@@ -1,5 +1,4 @@
-import { useTheme, type CSSObject } from '../index'
-import type { Theme } from '../themes'
+import { useTheme, type CSSObject, type Theme } from '@soroush.tech/design-system/theme'
 
 export type StyleFactory = { getStyles: (theme: Theme) => CSSObject }
 export type StyleInput = CSSObject | StyleFactory

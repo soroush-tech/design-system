@@ -44,7 +44,7 @@ export function useCopyToClipboard(resetMs: number = COPIED_RESET_MS): UseCopyTo
           }, resetMs)
         })
         .catch(() => {
-          // Clipboard write failed; leave `copied` in its idle state.
+          console.error('Clipboard write failed; leave `copied` in its idle state.')
         })
     },
     [resetMs]

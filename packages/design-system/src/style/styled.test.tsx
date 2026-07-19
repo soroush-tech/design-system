@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
-import { ThemeProvider } from './ThemeProvider'
-import { createTheme, baseTheme, type ComponentConfig } from './themes'
+import { ThemeProvider } from '../theme'
+import { createTheme, baseTheme, type ComponentConfig } from '../theme/themes'
 import { styled } from './styled'
 
 // A consumer-style component registered under a custom theme.components key —

@@ -1,6 +1,7 @@
 import type { ElementType } from 'react'
 import type { CSSObject as EmotionCSSObject } from '@emotion/react'
-import { spacing, generateBoxShadow, alpha } from './utils'
+import { alpha, generateBoxShadow } from '../utils'
+import { spacing } from './utils/spacing'
 
 /** Design-system's own style-object shape — Emotion stays an internal implementation detail. */
 export type CSSObject = EmotionCSSObject
@@ -11,7 +12,7 @@ export type CSSObject = EmotionCSSObject
 // used internally). Consumers extend every scale by declaration merging
 // against THIS module:
 //
-//   declare module '@soroush.tech/design-system/themes' {
+//   declare module '@soroush.tech/design-system/theme' {
 //     interface ThemePalette { brand: PaletteEntry }   // new palette color
 //     interface ThemeBackground { tertiary: string }   // new background token
 //     interface Theme { elevations: Record<string, string> }  // whole new scale
@@ -75,31 +76,6 @@ export interface ThemeBorder {
   light?: string
   primary: string
   dark?: string
-}
-/**
- * Syntax-highlighting colors for fenced code blocks — mapped onto highlight.js
- * token classes in `Markdown`'s code block. Values differ per theme so blocks
- * stay legible on the `background.terminal` surface in both light and dark.
- */
-export interface ThemeSyntax {
-  /** Default code text — plain identifiers, operators, punctuation. */
-  base: string
-  /** Keywords, built-ins, types, literals, selector tags. */
-  keyword: string
-  /** Strings, template literals, regular expressions. */
-  string: string
-  /** Numbers, symbols, links. */
-  number: string
-  /** Function / class titles, section headings, attributes. */
-  title: string
-  /** Fields, constants, and property keys. */
-  constant: string
-  /** Type and class names. */
-  type: string
-  /** Comments and quotes — rendered dimmed and italic. */
-  comment: string
-  /** Markup tags/names, meta, variables, deletions. */
-  tag: string
 }
 export interface ThemeFonts {
   body: string
@@ -443,7 +419,6 @@ export interface Theme {
   skeleton: OpenScale<ThemeSkeleton>
   switch: OpenScale<ThemeSwitch>
   shadow: OpenScale<ThemeShadow>
-  syntax: OpenScale<ThemeSyntax>
   sizes: { [K in keyof ThemeSizes]: OpenScale<ThemeSizes[K]> }
   colorScheme: 'light' | 'dark'
   blur: string
@@ -697,18 +672,6 @@ export const baseTheme: Theme = {
   },
   skeleton: {
     highlight: alpha('#363636', 0.65),
-  },
-  // Matched to the JetBrains "Islands Dark" editor scheme.
-  syntax: {
-    base: '#BBBBBB', // ≈ Islands text #bcbec4
-    keyword: '#CF8E6D', // = Islands keyword #cf8e6d
-    string: '#6AAB73', // = Islands string #6aab73
-    number: '#2AACB8', // = Islands number #2aacb8
-    title: '#6BA9FA', // ≈ Islands function #56a8f5
-    constant: '#C77DBB', // = Islands field/constant #c77dbb
-    type: '#2AACB8', // ≈ Islands type #16baac
-    comment: '#919191', // ≈ Islands comment #7a7e85
-    tag: '#D5B778', // = Islands markup tag #d5b778
   },
   logoFilter: 'brightness(0) invert(1)',
   portraitBlend: 'screen',

@@ -1,7 +1,9 @@
 // Internal-only Emotion bindings — the single seam for swapping the CSS-in-JS
 // engine. Not part of the public API (no package.json export maps to this
-// file): consumers use `styled`, `css`, `keyframes`, `Global`, and `useTheme`
-// from the package root instead, all typed against this package's own `Theme`.
+// file): consumers use `styled`, `css`, `keyframes` from the package root,
+// `ThemeProvider`/`useTheme`/theme hooks from the `./theme` subpath, or
+// `Global`/`CacheProvider` from the `./engine` subpath — all typed against
+// this package's own `Theme`.
 import { Global as EmotionGlobal } from '@emotion/react'
 import type { Interpolation } from '@emotion/react'
 import type { ComponentType, RefAttributes } from 'react'

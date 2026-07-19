@@ -3,8 +3,7 @@ import { render, screen } from '@testing-library/react'
 import { ThemeProvider } from '../ThemeProvider'
 import { baseTheme } from '../themes'
 import type { CSSObject, Theme } from '../themes'
-import { StylesConsumer } from './StylesConsumer'
-import { withStyles } from './withStyles'
+import { StylesConsumer, withStyles } from '@soroush.tech/design-system/style'
 import { withTheme } from './withTheme'
 
 const wrapper = ({ children }: { children: React.ReactNode }) => (

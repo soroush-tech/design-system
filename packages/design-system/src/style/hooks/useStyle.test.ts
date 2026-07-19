@@ -1,8 +1,7 @@
 import { renderHook } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
 import type { ReactNode } from 'react'
-import { ThemeProvider } from '../ThemeProvider'
-import { baseTheme } from '../themes'
+import { ThemeProvider, baseTheme } from '@soroush.tech/design-system/theme'
 import { useStyle } from './useStyle'
 
 const wrapper = ({ children }: { children: ReactNode }) =>

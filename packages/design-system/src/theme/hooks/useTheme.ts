@@ -1,4 +1,4 @@
-import { useEmotionTheme } from '../engine'
+import { useEmotionTheme } from '../emotion'
 import type { Theme } from '../themes'
 
 /**

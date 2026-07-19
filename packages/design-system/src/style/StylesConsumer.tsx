@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
-import { EmotionThemeContext } from '../engine'
-import type { CSSObject, Theme } from '../themes'
-import type { StyleFactory } from './useStyle'
+import { EmotionThemeContext } from '../theme/emotion'
+import type { CSSObject, Theme } from '../theme/themes'
+import type { StyleFactory } from './hooks/useStyle'
 
 type StylesConsumerProps = {
   style: StyleFactory

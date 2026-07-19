@@ -7,7 +7,7 @@ import type {
   StyledOptions,
 } from '@emotion/styled'
 import type { PropsOf } from '@emotion/react'
-import type { Theme } from './themes'
+import type { Theme } from '../theme/themes'
 import type { ComponentClass, ComponentProps, ComponentType, JSX, Ref } from 'react'
 
 /**

@@ -3,7 +3,7 @@
 Provides exactly **one** theme to the tree — a thin wrapper over Emotion's provider plus the optional `defaults` merge. It has no opinion about how many themes you have or how you switch between them: mode toggling is app state, not the provider's (see [`docs/theming.md`](../../docs/theming.md)).
 
 ```tsx
-import { ThemeProvider } from '@soroush.tech/design-system/ThemeProvider'
+import { ThemeProvider } from '@soroush.tech/design-system/theme'
 
 // Zero-config: the built-in dark theme.
 <ThemeProvider>{app}</ThemeProvider>

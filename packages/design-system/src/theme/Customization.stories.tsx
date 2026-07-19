@@ -3,7 +3,7 @@ import { Button, type ButtonVariant } from '../Button'
 import { ButtonGroup } from '../ButtonGroup'
 import { Flex } from '../Flex'
 import { Typography } from '../Typography'
-import { createTheme, baseTheme } from '../themes'
+import { createTheme, baseTheme } from './themes'
 import { ThemeProvider } from './ThemeProvider'
 
 // Living documentation for theme-level component customization

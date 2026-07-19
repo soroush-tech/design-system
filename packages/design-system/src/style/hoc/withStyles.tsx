@@ -1,7 +1,7 @@
 import type { ComponentType } from 'react'
-import { type CSSObject } from '../index'
-import type { StyleFactory, StyleInput } from './useStyle'
-import { StylesConsumer } from './StylesConsumer'
+import type { CSSObject } from '@soroush.tech/design-system/theme'
+import type { StyleFactory, StyleInput } from '../hooks/useStyle'
+import { StylesConsumer } from '../StylesConsumer'
 
 export function withStyles<P extends object>(style: StyleInput) {
   return (WrappedComponent: ComponentType<P & { styles: CSSObject }>) =>

@@ -1,4 +1,4 @@
-import { ownerDocument } from './ownerDocument'
+import { ownerDocument } from '../../utils/ownerDocument'
 
 /**
  * Returns the `Window` that owns the given node, falling back to the global

@@ -1,5 +1,5 @@
 import type { ComponentType } from 'react'
-import { EmotionThemeContext } from '../engine'
+import { EmotionThemeContext } from '../emotion'
 import type { Theme } from '../themes'
 
 export function withTheme<P extends object>(WrappedComponent: ComponentType<P & { theme: Theme }>) {

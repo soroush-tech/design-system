@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react'
-import type { ToolbarAction } from './const'
+import type { ToolbarAction } from '../const'
 
 /** A textarea selection range shared between the Editor and the Toolbar. */
 export interface MarkdownSelection {

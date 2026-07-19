@@ -1,8 +1,8 @@
 import { renderHook } from '@testing-library/react'
-import { useTheme } from '../hooks/useTheme'
+import { useTheme } from './hooks/useTheme'
 import { describe, it, expect } from 'vitest'
 import type { ReactNode } from 'react'
-import { createTheme, baseTheme } from '../themes'
+import { createTheme, baseTheme } from './themes'
 import { ThemeProvider } from './ThemeProvider'
 
 // A second theme with a distinct name — proves the theme prop replaces the default.
