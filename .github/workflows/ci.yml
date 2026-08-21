@@ -1,0 +1,297 @@
+# ci:validates all
+# ci.yml holds every job, so every job proves it.
+name: CI
+
+on:
+  push:
+    branches:
+      - 'main'
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Detect node version / package manager once and build the package matrix, then
+  # expose everything as outputs the other jobs reuse via needs.prepare.outputs.*
+  prepare:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    timeout-minutes: 15
+    outputs:
+      node_version: ${{ steps.node-version.outputs.version }}
+      manager: ${{ steps.detect-package-manager.outputs.manager }}
+      command: ${{ steps.detect-package-manager.outputs.command }}
+      runner: ${{ steps.detect-package-manager.outputs.runner }}
+      playwright_version: ${{ steps.detect-playwright.outputs.version }}
+      packages: ${{ steps.discover.outputs.packages }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Read Node.js version from .nvmrc
+        id: node-version
+        run: echo "version=$(cat .nvmrc)" >> "$GITHUB_OUTPUT"
+
+      # Every install runs --ignore-scripts: no lifecycle script at install time,
+      # anywhere in CI - the packages build with tsdown, which needs none.
+      - name: Detect package manager
+        id: detect-package-manager
+        run: |
+          if [ -f "${{ github.workspace }}/pnpm-lock.yaml" ]; then
+            echo "manager=pnpm" >> $GITHUB_OUTPUT
+            echo "command=install --frozen-lockfile --ignore-scripts" >> $GITHUB_OUTPUT
+            echo "runner=pnpm" >> $GITHUB_OUTPUT
+            exit 0
+          elif [ -f "${{ github.workspace }}/yarn.lock" ]; then
+            echo "manager=yarn" >> $GITHUB_OUTPUT
+            echo "command=install --frozen-lockfile --non-interactive --ignore-scripts" >> $GITHUB_OUTPUT
+            echo "runner=yarn" >> $GITHUB_OUTPUT
+            exit 0
+          elif [ -f "${{ github.workspace }}/package.json" ]; then
+            echo "manager=npm" >> $GITHUB_OUTPUT
+            echo "command=ci --ignore-scripts" >> $GITHUB_OUTPUT
+            echo "runner=npm" >> $GITHUB_OUTPUT
+            exit 0
+          else
+            echo "Unable to determine package manager"
+            exit 1
+          fi
+
+      # The Playwright cache key needs the version; whichever package declares
+      # playwright is the one whose browser tier runs it.
+      - name: Read Playwright version from packages
+        id: detect-playwright
+        run: |
+          VERSION=$(node -e '
+            const { readdirSync, readFileSync, existsSync } = require("node:fs")
+            for (const dir of readdirSync("packages")) {
+              const manifest = `packages/${dir}/package.json`
+              if (!existsSync(manifest)) continue
+              const pkg = JSON.parse(readFileSync(manifest, "utf8"))
+              const version = pkg.devDependencies?.playwright ?? pkg.dependencies?.playwright
+              if (version) { console.log(version.replace(/^\^/, "")); break }
+            }
+          ')
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      # One matrix row per package. The flag is the unscoped package name; a
+      # real-browser vitest tier declares `playwright` itself and needs Chromium
+      # downloaded first. A new package appears here without this file being touched.
+      - name: Discover package matrix
+        id: discover
+        run: |
+          MATRIX=$(node -e '
+            const { readdirSync, readFileSync, existsSync } = require("node:fs")
+            const rows = readdirSync("packages", { withFileTypes: true })
+              .filter((entry) => entry.isDirectory())
+              .map((entry) => entry.name)
+              .filter((dir) => existsSync(`packages/${dir}/package.json`))
+              .sort()
+              .map((dir) => {
+                const pkg = JSON.parse(readFileSync(`packages/${dir}/package.json`, "utf8"))
+                return {
+                  dir,
+                  filter: pkg.name,
+                  flag: pkg.name.split("/").pop(),
+                  browsers:
+                    Boolean(pkg.devDependencies?.playwright ?? pkg.dependencies?.playwright) &&
+                    !pkg.scripts?.["test:e2e"],
+                }
+              })
+            console.log(JSON.stringify({ include: rows }))
+          ')
+          echo "packages=$MATRIX" >> "$GITHUB_OUTPUT"
+
+  # Lint + typecheck the whole workspace once (cheap, recursive).
+  lint:
+    needs: prepare
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    timeout-minutes: 15
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Setup pnpm, Node and dependencies
+        uses: ./.github/actions/setup
+        with:
+          node_version: ${{ needs.prepare.outputs.node_version }}
+          manager: ${{ needs.prepare.outputs.manager }}
+          command: ${{ needs.prepare.outputs.command }}
+
+      # Formatting is enforced here, not by a lint rule: oxfmt owns it.
+      - name: Run Format Check
+        run: ${{ needs.prepare.outputs.runner }} run format:check
+
+      - name: Run Lint
+        run: ${{ needs.prepare.outputs.runner }} run lint
+
+      - name: Run Typecheck
+        run: ${{ needs.prepare.outputs.runner }} run typecheck
+
+      # Fail the build if a publishable package bumped its version without adding the matching
+      # release-notes/<version>.md - the same file cd-packages.yml requires before publishing.
+      - name: Check release notes
+        run: ${{ needs.prepare.outputs.runner }} run check:release-notes
+
+      # Fail the build on invisible characters, typographic punctuation or mojibake in any
+      # tracked text file. ASCII punctuation is the house rule.
+      - name: Check typography
+        run: ${{ needs.prepare.outputs.runner }} run check:typography
+
+  # One row per package: install, run its `test:coverage`, upload its lcov under its
+  # own Codecov flag. Packages are alike, so they are a matrix rather than a job each.
+  packages:
+    needs: [prepare, lint]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # tokenless OIDC Codecov upload
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.prepare.outputs.packages) }}
+    env:
+      PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/ms-playwright
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Setup pnpm, Node and dependencies
+        uses: ./.github/actions/setup
+        with:
+          node_version: ${{ needs.prepare.outputs.node_version }}
+          manager: ${{ needs.prepare.outputs.manager }}
+          command: ${{ needs.prepare.outputs.command }}
+
+      # After the install, which touches nothing on this path.
+      - name: Restore cache - Playwright binaries
+        if: matrix.browsers
+        uses: actions/cache/restore@v5
+        id: playwright-cache
+        with:
+          path: ${{ github.workspace }}/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ needs.prepare.outputs.playwright_version }}
+
+      # Only Chromium is needed - the browser test tier runs headless Chromium.
+      - name: Install Playwright browsers
+        if: matrix.browsers && steps.playwright-cache.outputs.cache-hit != 'true'
+        run: pnpm --filter ${{ matrix.filter }} exec playwright install --with-deps chromium
+
+      # On a cache hit the binaries are restored, but Linux system libs live outside the cache.
+      - name: Install Playwright system deps
+        if: matrix.browsers && steps.playwright-cache.outputs.cache-hit == 'true'
+        run: pnpm --filter ${{ matrix.filter }} exec playwright install-deps chromium
+
+      - name: Save cache - Playwright binaries
+        if: always() && matrix.browsers && steps.playwright-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v5
+        with:
+          path: ${{ github.workspace }}/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ needs.prepare.outputs.playwright_version }}
+
+      - name: Run Tests with Coverage
+        run: ${{ needs.prepare.outputs.runner }} --filter ${{ matrix.filter }} test:coverage
+
+      # The source tiers all typecheck `src/`; only `test:types` builds `dist` and compiles a
+      # consumer-shaped program against the emitted d.ts, which is where bundling can drop a
+      # type that `src/` resolves fine. `--if-present` skips the packages that declare no such
+      # script.
+      - name: Typecheck Published Declarations
+        run: ${{ needs.prepare.outputs.runner }} --filter ${{ matrix.filter }} run --if-present test:types
+
+      # vitest writes lcov paths relative to the member (e.g. SF:src/index.ts), which is
+      # ambiguous across the monorepo - Codecov can't map a lone src/index.ts and silently
+      # drops the flag's coverage. Prefix with the member's own directory so paths are
+      # repo-relative and unique. Via env (never spliced into the shell).
+      - name: Make lcov paths repo-relative for Codecov
+        env:
+          DIR: ${{ matrix.dir }}
+        run: sed -i "s#^SF:#SF:packages/$DIR/#" "packages/$DIR/coverage/lcov.info"
+
+      - name: Upload Coverage to Codecov
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7
+        with:
+          use_oidc: true
+          files: ./packages/${{ matrix.dir }}/coverage/lcov.info
+          slug: soroush-tech/design-system
+          flags: ${{ matrix.flag }}
+          name: ${{ matrix.flag }}
+
+  # Performance gate: styled-system's bench suite runs in the pinned Docker sandbox
+  # against the last npm release (via soroush-tech/bench-action); any case below the
+  # minimum speed ratio fails the job - and, via ci-ok, the PR.
+  bench:
+    needs: [prepare, lint]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write # bench-action posts/updates the results comment
+      id-token: write # OIDC token for the branded comment relay (api.bench.soroush.tech)
+    timeout-minutes: 20
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Setup pnpm, Node and dependencies
+        uses: ./.github/actions/setup
+        with:
+          node_version: ${{ needs.prepare.outputs.node_version }}
+          manager: ${{ needs.prepare.outputs.manager }}
+          command: ${{ needs.prepare.outputs.command }}
+
+      # The bench file imports this package's built dist so the comparison
+      # against the npm release's prebuilt dist is like-for-like.
+      - name: Build styled-system
+        run: ${{ needs.prepare.outputs.runner }} --filter @soroush.tech/styled-system build
+
+      # Mint a token from the org's GitHub App so the results comment is posted
+      # under the brand bot identity instead of github-actions[bot]. Skipped (and
+      # the gate falls back to GITHUB_TOKEN) when the app isn't configured.
+      - name: Mint bot token
+        id: bot-token
+        if: vars.BENCH_BOT_APP_ID != ''
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ vars.BENCH_BOT_APP_ID }}
+          private-key: ${{ secrets.BENCH_BOT_PRIVATE_KEY }}
+          # Scope the minted token to commenting only, instead of inheriting every
+          # permission the app installation has.
+          permission-pull-requests: write
+
+      - name: Run benchmark gate
+        # Our own action, pinned like any other: `v1` is a tag, and a tag moves.
+        uses: soroush-tech/bench-action@b527ad437545189516e36ee3c29f6aeb09c3557e # v1.1.1
+        with:
+          bench-dir: packages/styled-system/bench
+          baseline-case: previous
+          min-ratio: '80'
+          github-token: ${{ steps.bot-token.outputs.token || secrets.GITHUB_TOKEN }}
+
+  # Single stable status check for branch protection: fails only if a required
+  # job actually failed or was cancelled.
+  ci-ok:
+    name: ci-ok
+    if: always()
+    needs: [prepare, lint, packages, bench]
+    runs-on: ubuntu-latest
+    permissions: {}
+    timeout-minutes: 5
+    steps:
+      - name: Require all jobs to pass
+        if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')
+        run: |
+          echo "A required job failed or was cancelled."
+          exit 1

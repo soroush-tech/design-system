@@ -4,6 +4,10 @@
   "type": "module",
   "packageManager": "pnpm@10.13.1",
   "scripts": {
+    "prepare": "husky",
+    "gen:publish-options": "node scripts/gen-publish-options.mjs",
+    "check:release-notes": "node scripts/check-release-notes.mjs",
+    "check:typography": "aiwg --all",
     "build": "pnpm -r build",
     "lint": "pnpm -r lint",
     "typecheck": "pnpm -r typecheck",
@@ -15,6 +19,9 @@
     "build:storybook": "pnpm --filter @soroush.tech/design-system build:storybook"
   },
   "devDependencies": {
-    "oxfmt": "^0.63.0"
+    "ai-watermark-guard": "^0.1.0",
+    "husky": "^9.1.7",
+    "oxfmt": "^0.63.0",
+    "oxfmt-quick": "^1.0.1"
   }
 }

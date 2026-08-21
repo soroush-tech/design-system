@@ -8,9 +8,18 @@ importers:
 
   .:
     devDependencies:
+      ai-watermark-guard:
+        specifier: ^0.1.0
+        version: 0.1.0
+      husky:
+        specifier: ^9.1.7
+        version: 9.1.7
       oxfmt:
         specifier: ^0.63.0
         version: 0.63.0
+      oxfmt-quick:
+        specifier: ^1.0.1
+        version: 1.0.1(oxfmt@0.63.0)
 
   packages/design-system:
     dependencies:
@@ -1311,6 +1320,41 @@ packages:
       rollup:
         optional: true
 
+  '@soroush.tech/ai-watermark-guard-darwin-arm64@0.1.0':
+    resolution: {integrity: sha512-V1QlcuKCJyNrQMOfpL4r9/xWZFWLLrS2M4Ffnod1OAe/HOvFqycztwF37qePWWmobNc19CRrQU6hnLEwm3ZPFA==}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@soroush.tech/ai-watermark-guard-darwin-x64@0.1.0':
+    resolution: {integrity: sha512-pCJf1b6HK+EOwsWfT5NnKxoVA1e/iQ5L34UL1quPbBF4i/Onf2L3hWwvbRFnXz89IhX0zKrEtyRsU78i/97y9w==}
+    cpu: [x64]
+    os: [darwin]
+
+  '@soroush.tech/ai-watermark-guard-linux-arm64@0.1.0':
+    resolution: {integrity: sha512-5A+Qyo9NfOy88CM2CZmwsH+4Zs1g/MnoM07otUIH//klWSql5DaN4zhejTEpFwwXAJY3LkZCkLS6RuqPesFJpQ==}
+    cpu: [arm64]
+    os: [linux]
+
+  '@soroush.tech/ai-watermark-guard-linux-x64-musl@0.1.0':
+    resolution: {integrity: sha512-pNt/cTKY9r8c/A5G1JLWEOZrR7ZKUI6owz1m5rg2YL4WsS6dm2LYaN/iZl18DHlxOS3Ok4slUlSYWLvb7qSu4A==}
+    cpu: [x64]
+    os: [linux]
+
+  '@soroush.tech/ai-watermark-guard-linux-x64@0.1.0':
+    resolution: {integrity: sha512-S7SGhDI3cuf6JJAoH1aJNxTFtTAm/n8+EAuB08HCUUZIeGlDL2YFcqSHAU+mi5+OET22hX7uVHKWReJ4FUrf+g==}
+    cpu: [x64]
+    os: [linux]
+
+  '@soroush.tech/ai-watermark-guard-win32-arm64@0.1.0':
+    resolution: {integrity: sha512-wb9ufMgCQt8yxb9+qUsMOOmxnSqJcMN7UwaJgIZtk8Mo4Q4if5AIgGuZGG/79cKdycCadvjSYNDtfxzBIm74CQ==}
+    cpu: [arm64]
+    os: [win32]
+
+  '@soroush.tech/ai-watermark-guard-win32-x64@0.1.0':
+    resolution: {integrity: sha512-4SyTKTnnQKFSJPa0dg6Qm4gUhgIOwFL4dIZT9iqDzV7c0Ckpd47OCHENYHWkqN5Hnblxq4Kl7jb2HVME+2ZUqg==}
+    cpu: [x64]
+    os: [win32]
+
   '@soroush.tech/bench@2.2.3':
     resolution: {integrity: sha512-5qTaZrq8qr0wMvdynOh/C8gJk4zbfqfTvmFX2xhUZ3FymsCLuyfQXO+Z7tjt37dWL0QSmXve9qCjfBMxtd0wig==}
     engines: {node: '>=24.19.0'}
@@ -2004,6 +2048,11 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
 
+  ai-watermark-guard@0.1.0:
+    resolution: {integrity: sha512-WV4hmdUJ/2n2WFXdlDRYehTggxrFnHihExNhbHEmMNhHXtDWkPB2rRdMeY8CdB8ZIPvdSwhjkPu8WD4Zr587fw==}
+    engines: {node: '>=18'}
+    hasBin: true
+
   ajv@6.15.0:
     resolution: {integrity: sha512-fgFx7Hfoq60ytK2c7DhnF8jIvzYgOMxfugjLOSMHjLIPgenqa7S7oaagATUq99mV6IYvN2tRmC0wnTYX6iPbMw==}
 
@@ -2665,6 +2714,11 @@ packages:
   html-void-elements@3.0.0:
     resolution: {integrity: sha512-bEqo66MRXsUGxWHV5IP0PUiAWwoEjba4VCzg0LjFJBpchPaTfyfCKTG6bc5F8ucKec3q5y6qOdGyYTSBEvhCrg==}
 
+  husky@9.1.7:
+    resolution: {integrity: sha512-5gs5ytaNjBrh5Ow3zrvdUUY+0VxIuWVL4i9irt6friV+BqdCfmV11CQTWMiBYWHbXhco+J1kHfTOUkePhCDvMA==}
+    engines: {node: '>=18'}
+    hasBin: true
+
   iconv-lite@0.6.3:
     resolution: {integrity: sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==}
     engines: {node: '>=0.10.0'}
@@ -3097,6 +3151,10 @@ packages:
     resolution: {integrity: sha512-tEBHqDnIoM/1rXME1zgka9g6Q2lcoCkxHLuc7ODJ5BxbP5d4c2Z5cGgtXAku59200Cx7diuHTOYfSBD8n6mm8A==}
     engines: {node: '>=16 || 14 >=14.17'}
 
+  mri@1.2.0:
+    resolution: {integrity: sha512-tzzskb3bG8LvYGFF/mDTpq3jpI6Q9wc3LEmBaghu+DdCssd1FakN7Bc0hVNmEyGq1bq3RgfkCb3cmQLpNPOroA==}
+    engines: {node: '>=4'}
+
   mrmime@2.0.1:
     resolution: {integrity: sha512-Y3wQdFg2Va6etvQ5I82yUhGdsKrcYox6p7FfL1LbK2J4V01F9TGlepTIhnK24t7koZibmg82KGglhA1XK5IsLQ==}
     engines: {node: '>=10'}
@@ -3138,6 +3196,13 @@ packages:
 
   oxc-resolver@11.21.2:
     resolution: {integrity: sha512-w5tLwYN3Zo24w5EeWJjJWZOwhYqTtC8PS2B1tIt7BZUuqTIcU07sQValbDw+rq7+AuAGzOHklgK+ifsy4lpXfw==}
+
+  oxfmt-quick@1.0.1:
+    resolution: {integrity: sha512-s+8OQU6y99lXQDVl/bc14bpbB1vSYBGm/w0OG16W1C0wC9TIgoTKtL+cH/kLjZKr4/dtX7MxmadX08VwmCVlpQ==}
+    engines: {node: ^20.19.0 || ^22.12.0 || >=24}
+    hasBin: true
+    peerDependencies:
+      oxfmt: '>=0.60.0'
 
   oxfmt@0.63.0:
     resolution: {integrity: sha512-kgdDwv35wvVf6554U2Ab8Jnd0zTM+TsEQWwaB70RAjK3gICFAFGO+2Hd3Be27GMoXj3XRL9IKSNRVl7KBQL6iw==}
@@ -4642,6 +4707,27 @@ snapshots:
       estree-walker: 2.0.2
       picomatch: 4.0.5
 
+  '@soroush.tech/ai-watermark-guard-darwin-arm64@0.1.0':
+    optional: true
+
+  '@soroush.tech/ai-watermark-guard-darwin-x64@0.1.0':
+    optional: true
+
+  '@soroush.tech/ai-watermark-guard-linux-arm64@0.1.0':
+    optional: true
+
+  '@soroush.tech/ai-watermark-guard-linux-x64-musl@0.1.0':
+    optional: true
+
+  '@soroush.tech/ai-watermark-guard-linux-x64@0.1.0':
+    optional: true
+
+  '@soroush.tech/ai-watermark-guard-win32-arm64@0.1.0':
+    optional: true
+
+  '@soroush.tech/ai-watermark-guard-win32-x64@0.1.0':
+    optional: true
+
   '@soroush.tech/bench@2.2.3': {}
 
   '@standard-schema/spec@1.1.0': {}
@@ -5320,6 +5406,16 @@ snapshots:
       acorn: 8.18.0
 
   acorn@8.18.0: {}
+
+  ai-watermark-guard@0.1.0:
+    optionalDependencies:
+      '@soroush.tech/ai-watermark-guard-darwin-arm64': 0.1.0
+      '@soroush.tech/ai-watermark-guard-darwin-x64': 0.1.0
+      '@soroush.tech/ai-watermark-guard-linux-arm64': 0.1.0
+      '@soroush.tech/ai-watermark-guard-linux-x64': 0.1.0
+      '@soroush.tech/ai-watermark-guard-linux-x64-musl': 0.1.0
+      '@soroush.tech/ai-watermark-guard-win32-arm64': 0.1.0
+      '@soroush.tech/ai-watermark-guard-win32-x64': 0.1.0
 
   ajv@6.15.0:
     dependencies:
@@ -6073,6 +6169,8 @@ snapshots:
 
   html-void-elements@3.0.0: {}
 
+  husky@9.1.7: {}
+
   iconv-lite@0.6.3:
     dependencies:
       safer-buffer: 2.1.2
@@ -6691,6 +6789,8 @@ snapshots:
 
   minipass@7.1.3: {}
 
+  mri@1.2.0: {}
+
   mrmime@2.0.1: {}
 
   ms@2.1.3: {}
@@ -6767,6 +6867,12 @@ snapshots:
       '@oxc-resolver/binding-wasm32-wasi': 11.21.2
       '@oxc-resolver/binding-win32-arm64-msvc': 11.21.2
       '@oxc-resolver/binding-win32-x64-msvc': 11.21.2
+
+  oxfmt-quick@1.0.1(oxfmt@0.63.0):
+    dependencies:
+      mri: 1.2.0
+      oxfmt: 0.63.0
+      picocolors: 1.1.1
 
   oxfmt@0.63.0:
     dependencies:
