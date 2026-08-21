@@ -1,0 +1,20 @@
+{
+  "name": "design-system",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.13.1",
+  "scripts": {
+    "build": "pnpm -r build",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "test:coverage": "pnpm -r test:coverage",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
+    "storybook": "pnpm --filter @soroush.tech/design-system storybook",
+    "build:storybook": "pnpm --filter @soroush.tech/design-system build:storybook"
+  },
+  "devDependencies": {
+    "oxfmt": "^0.63.0"
+  }
+}
