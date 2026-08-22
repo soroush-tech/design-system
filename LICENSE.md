@@ -1,38 +1,21 @@
-# Read-Only Reference License
+MIT License
 
-**Copyright (c) 2025 Masoud Soroush. All rights reserved.**
+Copyright (c) 2026 Masoud Soroush <https://soroush.tech>
 
-This code is provided strictly for **educational and reference purposes only**.  
-You may **not copy, use, modify, distribute, or sublicense** any portion of this code, in part or in whole, without **explicit written permission** from the author.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-By accessing or viewing this code, you agree to these terms.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
----
-
-## Restrictions
-
-- ❌ No use in production or commercial environments.
-- ❌ No distribution, publication, or sharing (in whole or in part).
-- ❌ No modification.
-- ❌ No use for training or fine-tuning AI systems or large language models.
-- ❌ No sharing with third parties (individuals or companies).
-
----
-
-## Disclaimer of Warranty and Liability
-
-This software is provided **"as is"**, without warranty of any kind,  
-either express or implied, including but not limited to the warranties of  
-**merchantability**, **fitness for a particular purpose**, and **non-infringement**.
-
-In no event shall the author be liable for any claim, damages, or other liability,  
-whether in an action of contract, tort, or otherwise, arising from, out of,  
-or in connection with the software or the use or other dealings in the software.
-
----
-
-## Licensing
-
-This code is **not open-source** in the traditional sense.  
-**No license is granted** beyond the rights specified above.  
-**All other rights are reserved** by Masoud Soroush.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
