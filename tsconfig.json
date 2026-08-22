@@ -1,0 +1,9 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./packages/styled-system/tsconfig.json" },
+    { "path": "./packages/design-system/tsconfig.json" },
+    { "path": "./packages/markdown/tsconfig.json" },
+    { "path": "./packages/hooks/tsconfig.json" }
+  ]
+}

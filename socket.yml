@@ -1,0 +1,10 @@
+# Socket security configuration - https://docs.socket.dev/docs/socket-yml
+version: 2
+
+# Disable the "obfuscated code" alert. The only package it flags in this repo is a
+# reputable build-tooling transitive that never ships in our published packages:
+#   - @emnapi/runtime  ← tsdown/rolldown's wasm32-wasi binding
+# It is not removable and well-known. socket.yml has no per-package ignore, so this
+# is a repo-wide rule toggle (use the Socket dashboard for per-package triage).
+issueRules:
+  obfuscatedFile: false

@@ -1,0 +1,38 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "dependencyDashboard": true,
+  "rebaseWhen": "conflicted",
+  "prConcurrentLimit": 1,
+  "prHourlyLimit": 2,
+  "labels": ["dependencies"],
+  "semanticCommits": "enabled",
+  "rangeStrategy": "bump",
+  "enabledManagers": ["npm"],
+  "separateMajorMinor": false,
+  "separateMinorPatch": false,
+  "lockFileMaintenance": {
+    "enabled": false
+  },
+  "packageRules": [
+    {
+      "matchDepTypes": ["packageManager"],
+      "enabled": false
+    },
+    {
+      "matchUpdateTypes": ["pin"],
+      "enabled": false
+    },
+    {
+      "matchPackageNames": ["*"],
+      "groupName": "all dependencies",
+      "groupSlug": "all"
+    },
+    {
+      "matchPackageNames": ["jsdom"],
+      "allowedVersions": "<30.0.0",
+      "description": "Hold jsdom at 29.x: jsdom 30 absolutizes relative lengths in getComputedStyle (2rem resolves to 32px, -0.025em to -0.4px), so every design-system toHaveStyle assertion written in rem/em fails. Revisit once those assertions stop comparing against computed style."
+    }
+  ],
+  "platformAutomerge": true
+}
