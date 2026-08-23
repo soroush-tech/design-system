@@ -17,9 +17,13 @@ coverage:
           - design-system
           - eslint-config
           - hooks
+          - lab
           - markdown
+          - story-demo
           - styled-system
           # gen:codecov-patch-flags end
+          # App flags are hand-managed; the docs app is not a package.
+          - docs
 
 # Carry the last known report forward so a flag that didn't upload on a commit keeps
 # its coverage instead of dropping to "No report uploaded". paths map each flag to the
@@ -38,13 +42,23 @@ flag_management:
     - name: hooks
       paths:
         - packages/hooks/
+    - name: lab
+      paths:
+        - packages/lab/
     - name: markdown
       paths:
         - packages/markdown/
+    - name: story-demo
+      paths:
+        - packages/story-demo/
     - name: styled-system
       paths:
         - packages/styled-system/
     # gen:codecov-flags end
+    # The docs app flag (hand-managed - apps are not package-generated).
+    - name: docs
+      paths:
+        - apps/docs/
 
 component_management:
   default_rules:
@@ -67,12 +81,24 @@ component_management:
       name: hooks
       paths:
         - packages/hooks/**
+    - component_id: lab
+      name: lab
+      paths:
+        - packages/lab/**
     - component_id: markdown
       name: markdown
       paths:
         - packages/markdown/**
+    - component_id: story-demo
+      name: story-demo
+      paths:
+        - packages/story-demo/**
     - component_id: styled-system
       name: styled-system
       paths:
         - packages/styled-system/**
     # gen:codecov-components end
+    - component_id: docs
+      name: docs
+      paths:
+        - apps/docs/**
