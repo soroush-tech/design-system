@@ -26,6 +26,7 @@ jobs:
             eslint-config
             hooks
             markdown
+            story-demo
             styled-system
             # gen:issue-areas end
         with:

@@ -17,7 +17,6 @@ coverage:
           - design-system
           - eslint-config
           - hooks
-          - lab
           - markdown
           - story-demo
           - styled-system
@@ -42,9 +41,6 @@ flag_management:
     - name: hooks
       paths:
         - packages/hooks/
-    - name: lab
-      paths:
-        - packages/lab/
     - name: markdown
       paths:
         - packages/markdown/
@@ -81,10 +77,6 @@ component_management:
       name: hooks
       paths:
         - packages/hooks/**
-    - component_id: lab
-      name: lab
-      paths:
-        - packages/lab/**
     - component_id: markdown
       name: markdown
       paths:
