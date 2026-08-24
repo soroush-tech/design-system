@@ -10,6 +10,7 @@ Monorepo for the `@soroush.tech` UI libraries, extracted from [`soroush-tech/cor
 | [`@soroush.tech/design-system`](packages/design-system) | Token-driven React component library built on styled-system                   |
 | [`@soroush.tech/markdown`](packages/markdown)           | Markdown companion component library for the design system                    |
 | [`@soroush.tech/hooks`](packages/hooks)                 | Shared React hooks (private, internal)                                        |
+| [`@soroush.tech/story-demo`](packages/story-demo)       | Renders CSF3 stories as interactive docs demos (private, internal)            |
 | [`@soroush.tech/eslint-config`](packages/eslint-config) | Shared oxlint config and custom lint plugins (private, internal)              |
 
 See [`packages/packages.md`](packages/packages.md) for workspace-package conventions.

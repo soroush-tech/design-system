@@ -1,0 +1,174 @@
+import { describe, it, expect } from 'vitest'
+import {
+  isSerializableArg,
+  jsLiteral,
+  serializeArgsLiteral,
+  serializeJsxProps,
+} from './serializeJsxProps'
+
+describe('isSerializableArg', () => {
+  it('accepts primitives, plain objects, and arrays', () => {
+    expect(isSerializableArg('a')).toBe(true)
+    expect(isSerializableArg(1)).toBe(true)
+    expect(isSerializableArg(false)).toBe(true)
+    expect(isSerializableArg(null)).toBe(true)
+    expect(isSerializableArg({ a: [1, 'b'] })).toBe(true)
+  })
+
+  it('rejects functions, symbols, class instances, and nested rejects', () => {
+    expect(isSerializableArg(() => {})).toBe(false)
+    expect(isSerializableArg(Symbol('x'))).toBe(false)
+    expect(isSerializableArg(new Date())).toBe(false)
+    expect(isSerializableArg([() => {}])).toBe(false)
+    expect(isSerializableArg({ onClick: () => {} })).toBe(false)
+  })
+})
+
+describe('jsLiteral', () => {
+  it('prints values as source literals', () => {
+    expect(jsLiteral(null)).toBe('null')
+    expect(jsLiteral("it's")).toBe("'it\\'s'")
+    expect(jsLiteral('back\\slash')).toBe("'back\\\\slash'")
+    expect(jsLiteral([1, 'two'])).toBe("[1, 'two']")
+    expect(jsLiteral({ a: 1, 'aria-label': 'x', skipped: undefined })).toBe(
+      "{ a: 1, 'aria-label': 'x' }"
+    )
+    expect(jsLiteral({})).toBe('{}')
+    expect(jsLiteral(true)).toBe('true')
+  })
+
+  it('escapes control characters instead of emitting them raw', () => {
+    expect(jsLiteral('a\nb')).toBe("'a\\nb'")
+    expect(jsLiteral('a\tb\r')).toBe("'a\\tb\\r'")
+    expect(jsLiteral({ 'a\nb': 1 })).toBe("{ 'a\\nb': 1 }")
+  })
+
+  it('produces literals that actually parse', () => {
+    for (const value of ['a\nb', "it's", 'back\\slash', 'say "hi"', 'mixed \\" and \n']) {
+      // eslint-disable-next-line no-new-func
+      expect(new Function(`return ${jsLiteral(value)}`)()).toBe(value)
+    }
+  })
+})
+
+describe('serializeJsxProps', () => {
+  it('writes include-listed args as attributes with string children', () => {
+    const args = { children: 'Action', variant: 'contained', size: 'md', onClick: () => {} }
+    expect(serializeJsxProps('Button', args, ['children', 'variant', 'size'])).toBe(
+      '<Button variant="contained" size="md">Action</Button>'
+    )
+  })
+
+  it('formats booleans, numbers, objects, and escaped strings', () => {
+    const args = { on: true, off: false, gap: 2, sx: { m: 1 }, title: 'say "hi"' }
+    expect(serializeJsxProps('Box', args, ['on', 'off', 'gap', 'sx', 'title'])).toBe(
+      '<Box on off={false} gap={2} sx={{ m: 1 }} title={\'say "hi"\'} />'
+    )
+  })
+
+  it('always keeps aria-label and self-closes without children', () => {
+    const args = { 'aria-label': 'A group', variant: 'outlined' }
+    expect(serializeJsxProps('ButtonGroup', args, ['variant'])).toBe(
+      '<ButtonGroup variant="outlined" aria-label="A group" />'
+    )
+  })
+
+  it('renders numeric children and bare elements', () => {
+    expect(serializeJsxProps('Badge', { children: 3 }, [])).toBe('<Badge>3</Badge>')
+    expect(serializeJsxProps('Divider', {}, [])).toBe('<Divider />')
+  })
+
+  it('wraps attributes onto their own lines past 80 columns', () => {
+    const args = {
+      children: 'Action',
+      variant: 'contained',
+      color: 'primary',
+      size: 'md',
+      loadingPosition: 'center',
+      borderRadius: 'lg',
+    }
+    const include = ['variant', 'color', 'size', 'loadingPosition', 'borderRadius']
+    expect(serializeJsxProps('Button', { ...args, children: undefined }, include)).toBe(
+      [
+        '<Button',
+        '  variant="contained"',
+        '  color="primary"',
+        '  size="md"',
+        '  loadingPosition="center"',
+        '  borderRadius="lg"',
+        '/>',
+      ].join('\n')
+    )
+    expect(serializeJsxProps('Button', args, include)).toBe(
+      [
+        '<Button',
+        '  variant="contained"',
+        '  color="primary"',
+        '  size="md"',
+        '  loadingPosition="center"',
+        '  borderRadius="lg"',
+        '>',
+        '  Action',
+        '</Button>',
+      ].join('\n')
+    )
+  })
+
+  it('quotes attributes and children that JSX would mangle', () => {
+    expect(serializeJsxProps('Button', { children: '2 < 3' }, [])).toBe(
+      "<Button>{'2 < 3'}</Button>"
+    )
+    expect(serializeJsxProps('Button', { children: 'a & b' }, [])).toBe(
+      "<Button>{'a & b'}</Button>"
+    )
+    expect(serializeJsxProps('Button', { children: '{x}' }, [])).toBe("<Button>{'{x}'}</Button>")
+    expect(serializeJsxProps('Button', { label: 'a\nb' }, ['label'])).toBe(
+      "<Button label={'a\\nb'} />"
+    )
+    expect(serializeJsxProps('Button', { label: 'a & b' }, ['label'])).toBe(
+      "<Button label={'a & b'} />"
+    )
+  })
+
+  it('keeps plain text and plain attributes unquoted', () => {
+    expect(serializeJsxProps('Button', { children: 'Go', size: 'md' }, ['children', 'size'])).toBe(
+      '<Button size="md">Go</Button>'
+    )
+    expect(serializeJsxProps('Button', { children: 7 }, [])).toBe('<Button>7</Button>')
+  })
+})
+
+describe('serializeArgsLiteral', () => {
+  it('keeps children and aria-label alongside the include list', () => {
+    const args = { 'aria-label': 'A group', children: 'Text', variant: 'outlined' }
+    expect(serializeArgsLiteral(args, ['variant'])).toBe(
+      "{ variant: 'outlined', 'aria-label': 'A group', children: 'Text' }"
+    )
+  })
+
+  it('wraps long literals with one entry per line, quoting non-identifier keys', () => {
+    const args = {
+      variant: 'a-rather-long-variant-name',
+      color: 'another-long-color-token-name',
+      'aria-label': 'a descriptive label',
+    }
+    expect(serializeArgsLiteral(args, ['variant', 'color'])).toBe(
+      [
+        '{',
+        "  variant: 'a-rather-long-variant-name',",
+        "  color: 'another-long-color-token-name',",
+        "  'aria-label': 'a descriptive label',",
+        '}',
+      ].join('\n')
+    )
+  })
+
+  it('keeps an own __proto__ arg as a property rather than a prototype', () => {
+    const args = { ['__proto__']: 'x', size: 'md' }
+    const literal = serializeArgsLiteral(args, ['__proto__', 'size'])
+    expect(literal).toBe("{ ['__proto__']: 'x', size: 'md' }")
+    // eslint-disable-next-line no-new-func
+    const round = new Function(`return ${literal}`)() as object
+    expect(Object.hasOwn(round, '__proto__')).toBe(true)
+  })
+})

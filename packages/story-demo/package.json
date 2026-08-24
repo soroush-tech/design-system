@@ -1,0 +1,49 @@
+{
+  "name": "@soroush.tech/story-demo",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Renders CSF3 Storybook stories as interactive docs demos - live controls, editable code, TS/JS toggle, and CodeSandbox export.",
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*/index.ts"
+  },
+  "scripts": {
+    "lint": "oxlint --deny-warnings",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@storybook/react-vite": "^10.5.8",
+    "lz-string": "^1.5.0",
+    "react-live": "^4.1.8",
+    "storybook": "^10.5.8",
+    "sucrase": "^3.35.0"
+  },
+  "peerDependencies": {
+    "@soroush.tech/design-system": "workspace:^",
+    "@soroush.tech/hooks": "workspace:^",
+    "@soroush.tech/markdown": "workspace:^",
+    "react": "^19.2.8"
+  },
+  "devDependencies": {
+    "@soroush.tech/design-system": "workspace:*",
+    "@soroush.tech/eslint-config": "workspace:*",
+    "@soroush.tech/hooks": "workspace:*",
+    "@soroush.tech/markdown": "workspace:*",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.6",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "@vitest/coverage-v8": "^4.1.10",
+    "jsdom": "^29.1.1",
+    "oxlint": "^1.78.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "typescript": "~7.0.2",
+    "vitest": "^4.1.10"
+  }
+}
