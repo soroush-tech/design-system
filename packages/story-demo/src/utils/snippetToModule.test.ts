@@ -61,4 +61,11 @@ describe('snippetToModule', () => {
       '    <i />'
     )
   })
+
+  it('wraps a buffer whose only "export default" sits inside a string', () => {
+    const visible = 'const note = "export default"\n<p>{note}</p>'
+    const module_ = snippetToModule(visible, { importsText: '', helpersText: '' })
+    expect(module_).toContain('export default function Demo()')
+    expect(module_).toContain('<p>{note}</p>')
+  })
 })

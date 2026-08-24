@@ -51,6 +51,32 @@ interface Statement {
   text: string
 }
 
+/**
+ * Whether the line following a depth-0 newline opens a new top-level statement. Trailing
+ * whitespace at the end of the source counts, so the last statement closes there.
+ */
+const startsNewStatement = (source: string, mask: string, newlineIndex: number): boolean => {
+  const { length } = mask
+  let peek = newlineIndex + 1
+  while (peek < length && /\s/.test(mask[peek])) peek++
+  if (peek >= length) return true
+  const lineStart = mask.lastIndexOf('\n', peek - 1) + 1
+  return peek === lineStart && TOP_LEVEL_START.test(source.slice(peek, peek + 12))
+}
+
+/** The end of the statement beginning at `start`, scanning at bracket depth 0. */
+const findStatementEnd = (source: string, mask: string, start: number): number => {
+  const { length } = mask
+  let depth = 0
+  for (let index = start; index < length; index++) {
+    const char = mask[index]
+    if ('{(['.includes(char)) depth++
+    else if ('})]'.includes(char)) depth--
+    else if (char === '\n' && depth === 0 && startsNewStatement(source, mask, index)) return index
+  }
+  return length
+}
+
 const splitTopLevelStatements = (source: string, mask: string): Statement[] => {
   const statements: Statement[] = []
   const { length } = source
@@ -58,31 +84,8 @@ const splitTopLevelStatements = (source: string, mask: string): Statement[] => {
   while (index < length) {
     while (index < length && /\s/.test(mask[index])) index++
     if (index >= length) break
-    const start = index
-    let depth = 0
-    let end = length
-    while (index < length) {
-      const char = mask[index]
-      if ('{(['.includes(char)) {
-        depth++
-      } else if ('})]'.includes(char)) {
-        depth--
-      } else if (char === '\n' && depth === 0) {
-        let peek = index + 1
-        while (peek < length && /\s/.test(mask[peek])) peek++
-        if (peek >= length) {
-          end = index
-          break
-        }
-        const lineStart = mask.lastIndexOf('\n', peek - 1) + 1
-        if (peek === lineStart && TOP_LEVEL_START.test(source.slice(peek, peek + 12))) {
-          end = index
-          break
-        }
-      }
-      index++
-    }
-    statements.push({ start, end, text: source.slice(start, end).trimEnd() })
+    const end = findStatementEnd(source, mask, index)
+    statements.push({ start: index, end, text: source.slice(index, end).trimEnd() })
     index = end
   }
   return statements
@@ -97,14 +100,33 @@ const findMatching = (mask: string, openIndex: number, open: string, close: stri
   throw new Error(`Unbalanced \`${open}\` at index ${openIndex} in stories source.`)
 }
 
+/** The `{ a, b as c, type D }` specifiers of an import clause, `type` prefixes dropped. */
+const parseNamedBindings = (
+  clause: string,
+  braceStart: number
+): { imported: string; local: string }[] => {
+  const bindings: { imported: string; local: string }[] = []
+  const inner = clause.slice(braceStart + 1, clause.lastIndexOf('}'))
+  for (const part of inner.split(',')) {
+    const specifierText = part.replace(/^\s*type\s+/, '').trim()
+    if (specifierText === '') continue
+    const asMatch = /^([\w$]+)\s+as\s+([\w$]+)$/.exec(specifierText)
+    if (asMatch) bindings.push({ imported: asMatch[1], local: asMatch[2] })
+    else bindings.push({ imported: specifierText, local: specifierText })
+  }
+  return bindings
+}
+
 const parseImport = (text: string): ParsedImport => {
   const typeOnly = /^import\s+type\b/.test(text)
   const specifier =
     /from\s*['"]([^'"]+)['"]\s*;?$/.exec(text)?.[1] ?? /^import\s*['"]([^'"]+)['"]/.exec(text)?.[1]
   if (!specifier) throw new Error(`Could not read the import specifier of: ${text}`)
-  const fromIndex = text.lastIndexOf('from')
+  // Anchored on the trailing `from '...'` clause, not `lastIndexOf('from')` - a specifier
+  // such as './fromNow' contains the keyword and would truncate the binding clause.
+  const fromMatch = /\bfrom\s*['"][^'"]+['"]\s*;?$/.exec(text)
   const clause =
-    fromIndex === -1 ? '' : text.slice(0, fromIndex).replace(/^import\s+(type\s+)?/, '')
+    fromMatch === null ? '' : text.slice(0, fromMatch.index).replace(/^import\s+(type\s+)?/, '')
   const namedBindings: { imported: string; local: string }[] = []
   let defaultBinding: string | undefined
   let namespaceBinding: string | undefined
@@ -117,16 +139,7 @@ const parseImport = (text: string): ParsedImport => {
     .replaceAll(',', '')
     .trim()
   if (IDENTIFIER.test(headName)) defaultBinding = headName
-  if (braceStart !== -1) {
-    const inner = clause.slice(braceStart + 1, clause.indexOf('}'))
-    for (const part of inner.split(',')) {
-      const specifierText = part.replace(/^\s*type\s+/, '').trim()
-      if (specifierText === '') continue
-      const asMatch = /^([\w$]+)\s+as\s+([\w$]+)$/.exec(specifierText)
-      if (asMatch) namedBindings.push({ imported: asMatch[1], local: asMatch[2] })
-      else namedBindings.push({ imported: specifierText, local: specifierText })
-    }
-  }
+  if (braceStart !== -1) namedBindings.push(...parseNamedBindings(clause, braceStart))
   const bindings = [
     ...(defaultBinding ? [defaultBinding] : []),
     ...(namespaceBinding ? [namespaceBinding] : []),
@@ -174,6 +187,34 @@ interface ObjectProperty {
 
 const PROPERTY_KEY = /^([A-Za-z_$][\w$]*|'[^']*'|"[^"]*")\s*:/
 
+/** The property whose key starts at `index`; its value runs to `braceClose` until a
+ * qualifying comma trims it. */
+const readPropertyKey = (
+  source: string,
+  mask: string,
+  index: number,
+  braceClose: number
+): ObjectProperty => {
+  const keyMatch = PROPERTY_KEY.exec(mask.slice(index, braceClose))
+  if (!keyMatch) {
+    throw new Error(`Could not read a property key at index ${index} in stories source.`)
+  }
+  const rawKey = source.slice(index, index + keyMatch[1].length)
+  const name = /^['"]/.test(rawKey) ? rawKey.slice(1, -1) : rawKey
+  return { name, valueStart: index + keyMatch[0].length, valueEnd: braceClose }
+}
+
+/**
+ * Whether a depth-1 comma ends the current property value. It does so only when a
+ * property key (or the end of the object) follows - JSX text inside an unparenthesized
+ * render value may contain bare commas.
+ */
+const endsPropertyValue = (mask: string, commaIndex: number, braceClose: number): boolean => {
+  let peek = commaIndex + 1
+  while (peek < braceClose && /\s/.test(mask[peek])) peek++
+  return peek >= braceClose || PROPERTY_KEY.test(mask.slice(peek, braceClose))
+}
+
 /** The top-level properties of an object initializer, located via the mask. */
 const scanObjectProperties = (
   source: string,
@@ -182,49 +223,26 @@ const scanObjectProperties = (
   braceClose: number
 ): ObjectProperty[] => {
   const properties: ObjectProperty[] = []
-  let depth = 0
-  let expectKey = false
-  let index = braceOpen
+  // The scan starts just inside the object's own brace, so depth 1 is its property level
+  // and the first non-space character there is a key.
+  let depth = 1
+  let expectKey = true
+  let index = braceOpen + 1
   while (index <= braceClose) {
     const char = mask[index]
-    if ('{(['.includes(char)) {
-      depth++
-      if (char === '{' && depth === 1) expectKey = true
-      index++
+    if ('{(['.includes(char)) depth++
+    else if ('})]'.includes(char)) depth--
+    else if (depth === 1 && expectKey && !/\s/.test(char)) {
+      const property = readPropertyKey(source, mask, index, braceClose)
+      properties.push(property)
+      expectKey = false
+      index = property.valueStart
       continue
-    }
-    if ('})]'.includes(char)) {
-      depth--
-      index++
-      continue
-    }
-    if (depth === 1) {
-      if (expectKey && !/\s/.test(char)) {
-        const keyMatch = PROPERTY_KEY.exec(mask.slice(index, braceClose))
-        if (!keyMatch) {
-          throw new Error(`Could not read a property key at index ${index} in stories source.`)
-        }
-        const rawKey = source.slice(index, index + keyMatch[1].length)
-        const name = /^['"]/.test(rawKey) ? rawKey.slice(1, -1) : rawKey
-        const valueStart = index + keyMatch[0].length
-        properties.push({ name, valueStart, valueEnd: braceClose })
-        expectKey = false
-        index = valueStart
-        continue
-      }
-      if (char === ',') {
-        // A comma at depth 1 ends the value only when a property key (or the end of the
-        // object) follows - JSX text inside an unparenthesized render value may contain
-        // bare commas.
-        let peek = index + 1
-        while (peek < braceClose && /\s/.test(mask[peek])) peek++
-        if (peek >= braceClose || PROPERTY_KEY.test(mask.slice(peek, braceClose))) {
-          // A qualifying comma always follows a scanned property - the key branch above
-          // throws on anything that is not a key, so `properties` cannot be empty here.
-          properties[properties.length - 1].valueEnd = index
-          expectKey = true
-        }
-      }
+    } else if (depth === 1 && char === ',' && endsPropertyValue(mask, index, braceClose)) {
+      // A qualifying comma always follows a scanned property - readPropertyKey throws on
+      // anything that is not a key, so `properties` cannot be empty here.
+      properties.at(-1)!.valueEnd = index
+      expectKey = true
     }
     index++
   }
@@ -238,34 +256,41 @@ interface RenderValue {
   renderParamText?: string
 }
 
+interface RenderParam {
+  kind: RenderParamKind
+  text?: string
+  /** The index just past the parameter, where the `=>` search resumes. */
+  end: number
+}
+
+/** The render arrow's parameter: `(args)`, a destructuring `({ disabled })`, a bare
+ * `args`, or none at all. */
+const parseRenderParam = (
+  source: string,
+  mask: string,
+  start: number,
+  valueEnd: number
+): RenderParam => {
+  if (mask[start] === '(') {
+    const close = findMatching(mask, start, '(', ')')
+    const paramText = source.slice(start + 1, close).trim()
+    if (paramText === '') return { kind: 'none', end: close + 1 }
+    const paramName = paramText.split(':')[0].trim()
+    return IDENTIFIER.test(paramName)
+      ? { kind: 'args', text: paramName, end: close + 1 }
+      : { kind: 'pattern', text: paramText, end: close + 1 }
+  }
+  const bareParam = /^([A-Za-z_$][\w$]*)\s*=>/.exec(source.slice(start, valueEnd))
+  if (bareParam) return { kind: 'args', text: bareParam[1], end: start + bareParam[1].length }
+  return { kind: 'none', end: start }
+}
+
 const parseRenderValue = (source: string, mask: string, property: ObjectProperty): RenderValue => {
   let index = property.valueStart
   while (index < property.valueEnd && /\s/.test(mask[index])) index++
-  let renderParamKind: RenderParamKind = 'none'
-  let renderParamText: string | undefined
-  if (mask[index] === '(') {
-    const close = findMatching(mask, index, '(', ')')
-    const paramText = source.slice(index + 1, close).trim()
-    if (paramText !== '') {
-      renderParamText = paramText
-      const paramName = paramText.split(':')[0].trim()
-      if (IDENTIFIER.test(paramName)) {
-        renderParamKind = 'args'
-        renderParamText = paramName
-      } else {
-        renderParamKind = 'pattern'
-      }
-    }
-    index = close + 1
-  } else {
-    const bareParam = /^([A-Za-z_$][\w$]*)\s*=>/.exec(source.slice(index, property.valueEnd))
-    if (bareParam) {
-      renderParamKind = 'args'
-      renderParamText = bareParam[1]
-      index += bareParam[1].length
-    }
-  }
-  const arrow = source.indexOf('=>', index)
+  const param = parseRenderParam(source, mask, index, property.valueEnd)
+  const common = { renderParamKind: param.kind, renderParamText: param.text }
+  const arrow = source.indexOf('=>', param.end)
   if (arrow === -1 || arrow >= property.valueEnd) {
     throw new Error('Unsupported render value - expected an arrow function.')
   }
@@ -273,27 +298,16 @@ const parseRenderValue = (source: string, mask: string, property: ObjectProperty
   while (index < property.valueEnd && /\s/.test(mask[index])) index++
   if (mask[index] === '(') {
     const close = findMatching(mask, index, '(', ')')
-    return {
-      renderBody: dedent(source.slice(index + 1, close)),
-      isBlockBody: false,
-      renderParamKind,
-      renderParamText,
-    }
+    return { renderBody: dedent(source.slice(index + 1, close)), isBlockBody: false, ...common }
   }
   if (mask[index] === '{') {
     const close = findMatching(mask, index, '{', '}')
-    return {
-      renderBody: dedent(source.slice(index + 1, close)),
-      isBlockBody: true,
-      renderParamKind,
-      renderParamText,
-    }
+    return { renderBody: dedent(source.slice(index + 1, close)), isBlockBody: true, ...common }
   }
   return {
     renderBody: dedent(source.slice(index, property.valueEnd)).trim(),
     isBlockBody: false,
-    renderParamKind,
-    renderParamText,
+    ...common,
   }
 }
 

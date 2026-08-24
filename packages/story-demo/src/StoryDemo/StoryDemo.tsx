@@ -143,7 +143,9 @@ export function StoryDemo({
   // The preview's sections transpile one by one - joined they need not parse (an args
   // const flowing into bare JSX reads as a relational expression without a semicolon).
   const jsPreview = () => demoModule.previewParts.map((part) => tsToJs(part).trimEnd()).join('\n\n')
-  const generatedCode = isExpanded ? fullCode : language === 'js' ? jsPreview() : demoModule.preview
+  // Kept as a thunk so the collapsed transpile is skipped entirely while expanded.
+  const collapsedCode = () => (language === 'js' ? jsPreview() : demoModule.preview)
+  const generatedCode = isExpanded ? fullCode : collapsedCode()
   const currentCode = editedCode ?? generatedCode
 
   // Every regeneration - a control change, the language or expand toggle, reset -

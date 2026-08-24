@@ -15,13 +15,11 @@ describe('maskSource', () => {
     expect(maskSource("const f = () => { return 'x}' }")).toBe("const f = () => { return '  ' }")
   })
 
-  it('leaves apostrophes in JSX text alone', () => {
-    const source = "const a = <span>It's fine</span>"
-    expect(maskSource(source)).toBe(source)
-  })
-
-  it('does not treat a quote after a closing brace as a string start', () => {
-    const source = "const a = <span>{x}'s</span>"
+  it.each([
+    ['apostrophes in JSX text', "const a = <span>It's fine</span>"],
+    ['a quote after a closing brace', "const a = <span>{x}'s</span>"],
+    ['division', 'const a = b / c'],
+  ])('leaves %s untouched', (_label, source) => {
     expect(maskSource(source)).toBe(source)
   })
 
@@ -47,11 +45,6 @@ describe('maskSource', () => {
     expect(maskSource("const a = 'open {")).toBe("const a = '      ")
   })
 
-  it('leaves division untouched', () => {
-    const source = 'const a = b / c'
-    expect(maskSource(source)).toBe(source)
-  })
-
   it('blanks template contents including interpolated code', () => {
     expect(maskSource('const a = `x ${foo({ b: 1 })} y`')).toBe('const a = `                    `')
   })
@@ -75,6 +68,6 @@ describe('maskSource', () => {
   it('keeps brace depth intact across masked regions', () => {
     const source = "const s = { key: 'value } with brace', other: 1 }"
     const mask = maskSource(source)
-    expect(mask.split('{').length).toBe(mask.split('}').length)
+    expect(mask.split('{')).toHaveLength(mask.split('}').length)
   })
 })

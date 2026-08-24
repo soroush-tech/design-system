@@ -45,4 +45,20 @@ describe('buildSandboxProject', () => {
     expect(manifest.devDependencies.typescript).toBeUndefined()
     expect(manifest.devDependencies['@types/react']).toBeUndefined()
   })
+
+  it('slugifies a Storybook title into a valid npm package name', () => {
+    const nameFor = (title: string) =>
+      (
+        buildSandboxProject(title, SOURCE, { ...OPTIONS, language: 'js' })['package.json']
+          .content as { name: string }
+      ).name
+    expect(nameFor('Fixtures/Sample')).toBe('fixtures-sample-demo')
+    expect(nameFor('Button (outlined)')).toBe('button-outlined-demo')
+    expect(nameFor('Grid / Stack')).toBe('grid-stack-demo')
+    expect(nameFor('!!!')).toBe('story-demo')
+    // npm rejects a name carrying anything outside this set.
+    for (const title of ['Fixtures/Sample', 'Button (outlined)', 'Grid / Stack', '!!!']) {
+      expect(nameFor(title)).toMatch(/^[a-z0-9][a-z0-9-]*$/)
+    }
+  })
 })

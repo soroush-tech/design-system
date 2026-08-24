@@ -43,4 +43,35 @@ describe('prepareLiveCode', () => {
       'const a = 1\nconst b = 2\n\nrender(<Demo />)\n'
     )
   })
+
+  it('keeps a dynamic import expression and the code after it', () => {
+    const code = [
+      "import('./Widget')",
+      '',
+      'export default function Demo() {',
+      '  return <p />',
+      '}',
+    ].join('\n')
+    const live = prepareLiveCode(code)
+    expect(live).toContain("import('./Widget')")
+    expect(live).toContain('function Demo()')
+    expect(live).toContain('render(<Demo />)')
+  })
+
+  it('does not strip an import line inside a template literal', () => {
+    const code = [
+      "import { Code } from '@soroush.tech/design-system/Code'",
+      '',
+      'export default function Demo() {',
+      '  const sample = `',
+      "import { Button } from 'somewhere'",
+      '`',
+      '  return <Code>{sample}</Code>',
+      '}',
+    ].join('\n')
+    const live = prepareLiveCode(code)
+    expect(live).toContain("import { Button } from 'somewhere'")
+    expect(live).not.toContain('@soroush.tech/design-system/Code')
+    expect(live).toContain('render(<Demo />)')
+  })
 })

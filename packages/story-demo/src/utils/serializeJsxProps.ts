@@ -22,23 +22,35 @@ export const isSerializableArg = (value: unknown): boolean => {
   }
 }
 
+/**
+ * A single-quoted JS string literal. JSON.stringify does the escaping - line breaks and
+ * other control characters included, which a hand-rolled quote/backslash pass emits raw,
+ * producing an unterminated literal - then the quote style is swapped back to the house
+ * single quote.
+ */
+const singleQuoted = (value: string): string =>
+  `'${JSON.stringify(value)
+    .slice(1, -1)
+    .replaceAll(String.raw`\"`, '"')
+    .replaceAll("'", String.raw`\'`)}'`
+
 /** A JS source literal for a serializable value - single-quoted strings, plain objects. */
 export const jsLiteral = (value: unknown): string => {
   if (value === null) return 'null'
-  if (typeof value === 'string') {
-    return `'${value.replaceAll('\\', '\\\\').replaceAll("'", "\\'")}'`
-  }
+  if (typeof value === 'string') return singleQuoted(value)
   if (Array.isArray(value)) return `[${value.map(jsLiteral).join(', ')}]`
   if (typeof value === 'object') {
     const entries = Object.entries(value)
       .filter(([, entryValue]) => entryValue !== undefined)
       .map(([key, entryValue]) => {
-        const keyText = IDENTIFIER.test(key) ? key : `'${key}'`
+        const keyText = IDENTIFIER.test(key) ? key : singleQuoted(key)
         return `${keyText}: ${jsLiteral(entryValue)}`
       })
     return entries.length === 0 ? '{}' : `{ ${entries.join(', ')} }`
   }
-  return String(value)
+  // Numbers and booleans are all that isSerializableArg admits past the guards above,
+  // so this never reaches Object's default stringification.
+  return String(value as number | boolean)
 }
 
 /**
@@ -62,11 +74,34 @@ const presentableKeys = (
   return keys
 }
 
+/**
+ * Strings that survive a double-quoted JSX attribute byte for byte. A quote closes the
+ * attribute, an ampersand may be read as a character reference, and a control character
+ * (a line break above all) cannot be written raw - each of those goes in an expression
+ * container instead, where it is an ordinary JS literal.
+ */
+const JSX_ATTRIBUTE_SAFE = /^[^"&\p{Cc}]*$/u
+
+/**
+ * Strings that survive as JSX text. On top of the attribute cases, angle brackets open a
+ * tag and braces open an expression, so text carrying either is quoted instead.
+ */
+const JSX_TEXT_SAFE = /^[^<>{}&\p{Cc}]*$/u
+
 const jsxAttribute = (key: string, value: unknown): string => {
   if (value === true) return key
-  if (typeof value === 'string') return `${key}="${value.replaceAll('"', '&quot;')}"`
+  if (typeof value === 'string') {
+    return JSX_ATTRIBUTE_SAFE.test(value) ? `${key}="${value}"` : `${key}={${jsLiteral(value)}}`
+  }
   if (typeof value === 'number' || typeof value === 'boolean') return `${key}={${String(value)}}`
   return `${key}={${jsLiteral(value)}}`
+}
+
+/** The text child for an args value, quoted into an expression container when it must be. */
+const jsxChild = (children: unknown): string | undefined => {
+  if (typeof children === 'number') return String(children)
+  if (typeof children !== 'string') return undefined
+  return JSX_TEXT_SAFE.test(children) ? children : `{${jsLiteral(children)}}`
 }
 
 /**
@@ -81,9 +116,7 @@ export const serializeJsxProps = (
 ): string => {
   const keys = presentableKeys(args, include, ['aria-label'])
   const attributes = keys.map((key) => jsxAttribute(key, args[key]))
-  const children = args.children
-  const childText =
-    typeof children === 'string' || typeof children === 'number' ? String(children) : undefined
+  const childText = jsxChild(args.children)
   const attributeText = attributes.length > 0 ? ` ${attributes.join(' ')}` : ''
   const singleLine =
     childText === undefined
@@ -111,7 +144,7 @@ export const serializeArgsLiteral = (
   if (singleLine.length <= MAX_SINGLE_LINE) return singleLine
   const entryLines = keys
     .map((key) => {
-      const keyText = IDENTIFIER.test(key) ? key : `'${key}'`
+      const keyText = IDENTIFIER.test(key) ? key : jsLiteral(key)
       return `  ${keyText}: ${jsLiteral(args[key])},`
     })
     .join('\n')

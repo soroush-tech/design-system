@@ -2,7 +2,7 @@
 export const dedent = (text: string): string => {
   const lines = text.split('\n')
   while (lines.length > 0 && lines[0].trim() === '') lines.shift()
-  while (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop()
+  while (lines.length > 0 && lines.at(-1)!.trim() === '') lines.pop()
   const indents = lines
     .filter((line) => line.trim() !== '')
     .map((line) => /^\s*/.exec(line)![0].length)

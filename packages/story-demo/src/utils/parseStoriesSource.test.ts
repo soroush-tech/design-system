@@ -207,4 +207,22 @@ describe('parseStoriesSource', () => {
     const module = 'const meta: Meta<typeof I> = { component: I }\r\nexport const S: Story = {}\r\n'
     expect([...parseStoriesSource(module).stories.keys()]).toEqual(['S'])
   })
+
+  it('reads the default binding when the specifier itself contains "from"', () => {
+    const source = [
+      "import Sample from './fromNow'",
+      '',
+      'const meta: Meta<typeof Sample> = {',
+      "  title: 'Fixtures/Sample',",
+      '  component: Sample,',
+      '}',
+      'export default meta',
+      '',
+      'export const Default: StoryObj<typeof Sample> = { args: {} }',
+    ].join('\n')
+    const module_ = parseStoriesSource(source)
+    expect(module_.imports[0].specifier).toBe('./fromNow')
+    expect(module_.imports[0].defaultBinding).toBe('Sample')
+    expect(module_.imports[0].bindings).toEqual(['Sample'])
+  })
 })

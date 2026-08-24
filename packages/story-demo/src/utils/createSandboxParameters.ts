@@ -11,4 +11,6 @@ export const createSandboxParameters = (files: SandboxFiles): string =>
     .compressToBase64(JSON.stringify({ files }))
     .replaceAll('+', '-')
     .replaceAll('/', '_')
-    .replace(/=+$/, '')
+    // Bounded rather than `=+$`: base64 padding is never longer than two characters,
+    // and an unbounded trailing repeat backtracks on a long run of '='.
+    .replace(/={0,2}$/, '')

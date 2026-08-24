@@ -90,12 +90,15 @@ export function ArgControl({ control, value, disabled, onChange }: Readonly<ArgC
       </Flex>
     )
   }
+  // Text and number controls carry a primitive, so the cast keeps this off Object's
+  // default stringification.
+  const textValue = value === undefined ? '' : String(value as string | number)
   return (
     <Flex flexDirection="column" gap={1}>
       {label}
       <TextInput
         type={kind === 'number' ? 'number' : 'text'}
-        value={value === undefined ? '' : String(value)}
+        value={textValue}
         placeholder={defaultValue}
         disabled={disabled}
         inputProps={{ 'aria-label': name, min, max, step }}

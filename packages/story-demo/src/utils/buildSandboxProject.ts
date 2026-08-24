@@ -44,6 +44,17 @@ const TSCONFIG = {
 }
 
 /**
+ * An npm-safe slug for a Storybook title: `Fixtures/Sample` becomes `fixtures-sample`
+ * and `Button (outlined)` becomes `button-outlined`. npm rejects a name carrying a
+ * slash, a space, or parentheses, and the sandbox refuses the project with one.
+ */
+const slugifyTitle = (title: string): string =>
+  title
+    .toLowerCase()
+    .replaceAll(/[^a-z0-9]+/g, '-')
+    .replaceAll(/^-+|-+$/g, '') || 'story'
+
+/**
  * A complete, self-contained React project for the sandbox define API: the demo's
  * source as src/Demo.tsx (or .jsx), an entry that mounts it under the base theme, and a
  * package.json whose dependencies are inferred from the demo's imports. In js mode the
@@ -66,7 +77,7 @@ export const buildSandboxProject = (
   return {
     'package.json': {
       content: {
-        name: `${title.toLowerCase().replaceAll(' ', '-')}-demo`,
+        name: `${slugifyTitle(title)}-demo`,
         private: true,
         main: `src/index.${extension}`,
         dependencies: {

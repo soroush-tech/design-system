@@ -223,4 +223,27 @@ describe('buildDemoModule', () => {
       )
     )
   })
+
+  it('maps a directory-relative import to the package root', () => {
+    // The repo's own barrel idiom: `from '.'` rather than `from './Sample'`.
+    const demoImporting = (original: string, specifier: string, storyName: string) =>
+      buildDemoModule({
+        parsed: parseStoriesSource(sampleRaw.replace(`from '${original}'`, `from '${specifier}'`)),
+        storyName,
+        args: { children: 'Sample' },
+        include: ['children'],
+        packageName: PKG,
+      }).full
+
+    for (const specifier of ['.', '..']) {
+      expect(demoImporting('./Sample', specifier, 'Default')).toContain(
+        `import { Sample } from '${PKG}'`
+      )
+    }
+    // './' strips to an empty subpath - a separate guard from the dot-only case.
+    const sizes = demoImporting('./Stack', './', 'Sizes')
+    expect(sizes).toContain(`import { Stack } from '${PKG}'`)
+    expect(sizes).not.toContain(`${PKG}/'`)
+    expect(sizes).not.toContain(`${PKG}/.`)
+  })
 })

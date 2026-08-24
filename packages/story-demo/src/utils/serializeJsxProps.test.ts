@@ -36,6 +36,19 @@ describe('jsLiteral', () => {
     expect(jsLiteral({})).toBe('{}')
     expect(jsLiteral(true)).toBe('true')
   })
+
+  it('escapes control characters instead of emitting them raw', () => {
+    expect(jsLiteral('a\nb')).toBe("'a\\nb'")
+    expect(jsLiteral('a\tb\r')).toBe("'a\\tb\\r'")
+    expect(jsLiteral({ 'a\nb': 1 })).toBe("{ 'a\\nb': 1 }")
+  })
+
+  it('produces literals that actually parse', () => {
+    for (const value of ['a\nb', "it's", 'back\\slash', 'say "hi"', 'mixed \\" and \n']) {
+      // eslint-disable-next-line no-new-func
+      expect(new Function(`return ${jsLiteral(value)}`)()).toBe(value)
+    }
+  })
 })
 
 describe('serializeJsxProps', () => {
@@ -49,7 +62,7 @@ describe('serializeJsxProps', () => {
   it('formats booleans, numbers, objects, and escaped strings', () => {
     const args = { on: true, off: false, gap: 2, sx: { m: 1 }, title: 'say "hi"' }
     expect(serializeJsxProps('Box', args, ['on', 'off', 'gap', 'sx', 'title'])).toBe(
-      '<Box on off={false} gap={2} sx={{ m: 1 }} title="say &quot;hi&quot;" />'
+      '<Box on off={false} gap={2} sx={{ m: 1 }} title={\'say "hi"\'} />'
     )
   })
 
@@ -99,6 +112,29 @@ describe('serializeJsxProps', () => {
         '</Button>',
       ].join('\n')
     )
+  })
+
+  it('quotes attributes and children that JSX would mangle', () => {
+    expect(serializeJsxProps('Button', { children: '2 < 3' }, [])).toBe(
+      "<Button>{'2 < 3'}</Button>"
+    )
+    expect(serializeJsxProps('Button', { children: 'a & b' }, [])).toBe(
+      "<Button>{'a & b'}</Button>"
+    )
+    expect(serializeJsxProps('Button', { children: '{x}' }, [])).toBe("<Button>{'{x}'}</Button>")
+    expect(serializeJsxProps('Button', { label: 'a\nb' }, ['label'])).toBe(
+      "<Button label={'a\\nb'} />"
+    )
+    expect(serializeJsxProps('Button', { label: 'a & b' }, ['label'])).toBe(
+      "<Button label={'a & b'} />"
+    )
+  })
+
+  it('keeps plain text and plain attributes unquoted', () => {
+    expect(serializeJsxProps('Button', { children: 'Go', size: 'md' }, ['children', 'size'])).toBe(
+      '<Button size="md">Go</Button>'
+    )
+    expect(serializeJsxProps('Button', { children: 7 }, [])).toBe('<Button>7</Button>')
   })
 })
 

@@ -16,7 +16,10 @@ reviews:
   path_instructions:
     - path: 'packages/**'
       instructions: >-
-        Scoped @soroush.tech/* package. Require 100% coverage and a co-located *.test.ts
-        per source file. Publishable (non-private) packages must ship a LICENSE.
+        Scoped @soroush.tech/* package. Require 100% coverage, measured by the package's
+        own vitest run - not by the presence of any particular file. Tests are co-located
+        and named *.test.ts or *.test.tsx (.tsx for anything rendering JSX). Barrels,
+        type-only modules, and __fixtures__ are covered through their consumers and need
+        no test of their own. Publishable (non-private) packages must ship a LICENSE.
 chat:
   auto_reply: true

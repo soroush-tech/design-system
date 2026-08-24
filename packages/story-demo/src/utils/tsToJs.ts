@@ -20,4 +20,5 @@ export const tsToJs = (code: string): string =>
     })
     .join('\n')
     .replaceAll(/\n{3,}/g, '\n\n')
-    .replace(/\n*$/, '\n')
+    // trimEnd rather than `/\n*$/`, which backtracks on a long run of blank lines.
+    .trimEnd() + '\n'
