@@ -106,3 +106,5 @@ Before returning an edit, verify the edited draft against this list:
 2. Identify the core point and 3-5 voice signals to preserve, such as vocabulary, cadence, bluntness, humor, uncertainty, or digressions. Keep this note internal. If you cannot identify the core point, ask the user.
 3. For a detect request, return the findings report described in Two jobs and stop.
 4. For an edit, make the minimum effective changes, then run the Final checks on the edited draft yourself.
+5. If any check fails, fix the draft and run the checks again.
+6. Output the full edited draft and a short **What changed** section.

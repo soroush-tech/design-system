@@ -70,4 +70,25 @@ describe('maskSource', () => {
     const mask = maskSource(source)
     expect(mask.split('{')).toHaveLength(mask.split('}').length)
   })
+
+  it.each([
+    ['a brace inside a regex literal', 'const p = /}/', 'const p = / /'],
+    ['a slash inside a character class', 'const p = /[/]}/', 'const p = /    /'],
+    ['an escaped slash', 'const p = /a\\/b/', 'const p = /    /'],
+    ['comment-like text inside a regex', 'const p = /a**b/', 'const p = /    /'],
+  ])('masks %s', (_label, source, expected) => {
+    expect(maskSource(source)).toBe(expected)
+  })
+
+  it.each([
+    ['a regex that never closes before the line ends', 'const p = / + b\nconst q = 1'],
+    ['a regex that never closes before the source ends', 'const p = / + b'],
+  ])('treats %s as division', (_label, source) => {
+    expect(maskSource(source)).toBe(source)
+  })
+
+  it('keeps brace depth intact across a regex literal', () => {
+    const mask = maskSource('const s = { pattern: /}/, other: 1 }')
+    expect(mask.split('{')).toHaveLength(mask.split('}').length)
+  })
 })

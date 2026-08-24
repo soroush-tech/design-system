@@ -52,7 +52,9 @@ const slugifyTitle = (title: string): string =>
   title
     .toLowerCase()
     .replaceAll(/[^a-z0-9]+/g, '-')
-    .replaceAll(/^-+|-+$/g, '') || 'story'
+    // A single `-` on each edge: the collapse above leaves no two hyphens adjacent, so
+    // `-+` would be an unbounded repeat that can never match more than one character.
+    .replaceAll(/^-|-$/g, '') || 'story'
 
 /**
  * A complete, self-contained React project for the sandbox define API: the demo's

@@ -225,4 +225,18 @@ describe('parseStoriesSource', () => {
     expect(module_.imports[0].defaultBinding).toBe('Sample')
     expect(module_.imports[0].bindings).toEqual(['Sample'])
   })
+
+  it('finds the render arrow past a comment that looks like one', () => {
+    const source = sampleRaw.replace('render: (args) =>', 'render: (args) /* => */ =>')
+    const story = parseStoriesSource(source).stories.get('Grouped')!
+    expect(story.renderBody).toBe('<Sample {...args}>{items}</Sample>')
+    expect(story.renderParamKind).toBe('args')
+  })
+
+  it('parses a module whose top-level helper holds a regex literal', () => {
+    const source = sampleRaw.replace('const items = ', 'const brace = /}/\nconst items = ')
+    const parsed = parseStoriesSource(source)
+    expect(parsed.componentName).toBe('Sample')
+    expect([...parsed.stories.keys()]).toContain('Grouped')
+  })
 })

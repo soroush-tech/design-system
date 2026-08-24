@@ -162,4 +162,13 @@ describe('serializeArgsLiteral', () => {
       ].join('\n')
     )
   })
+
+  it('keeps an own __proto__ arg as a property rather than a prototype', () => {
+    const args = { ['__proto__']: 'x', size: 'md' }
+    const literal = serializeArgsLiteral(args, ['__proto__', 'size'])
+    expect(literal).toBe("{ ['__proto__']: 'x', size: 'md' }")
+    // eslint-disable-next-line no-new-func
+    const round = new Function(`return ${literal}`)() as object
+    expect(Object.hasOwn(round, '__proto__')).toBe(true)
+  })
 })

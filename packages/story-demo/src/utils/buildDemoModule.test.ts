@@ -246,4 +246,18 @@ describe('buildDemoModule', () => {
     expect(sizes).not.toContain(`${PKG}/'`)
     expect(sizes).not.toContain(`${PKG}/.`)
   })
+
+  it('keeps an import whose binding starts with a regex metacharacter', () => {
+    // `$Stack` reads as an end anchor plus `Stack` unless the name is escaped, which
+    // drops the import while the demo body still references it.
+    const source = sampleRaw.replaceAll(/\bStack\b/g, '$Stack')
+    const demo = buildDemoModule({
+      parsed: parseStoriesSource(source),
+      storyName: 'Sizes',
+      args: {},
+      packageName: PKG,
+    })
+    expect(demo.full).toContain('$Stack')
+    expect(demo.importsText).toContain('$Stack')
+  })
 })

@@ -39,8 +39,11 @@ export const prepareLiveCode = (code: string): string => {
     kept.push(lines[index])
   }
   const withoutImports = kept.join('\n')
+  // `[ \t]` rather than `\s`, which spans newlines: under /m a leading `\s*` can restart
+  // at every line and rescan what it already covered.
   const componentName =
-    /^\s*export\s+default\s+function\s+([A-Za-z_$][\w$]*)/m.exec(withoutImports)?.[1] ?? 'Demo'
+    /^[ \t]*export[ \t]+default[ \t]+function[ \t]+([A-Za-z_$][\w$]*)/m.exec(withoutImports)?.[1] ??
+    'Demo'
   const unwrapped = withoutImports
     .replace(/^export\s+default\s+/m, '')
     .replaceAll(/^export\s+(?=const|let|var|function|class)/gm, '')

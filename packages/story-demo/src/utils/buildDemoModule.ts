@@ -49,8 +49,11 @@ const rewriteSpecifier = (specifier: string, packageName: string): string => {
 }
 
 const referencesName = (name: string, texts: readonly string[]): boolean => {
+  // Escaped first: a binding may legally contain a regex metacharacter, and an
+  // unescaped `$Button` reads as an end anchor followed by `Button`, matching nothing.
+  const escaped = name.replaceAll(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`)
   // `-` counts as a word character so `label` never matches inside `aria-label`.
-  const usage = new RegExp(String.raw`(?<![\w$-])${name}(?![\w$-])`)
+  const usage = new RegExp(String.raw`(?<![\w$-])${escaped}(?![\w$-])`)
   return texts.some((text) => usage.test(text))
 }
 

@@ -290,7 +290,9 @@ const parseRenderValue = (source: string, mask: string, property: ObjectProperty
   while (index < property.valueEnd && /\s/.test(mask[index])) index++
   const param = parseRenderParam(source, mask, index, property.valueEnd)
   const common = { renderParamKind: param.kind, renderParamText: param.text }
-  const arrow = source.indexOf('=>', param.end)
+  // Searched in the mask, not the source: a comment such as `(args) /* => */ => ...`
+  // would otherwise supply the arrow and the body would start at `*/`.
+  const arrow = mask.indexOf('=>', param.end)
   if (arrow === -1 || arrow >= property.valueEnd) {
     throw new Error('Unsupported render value - expected an arrow function.')
   }

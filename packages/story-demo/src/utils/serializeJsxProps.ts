@@ -28,11 +28,25 @@ export const isSerializableArg = (value: unknown): boolean => {
  * producing an unterminated literal - then the quote style is swapped back to the house
  * single quote.
  */
-const singleQuoted = (value: string): string =>
-  `'${JSON.stringify(value)
+const ESCAPED_DOUBLE_QUOTE = String.raw`\"`
+const ESCAPED_SINGLE_QUOTE = String.raw`\'`
+
+const singleQuoted = (value: string): string => {
+  const escaped = JSON.stringify(value)
     .slice(1, -1)
-    .replaceAll(String.raw`\"`, '"')
-    .replaceAll("'", String.raw`\'`)}'`
+    .replaceAll(ESCAPED_DOUBLE_QUOTE, '"')
+    .replaceAll("'", ESCAPED_SINGLE_QUOTE)
+  return `'${escaped}'`
+}
+
+/**
+ * An object-literal key. `__proto__` gets the computed form: written bare it sets the
+ * new object's prototype instead of adding a property of that name.
+ */
+const objectKeyText = (key: string): string => {
+  if (key === '__proto__') return `[${singleQuoted(key)}]`
+  return IDENTIFIER.test(key) ? key : singleQuoted(key)
+}
 
 /** A JS source literal for a serializable value - single-quoted strings, plain objects. */
 export const jsLiteral = (value: unknown): string => {
@@ -42,10 +56,7 @@ export const jsLiteral = (value: unknown): string => {
   if (typeof value === 'object') {
     const entries = Object.entries(value)
       .filter(([, entryValue]) => entryValue !== undefined)
-      .map(([key, entryValue]) => {
-        const keyText = IDENTIFIER.test(key) ? key : singleQuoted(key)
-        return `${keyText}: ${jsLiteral(entryValue)}`
-      })
+      .map(([key, entryValue]) => `${objectKeyText(key)}: ${jsLiteral(entryValue)}`)
     return entries.length === 0 ? '{}' : `{ ${entries.join(', ')} }`
   }
   // Numbers and booleans are all that isSerializableArg admits past the guards above,
@@ -138,15 +149,14 @@ export const serializeArgsLiteral = (
   include: readonly string[]
 ): string => {
   const keys = presentableKeys(args, include, ['aria-label', 'children'])
-  const literal: Record<string, unknown> = {}
+  // Null-prototype: assigning `__proto__` on a plain object replaces the prototype and
+  // the key is lost before jsLiteral ever sees it.
+  const literal: Record<string, unknown> = Object.create(null)
   for (const key of keys) literal[key] = args[key]
   const singleLine = jsLiteral(literal)
   if (singleLine.length <= MAX_SINGLE_LINE) return singleLine
   const entryLines = keys
-    .map((key) => {
-      const keyText = IDENTIFIER.test(key) ? key : jsLiteral(key)
-      return `  ${keyText}: ${jsLiteral(args[key])},`
-    })
+    .map((key) => `  ${objectKeyText(key)}: ${jsLiteral(args[key])},`)
     .join('\n')
   return `{\n${entryLines}\n}`
 }

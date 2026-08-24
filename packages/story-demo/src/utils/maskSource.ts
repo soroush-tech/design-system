@@ -134,12 +134,45 @@ const scanCodeChar = (scanner: Scanner, mode: CodeMode, index: number): number =
   return index + 1
 }
 
+/**
+ * A regex literal, blanked like a string so a `}` or `/*` inside it cannot move the
+ * brace depth or open a comment. A literal never spans a line, so running past one (or
+ * past the end) means the `/` was division after all - undefined tells the caller to
+ * treat it as ordinary code, and nothing has been blanked yet.
+ */
+const scanRegex = (scanner: Scanner, index: number): number | undefined => {
+  const { source, blank } = scanner
+  let inClass = false
+  let cursor = index + 1
+  while (cursor < source.length && source[cursor] !== '\n') {
+    const char = source[cursor]
+    if (char === '\\') {
+      cursor += 2
+      continue
+    }
+    if (char === '[') inClass = true
+    else if (char === ']') inClass = false
+    else if (char === '/' && !inClass) {
+      for (let at = index + 1; at < cursor; at++) blank(at)
+      return cursor + 1
+    }
+    cursor++
+  }
+  return undefined
+}
+
 /** Code outside a template: picks the construct starting at `index` and consumes it. */
 const scanCode = (scanner: Scanner, mode: CodeMode, index: number): number => {
   const { source, stack, blank } = scanner
   const char = source[index]
   const next = source[index + 1]
   if (char === '/' && (next === '/' || next === '*')) return scanComment(scanner, index)
+  // The same lookbehind that decides a string decides a regex: at a value position a `/`
+  // opens a literal, after an operand it is division.
+  if (char === '/' && isStringStart(source, index)) {
+    const end = scanRegex(scanner, index)
+    if (end !== undefined) return end
+  }
   if ((char === "'" || char === '"') && isStringStart(source, index)) {
     return scanString(scanner, index, mode.isMasked)
   }

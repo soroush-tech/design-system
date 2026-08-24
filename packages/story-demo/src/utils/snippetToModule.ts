@@ -18,7 +18,7 @@ export const snippetToModule = (visible: string, context: SnippetContext): strin
   // Matched on the masked copy and anchored to a line start: "export default" inside a
   // string literal is not a declaration, and passing that buffer through unwrapped would
   // leave the evaluated code with no Demo component.
-  if (/^\s*export\s+default\b/m.test(maskSource(visible))) return visible
+  if (/^[ \t]*export[ \t]+default\b/m.test(maskSource(visible))) return visible
   const normalized = visible.replaceAll('\r\n', '\n')
   const lines = normalized.split('\n')
   const jsxStart = lines.findIndex((line) => line.startsWith('<'))
