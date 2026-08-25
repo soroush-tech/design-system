@@ -22,6 +22,29 @@ npm i @soroush.tech/design-system
 
 ---
 
+## Use it with AI tools
+
+An MCP server serves this library's component inventory, every component's props
+reference, and the live token contract, so an AI assistant writes against the real API
+instead of guessing:
+
+```sh
+claude mcp add --transport http soroush https://mcp.soroush.design/mcp
+```
+
+It also runs locally over stdio (`npx -y @soroush.tech/mcp`). Claude Code users can
+install the plugin instead, which adds a house-style skill and a UI review agent on top
+of the same server:
+
+```sh
+claude plugin marketplace add soroush-tech/design-system
+```
+
+Any other tool can read [docs.soroush.design/llms.txt](https://docs.soroush.design/llms.txt).
+See [`@soroush.tech/mcp`](../mcp) for the full tool list.
+
+---
+
 ## Importing
 
 Import components by subpath, styling primitives from the barrel:

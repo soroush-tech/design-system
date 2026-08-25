@@ -20,6 +20,7 @@ coverage:
           - hooks
           - lab
           - markdown
+          - mcp
           - story-demo
           - styled-system
           # gen:codecov-patch-flags end
@@ -52,6 +53,9 @@ flag_management:
     - name: markdown
       paths:
         - packages/markdown/
+    - name: mcp
+      paths:
+        - packages/mcp/
     - name: story-demo
       paths:
         - packages/story-demo/
@@ -97,6 +101,10 @@ component_management:
       name: markdown
       paths:
         - packages/markdown/**
+    - component_id: mcp
+      name: mcp
+      paths:
+        - packages/mcp/**
     - component_id: story-demo
       name: story-demo
       paths:

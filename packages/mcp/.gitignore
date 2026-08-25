@@ -1,0 +1,5 @@
+# The content bundle is regenerated from repo sources on every build, so it is never
+# committed - that is what makes drift impossible.
+src/generated/
+dist-worker/
+.wrangler/

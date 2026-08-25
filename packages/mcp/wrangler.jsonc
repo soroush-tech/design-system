@@ -1,0 +1,18 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "soroush-mcp",
+  "main": "src/worker.ts",
+  "compatibility_date": "2026-08-01",
+  "compatibility_flags": ["nodejs_compat"],
+  // Serves the MCP endpoint at https://mcp.soroush.design/mcp. Wrangler provisions the
+  // DNS record on first deploy; the zone already hosts docs.soroush.design.
+  "routes": [
+    {
+      "pattern": "mcp.soroush.design",
+      "custom_domain": true,
+    },
+  ],
+  "observability": {
+    "enabled": true,
+  },
+}

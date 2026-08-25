@@ -1,0 +1,26 @@
+{
+  "name": "soroush-tech",
+  "owner": {
+    "name": "Masoud Soroush",
+    "url": "https://soroush.tech"
+  },
+  "metadata": {
+    "description": "Plugins for the @soroush.tech design system.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "soroush-design-system",
+      "source": "./plugins/soroush-design-system",
+      "description": "Build UI with @soroush.tech/design-system: a house-style skill, a UI review agent, and the MCP server that serves every component README and the token contract.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Masoud Soroush",
+        "url": "https://soroush.tech"
+      },
+      "homepage": "https://docs.soroush.design",
+      "license": "MIT",
+      "keywords": ["design-system", "react", "emotion", "ui", "mcp"]
+    }
+  ]
+}
