@@ -71,7 +71,7 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 - **Test placement:** Co-located next to source. Unit → `*.test.ts(x)` (vitest). Integration → `*.spec.ts(x)` (vitest). Real-browser tier → `*.browser.test.ts(x)` (vitest + Chromium, only for what jsdom can't run).
 - **Lint:** `pnpm lint` runs `oxlint --deny-warnings` - any warning fails. Formatting is not
   linted; `oxfmt` owns it, via `pnpm format` and the `format:check` gate in CI.
-- **Packages:** Everything under `packages/` is a scoped `@soroush.tech/*` workspace package - read `packages/packages.md` first. Every package must have **100% test coverage**, and any publishable (non-`private`) package must declare a license and ship a `LICENSE` file.
+- **Packages:** Everything under `packages/` is a scoped `@soroush.tech/*` workspace package. `packages/packages.md` is the **standard** for packages - read it first, and follow it when creating or changing any package (structure, exports, publishing, registration chores). Every package must have **100% test coverage**, and any publishable (non-`private`) package must declare a license and ship a `LICENSE` file.
 - **Issue artifacts:** Any epic, task, RFC, bug report, user story, feature request, or documentation-feedback item you draft - whether as a `docs/` file or for GitHub - must follow the matching template in `.github/ISSUE_TEMPLATE/` (`4.epic.yml`, `6.task.yml`, `3.rfc.yml`, `1.bug_report.yml`, `5.user_story.yml`, `2.feature_request.yml`, `7.documentation_feedback.yml`). Use that template's exact section headings, order, and title prefix (e.g. `[Epic]`, `[Task]`). Read the template before drafting.
 
 ## Layer conventions
@@ -84,6 +84,8 @@ Read the relevant doc before working in that area:
 | Markdown package      | `packages/markdown/markdown.md`           | Companion component library - **follows design-system.md verbatim** + packages.md; theme-slot augmentation, lazy mermaid |
 | Theming/customization | `packages/design-system/docs/`            | `theming.md` (createTheme, defaults, augmentation) · `customization.md` (`theme.components`)                             |
 | Packages              | `packages/packages.md`                    | Workspace packages: structure, default-export, tsdown + `publishConfig` publishing, 100% coverage, licensing             |
+| Docs app              | `apps/docs/docs-app.md`                   | The docs.soroush.design Vike SSG app: content pipeline, demos, versioned sections, e2e-only pages                        |
+| AI surface            | `packages/mcp/mcp.md`                     | The MCP server, llms.txt, and the Claude Code plugin: what they serve, and the generated files that must not drift       |
 
 ## Quick checklist before pushing
 

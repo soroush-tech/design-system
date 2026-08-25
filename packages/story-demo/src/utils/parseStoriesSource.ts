@@ -183,19 +183,30 @@ interface ObjectProperty {
   name: string
   valueStart: number
   valueEnd: number
+  /** Set on a `...Story` entry - the identifier it spreads from. */
+  spreadFrom?: string
 }
 
 const PROPERTY_KEY = /^([A-Za-z_$][\w$]*|'[^']*'|"[^"]*")\s*:/
+// CSF composes a story from a sibling: `{ ...WithPanel, args: { ... } }`. The scanned
+// slice stops before the closing brace, so a trailing spread ends at the string's end.
+const SPREAD_ENTRY = /^\.\.\.\s*([A-Za-z_$][\w$]*)\s*(?=[,}]|$)/
 
 /** The property whose key starts at `index`; its value runs to `braceClose` until a
- * qualifying comma trims it. */
+ * qualifying comma trims it. A `...Story` entry carries no value of its own. */
 const readPropertyKey = (
   source: string,
   mask: string,
   index: number,
   braceClose: number
 ): ObjectProperty => {
-  const keyMatch = PROPERTY_KEY.exec(mask.slice(index, braceClose))
+  const rest = mask.slice(index, braceClose)
+  const spreadMatch = SPREAD_ENTRY.exec(rest)
+  if (spreadMatch) {
+    const valueStart = index + spreadMatch[0].length
+    return { name: '...', spreadFrom: spreadMatch[1], valueStart, valueEnd: valueStart }
+  }
+  const keyMatch = PROPERTY_KEY.exec(rest)
   if (!keyMatch) {
     throw new Error(`Could not read a property key at index ${index} in stories source.`)
   }
@@ -212,7 +223,9 @@ const readPropertyKey = (
 const endsPropertyValue = (mask: string, commaIndex: number, braceClose: number): boolean => {
   let peek = commaIndex + 1
   while (peek < braceClose && /\s/.test(mask[peek])) peek++
-  return peek >= braceClose || PROPERTY_KEY.test(mask.slice(peek, braceClose))
+  if (peek >= braceClose) return true
+  const rest = mask.slice(peek, braceClose)
+  return PROPERTY_KEY.test(rest) || SPREAD_ENTRY.test(rest)
 }
 
 /** The top-level properties of an object initializer, located via the mask. */
@@ -317,21 +330,31 @@ const parseStory = (
   source: string,
   mask: string,
   statement: Statement,
-  name: string
+  name: string,
+  /** Stories already parsed in this module - what a `...Story` spread can name. */
+  parsed: Map<string, ParsedStory>
 ): ParsedStory => {
   const braceOpen = mask.indexOf('{', mask.indexOf('=', statement.start))
   const braceClose = findMatching(mask, braceOpen, '{', '}')
   const properties = scanObjectProperties(source, mask, braceOpen, braceClose)
   const renderProperty = properties.find((property) => property.name === 'render')
   const render = renderProperty ? parseRenderValue(source, mask, renderProperty) : undefined
+  // `{ ...Base, args: {...} }` inherits Base's render; an own `render` still wins.
+  let base: ParsedStory | undefined
+  for (const property of properties) {
+    if (property.spreadFrom) base = parsed.get(property.spreadFrom) ?? base
+  }
+  const inherited = render ? undefined : base
   return {
     name,
     text: source.slice(braceOpen, braceClose + 1),
-    renderBody: render?.renderBody,
-    isBlockBody: render?.isBlockBody ?? false,
-    renderParamKind: render?.renderParamKind ?? 'none',
-    renderParamText: render?.renderParamText,
-    hasDecorators: properties.some((property) => property.name === 'decorators'),
+    renderBody: render?.renderBody ?? inherited?.renderBody,
+    isBlockBody: render?.isBlockBody ?? inherited?.isBlockBody ?? false,
+    renderParamKind: render?.renderParamKind ?? inherited?.renderParamKind ?? 'none',
+    renderParamText: render?.renderParamText ?? inherited?.renderParamText,
+    hasDecorators:
+      properties.some((property) => property.name === 'decorators') ||
+      (base?.hasDecorators ?? false),
   }
 }
 
@@ -361,7 +384,7 @@ export const parseStoriesSource = (raw: string): ParsedStoriesSource => {
     const storyMatch = /^export\s+const\s+([A-Za-z_$][\w$]*)\s*:\s*Story\b/.exec(text)
     if (storyMatch) {
       const name = storyMatch[1]
-      stories.set(name, parseStory(source, mask, statement, name))
+      stories.set(name, parseStory(source, mask, statement, name, stories))
       continue
     }
     const declarationMatch =

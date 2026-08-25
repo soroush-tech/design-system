@@ -1,0 +1,7 @@
+{
+  "extends": ["../../packages/eslint-config/.oxlintrc.react.json"],
+  "env": {
+    "browser": true
+  },
+  "ignorePatterns": ["public", "build", "dist", "coverage"]
+}

@@ -85,7 +85,7 @@ Rules when converting a component:
 
 ## Component Architecture
 
-**Every component lives in its own folder** `packages/design-system/src/ComponentName/` with: `index.ts` (`export * from './ComponentName'`) · `ComponentName.tsx` · `README.md` · `ComponentName.stories.tsx` · `ComponentName.test.tsx`
+**Every component lives in its own folder** `packages/design-system/src/ComponentName/` with: `index.ts` (`export * from './ComponentName'`) · `ComponentName.tsx` · `README.md` · `ComponentName.mdx` · `ComponentName.stories.tsx` · `ComponentName.test.tsx`
 
 **Prop types** - derive from `Theme` (this package's own type, owned by `src/theme/themes.ts` - Emotion is internal-only), never write manual unions:
 
@@ -198,7 +198,7 @@ export function MyComponent({ as, ...rest }: MyComponentProps) {
 
 ## Files per Component
 
-Every component lives in its own folder under `@soroush.tech/design-system/`. The folder contains four files plus a barrel index:
+Every component lives in its own folder under `@soroush.tech/design-system/`. The folder contains five files plus a barrel index:
 
 ```
 @soroush.tech/design-system/
@@ -206,6 +206,7 @@ Every component lives in its own folder under `@soroush.tech/design-system/`. Th
     index.ts               ← export * from './ComponentName'
     ComponentName.tsx      ← component + exported prop types
     README.md              ← prop reference documentation
+    ComponentName.mdx      ← the docs-site page for this component
     ComponentName.stories.tsx ← Storybook stories
     ComponentName.test.tsx ← unit tests
 ```
@@ -219,6 +220,24 @@ Documents every prop the component accepts. Rules:
 - Color tables show palette source names only - `kineticGreen[500]`, not `#00FF41`
 - Keep in sync with actual values in `themes.ts` - the README is the source of truth for consumers
 - Include all styled-system prop groups the component supports
+
+### `ComponentName.mdx`
+
+The component's page on docs.soroush.design, owned by the component rather than the docs
+app. The element map is injected, so the file imports nothing:
+
+```mdx
+# ComponentName
+
+<Readme of="ComponentName" part="intro" />
+
+<StoryDemo of="ComponentName/StoryExport" />
+```
+
+`<Readme of part>` renders a section of the sibling README (`intro` / `api` / `examples`);
+`<StoryDemo of>` renders a registered story demo (see `apps/docs/src/demos/registry.ts`).
+The page is **required** - the docs route renders it and nothing else, so a component
+without one fails `nav.test.ts` and the docs prerender.
 
 ### `ComponentName.stories.tsx`
 
@@ -318,6 +337,7 @@ Use `/new_theme_component ComponentName` to scaffold all files automatically.
 - [ ] Prop types derived from `Theme` (`keyof Theme['scaleName']`), not manual unions
 - [ ] Custom prop types exported for use in `storiesOptions.ts`
 - [ ] `ComponentName/README.md` - all props documented, no hex codes
+- [ ] `ComponentName/ComponentName.mdx` - the docs-site page (heading + `<Readme part="intro" />` + demos or examples)
 - [ ] `ComponentName/ComponentName.stories.tsx` - imports from `storiesArgs` (shared props) or `storiesOptions` (component-specific), `controls.include` whitelist, argType categories
 - [ ] New token arrays added to `@soroush.tech/design-system/utils/test/storiesOptions.ts` with `satisfies`
 - [ ] `ComponentName/ComponentName.test.tsx` - prop→CSS, element mapping, HTML passthrough

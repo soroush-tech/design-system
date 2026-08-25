@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "typeRoots": ["./@types", "./node_modules/@types"],
+    "paths": {
+      "src/*": ["./src/*"],
+      "content/*": ["./content/*"],
+      "packages/*": ["../../packages/*"]
+    }
+  }
+}
