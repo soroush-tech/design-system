@@ -35,5 +35,8 @@ export const listComponentReadmes = (pkg: DocsPackage): string[] => {
       if (nested.includes('README.md')) found.push(`${top.name}/${child.name}/README.md`)
     }
   }
-  return found.sort()
+  // Ordered by code unit rather than `localeCompare`: these paths key a registry that
+  // must come out identical on every machine, and collation varies with the runtime's
+  // locale data.
+  return found.sort((a, b) => (a < b ? -1 : Number(a > b)))
 }

@@ -18,3 +18,13 @@ export const docBySlug = new Map(
     { label, source: findSource(file) ?? '' },
   ])
 )
+
+/**
+ * The wildcard route param without its trailing slashes. Scanned rather than matched
+ * with `/\/+$/`, whose `+` backtracks over a long run of slashes.
+ */
+export const docSlugFromParam = (param: string): string => {
+  let end = param.length
+  while (end > 0 && param[end - 1] === '/') end--
+  return param.slice(0, end)
+}
