@@ -37,6 +37,7 @@ export const listComponentReadmes = (pkg: DocsPackage): string[] => {
   }
   // Ordered by code unit rather than `localeCompare`: these paths key a registry that
   // must come out identical on every machine, and collation varies with the runtime's
-  // locale data.
-  return found.sort((a, b) => (a < b ? -1 : Number(a > b)))
+  // locale data. Arithmetic rather than a ternary so the comparator carries no branch
+  // for the equal case, which two distinct paths can never reach.
+  return found.sort((a, b) => Number(a > b) - Number(a < b))
 }
