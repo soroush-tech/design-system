@@ -1,6 +1,6 @@
 # Docs app conventions (apps/docs)
 
-The Vike SSG app served at docs.soroush.design. Architecture mirrors the soroush.tech web
+The Vike SSG app served at docs.soroush.tech. Architecture mirrors the soroush.tech web
 app's renderer (Emotion critical CSS, managed head tags) with the data layer removed:
 every input is an in-repo glob over `packages/` and `content/` - no remote fetches, no MSW.
 

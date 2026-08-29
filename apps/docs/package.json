@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "Documentation and demo site for the @soroush.tech design-system packages, served at docs.soroush.design.",
+  "description": "Documentation and demo site for the @soroush.tech design-system packages, served at docs.soroush.tech.",
   "scripts": {
     "dev": "vite",
     "prebuild": "tsc -b",

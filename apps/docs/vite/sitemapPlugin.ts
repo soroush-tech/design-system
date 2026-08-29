@@ -6,7 +6,7 @@ import { readFileSync, readdirSync, writeFileSync } from 'node:fs'
 import { resolve, sep } from 'node:path'
 import type { Plugin } from 'vite'
 
-const SITE_URL = process.env.VITE_SITE_URL ?? 'https://docs.soroush.design'
+const SITE_URL = process.env.VITE_SITE_URL ?? 'https://docs.soroush.tech'
 
 const meta = (html: string, name: string): string | undefined => {
   // Match name= or property= regardless of attribute order around content=.

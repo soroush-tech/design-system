@@ -21,7 +21,7 @@ import {
 } from '@soroush.tech/docs-content'
 import { loadPackageFile, loadReadme } from '@soroush.tech/docs-content/node'
 
-const SITE_URL = process.env.VITE_SITE_URL ?? 'https://docs.soroush.design'
+const SITE_URL = process.env.VITE_SITE_URL ?? 'https://docs.soroush.tech'
 
 const componentUrl = (item: ComponentNavItem): string =>
   `${SITE_URL}/${item.pkg}/components/${item.slug}/`
@@ -46,7 +46,7 @@ export const renderIndex = (): string =>
     '> defaults in its own README, which is what these pages render.',
     '',
     'An MCP server serves this same content to AI tools:',
-    'https://mcp.soroush.design/mcp (or `npx -y @soroush.tech/mcp`).',
+    'https://mcp.soroush.tech/mcp (or `npx -y @soroush.tech/mcp`).',
     '',
     '## Getting started',
     '',

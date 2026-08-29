@@ -1,1 +1,1 @@
-export const SITE_URL = import.meta.env.VITE_SITE_URL ?? 'https://docs.soroush.design'
+export const SITE_URL = import.meta.env.VITE_SITE_URL ?? 'https://docs.soroush.tech'

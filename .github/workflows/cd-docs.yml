@@ -2,7 +2,7 @@
 # CI never runs this workflow, so no job here could prove anything about it.
 name: CD · Docs
 
-# Deploys docs.soroush.design from the composed docs-dist branch: the live site rebuilds
+# Deploys docs.soroush.tech from the composed docs-dist branch: the live site rebuilds
 # on every CI-passed main push; a package publish freezes that package's section under
 # /<pkg>/<version>/, built once from the release's git tag and stored forever. Manual
 # dispatch backfills or repairs a single snapshot.

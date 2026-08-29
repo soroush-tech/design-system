@@ -36,13 +36,13 @@ describe('socialMeta', () => {
     })
     expect(tags).toContainEqual({
       property: 'og:image',
-      content: 'https://docs.soroush.design/assets/x.png',
+      content: 'https://docs.soroush.tech/assets/x.png',
     })
     expect(tags).toContainEqual({ property: 'og:image:width', content: '1200' })
     expect(tags).toContainEqual({ property: 'og:image:height', content: '630' })
     expect(tags).toContainEqual({
       name: 'twitter:image',
-      content: 'https://docs.soroush.design/assets/x.png',
+      content: 'https://docs.soroush.tech/assets/x.png',
     })
     expect(tags).toContainEqual({ name: 'twitter:card', content: 'summary_large_image' })
   })
