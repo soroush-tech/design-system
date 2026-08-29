@@ -17,7 +17,8 @@ export const findComponent = (
 ): ContentBundle['components'][number] | undefined => {
   const needle = query.trim().toLowerCase()
   return source.components.find(
-    (component) => component.name.toLowerCase() === needle || component.slug === needle
+    (component) =>
+      component.name.toLowerCase() === needle || component.slug.toLowerCase() === needle
   )
 }
 

@@ -85,6 +85,18 @@ describe('summarize', () => {
     expect(summarize('# Title\n\nShips as e.g.')).toBe('Ships as e.g.')
   })
 
+  it('ends the sentence on a lone single-letter token', () => {
+    // A trailing capital is only an initial while more initials follow, so "A." here
+    // closes the sentence instead of swallowing the next one.
+    expect(summarize('# Title\n\nSelect option A. Continue.')).toBe('Select option A.')
+  })
+
+  it('reads through a run of initials', () => {
+    expect(summarize('# Title\n\nNamed for J. R. Tolkien and others. Rest.')).toBe(
+      'Named for J. R. Tolkien and others.'
+    )
+  })
+
   it('does not start the paragraph inside a fenced block', () => {
     expect(summarize('# Title\n\n```\ncode line\n```\n\nReal prose here. Rest.')).toBe(
       'Real prose here.'

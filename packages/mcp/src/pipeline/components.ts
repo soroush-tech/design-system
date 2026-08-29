@@ -45,7 +45,22 @@ const firstProseParagraph = (markdown: string): string | undefined => {
 
 // Abbreviations whose dot is not a sentence end. Without this, "items (e.g. a blog
 // index), with ..." is cut to "items (e.g." - a summary that stops mid-parenthesis.
-const ABBREVIATION = /(?:\b(?:e\.g|i\.e|etc|vs|cf|approx|Dr|Mr|Ms|St|no)|\s[A-Za-z])\.$/
+const ABBREVIATION = /\b(?:e\.g|i\.e|etc|vs|cf|approx|Dr|Mr|Ms|St|no)\.$/
+// A lone capital before a dot is an initial only as part of a run, as in "J. R. R.
+// Tolkien" - it counts when another initial sits on either side of it. Standing alone it
+// ends the sentence, so "Select option A." stops there rather than swallowing the next.
+const INITIAL = /\s[A-Z]\.$/
+const AFTER_INITIAL = /\s[A-Z]\.\s[A-Z]\.$/
+const BEFORE_INITIAL = /^\s+[A-Z]\./
+
+/** Whether the dot ending `trimmed.slice(0, end)` closes a sentence. */
+const endsSentence = (trimmed: string, end: number): boolean => {
+  const upTo = trimmed.slice(0, end)
+  if (ABBREVIATION.test(upTo)) return false
+  const inRunOfInitials =
+    INITIAL.test(upTo) && (BEFORE_INITIAL.test(trimmed.slice(end)) || AFTER_INITIAL.test(upTo))
+  return !inRunOfInitials
+}
 
 /** The first sentence of a README's prose, used as the one-line inventory summary. */
 export const summarize = (intro: string): string => {
@@ -55,7 +70,7 @@ export const summarize = (intro: string): string => {
   const sentence = /(?:^|\s)\S*?[.!?](?=\s|$)/g
   for (const match of trimmed.matchAll(sentence)) {
     const end = match.index + match[0].length
-    if (!ABBREVIATION.test(trimmed.slice(0, end))) return trimmed.slice(0, end).replace(/\s+/g, ' ')
+    if (endsSentence(trimmed, end)) return trimmed.slice(0, end).replace(/\s+/g, ' ')
   }
   return trimmed.replace(/\s+/g, ' ')
 }

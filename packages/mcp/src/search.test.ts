@@ -93,6 +93,14 @@ describe('content lookups', () => {
     expect(findDoc('Theming')?.id).toBe('theming')
   })
 
+  it('matches a slug case-insensitively on either side', () => {
+    // The shipped bundle only ever carries kebab-case slugs, but a caller may pass its
+    // own bundle, and the lookup promises case-insensitivity for the slug too.
+    expect(findComponent('TEXT-INPUT')?.name).toBe('TextInput')
+    const mixed = { ...bundle, components: [{ ...bundle.components[0], slug: 'Text-Input' }] }
+    expect(findComponent('text-input', mixed)?.slug).toBe('Text-Input')
+  })
+
   it('returns undefined for unknown refs', () => {
     expect(findComponent('nope')).toBeUndefined()
     expect(findDoc('nope')).toBeUndefined()

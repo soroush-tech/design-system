@@ -88,6 +88,10 @@ jobs:
       # This requires Settings > Pages > Source = "Deploy from a branch", branch
       # `docs-dist`, folder `/`. Set to "GitHub Actions" instead, Pages waits for a
       # deployment this workflow never makes and the site silently serves stale content.
+      #
+      # The custom domain is bound by the `CNAME` file that compose-docs-dist.mjs writes
+      # into the tree, not by the Pages setting alone: a deploy landing without it
+      # unbinds docs.soroush.tech and GitHub starts serving "Site not found".
 
   # Freeze the published packages' sections after a release (or on manual dispatch).
   # One leg per public package; serialized so docs-dist pushes never race.
