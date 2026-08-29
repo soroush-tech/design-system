@@ -228,6 +228,78 @@ jobs:
           flags: ${{ matrix.flag }}
           name: ${{ matrix.flag }}
 
+  # The docs app (apps/docs): unit coverage, the prerender build (which itself gates
+  # every page), and the Playwright e2e suite against the built output.
+  docs:
+    needs: [prepare, lint]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # tokenless OIDC Codecov upload
+    timeout-minutes: 20
+    env:
+      PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/ms-playwright
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Setup pnpm, Node and dependencies
+        uses: ./.github/actions/setup
+        with:
+          node_version: ${{ needs.prepare.outputs.node_version }}
+          manager: ${{ needs.prepare.outputs.manager }}
+          command: ${{ needs.prepare.outputs.command }}
+
+      # Same pinned browser location and key as the packages matrix, so the docs e2e
+      # run shares the Playwright cache with the browser-tier package rows.
+      - name: Restore cache - Playwright binaries
+        uses: actions/cache/restore@v5
+        id: playwright-cache
+        with:
+          path: ${{ github.workspace }}/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ needs.prepare.outputs.playwright_version }}
+
+      - name: Install Playwright browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: pnpm --filter @soroush.tech/docs exec playwright install --with-deps chromium
+
+      - name: Install Playwright system deps
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: pnpm --filter @soroush.tech/docs exec playwright install-deps chromium
+
+      - name: Save cache - Playwright binaries
+        if: always() && steps.playwright-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v5
+        with:
+          path: ${{ github.workspace }}/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ needs.prepare.outputs.playwright_version }}
+
+      - name: Run Tests with Coverage
+        run: ${{ needs.prepare.outputs.runner }} --filter @soroush.tech/docs test:coverage
+
+      - name: Build (prerender)
+        run: ${{ needs.prepare.outputs.runner }} --filter @soroush.tech/docs build
+
+      - name: Run E2E
+        run: ${{ needs.prepare.outputs.runner }} --filter @soroush.tech/docs test:e2e
+        env:
+          CI: true
+
+      # As in the packages matrix: prefix lcov paths so Codecov maps them repo-relative.
+      - name: Make lcov paths repo-relative for Codecov
+        run: sed -i "s#^SF:#SF:apps/docs/#" "apps/docs/coverage/lcov.info"
+
+      - name: Upload Coverage to Codecov
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7
+        with:
+          use_oidc: true
+          files: ./apps/docs/coverage/lcov.info
+          slug: soroush-tech/design-system
+          flags: docs
+          name: docs
+
   # Performance gate: styled-system's bench suite runs in the pinned Docker sandbox
   # against the last npm release (via soroush-tech/bench-action); any case below the
   # minimum speed ratio fails the job - and, via ci-ok, the PR.
@@ -285,7 +357,7 @@ jobs:
   ci-ok:
     name: ci-ok
     if: always()
-    needs: [prepare, lint, packages, bench]
+    needs: [prepare, lint, packages, docs, bench]
     runs-on: ubuntu-latest
     permissions: {}
     timeout-minutes: 5

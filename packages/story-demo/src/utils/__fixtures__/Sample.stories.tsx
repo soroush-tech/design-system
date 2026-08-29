@@ -87,3 +87,9 @@ export const Decorated: Story = {
   decorators: [(StoryComponent) => <Stack>{<StoryComponent />}</Stack>],
   render: () => <Sample>Decorated</Sample>,
 }
+
+// CSF composition: inherits Grouped's render, overriding only the args.
+export const Composed: Story = {
+  ...Grouped,
+  args: { size: 'sm' },
+}

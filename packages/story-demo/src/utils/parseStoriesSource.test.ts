@@ -41,6 +41,7 @@ describe('parseStoriesSource', () => {
       'Destructured',
       'Block',
       'Decorated',
+      'Composed',
     ])
   })
 
@@ -163,12 +164,46 @@ describe('parseStoriesSource', () => {
     expect(() => parseStoriesSource(module)).toThrow(/expected an arrow function/)
   })
 
-  it('throws on a spread inside a story initializer', () => {
+  it('throws on an unreadable property key', () => {
     const module = [
       'const meta: Meta<typeof I> = { component: I }',
-      'export const S: Story = { ...base }',
+      'export const S: Story = { 1 + 1 }',
     ].join('\n')
     expect(() => parseStoriesSource(module)).toThrow(/property key/)
+  })
+
+  it('inherits the render of a story composed by spread', () => {
+    const composed = parsed.stories.get('Composed')!
+    const base = parsed.stories.get('Grouped')!
+    expect(composed.renderBody).toBe(base.renderBody)
+    expect(composed.renderParamKind).toBe('args')
+    expect(composed.renderParamText).toBe('args')
+  })
+
+  it('lets an own render win over the spread base, and carries its decorators', () => {
+    const module = [
+      'const meta: Meta<typeof I> = { component: I }',
+      'export const Base: Story = { decorators: [d], render: () => <i>base</i> }',
+      'export const Own: Story = { ...Base, render: () => <i>own</i> }',
+      'export const Inherited: Story = { ...Base, args: { a: 1 } }',
+      // An unknown spread target leaves the story render-less rather than throwing.
+      'export const Unknown: Story = { ...Elsewhere }',
+    ].join('\n')
+    const { stories } = parseStoriesSource(module)
+    expect(stories.get('Own')!.renderBody).toBe('<i>own</i>')
+    expect(stories.get('Inherited')!.renderBody).toBe('<i>base</i>')
+    expect(stories.get('Inherited')!.hasDecorators).toBe(true)
+    expect(stories.get('Unknown')!.renderBody).toBeUndefined()
+    expect(stories.get('Unknown')!.hasDecorators).toBe(false)
+  })
+
+  it('reads back-to-back spreads, the last resolvable one winning', () => {
+    const module = [
+      'const meta: Meta<typeof I> = { component: I }',
+      'export const Base: Story = { render: () => <i>base</i> }',
+      'export const Two: Story = { ...Other, ...Base }',
+    ].join('\n')
+    expect(parseStoriesSource(module).stories.get('Two')!.renderBody).toBe('<i>base</i>')
   })
 
   it('throws on an unbalanced story initializer', () => {

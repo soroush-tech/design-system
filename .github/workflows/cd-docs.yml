@@ -1,0 +1,210 @@
+# ci:validates nothing
+# CI never runs this workflow, so no job here could prove anything about it.
+name: CD · Docs
+
+# Deploys docs.soroush.design from the composed docs-dist branch: the live site rebuilds
+# on every CI-passed main push; a package publish freezes that package's section under
+# /<pkg>/<version>/, built once from the release's git tag and stored forever. Manual
+# dispatch backfills or repairs a single snapshot.
+
+on:
+  workflow_run:
+    workflows: ['CI', 'CD · Packages (npm)']
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      package:
+        description: Package section to snapshot (from its latest release tag)
+        required: true
+        type: choice
+        options:
+          - design-system
+          - markdown
+          - styled-system
+
+concurrency:
+  group: cd-docs
+  cancel-in-progress: false
+
+jobs:
+  # Rebuild the live tree on every successful CI run on main.
+  live:
+    if: >-
+      github.event_name == 'workflow_run' &&
+      github.event.workflow_run.name == 'CI' &&
+      github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    environment: cd-docs
+    timeout-minutes: 30
+    permissions:
+      contents: write # commits to the docs-dist branch
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v7
+
+      - name: Read Node.js version from .nvmrc
+        run: echo "NODE_VERSION=$(cat .nvmrc)" >> "$GITHUB_ENV"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --ignore-scripts
+
+      - name: Build the live site
+        run: pnpm --filter @soroush.tech/docs build
+
+      - name: Checkout docs-dist (create the orphan branch on first run)
+        run: |
+          git fetch origin docs-dist && git worktree add docs-dist origin/docs-dist || {
+            git worktree add --orphan -b docs-dist docs-dist
+          }
+
+      - name: Compose the live tree
+        run: node scripts/compose-docs-dist.mjs live apps/docs/build/client docs-dist
+
+      - name: Commit docs-dist
+        run: |
+          cd docs-dist
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No live-tree changes."
+          else
+            git -c user.name=github-actions -c user.email=github-actions@github.com \
+              commit -m "live: ${{ github.event.workflow_run.head_sha }}"
+            git push origin docs-dist
+          fi
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4.0.0
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy docs-dist --project-name=soroush-design-docs --branch=main --commit-dirty=true
+
+  # Freeze the published packages' sections after a release (or on manual dispatch).
+  # One leg per public package; serialized so docs-dist pushes never race.
+  snapshot:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.name == 'CD · Packages (npm)' &&
+       github.event.workflow_run.conclusion == 'success')
+    runs-on: ubuntu-latest
+    environment: cd-docs
+    timeout-minutes: 30
+    permissions:
+      contents: write # commits to the docs-dist branch
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        package: [design-system, markdown, styled-system]
+    steps:
+      - name: Checkout Repository (full history for release tags)
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      # Manual dispatch targets a single package; the matrix legs for the others no-op.
+      - name: Resolve the package's latest release tag
+        id: resolve
+        env:
+          PKG: ${{ matrix.package }}
+          DISPATCH_PKG: ${{ inputs.package }}
+        run: |
+          if [ -n "$DISPATCH_PKG" ] && [ "$DISPATCH_PKG" != "$PKG" ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          TAG=$(git tag --list "@soroush.tech/$PKG@*" | sort -V | tail -1)
+          if [ -z "$TAG" ]; then
+            echo "No release tag for $PKG."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "version=${TAG##*@}" >> "$GITHUB_OUTPUT"
+          echo "skip=false" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout docs-dist (create the orphan branch on first run)
+        if: steps.resolve.outputs.skip == 'false'
+        run: |
+          git fetch origin docs-dist && git worktree add docs-dist origin/docs-dist || {
+            git worktree add --orphan -b docs-dist docs-dist
+          }
+
+      - name: Skip when the snapshot is already archived
+        if: steps.resolve.outputs.skip == 'false'
+        id: archived
+        run: |
+          if node scripts/compose-docs-dist.mjs has "${{ matrix.package }}" "${{ steps.resolve.outputs.version }}" docs-dist; then
+            echo "done=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "done=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Build the docs app as it existed at the release tag - old prose, old components,
+      # old demos, all consistent. Tags older than the docs app cannot be built; the
+      # archive starts with the first release after the app shipped.
+      - name: Checkout the release tag into a worktree
+        if: steps.resolve.outputs.skip == 'false' && steps.archived.outputs.done == 'false'
+        run: git worktree add snapshot-src "${{ steps.resolve.outputs.tag }}"
+
+      - name: Read Node.js version from the tag's .nvmrc
+        if: steps.resolve.outputs.skip == 'false' && steps.archived.outputs.done == 'false'
+        run: echo "NODE_VERSION=$(cat snapshot-src/.nvmrc)" >> "$GITHUB_ENV"
+
+      - name: Setup pnpm
+        if: steps.resolve.outputs.skip == 'false' && steps.archived.outputs.done == 'false'
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+
+      - name: Setup Node
+        if: steps.resolve.outputs.skip == 'false' && steps.archived.outputs.done == 'false'
+        uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Build the section snapshot from the tag
+        if: steps.resolve.outputs.skip == 'false' && steps.archived.outputs.done == 'false'
+        working-directory: snapshot-src
+        env:
+          DOCS_SECTION: ${{ matrix.package }}
+          DOCS_BASE: /${{ matrix.package }}/${{ steps.resolve.outputs.version }}/
+        run: |
+          if [ ! -d apps/docs ]; then
+            echo "The docs app does not exist at this tag - nothing to archive."
+            exit 0
+          fi
+          pnpm install --frozen-lockfile --ignore-scripts
+          pnpm --filter @soroush.tech/docs build
+
+      - name: Install the snapshot into docs-dist
+        if: steps.resolve.outputs.skip == 'false' && steps.archived.outputs.done == 'false'
+        run: |
+          if [ ! -d snapshot-src/apps/docs/build/client ]; then
+            echo "No snapshot output - skipping."
+            exit 0
+          fi
+          node scripts/compose-docs-dist.mjs snapshot \
+            "${{ matrix.package }}" "${{ steps.resolve.outputs.version }}" \
+            snapshot-src/apps/docs/build/client docs-dist
+          cd docs-dist
+          git add -A
+          git -c user.name=github-actions -c user.email=github-actions@github.com \
+            commit -m "snapshot: ${{ matrix.package }}@${{ steps.resolve.outputs.version }}"
+          git push origin docs-dist
+
+      - name: Deploy to Cloudflare Pages
+        if: steps.resolve.outputs.skip == 'false' && steps.archived.outputs.done == 'false'
+        uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4.0.0
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy docs-dist --project-name=soroush-design-docs --branch=main --commit-dirty=true

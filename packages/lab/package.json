@@ -1,0 +1,35 @@
+{
+  "name": "@soroush.tech/lab",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Incubator for components on their way into @soroush.tech/design-system - APIs here may change without notice.",
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*/index.ts"
+  },
+  "scripts": {
+    "lint": "oxlint --deny-warnings",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "peerDependencies": {
+    "@soroush.tech/design-system": "workspace:^",
+    "react": "^19.2.8"
+  },
+  "devDependencies": {
+    "@soroush.tech/design-system": "workspace:*",
+    "@soroush.tech/eslint-config": "workspace:*",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.2",
+    "@types/react": "^19.2.18",
+    "@vitest/coverage-v8": "^4.1.10",
+    "jsdom": "^29.1.1",
+    "oxlint": "^1.78.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "typescript": "~7.0.2",
+    "vitest": "^4.1.10"
+  }
+}

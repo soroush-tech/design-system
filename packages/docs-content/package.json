@@ -1,0 +1,25 @@
+{
+  "name": "@soroush.tech/docs-content",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "The component registry and README parsing shared by the docs app and the MCP server - one source of truth for what ships and where its docs live.",
+  "exports": {
+    ".": "./src/index.ts",
+    "./node": "./src/node/index.ts"
+  },
+  "scripts": {
+    "lint": "oxlint --deny-warnings",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "devDependencies": {
+    "@soroush.tech/eslint-config": "workspace:*",
+    "@types/node": "^26.2.0",
+    "@vitest/coverage-v8": "^4.1.10",
+    "oxlint": "^1.78.0",
+    "typescript": "~7.0.2",
+    "vitest": "^4.1.10"
+  }
+}
