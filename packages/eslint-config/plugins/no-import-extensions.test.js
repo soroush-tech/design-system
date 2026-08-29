@@ -32,4 +32,18 @@ describe('local/no-import-extensions', () => {
       expect(visit(value).report).not.toHaveBeenCalled()
     }
   )
+
+  // A dependency's own exports map decides its layout, and some published ESM
+  // packages resolve only with the extension spelled out.
+  it.each([
+    '@modelcontextprotocol/sdk/server/mcp.js',
+    '@modelcontextprotocol/sdk/server/stdio.js',
+    'some-pkg/entry.js',
+  ])('allows the bare package specifier %s', (value) => {
+    expect(visit(value).report).not.toHaveBeenCalled()
+  })
+
+  it('still reports an absolute path with an extension', () => {
+    expect(visit('/abs/mod.ts').report).toHaveBeenCalled()
+  })
 })

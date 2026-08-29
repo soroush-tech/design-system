@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://docs.soroush.design/sitemap.xml
+Sitemap: https://docs.soroush.tech/sitemap.xml

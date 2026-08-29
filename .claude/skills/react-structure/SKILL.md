@@ -34,7 +34,7 @@ src/ComponentName/
   ComponentName.tsx         <- component + exported prop types
   README.md                 <- prop reference (token tables, styled-system props, Examples)
   ComponentName.mdx         <- optional hand-authored docs page; overrides the automatic
-                               README+demos page on docs.soroush.design
+                               README+demos page on docs.soroush.tech
   ComponentName.stories.tsx <- design-system only (lab ships no storybook yet)
   ComponentName.test.tsx    <- unit tests, 100% coverage
 ```

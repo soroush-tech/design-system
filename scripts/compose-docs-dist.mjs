@@ -37,10 +37,20 @@ const compareSemver = (a, b) => {
   return 0
 }
 
+// Files that belong to the branch rather than to any one build. `CNAME` is what binds
+// the custom domain when Pages deploys from a branch - a deploy that lands without it
+// unbinds docs.soroush.tech and GitHub serves "Site not found". `.nojekyll` stops Pages
+// running the tree through Jekyll, which would drop every `_`-prefixed asset.
+const DOMAIN = 'docs.soroush.tech'
+const BRANCH_FILES = { CNAME: `${DOMAIN}\n`, '.nojekyll': '' }
+
 /** Removes the live tree from distDir, keeping snapshot dirs and versions.json. */
 const clearLive = (distDir) => {
   for (const entry of readdirSync(distDir, { withFileTypes: true })) {
     if (entry.name === '.git' || entry.name === 'versions.json') continue
+    // Own properties only: `in` would also match inherited names, so a page routed to
+    // `constructor/` or `toString/` would survive a clear and serve stale forever.
+    if (Object.hasOwn(BRANCH_FILES, entry.name)) continue
     const path = join(distDir, entry.name)
     if (!entry.isDirectory()) {
       rmSync(path)
@@ -57,11 +67,19 @@ const clearLive = (distDir) => {
 
 const [mode, ...args] = process.argv.slice(2)
 
+/** Writes the branch-level files every deploy must carry, whatever the build produced. */
+const writeBranchFiles = (distDir) => {
+  for (const [name, body] of Object.entries(BRANCH_FILES)) {
+    writeFileSync(join(distDir, name), body)
+  }
+}
+
 if (mode === 'live') {
   const [buildDir, distDir] = args
   mkdirSync(distDir, { recursive: true })
   clearLive(distDir)
   cpSync(buildDir, distDir, { recursive: true })
+  writeBranchFiles(distDir)
   console.log(`composed live tree from ${buildDir} into ${distDir}`)
 } else if (mode === 'snapshot') {
   const [pkg, version, buildDir, distDir] = args
@@ -70,6 +88,8 @@ if (mode === 'live') {
   rmSync(target, { recursive: true, force: true })
   mkdirSync(target, { recursive: true })
   cpSync(buildDir, target, { recursive: true })
+  // A snapshot commits the branch too, so it must not ship without them either.
+  writeBranchFiles(distDir)
   const manifest = readManifest(distDir)
   const versions = new Set(manifest[pkg] ?? [])
   versions.add(version)

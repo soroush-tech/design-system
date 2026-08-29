@@ -7,6 +7,7 @@
   "scripts": {
     "prepare": "husky",
     "gen:publish-options": "node scripts/gen-publish-options.mjs",
+    "gen:plugin-refs": "pnpm --filter @soroush.tech/mcp gen -- --plugin",
     "check:release-notes": "node scripts/check-release-notes.mjs",
     "check:typography": "aiwg --all",
     "build": "pnpm -r build",

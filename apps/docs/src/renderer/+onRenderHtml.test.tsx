@@ -71,7 +71,7 @@ describe('+onRenderHtml', () => {
     const result = (await onRenderHtml(pageContext as never)) as unknown as { __html: string }
     expect(result.__html).toContain('<title data-mh>About · SOROUSH.DESIGN</title>')
     expect(result.__html).toContain(
-      '<link rel="canonical" href="https://docs.soroush.design/about/" data-mh />'
+      '<link rel="canonical" href="https://docs.soroush.tech/about/" data-mh />'
     )
   })
 })

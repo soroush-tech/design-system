@@ -223,7 +223,7 @@ Documents every prop the component accepts. Rules:
 
 ### `ComponentName.mdx`
 
-The component's page on docs.soroush.design, owned by the component rather than the docs
+The component's page on docs.soroush.tech, owned by the component rather than the docs
 app. The element map is injected, so the file imports nothing:
 
 ```mdx

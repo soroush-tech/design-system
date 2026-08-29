@@ -21,6 +21,7 @@ on:
           - all
           - design-system
           - markdown
+          - mcp
           - styled-system
         # gen:publish-options end
 

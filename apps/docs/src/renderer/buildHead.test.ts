@@ -18,9 +18,9 @@ describe('buildHead', () => {
     })
 
     it('emits canonical, og:url, og:site_name, and referrer', () => {
-      expect(head).toContain('<link rel="canonical" href="https://docs.soroush.design/" data-mh />')
+      expect(head).toContain('<link rel="canonical" href="https://docs.soroush.tech/" data-mh />')
       expect(head).toContain(
-        '<meta property="og:url" content="https://docs.soroush.design/" data-mh />'
+        '<meta property="og:url" content="https://docs.soroush.tech/" data-mh />'
       )
       expect(head).toContain('<meta property="og:site_name" content="SOROUSH.DESIGN" data-mh />')
       expect(head).toContain(
@@ -74,16 +74,16 @@ describe('buildHead', () => {
 
   describe('canonical/og:url trailing slash', () => {
     it('keeps a single slash for the home page', () => {
-      expect(buildHead(ctx(undefined, '/'))).toContain('href="https://docs.soroush.design/"')
+      expect(buildHead(ctx(undefined, '/'))).toContain('href="https://docs.soroush.tech/"')
     })
 
     it('appends a trailing slash to other paths', () => {
       const head = buildHead(ctx(undefined, '/about'))
       expect(head).toContain(
-        '<link rel="canonical" href="https://docs.soroush.design/about/" data-mh />'
+        '<link rel="canonical" href="https://docs.soroush.tech/about/" data-mh />'
       )
       expect(head).toContain(
-        '<meta property="og:url" content="https://docs.soroush.design/about/" data-mh />'
+        '<meta property="og:url" content="https://docs.soroush.tech/about/" data-mh />'
       )
     })
   })
@@ -205,10 +205,10 @@ describe('applyHead', () => {
       'Who I am.'
     )
     expect(document.querySelector('link[rel="canonical"]')?.getAttribute('href')).toBe(
-      'https://docs.soroush.design/about/'
+      'https://docs.soroush.tech/about/'
     )
     expect(document.querySelector('meta[property="og:url"]')?.getAttribute('content')).toBe(
-      'https://docs.soroush.design/about/'
+      'https://docs.soroush.tech/about/'
     )
     expect(document.querySelector('meta[name="robots"]')?.getAttribute('content')).toBe(
       'index,follow'

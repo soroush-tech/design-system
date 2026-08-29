@@ -2,7 +2,7 @@
 # CI never runs this workflow, so no job here could prove anything about it.
 name: CD · Docs
 
-# Deploys docs.soroush.design from the composed docs-dist branch: the live site rebuilds
+# Deploys docs.soroush.tech from the composed docs-dist branch: the live site rebuilds
 # on every CI-passed main push; a package publish freezes that package's section under
 # /<pkg>/<version>/, built once from the release's git tag and stored forever. Manual
 # dispatch backfills or repairs a single snapshot.
@@ -82,12 +82,16 @@ jobs:
             git push origin docs-dist
           fi
 
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4.0.0
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy docs-dist --project-name=soroush-design-docs --branch=main --commit-dirty=true
+      # No deploy step: GitHub Pages serves the docs-dist branch, so the push above is
+      # the publish. Pages runs its own build-and-deploy on every push to that branch.
+      #
+      # This requires Settings > Pages > Source = "Deploy from a branch", branch
+      # `docs-dist`, folder `/`. Set to "GitHub Actions" instead, Pages waits for a
+      # deployment this workflow never makes and the site silently serves stale content.
+      #
+      # The custom domain is bound by the `CNAME` file that compose-docs-dist.mjs writes
+      # into the tree, not by the Pages setting alone: a deploy landing without it
+      # unbinds docs.soroush.tech and GitHub starts serving "Site not found".
 
   # Freeze the published packages' sections after a release (or on manual dispatch).
   # One leg per public package; serialized so docs-dist pushes never race.
@@ -201,10 +205,4 @@ jobs:
             commit -m "snapshot: ${{ matrix.package }}@${{ steps.resolve.outputs.version }}"
           git push origin docs-dist
 
-      - name: Deploy to Cloudflare Pages
-        if: steps.resolve.outputs.skip == 'false' && steps.archived.outputs.done == 'false'
-        uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4.0.0
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy docs-dist --project-name=soroush-design-docs --branch=main --commit-dirty=true
+      # As above: pushing docs-dist is the publish - GitHub Pages serves that branch.

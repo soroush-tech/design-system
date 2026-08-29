@@ -1,0 +1,55 @@
+# ci:validates nothing
+# CI never runs this workflow, so no job here could prove anything about it.
+name: CD · MCP (Cloudflare)
+
+# Deploys the MCP server to mcp.soroush.tech. Manual only, like the npm publish:
+# the content bundle is baked at build time, so a deploy is a deliberate act of
+# publishing whatever main currently documents.
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: cd-mcp
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: cd-mcp
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Read Node.js version from .nvmrc
+        run: echo "NODE_VERSION=$(cat .nvmrc)" >> "$GITHUB_ENV"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --ignore-scripts
+
+      # Bakes the component READMEs, guides, and token contract into the Worker bundle.
+      - name: Generate the content bundle
+        run: pnpm --filter @soroush.tech/mcp gen
+
+      - name: Deploy to Cloudflare Workers
+        uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4.0.0
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: packages/mcp
+          command: deploy

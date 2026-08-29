@@ -28,6 +28,7 @@ jobs:
             hooks
             lab
             markdown
+            mcp
             story-demo
             styled-system
             # gen:issue-areas end
