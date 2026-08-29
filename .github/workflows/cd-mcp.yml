@@ -2,7 +2,7 @@
 # CI never runs this workflow, so no job here could prove anything about it.
 name: CD · MCP (Cloudflare)
 
-# Deploys the MCP server to mcp.soroush.design. Manual only, like the npm publish:
+# Deploys the MCP server to mcp.soroush.tech. Manual only, like the npm publish:
 # the content bundle is baked at build time, so a deploy is a deliberate act of
 # publishing whatever main currently documents.
 

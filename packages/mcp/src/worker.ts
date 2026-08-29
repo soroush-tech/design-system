@@ -22,12 +22,12 @@ const LANDING = [
   `from @soroush.tech/design-system ${content.version}.`,
   '',
   'Connect (Claude Code):',
-  '  claude mcp add --transport http soroush https://mcp.soroush.design/mcp',
+  '  claude mcp add --transport http soroush https://mcp.soroush.tech/mcp',
   '',
   'Or run it locally over stdio:',
   '  npx -y @soroush.tech/mcp',
   '',
-  `Docs: https://docs.soroush.design`,
+  `Docs: https://docs.soroush.tech`,
   '',
 ].join('\n')
 

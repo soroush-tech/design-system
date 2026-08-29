@@ -8,13 +8,13 @@ Import every component from its own subpath.
 ## Layout & surfaces
 
 - **View** - The base layout primitive.
-- **Flex** - Extends [`View`](https://docs.soroush.design/design-system/components/view/).
-- **Grid** - Extends [`View`](https://docs.soroush.design/design-system/components/view/).
+- **Flex** - Extends [`View`](https://docs.soroush.tech/design-system/components/view/).
+- **Grid** - Extends [`View`](https://docs.soroush.tech/design-system/components/view/).
 - **Paper** - An elevated surface primitive that extends `View`.
 - **Card** - A surface component with an optional title, caption, and variant-based visual treatment.
 - **Quote** - A `View` with a fixed 2px primary left border - used for terminal readouts and markdown
 - **AppBar** - Renders as `<header>`.
-- **Drawer** - A panel that slides in from a screen edge, built on [`Modal`](https://docs.soroush.design/design-system/components/modal/).
+- **Drawer** - A panel that slides in from a screen edge, built on [`Modal`](https://docs.soroush.tech/design-system/components/modal/).
 - **Sidebar** - A collapsible vertical icon rail.
 
 ## Content & data display
@@ -37,11 +37,11 @@ Import every component from its own subpath.
 - **Switch** - A sliding toggle control.
 - **NativeSelect** - A styled native `<select>` form control.
 - **Select** - A form select with a custom, themeable listbox - and a `native` escape hatch.
-- **MenuItem** - A single option row for [`Select`](https://docs.soroush.design/design-system/components/select/)'s listbox, rendered as a semantic
+- **MenuItem** - A single option row for [`Select`](https://docs.soroush.tech/design-system/components/select/)'s listbox, rendered as a semantic
 - **Form** - Renders a `<form>` and provides form-wide field defaults through `FormContext`.
 - **FormControl** - Groups a label, control, and helper text into one accessible field and shares their state through React context.
-- **FormLabel** - A field label built on [`Typography`](https://docs.soroush.design/design-system/components/typography/), rendered as a `<label>`.
-- **FormHelperText** - Helper or error text for a field, built on [`Typography`](https://docs.soroush.design/design-system/components/typography/) and rendered as a `<p>`.
+- **FormLabel** - A field label built on [`Typography`](https://docs.soroush.tech/design-system/components/typography/), rendered as a `<label>`.
+- **FormHelperText** - Helper or error text for a field, built on [`Typography`](https://docs.soroush.tech/design-system/components/typography/) and rendered as a `<p>`.
 - **Pagination** - Page-number navigation for paging a list of arbitrary items (e.g.
 
 ## Feedback

@@ -2,7 +2,7 @@
   "mcpServers": {
     "soroush": {
       "type": "http",
-      "url": "https://mcp.soroush.design/mcp"
+      "url": "https://mcp.soroush.tech/mcp"
     }
   }
 }

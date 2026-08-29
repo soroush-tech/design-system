@@ -4,11 +4,11 @@
   "main": "src/worker.ts",
   "compatibility_date": "2026-08-01",
   "compatibility_flags": ["nodejs_compat"],
-  // Serves the MCP endpoint at https://mcp.soroush.design/mcp. Wrangler provisions the
-  // DNS record on first deploy; the zone already hosts docs.soroush.design.
+  // Serves the MCP endpoint at https://mcp.soroush.tech/mcp. Wrangler provisions the
+  // DNS record on first deploy; the zone already hosts docs.soroush.tech.
   "routes": [
     {
-      "pattern": "mcp.soroush.design",
+      "pattern": "mcp.soroush.tech",
       "custom_domain": true,
     },
   ],

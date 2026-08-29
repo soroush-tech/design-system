@@ -13,7 +13,7 @@ For the consumer-facing view - how to connect and what the tools do - see
 
 | Piece                                | Lives in                         | Ships via                                     |
 | ------------------------------------ | -------------------------------- | --------------------------------------------- |
-| MCP server (hosted)                  | `packages/mcp/src/worker.ts`     | Cloudflare Worker at `mcp.soroush.design`     |
+| MCP server (hosted)                  | `packages/mcp/src/worker.ts`     | Cloudflare Worker at `mcp.soroush.tech`       |
 | MCP server (local)                   | `packages/mcp/src/bin.ts`        | `npx -y @soroush.tech/mcp` (npm, public)      |
 | `llms.txt` / `llms-full.txt`         | `apps/docs/scripts/emitLlms.ts`  | The docs build, into `build/client`           |
 | Claude Code plugin                   | `plugins/soroush-design-system/` | `.claude-plugin/marketplace.json` at the root |

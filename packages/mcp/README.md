@@ -1,6 +1,6 @@
 # @soroush.tech/mcp
 
-MCP server for the [`@soroush.tech`](https://docs.soroush.design) design system. It
+MCP server for the [`@soroush.tech`](https://docs.soroush.tech) design system. It
 gives AI coding tools - Claude Code, Claude, Cursor, or anything else that speaks the
 [Model Context Protocol](https://modelcontextprotocol.io) - the component inventory,
 every component's README, and the theme token contract, so they write UI that matches
@@ -11,7 +11,7 @@ the library instead of guessing at it.
 The hosted server needs no install:
 
 ```sh
-claude mcp add --transport http soroush https://mcp.soroush.design/mcp
+claude mcp add --transport http soroush https://mcp.soroush.tech/mcp
 ```
 
 Or run it locally over stdio - useful offline, or to pin a version:
@@ -61,7 +61,7 @@ bundle without going through MCP.
 Nothing here is hand-written documentation. At build time the package reads the
 component registry and README splitter from the workspace, pulls each component's
 `README.md`, and serializes the live `baseTheme` object. The docs site at
-docs.soroush.design renders the same sources, so the two cannot drift.
+docs.soroush.tech renders the same sources, so the two cannot drift.
 
 ## License
 

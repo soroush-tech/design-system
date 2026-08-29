@@ -29,7 +29,7 @@ reference, and the live token contract, so an AI assistant writes against the re
 instead of guessing:
 
 ```sh
-claude mcp add --transport http soroush https://mcp.soroush.design/mcp
+claude mcp add --transport http soroush https://mcp.soroush.tech/mcp
 ```
 
 It also runs locally over stdio (`npx -y @soroush.tech/mcp`). Claude Code users can
@@ -40,7 +40,7 @@ of the same server:
 claude plugin marketplace add soroush-tech/design-system
 ```
 
-Any other tool can read [docs.soroush.design/llms.txt](https://docs.soroush.design/llms.txt).
+Any other tool can read [docs.soroush.tech/llms.txt](https://docs.soroush.tech/llms.txt).
 See [`@soroush.tech/mcp`](../mcp) for the full tool list.
 
 ---

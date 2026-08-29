@@ -18,7 +18,7 @@ const bundle: ContentBundle = {
         'A pressable control used across forms, toolbars, dialogs, cards and page headers, appearing just about everywhere in the app.',
       api: '## Props\n\nvariant, color, size.',
       examples: '',
-      url: 'https://docs.soroush.design/design-system/components/button/',
+      url: 'https://docs.soroush.tech/design-system/components/button/',
     },
   ],
   docs: [

@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import worker, { handleRequest } from './worker'
 
 const rpc = (body: unknown, init: RequestInit = {}): Request =>
-  new Request('https://mcp.soroush.design/mcp', {
+  new Request('https://mcp.soroush.tech/mcp', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -25,21 +25,21 @@ const INITIALIZE = {
 
 describe('worker routing', () => {
   it('serves a plain-text landing page at the root', async () => {
-    const response = await handleRequest(new Request('https://mcp.soroush.design/'))
+    const response = await handleRequest(new Request('https://mcp.soroush.tech/'))
     expect(response.status).toBe(200)
     expect(await response.text()).toContain('claude mcp add --transport http')
   })
 
   it('answers CORS preflight', async () => {
     const response = await handleRequest(
-      new Request('https://mcp.soroush.design/mcp', { method: 'OPTIONS' })
+      new Request('https://mcp.soroush.tech/mcp', { method: 'OPTIONS' })
     )
     expect(response.status).toBe(204)
     expect(response.headers.get('Access-Control-Allow-Origin')).toBe('*')
   })
 
   it('404s an unknown path', async () => {
-    const response = await handleRequest(new Request('https://mcp.soroush.design/nope'))
+    const response = await handleRequest(new Request('https://mcp.soroush.tech/nope'))
     expect(response.status).toBe(404)
   })
 

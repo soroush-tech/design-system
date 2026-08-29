@@ -19,7 +19,7 @@ describe('component pipeline', () => {
     for (const component of components) {
       expect(component.summary, `${component.name} has no summary`).not.toBe('')
       expect(component.importPath).toContain(`from '${component.packageName}/${component.name}'`)
-      expect(component.url.startsWith('https://docs.soroush.design/')).toBe(true)
+      expect(component.url.startsWith('https://docs.soroush.tech/')).toBe(true)
     }
   })
 

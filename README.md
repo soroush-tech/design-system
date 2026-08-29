@@ -25,14 +25,14 @@ renders - component READMEs, the live token contract, and the guides:
 
 ```sh
 # The hosted MCP server (no install)
-claude mcp add --transport http soroush https://mcp.soroush.design/mcp
+claude mcp add --transport http soroush https://mcp.soroush.tech/mcp
 
 # Or the Claude Code plugin: MCP server + house-style skill + UI review agent
 claude plugin marketplace add soroush-tech/design-system
 ```
 
 `npx -y @soroush.tech/mcp` runs the same server locally over stdio, and
-[docs.soroush.design/llms.txt](https://docs.soroush.design/llms.txt) serves a
+[docs.soroush.tech/llms.txt](https://docs.soroush.tech/llms.txt) serves a
 machine-readable index. See [`packages/mcp/mcp.md`](packages/mcp/mcp.md) for how it is
 built and kept in sync.
 

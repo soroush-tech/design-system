@@ -1,6 +1,6 @@
 ---
 name: soroush-design-system
-description: Build UI with @soroush.tech/design-system - the token-driven Emotion component library documented at docs.soroush.design. Load when starting or styling a React/Next.js app that should match that house style, when wiring ThemeProvider or the brand light+dark themes, when adding pages, cards, tables, forms, nav chrome, or status chips, or when reviewing UI code for token compliance (no raw hex, no ad-hoc spacing).
+description: Build UI with @soroush.tech/design-system - the token-driven Emotion component library documented at docs.soroush.tech. Load when starting or styling a React/Next.js app that should match that house style, when wiring ThemeProvider or the brand light+dark themes, when adding pages, cards, tables, forms, nav chrome, or status chips, or when reviewing UI code for token compliance (no raw hex, no ad-hoc spacing).
 ---
 
 # @soroush.tech design system
