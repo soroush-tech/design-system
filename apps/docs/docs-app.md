@@ -44,9 +44,12 @@ section-relative routes, links ride the base via `sectionPath()`, cross-section 
 escape to the live site, and every page defaults to noindex. `cd-docs.yml` builds the
 live tree on CI-passed main pushes and freezes a section from its release tag when
 `CD · Packages (npm)` completes; `scripts/compose-docs-dist.mjs` composes the `docs-dist`
-orphan branch (live root + `<pkg>/<version>/` snapshots + `versions.json`), which deploys
-wholesale to Cloudflare Pages. The `VersionSwitcher` reads `/versions.json` from the
-domain root, so old snapshots list newer releases.
+orphan branch (live root + `<pkg>/<version>/` snapshots + `versions.json`). GitHub Pages
+serves that branch at docs.soroush.tech, so pushing it _is_ the deploy - there is no
+publish step. `public/CNAME` carries the domain and `public/.nojekyll` keeps Pages from
+running Jekyll over the build; both ride along in every build's output. The
+`VersionSwitcher` reads `/versions.json` from the domain root, so old snapshots list
+newer releases.
 
 ## Rules
 

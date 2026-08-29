@@ -82,12 +82,8 @@ jobs:
             git push origin docs-dist
           fi
 
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4.0.0
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy docs-dist --project-name=soroush-design-docs --branch=main --commit-dirty=true
+      # No deploy step: GitHub Pages serves the docs-dist branch, so the push above is
+      # the publish. Pages runs its own build-and-deploy on every push to that branch.
 
   # Freeze the published packages' sections after a release (or on manual dispatch).
   # One leg per public package; serialized so docs-dist pushes never race.
@@ -201,10 +197,4 @@ jobs:
             commit -m "snapshot: ${{ matrix.package }}@${{ steps.resolve.outputs.version }}"
           git push origin docs-dist
 
-      - name: Deploy to Cloudflare Pages
-        if: steps.resolve.outputs.skip == 'false' && steps.archived.outputs.done == 'false'
-        uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4.0.0
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy docs-dist --project-name=soroush-design-docs --branch=main --commit-dirty=true
+      # As above: pushing docs-dist is the publish - GitHub Pages serves that branch.
