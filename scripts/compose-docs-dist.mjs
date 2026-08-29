@@ -48,7 +48,9 @@ const BRANCH_FILES = { CNAME: `${DOMAIN}\n`, '.nojekyll': '' }
 const clearLive = (distDir) => {
   for (const entry of readdirSync(distDir, { withFileTypes: true })) {
     if (entry.name === '.git' || entry.name === 'versions.json') continue
-    if (entry.name in BRANCH_FILES) continue
+    // Own properties only: `in` would also match inherited names, so a page routed to
+    // `constructor/` or `toString/` would survive a clear and serve stale forever.
+    if (Object.hasOwn(BRANCH_FILES, entry.name)) continue
     const path = join(distDir, entry.name)
     if (!entry.isDirectory()) {
       rmSync(path)

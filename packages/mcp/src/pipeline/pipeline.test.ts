@@ -97,6 +97,18 @@ describe('summarize', () => {
     )
   })
 
+  it('reads through a run of initials that opens the paragraph', () => {
+    // Nothing precedes the first initial, so the run has to be recognized at the very
+    // start of the string and not just after a space.
+    expect(summarize('# Title\n\nJ. R. R. Tolkien wrote this. More.')).toBe(
+      'J. R. R. Tolkien wrote this.'
+    )
+  })
+
+  it('ends the sentence on a single letter that opens the paragraph', () => {
+    expect(summarize('# Title\n\nA. Continue.')).toBe('A.')
+  })
+
   it('does not start the paragraph inside a fenced block', () => {
     expect(summarize('# Title\n\n```\ncode line\n```\n\nReal prose here. Rest.')).toBe(
       'Real prose here.'

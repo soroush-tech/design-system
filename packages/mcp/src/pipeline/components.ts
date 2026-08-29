@@ -49,8 +49,10 @@ const ABBREVIATION = /\b(?:e\.g|i\.e|etc|vs|cf|approx|Dr|Mr|Ms|St|no)\.$/
 // A lone capital before a dot is an initial only as part of a run, as in "J. R. R.
 // Tolkien" - it counts when another initial sits on either side of it. Standing alone it
 // ends the sentence, so "Select option A." stops there rather than swallowing the next.
-const INITIAL = /\s[A-Z]\.$/
-const AFTER_INITIAL = /\s[A-Z]\.\s[A-Z]\.$/
+// Anchored on start-of-string as well as whitespace: a paragraph can open on the run,
+// as in "J. R. R. Tolkien wrote this."
+const INITIAL = /(?:^|\s)[A-Z]\.$/
+const AFTER_INITIAL = /(?:^|\s)[A-Z]\.\s[A-Z]\.$/
 const BEFORE_INITIAL = /^\s+[A-Z]\./
 
 /** Whether the dot ending `trimmed.slice(0, end)` closes a sentence. */
