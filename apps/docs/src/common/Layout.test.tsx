@@ -34,8 +34,8 @@ describe('Layout', () => {
     expect(screen.getByTestId('nav')).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: 'Open navigation' }))
     // Drawer portals a second copy of the sidebar content.
-    expect(screen.getAllByTestId('nav').length).toBe(2)
+    expect(screen.getAllByTestId('nav')).toHaveLength(2)
     await user.keyboard('{Escape}')
-    expect(screen.getAllByTestId('nav').length).toBe(1)
+    expect(screen.getAllByTestId('nav')).toHaveLength(1)
   })
 })

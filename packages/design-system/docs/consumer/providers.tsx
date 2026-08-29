@@ -44,7 +44,7 @@ function useEmotionRegistry() {
   return cache
 }
 
-export default function Providers({ children }: { children: React.ReactNode }) {
+export default function Providers({ children }: Readonly<{ children: React.ReactNode }>) {
   const cache = useEmotionRegistry()
   return (
     <CacheProvider value={cache}>

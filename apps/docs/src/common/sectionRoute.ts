@@ -18,8 +18,12 @@ export const docsSection = (): string | undefined => readNodeEnv('DOCS_SECTION')
  * prefix (`/design-system/components/@name`); in that section's versioned snapshot
  * build the prefix drops - the vite base (`/<pkg>/<version>/`) carries it instead.
  */
-export const sectionRoute = (pkg: DocsPackage, route: string): string =>
-  docsSection() === pkg ? route : `/${pkg}${route === '/' ? '' : route}`
+export const sectionRoute = (pkg: DocsPackage, route: string): string => {
+  if (docsSection() === pkg) return route
+  // The section overview is `/<pkg>`, not `/<pkg>/` - Vike matches routes exactly.
+  const suffix = route === '/' ? '' : route
+  return `/${pkg}${suffix}`
+}
 
 /**
  * Whether a section's pages prerender in the current build: always on the live site,

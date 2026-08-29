@@ -92,7 +92,7 @@ describe('component registry', () => {
 
   it('groups every design-system component into exactly one category', () => {
     const counted = componentCategories.flatMap((category) => category.items)
-    expect(counted.length).toBe(new Set(counted).size)
-    expect(counted.length).toBe(allComponents.length)
+    expect(counted).toHaveLength(new Set(counted).size)
+    expect(counted).toHaveLength(allComponents.length)
   })
 })
