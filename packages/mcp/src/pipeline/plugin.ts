@@ -1,6 +1,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { loadPackageFile, repoRoot } from '@soroush.tech/docs-content/node'
+import { tokenPath } from '../tokenPath'
 import type { ContentBundle } from '../types'
 
 /** Where the Claude Code plugin keeps the reference files it ships. */
@@ -55,7 +56,7 @@ export const renderTokensReference = (bundle: ContentBundle): string =>
       `## ${scale.name}`,
       '',
       ...scale.tokens.map(
-        ({ path, value }) => `- \`theme.${scale.name}.${path}\` - ${String(value)}`
+        ({ path, value }) => `- \`theme.${tokenPath(scale.name, path)}\` - ${String(value)}`
       ),
       '',
     ]),

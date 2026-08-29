@@ -12,7 +12,7 @@ Import every component from its own subpath.
 - **Grid** - Extends [`View`](https://docs.soroush.tech/design-system/components/view/).
 - **Paper** - An elevated surface primitive that extends `View`.
 - **Card** - A surface component with an optional title, caption, and variant-based visual treatment.
-- **Quote** - A `View` with a fixed 2px primary left border - used for terminal readouts and markdown
+- **Quote** - A `View` with a fixed 2px primary left border - used for terminal readouts and markdown blockquotes.
 - **AppBar** - Renders as `<header>`.
 - **Drawer** - A panel that slides in from a screen edge, built on [`Modal`](https://docs.soroush.tech/design-system/components/modal/).
 - **Sidebar** - A collapsible vertical icon rail.
@@ -29,7 +29,7 @@ Import every component from its own subpath.
 ## Inputs & forms
 
 - **Button** - Renders as `<button>`.
-- **ButtonGroup** - Groups related `Button` immediate children into a visually joined cluster - adjacent borders
+- **ButtonGroup** - Groups related `Button` immediate children into a visually joined cluster - adjacent borders collapse and the group's `borderRadius` rounds only its outer corners (the first/last buttons keep their leading/trailing corners; every inner corner is squared).
 - **ToggleButton** - An individual toggle button (text or icon) - usable standalone or inside a `ToggleButtonGroup`.
 - **TextInput** - A theme-aware text input primitive.
 - **Checkbox** - A binary toggle control.
@@ -37,12 +37,12 @@ Import every component from its own subpath.
 - **Switch** - A sliding toggle control.
 - **NativeSelect** - A styled native `<select>` form control.
 - **Select** - A form select with a custom, themeable listbox - and a `native` escape hatch.
-- **MenuItem** - A single option row for [`Select`](https://docs.soroush.tech/design-system/components/select/)'s listbox, rendered as a semantic
+- **MenuItem** - A single option row for [`Select`](https://docs.soroush.tech/design-system/components/select/)'s listbox, rendered as a semantic `<li role="option">`.
 - **Form** - Renders a `<form>` and provides form-wide field defaults through `FormContext`.
 - **FormControl** - Groups a label, control, and helper text into one accessible field and shares their state through React context.
 - **FormLabel** - A field label built on [`Typography`](https://docs.soroush.tech/design-system/components/typography/), rendered as a `<label>`.
 - **FormHelperText** - Helper or error text for a field, built on [`Typography`](https://docs.soroush.tech/design-system/components/typography/) and rendered as a `<p>`.
-- **Pagination** - Page-number navigation for paging a list of arbitrary items (e.g.
+- **Pagination** - Page-number navigation for paging a list of arbitrary items (e.g. a blog index), with ellipsis ranges and optional first/last/prev/next controls.
 
 ## Feedback
 
@@ -57,14 +57,14 @@ Import every component from its own subpath.
 - **FocusTrap** - Keeps keyboard focus within its children while active.
 - **Modal** - A low-level, accessible overlay primitive.
 - **Popover** - Positions floating content next to an anchor, portaled above the page.
-- **Pressable** - An unstyled clickable surface: button semantics - keyboard activation, focus ring, disabled
+- **Pressable** - An unstyled clickable surface: button semantics - keyboard activation, focus ring, disabled state - with none of a button's looks.
 
 ## @soroush.tech/markdown
 
-- **Preview** - Renders a markdown **string** with every element mapped to a design-system primitive - headings,
+- **Preview** - Renders a markdown **string** with every element mapped to a design-system primitive - headings, paragraphs, links, lists, GFM task-list checkboxes (`theme/Checkbox`), tables, blockquotes, images, and syntax-highlighted fenced code blocks (`CodeBlock`, via `rehype-highlight`).
 - **Editor** - The source `<textarea>` of the `Markdown` compound.
 - **LiveEdit** - A preview you write on directly.
 - **Control** - The headless root of the `Markdown` compound.
 - **Toolbar** - The formatting toolbar of the `Markdown` compound.
-- **CodeBlock** - A fenced-code surface: a horizontally scrollable, terminal-styled block with a copy-to-clipboard
+- **CodeBlock** - A fenced-code surface: a horizontally scrollable, terminal-styled block with a copy-to-clipboard button that stays pinned to the top-right while the block is in view.
 - **Mermaid** - Renders a fenced ` ```mermaid ` block as a diagram.

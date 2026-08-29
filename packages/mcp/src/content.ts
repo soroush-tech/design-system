@@ -6,16 +6,26 @@ import type { ContentBundle } from './types'
 
 export const content: ContentBundle = bundle
 
+// Both lookups take the bundle to search rather than closing over `content`, so a server
+// built with `createMcpServer(customBundle)` resolves names against the same content its
+// listings render. They default to the shipped bundle for the ordinary case.
+
 /** Case-insensitive component lookup by name or slug. */
-export const findComponent = (query: string): ContentBundle['components'][number] | undefined => {
+export const findComponent = (
+  query: string,
+  source: ContentBundle = content
+): ContentBundle['components'][number] | undefined => {
   const needle = query.trim().toLowerCase()
-  return content.components.find(
+  return source.components.find(
     (component) => component.name.toLowerCase() === needle || component.slug === needle
   )
 }
 
 /** Doc lookup by exact id, case-insensitive. */
-export const findDoc = (id: string): ContentBundle['docs'][number] | undefined => {
+export const findDoc = (
+  id: string,
+  source: ContentBundle = content
+): ContentBundle['docs'][number] | undefined => {
   const needle = id.trim().toLowerCase()
-  return content.docs.find((doc) => doc.id.toLowerCase() === needle)
+  return source.docs.find((doc) => doc.id.toLowerCase() === needle)
 }

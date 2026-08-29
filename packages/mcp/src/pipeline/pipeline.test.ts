@@ -59,6 +59,37 @@ describe('summarize', () => {
   it('returns empty when there is no prose at all', () => {
     expect(summarize('# Only a heading\n\n> quote\n\n```\ncode\n```')).toBe('')
   })
+
+  it('joins a wrapped paragraph so the sentence is not cut at the line break', () => {
+    expect(summarize('# Title\n\nPage-number navigation for paging\na list of items. More.')).toBe(
+      'Page-number navigation for paging a list of items.'
+    )
+  })
+
+  it('stops at the paragraph break rather than swallowing the next one', () => {
+    expect(summarize('# Title\n\nFirst wrapped\nparagraph\n\nSecond paragraph.')).toBe(
+      'First wrapped paragraph'
+    )
+  })
+
+  it('reads through an abbreviation rather than ending the sentence on its dot', () => {
+    expect(
+      summarize('# Title\n\nPaging a list of items (e.g. a blog index), with ranges. Rest.')
+    ).toBe('Paging a list of items (e.g. a blog index), with ranges.')
+    expect(summarize('# Title\n\nUses i.e. and etc. inside one sentence. Next.')).toBe(
+      'Uses i.e. and etc. inside one sentence.'
+    )
+  })
+
+  it('falls back to the whole paragraph when every candidate is an abbreviation', () => {
+    expect(summarize('# Title\n\nShips as e.g.')).toBe('Ships as e.g.')
+  })
+
+  it('does not start the paragraph inside a fenced block', () => {
+    expect(summarize('# Title\n\n```\ncode line\n```\n\nReal prose here. Rest.')).toBe(
+      'Real prose here.'
+    )
+  })
 })
 
 describe('doc pipeline', () => {

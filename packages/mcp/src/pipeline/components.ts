@@ -23,25 +23,41 @@ export const importPathFor = (item: ComponentNavItem): string =>
 const isProse = (line: string): boolean =>
   line.trim().length > 0 && !/^(#|\[!\[|>|<|\||-{3,})/.test(line.trim())
 
-/** The first prose line, ignoring anything inside a fenced code block. */
-const firstProseLine = (markdown: string): string | undefined => {
+/**
+ * The first prose paragraph, ignoring anything inside a fenced code block. READMEs wrap
+ * their prose, so a paragraph is collected to its blank line rather than stopping at the
+ * first physical line - otherwise a summary is cut wherever the author happened to wrap.
+ */
+const firstProseParagraph = (markdown: string): string | undefined => {
   let fenced = false
+  const paragraph: string[] = []
   for (const line of markdown.split('\n')) {
     if (line.trim().startsWith('```')) {
       fenced = !fenced
       continue
     }
-    if (!fenced && isProse(line)) return line
+    if (fenced) continue
+    if (isProse(line)) paragraph.push(line.trim())
+    else if (paragraph.length) break
   }
-  return undefined
+  return paragraph.length ? paragraph.join(' ') : undefined
 }
+
+// Abbreviations whose dot is not a sentence end. Without this, "items (e.g. a blog
+// index), with ..." is cut to "items (e.g." - a summary that stops mid-parenthesis.
+const ABBREVIATION = /(?:\b(?:e\.g|i\.e|etc|vs|cf|approx|Dr|Mr|Ms|St|no)|\s[A-Za-z])\.$/
 
 /** The first sentence of a README's prose, used as the one-line inventory summary. */
 export const summarize = (intro: string): string => {
-  const line = firstProseLine(stripReadmeChrome(intro))
+  const line = firstProseParagraph(stripReadmeChrome(intro))
   if (!line) return ''
-  const sentence = /^(.*?[.!?])(\s|$)/.exec(line.trim())
-  return (sentence ? sentence[1] : line.trim()).replace(/\s+/g, ' ')
+  const trimmed = line.trim()
+  const sentence = /(?:^|\s)\S*?[.!?](?=\s|$)/g
+  for (const match of trimmed.matchAll(sentence)) {
+    const end = match.index + match[0].length
+    if (!ABBREVIATION.test(trimmed.slice(0, end))) return trimmed.slice(0, end).replace(/\s+/g, ' ')
+  }
+  return trimmed.replace(/\s+/g, ' ')
 }
 
 /** Reads every registered component's README and splits it into the served slices. */

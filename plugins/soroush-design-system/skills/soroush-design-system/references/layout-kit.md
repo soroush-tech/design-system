@@ -114,6 +114,8 @@ export function PageHeader({
 The `0.35em` tracking is the signature; don't soften it.
 
 ```tsx
+import { styled } from '@soroush.tech/design-system'
+
 export const SectionLabel = styled('h3')(({ theme }) => ({
   margin: 0,
   fontSize: '13px',
@@ -178,6 +180,9 @@ Pill is for human labels, StatusBadge for enum values. The tone map is the patte
 worth copying: statuses map to palette slots in one table, so adding a status is one line.
 
 ```tsx
+import { styled } from '@soroush.tech/design-system'
+import type { PaletteColor } from '@soroush.tech/design-system'
+
 const STATUS_TONE: Record<string, PaletteColor> = {
   PASSED: 'success',
   APPROVED: 'success',
@@ -220,6 +225,8 @@ export function StatusBadge({ status }: { status: string }) {
 Stacks on mobile, 25px-gapped row at 800px.
 
 ```tsx
+import { styled } from '@soroush.tech/design-system'
+
 const Value = styled('div')(({ theme }) => ({
   fontSize: '28px',
   lineHeight: '28px',
@@ -247,6 +254,9 @@ then the rest.
 Built on `Pressable`; active tab is a 3px inset bottom shadow in primary.
 
 ```tsx
+import { styled } from '@soroush.tech/design-system'
+import { Pressable } from '@soroush.tech/design-system/Pressable'
+
 const Bar = styled('nav')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'row',
@@ -314,6 +324,9 @@ from the pathname, defaulting to the first item.
 ## NavLink / TokenCode - the two text primitives
 
 ```tsx
+import NextLink from 'next/link'
+import { styled } from '@soroush.tech/design-system'
+
 export const NavLink = styled(NextLink)(({ theme }) => ({
   color: theme.text.primary,
   textDecoration: 'none',

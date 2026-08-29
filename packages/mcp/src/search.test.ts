@@ -67,6 +67,20 @@ describe('search', () => {
     const [hit] = search(bundle, 'forms')
     expect(hit.snippet.startsWith('...')).toBe(false)
   })
+
+  it('centres on the query term the body actually holds, not merely the first', () => {
+    // "button" matches only through the heading; "everywhere" is what the body carries,
+    // so the excerpt has to open around the later term.
+    const [hit] = search(bundle, 'button everywhere')
+    expect(hit.snippet).toContain('everywhere')
+    expect(hit.snippet.startsWith('...')).toBe(true)
+  })
+
+  it('opens at the body when no query term appears in it at all', () => {
+    const [hit] = search(bundle, 'inputs')
+    expect(hit.snippet.startsWith('...')).toBe(false)
+    expect(hit.snippet.startsWith('A pressable control')).toBe(true)
+  })
 })
 
 describe('content lookups', () => {
@@ -82,5 +96,14 @@ describe('content lookups', () => {
   it('returns undefined for unknown refs', () => {
     expect(findComponent('nope')).toBeUndefined()
     expect(findDoc('nope')).toBeUndefined()
+  })
+
+  it('searches the bundle it is given rather than the shipped one', () => {
+    // The fixture bundle holds only Button and the theming doc, so a name the shipped
+    // content does carry must miss here - otherwise the lookup ignored its argument.
+    expect(findComponent('Button', bundle)?.name).toBe('Button')
+    expect(findComponent('TextInput', bundle)).toBeUndefined()
+    expect(findDoc('theming', bundle)?.id).toBe('theming')
+    expect(findDoc('styled-system/api', bundle)).toBeUndefined()
   })
 })

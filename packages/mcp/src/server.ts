@@ -2,6 +2,7 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import { z } from 'zod'
 import { content, findComponent, findDoc } from './content'
 import { search } from './search'
+import { tokenPath } from './tokenPath'
 import type { ComponentRecord, ContentBundle } from './types'
 
 export const SERVER_NAME = 'soroush-design-system'
@@ -80,7 +81,9 @@ export const renderTokens = (bundle: ContentBundle, scale?: string): string => {
     '',
     ...scales.flatMap((item) => [
       `## ${item.name}`,
-      ...item.tokens.map(({ path, value }) => `- \`${path}\`: ${String(value)}`),
+      ...item.tokens.map(
+        ({ path, value }) => `- \`theme.${tokenPath(item.name, path)}\`: ${String(value)}`
+      ),
       '',
     ]),
   ].join('\n')
@@ -126,7 +129,7 @@ export const createMcpServer = (bundle: ContentBundle = content): McpServer => {
       },
     },
     async ({ name, part }) => {
-      const component = findComponent(name)
+      const component = findComponent(name, bundle)
       if (!component) {
         const names = bundle.components.map((item) => item.name).join(', ')
         return text(`Unknown component "${name}". Available: ${names}.`)
@@ -169,7 +172,7 @@ export const createMcpServer = (bundle: ContentBundle = content): McpServer => {
       },
     },
     async ({ id }) => {
-      const doc = findDoc(id)
+      const doc = findDoc(id, bundle)
       if (!doc) {
         const ids = bundle.docs.map((item) => item.id).join(', ')
         return text(`Unknown doc "${id}". Available: ${ids}.`)

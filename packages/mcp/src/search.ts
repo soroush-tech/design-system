@@ -45,8 +45,8 @@ const terms = (query: string): string[] =>
 const count = (haystack: string, term: string): number => haystack.split(term).length - 1
 
 /** An excerpt centred on the first hit, so the caller can judge relevance cheaply. */
-const excerpt = (body: string, term: string): string => {
-  const at = body.toLowerCase().indexOf(term)
+const excerpt = (body: string, term: string | undefined): string => {
+  const at = term === undefined ? -1 : body.toLowerCase().indexOf(term)
   if (at < 0) return body.slice(0, 160).replace(/\s+/g, ' ').trim()
   const start = Math.max(0, at - 60)
   return `${start > 0 ? '...' : ''}${body
@@ -80,7 +80,12 @@ export const search = (bundle: ContentBundle, query: string, limit = 5): SearchH
       kind: entry.kind,
       ref: entry.ref,
       title: entry.title,
-      snippet: excerpt(entry.body, words[0]),
+      // A multi-term query can match through a later term while the first appears only
+      // in the heading, so centre the excerpt on a term the body actually contains.
+      snippet: excerpt(
+        entry.body,
+        words.find((term) => entry.body.toLowerCase().includes(term))
+      ),
       score,
     }))
 }

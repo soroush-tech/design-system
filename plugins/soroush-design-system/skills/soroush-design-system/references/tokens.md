@@ -172,7 +172,7 @@ Reference tokens through the theme; a literal value in a component is a bug.
 
 ## blur
 
-- `theme.blur.` - 12px
+- `theme.blur` - 12px
 
 ## palette
 
@@ -244,15 +244,15 @@ Reference tokens through the theme; a literal value in a component is a bug.
 
 ## logoFilter
 
-- `theme.logoFilter.` - brightness(0) invert(1)
+- `theme.logoFilter` - brightness(0) invert(1)
 
 ## portraitBlend
 
-- `theme.portraitBlend.` - screen
+- `theme.portraitBlend` - screen
 
 ## portraitOpacity
 
-- `theme.portraitOpacity.` - 0.8
+- `theme.portraitOpacity` - 0.8
 
 ## shadow
 

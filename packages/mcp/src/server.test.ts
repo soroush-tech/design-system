@@ -112,6 +112,13 @@ describe('renderers', () => {
     expect(renderTokens(content, 'nope')).toContain('Unknown scale')
   })
 
+  it('renders tokens as full theme paths, with no trailing dot on a scalar scale', () => {
+    expect(renderTokens(content, 'space')).toContain('`theme.space.')
+    // `blur` is a leaf at the top of the theme, so its flattened path is empty.
+    expect(renderTokens(content, 'blur')).toContain('`theme.blur`')
+    expect(renderTokens(content, 'blur')).not.toContain('theme.blur.`')
+  })
+
   it('indexes every doc', () => {
     const index = renderDocIndex(content)
     for (const doc of content.docs) expect(index).toContain(`\`${doc.id}\``)

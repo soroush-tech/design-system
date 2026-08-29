@@ -84,6 +84,10 @@ jobs:
 
       # No deploy step: GitHub Pages serves the docs-dist branch, so the push above is
       # the publish. Pages runs its own build-and-deploy on every push to that branch.
+      #
+      # This requires Settings > Pages > Source = "Deploy from a branch", branch
+      # `docs-dist`, folder `/`. Set to "GitHub Actions" instead, Pages waits for a
+      # deployment this workflow never makes and the site silently serves stale content.
 
   # Freeze the published packages' sections after a release (or on manual dispatch).
   # One leg per public package; serialized so docs-dist pushes never race.
