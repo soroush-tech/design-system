@@ -20,8 +20,8 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self' https://codesandbox.io" />
     <title data-mh>Design System · SOROUSH.DESIGN</title>
     <meta name="referrer" content="strict-origin-when-cross-origin" data-mh />
-    <link rel="canonical" href="https://docs.soroush.design/design-system/" data-mh />
-    <meta property="og:url" content="https://docs.soroush.design/design-system/" data-mh />
+    <link rel="canonical" href="https://docs.soroush.tech/design-system/" data-mh />
+    <meta property="og:url" content="https://docs.soroush.tech/design-system/" data-mh />
     <meta property="og:site_name" content="SOROUSH.DESIGN" data-mh />
     <meta name="robots" content="index,follow" data-mh />
     <meta name="description" content="Overview of @soroush.tech/design-system: the component inventory, theme tokens, and how the pieces fit together." data-mh />
@@ -41,6 +41,21 @@ A fully typed React component library where nothing is hardcoded - every color, 
 <div class="soroush-1fffgpx-View-CodeBlock"><div class="code-copy soroush-11wvy74-View"><button type="button" aria-label="Copy code" class="soroush-1b9drz0"><span class="soroush-1a1vmz3"><svg viewBox="0 -960 960 960" fill="#ffffff" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="soroush-11yj3h8-icon"><path d="M360-240q-33 0-56.5-23.5T280-320v-480q0-33 23.5-56.5T360-880h360q33 0 56.5 23.5T800-800v480q0 33-23.5 56.5T720-240H360Zm0-80h360v-480H360v480ZM200-80q-33 0-56.5-23.5T120-160v-560h80v560h440v80H200Zm160-240v-480 480Z"></path></svg></span></button></div><pre tabindex="0" class="soroush-1sd8lyn-View-CodeSurface"><code class="hljs language-sh soroush-1m95q1r-Typography">npm i @soroush.tech/design-system
 </code></pre></div>
 <p class="soroush-1fb9uog-Typography"><code class="soroush-1e9x6br-Typography">react</code> and <code class="soroush-1e9x6br-Typography">react-dom</code> are peer dependencies. Emotion is an internal implementation detail - it ships as a regular dependency, not a peer, so you never install it yourself.</p>
+<hr class="soroush-1suso5l-View"/>
+<h2 class="soroush-16nispn-Typography">Use it with AI tools</h2>
+<p class="soroush-1fb9uog-Typography">An MCP server serves this library&#x27;s component inventory, every component&#x27;s props
+reference, and the live token contract, so an AI assistant writes against the real API
+instead of guessing:</p>
+<div class="soroush-1fffgpx-View-CodeBlock"><div class="code-copy soroush-11wvy74-View"><button type="button" aria-label="Copy code" class="soroush-1b9drz0"><span class="soroush-1a1vmz3"><svg viewBox="0 -960 960 960" fill="#ffffff" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="soroush-11yj3h8-icon"><path d="M360-240q-33 0-56.5-23.5T280-320v-480q0-33 23.5-56.5T360-880h360q33 0 56.5 23.5T800-800v480q0 33-23.5 56.5T720-240H360Zm0-80h360v-480H360v480ZM200-80q-33 0-56.5-23.5T120-160v-560h80v560h440v80H200Zm160-240v-480 480Z"></path></svg></span></button></div><pre tabindex="0" class="soroush-1sd8lyn-View-CodeSurface"><code class="hljs language-sh soroush-1m95q1r-Typography">claude mcp add --transport http soroush https://mcp.soroush.tech/mcp
+</code></pre></div>
+<p class="soroush-1fb9uog-Typography">It also runs locally over stdio (<code class="soroush-1e9x6br-Typography">npx -y @soroush.tech/mcp</code>). Claude Code users can
+install the plugin instead, which adds a house-style skill and a UI review agent on top
+of the same server:</p>
+<div class="soroush-1fffgpx-View-CodeBlock"><div class="code-copy soroush-11wvy74-View"><button type="button" aria-label="Copy code" class="soroush-1b9drz0"><span class="soroush-1a1vmz3"><svg viewBox="0 -960 960 960" fill="#ffffff" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="soroush-11yj3h8-icon"><path d="M360-240q-33 0-56.5-23.5T280-320v-480q0-33 23.5-56.5T360-880h360q33 0 56.5 23.5T800-800v480q0 33-23.5 56.5T720-240H360Zm0-80h360v-480H360v480ZM200-80q-33 0-56.5-23.5T120-160v-560h80v560h440v80H200Zm160-240v-480 480Z"></path></svg></span></button></div><pre tabindex="0" class="soroush-1sd8lyn-View-CodeSurface"><code class="hljs language-sh soroush-1m95q1r-Typography">claude plugin marketplace add soroush-tech/design-system
+claude plugin install soroush-design-system@soroush-tech
+</code></pre></div>
+<p class="soroush-1fb9uog-Typography">Any other tool can read <a href="https://docs.soroush.tech/llms.txt" class="soroush-1jv6bs3-Typography-Link">docs.soroush.tech/llms.txt</a>.
+See <a href="../mcp" class="soroush-1jv6bs3-Typography-Link"><code class="soroush-1e9x6br-Typography">@soroush.tech/mcp</code></a> for the full tool list.</p>
 <hr class="soroush-1suso5l-View"/>
 <h2 class="soroush-16nispn-Typography">Importing</h2>
 <p class="soroush-1fb9uog-Typography">Import components by subpath, styling primitives from the barrel:</p>
@@ -184,9 +199,14 @@ A fully typed React component library where nothing is hardcoded - every color, 
 <h3 class="soroush-1b8vbfp-Typography">Added</h3>
 <ul class="soroush-1ohw29s-View">
 <li class="soroush-yvaico-Typography">Every component now owns its documentation page: <code class="soroush-1e9x6br-Typography">&lt;Name&gt;.mdx</code> sits beside the component&#x27;s
-<code class="soroush-1e9x6br-Typography">README.md</code> and drives that component&#x27;s page on docs.soroush.design. The page renders the
+<code class="soroush-1e9x6br-Typography">README.md</code> and drives that component&#x27;s page on docs.soroush.tech. The page renders the
 README&#x27;s intro followed by every story in <code class="soroush-1e9x6br-Typography">&lt;Name&gt;.stories.tsx</code> as a live, editable demo.</li>
 <li class="soroush-yvaico-Typography">The page is required - a component without one fails the docs build.</li>
+<li class="soroush-yvaico-Typography">The README now explains how to point an AI assistant at this library: the hosted MCP server,
+the same server locally over stdio, and the Claude Code plugin that wraps it.</li>
+<li class="soroush-yvaico-Typography"><code class="soroush-1e9x6br-Typography">docs/consumer/</code> carries the consumer-facing setup guide, the layout-kit patterns, and
+copyable <code class="soroush-1e9x6br-Typography">theme.ts</code> / <code class="soroush-1e9x6br-Typography">providers.tsx</code> starters. The MCP server serves these to AI tools; they
+are repo files, not part of the npm tarball.</li>
 </ul></div></div><div class="soroush-587rzo-View"><div class="soroush-1carqy9-View-MarkdownPreview"><h2 class="soroush-16nispn-Typography">@soroush.tech/design-system@1.3.3</h2>
 <p class="soroush-1fb9uog-Typography">Maintenance release. One rendered string changes; no API changes.</p>
 <h3 class="soroush-1b8vbfp-Typography">Changed</h3>
@@ -394,15 +414,15 @@ subpaths are folded into <code class="soroush-1e9x6br-Typography">.../theme</cod
 </ul></div></div></section></main></div><footer class="soroush-126tx8w-View-flex"><p class="soroush-229jxh-Typography">@soroush.tech design system</p></footer></div></div>
       <script id="vike_pageContext" type="application/json">{"pageId":"\/src\/pages\/design-system\/index","routeParams":{},"data":{"meta":[{"property":"og:type","content":"website"},{"property":"og:title","content":"Design System"},{"name":"twitter:card","content":"summary"},{"name":"twitter:title","content":"Design System"},{"property":"og:description","content":"Overview of @soroush.tech\/design-system: the component inventory, theme tokens, and how the pieces fit together."},{"name":"twitter:description","content":"Overview of @soroush.tech\/design-system: the component inventory, theme tokens, and how the pieces fit together."}]}}</script>
       <script id="vike_globalContext" type="application/json">{}</script>
-      <script src="/assets/entries/entry-client-routing.BFTJ776P.js" type="module" async></script>
-      <link rel="modulepreload" href="/assets/entries/src_pages_design-system_index.B-WjKL-Y.js" as="script" type="text/javascript">
+      <script src="/assets/entries/entry-client-routing.CO-qwJ-d.js" type="module" async></script>
+      <link rel="modulepreload" href="/assets/entries/src_pages_design-system_index.DB32uPXf.js" as="script" type="text/javascript">
       <link rel="modulepreload" href="/assets/chunks/chunk-aKtaBQYM.js" as="script" type="text/javascript">
-      <link rel="modulepreload" href="/assets/chunks/chunk-m-9K0bxn.js" as="script" type="text/javascript">
+      <link rel="modulepreload" href="/assets/chunks/chunk-BF5idQyo.js" as="script" type="text/javascript">
       <link rel="modulepreload" href="/assets/chunks/chunk-zJ_50EbN.js" as="script" type="text/javascript">
       <link rel="modulepreload" href="/assets/chunks/chunk-BkML6sXq.js" as="script" type="text/javascript">
       <link rel="modulepreload" href="/assets/chunks/chunk--uy_ci8l.js" as="script" type="text/javascript">
       <link rel="modulepreload" href="/assets/chunks/chunk-B92s48ZP.js" as="script" type="text/javascript">
-      <link rel="modulepreload" href="/assets/chunks/chunk-WqZbfXZo.js" as="script" type="text/javascript">
-      <link rel="modulepreload" href="/assets/chunks/chunk-BgwHK01_.js" as="script" type="text/javascript">
+      <link rel="modulepreload" href="/assets/chunks/chunk-B11dARQk.js" as="script" type="text/javascript">
+      <link rel="modulepreload" href="/assets/chunks/chunk-BYx-Cw0X.js" as="script" type="text/javascript">
     </body>
   </html>

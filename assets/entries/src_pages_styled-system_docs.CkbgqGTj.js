@@ -1,4 +1,4 @@
-import{n as e}from"../chunks/chunk-aKtaBQYM.js";import{A as t,f as n,j as r,k as i,n as a,t as o,u as s}from"../chunks/chunk-m-9K0bxn.js";import{W as c}from"../chunks/chunk-BkML6sXq.js";import{n as l,t as u}from"../chunks/chunk-WqZbfXZo.js";var d=Object.assign({"../../packages/styled-system/docs/README.md":`# Documentation
+import{n as e}from"../chunks/chunk-aKtaBQYM.js";import{A as t,f as n,j as r,k as i,n as a,t as o,u as s}from"../chunks/chunk-BF5idQyo.js";import{W as c}from"../chunks/chunk-BkML6sXq.js";import{n as l,t as u}from"../chunks/chunk-B11dARQk.js";var d=Object.assign({"../../packages/styled-system/docs/README.md":`# Documentation
 
 Full documentation for [\`@soroush.tech/styled-system\`](../README.md) - a maintained,
 first-class-TypeScript rewrite of [styled-system](https://github.com/jxnblk/styled-system)

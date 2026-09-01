@@ -1,4 +1,4 @@
-import{n as e}from"../chunks/chunk-aKtaBQYM.js";import{t,u as n}from"../chunks/chunk-m-9K0bxn.js";import{W as r}from"../chunks/chunk-BkML6sXq.js";import{t as i}from"../chunks/chunk-BOh_Btbb.js";var a=`# Usage
+import{n as e}from"../chunks/chunk-aKtaBQYM.js";import{t,u as n}from"../chunks/chunk-BF5idQyo.js";import{W as r}from"../chunks/chunk-BkML6sXq.js";import{t as i}from"../chunks/chunk-VwUPG73Q.js";var a=`# Usage
 
 ## Import per component
 
