@@ -63,7 +63,7 @@ jobs:
 
       - name: Checkout docs-dist (create the orphan branch on first run)
         run: |
-          git fetch origin docs-dist && git worktree add docs-dist origin/docs-dist || {
+          git fetch origin docs-dist && git worktree add -B docs-dist docs-dist origin/docs-dist || {
             git worktree add --orphan -b docs-dist docs-dist
           }
 
@@ -140,7 +140,7 @@ jobs:
       - name: Checkout docs-dist (create the orphan branch on first run)
         if: steps.resolve.outputs.skip == 'false'
         run: |
-          git fetch origin docs-dist && git worktree add docs-dist origin/docs-dist || {
+          git fetch origin docs-dist && git worktree add -B docs-dist docs-dist origin/docs-dist || {
             git worktree add --orphan -b docs-dist docs-dist
           }
 
