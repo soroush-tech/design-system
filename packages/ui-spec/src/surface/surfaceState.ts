@@ -101,10 +101,12 @@ export const readSurfaces = (messages: Message[]): { surfaces: Surface[]; findin
         // The root holds keys, so a root replaced by anything but an object is an empty one.
         surface.dataModel = isObject(value) ? value : {}
       } else {
-        // The value replaces what is there, and `null` removes the key.
+        // The value replaces what is there, and `null` removes the key. From a list that is the
+        // item itself, as a JSON Patch `remove` does: deleting the index would leave a hole.
         const [holder, key] = getHolder(surface.dataModel, segments)
-        if (value === null) delete holder[key]
-        else setOwn(holder, key, value)
+        if (value !== null) setOwn(holder, key, value)
+        else if (Array.isArray(holder) && /^\d+$/.test(key)) holder.splice(Number(key), 1)
+        else delete holder[key]
       }
     }
     if (deleteSurface !== undefined) surfaces.delete(deleteSurface.surfaceId)

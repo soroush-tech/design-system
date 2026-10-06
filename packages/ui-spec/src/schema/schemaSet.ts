@@ -37,11 +37,15 @@ export const aliasCatalog = (catalog: JsonObject, name = 'catalog.json'): JsonOb
   $id: `${A2UI_BASE}${name}`,
 })
 
+/** A name as one segment of a JSON Pointer (RFC 6901), where `~` and `/` are escaped. */
+const escapeSegment = (name: string): string => name.replaceAll('~', '~0').replaceAll('/', '~1')
+
 /** The property an issue is about: `required` and the closed-object keywords name it in `params`. */
 const locateIssue = ({ instancePath, params }: ErrorObject): string => {
   const property: string | undefined =
     params.missingProperty ?? params.unevaluatedProperty ?? params.additionalProperty
-  return property === undefined ? instancePath : `${instancePath}/${property}`
+  // ajv escapes `instancePath` as a JSON Pointer, and leaves the names in `params` as written.
+  return property === undefined ? instancePath : `${instancePath}/${escapeSegment(property)}`
 }
 
 const describeIssue = ({ message, params }: ErrorObject): string =>

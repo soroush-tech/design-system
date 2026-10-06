@@ -95,6 +95,17 @@ describe('readSurfaces', () => {
     expect(surfaces[0]!.dataModel).toEqual({ form: { name: 'Ada' }, page: { params: { id: 7 } } })
   })
 
+  it('removes an item from a list, leaving no hole', () => {
+    const { surfaces } = readSurfaces([
+      { createSurface: { surfaceId: 'main', dataModel: { items: ['a', 'b', 'c'] } } },
+      { updateDataModel: { surfaceId: 'main', path: '/items/1', value: null } },
+      // Not an index, so there is no item to remove.
+      { updateDataModel: { surfaceId: 'main', path: '/items/first', value: null } },
+    ])
+
+    expect(surfaces[0]!.dataModel).toEqual({ items: ['a', 'c'] })
+  })
+
   it('replaces the whole model when an update names no path', () => {
     const replaced = readSurfaces([
       { createSurface: { surfaceId: 'main', dataModel: { old: true } } },

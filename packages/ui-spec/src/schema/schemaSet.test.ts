@@ -58,6 +58,13 @@ describe('createSchemaSet', () => {
     ])
   })
 
+  it('escapes a property name that holds a `/` or a `~`, so the path still leads to it', () => {
+    expect(schemas.check(closed, { size: 'sm', 'a/b': 1, 'c~d': 2 })).toEqual([
+      { path: '/a~1b', message: 'must NOT have additional properties' },
+      { path: '/c~0d', message: 'must NOT have additional properties' },
+    ])
+  })
+
   it('lists the allowed values of an enumeration', () => {
     expect(schemas.check(closed, { size: 'xl' })).toEqual([
       { path: '/size', message: 'must be equal to one of the allowed values: sm, md' },
