@@ -351,7 +351,7 @@ describe('validateSurface: function calls', () => {
         // `select` returns anything, which fits any position.
         text(
           'label',
-          call('select', { condition: { '@path': '/ui/isDark' }, then: 'on', else: 'off' })
+          call('select', { condition: { '@path': '/ui/isDark' }, ifTrue: 'on', ifFalse: 'off' })
         ),
         {
           id: 'button',

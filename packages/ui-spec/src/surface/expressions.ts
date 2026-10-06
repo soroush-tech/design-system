@@ -151,10 +151,14 @@ export const checkValue = (
     }
   }
 
-  if (isObject(value) && typeof value['@path'] === 'string') {
-    if (lookUp(env.dataModel, resolvePath(value['@path'], scope)) === 'missing') {
-      report('unresolved-path', pointer, `Nothing in the data model is at "${value['@path']}".`)
+  const checkBinding = (path: string) => {
+    if (lookUp(env.dataModel, resolvePath(path, scope)) === 'missing') {
+      report('unresolved-path', pointer, `Nothing in the data model is at "${path}".`)
     }
+  }
+
+  if (isObject(value) && typeof value['@path'] === 'string') {
+    checkBinding(value['@path'])
     return
   }
   if (isObject(value) && typeof value['@call'] === 'string') {

@@ -39,9 +39,9 @@ export const aliasCatalog = (catalog: JsonObject, name = 'catalog.json'): JsonOb
 
 /** The property an issue is about: `required` and the closed-object keywords name it in `params`. */
 const locateIssue = ({ instancePath, params }: ErrorObject): string => {
-  const property: unknown =
+  const property: string | undefined =
     params.missingProperty ?? params.unevaluatedProperty ?? params.additionalProperty
-  return property === undefined ? instancePath : `${instancePath}/${String(property)}`
+  return property === undefined ? instancePath : `${instancePath}/${property}`
 }
 
 const describeIssue = ({ message, params }: ErrorObject): string =>

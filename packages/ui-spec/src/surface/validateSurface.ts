@@ -62,20 +62,15 @@ const ACTION_SLOT = { $ref: 'common_types.json#/$defs/Action' }
 const isAllowed = (list: unknown, type: string): boolean =>
   !Array.isArray(list) || list.includes(type)
 
-const inspectSurface = (
-  surface: Surface,
+/**
+ * Checks each component against the catalog it resolves to, and answers the definition of every
+ * one that passes. Only those are read further: the walk trusts the shapes a schema guarantees.
+ */
+const resolveDefinitions = (
+  { components, catalogId }: Surface,
   catalogs: ReturnType<typeof registerCatalogs>,
-  report: (finding: Finding) => void,
-  behavior: Behavior | undefined
-): Inspected => {
-  const { components, surfaceId, catalogId, extensions } = surface
-  const dataModel =
-    behavior === undefined ? surface.dataModel : augmentDataModel(surface.dataModel, behavior)
-  const env: Environment = { ...catalogs, defaultCatalogId: catalogId, dataModel, report }
-  const events = new Set<string>()
-
-  // Each component against the catalog it resolves to. Only one that passes is read further:
-  // the walk below trusts the shapes its schema guarantees.
+  report: (finding: Finding) => void
+): Map<string, JsonObject> => {
   const definitions = new Map<string, JsonObject>()
   for (const [id, { component, path }] of components) {
     const ownCatalogId = component.catalogId ?? catalogId
@@ -121,6 +116,21 @@ const inspectSurface = (
     }
     if (issues.length === 0) definitions.set(id, definition)
   }
+  return definitions
+}
+
+const inspectSurface = (
+  surface: Surface,
+  catalogs: ReturnType<typeof registerCatalogs>,
+  report: (finding: Finding) => void,
+  behavior: Behavior | undefined
+): Inspected => {
+  const { components, surfaceId, catalogId, extensions } = surface
+  const dataModel =
+    behavior === undefined ? surface.dataModel : augmentDataModel(surface.dataModel, behavior)
+  const env: Environment = { ...catalogs, defaultCatalogId: catalogId, dataModel, report }
+  const events = new Set<string>()
+  const definitions = resolveDefinitions(surface, catalogs, report)
 
   const reached = new Set<string>()
   // Set when a reached component could not be read. What it holds is then unknown, so the

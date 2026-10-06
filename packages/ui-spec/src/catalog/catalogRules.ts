@@ -10,7 +10,7 @@ export interface Catalog extends JsonObject {
 }
 
 /** Unicode UAX #31, as the specification spells it for every name a catalog introduces. */
-const IDENTIFIER = /^[\p{XID_Start}_][\p{XID_Continue}]*$/u
+const IDENTIFIER = /^[\p{XID_Start}_]\p{XID_Continue}*$/u
 
 /** The protocol's own property names. Their `@` is outside the identifier grammar on purpose. */
 const DIRECTIVES = new Set(['@path', '@call'])

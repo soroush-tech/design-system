@@ -44,7 +44,7 @@ export const articlesSurface = [
           component: 'Icon',
           name: {
             '@call': 'select',
-            args: { condition: { '@path': '/ui/isDark' }, then: 'moon', else: 'sun' },
+            args: { condition: { '@path': '/ui/isDark' }, ifTrue: 'moon', ifFalse: 'sun' },
           },
         },
         {

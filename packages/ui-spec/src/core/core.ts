@@ -122,10 +122,10 @@ export const CORE_FUNCTIONS: Record<string, JsonObject> = {
   ),
   select: defineFunction(
     'select',
-    'Returns `then` when `condition` is true, otherwise `else`.',
+    'Returns `ifTrue` when `condition` is true, otherwise `ifFalse`.',
     'any',
-    { condition: DYNAMIC_BOOLEAN, then: DYNAMIC_VALUE, else: DYNAMIC_VALUE },
-    ['condition', 'then', 'else']
+    { condition: DYNAMIC_BOOLEAN, ifTrue: DYNAMIC_VALUE, ifFalse: DYNAMIC_VALUE },
+    ['condition', 'ifTrue', 'ifFalse']
   ),
 }
 
