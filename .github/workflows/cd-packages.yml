@@ -23,6 +23,7 @@ on:
           - markdown
           - mcp
           - styled-system
+          - ui-spec
         # gen:publish-options end
 
 concurrency:

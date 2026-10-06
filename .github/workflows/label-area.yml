@@ -31,6 +31,7 @@ jobs:
             mcp
             story-demo
             styled-system
+            ui-spec
             # gen:issue-areas end
         with:
           script: |

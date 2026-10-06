@@ -6,5 +6,5 @@
   "printWidth": 100,
   "endOfLine": "lf",
   "sortPackageJson": false,
-  "ignorePatterns": []
+  "ignorePatterns": ["packages/ui-spec/vendor"]
 }

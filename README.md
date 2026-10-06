@@ -10,6 +10,7 @@ Monorepo for the `@soroush.tech` UI libraries, extracted from [`soroush-tech/cor
 | [`@soroush.tech/design-system`](packages/design-system) | Token-driven React component library built on styled-system                   |
 | [`@soroush.tech/markdown`](packages/markdown)           | Markdown companion component library for the design system                    |
 | [`@soroush.tech/mcp`](packages/mcp)                     | MCP server exposing the components, READMEs, and tokens to AI coding tools    |
+| [`@soroush.tech/ui-spec`](packages/ui-spec)             | Generative-UI spec on A2UI v1.0: catalogs, a behavior schema, and validators  |
 | [`@soroush.tech/hooks`](packages/hooks)                 | Shared React hooks (private, internal)                                        |
 | [`@soroush.tech/lab`](packages/lab)                     | Incubator for components heading into the design system (private, internal)   |
 | [`@soroush.tech/story-demo`](packages/story-demo)       | Renders CSF3 stories as interactive docs demos (private, internal)            |

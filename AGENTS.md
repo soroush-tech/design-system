@@ -86,6 +86,7 @@ Read the relevant doc before working in that area:
 | Packages              | `packages/packages.md`                    | Workspace packages: structure, default-export, tsdown + `publishConfig` publishing, 100% coverage, licensing             |
 | Docs app              | `apps/docs/docs-app.md`                   | The docs.soroush.tech Vike SSG app: content pipeline, demos, versioned sections, e2e-only pages                          |
 | AI surface            | `packages/mcp/mcp.md`                     | The MCP server, llms.txt, and the Claude Code plugin: what they serve, and the generated files that must not drift       |
+| Generative-UI spec    | `packages/ui-spec/ui-spec.md`             | A2UI v1.0 catalogs, the behavior document, the validators: vendored files that stay unedited, closed finding codes       |
 
 ## Quick checklist before pushing
 
