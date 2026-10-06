@@ -46,6 +46,23 @@ interface Message {
   deleteSurface?: { surfaceId: string }
 }
 
+/** Applies one `updateDataModel` to the data a surface holds. */
+const updateData = (surface: Surface, { path = '/', value: sent }: DataModelMessage): void => {
+  const segments = parsePointer(path)
+  const value = structuredClone(sent)
+  if (segments.length === 0) {
+    // The root holds keys, so a root replaced by anything but an object is an empty one.
+    surface.dataModel = isObject(value) ? value : {}
+  } else {
+    // The value replaces what is there, and `null` removes the key. From a list that is the
+    // item itself, as a JSON Patch `remove` does: deleting the index would leave a hole.
+    const [holder, key] = getHolder(surface.dataModel, segments)
+    if (value !== null) setOwn(holder, key, value)
+    else if (Array.isArray(holder) && /^\d+$/.test(key)) holder.splice(Number(key), 1)
+    else delete holder[key]
+  }
+}
+
 /**
  * The surfaces a run of envelope-valid messages describes, each as it stands after the last one.
  *
@@ -94,20 +111,7 @@ export const readSurfaces = (messages: Message[]): { surfaces: Surface[]; findin
     }
     if (updateComponents !== undefined) place(updateComponents, `/${index}/updateComponents`)
     if (updateDataModel !== undefined) {
-      const surface = getSurface(updateDataModel.surfaceId)
-      const segments = parsePointer(updateDataModel.path ?? '/')
-      const value = structuredClone(updateDataModel.value)
-      if (segments.length === 0) {
-        // The root holds keys, so a root replaced by anything but an object is an empty one.
-        surface.dataModel = isObject(value) ? value : {}
-      } else {
-        // The value replaces what is there, and `null` removes the key. From a list that is the
-        // item itself, as a JSON Patch `remove` does: deleting the index would leave a hole.
-        const [holder, key] = getHolder(surface.dataModel, segments)
-        if (value !== null) setOwn(holder, key, value)
-        else if (Array.isArray(holder) && /^\d+$/.test(key)) holder.splice(Number(key), 1)
-        else delete holder[key]
-      }
+      updateData(getSurface(updateDataModel.surfaceId), updateDataModel)
     }
     if (deleteSurface !== undefined) surfaces.delete(deleteSurface.surfaceId)
   })
