@@ -23,6 +23,7 @@ coverage:
           - mcp
           - story-demo
           - styled-system
+          - ui-spec
           # gen:codecov-patch-flags end
           # App flags are hand-managed; the docs app is not a package.
           - docs
@@ -62,6 +63,9 @@ flag_management:
     - name: styled-system
       paths:
         - packages/styled-system/
+    - name: ui-spec
+      paths:
+        - packages/ui-spec/
     # gen:codecov-flags end
     # The docs app flag (hand-managed - apps are not package-generated).
     - name: docs
@@ -113,6 +117,10 @@ component_management:
       name: styled-system
       paths:
         - packages/styled-system/**
+    - component_id: ui-spec
+      name: ui-spec
+      paths:
+        - packages/ui-spec/**
     # gen:codecov-components end
     - component_id: docs
       name: docs

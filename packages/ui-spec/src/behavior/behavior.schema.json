@@ -1,0 +1,250 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://soroush.tech/ui-spec/behavior/v0_1/behavior.schema.json",
+  "title": "UI spec behavior document",
+  "description": "Where a surface gets its data: page inputs, data sources, derived values, triggers and document metadata. It never contains code: every computation is a named function that a catalog provides. A runtime executes it by writing results into the surface data model, the way an agent would with updateDataModel messages. This document is built on A2UI v1.0 and is not part of it; it is versioned on its own.",
+  "type": "object",
+  "properties": {
+    "$schema": { "type": "string" },
+    "behaviorVersion": { "const": "0.1" },
+    "surfaceId": {
+      "type": "string",
+      "description": "The surface this document drives."
+    },
+    "catalogId": {
+      "type": "string",
+      "description": "The catalog a function call resolves in when it names none. It must be the default catalog of the surface."
+    },
+    "requires": {
+      "type": "object",
+      "description": "What the host must have before it runs this document.",
+      "properties": {
+        "functions": {
+          "type": "array",
+          "items": { "type": "string" },
+          "uniqueItems": true,
+          "description": "The functions of `catalogId` that the expressions in this document call. The list is exact: every function called without a `catalogId` of its own, and no other."
+        }
+      },
+      "additionalProperties": false
+    },
+    "params": {
+      "type": "object",
+      "description": "Page inputs: route parameters, the query string, the page context. Each is written to `/page/params/<name>` in the data model when the surface is created.",
+      "propertyNames": { "$ref": "#/$defs/Identifier" },
+      "additionalProperties": { "$ref": "#/$defs/Param" }
+    },
+    "resources": {
+      "type": "object",
+      "description": "Named data sources. A query stands for a data-fetching hook, a mutation for a submit hook. The runtime keeps `/resources/<name>` as `{ status, error }`, with `status` one of idle, pending, error or ready, and writes the response to `into`. A `When` component bound to `/resources/<name>/status` is how a surface shows a skeleton, an error and the content.",
+      "propertyNames": { "$ref": "#/$defs/Identifier" },
+      "additionalProperties": { "$ref": "#/$defs/Resource" }
+    },
+    "derived": {
+      "type": "array",
+      "description": "Computed values written into the data model, evaluated in order. A later entry may read an earlier one.",
+      "items": { "$ref": "#/$defs/Derived" }
+    },
+    "triggers": {
+      "type": "array",
+      "description": "What runs a resource that does not run by itself: a mutation, or a refetch.",
+      "items": { "$ref": "#/$defs/Trigger" }
+    },
+    "head": {
+      "$ref": "#/$defs/Head"
+    }
+  },
+  "required": ["behaviorVersion", "surfaceId", "catalogId"],
+  "additionalProperties": false,
+  "$defs": {
+    "Identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+    },
+    "JsonPointer": {
+      "type": "string",
+      "pattern": "^(/([^/~]|~[01])*)*$",
+      "description": "An RFC 6901 JSON Pointer into the surface data model. `/resources` and `/page/params` belong to the runtime and cannot be written to."
+    },
+    "Expression": {
+      "description": "A literal, a data binding or a function call, in the shapes A2UI v1.0 gives them. The functions and their arguments are checked against the catalog by the validator, not by this schema.",
+      "oneOf": [
+        { "type": ["string", "number", "boolean", "null"] },
+        { "type": "array" },
+        {
+          "type": "object",
+          "properties": { "@path": { "type": "string" } },
+          "required": ["@path"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "@call": { "type": "string" },
+            "args": { "type": "object" },
+            "catalogId": {
+              "type": "string",
+              "description": "The catalog this one call resolves in, instead of the document's."
+            }
+          },
+          "required": ["@call"],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "Param": {
+      "type": "object",
+      "properties": {
+        "from": {
+          "enum": ["route", "query", "pageContext"],
+          "description": "Where the host reads the value."
+        },
+        "type": { "enum": ["string", "number", "boolean"] },
+        "required": { "type": "boolean", "default": false },
+        "default": { "type": ["string", "number", "boolean"] }
+      },
+      "required": ["from", "type"],
+      "additionalProperties": false
+    },
+    "Resource": {
+      "type": "object",
+      "properties": {
+        "kind": { "enum": ["query", "mutation"] },
+        "request": {
+          "type": "object",
+          "properties": {
+            "method": { "enum": ["get", "post", "put", "patch", "delete"] },
+            "url": {
+              "$ref": "#/$defs/Expression",
+              "description": "A string, or an expression that builds one from params."
+            },
+            "query": {
+              "type": "object",
+              "additionalProperties": { "$ref": "#/$defs/Expression" }
+            },
+            "body": { "$ref": "#/$defs/Expression" }
+          },
+          "required": ["method", "url"],
+          "additionalProperties": false
+        },
+        "cache": {
+          "type": "object",
+          "description": "How a query is cached. A mutation ignores it.",
+          "properties": {
+            "key": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/Expression" },
+              "minItems": 1
+            },
+            "staleTimeMs": { "type": "integer", "minimum": 0, "default": 0 },
+            "suspense": {
+              "type": "boolean",
+              "default": false,
+              "description": "When true the surface shows its pending state until the first response."
+            }
+          },
+          "required": ["key"],
+          "additionalProperties": false
+        },
+        "enabled": {
+          "$ref": "#/$defs/Expression",
+          "description": "A boolean expression. The query runs only while it is true."
+        },
+        "select": {
+          "$ref": "#/$defs/Expression",
+          "description": "Transforms the response before it is written to `into`. The raw response is readable at `/_response` while it runs."
+        },
+        "into": {
+          "$ref": "#/$defs/JsonPointer",
+          "description": "Where in the data model the response goes, after `select`."
+        },
+        "prefetch": {
+          "type": "boolean",
+          "default": false,
+          "description": "Run on the server before the surface is created, and send the result in `createSurface.dataModel`."
+        },
+        "onError": {
+          "$ref": "#/$defs/JsonPointer",
+          "description": "Where in the data model an error object goes on failure, besides `/resources/<name>/error`."
+        }
+      },
+      "required": ["kind", "request", "into"],
+      "allOf": [
+        {
+          "if": { "properties": { "kind": { "const": "query" } } },
+          "then": { "required": ["cache"] }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "Derived": {
+      "type": "object",
+      "properties": {
+        "id": { "$ref": "#/$defs/Identifier" },
+        "forEach": {
+          "$ref": "#/$defs/JsonPointer",
+          "description": "A list to compute the value for, once per item. Inside `value`, a relative path starts at the item, as in an A2UI list template."
+        },
+        "into": {
+          "type": "string",
+          "description": "Where the value goes. With `forEach` it is a path inside the item, with no leading slash; without, it is a JSON Pointer."
+        },
+        "value": { "$ref": "#/$defs/Expression" }
+      },
+      "required": ["id", "into", "value"],
+      "additionalProperties": false
+    },
+    "Trigger": {
+      "type": "object",
+      "properties": {
+        "on": {
+          "type": "object",
+          "properties": {
+            "event": {
+              "type": "string",
+              "description": "The `name` of an A2UI action event that a component of the surface dispatches. This is how a button runs a mutation."
+            },
+            "change": {
+              "$ref": "#/$defs/JsonPointer",
+              "description": "A place in the data model. The trigger fires when its value changes."
+            }
+          },
+          "minProperties": 1,
+          "maxProperties": 1,
+          "additionalProperties": false
+        },
+        "run": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/Identifier" },
+          "description": "The resources to run, in order."
+        }
+      },
+      "required": ["on", "run"],
+      "additionalProperties": false
+    },
+    "Head": {
+      "type": "object",
+      "description": "Document metadata. A surface has no place for it, so it lives here.",
+      "properties": {
+        "title": { "$ref": "#/$defs/Expression" },
+        "description": { "$ref": "#/$defs/Expression" },
+        "meta": {
+          "type": "array",
+          "description": "The meta tags, each keyed by `name` or by `property`.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "property": { "type": "string" },
+              "content": { "$ref": "#/$defs/Expression" }
+            },
+            "required": ["content"],
+            "oneOf": [{ "required": ["name"] }, { "required": ["property"] }],
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

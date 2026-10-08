@@ -1,0 +1,23 @@
+{
+  "LICENSE": "cb64c585030539d0efa75d6b675a431db9c5cc92545c51e09462e92143f1a55c",
+  "catalogs/basic/catalog.json": "687f2e1cf88c527d2c7a588ce74d98662577fae244685e392185467e29944630",
+  "json/agent_to_renderer.json": "468c8e544dbe0b02d5d5586ebcdca399ecfa6d07a7b875d887089ce3bd2df160",
+  "json/catalog_definition.json": "dcbf9a0fc4140640c912732d5ca42ef8768bd3eabde65254173df863fbc25bd6",
+  "json/common_types.json": "ea03be1c89be3f40d53eec306e32661721c74c66297328ed82e7230faea7f458",
+  "json/renderer_to_agent.json": "a8d76b8c8b8b38c15f15f1f06df4f3a992f512feec2e7799d85e18de163456a8",
+  "test/cases/button_checks.json": "fadbc826ce765242479a1edccb7c286c496d2794241f946dd35768f2afec57c5",
+  "test/cases/call_agent_function_message.json": "6def045c344e2d7c54ae97924202acc9d68ec31a14f300a4124c40ff9ababf60",
+  "test/cases/call_function_message.json": "4433648fd5f05ae1083dc513440dde4d6ab41c100150bcff13f925e71d66a535",
+  "test/cases/checkable_components.json": "510e20ae65da1f9194e6f90bbdb2d590a4b859abccfc5cf092fcfe8684587ad4",
+  "test/cases/composition_constraints.json": "469ede847664c349d2801ae19e09a5f417b53f96c4a165804e8c4a8b5b7b05a4",
+  "test/cases/contact_form_example_test.json": "fc0158d1fb283ff4992e3f3388b52080799ef06907edbc164cb511499e128695",
+  "test/cases/dynamic_value_validation.json": "bc36f4d7350cc2742132ae1e60395f6669948d5d003c6c191c1384898eb005b5",
+  "test/cases/function_catalog_validation.json": "2fd92fc9cd3264cc7f8ce3047157d9618fe981bae4cd5ac08ff444870b1bd21b",
+  "test/cases/function_response.json": "83b391e2a5422f0d8426ccc94f5d85e9cd2556d8115d8f9d70109027539c36e3",
+  "test/cases/icon_checks.json": "a8f629ad51b81838dfa63192320530d51db712681f3e5da2af1863364a4b69cc",
+  "test/cases/initial_state_validation.json": "9d016b76cbdfbb17552a71d2a58ae4adfa0aee411743cd2ea8f304d14a9a21f2",
+  "test/cases/renderer_messages.json": "771a5799ae7c8b03650e2a31ded27c65bda7b8d8e47eb7206e40782828aa6c51",
+  "test/cases/tabs_checks.json": "05b9364b6eef53f84e8cdedc65cdf081212fcbce02fd031f47e007dc3bf94554",
+  "test/cases/text_variants.json": "286a6be809331865b25a12b13b756ba31ba2f5da89f92cfd8e08b5dee7bb9e2b",
+  "test/testing_catalog.json": "df9781ae02fcd41d19b6b09468bb60838661f887478e90c7bce01fc55ae44098"
+}
