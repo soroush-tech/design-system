@@ -102,4 +102,30 @@ describe('Flex', () => {
       expect(screen.getByText('no-attr')).not.toHaveAttribute('p')
     })
   })
+
+  describe('layout (theme.layout)', () => {
+    // jsdom applies no media query, so the computed style is the base (xs) entry.
+    it("draws the theme's layout grid as a wrapping row", () => {
+      renderWithTheme(<Flex layout>row</Flex>)
+      const row = screen.getByText('row')
+      expect(row).toHaveStyle({
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        columnGap: '16px',
+        paddingInline: '16px',
+      })
+      expect(row.style.getPropertyValue('--layout-columns')).toBe('')
+      expect(getComputedStyle(row).getPropertyValue('--layout-columns').trim()).toBe('4')
+      expect(row).not.toHaveAttribute('layout')
+    })
+
+    it('lets flexDirection and gap props win', () => {
+      renderWithTheme(
+        <Flex layout flexDirection="column" columnGap={1}>
+          row
+        </Flex>
+      )
+      expect(screen.getByText('row')).toHaveStyle({ flexDirection: 'column', columnGap: '8px' })
+    })
+  })
 })

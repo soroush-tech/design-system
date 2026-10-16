@@ -111,21 +111,21 @@ describe('Grid', () => {
     })
   })
 
-  // ─── contentGrid (theme.layout) ──────────────────────────────────────────────
+  // ─── layout (theme.layout) ──────────────────────────────────────────────
 
-  describe('contentGrid', () => {
+  describe('layout (theme.layout)', () => {
     // jsdom applies no media query, so the computed style is the base (xs) entry.
     it("lays the grid out from the theme's base layout entry", () => {
-      renderWithTheme(<Grid contentGrid>content</Grid>)
+      renderWithTheme(<Grid layout>content</Grid>)
       const grid = screen.getByText('content')
       expect(getComputedStyle(grid).gridTemplateColumns).toBe('repeat(4, minmax(0, 1fr))')
       expect(grid).toHaveStyle({ columnGap: '16px', paddingInline: '16px' })
-      expect(grid).not.toHaveAttribute('contentGrid')
+      expect(grid).not.toHaveAttribute('layout')
     })
 
     it('lets gridTemplateColumns, gap and padding props win', () => {
       renderWithTheme(
-        <Grid contentGrid gridTemplateColumns="1fr 1fr" columnGap={1} px={3}>
+        <Grid layout gridTemplateColumns="1fr 1fr" columnGap={1} px={3}>
           content
         </Grid>
       )

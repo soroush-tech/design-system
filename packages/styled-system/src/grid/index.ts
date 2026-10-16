@@ -1,5 +1,5 @@
 export * from './grid'
-export * from './contentGrid'
+export * from './layoutGrid'
 export { default } from './grid'
 export type {
   GridGapProps,
@@ -15,5 +15,5 @@ export type {
   GridTemplateAreasProps,
   GridAreaProps,
   GridProps,
-  ContentGridProps,
+  LayoutGridProps,
 } from '../types'

@@ -1,7 +1,7 @@
 import type {
   GridProps as SystemGridProps,
   FlexboxProps,
-  ContentGridProps,
+  LayoutGridProps,
 } from '@soroush.tech/styled-system'
 import {
   styled,
@@ -11,7 +11,7 @@ import {
   grid,
   flexbox,
   space,
-  contentGrid,
+  layoutGrid,
 } from '../index'
 import { View, type ViewProps } from '../View'
 
@@ -22,19 +22,19 @@ export type GapToken = keyof Theme['space']
 // @soroush.tech/styled-system 5.8.0 - they arrive through View's `space` parser
 // and `SpaceProps`.
 /**
- * `contentGrid` lays the grid out from `theme.layout` - the theme's columns, gutter and margin per
- * breakpoint, or entries merged over them: `contentGrid={{ xl: { columns: 16 } }}`.
+ * `layout` lays the grid out from `theme.layout` - the theme's columns, gutter and margin per
+ * breakpoint, or its own for a named breakpoint: `layout={{ lg: { columns: 16 } }}`.
  */
 export interface GridProps
-  extends ViewProps, SystemGridProps<Theme>, FlexboxProps<Theme>, ContentGridProps<Theme> {}
+  extends ViewProps, SystemGridProps<Theme>, FlexboxProps<Theme>, LayoutGridProps<Theme> {}
 
-const shouldForwardProp = createShouldForwardProp([...props, 'contentGrid'])
+const shouldForwardProp = createShouldForwardProp([...props, 'layout'])
 
 export const Grid = styled(View, {
   name: 'Grid',
   label: 'grid',
   shouldForwardProp,
-  // contentGrid first, then `space` again: an explicit gridTemplateColumns, gap or padding
+  // layout first, then `space` again: an explicit gridTemplateColumns, gap or padding
   // prop still wins over the theme's grid.
-  systemProps: [contentGrid, grid, flexbox, space],
+  systemProps: [layoutGrid, grid, flexbox, space],
 })<GridProps>({ display: 'grid' })

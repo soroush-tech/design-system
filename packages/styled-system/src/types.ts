@@ -727,11 +727,12 @@ export interface GridAreaProps<ThemeType extends Theme = RequiredTheme> {
 }
 
 /**
- * Not in upstream styled-system: the content grid from `theme.layout` - `true` for the theme's
- * own, or entries per breakpoint merged over it (`{ xl: { columns: 16 } }`).
+ * Not in upstream styled-system: the layout grid from `theme.layout` on a Grid or Flex - `true`
+ * for the theme's, or entries for named breakpoints that replace it there only
+ * (`{ lg: { columns: 16 } }`).
  */
-export interface ContentGridProps<ThemeType extends Theme = RequiredTheme> {
-  contentGrid?:
+export interface LayoutGridProps<ThemeType extends Theme = RequiredTheme> {
+  layout?:
     | boolean
     | {
         [key in BreakpointName<ThemeType>]?: {
