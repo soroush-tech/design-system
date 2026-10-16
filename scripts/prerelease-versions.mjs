@@ -11,10 +11,10 @@
 // - A workspace dependency outside the run is pointed at its newest `<target>-<channel>.N` on npm,
 //   so `workspace:^` publishes a range that resolves; with none there, the run stops: publish the
 //   dependency first. A dependency whose target is already released keeps it.
-import { execFileSync } from 'node:child_process'
 import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 
 const CHANNELS = ['alpha', 'rc', 'stable']
+const REGISTRY = 'https://registry.npmjs.org'
 const args = process.argv.slice(2)
 const channel = args.shift()
 const skipReleased = args[0] === '--skip-released' && Boolean(args.shift())
@@ -41,20 +41,13 @@ const workspaceDeps = ({ pkg }) =>
     .map(([name]) => byName.get(name))
     .filter(Boolean)
 
-// Every version of a package on npm; [] before its first publish.
-const publishedVersions = (name) => {
-  try {
-    const out = execFileSync('npm', ['view', name, 'versions', '--json'], {
-      encoding: 'utf8',
-      stdio: ['ignore', 'pipe', 'pipe'],
-      shell: process.platform === 'win32',
-    })
-    const versions = JSON.parse(out)
-    return Array.isArray(versions) ? versions : [versions]
-  } catch (error) {
-    if (String(error.stderr).includes('E404')) return []
-    throw error
-  }
+// Every version of a package on npm; [] before its first publish. Read from the registry, as
+// check-release-notes does, so no `npm` binary is looked up on PATH.
+const publishedVersions = async (name) => {
+  const response = await fetch(`${REGISTRY}/${name}`, { signal: AbortSignal.timeout(15_000) })
+  if (response.status === 404) return []
+  if (!response.ok) fail(`The npm registry answered ${response.status} for ${name}`)
+  return Object.keys((await response.json()).versions ?? {})
 }
 
 // The N of every `<target>-<channel>.N` on npm.
@@ -75,17 +68,18 @@ const setVersion = (entry, version) => {
 let run = args.map((dir) => byDir.get(dir) ?? fail(`Unknown package: ${dir}`))
 
 if (channel !== 'stable') {
-  run = run.filter(({ pkg }) => {
+  const unreleased = []
+  for (const entry of run) {
+    const { pkg } = entry
     if (pkg.version.includes('-')) {
       fail(`${pkg.name}: package.json must hold the target version, not ${pkg.version}`)
     }
-    if (!publishedVersions(pkg.name).includes(pkg.version)) return true
-    if (skipReleased) {
+    if (!(await publishedVersions(pkg.name)).includes(pkg.version)) unreleased.push(entry)
+    else if (skipReleased)
       console.error(`${pkg.name}@${pkg.version} is already released - skipped.`)
-      return false
-    }
-    return fail(`${pkg.name}@${pkg.version} is already released - bump the version first.`)
-  })
+    else fail(`${pkg.name}@${pkg.version} is already released - bump the version first.`)
+  }
+  run = unreleased
 }
 
 // Dependencies first, so a dependent never points at a version not yet on npm.
@@ -102,7 +96,7 @@ run.forEach(visit)
 if (channel !== 'stable') {
   for (const entry of ordered) {
     const target = entry.pkg.version
-    const numbers = prereleaseNumbers(publishedVersions(entry.pkg.name), target)
+    const numbers = prereleaseNumbers(await publishedVersions(entry.pkg.name), target)
     setVersion(entry, `${target}-${channel}.${numbers.length ? Math.max(...numbers) + 1 : 0}`)
   }
 
@@ -111,7 +105,7 @@ if (channel !== 'stable') {
     if (run.includes(dep) || pointed.has(dep) || dep.pkg.private) continue
     pointed.add(dep)
     const target = dep.pkg.version
-    const versions = publishedVersions(dep.pkg.name)
+    const versions = await publishedVersions(dep.pkg.name)
     if (versions.includes(target)) continue
     const numbers = prereleaseNumbers(versions, target)
     if (numbers.length === 0) {
