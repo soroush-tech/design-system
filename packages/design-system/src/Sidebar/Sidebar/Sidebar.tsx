@@ -1,9 +1,6 @@
-import { useContext, useId, useMemo, useState, type ElementType, type ReactNode } from 'react'
-import { styled, type CSSObject } from '@soroush.tech/design-system'
+import { useId, useMemo, useState, type ElementType, type ReactNode } from 'react'
+import { styled } from '@soroush.tech/design-system'
 import { Flex, type FlexProps } from '@soroush.tech/design-system/Flex'
-import type { LayoutPanels } from '@soroush.tech/design-system/theme'
-import { PageLayoutContext } from '../../PageLayout/PageLayoutContext'
-import { layoutLength, layoutStyles } from '../../PageLayout/layoutStyles'
 import { SidebarContext, type SidebarAnchor, type SidebarItemVariant } from '../SidebarContext'
 
 export interface SidebarProps extends FlexProps {
@@ -21,10 +18,7 @@ export interface SidebarProps extends FlexProps {
   anchor?: SidebarAnchor
   /** Default variant for every item - an item's own `variant` wins. Default: `'text'`. */
   variant?: SidebarItemVariant
-  /**
-   * Rail width while open. Default: `'14rem'`. In a `PageLayout` panel, with neither
-   * width set, the rail fills the panel's track instead.
-   */
+  /** Rail width while open. Default: `'14rem'`. */
   expandedWidth?: string
   /** Rail width while collapsed (icons only). Default: `'3.5rem'`. */
   collapsedWidth?: string
@@ -51,13 +45,6 @@ interface SidebarRailProps {
   isOpen?: boolean
   expandedWidth?: string
   collapsedWidth?: string
-  /** The `PageLayout` panel side whose track the rail fills, if any. */
-  panelSide?: keyof LayoutPanels
-}
-
-// Everything in an item's row but its icon - what a too-narrow rail hides.
-const hideLabels: CSSObject = {
-  '[data-sidebar-item-content] > :not(:first-child)': { display: 'none' },
 }
 
 // The landmark and the shared surface. It holds no width of its own, so it is
@@ -76,32 +63,13 @@ const SidebarRail = styled(Flex, {
   slot: 'rail',
   label: 'SidebarRail',
   shouldForwardProp: (prop) =>
-    prop !== 'isOpen' &&
-    prop !== 'expandedWidth' &&
-    prop !== 'collapsedWidth' &&
-    prop !== 'panelSide',
-})<SidebarRailProps>(({ theme, isOpen, expandedWidth, collapsedWidth, panelSide }) =>
-  panelSide
-    ? {
-        // In a PageLayout panel the theme sizes the track; a track narrower than the
-        // panel's open width is its rail, so the labels give way to the icons.
-        width: '100%',
-        overflowX: 'hidden',
-        containerType: 'inline-size',
-        ...layoutStyles(theme, ({ panels }) => {
-          const width = panels[panelSide]?.width
-          return width === undefined
-            ? {}
-            : { [`@container (width < ${layoutLength(theme, width)})`]: hideLabels }
-        }),
-      }
-    : {
-        width: isOpen ? expandedWidth : collapsedWidth,
-        transition: 'width 200ms ease',
-        overflowX: 'hidden',
-        '@media (prefers-reduced-motion: reduce)': { transition: 'none' },
-      }
-)
+    prop !== 'isOpen' && prop !== 'expandedWidth' && prop !== 'collapsedWidth',
+})<SidebarRailProps>(({ isOpen, expandedWidth, collapsedWidth }) => ({
+  width: isOpen ? expandedWidth : collapsedWidth,
+  transition: 'width 200ms ease',
+  overflowX: 'hidden',
+  '@media (prefers-reduced-motion: reduce)': { transition: 'none' },
+}))
 
 // The panel column - the portal target the selected item renders into, so it is
 // always mounted while `hasPanel`. `:empty` collapses it when nothing has been
@@ -136,18 +104,14 @@ export function Sidebar({
   isOpen,
   anchor = 'left',
   variant = 'text',
-  expandedWidth,
-  collapsedWidth,
+  expandedWidth = '14rem',
+  collapsedWidth = '3.5rem',
   hasPanel = false,
   panelWidth = '18rem',
   panelProps,
   'aria-label': ariaLabel,
   ...rest
 }: Readonly<SidebarProps>) {
-  const region = useContext(PageLayoutContext)
-  // Explicit widths win; without them, a rail in a PageLayout panel fills its track.
-  const isSized = expandedWidth !== undefined || collapsedWidth !== undefined
-  const panelSide = region?.region === 'panel' && !isSized ? region.side : undefined
   const panelId = useId()
   // The panel's DOM node is the portal container, so it has to be state rather
   // than a ref - items need a re-render once it exists to port into it.
@@ -172,7 +136,6 @@ export function Sidebar({
       aria-label={ariaLabel}
       flexDirection={anchor === 'right' ? 'row-reverse' : 'row'}
       flexShrink={0}
-      {...(panelSide && { width: '100%', height: '100%' })}
       {...rest}
     >
       <SidebarRail
@@ -180,9 +143,8 @@ export function Sidebar({
         gap={1}
         flexShrink={0}
         isOpen={isOpen}
-        expandedWidth={expandedWidth ?? '14rem'}
-        collapsedWidth={collapsedWidth ?? '3.5rem'}
-        panelSide={panelSide}
+        expandedWidth={expandedWidth}
+        collapsedWidth={collapsedWidth}
       >
         <SidebarContext.Provider value={context}>{children}</SidebarContext.Provider>
       </SidebarRail>

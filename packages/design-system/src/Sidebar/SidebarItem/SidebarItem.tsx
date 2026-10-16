@@ -208,8 +208,6 @@ export function SidebarItem({
       >
         <Flex
           as="span"
-          // The hook a Sidebar filling a narrow PageLayout panel hides the label by.
-          data-sidebar-item-content=""
           flexDirection={anchor === 'right' ? 'row-reverse' : 'row'}
           alignItems="center"
           gap={2}

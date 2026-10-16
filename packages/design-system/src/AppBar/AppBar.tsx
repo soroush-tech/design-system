@@ -1,4 +1,3 @@
-import { useContext } from 'react'
 import {
   styled,
   type Theme,
@@ -19,7 +18,6 @@ import {
   system,
 } from '../index'
 import { Flex, type FlexProps } from '../Flex'
-import { PageLayoutContext } from '../PageLayout/PageLayoutContext'
 import { themeDefault } from '../theme/utils/themeDefault'
 
 /** Valid values for the color prop - derived from theme.background keys. */
@@ -106,15 +104,5 @@ const AppBarBase = styled(Flex, {
 })<AppBarBaseProps>({ flexShrink: 0, width: '100%' }, elevationVariant, sizeVariants)
 
 export function AppBar({ elevation = 4, size, ...rest }: Readonly<AppBarProps>) {
-  // In a PageLayout bar the theme sets the bar's height, and the AppBar fills it.
-  const isInBar = useContext(PageLayoutContext)?.region === 'bar'
-  return (
-    <AppBarBase
-      as="header"
-      elevation={elevation}
-      size={size}
-      {...(isInBar && { height: '100%' })}
-      {...rest}
-    />
-  )
+  return <AppBarBase as="header" elevation={elevation} size={size} {...rest} />
 }

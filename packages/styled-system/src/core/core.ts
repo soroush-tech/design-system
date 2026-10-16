@@ -1,7 +1,7 @@
 // Typed rewrite of @styled-system/core (styled-system v5).
 // Public surface and observable behavior match upstream; internals are modern TS.
 import type * as CSS from 'csstype'
-import { createMediaQuery, type Breakpoints } from './media'
+import { responsiveQueries, type Breakpoints, type ResponsiveQueries } from './media'
 
 // Internal shape of the objects parsers build up (arbitrary CSS keys → values or
 // nested media-query/selector objects). Kept loose for the implementation.
@@ -59,7 +59,7 @@ export type ConfigFunction = StyleFn
 
 interface ParserCache {
   breakpoints?: Breakpoints
-  media: (string | null)[]
+  queries?: ResponsiveQueries
 }
 
 export interface Parser {
@@ -86,14 +86,14 @@ export const merge = (a: StyleObject, b: StyleObject): StyleObject => {
   return result
 }
 
-// order object-value responsive styles: plain styles first, then media blocks in breakpoint order
-const sort = (obj: StyleObject, media: (string | null)[]): StyleObject => {
+// order object-value responsive styles: plain styles first, then the query blocks in cascade order
+const sort = (obj: StyleObject, order: string[]): StyleObject => {
   const next: StyleObject = {}
   for (const key in obj) {
-    if (!media.includes(key)) next[key] = obj[key]
+    if (!order.includes(key)) next[key] = obj[key]
   }
-  for (const key of media) {
-    if (key && key in obj) next[key] = obj[key]
+  for (const key of order) {
+    if (key in obj) next[key] = obj[key]
   }
   return next
 }
@@ -135,7 +135,7 @@ const parseResponsiveStyle = (
 }
 
 const parseResponsiveObject = (
-  breakpoints: Breakpoints,
+  keyed: ResponsiveQueries['keyed'],
   sx: StyleFn,
   scale: unknown,
   raw: Record<string, unknown>,
@@ -143,14 +143,10 @@ const parseResponsiveObject = (
 ): StyleObject => {
   const styles: StyleObject = {}
   for (const key in raw) {
-    // Own keys only: `constructor` or `toString` must not find Object.prototype's functions.
-    const breakpoint = Object.hasOwn(breakpoints, key)
-      ? (breakpoints as Record<string, string | number>)[key]
-      : undefined
-    const value = raw[key]
-    const style = sx(value, scale, props)
-    if (breakpoint !== undefined) {
-      const media = createMediaQuery(breakpoint)
+    // A breakpoint name or its `cq<Name>` key; the base breakpoint and any other key are the base.
+    const media = keyed.get(key)
+    const style = sx(raw[key], scale, props)
+    if (media) {
       Object.assign(styles, {
         [media]: { ...(styles[media] as StyleObject), ...style },
       })
@@ -162,7 +158,7 @@ const parseResponsiveObject = (
 }
 
 export const createParser = (config: ParserConfig): Parser => {
-  const cache: ParserCache = { media: [] }
+  const cache: ParserCache = {}
   const parse = ((props: Props): StyleObject => {
     let styles: StyleObject = {}
     let shouldSort = false
@@ -177,18 +173,20 @@ export const createParser = (config: ParserConfig): Parser => {
       if (typeof raw === 'object') {
         const breakpoints = get(props.theme, 'breakpoints', defaults.breakpoints) as Breakpoints
         // recomputed whenever the theme's breakpoints change, so a theme switch takes effect
-        if (isCacheDisabled || cache.breakpoints !== breakpoints) {
+        if (isCacheDisabled || cache.breakpoints !== breakpoints || !cache.queries) {
           cache.breakpoints = breakpoints
-          cache.media = [null, ...Object.values(breakpoints).map(createMediaQuery)]
+          cache.queries = responsiveQueries(breakpoints)
         }
+        const queries = cache.queries
         if (Array.isArray(raw)) {
-          styles = merge(styles, parseResponsiveStyle(cache.media, sx, scale, raw, props))
+          styles = merge(styles, parseResponsiveStyle(queries.array, sx, scale, raw, props))
+          shouldSort = true
           continue
         }
         if (raw !== null) {
           styles = merge(
             styles,
-            parseResponsiveObject(breakpoints, sx, scale, raw as Record<string, unknown>, props)
+            parseResponsiveObject(queries.keyed, sx, scale, raw as Record<string, unknown>, props)
           )
           shouldSort = true
         }
@@ -198,8 +196,8 @@ export const createParser = (config: ParserConfig): Parser => {
       Object.assign(styles, sx(raw, scale, props))
     }
 
-    if (shouldSort) {
-      styles = sort(styles, cache.media)
+    if (shouldSort && cache.queries) {
+      styles = sort(styles, cache.queries.order)
     }
 
     return styles

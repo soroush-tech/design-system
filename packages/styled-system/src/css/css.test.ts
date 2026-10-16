@@ -22,7 +22,7 @@ describe('responsive', () => {
       margin: 0,
       fn: 'blue',
       raw: 'static',
-      '@media screen and (min-width: 40em)': { margin: 4 },
+      '@media (width >= 40em)': { margin: 4 },
     })
   })
 })
@@ -32,9 +32,35 @@ describe('responsive with named breakpoints', () => {
     const theme = { breakpoints: { tablet: '37.5em', landscape: '(orientation: landscape)' } }
     expect(responsive({ margin: [0, 4, 8] })(theme)).toEqual({
       margin: 0,
-      '@media screen and (min-width: 37.5em)': { margin: 4 },
+      '@media (width >= 37.5em)': { margin: 4 },
       '@media (orientation: landscape)': { margin: 8 },
     })
+  })
+})
+
+describe('responsive objects and helper keys', () => {
+  const theme = { space: [0, 4, 8], breakpoints: { xs: '0px', sm: '600px', md: '840px' } }
+
+  it('expands an object of breakpoint names, and keeps any other object as a selector', () => {
+    expect(css({ p: { xs: 1, md: 2 }, '&:hover': { m: 1 } })(theme)).toEqual({
+      padding: 4,
+      '&:hover': { margin: 4 },
+      '@media (width >= 840px)': { padding: 8 },
+    })
+  })
+
+  it('writes generated blocks in cascade order after the author keys, merging a shared one', () => {
+    const styles = css({
+      '@media (width >= 840px)': { color: 'red' },
+      m: { md: 1, cqSm: 2 },
+      p: { sm: 1 },
+    })(theme)
+    expect(Object.keys(styles)).toEqual([
+      '@media (width >= 600px)',
+      '@media (width >= 840px)',
+      '@container (width >= 600px)',
+    ])
+    expect(styles['@media (width >= 840px)']).toEqual({ color: 'red', margin: 4 })
   })
 })
 

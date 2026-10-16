@@ -104,17 +104,16 @@ Combine with `color="backdrop"`, which resolves to the theme's pre-composited fr
 
 ## Default styles
 
-| Property                       | Value                                                                                             |
-| ------------------------------ | ------------------------------------------------------------------------------------------------- |
-| `display`                      | `flex`                                                                                            |
-| `flexDirection`                | `column`                                                                                          |
-| `flexShrink`                   | `0`                                                                                               |
-| `width`                        | `100%`                                                                                            |
-| `boxShadow`                    | none (set via `elevation` prop)                                                                   |
-| `paddingLeft` / `paddingRight` | `theme.space[2]` (16px, `md`)                                                                     |
-| `paddingTop` / `paddingBottom` | `theme.space[1]` (8px, `md`)                                                                      |
-| `zIndex`                       | `theme.zOrder.appBar` (1100) - override with the `zIndex` prop                                    |
-| `height`                       | `100%` inside a `PageLayout` bar (the theme's bar height); unset elsewhere - a `height` prop wins |
+| Property                       | Value                                                          |
+| ------------------------------ | -------------------------------------------------------------- |
+| `display`                      | `flex`                                                         |
+| `flexDirection`                | `column`                                                       |
+| `flexShrink`                   | `0`                                                            |
+| `width`                        | `100%`                                                         |
+| `boxShadow`                    | none (set via `elevation` prop)                                |
+| `paddingLeft` / `paddingRight` | `theme.space[2]` (16px, `md`)                                  |
+| `paddingTop` / `paddingBottom` | `theme.space[1]` (8px, `md`)                                   |
+| `zIndex`                       | `theme.zOrder.appBar` (1100) - override with the `zIndex` prop |
 
 ---
 

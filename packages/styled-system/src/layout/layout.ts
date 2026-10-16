@@ -19,6 +19,8 @@ const config: SystemConfig = {
   display: true,
   verticalAlign: true,
   aspectRatio: true,
+  containerType: true,
+  containerName: true,
 }
 
 export const layout = system(config)
