@@ -240,7 +240,9 @@ export interface LayoutEntry {
 }
 /**
  * `theme.layout`: the complete `base` entry (below the first breakpoint), then a
- * partial entry per breakpoint, merged mobile-first in `ThemeBreakpoints` order.
+ * partial entry per breakpoint, merged mobile-first in `ThemeBreakpoints` order. A
+ * panel first declared at a breakpoint needs its `mode`, `width` and `railWidth`
+ * there; an incomplete one is left out.
  */
 export type ThemeLayout = { base: LayoutEntry } & {
   [K in keyof ThemeBreakpoints]?: {

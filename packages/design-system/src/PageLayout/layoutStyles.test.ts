@@ -32,14 +32,20 @@ describe('layoutEntries', () => {
     })
   })
 
-  it('skips breakpoints without an entry and adds a panel the base lacks', () => {
+  it('skips breakpoints without an entry and adds a complete panel the base lacks', () => {
+    const end = { mode: 'inline', width: '240px', railWidth: 9 } as const
+    const theme = { ...baseTheme, layout: { base: entry, web: { panels: { end } } } } as Theme
+    const entries = layoutEntries(theme)
+    expect(entries).toHaveLength(2)
+    expect(entries[1][1].panels).toEqual({ start: undefined, end })
+  })
+
+  it('leaves out a panel a breakpoint introduces without its widths', () => {
     const theme = {
       ...baseTheme,
       layout: { base: entry, web: { panels: { end: { mode: 'inline' } } } },
     } as Theme
-    const entries = layoutEntries(theme)
-    expect(entries).toHaveLength(2)
-    expect(entries[1][1].panels).toEqual({ start: undefined, end: { mode: 'inline' } })
+    expect(layoutEntries(theme)[1][1].panels.end).toBeUndefined()
   })
 })
 

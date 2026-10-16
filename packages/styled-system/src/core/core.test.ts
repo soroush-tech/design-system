@@ -119,6 +119,15 @@ describe('system / createParser', () => {
     ])
   })
 
+  it('keeps a breakpoint of 0 as a breakpoint', () => {
+    const parse = system({ m: { property: 'margin', scale: 'space' } })
+    const theme = { space: [0, 4, 8], breakpoints: { phone: 0 } }
+    expect(parse({ m: { _: 1, phone: 2 }, theme })).toEqual({
+      margin: 4,
+      '@media screen and (min-width: 0px)': { margin: 8 },
+    })
+  })
+
   it('treats inherited names as base values, not breakpoints', () => {
     const parse = system({ m: { property: 'margin', scale: 'space' } })
     const theme = { space: [0, 4, 8], breakpoints: { web: '75em' } }

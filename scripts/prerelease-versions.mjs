@@ -4,7 +4,8 @@
 //   node scripts/prerelease-versions.mjs <alpha|rc|stable> [--skip-released] <dir>...
 //
 // A package.json holds the target version (`2.0.0`); this script never asks anyone to edit it.
-// - stable: versions stay as they are; only the order changes.
+// - stable: versions stay as they are; only the order changes, and every workspace dependency
+//   outside the run must already have its version on npm.
 // - alpha / rc: each package becomes `<target>-<channel>.N`, N one above the highest already on
 //   npm for that target and channel (0 when there is none). A target that is already released
 //   fails the run, or is dropped with --skip-released (the `all` dispatch).
@@ -112,6 +113,17 @@ if (channel !== 'stable') {
       fail(`${dep.pkg.name}@${target} has no ${channel} on npm yet - publish ${dep.dir} first.`)
     }
     setVersion(dep, `${target}-${channel}.${Math.max(...numbers)}`)
+  }
+}
+
+// A stable run publishes `^<target>` for each workspace dependency, so that target must
+// already be on npm - or be published earlier in this run.
+if (channel === 'stable') {
+  for (const dep of new Set(ordered.flatMap(workspaceDeps))) {
+    if (run.includes(dep) || dep.pkg.private) continue
+    if (!(await publishedVersions(dep.pkg.name)).includes(dep.pkg.version)) {
+      fail(`${dep.pkg.name}@${dep.pkg.version} is not on npm yet - publish ${dep.dir} first.`)
+    }
   }
 }
 

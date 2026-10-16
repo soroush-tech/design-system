@@ -147,6 +147,8 @@ layout: {
 - **Panels** - `start` and `end`, which follow the writing direction (they swap in RTL). `mode` is
   `inline` (a track of `width`; the content gets what is left), `collapsed` (a track of
   `railWidth`), `overlay` (over the content at `width`; the columns don't change) or `hidden`.
+  A panel first declared at a breakpoint (not in `base`) needs its `mode`, `width` and
+  `railWidth` there; an incomplete one is left out.
 - **Content** - `columns` measured in the space the bars and inline panels leave. `fluid` spans
   it with `margin` as inline padding; `fixed` is the same inside a container centred at
   `maxWidth`.

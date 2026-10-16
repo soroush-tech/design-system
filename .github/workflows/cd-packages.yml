@@ -139,6 +139,7 @@ jobs:
       # order the run dependencies-first. With `all`, a target already on npm is skipped; a
       # named one fails. The release notes were checked for the target version above.
       - name: Set channel versions
+        id: versions
         env:
           CHANNEL: ${{ inputs.channel }}
           PKG: ${{ inputs.package }}
@@ -201,7 +202,10 @@ jobs:
       # verbatim. $pkg comes from the resolved list (repo directory names), never spliced
       # from the dispatch input.
       - name: Create GitHub Releases
-        if: ${{ !cancelled() && inputs.channel != 'alpha' }}
+        # Only after the versions were set: a failed version step leaves package.json at the
+        # target, which must never be released under this channel. A publish failure still
+        # reaches here, so packages that did publish get their release.
+        if: ${{ !cancelled() && inputs.channel != 'alpha' && steps.versions.outcome == 'success' }}
         env:
           GH_TOKEN: ${{ github.token }}
           CHANNEL: ${{ inputs.channel }}

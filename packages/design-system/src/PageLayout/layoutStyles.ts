@@ -11,8 +11,14 @@ import type {
 
 type LayoutOverride = NonNullable<ThemeLayout[keyof ThemeBreakpoints]>
 
-const mergePanel = (panel?: LayoutPanel, override?: Partial<LayoutPanel>) =>
-  panel || override ? ({ ...panel, ...override } as LayoutPanel) : undefined
+// A panel first declared at a breakpoint must be complete there: an incomplete one is left out
+// rather than laid out on a 0px track.
+const mergePanel = (panel?: LayoutPanel, override?: Partial<LayoutPanel>) => {
+  const { mode, width, railWidth } = { ...panel, ...override }
+  return mode && width !== undefined && railWidth !== undefined
+    ? { mode, width, railWidth }
+    : undefined
+}
 
 const mergeEntry = (entry: LayoutEntry, { bars, panels, content }: LayoutOverride) => ({
   bars: { ...entry.bars, ...bars },

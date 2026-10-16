@@ -149,7 +149,7 @@ const parseResponsiveObject = (
       : undefined
     const value = raw[key]
     const style = sx(value, scale, props)
-    if (breakpoint) {
+    if (breakpoint !== undefined) {
       const media = createMediaQuery(breakpoint)
       Object.assign(styles, {
         [media]: { ...(styles[media] as StyleObject), ...style },

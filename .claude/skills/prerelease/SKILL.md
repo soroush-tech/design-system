@@ -42,7 +42,8 @@ nobody edits it.
   `check:release-notes` gate keeps passing: it compares `package.json` with `latest` only.
 - Publish dependencies first (`styled-system` before `design-system`): `workspace:^` publishes
   as `^<sibling's version>`, so a prerelease run points each workspace dependency at its newest
-  prerelease on the same channel, and stops with "publish X first" when there is none. `all`
+  prerelease on the same channel, and stops with "publish X first" when there is none; a
+  stable run stops the same way when the dependency's version isn't on npm. `all`
   orders the run itself.
 - A target already released can't get a prerelease: a named package fails, `all` skips it.
 - Consumers never get a prerelease by accident: `^1.3.4`, `^2.0.0` and `@latest` skip
