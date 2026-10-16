@@ -94,6 +94,44 @@ describe('system / createParser', () => {
     })
   })
 
+  it('maps arrays onto named breakpoints in declared order', () => {
+    const parse = system({ m: { property: 'margin', scale: 'space' } })
+    const theme = { space: [0, 4, 8], breakpoints: { tablet: '37.5em', web: '(width >= 75em)' } }
+    expect(parse({ m: [0, 1, 2], theme })).toEqual({
+      margin: 0,
+      '@media screen and (min-width: 37.5em)': { margin: 4 },
+      '@media (width >= 75em)': { margin: 8 },
+    })
+  })
+
+  it('orders object styles by breakpoint, not by query text', () => {
+    const parse = system({
+      m: { property: 'margin', scale: 'space' },
+      p: { property: 'padding', scale: 'space' },
+    })
+    const theme = { space: [0, 4, 8], breakpoints: { web: '75em', wide: '(width >= 100em)' } }
+    const styles = parse({ p: { wide: 2, _: 1 }, m: { web: 1, _: 0 }, theme })
+    expect(Object.keys(styles)).toEqual([
+      'padding',
+      'margin',
+      '@media screen and (min-width: 75em)',
+      '@media (width >= 100em)',
+    ])
+  })
+
+  it('follows a theme whose breakpoints change', () => {
+    const parse = system({ m: { property: 'margin', scale: 'space' } })
+    const space = [0, 4]
+    expect(parse({ m: [0, 1], theme: { space, breakpoints: ['30em'] } })).toEqual({
+      margin: 0,
+      '@media screen and (min-width: 30em)': { margin: 4 },
+    })
+    expect(parse({ m: [0, 1], theme: { space, breakpoints: { tablet: 600 } } })).toEqual({
+      margin: 0,
+      '@media screen and (min-width: 600px)': { margin: 4 },
+    })
+  })
+
   it('treats a null prop value as a no-op', () => {
     const parse = system({ m: { property: 'margin', scale: 'space' } })
     expect(parse({ m: null, theme: { space: [0] } })).toEqual({})

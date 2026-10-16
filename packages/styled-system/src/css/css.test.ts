@@ -27,6 +27,17 @@ describe('responsive', () => {
   })
 })
 
+describe('responsive with named breakpoints', () => {
+  it('maps arrays onto them in declared order and passes conditions through', () => {
+    const theme = { breakpoints: { tablet: '37.5em', landscape: '(orientation: landscape)' } }
+    expect(responsive({ margin: [0, 4, 8] })(theme)).toEqual({
+      margin: 0,
+      '@media screen and (min-width: 37.5em)': { margin: 4 },
+      '@media (orientation: landscape)': { margin: 8 },
+    })
+  })
+})
+
 describe('css', () => {
   it('resolves aliases, scales, multiples and raw props', () => {
     const theme = { colors: { primary: '#0cf' }, space: [0, 4, 8, 16] }

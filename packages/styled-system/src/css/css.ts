@@ -1,10 +1,12 @@
 // Typed rewrite of @styled-system/css (styled-system v5).
-// Standalone - does not depend on ./core; carries its own get/responsive/scales.
+// Standalone - carries its own get/responsive/scales; from ./core it shares only the
+// media-query helper.
+import { createMediaQuery, type Breakpoints } from '../core/media'
 
 export type CSSObject = Record<string, unknown>
 
 export interface CssTheme {
-  breakpoints?: (string | number)[]
+  breakpoints?: Breakpoints
   [key: string]: unknown
 }
 
@@ -165,8 +167,8 @@ export const responsive =
   (styles: CSSObject) =>
   (theme: CssTheme): CSSObject => {
     const next: CSSObject = {}
-    const breakpoints = get(theme, 'breakpoints', defaultBreakpoints) as (string | number)[]
-    const mediaQueries = [null, ...breakpoints.map((n) => `@media screen and (min-width: ${n})`)]
+    const breakpoints = get(theme, 'breakpoints', defaultBreakpoints) as Breakpoints
+    const mediaQueries = [null, ...Object.values(breakpoints).map(createMediaQuery)]
 
     for (const key in styles) {
       const value =

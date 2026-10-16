@@ -59,7 +59,10 @@ export type ResponsiveValue<T, ThemeType extends Theme = RequiredTheme> =
   | T
   | null
   | Array<T | null>
-  | { [key in (ThemeValue<'breakpoints', ThemeType> & string) | number]?: T }
+  | ({ [key in (ThemeValue<'breakpoints', ThemeType> & string) | number]?: T } & {
+      /** The value below the first breakpoint. */
+      _?: T
+    })
 
 // ---------------------------------------------------------------------------
 // space
