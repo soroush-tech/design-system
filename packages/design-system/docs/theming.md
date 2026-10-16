@@ -175,10 +175,13 @@ design studio draws them on its frames.
 
 - **Grid** - `grid-template-columns: repeat(N, minmax(0, 1fr))`, the gutter as `column-gap`, the
   margin as `padding-inline`, and `max-width` with `margin-inline: auto` when the mode is fixed.
-  Children place themselves with `gridColumn` (`span 4`, `1 / -1`).
+  Children place themselves with `span` (below) or `gridColumn` (`1 / -1`).
 - **Flex** - a wrapping row with the same gutter, margin and fixed mode.
-- **Both** set `--layout-columns` and `--layout-gutter` for each class, so a child can size itself
-  from the current grid.
+- **Both** set `--layout-columns` and `--layout-gutter` for each class.
+- **Children take `span`** - how many columns an element takes, on any `View`-based component:
+  `span={6}`, or per class `span={{ xs: 4, md: 6 }}`. In a Grid it is `grid-column: span N`; in a
+  Flex it is a width of N columns and the gutters between them, read from the variables above.
+  Outside a layout grid it does nothing.
 - An entry in the value replaces the theme's grid at the class it names only; the next class is
   back to the theme. Explicit `gridTemplateColumns`, `flexDirection`, `gap` or padding props
   still win.

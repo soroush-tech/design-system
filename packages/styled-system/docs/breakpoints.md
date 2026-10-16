@@ -118,5 +118,6 @@ block with the same query is merged into it.
 The `layout` prop on design-system's `Grid` and `Flex` turns `theme.layout`'s tokens into CSS per
 breakpoint: column tracks on a Grid, a wrapping row on a Flex, with the gutter, the margin, and a
 centred max width when the mode is fixed. `layout={{ lg: { columns: 16 } }}` replaces the theme's
-grid at `lg` only. Outside design-system, `layoutGridStyles(theme, value, 'grid' | 'flex')` writes
+grid at `lg` only. A child takes columns with `span` (`span={{ xs: 4, md: 6 }}`): `grid-column`
+in a Grid, a width of N columns and gutters in a Flex. Outside design-system, `layoutGridStyles(theme, value, 'grid' | 'flex')` writes
 the same styles in a style function. The design-system theming guide has the details.

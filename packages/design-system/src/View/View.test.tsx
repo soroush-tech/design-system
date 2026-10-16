@@ -125,4 +125,13 @@ describe('View', () => {
       expect(screen.getByText('no-attr')).not.toHaveAttribute('p')
     })
   })
+
+  describe('span (layout-grid columns)', () => {
+    it('takes N columns of a Grid or Flex layout parent, and stays off the DOM', () => {
+      renderWithTheme(<View span={6}>cell</View>)
+      const cell = screen.getByText('cell')
+      expect(cell).toHaveStyle({ gridColumn: 'span 6' })
+      expect(cell).not.toHaveAttribute('span')
+    })
+  })
 })

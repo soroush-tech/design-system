@@ -1,4 +1,10 @@
-import { get, type Parser, type Props, type StyleObject } from '@soroush.tech/styled-system/core'
+import {
+  get,
+  system,
+  type Parser,
+  type Props,
+  type StyleObject,
+} from '@soroush.tech/styled-system/core'
 import { responsiveQueries, type Breakpoints } from '../core/media'
 
 /** The layout grid at one breakpoint - the `content` part of a `theme.layout` entry. */
@@ -94,3 +100,21 @@ export const layoutGrid = layoutParser('grid')
 
 /** The `layout` prop on a flex container: a wrapping row with the same gutter and margin. */
 export const layoutFlex = layoutParser('flex')
+
+// A child's width in a layout-grid flex row: N columns and the N - 1 gutters between them. The
+// fallbacks keep it a plain auto item outside a layout grid.
+const flexSpan = (n: number) => {
+  const columns = 'var(--layout-columns, 1)'
+  const gutter = 'var(--layout-gutter, 0px)'
+  return `0 0 calc((100% - (${columns} - 1) * ${gutter}) / ${columns} * ${n} + ${n - 1} * ${gutter})`
+}
+
+/**
+ * The `span` prop: how many layout-grid columns an element takes. It writes both
+ * `grid-column: span N` (read by a Grid parent) and a flex basis from the parent's
+ * `--layout-columns` / `--layout-gutter` (read by a Flex parent); each container ignores the
+ * other's property. Responsive like any prop: `span={{ xs: 4, md: 6 }}`.
+ */
+export const span = system({
+  span: (n: number) => ({ gridColumn: `span ${n}`, flex: flexSpan(n) }),
+})

@@ -16,4 +16,5 @@ export type {
   GridAreaProps,
   GridProps,
   LayoutGridProps,
+  SpanProps,
 } from '../types'

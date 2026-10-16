@@ -6,6 +6,7 @@ import type {
   BorderProps,
   PositionProps,
   FlexboxProps,
+  SpanProps,
 } from '@soroush.tech/styled-system'
 import {
   styled,
@@ -17,6 +18,7 @@ import {
   typography,
   border,
   position,
+  span,
   system,
 } from '../index'
 
@@ -42,7 +44,8 @@ export interface ViewProps
     LayoutProps<Theme>,
     SystemTypographyProps<Theme>,
     Omit<BorderProps<Theme>, 'borderColor' | 'borderWidth' | 'borderRadius'>,
-    PositionProps<Theme> {
+    PositionProps<Theme>,
+    SpanProps<Theme> {
   bg?: ViewBackgroundToken
   /** Resolves against theme.border - light · primary · dark */
   borderColor?: ViewBorderColorToken
@@ -73,5 +76,5 @@ export const View = styled('div', {
   name: 'View',
   label: 'View',
   shouldForwardProp,
-  systemProps: [space, layout, colorSystem, typography, border, position],
+  systemProps: [space, layout, colorSystem, typography, border, position, span],
 })<ViewProps>()

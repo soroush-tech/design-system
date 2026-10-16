@@ -745,6 +745,11 @@ export interface LayoutGridProps<ThemeType extends Theme = RequiredTheme> {
       }
 }
 
+/** Not in upstream styled-system: how many layout-grid columns the element takes. */
+export interface SpanProps<ThemeType extends Theme = RequiredTheme> {
+  span?: ResponsiveValue<number, ThemeType>
+}
+
 export interface GridProps<ThemeType extends Theme = RequiredTheme>
   extends
     GridGapProps<ThemeType>,

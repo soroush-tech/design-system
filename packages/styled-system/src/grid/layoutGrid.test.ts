@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { layoutFlex, layoutGrid, layoutGridStyles } from './layoutGrid'
+import { layoutFlex, layoutGrid, layoutGridStyles, span } from './layoutGrid'
 
 const theme = {
   space: [0, 8, 16, 24, 32],
@@ -77,5 +77,19 @@ describe('layoutFlex', () => {
     })
     expect(styles.gridTemplateColumns).toBeUndefined()
     expect(styles['@media (width >= 840px)']).toMatchObject({ '--layout-columns': 12 })
+  })
+})
+
+describe('span', () => {
+  it('writes the grid column and the flex basis from the layout grid, per breakpoint', () => {
+    const styles = span({ span: { xs: 4, md: 6 }, theme })
+    expect(styles).toEqual({
+      gridColumn: 'span 4',
+      flex: '0 0 calc((100% - (var(--layout-columns, 1) - 1) * var(--layout-gutter, 0px)) / var(--layout-columns, 1) * 4 + 3 * var(--layout-gutter, 0px))',
+      '@media (width >= 840px)': {
+        gridColumn: 'span 6',
+        flex: '0 0 calc((100% - (var(--layout-columns, 1) - 1) * var(--layout-gutter, 0px)) / var(--layout-columns, 1) * 6 + 5 * var(--layout-gutter, 0px))',
+      },
+    })
   })
 })

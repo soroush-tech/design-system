@@ -51,6 +51,7 @@ export {
   grid,
   layoutGrid,
   layoutFlex,
+  span,
   layoutGridStyles,
   type LayoutGridEntry,
   type LayoutGridValue,
