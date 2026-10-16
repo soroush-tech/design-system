@@ -35,6 +35,8 @@ Each scale is a named, consumer-extensible interface (declared in `src/theme/the
 | Backgrounds     | `theme.background`     | `ThemeBackground`         | `keyof Theme['background']`     |
 | Borders         | `theme.border`         | `ThemeBorder`             | `keyof Theme['border']`         |
 | Space           | `theme.space`          | `ThemeSpace`              | `keyof Theme['space']`          |
+| Breakpoints     | `theme.breakpoints`    | `ThemeBreakpoints`        | responsive prop keys            |
+| Layout          | `theme.layout`         | `ThemeLayout`             | - (page layout per breakpoint)  |
 | Sizes           | `theme.sizes`          | `ThemeSizes`              | `keyof Theme['sizes']`          |
 | Font sizes      | `theme.fontSizes`      | `number[]`                | index (number)                  |
 | Font weights    | `theme.fontWeights`    | `ThemeFontWeights`        | `keyof Theme['fontWeights']`    |

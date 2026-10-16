@@ -2,7 +2,7 @@
 
 # Token contract
 
-Every scale on `theme`, serialized from `baseTheme` (@soroush.tech/design-system 1.3.4).
+Every scale on `theme`, serialized from `baseTheme` (@soroush.tech/design-system 2.0.0).
 Reference tokens through the theme; a literal value in a component is a bug.
 
 ## switch
@@ -163,6 +163,36 @@ Reference tokens through the theme; a literal value in a component is a bug.
 - `theme.space.0.5` - 4px
 - `theme.space.1.5` - 12px
 - `theme.space.auto` - auto
+
+## breakpoints
+
+- `theme.breakpoints.tablet` - 37.5em
+- `theme.breakpoints.web` - 75em
+- `theme.breakpoints.wide` - 100em
+
+## layout
+
+- `theme.layout.base.bars.bottom` - 8
+- `theme.layout.base.panels.start.mode` - hidden
+- `theme.layout.base.panels.start.width` - 280px
+- `theme.layout.base.panels.start.railWidth` - 9
+- `theme.layout.base.content.columns` - 4
+- `theme.layout.base.content.margin` - 2
+- `theme.layout.base.content.gutter` - 2
+- `theme.layout.base.content.mode` - fluid
+- `theme.layout.tablet.panels.start.mode` - collapsed
+- `theme.layout.tablet.content.columns` - 8
+- `theme.layout.tablet.content.margin` - 4
+- `theme.layout.web.bars.top` - 8
+- `theme.layout.web.bars.bottom` - 0
+- `theme.layout.web.panels.start.mode` - inline
+- `theme.layout.web.content.columns` - 12
+- `theme.layout.web.content.margin` - 3
+- `theme.layout.web.content.gutter` - 3
+- `theme.layout.web.content.mode` - fixed
+- `theme.layout.web.content.maxWidth` - 1200px
+- `theme.layout.wide.content.columns` - 16
+- `theme.layout.wide.content.maxWidth` - 1600px
 
 ## zOrder
 

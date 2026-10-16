@@ -25,19 +25,19 @@ export function Layout({ children, sidebar }: Readonly<LayoutProps>) {
       )}
       <Flex flexDirection="row" flex="1 1 auto" width="100%">
         {sidebar && (
-          <Flex
+          // A View, not a Flex: Flex's own `display: flex` would override the hidden base.
+          <View
             as="aside"
-            flexDirection="column"
-            display={['none', 'none', 'block']}
+            display={{ _: 'none', web: 'block' }}
             width="16rem"
-            flex="0 0 auto"
+            minWidth="16rem"
             px={4}
             py={5}
             borderRight="1px solid"
             borderColor="light"
           >
             {sidebar}
-          </Flex>
+          </View>
         )}
         <Flex as="main" flexDirection="column" flex="1 1 auto" minWidth={0} px={4} py={5}>
           {children}

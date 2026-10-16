@@ -35,6 +35,13 @@ declare module '@soroush.tech/design-system/theme' {
   interface ThemeComponents {
     MyWidget?: ComponentConfig<{ mood?: 'calm' | 'loud' }, 'root' | 'handle'>
   }
+  // A larger breakpoint (createTheme appends it after `wide`) and a new layout field.
+  interface ThemeBreakpoints {
+    ultra: string
+  }
+  interface LayoutContent {
+    align?: 'start' | 'center'
+  }
 }
 
 // Component prop unions widen to the augmented keys...
@@ -58,6 +65,9 @@ export const bogusVariant: ButtonVariant = 'wiggly'
 export const override: ThemeOverride = {
   palette: { brand: { main: '#00ff88', light: '#66ffb2', dark: '#00b25f', contrastText: '#000' } },
   background: { tertiary: '#101418' },
+  // The augmented breakpoint gets a layout entry of its own.
+  breakpoints: { ultra: '160em' },
+  layout: { ultra: { content: { columns: 24, align: 'center' } } },
   elevations: { low: '0 1px 2px', mid: '0 2px 6px', high: '0 6px 18px' },
   // theme.defaults accepts augmented keys - components then default to them.
   defaults: { size: 'xl', color: 'brand', bg: 'tertiary' },
@@ -80,3 +90,9 @@ export const override: ThemeOverride = {
   },
 }
 export const augmentedTheme: Theme = createTheme(baseTheme, override)
+
+// Layout entries exist only for declared breakpoints; margins and gutters are space keys.
+// @ts-expect-error -- 'huge' is not a breakpoint
+export const bogusLayout: ThemeOverride = { layout: { huge: { content: { columns: 2 } } } }
+// @ts-expect-error -- a gutter is a theme.space key, not a length
+export const bogusGutter: ThemeOverride = { layout: { web: { content: { gutter: '20px' } } } }

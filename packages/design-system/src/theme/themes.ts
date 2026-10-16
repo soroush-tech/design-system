@@ -188,6 +188,67 @@ export interface ThemeSizes {
  * forces the matching icon size to be supplied.
  */
 export type ThemeIconSizes = { [K in keyof ThemeSizes]: string }
+/**
+ * `theme.breakpoints`, ascending, in declared order - responsive props map onto
+ * them in this order. A value is a CSS length (a min-width), a media condition such
+ * as `(600px <= width < 1200px)`, or a full `@media ...` rule, kept as written.
+ * `createTheme` appends a consumer's new breakpoint after these, so it must be larger.
+ */
+export interface ThemeBreakpoints {
+  tablet: string
+  web: string
+  wide: string
+}
+/** A `theme.space` key - layout margins and gutters step on the spacing scale. */
+export type LayoutSpace = Exclude<keyof ThemeSpace, 'auto'>
+/** A `theme.space` key or a CSS length (a 280px panel is a size, not a spacing step). */
+export type LayoutLength = LayoutSpace | string
+/** Bar heights at the top and bottom of the page; `0` removes an inherited bar. */
+export interface LayoutBars {
+  top?: LayoutLength
+  bottom?: LayoutLength
+}
+/** A side panel: a track (`inline`), over the content (`overlay`), its rail (`collapsed`) or absent (`hidden`). */
+export interface LayoutPanel {
+  mode: 'inline' | 'overlay' | 'collapsed' | 'hidden'
+  /** Open width. */
+  width: LayoutLength
+  /** Collapsed width. */
+  railWidth: LayoutLength
+}
+/** Side panels by logical side - `start` and `end` flip in RTL. */
+export interface LayoutPanels {
+  start?: LayoutPanel
+  end?: LayoutPanel
+}
+/** The content columns, measured in the space the bars and inline panels leave. */
+export interface LayoutContent {
+  columns: number
+  /** Inline padding of the content. */
+  margin: LayoutSpace
+  /** Gap between columns. */
+  gutter: LayoutSpace
+  /** `fluid` spans the space; `fixed` is a container centred at `maxWidth`. */
+  mode: 'fluid' | 'fixed'
+  maxWidth?: LayoutLength
+}
+/** The page layout at one breakpoint. */
+export interface LayoutEntry {
+  bars: LayoutBars
+  panels: LayoutPanels
+  content: LayoutContent
+}
+/**
+ * `theme.layout`: the complete `base` entry (below the first breakpoint), then a
+ * partial entry per breakpoint, merged mobile-first in `ThemeBreakpoints` order.
+ */
+export type ThemeLayout = { base: LayoutEntry } & {
+  [K in keyof ThemeBreakpoints]?: {
+    bars?: LayoutBars
+    panels?: { [P in keyof LayoutPanels]?: Partial<LayoutPanel> }
+    content?: Partial<LayoutContent>
+  }
+}
 /** Style of one typography variant. */
 export interface TypographyVariantStyle {
   element: ElementType
@@ -421,6 +482,8 @@ export interface Theme {
   /** Optional per-component customization - see `ThemeComponents`. */
   components?: OpenScale<ThemeComponents>
   space: OpenScale<ThemeSpace>
+  breakpoints: OpenScale<ThemeBreakpoints>
+  layout: ThemeLayout
   border: OpenScale<ThemeBorder>
   text: OpenScale<ThemeText>
   background: OpenScale<ThemeBackground>
@@ -559,6 +622,34 @@ export const space: ThemeSpace = {
   auto: 'auto',
 }
 
+// em in a media query resolves against the browser's initial font size (16px): 600 / 1200 / 1600px.
+export const breakpoints: ThemeBreakpoints = {
+  tablet: '37.5em',
+  web: '75em',
+  wide: '100em',
+}
+
+// Mobile-first: each breakpoint lists only what changes from the one before it.
+export const layout: ThemeLayout = {
+  base: {
+    bars: { bottom: 8 },
+    panels: { start: { mode: 'hidden', width: '280px', railWidth: 9 } },
+    content: { columns: 4, margin: 2, gutter: 2, mode: 'fluid' },
+  },
+  tablet: {
+    panels: { start: { mode: 'collapsed' } },
+    content: { columns: 8, margin: 4 },
+  },
+  web: {
+    bars: { top: 8, bottom: 0 },
+    panels: { start: { mode: 'inline' } },
+    content: { columns: 12, margin: 3, gutter: 3, mode: 'fixed', maxWidth: '1200px' },
+  },
+  wide: {
+    content: { columns: 16, maxWidth: '1600px' },
+  },
+}
+
 export const typography: ThemeTypographyVariants = {
   h1: { element: 'h1', fontSize: 6, fontWeight: 'bold' },
   h2: { element: 'h2', fontSize: 5, fontWeight: 'bold' },
@@ -610,6 +701,8 @@ export const baseTheme: Theme = {
   icon,
   sizes,
   space,
+  breakpoints,
+  layout,
   zOrder,
   blur: '12px',
   colorScheme: 'dark',

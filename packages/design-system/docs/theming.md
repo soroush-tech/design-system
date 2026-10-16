@@ -99,6 +99,8 @@ Two rules: new object-valued keys (like a `PaletteEntry`) must be supplied compl
 | Backgrounds     | `theme.background`     | `ThemeBackground`         |
 | Borders         | `theme.border`         | `ThemeBorder`             |
 | Space           | `theme.space`          | `ThemeSpace`              |
+| Breakpoints     | `theme.breakpoints`    | `ThemeBreakpoints`        |
+| Layout          | `theme.layout`         | `ThemeLayout`             |
 | Sizes           | `theme.sizes`          | `ThemeSizes`              |
 | Radii           | `theme.radii`          | `ThemeRadii`              |
 | Border widths   | `theme.borderWidths`   | `ThemeBorderWidths`       |

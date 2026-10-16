@@ -21,7 +21,7 @@ export function Navbar({ onMenuClick }: Readonly<NavbarProps> = {}) {
       <Flex alignItems="center" justifyContent="space-between" maxWidth="1440px" mx="auto">
         <Flex alignItems="center" gap={3}>
           {onMenuClick && (
-            <View display={['inline-flex', 'inline-flex', 'none']}>
+            <View display={{ _: 'inline-flex', web: 'none' }}>
               <Button variant="text" size="sm" aria-label="Open navigation" onClick={onMenuClick}>
                 <Icon name="menu" />
               </Button>
@@ -35,7 +35,7 @@ export function Navbar({ onMenuClick }: Readonly<NavbarProps> = {}) {
           <Chip>v{designSystemPkg.version}</Chip>
         </Flex>
         <Flex alignItems="center" gap={3}>
-          <View display={['none', 'none', 'inline-flex']}>
+          <View display={{ _: 'none', web: 'inline-flex' }}>
             <Flex flexDirection="row" gap={3}>
               <Link href="/design-system/" color="secondary">
                 Design System

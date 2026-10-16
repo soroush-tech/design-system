@@ -20,7 +20,8 @@ describe('DocPage', () => {
   it('renders the sidebar nav and the markdown body', () => {
     renderDocPage({ source: '# Doc Title\n\nBody copy.' })
     expect(
-      screen.getByRole('navigation', { name: 'Design system documentation' })
+      // The sidebar's aside is display: none below the `web` breakpoint, which jsdom applies.
+      screen.getByRole('navigation', { name: 'Design system documentation', hidden: true })
     ).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Doc Title' })).toBeInTheDocument()
     expect(screen.getByText('Body copy.')).toBeInTheDocument()

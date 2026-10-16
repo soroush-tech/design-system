@@ -24,13 +24,14 @@ describe('Layout', () => {
   it('has no menu button or aside without a sidebar', () => {
     renderLayout()
     expect(screen.queryByRole('button', { name: 'Open navigation' })).not.toBeInTheDocument()
-    expect(screen.queryByRole('complementary')).not.toBeInTheDocument()
+    expect(screen.queryByRole('complementary', { hidden: true })).not.toBeInTheDocument()
   })
 
   it('renders the sidebar in an aside and opens it in a drawer from the menu button', async () => {
     const user = userEvent.setup()
     renderLayout(<div data-testid="nav">nav content</div>)
-    expect(screen.getByRole('complementary')).toBeInTheDocument()
+    // The aside is display: none below the `web` breakpoint, which jsdom applies.
+    expect(screen.getByRole('complementary', { hidden: true })).toBeInTheDocument()
     expect(screen.getByTestId('nav')).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: 'Open navigation' }))
     // Drawer portals a second copy of the sidebar content.
