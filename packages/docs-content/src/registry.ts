@@ -44,6 +44,7 @@ export const componentCategories: ComponentCategory[] = [
       component('View'),
       component('Flex'),
       component('Grid'),
+      component('PageLayout', true),
       component('Paper'),
       component('Card'),
       component('Quote'),

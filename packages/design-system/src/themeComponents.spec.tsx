@@ -26,6 +26,7 @@ import { Modal } from './Modal'
 import { NativeSelect } from './NativeSelect'
 import { Pagination } from './Pagination'
 import { Paper } from './Paper'
+import { LayoutGrid, PageLayout } from './PageLayout'
 import { Popover } from './Popover'
 import { Pressable } from './Pressable'
 import { Quote } from './Quote'
@@ -114,6 +115,12 @@ const tablePagination = (
       </tr>
     </tfoot>
   </table>
+)
+
+const pageLayout = (
+  <PageLayout topBar="bar" startPanel="panel">
+    content
+  </PageLayout>
 )
 
 const cases: Case[] = [
@@ -278,6 +285,11 @@ const cases: Case[] = [
   { name: 'View', slot: 'root', label: 'View', ui: <View>v</View> },
   { name: 'Flex', slot: 'root', label: 'flex', ui: <Flex>f</Flex> },
   { name: 'Grid', slot: 'root', label: 'grid', ui: <Grid>g</Grid> },
+  { name: 'LayoutGrid', slot: 'root', label: 'LayoutGrid', ui: <LayoutGrid>g</LayoutGrid> },
+  { name: 'PageLayout', slot: 'root', label: 'PageLayout', ui: pageLayout },
+  { name: 'PageLayout', slot: 'bar', label: 'PageLayoutBar', ui: pageLayout },
+  { name: 'PageLayout', slot: 'panel', label: 'PageLayoutPanel', ui: pageLayout },
+  { name: 'PageLayout', slot: 'content', label: 'PageLayoutContent', ui: pageLayout },
   { name: 'Avatar', slot: 'img', label: 'AvatarImg', ui: <Avatar src="p.jpg" alt="a" /> },
   {
     name: 'Button',

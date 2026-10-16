@@ -439,12 +439,14 @@ export interface ThemeComponents {
     Record<string, unknown>,
     'root' | 'track' | 'dash' | 'bar' | 'traveler' | 'segment' | 'secondaryBar'
   >
+  LayoutGrid?: ComponentConfig
   Link?: ComponentConfig
   MenuItem?: ComponentConfig<Record<string, unknown>, 'root' | 'check'>
   Modal?: ComponentConfig
   NativeSelect?: ComponentConfig<Record<string, unknown>, 'root' | 'select' | 'icon'>
   Pagination?: ComponentConfig<Record<string, unknown>, 'root' | 'list'>
   PaginationItem?: ComponentConfig<Record<string, unknown>, 'root' | 'ellipsis'>
+  PageLayout?: ComponentConfig<Record<string, unknown>, 'root' | 'bar' | 'panel' | 'content'>
   Paper?: ComponentConfig
   Popover?: ComponentConfig<Record<string, unknown>, 'root' | 'positioner'>
   Pressable?: ComponentConfig<PressableOwnerState>

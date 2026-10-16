@@ -2,7 +2,7 @@
 
 # Components
 
-The 46 components shipped by the design system, and when to reach for each.
+The 47 components shipped by the design system, and when to reach for each.
 Import every component from its own subpath.
 
 ## Layout & surfaces
@@ -10,6 +10,7 @@ Import every component from its own subpath.
 - **View** - The base layout primitive.
 - **Flex** - Extends [`View`](https://docs.soroush.tech/design-system/components/view/).
 - **Grid** - Extends [`View`](https://docs.soroush.tech/design-system/components/view/).
+- **PageLayout** - The page frame from `theme.layout`: a top and a bottom bar, side panels at the start and the end, and the content container between them.
 - **Paper** - An elevated surface primitive that extends `View`.
 - **Card** - A surface component with an optional title, caption, and variant-based visual treatment.
 - **Quote** - A `View` with a fixed 2px primary left border - used for terminal readouts and markdown blockquotes.
