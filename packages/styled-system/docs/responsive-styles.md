@@ -43,13 +43,13 @@ Using Styled System with a CSS-in-JS library will generate something like the fo
   width: 100%;
 }
 
-@media screen and (min-width: 40em) {
+@media (width >= 40em) {
   .Box-hash {
     width: 50%;
   }
 }
 
-@media screen and (min-width: 52em) {
+@media (width >= 52em) {
   .Box-hash {
     width: 25%;
   }
@@ -58,25 +58,18 @@ Using Styled System with a CSS-in-JS library will generate something like the fo
 
 ## Using objects
 
-Alternatively, you can define breakpoints with aliases and use plain objects as values. Any undefined alias key will define the base, non-responsive value.
+Alternatively, name the breakpoints and use plain objects as values. Each key holds from its
+breakpoint up; a breakpoint that starts at 0 is the base.
 
 ```js
 // theme.js
-const breakpoints = ['40em', '52em', '64em', '80em']
-
-// aliases
-breakpoints.sm = breakpoints[0]
-breakpoints.md = breakpoints[1]
-breakpoints.lg = breakpoints[2]
-breakpoints.xl = breakpoints[3]
-
 export default {
-  breakpoints,
+  breakpoints: { xs: '0px', sm: '600px', md: '840px', lg: '1200px', xl: '1600px' },
 }
 ```
 
 ```jsx
-<Box width={{ _: 1, sm: 1, md: 1 / 2, lg: 1 / 4 }} />
+<Box width={{ xs: 1, md: 1 / 2, lg: 1 / 4 }} />
 ```
 
 Read more in the [Array Props Guide](./guides/array-props.md). Named breakpoints, media

@@ -1,70 +1,122 @@
 # Breakpoints
 
-`theme.breakpoints` decides where responsive values change. Every responsive prop, and every
-array in `css()`, turns its values into media queries from this one scale.
+`theme.breakpoints` decides where responsive values change. Every responsive prop, every value in
+`css()`, and the query helpers turn this one scale into media queries - and into container queries
+when you ask for them. Everything is CSS: no component measures the window or its container in
+JavaScript, so a server-rendered page lays out the same as the client, with JavaScript or without.
 
-## A list or named breakpoints
+## Each key is a range
 
-The scale is either an ascending list or named breakpoints, in the order you declare them.
+A key holds from its value until the next key. The theme writes where each range **starts**,
+because a mobile-first query is a min-width; the range ends where the next key starts.
 
 ```js
-// a list - array values map by position
-breakpoints: ['40em', '52em', '64em']
-
-// named - object values map by name, array values by declared order
-breakpoints: { tablet: '37.5em', web: '75em', wide: '100em' }
+breakpoints: { xs: '0px', sm: '600px', md: '840px', lg: '1200px', xl: '1600px' }
 ```
 
-The two value forms work with either scale:
+| Key  | Range       | Window class (Material 3) |
+| ---- | ----------- | ------------------------- |
+| `xs` | 0-599px     | compact                   |
+| `sm` | 600-839px   | medium                    |
+| `md` | 840-1199px  | expanded                  |
+| `lg` | 1200-1599px | large                     |
+| `xl` | 1600px+     | extra-large               |
+
+`xs` starts at 0, so it applies everywhere until `sm` overrides it - it is the base. The names
+are window classes, not devices: a class is about the space the window has, not the hardware.
+A theme can use any names (`mobile`, `tablet`, `web`) and any number of breakpoints; every form
+below follows the theme's names.
+
+A scale can also be a plain list, `['40em', '52em', '64em']`. A list has no base key: position 0
+is the base and each entry starts the next range.
+
+## Responsive values
+
+A prop - or a property in `css()` - takes one of three forms:
 
 ```jsx
-<Box p={[2, 3, 4]} />           // base, then the first and second breakpoint
-<Box p={{ _: 2, web: 4 }} />    // `_` is the base value; keys name breakpoints
+<Box p={2} />                                 // one value, everywhere
+<Box display={{ xs: 'none', md: 'block' }} /> // by name: each key from its size up
+<Box gap={[1, 2, 4]} />                       // by position: xs, sm, md - mobile-first
 ```
 
-With a list, object keys are indexes (`{ _: 2, 1: 4 }`). Keep named breakpoints in ascending
-order, because array values take them in declared order. Names must not look like integers
-(`'600'`): JavaScript moves integer-like keys to the front of an object.
+- **An object** takes breakpoint names only. Each value holds from that breakpoint up, until a
+  larger key in the same object overrides it.
+- **An array** maps by position onto the breakpoints in declared order; `null` skips one
+  (`[1, null, 4]`). Prefer an object beyond about three values: adding a breakpoint to the theme
+  shifts every array after it.
 
-## What a breakpoint value can be
+## Query helpers
 
-| Value                                                   | Media query                                 |
-| ------------------------------------------------------- | ------------------------------------------- |
-| a length: `'40em'`, `'600px'`, `'calc(...)'`            | `@media screen and (min-width: 40em)`       |
-| a number: `768`                                         | `@media screen and (min-width: 768px)`      |
-| a condition: `'(orientation: landscape)'`               | `@media (orientation: landscape)`           |
-| a range: `'(600px <= width < 1200px)'`                  | `@media (600px <= width < 1200px)`          |
-| a media type or list: `'print'`, `'not (hover: hover)'` | `@media print`, `@media not (hover: hover)` |
-| a full rule: `'@media screen and (max-width: 20em)'`    | used as written                             |
+`up`, `down`, `only`, `between` and `not` take a breakpoint name, or a width (a number is px, a
+string any CSS length), and return an `@media` rule in range syntax - exact, with no `-0.02px`
+step:
 
-A length keeps the mobile-first meaning: from this width up. A condition or a full rule
-applies only where it matches, so a range breakpoint styles one band of widths and nothing
-above it.
+| Call                  | Output                                      |
+| --------------------- | ------------------------------------------- |
+| `up('md')`            | `@media (width >= 840px)`                   |
+| `up(500)`             | `@media (width >= 500px)`                   |
+| `down('md')`          | `@media (width < 840px)`                    |
+| `only('md')`          | `@media (840px <= width < 1200px)`          |
+| `only('xs')`          | `@media (width < 600px)`                    |
+| `only('xl')`          | `@media (width >= 1600px)`                  |
+| `between('sm', 'lg')` | `@media (600px <= width < 1200px)`          |
+| `not('md')`           | `@media (width < 840px), (width >= 1200px)` |
 
-`createMediaQuery(value)` returns this rule for one value, and `breakpointQueries(breakpoints)`
-returns `[name, rule]` pairs in declared order, for components that write their own media
-blocks.
+Use them as keys in a style object, or in a template - the helper already writes `@media`:
 
-## Units: em and rem use the browser's font size
+```js
+const Panel = styled.div(({ theme }) => ({
+  padding: 16,
+  [theme.breakpoints.down('sm')]: { padding: 8 },
+}))
 
-Inside a media query, `em` and `rem` are relative to the browser's **initial** font size (16px
-unless the user changed it), not to the root element's font size. `html { font-size: 62.5% }`
-does not move a breakpoint; `40em` stays 640px. A user who raises the browser's default font size
-moves every em breakpoint with it, so the layout switches at the same amount of text per line.
-That is the reason to prefer `em` for breakpoints. `px` breakpoints ignore the user's font size.
+const Rail = styled.nav`
+  width: 280px;
+  ${({ theme }) => theme.breakpoints.only('sm')} {
+    width: 72px;
+  }
+`
+```
 
-Viewport units are no use in a width query: `50vw` measures the very viewport being tested. A
-media query can't read custom properties either, so `var(--x)` is not a breakpoint.
-
-## The order media blocks are written in
-
-Responsive styles are written base first, then one `@media` block per breakpoint in declared
-order. Later blocks win where two match, so with min-width lengths the largest matching
-breakpoint wins, as mobile-first expects. With conditions or ranges, declared order is the
-tie-breaker: declare the broader condition first.
+Without design-system, build them from any scale with `createMediaHelpers(breakpoints)`.
 
 ## Container queries
 
-A breakpoint answers to the viewport. A component that should respond to its own container's
-width needs a container query (`@container (min-width: ...)`), which this scale does not produce
-yet. Write those in your styles directly until then.
+The same scale sizes container queries - for a component that should respond to the space its
+container gives it, not to the window:
+
+- **A container**: `containerType="inline-size"` (and `containerName="sidebar"` to name it) on
+  the element whose width counts.
+- **Prop keys**: `cq` + the breakpoint name, from that size up - `p={{ xs: 2, cqSm: 4 }}` writes
+  `@container (width >= 600px)`. They follow the theme's names (`cqTablet` for a `tablet` key).
+- **Helpers**: `containerQueries.up('sm')`, `.down`, `.only`, `.between`, `.not` write
+  `@container (...)` rules; `containerQueries('sidebar').up(400)` targets a named container:
+  `@container sidebar (width >= 400px)`. One-off sizes go through the helpers. Build them from
+  any scale with `createContainerQueries(breakpoints)`.
+
+## Units
+
+Inside a media query, `em` and `rem` are relative to the browser's **initial** font size (16px
+unless the user changed it), not to the root element's: `html { font-size: 62.5% }` doesn't move
+a breakpoint. A user who raises their browser's default font size moves `em` breakpoints with it;
+`px` breakpoints stay put. Viewport units are no use in a width query (`50vw` measures the
+viewport being tested), and a media query can't read custom properties, so `var(--x)` is not a
+breakpoint. A breakpoint written as a media condition or a full `@media` rule is passed through;
+it has no width, so the helpers and `cq` keys skip it.
+
+## The order blocks are written in
+
+A prop's styles are written base first, then one `@media` block per breakpoint in declared order,
+then the container blocks in the same order. Later blocks win where two match, so the largest
+matching breakpoint wins, as mobile-first expects. In `css()`, the generated blocks come after the
+keys you write yourself - a helper key such as `[up('md')]` keeps your order, and a generated
+block with the same query is merged into it.
+
+## The layout grid
+
+The `layout` prop on design-system's `Grid` and `Flex` turns `theme.layout`'s tokens into CSS per
+breakpoint: column tracks on a Grid, a wrapping row on a Flex, with the gutter, the margin, and a
+centred max width when the mode is fixed. `layout={{ lg: { columns: 16 } }}` replaces the theme's
+grid at `lg` only. Outside design-system, `layoutGridStyles(theme, value, 'grid' | 'flex')` writes
+the same styles in a style function. The design-system theming guide has the details.

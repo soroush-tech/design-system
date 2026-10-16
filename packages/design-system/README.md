@@ -89,17 +89,16 @@ SSR critical-CSS extraction (e.g. with `@emotion/server`) is a separate, opt-in 
 
 ### Layout & surfaces
 
-| Component    | Purpose                                                                                   |
-| ------------ | ----------------------------------------------------------------------------------------- |
-| `View`       | Styled `div` primitive - the base building block                                          |
-| `Flex`       | `View` with flexbox defaults                                                              |
-| `Grid`       | CSS grid container                                                                        |
-| `PageLayout` | Page frame (bars, side panels, content) from `theme.layout`; `LayoutGrid` for its columns |
-| `Paper`      | Elevated surface with background and shadow                                               |
-| `Card`       | Content container built on `Paper`                                                        |
-| `Quote`      | Bordered quote / terminal-panel surface on `View`                                         |
-| `AppBar`     | Top application bar                                                                       |
-| `Drawer`     | Slide-in side panel                                                                       |
+| Component | Purpose                                           |
+| --------- | ------------------------------------------------- |
+| `View`    | Styled `div` primitive - the base building block  |
+| `Flex`    | `View` with flexbox defaults                      |
+| `Grid`    | CSS grid container                                |
+| `Paper`   | Elevated surface with background and shadow       |
+| `Card`    | Content container built on `Paper`                |
+| `Quote`   | Bordered quote / terminal-panel surface on `View` |
+| `AppBar`  | Top application bar                               |
+| `Drawer`  | Slide-in side panel                               |
 
 ### Content & data display
 
@@ -149,14 +148,14 @@ SSR critical-CSS extraction (e.g. with `@emotion/server`) is a separate, opt-in 
 
 Components never hardcode colors or sizes - props resolve against scales on the `Theme` object:
 
-| Group              | Scales                                                                                                |
-| ------------------ | ----------------------------------------------------------------------------------------------------- |
-| Color              | `palette` (main/light/dark/contrastText per color) · `text` · `background` · `border` · `colorScheme` |
-| Typography         | `typography` (variant map) · `fonts` · `fontSizes` · `fontWeights` · `lineHeights` · `letterSpacings` |
-| Space & shape      | `space` · `sizes` · `radii` · `borderWidths` · `shadows`                                              |
-| Layout             | `breakpoints` (tablet/web/wide) · `layout` (bars, panels, content columns per breakpoint)             |
-| Component scales   | `avatar` (size steps) · `skeleton` (wave highlight)                                                   |
-| Layering & effects | `zOrder` (appBar/drawer/modal) · `blur` · `logoFilter` · `portraitBlend` · `portraitOpacity`          |
+| Group              | Scales                                                                                                 |
+| ------------------ | ------------------------------------------------------------------------------------------------------ |
+| Color              | `palette` (main/light/dark/contrastText per color) · `text` · `background` · `border` · `colorScheme`  |
+| Typography         | `typography` (variant map) · `fonts` · `fontSizes` · `fontWeights` · `lineHeights` · `letterSpacings`  |
+| Space & shape      | `space` · `sizes` · `radii` · `borderWidths` · `shadows`                                               |
+| Layout             | `breakpoints` (xs/sm/md/lg/xl window classes) · `layout` (columns, margins, panels, top bar per class) |
+| Component scales   | `avatar` (size steps) · `skeleton` (wave highlight)                                                    |
+| Layering & effects | `zOrder` (appBar/drawer/modal) · `blur` · `logoFilter` · `portraitBlend` · `portraitOpacity`           |
 
 Prop types are derived from the interface (`keyof Theme['text']`), so adding a token to `themes.ts` propagates everywhere automatically. See [`design-system.md`](./design-system.md) for the full scale table and the palette rules.
 
@@ -190,11 +189,15 @@ const [isDark, setIsDark] = useState(true)
 
 ### Breakpoints and layout
 
-`theme.breakpoints` (`tablet` 600px, `web` 1200px, `wide` 1600px) is where responsive props change -
-`p={{ _: 2, web: 4 }}` or `p={[2, 3, 4]}`. `theme.layout` holds the page's columns, margins,
-gutters, side panels and bars per breakpoint, merged mobile-first; `PageLayout` and `LayoutGrid`
-lay a page out from it. Override both with `createTheme`; a breakpoint you add comes after the
-existing ones, so it must be larger. The full guide is the
+`theme.breakpoints` are Material 3's window classes, each a range from its start until the next:
+`xs` 0-599px (compact, the base), `sm` 600-839 (medium), `md` 840-1199 (expanded), `lg`
+1200-1599 (large), `xl` 1600+ (extra-large). Responsive props use them by name or position -
+`p={{ xs: 2, md: 4 }}`, `p={[2, 3, 4]}` - and `cqSm`-style keys write container queries;
+`theme.breakpoints.up('md')` and its siblings write queries for hand-written styles. Everything is
+CSS, so pages work with JavaScript off. `theme.layout` holds the layout tokens per class (columns,
+margins, gutters, side panels, top bar); `Grid` and `Flex` apply the column grid with
+`layout` / `layout={{ lg: { columns: 16 } }}`, and apps place `AppBar`, `Sidebar` and `Drawer`
+themselves. The full guide is the
 [Breakpoints and layout](./docs/theming.md#breakpoints-and-layout) section of the theming guide.
 
 ### Component defaults

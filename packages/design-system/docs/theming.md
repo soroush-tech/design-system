@@ -93,83 +93,154 @@ Two rules: new object-valued keys (like a `PaletteEntry`) must be supplied compl
 ## Breakpoints and layout
 
 `theme.breakpoints` and `theme.layout` hold the page's layout system: where it changes, how many
-columns it has, its margins and gutters, its side panels and bars. The app lays out from them,
-and a design tool reading the theme draws the same guides.
+columns it has, its margins and gutters, its side panels and the top bar. Everything responsive is
+CSS - no component measures the window in JavaScript - so a prerendered page lays out the same
+with JavaScript off. The design system ships these as tokens and building blocks (`AppBar`,
+`Sidebar`, `Drawer`, `Grid`, `Flex`); each app composes its own pages from them.
 
-### `theme.breakpoints`
+### `theme.breakpoints` - window classes
 
-Named breakpoints - window widths, ascending, in declared order. `baseTheme` has:
+Each key is a range: its value is where the range starts, and it holds until the next key. The
+theme writes the start because media queries are min-width. `xs` starts at 0, so it applies
+everywhere until `sm` overrides it.
 
 ```ts
-breakpoints: { tablet: '600px', web: '1200px', wide: '1600px' }
+breakpoints: { xs: '0px', sm: '600px', md: '840px', lg: '1200px', xl: '1600px' }
 ```
 
-A value is any CSS length (a min-width), a media condition such as `(600px <= width < 1200px)`,
-or a full `@media` rule. `baseTheme` uses px, like the layout sizes the breakpoints switch. `em`
-works too: in a media query it is relative to the browser's default font size, not the page's, so
-`75em` is 1200px until the user raises that size - and then the layout switches earlier. Every value form
-and the units are covered in the styled-system
-[Breakpoints](https://docs.soroush.tech/styled-system/docs/breakpoints/) guide.
+| Key  | Range       | Material 3 window class |
+| ---- | ----------- | ----------------------- |
+| `xs` | 0-599px     | compact                 |
+| `sm` | 600-839px   | medium                  |
+| `md` | 840-1199px  | expanded                |
+| `lg` | 1200-1599px | large                   |
+| `xl` | 1600px+     | extra-large             |
 
-Responsive props use them by name or by position:
+They are window classes, not devices: a class is about the space the window has. Responsive props
+use them by name - each key from its size up - or by position:
 
 ```tsx
-<View display={{ _: 'none', web: 'block' }} />   // `_` is below the first breakpoint
-<View p={[2, 3, 4]} />                           // base, tablet, web
+<View display={{ xs: 'none', md: 'block' }} />
+<View p={[2, 3, 4]} />                         // xs, sm, md
+<View p={{ xs: 2, cqSm: 4 }} />                // cq keys: container queries on the same sizes
 ```
 
-### `theme.layout`
-
-`layout.base` is the complete layout below the first breakpoint. Each breakpoint's entry lists
-only what changes, and is merged over the ones before it (mobile-first, like min-width queries):
+For hand-written styles, `theme.breakpoints` carries the query helpers (also exported for
+`baseTheme` as `up`, `down`, `only`, `between`, `not` and `containerQueries`):
 
 ```ts
-layout: {
-  base: {
-    bars: { bottom: 8 },
-    panels: { start: { mode: 'hidden', width: '280px', railWidth: 9 } },
-    content: { columns: 4, margin: 2, gutter: 2, mode: 'fluid' },
-  },
-  tablet: { panels: { start: { mode: 'collapsed' } }, content: { columns: 8, margin: 4 } },
-  web: {
-    bars: { top: 8, bottom: 0 },
-    panels: { start: { mode: 'inline' } },
-    content: { columns: 12, margin: 3, gutter: 3, mode: 'fixed', maxWidth: '1200px' },
-  },
-  wide: { content: { columns: 16, maxWidth: '1600px' } },
-}
+const Panel = styled.div(({ theme }) => ({
+  padding: 16,
+  [theme.breakpoints.down('sm')]: { padding: 8 }, // @media (width < 600px)
+  [theme.breakpoints.only('md')]: { padding: 24 }, // @media (840px <= width < 1200px)
+}))
 ```
 
-- **Units** - `margin` and `gutter` are `theme.space` keys, so they move with the spacing scale.
-  Bar heights, panel widths and `maxWidth` take a space key or any CSS length: a 280px panel is a
-  size, not a spacing step.
-- **Bars** - `top` and `bottom` heights. `0` removes a bar a smaller breakpoint set.
-- **Panels** - `start` and `end`, which follow the writing direction (they swap in RTL). `mode` is
-  `inline` (a track of `width`; the content gets what is left), `collapsed` (a track of
-  `railWidth`), `overlay` (over the content at `width`; the columns don't change) or `hidden`.
-  A panel first declared at a breakpoint (not in `base`) needs its `mode`, `width` and
-  `railWidth` there; an incomplete one is left out.
-- **Content** - `columns` measured in the space the bars and inline panels leave. `fluid` spans
-  it with `margin` as inline padding; `fixed` is the same inside a container centred at
-  `maxWidth`.
+Every form, the container queries, the units and the order blocks are written in are covered in
+the styled-system [Breakpoints](https://docs.soroush.tech/styled-system/docs/breakpoints/) guide.
 
-[`PageLayout`](https://docs.soroush.tech/design-system/components/page-layout/) lays a page out from these entries and
-`LayoutGrid` puts content on the columns, both in CSS alone.
+### `theme.layout` - layout tokens per window class
+
+`xs` is complete; each later class lists only what changes and is merged over the ones before it.
+With `baseTheme`:
+
+| Class | Columns | Margin / gutter | Content    | Start panel | End panel   | Top bar |
+| ----- | ------- | --------------- | ---------- | ----------- | ----------- | ------- |
+| `xs`  | 4       | 16 / 16         | fluid      | hidden      | hidden      | 64      |
+| `sm`  | 8       | 32 / 16         | fluid      | rail 72     | hidden      | 64      |
+| `md`  | 12      | 24 / 24         | fluid      | rail 72     | overlay 360 | 64      |
+| `lg`  | 12      | 24 / 24         | fixed 1200 | rail 72     | overlay 412 | 64      |
+| `xl`  | 12      | 24 / 24         | fixed 1600 | inline 280  | inline 412  | 64      |
+
+- **Units** - `margin` and `gutter` are `theme.space` keys, so they move with the spacing scale.
+  Bar heights, panel widths and `maxWidth` take a space key or any CSS length.
+- **Columns** - 1 to 16. 12 is the default from `md` up.
+- **Panels** - `start` and `end` follow the writing direction (they swap in RTL). `mode` is
+  `inline` (beside the content at `width`), `collapsed` (a rail at `railWidth`), `overlay` (over
+  the content at `width`) or `hidden`. A panel first declared at a later class needs its `mode`,
+  `width` and `railWidth` there.
+- **Bars** - `top` (and an optional `bottom`) heights; `0` removes an inherited bar.
+
+These are tokens: the app places its own `AppBar`, `Sidebar` and `Drawer` with them, and the
+design studio draws them on its frames.
+
+### The `layout` prop - the layout grid on a Grid or Flex
+
+`Grid` and `Flex` take a `layout` prop that turns the content tokens into CSS per window class:
+
+```tsx
+<Grid layout>...</Grid>                                // the theme's layout grid
+<Grid layout={{ lg: { columns: 16, gutter: 2 } }}>...</Grid> // its own at lg only
+```
+
+- **Grid** - `grid-template-columns: repeat(N, minmax(0, 1fr))`, the gutter as `column-gap`, the
+  margin as `padding-inline`, and `max-width` with `margin-inline: auto` when the mode is fixed.
+  Children place themselves with `gridColumn` (`span 4`, `1 / -1`).
+- **Flex** - a wrapping row with the same gutter, margin and fixed mode.
+- **Both** set `--layout-columns` and `--layout-gutter` for each class, so a child can size itself
+  from the current grid.
+- An entry in the value replaces the theme's grid at the class it names only; the next class is
+  back to the theme. Explicit `gridTemplateColumns`, `flexDirection`, `gap` or padding props
+  still win.
+
+The same page without the prop needs every value written out - and stops following the theme:
+
+```tsx
+<Grid
+  gridTemplateColumns={{
+    xs: 'repeat(4, minmax(0, 1fr))',
+    sm: 'repeat(8, minmax(0, 1fr))',
+    md: 'repeat(12, minmax(0, 1fr))',
+  }}
+  columnGap={{ xs: 2, md: 3 }}
+  px={{ xs: 2, sm: 4, md: 3 }}
+>
+  ...
+</Grid>
+```
 
 ### Your own breakpoints and layout
 
-Override them with `createTheme`, like any scale:
+Override values with `createTheme`, like any scale:
 
 ```ts
 const theme = createTheme(baseTheme, {
-  breakpoints: { web: '64em' },
-  layout: { web: { content: { maxWidth: '1024px' } } },
+  breakpoints: { md: '900px' },
+  layout: { lg: { content: { maxWidth: '1280px' } } },
 })
 ```
 
-`createTheme` merges, so an overridden breakpoint keeps its place, and a breakpoint you add
-(declared by augmenting `ThemeBreakpoints`) comes after the existing ones. An added breakpoint
-must therefore be larger than `wide`. Its layout key exists as soon as the breakpoint does.
+The helpers on `theme.breakpoints` are rebuilt from the merged sizes. `createTheme` merges, so
+it can change values and add a larger breakpoint after the existing ones, but not remove or rename
+one. To use your own names, declare them by augmenting `BreakpointOverrides` (`true` adds a name,
+`false` removes a default) and replace the scale and the layout on the base:
+
+```ts
+declare module '@soroush.tech/design-system/theme' {
+  interface BreakpointOverrides {
+    mobile: true
+    tablet: true
+    web: true
+    xs: false
+    sm: false
+    md: false
+    lg: false
+    xl: false
+  }
+}
+
+const theme = createTheme(
+  {
+    ...baseTheme,
+    breakpoints: withBreakpointHelpers({ mobile: '0px', tablet: '768px', web: '1280px' }),
+    layout: { mobile: { ...a complete entry... }, tablet: { ... }, web: { ... } },
+  },
+  {}
+)
+```
+
+Responsive props, `cq` keys (`cqTablet`), the helpers and the `layout` keys all follow the new
+names.
 
 ## The scale interfaces
 
