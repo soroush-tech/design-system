@@ -19,10 +19,7 @@ export default function Page() {
           <Typography variant="h4" as="h2" gutterBottom>
             {category.label}
           </Typography>
-          <Grid
-            gridTemplateColumns={{ _: '1fr', tablet: '1fr 1fr', web: '1fr 1fr 1fr' }}
-            gridGap={3}
-          >
+          <Grid gridTemplateColumns={{ xs: '1fr', sm: '1fr 1fr', lg: '1fr 1fr 1fr' }} gridGap={3}>
             {category.items.map((item) => (
               <Link
                 key={item.slug}

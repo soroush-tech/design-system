@@ -28,7 +28,7 @@ export function Layout({ children, sidebar }: Readonly<LayoutProps>) {
           // A View, not a Flex: Flex's own `display: flex` would override the hidden base.
           <View
             as="aside"
-            display={{ _: 'none', web: 'block' }}
+            display={{ xs: 'none', lg: 'block' }}
             width="16rem"
             minWidth="16rem"
             px={4}

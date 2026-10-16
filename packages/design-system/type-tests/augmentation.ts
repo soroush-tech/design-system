@@ -13,7 +13,7 @@ import type {
 import { baseTheme, createTheme } from '@soroush.tech/design-system/theme'
 import type { ButtonColor, ButtonVariant } from '@soroush.tech/design-system/Button'
 import type { CheckboxSize } from '@soroush.tech/design-system/Checkbox'
-import type { ViewBackgroundToken } from '@soroush.tech/design-system/View'
+import type { ViewBackgroundToken, ViewProps } from '@soroush.tech/design-system/View'
 
 declare module '@soroush.tech/design-system/theme' {
   interface ThemePalette {
@@ -35,9 +35,11 @@ declare module '@soroush.tech/design-system/theme' {
   interface ThemeComponents {
     MyWidget?: ComponentConfig<{ mood?: 'calm' | 'loud' }, 'root' | 'handle'>
   }
-  // A larger breakpoint (createTheme appends it after `wide`) and a new layout field.
-  interface ThemeBreakpoints {
-    ultra: string
+  // Breakpoints renamed by the app: `ultra` added (createTheme appends it after `xl`), `xs`
+  // kept, `xl` removed - and a new layout field.
+  interface BreakpointOverrides {
+    ultra: true
+    xl: false
   }
   interface LayoutContent {
     align?: 'start' | 'center'
@@ -91,8 +93,20 @@ export const override: ThemeOverride = {
 }
 export const augmentedTheme: Theme = createTheme(baseTheme, override)
 
+// Responsive values take the theme's breakpoint names and their cq keys - not helper names,
+// not removed breakpoints.
+export const responsivePadding: ViewProps['p'] = { xs: 1, ultra: 3, cqUltra: 2 }
+// @ts-expect-error -- `up` is a helper on the scale, not a breakpoint
+export const helperAsBreakpoint: ViewProps['p'] = { up: 2 }
+// @ts-expect-error -- `xl` was removed by BreakpointOverrides
+export const removedBreakpoint: ViewProps['p'] = { xl: 2 }
+// The helpers follow the theme's names.
+export const ultraQuery: string = baseTheme.breakpoints.up('ultra')
+
 // Layout entries exist only for declared breakpoints; margins and gutters are space keys.
 // @ts-expect-error -- 'huge' is not a breakpoint
 export const bogusLayout: ThemeOverride = { layout: { huge: { content: { columns: 2 } } } }
 // @ts-expect-error -- a gutter is a theme.space key, not a length
-export const bogusGutter: ThemeOverride = { layout: { web: { content: { gutter: '20px' } } } }
+export const bogusGutter: ThemeOverride = { layout: { md: { content: { gutter: '20px' } } } }
+// @ts-expect-error -- `xl` was removed, so it has no layout entry
+export const removedLayout: ThemeOverride = { layout: { xl: { content: { columns: 16 } } } }

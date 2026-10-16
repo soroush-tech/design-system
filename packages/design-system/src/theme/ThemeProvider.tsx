@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import type { ReactNode } from 'react'
 import { EmotionThemeProvider as DefaultThemeProvider } from './emotion'
 import { baseTheme, type Theme, type ThemeDefaults } from './themes'
-import { createTheme } from './utils/createTheme'
+import { createTheme, withHelpers } from './utils/createTheme'
 
 interface ThemeProviderProps {
   children: ReactNode
@@ -25,7 +25,7 @@ export function ThemeProvider({
   defaults,
 }: Readonly<ThemeProviderProps>) {
   const value = useMemo(
-    () => (defaults ? createTheme(theme, { defaults }) : theme),
+    () => (defaults ? createTheme(theme, { defaults }) : withHelpers(theme)),
     [theme, defaults]
   )
   return <DefaultThemeProvider theme={value}>{children}</DefaultThemeProvider>

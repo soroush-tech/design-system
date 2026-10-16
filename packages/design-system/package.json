@@ -53,7 +53,6 @@
     "./Modal": "./src/Modal/index.ts",
     "./NativeSelect": "./src/NativeSelect/index.ts",
     "./Pagination": "./src/Pagination/index.ts",
-    "./PageLayout": "./src/PageLayout/index.ts",
     "./Paper": "./src/Paper/index.ts",
     "./Popover": "./src/Popover/index.ts",
     "./Portal": "./src/Portal/index.ts",
@@ -330,16 +329,6 @@
         "require": {
           "types": "./dist/Pagination.d.cts",
           "default": "./dist/Pagination.cjs"
-        }
-      },
-      "./PageLayout": {
-        "import": {
-          "types": "./dist/PageLayout.d.mts",
-          "default": "./dist/PageLayout.mjs"
-        },
-        "require": {
-          "types": "./dist/PageLayout.d.cts",
-          "default": "./dist/PageLayout.cjs"
         }
       },
       "./Paper": {

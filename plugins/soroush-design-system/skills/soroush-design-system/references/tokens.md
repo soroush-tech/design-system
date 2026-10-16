@@ -166,33 +166,38 @@ Reference tokens through the theme; a literal value in a component is a bug.
 
 ## breakpoints
 
-- `theme.breakpoints.tablet` - 600px
-- `theme.breakpoints.web` - 1200px
-- `theme.breakpoints.wide` - 1600px
+- `theme.breakpoints.xs` - 0px
+- `theme.breakpoints.sm` - 600px
+- `theme.breakpoints.md` - 840px
+- `theme.breakpoints.lg` - 1200px
+- `theme.breakpoints.xl` - 1600px
 
 ## layout
 
-- `theme.layout.base.bars.bottom` - 8
-- `theme.layout.base.panels.start.mode` - hidden
-- `theme.layout.base.panels.start.width` - 280px
-- `theme.layout.base.panels.start.railWidth` - 9
-- `theme.layout.base.content.columns` - 4
-- `theme.layout.base.content.margin` - 2
-- `theme.layout.base.content.gutter` - 2
-- `theme.layout.base.content.mode` - fluid
-- `theme.layout.tablet.panels.start.mode` - collapsed
-- `theme.layout.tablet.content.columns` - 8
-- `theme.layout.tablet.content.margin` - 4
-- `theme.layout.web.bars.top` - 8
-- `theme.layout.web.bars.bottom` - 0
-- `theme.layout.web.panels.start.mode` - inline
-- `theme.layout.web.content.columns` - 12
-- `theme.layout.web.content.margin` - 3
-- `theme.layout.web.content.gutter` - 3
-- `theme.layout.web.content.mode` - fixed
-- `theme.layout.web.content.maxWidth` - 1200px
-- `theme.layout.wide.content.columns` - 16
-- `theme.layout.wide.content.maxWidth` - 1600px
+- `theme.layout.xs.bars.top` - 8
+- `theme.layout.xs.panels.start.mode` - hidden
+- `theme.layout.xs.panels.start.width` - 280px
+- `theme.layout.xs.panels.start.railWidth` - 9
+- `theme.layout.xs.panels.end.mode` - hidden
+- `theme.layout.xs.panels.end.width` - 360px
+- `theme.layout.xs.panels.end.railWidth` - 9
+- `theme.layout.xs.content.columns` - 4
+- `theme.layout.xs.content.margin` - 2
+- `theme.layout.xs.content.gutter` - 2
+- `theme.layout.xs.content.mode` - fluid
+- `theme.layout.sm.panels.start.mode` - collapsed
+- `theme.layout.sm.content.columns` - 8
+- `theme.layout.sm.content.margin` - 4
+- `theme.layout.md.panels.end.mode` - overlay
+- `theme.layout.md.content.columns` - 12
+- `theme.layout.md.content.margin` - 3
+- `theme.layout.md.content.gutter` - 3
+- `theme.layout.lg.panels.end.width` - 412px
+- `theme.layout.lg.content.mode` - fixed
+- `theme.layout.lg.content.maxWidth` - 1200px
+- `theme.layout.xl.panels.start.mode` - inline
+- `theme.layout.xl.panels.end.mode` - inline
+- `theme.layout.xl.content.maxWidth` - 1600px
 
 ## zOrder
 

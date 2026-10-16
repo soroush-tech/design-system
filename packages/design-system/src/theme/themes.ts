@@ -2,6 +2,7 @@ import type { ElementType } from 'react'
 import type { CSSObject as EmotionCSSObject } from '@emotion/react'
 import { alpha, generateBoxShadow } from '../utils'
 import { spacing } from './utils/spacing'
+import { withBreakpointHelpers, type BreakpointHelpers } from './breakpoints'
 
 /** Design-system's own style-object shape - Emotion stays an internal implementation detail. */
 export type CSSObject = EmotionCSSObject
@@ -188,17 +189,45 @@ export interface ThemeSizes {
  * forces the matching icon size to be supplied.
  */
 export type ThemeIconSizes = { [K in keyof ThemeSizes]: string }
-/**
- * `theme.breakpoints`, ascending, in declared order - responsive props map onto
- * them in this order. A value is a CSS length (a min-width), a media condition such
- * as `(600px <= width < 1200px)`, or a full `@media ...` rule, kept as written.
- * `createTheme` appends a consumer's new breakpoint after these, so it must be larger.
- */
-export interface ThemeBreakpoints {
-  tablet: string
-  web: string
-  wide: string
+/** The default breakpoint names - Material 3's window classes. */
+export interface DefaultBreakpoints {
+  /** compact: 0-599px - the base, applies everywhere until `sm` overrides it. */
+  xs: true
+  /** medium: 600-839px. */
+  sm: true
+  /** expanded: 840-1199px. */
+  md: true
+  /** large: 1200-1599px. */
+  lg: true
+  /** extra-large: 1600px and up. */
+  xl: true
 }
+/**
+ * Add, rename or remove breakpoints by augmenting this interface: `true` adds a name, `false`
+ * removes a default one.
+ *
+ *   declare module '@soroush.tech/design-system/theme' {
+ *     interface BreakpointOverrides { mobile: true; tablet: true; xs: false; sm: false }
+ *   }
+ */
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type -- an augmentation point
+export interface BreakpointOverrides {}
+/** The theme's breakpoint names: the defaults, plus every override set to `true`, minus every one set to `false`. */
+export type BreakpointKey = Exclude<
+  keyof DefaultBreakpoints | keyof BreakpointOverrides,
+  {
+    [K in keyof BreakpointOverrides]: BreakpointOverrides[K] extends false ? K : never
+  }[keyof BreakpointOverrides]
+>
+/**
+ * `theme.breakpoints`: where each window class starts, ascending, in declared order. A key holds
+ * from its value until the next key, so `xs: '0px'` applies everywhere until `sm` overrides it;
+ * media queries are min-width, which is why the theme writes the start of each range. Responsive
+ * props map onto the keys by name, or by position for an array. A value is a CSS length; a
+ * media condition or a full `@media` rule is passed through, without the range helpers.
+ * `createTheme` appends a breakpoint you add after the existing ones, so it must be larger.
+ */
+export type ThemeBreakpoints = { [K in BreakpointKey]: string }
 /** A `theme.space` key - layout margins and gutters step on the spacing scale. */
 export type LayoutSpace = Exclude<keyof ThemeSpace, 'auto'>
 /** A `theme.space` key or a CSS length (a 280px panel is a size, not a spacing step). */
@@ -239,13 +268,13 @@ export interface LayoutEntry {
   content: LayoutContent
 }
 /**
- * `theme.layout`: the complete `base` entry (below the first breakpoint), then a
- * partial entry per breakpoint, merged mobile-first in `ThemeBreakpoints` order. A
- * panel first declared at a breakpoint needs its `mode`, `width` and `railWidth`
- * there; an incomplete one is left out.
+ * `theme.layout`: layout tokens per breakpoint, merged mobile-first in breakpoint order. The
+ * first breakpoint's entry (`xs`) is complete; every later one lists only what changes. A panel
+ * first declared at a later breakpoint needs its `mode`, `width` and `railWidth` there. These
+ * are tokens: apps (and the studio) read them; nothing in the design system lays a page out.
  */
-export type ThemeLayout = { base: LayoutEntry } & {
-  [K in keyof ThemeBreakpoints]?: {
+export type ThemeLayout = {
+  [K in BreakpointKey]?: {
     bars?: LayoutBars
     panels?: { [P in keyof LayoutPanels]?: Partial<LayoutPanel> }
     content?: Partial<LayoutContent>
@@ -441,14 +470,12 @@ export interface ThemeComponents {
     Record<string, unknown>,
     'root' | 'track' | 'dash' | 'bar' | 'traveler' | 'segment' | 'secondaryBar'
   >
-  LayoutGrid?: ComponentConfig
   Link?: ComponentConfig
   MenuItem?: ComponentConfig<Record<string, unknown>, 'root' | 'check'>
   Modal?: ComponentConfig
   NativeSelect?: ComponentConfig<Record<string, unknown>, 'root' | 'select' | 'icon'>
   Pagination?: ComponentConfig<Record<string, unknown>, 'root' | 'list'>
   PaginationItem?: ComponentConfig<Record<string, unknown>, 'root' | 'ellipsis'>
-  PageLayout?: ComponentConfig<Record<string, unknown>, 'root' | 'bar' | 'panel' | 'content'>
   Paper?: ComponentConfig
   Popover?: ComponentConfig<Record<string, unknown>, 'root' | 'positioner'>
   Pressable?: ComponentConfig<PressableOwnerState>
@@ -486,7 +513,7 @@ export interface Theme {
   /** Optional per-component customization - see `ThemeComponents`. */
   components?: OpenScale<ThemeComponents>
   space: OpenScale<ThemeSpace>
-  breakpoints: OpenScale<ThemeBreakpoints>
+  breakpoints: OpenScale<ThemeBreakpoints & BreakpointHelpers>
   layout: ThemeLayout
   border: OpenScale<ThemeBorder>
   text: OpenScale<ThemeText>
@@ -626,31 +653,40 @@ export const space: ThemeSpace = {
   auto: 'auto',
 }
 
-// Window widths, in px like the layout sizes they switch (the 280px panel, the 1200px container).
-export const breakpoints: ThemeBreakpoints = {
-  tablet: '600px',
-  web: '1200px',
-  wide: '1600px',
-}
+// Material 3's window classes, in px: each value is where its range starts.
+export const breakpoints = withBreakpointHelpers<ThemeBreakpoints>({
+  xs: '0px',
+  sm: '600px',
+  md: '840px',
+  lg: '1200px',
+  xl: '1600px',
+})
 
-// Mobile-first: each breakpoint lists only what changes from the one before it.
+// Mobile-first: `xs` is complete, each later class lists only what changes.
 export const layout: ThemeLayout = {
-  base: {
-    bars: { bottom: 8 },
-    panels: { start: { mode: 'hidden', width: '280px', railWidth: 9 } },
+  xs: {
+    bars: { top: 8 },
+    panels: {
+      start: { mode: 'hidden', width: '280px', railWidth: 9 },
+      end: { mode: 'hidden', width: '360px', railWidth: 9 },
+    },
     content: { columns: 4, margin: 2, gutter: 2, mode: 'fluid' },
   },
-  tablet: {
+  sm: {
     panels: { start: { mode: 'collapsed' } },
     content: { columns: 8, margin: 4 },
   },
-  web: {
-    bars: { top: 8, bottom: 0 },
-    panels: { start: { mode: 'inline' } },
-    content: { columns: 12, margin: 3, gutter: 3, mode: 'fixed', maxWidth: '1200px' },
+  md: {
+    panels: { end: { mode: 'overlay' } },
+    content: { columns: 12, margin: 3, gutter: 3 },
   },
-  wide: {
-    content: { columns: 16, maxWidth: '1600px' },
+  lg: {
+    panels: { end: { width: '412px' } },
+    content: { mode: 'fixed', maxWidth: '1200px' },
+  },
+  xl: {
+    panels: { start: { mode: 'inline' }, end: { mode: 'inline' } },
+    content: { maxWidth: '1600px' },
   },
 }
 
@@ -793,3 +829,9 @@ export const baseTheme: Theme = {
   shadow,
   shadows,
 }
+
+/**
+ * The query helpers for `baseTheme`'s breakpoints, as plain functions. A theme with its own
+ * breakpoints has the same helpers on `theme.breakpoints`.
+ */
+export const { up, down, only, between, not, containerQueries } = breakpoints

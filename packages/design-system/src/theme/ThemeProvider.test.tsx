@@ -34,6 +34,15 @@ describe('ThemeProvider', () => {
     expect(result.current.palette.primary.contrastText).toBe(baseTheme.palette.primary.contrastText)
   })
 
+  it('gives a hand-built theme the breakpoint helpers', () => {
+    const handBuilt = { ...baseTheme, breakpoints: { ...baseTheme.breakpoints, sm: '500px' } }
+    const handWrapper = ({ children }: { children: ReactNode }) => (
+      <ThemeProvider theme={handBuilt as typeof baseTheme}>{children}</ThemeProvider>
+    )
+    const { result } = renderHook(() => useTheme(), { wrapper: handWrapper })
+    expect(result.current.breakpoints.up('sm')).toBe('@media (width >= 500px)')
+  })
+
   describe('defaults prop', () => {
     it('merges component default keys into the provided theme', () => {
       const defaultsWrapper = ({ children }: { children: ReactNode }) => (
