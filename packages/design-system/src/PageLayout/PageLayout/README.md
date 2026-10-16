@@ -40,6 +40,13 @@ With `baseTheme`:
 | web (1200px)   | top 64px    | inline, 280px   | 12 columns, fixed 1200px, margin 24, gutter 24 |
 | wide (1600px)  | top 64px    | inline, 280px   | 16 columns, fixed 1600px, margin 24, gutter 24 |
 
+## What the regions tell their contents
+
+Each bar and panel provides `PageLayoutContext` - `{ region: 'bar', placement }` or
+`{ region: 'panel', side }` - so a component can fill the region it sits in. `Sidebar` fills a
+panel's track and shows its icons only in a collapsed rail; `AppBar` takes a bar's height. Your
+own components can read the context the same way.
+
 ## Props
 
 Extends all [Grid](../../Grid/README.md) props. A `minHeight` or `height` prop beats the default

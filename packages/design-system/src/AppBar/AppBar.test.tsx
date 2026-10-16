@@ -7,6 +7,7 @@ import { baseTheme, createTheme } from '../theme/themes'
 // A second theme with a different surface value - proves tokens resolve per-theme.
 const light = createTheme(baseTheme, { background: { paper: '#F3F3F3' } })
 import { AppBar } from '../AppBar'
+import { PageLayout } from '../PageLayout'
 
 describe('AppBar', () => {
   // ─── element ────────────────────────────────────────────────────────────────
@@ -301,6 +302,25 @@ describe('AppBar', () => {
     it('forwards data-* attributes', () => {
       renderWithTheme(<AppBar data-custom="yes" data-testid="bar" />)
       expect(screen.getByTestId('bar')).toHaveAttribute('data-custom', 'yes')
+    })
+  })
+
+  // ─── inside a PageLayout ────────────────────────────────────────────────────
+
+  describe('inside a PageLayout', () => {
+    it("fills a bar's height", () => {
+      renderWithTheme(<PageLayout topBar={<AppBar>bar</AppBar>}>content</PageLayout>)
+      expect(screen.getByText('bar')).toHaveStyle({ height: '100%' })
+    })
+
+    it('lets a height prop win', () => {
+      renderWithTheme(<PageLayout topBar={<AppBar height="40px">bar</AppBar>}>content</PageLayout>)
+      expect(screen.getByText('bar')).toHaveStyle({ height: '40px' })
+    })
+
+    it('keeps its own height in a panel', () => {
+      renderWithTheme(<PageLayout startPanel={<AppBar>bar</AppBar>}>content</PageLayout>)
+      expect(getComputedStyle(screen.getByText('bar')).height).toBe('auto')
     })
   })
 })

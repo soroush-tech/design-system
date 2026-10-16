@@ -4,6 +4,7 @@ import { Grid, type GridProps } from '../../Grid'
 import { View } from '../../View'
 import type { CSSObject, LayoutPanel, LayoutPanels } from '../../theme'
 import { layoutLength, layoutStyles } from '../layoutStyles'
+import { PageLayoutContext, type PageLayoutRegion } from '../PageLayoutContext'
 
 export type PageLayoutPanelSide = keyof LayoutPanels
 export type PageLayoutBarPlacement = 'top' | 'bottom'
@@ -22,6 +23,18 @@ export interface PageLayoutProps extends GridProps {
   /** Which `overlay` panels are open. Panels in another mode ignore it. Default: none. */
   openPanels?: { [Side in PageLayoutPanelSide]?: boolean }
 }
+
+// What each region tells the components inside it - constant, so consumers don't re-render.
+const regionContext: Record<PageLayoutBarPlacement | PageLayoutPanelSide, PageLayoutRegion> = {
+  top: { region: 'bar', placement: 'top' },
+  bottom: { region: 'bar', placement: 'bottom' },
+  start: { region: 'panel', side: 'start' },
+  end: { region: 'panel', side: 'end' },
+}
+
+const inRegion = (key: PageLayoutBarPlacement | PageLayoutPanelSide, node: ReactNode) => (
+  <PageLayoutContext.Provider value={regionContext[key]}>{node}</PageLayoutContext.Provider>
+)
 
 /** Which regions the page renders - an absent one gets no track. */
 type PageLayoutRegions = Record<PageLayoutBarPlacement | PageLayoutPanelSide, boolean>
@@ -151,19 +164,21 @@ export function PageLayout({
   }
   return (
     <PageLayoutRoot regions={regions} {...rest}>
-      {regions.top && <PageLayoutBar placement="top">{topBar}</PageLayoutBar>}
+      {regions.top && <PageLayoutBar placement="top">{inRegion('top', topBar)}</PageLayoutBar>}
       {regions.start && (
         <PageLayoutPanel side="start" isOpen={!!openPanels.start}>
-          {startPanel}
+          {inRegion('start', startPanel)}
         </PageLayoutPanel>
       )}
       <PageLayoutContent>{children}</PageLayoutContent>
       {regions.end && (
         <PageLayoutPanel side="end" isOpen={!!openPanels.end}>
-          {endPanel}
+          {inRegion('end', endPanel)}
         </PageLayoutPanel>
       )}
-      {regions.bottom && <PageLayoutBar placement="bottom">{bottomBar}</PageLayoutBar>}
+      {regions.bottom && (
+        <PageLayoutBar placement="bottom">{inRegion('bottom', bottomBar)}</PageLayoutBar>
+      )}
     </PageLayoutRoot>
   )
 }

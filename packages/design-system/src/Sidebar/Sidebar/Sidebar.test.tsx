@@ -1,7 +1,9 @@
+import type { ReactNode } from 'react'
 import { describe, it, expect, vi } from 'vitest'
-import { screen } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import { renderWithTheme } from '@soroush.tech/design-system/utils/test/renderWithTheme'
-import { baseTheme } from '@soroush.tech/design-system/theme'
+import { baseTheme, ThemeProvider, type Theme } from '@soroush.tech/design-system/theme'
+import { PageLayout } from '@soroush.tech/design-system/PageLayout'
 import { Typography } from '@soroush.tech/design-system/Typography'
 import { Sidebar } from './Sidebar'
 import { SidebarItem } from '../SidebarItem'
@@ -258,5 +260,80 @@ describe('Sidebar', () => {
       </Sidebar>
     )
     expect(screen.getByTestId('rail')).toHaveStyle({ backgroundColor: '#131313' })
+  })
+
+  describe('in a PageLayout panel', () => {
+    // An inline 280px start panel and no end panel, at every width jsdom reports.
+    const theme = {
+      ...baseTheme,
+      layout: {
+        base: {
+          bars: { top: 8 },
+          panels: { start: { mode: 'inline', width: '280px', railWidth: 9 } },
+          content: { columns: 4, margin: 2, gutter: 2, mode: 'fluid' },
+        },
+      },
+    } as Theme
+    const renderInPage = (slot: 'startPanel' | 'endPanel' | 'topBar', sidebar: ReactNode) =>
+      render(
+        <ThemeProvider theme={theme}>
+          <PageLayout {...{ [slot]: sidebar }}>content</PageLayout>
+        </ThemeProvider>
+      )
+    const nav = () => screen.getByRole('navigation', { name: 'Panels', hidden: true })
+    const styles = () =>
+      [...document.querySelectorAll('style')].map((el) => el.textContent).join('')
+
+    it("fills the panel's track and hides labels below the panel's open width", () => {
+      renderInPage(
+        'startPanel',
+        <Sidebar aria-label="Panels" isOpen>
+          <SidebarItem icon="folder" label="Directory" />
+        </Sidebar>
+      )
+      expect(nav()).toHaveStyle({ width: '100%', height: '100%' })
+      const rail = nav().firstElementChild!
+      expect(rail).toHaveStyle({ width: '100%' })
+      expect(getComputedStyle(rail).getPropertyValue('container-type')).toBe('inline-size')
+      expect(styles()).toMatch(
+        /@container \(width < 280px\)\{[^{]*\[data-sidebar-item-content\]>:not\(:first-child\)\{display:none;\}/
+      )
+      // isOpen still decides whether labels render at all.
+      expect(screen.getByText('Directory')).toBeInTheDocument()
+    })
+
+    it('writes no label rule for a side the layout has no panel on', () => {
+      renderInPage(
+        'endPanel',
+        <Sidebar aria-label="Panels" isOpen>
+          <SidebarItem icon="folder" label="Directory" />
+        </Sidebar>
+      )
+      const rail = nav().firstElementChild!
+      expect(rail).toHaveStyle({ width: '100%' })
+      // Emotion keeps earlier tests' rules, so look for one aimed at this rail's class.
+      const railClass = [...rail.classList].find((name) => name.endsWith('SidebarRail'))
+      expect(styles()).not.toContain(`{.${railClass} [data-sidebar-item-content]`)
+    })
+
+    it('keeps its own widths when given one', () => {
+      renderInPage(
+        'startPanel',
+        <Sidebar aria-label="Panels" isOpen collapsedWidth="4rem">
+          <SidebarItem icon="folder" label="Directory" />
+        </Sidebar>
+      )
+      expect(nav().firstElementChild).toHaveStyle({ width: '14rem' })
+    })
+
+    it('keeps its own widths in a bar', () => {
+      renderInPage(
+        'topBar',
+        <Sidebar aria-label="Panels" isOpen={false}>
+          <SidebarItem icon="folder" label="Directory" />
+        </Sidebar>
+      )
+      expect(nav().firstElementChild).toHaveStyle({ width: '3.5rem' })
+    })
   })
 })

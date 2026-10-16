@@ -1,8 +1,15 @@
+import { useContext } from 'react'
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import { baseTheme, ThemeProvider, type LayoutEntry, type Theme } from '../../theme'
 import { renderWithTheme } from '../../utils/test/renderWithTheme'
 import { PageLayout, type PageLayoutProps } from './PageLayout'
+import { PageLayoutContext } from '../PageLayoutContext'
+
+const RegionName = () => {
+  const region = useContext(PageLayoutContext)
+  return <>{region ? Object.values(region).join(':') : 'none'}</>
+}
 
 // A theme with only a base entry, so jsdom sees one layout whatever its window width.
 const renderAt = (base: LayoutEntry, props: Partial<PageLayoutProps> = {}) =>
@@ -37,6 +44,22 @@ describe('PageLayout', () => {
         'end',
         'bottom',
       ])
+    })
+
+    it('tells each region its place through PageLayoutContext', () => {
+      renderWithTheme(
+        <PageLayout
+          topBar={<RegionName />}
+          startPanel={<RegionName />}
+          endPanel={<RegionName />}
+          bottomBar={<RegionName />}
+        >
+          <RegionName />
+        </PageLayout>
+      )
+      for (const name of ['bar:top', 'panel:start', 'panel:end', 'bar:bottom', 'none']) {
+        expect(screen.getByText(name)).toBeInTheDocument()
+      }
     })
 
     it('renders only the content when no region is passed', () => {

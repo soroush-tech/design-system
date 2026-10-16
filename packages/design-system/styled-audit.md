@@ -38,9 +38,9 @@ None.
 | `src/MenuItem/MenuItem.tsx:163`                        | `CheckSlot`                  | `span`               | `MenuItem`         | `check`        | `MenuItemCheck`              |
 | `src/NativeSelect/NativeSelect.tsx:226`                | `StyledNativeSelect`         | `select`             | `NativeSelect`     | `select`       | `NativeSelectSelect`         |
 | `src/NativeSelect/NativeSelect.tsx:251`                | `DropdownIcon`               | `Icon`               | `NativeSelect`     | `icon`         | `NativeSelectIcon`           |
-| `src/PageLayout/PageLayout/PageLayout.tsx:62`          | `PageLayoutBar`              | `View`               | `PageLayout`       | `bar`          | `PageLayoutBar`              |
-| `src/PageLayout/PageLayout/PageLayout.tsx:98`          | `PageLayoutPanel`            | `View`               | `PageLayout`       | `panel`        | `PageLayoutPanel`            |
-| `src/PageLayout/PageLayout/PageLayout.tsx:112`         | `PageLayoutContent`          | `View`               | `PageLayout`       | `content`      | `PageLayoutContent`          |
+| `src/PageLayout/PageLayout/PageLayout.tsx:75`          | `PageLayoutBar`              | `View`               | `PageLayout`       | `bar`          | `PageLayoutBar`              |
+| `src/PageLayout/PageLayout/PageLayout.tsx:111`         | `PageLayoutPanel`            | `View`               | `PageLayout`       | `panel`        | `PageLayoutPanel`            |
+| `src/PageLayout/PageLayout/PageLayout.tsx:125`         | `PageLayoutContent`          | `View`               | `PageLayout`       | `content`      | `PageLayoutContent`          |
 | `src/Pagination/Pagination.tsx:57`                     | `PaginationList`             | `ul`                 | `Pagination`       | `list`         | `Pagination`                 |
 | `src/Pagination/PaginationItem/PaginationItem.tsx:155` | `Ellipsis`                   | `span`               | `PaginationItem`   | `ellipsis`     | `PaginationEllipsis`         |
 | `src/Popover/Popover.tsx:81`                           | `Positioner`                 | `div`                | `Popover`          | `positioner`   | `PopoverPositioner`          |
@@ -50,8 +50,8 @@ None.
 | `src/Select/Select.tsx:229`                            | `ValueGhost`                 | `span`               | `Select`           | `valueGhost`   | `SelectValueGhost`           |
 | `src/Select/Select.tsx:244`                            | `TriggerValue`               | `span`               | `Select`           | `value`        | `SelectValue`                |
 | `src/Select/Select.tsx:253`                            | `ListBox`                    | `ul`                 | `Select`           | `listbox`      | `SelectListbox`              |
-| `src/Sidebar/Sidebar/Sidebar.tsx:61`                   | `SidebarRail`                | `Flex`               | `Sidebar`          | `rail`         | `SidebarRail`                |
-| `src/Sidebar/Sidebar/Sidebar.tsx:78`                   | `SidebarPanelRoot`           | `Flex`               | `Sidebar`          | `panel`        | `SidebarPanel`               |
+| `src/Sidebar/Sidebar/Sidebar.tsx:74`                   | `SidebarRail`                | `Flex`               | `Sidebar`          | `rail`         | `SidebarRail`                |
+| `src/Sidebar/Sidebar/Sidebar.tsx:110`                  | `SidebarPanelRoot`           | `Flex`               | `Sidebar`          | `panel`        | `SidebarPanel`               |
 | `src/Skeleton/Skeleton.tsx:125`                        | `HiddenContent`              | `span`               | `Skeleton`         | `content`      | `SkeletonContent`            |
 | `src/Switch/Switch.tsx:101`                            | `HiddenInput`                | `input`              | `Switch`           | `input`        | `SwitchInput`                |
 | `src/Switch/Switch.tsx:113`                            | `SwitchTrack`                | `span`               | `Switch`           | `track`        | `SwitchTrack`                |
@@ -65,7 +65,7 @@ None.
 
 | Location                                                         | Variable                | Base                                                            | Name                     | Slot   | Label                    |
 | ---------------------------------------------------------------- | ----------------------- | --------------------------------------------------------------- | ------------------------ | ------ | ------------------------ |
-| `src/AppBar/AppBar.tsx:83`                                       | `AppBarBase`            | `Flex`                                                          | `AppBar`                 | `root` | `AppBar`                 |
+| `src/AppBar/AppBar.tsx:85`                                       | `AppBarBase`            | `Flex`                                                          | `AppBar`                 | `root` | `AppBar`                 |
 | `src/Avatar/Avatar.tsx:69`                                       | `AvatarRoot`            | `Flex`                                                          | `Avatar`                 | `root` | `avatar`                 |
 | `src/Backdrop/Backdrop.tsx:9`                                    | `BackdropRoot`          | `View`                                                          | `Backdrop`               | `root` | `Backdrop`               |
 | `src/Button/Button.tsx:216`                                      | `ButtonRoot`            | `button`                                                        | `Button`                 | `root` | -                        |
@@ -89,7 +89,7 @@ None.
 | `src/Modal/Modal.tsx:46`                                         | `ModalRoot`             | `View`                                                          | `Modal`                  | `root` | `Modal`                  |
 | `src/NativeSelect/NativeSelect.tsx:167`                          | `NativeSelectRoot`      | `div`                                                           | `NativeSelect`           | `root` | `NativeSelect`           |
 | `src/PageLayout/LayoutGrid/LayoutGrid.tsx:13`                    | `LayoutGrid`            | `Grid`                                                          | `LayoutGrid`             | `root` | `LayoutGrid`             |
-| `src/PageLayout/PageLayout/PageLayout.tsx:38`                    | `PageLayoutRoot`        | `Grid`                                                          | `PageLayout`             | `root` | `PageLayout`             |
+| `src/PageLayout/PageLayout/PageLayout.tsx:51`                    | `PageLayoutRoot`        | `Grid`                                                          | `PageLayout`             | `root` | `PageLayout`             |
 | `src/Pagination/Pagination.tsx:50`                               | `PaginationNav`         | `nav`                                                           | `Pagination`             | `root` | `PaginationNav`          |
 | `src/Pagination/PaginationItem/PaginationItem.tsx:142`           | `ItemRoot`              | `button`                                                        | `PaginationItem`         | `root` | `PaginationItem`         |
 | `src/Paper/Paper.tsx:67`                                         | `PaperRoot`             | `Flex`                                                          | `Paper`                  | `root` | `paper`                  |
@@ -98,7 +98,7 @@ None.
 | `src/Quote/Quote.tsx:7`                                          | `Quote`                 | `View`                                                          | `Quote`                  | `root` | `Quote`                  |
 | `src/Radio/Radio.tsx:132`                                        | `RadioRoot`             | `label`                                                         | `Radio`                  | `root` | `Radio`                  |
 | `src/Select/Select.tsx:197`                                      | `Trigger`               | `div`                                                           | `Select`                 | `root` | `Select`                 |
-| `src/Sidebar/Sidebar/Sidebar.tsx:53`                             | `SidebarRoot`           | `Flex`                                                          | `Sidebar`                | `root` | `Sidebar`                |
+| `src/Sidebar/Sidebar/Sidebar.tsx:66`                             | `SidebarRoot`           | `Flex`                                                          | `Sidebar`                | `root` | `Sidebar`                |
 | `src/Sidebar/SidebarItem/SidebarItem.tsx:129`                    | `SidebarItemRoot`       | `Pressable`                                                     | `SidebarItem`            | `root` | `SidebarItem`            |
 | `src/Skeleton/Skeleton.tsx:109`                                  | `SkeletonRoot`          | `span`                                                          | `Skeleton`               | `root` | `skeleton`               |
 | `src/Switch/Switch.tsx:310`                                      | `SwitchRoot`            | `label`                                                         | `Switch`                 | `root` | `Switch`                 |
