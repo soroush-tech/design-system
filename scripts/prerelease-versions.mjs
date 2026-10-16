@@ -44,12 +44,22 @@ const workspaceDeps = ({ pkg }) =>
 
 // Every version of a package on npm; [] before its first publish. Read from the registry, as
 // check-release-notes does, so no `npm` binary is looked up on PATH.
-const publishedVersions = async (name) => {
+const fetchVersions = async (name) => {
   const response = await fetch(`${REGISTRY}/${name}`, { signal: AbortSignal.timeout(15_000) })
   if (response.status === 404) return []
   if (!response.ok) fail(`The npm registry answered ${response.status} for ${name}`)
   return Object.keys((await response.json()).versions ?? {})
 }
+
+// Fetched once for every publishable package, in parallel; the checks below only read it.
+const published = new Map(
+  await Promise.all(
+    workspace
+      .filter(({ pkg }) => !pkg.private)
+      .map(async ({ pkg }) => [pkg.name, await fetchVersions(pkg.name)])
+  )
+)
+const publishedVersions = (name) => published.get(name) ?? []
 
 // The N of every `<target>-<channel>.N` on npm.
 const prereleaseNumbers = (versions, target) => {
@@ -75,7 +85,7 @@ if (channel !== 'stable') {
     if (pkg.version.includes('-')) {
       fail(`${pkg.name}: package.json must hold the target version, not ${pkg.version}`)
     }
-    if (!(await publishedVersions(pkg.name)).includes(pkg.version)) unreleased.push(entry)
+    if (!publishedVersions(pkg.name).includes(pkg.version)) unreleased.push(entry)
     else if (skipReleased)
       console.error(`${pkg.name}@${pkg.version} is already released - skipped.`)
     else fail(`${pkg.name}@${pkg.version} is already released - bump the version first.`)
@@ -97,7 +107,7 @@ run.forEach(visit)
 if (channel !== 'stable') {
   for (const entry of ordered) {
     const target = entry.pkg.version
-    const numbers = prereleaseNumbers(await publishedVersions(entry.pkg.name), target)
+    const numbers = prereleaseNumbers(publishedVersions(entry.pkg.name), target)
     setVersion(entry, `${target}-${channel}.${numbers.length ? Math.max(...numbers) + 1 : 0}`)
   }
 
@@ -106,7 +116,7 @@ if (channel !== 'stable') {
     if (run.includes(dep) || pointed.has(dep) || dep.pkg.private) continue
     pointed.add(dep)
     const target = dep.pkg.version
-    const versions = await publishedVersions(dep.pkg.name)
+    const versions = publishedVersions(dep.pkg.name)
     if (versions.includes(target)) continue
     const numbers = prereleaseNumbers(versions, target)
     if (numbers.length === 0) {
@@ -121,7 +131,7 @@ if (channel !== 'stable') {
 if (channel === 'stable') {
   for (const dep of new Set(ordered.flatMap(workspaceDeps))) {
     if (run.includes(dep) || dep.pkg.private) continue
-    if (!(await publishedVersions(dep.pkg.name)).includes(dep.pkg.version)) {
+    if (!publishedVersions(dep.pkg.name).includes(dep.pkg.version)) {
       fail(`${dep.pkg.name}@${dep.pkg.version} is not on npm yet - publish ${dep.dir} first.`)
     }
   }
