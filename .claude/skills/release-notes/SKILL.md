@@ -134,7 +134,9 @@ Maintenance release - dependency refresh only. No public API or behavior changes
    package isn't ahead of the version already on npm, so an edit can't land without its bump. A
    package you didn't touch may stay at its published version.
 2. Dispatch - Actions → **CD · Packages (npm)** → pick `package`, **Run**. CLI:
-   `gh workflow run cd-packages.yml -f package=<dir>`.
+   `gh workflow run cd-packages.yml -f package=<dir> -f channel=stable`. A prerelease
+   (`alpha`, `rc`) uses the target's notes file - see the [`prerelease`](../prerelease/SKILL.md)
+   skill.
 3. The job publishes to npm (skips if that version already exists) and cuts a GitHub Release
    tagged/titled `<name>@<version>` from the notes file. Re-running repairs a missing Release
    without republishing.

@@ -101,7 +101,7 @@ The `publishConfig` → `dist` swap above is a **pnpm feature**. `pnpm pack` / `
 
 So release **only** one of these two ways:
 
-1. **CI (preferred)** - dispatch the [`cd-packages.yml`](../.github/workflows/cd-packages.yml) workflow (manual `workflow_dispatch`, main-only, npm Trusted Publishing via OIDC). It runs `pnpm publish`, so the swap is always applied and there is no long-lived token. Add the package to the workflow's `package` choice list first.
+1. **CI (preferred)** - dispatch the [`cd-packages.yml`](../.github/workflows/cd-packages.yml) workflow (manual `workflow_dispatch`, npm Trusted Publishing via OIDC) with a `channel`: `alpha` from a CI-passed branch, `rc` and `stable` from `main` (see the `prerelease` skill). It runs `pnpm publish`, so the swap is always applied and there is no long-lived token. Add the package to the workflow's `package` choice list first.
 2. **Local, only if you must** - from the repo root:
 
    ```sh
