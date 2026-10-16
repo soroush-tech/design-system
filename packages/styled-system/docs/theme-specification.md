@@ -99,8 +99,9 @@ space.large = space[3]
 
 ### Breakpoints
 
-Breakpoints are CSS lengths intended for use in media queries.
-In Styled System the breakpoints scale is used to create mobile-first responsive media queries based on array values.
+Breakpoints are CSS lengths, media conditions or full `@media` rules, as a list or as named breakpoints.
+In Styled System the breakpoints scale is used to create mobile-first responsive media queries based on array and object values.
+See [Breakpoints](./breakpoints.md) for every value form, the units, and the order media blocks are written in.
 
 For example, using a margin value of `[ 0, 1, 2 ]` creates styles with multiple mobile-first min-width media queries.
 

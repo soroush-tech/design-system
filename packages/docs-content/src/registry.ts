@@ -134,6 +134,7 @@ export const styledSystemDocs: Array<{ label: string; file: string }> = [
   { label: 'Getting started', file: 'getting-started.md' },
   { label: 'How it works', file: 'how-it-works.md' },
   { label: 'Responsive styles', file: 'responsive-styles.md' },
+  { label: 'Breakpoints', file: 'breakpoints.md' },
   { label: 'API', file: 'api.md' },
   { label: 'Variants', file: 'variants.md' },
   { label: 'Custom props', file: 'custom-props.md' },

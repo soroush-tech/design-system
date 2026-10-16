@@ -79,4 +79,6 @@ export default {
 <Box width={{ _: 1, sm: 1, md: 1 / 2, lg: 1 / 4 }} />
 ```
 
-Read more in the [Array Props Guide](./guides/array-props.md).
+Read more in the [Array Props Guide](./guides/array-props.md). Named breakpoints, media
+conditions as breakpoint values, and why `em` breakpoints follow the browser's font size are in
+[Breakpoints](./breakpoints.md).

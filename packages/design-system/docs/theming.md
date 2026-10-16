@@ -90,6 +90,84 @@ const brand = createTheme(baseTheme, {
 
 Two rules: new object-valued keys (like a `PaletteEntry`) must be supplied complete - components read `.main`/`.contrastText` at runtime; and TypeScript cannot verify at runtime that an augmented token was supplied - **always pair an augmentation with the matching override**.
 
+## Breakpoints and layout
+
+`theme.breakpoints` and `theme.layout` hold the page's layout system: where it changes, how many
+columns it has, its margins and gutters, its side panels and bars. The app lays out from them,
+and a design tool reading the theme draws the same guides.
+
+### `theme.breakpoints`
+
+Named breakpoints, ascending, in declared order. `baseTheme` has:
+
+```ts
+breakpoints: { tablet: '37.5em', web: '75em', wide: '100em' } // 600 / 1200 / 1600px
+```
+
+A value is a CSS length (a min-width), a media condition such as `(600px <= width < 1200px)`, or
+a full `@media` rule. `em` in a media query is relative to the browser's default font size, not
+the page's, so `75em` is 1200px until the user changes their browser's font size. Every value form
+and the units are covered in the styled-system
+[Breakpoints](https://docs.soroush.tech/styled-system/docs/breakpoints/) guide.
+
+Responsive props use them by name or by position:
+
+```tsx
+<View display={{ _: 'none', web: 'block' }} />   // `_` is below the first breakpoint
+<View p={[2, 3, 4]} />                           // base, tablet, web
+```
+
+### `theme.layout`
+
+`layout.base` is the complete layout below the first breakpoint. Each breakpoint's entry lists
+only what changes, and is merged over the ones before it (mobile-first, like min-width queries):
+
+```ts
+layout: {
+  base: {
+    bars: { bottom: 8 },
+    panels: { start: { mode: 'hidden', width: '280px', railWidth: 9 } },
+    content: { columns: 4, margin: 2, gutter: 2, mode: 'fluid' },
+  },
+  tablet: { panels: { start: { mode: 'collapsed' } }, content: { columns: 8, margin: 4 } },
+  web: {
+    bars: { top: 8, bottom: 0 },
+    panels: { start: { mode: 'inline' } },
+    content: { columns: 12, margin: 3, gutter: 3, mode: 'fixed', maxWidth: '1200px' },
+  },
+  wide: { content: { columns: 16, maxWidth: '1600px' } },
+}
+```
+
+- **Units** - `margin` and `gutter` are `theme.space` keys, so they move with the spacing scale.
+  Bar heights, panel widths and `maxWidth` take a space key or any CSS length: a 280px panel is a
+  size, not a spacing step.
+- **Bars** - `top` and `bottom` heights. `0` removes a bar a smaller breakpoint set.
+- **Panels** - `start` and `end`, which follow the writing direction (they swap in RTL). `mode` is
+  `inline` (a track of `width`; the content gets what is left), `collapsed` (a track of
+  `railWidth`), `overlay` (over the content at `width`; the columns don't change) or `hidden`.
+- **Content** - `columns` measured in the space the bars and inline panels leave. `fluid` spans
+  it with `margin` as inline padding; `fixed` is the same inside a container centred at
+  `maxWidth`.
+
+[`PageLayout`](https://docs.soroush.tech/design-system/components/page-layout/) lays a page out from these entries and
+`LayoutGrid` puts content on the columns, both in CSS alone.
+
+### Your own breakpoints and layout
+
+Override them with `createTheme`, like any scale:
+
+```ts
+const theme = createTheme(baseTheme, {
+  breakpoints: { web: '64em' },
+  layout: { web: { content: { maxWidth: '1024px' } } },
+})
+```
+
+`createTheme` merges, so an overridden breakpoint keeps its place, and a breakpoint you add
+(declared by augmenting `ThemeBreakpoints`) comes after the existing ones. An added breakpoint
+must therefore be larger than `wide`. Its layout key exists as soon as the breakpoint does.
+
 ## The scale interfaces
 
 | Scale           | Key in Theme           | Interface                 |

@@ -89,16 +89,17 @@ SSR critical-CSS extraction (e.g. with `@emotion/server`) is a separate, opt-in 
 
 ### Layout & surfaces
 
-| Component | Purpose                                           |
-| --------- | ------------------------------------------------- |
-| `View`    | Styled `div` primitive - the base building block  |
-| `Flex`    | `View` with flexbox defaults                      |
-| `Grid`    | CSS grid container                                |
-| `Paper`   | Elevated surface with background and shadow       |
-| `Card`    | Content container built on `Paper`                |
-| `Quote`   | Bordered quote / terminal-panel surface on `View` |
-| `AppBar`  | Top application bar                               |
-| `Drawer`  | Slide-in side panel                               |
+| Component    | Purpose                                                                                   |
+| ------------ | ----------------------------------------------------------------------------------------- |
+| `View`       | Styled `div` primitive - the base building block                                          |
+| `Flex`       | `View` with flexbox defaults                                                              |
+| `Grid`       | CSS grid container                                                                        |
+| `PageLayout` | Page frame (bars, side panels, content) from `theme.layout`; `LayoutGrid` for its columns |
+| `Paper`      | Elevated surface with background and shadow                                               |
+| `Card`       | Content container built on `Paper`                                                        |
+| `Quote`      | Bordered quote / terminal-panel surface on `View`                                         |
+| `AppBar`     | Top application bar                                                                       |
+| `Drawer`     | Slide-in side panel                                                                       |
 
 ### Content & data display
 
@@ -153,6 +154,7 @@ Components never hardcode colors or sizes - props resolve against scales on the 
 | Color              | `palette` (main/light/dark/contrastText per color) · `text` · `background` · `border` · `colorScheme` |
 | Typography         | `typography` (variant map) · `fonts` · `fontSizes` · `fontWeights` · `lineHeights` · `letterSpacings` |
 | Space & shape      | `space` · `sizes` · `radii` · `borderWidths` · `shadows`                                              |
+| Layout             | `breakpoints` (tablet/web/wide) · `layout` (bars, panels, content columns per breakpoint)             |
 | Component scales   | `avatar` (size steps) · `skeleton` (wave highlight)                                                   |
 | Layering & effects | `zOrder` (appBar/drawer/modal) · `blur` · `logoFilter` · `portraitBlend` · `portraitOpacity`          |
 
@@ -185,6 +187,15 @@ const [isDark, setIsDark] = useState(true)
 ```
 
 `createTheme(base, overrides)` (exported from `@soroush.tech/design-system/theme`) is the merge primitive: plain objects recurse, arrays (`shadows`, `fontSizes`) and functions replace wholesale, `undefined` values are ignored - keys are added or replaced, never removed.
+
+### Breakpoints and layout
+
+`theme.breakpoints` (`tablet` 37.5em, `web` 75em, `wide` 100em) is where responsive props change -
+`p={{ _: 2, web: 4 }}` or `p={[2, 3, 4]}`. `theme.layout` holds the page's columns, margins,
+gutters, side panels and bars per breakpoint, merged mobile-first; `PageLayout` and `LayoutGrid`
+lay a page out from it. Override both with `createTheme`; a breakpoint you add comes after the
+existing ones, so it must be larger. The full guide is the
+[Breakpoints and layout](./docs/theming.md#breakpoints-and-layout) section of the theming guide.
 
 ### Component defaults
 
