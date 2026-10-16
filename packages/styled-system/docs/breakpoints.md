@@ -30,7 +30,7 @@ order, because array values take them in declared order. Names must not look lik
 
 | Value                                                   | Media query                                 |
 | ------------------------------------------------------- | ------------------------------------------- |
-| a length: `'40em'`, `'600px'`, `'calc(...)'`              | `@media screen and (min-width: 40em)`       |
+| a length: `'40em'`, `'600px'`, `'calc(...)'`            | `@media screen and (min-width: 40em)`       |
 | a number: `768`                                         | `@media screen and (min-width: 768px)`      |
 | a condition: `'(orientation: landscape)'`               | `@media (orientation: landscape)`           |
 | a range: `'(600px <= width < 1200px)'`                  | `@media (600px <= width < 1200px)`          |
