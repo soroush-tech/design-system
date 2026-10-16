@@ -166,9 +166,9 @@ Reference tokens through the theme; a literal value in a component is a bug.
 
 ## breakpoints
 
-- `theme.breakpoints.tablet` - 37.5em
-- `theme.breakpoints.web` - 75em
-- `theme.breakpoints.wide` - 100em
+- `theme.breakpoints.tablet` - 600px
+- `theme.breakpoints.web` - 1200px
+- `theme.breakpoints.wide` - 1600px
 
 ## layout
 

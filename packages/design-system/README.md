@@ -190,7 +190,7 @@ const [isDark, setIsDark] = useState(true)
 
 ### Breakpoints and layout
 
-`theme.breakpoints` (`tablet` 37.5em, `web` 75em, `wide` 100em) is where responsive props change -
+`theme.breakpoints` (`tablet` 600px, `web` 1200px, `wide` 1600px) is where responsive props change -
 `p={{ _: 2, web: 4 }}` or `p={[2, 3, 4]}`. `theme.layout` holds the page's columns, margins,
 gutters, side panels and bars per breakpoint, merged mobile-first; `PageLayout` and `LayoutGrid`
 lay a page out from it. Override both with `createTheme`; a breakpoint you add comes after the

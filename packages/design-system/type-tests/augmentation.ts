@@ -66,7 +66,7 @@ export const override: ThemeOverride = {
   palette: { brand: { main: '#00ff88', light: '#66ffb2', dark: '#00b25f', contrastText: '#000' } },
   background: { tertiary: '#101418' },
   // The augmented breakpoint gets a layout entry of its own.
-  breakpoints: { ultra: '160em' },
+  breakpoints: { ultra: '2560px' },
   layout: { ultra: { content: { columns: 24, align: 'center' } } },
   elevations: { low: '0 1px 2px', mid: '0 2px 6px', high: '0 6px 18px' },
   // theme.defaults accepts augmented keys - components then default to them.

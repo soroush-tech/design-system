@@ -98,15 +98,16 @@ and a design tool reading the theme draws the same guides.
 
 ### `theme.breakpoints`
 
-Named breakpoints, ascending, in declared order. `baseTheme` has:
+Named breakpoints - window widths, ascending, in declared order. `baseTheme` has:
 
 ```ts
-breakpoints: { tablet: '37.5em', web: '75em', wide: '100em' } // 600 / 1200 / 1600px
+breakpoints: { tablet: '600px', web: '1200px', wide: '1600px' }
 ```
 
-A value is a CSS length (a min-width), a media condition such as `(600px <= width < 1200px)`, or
-a full `@media` rule. `em` in a media query is relative to the browser's default font size, not
-the page's, so `75em` is 1200px until the user changes their browser's font size. Every value form
+A value is any CSS length (a min-width), a media condition such as `(600px <= width < 1200px)`,
+or a full `@media` rule. `baseTheme` uses px, like the layout sizes the breakpoints switch. `em`
+works too: in a media query it is relative to the browser's default font size, not the page's, so
+`75em` is 1200px until the user raises that size - and then the layout switches earlier. Every value form
 and the units are covered in the styled-system
 [Breakpoints](https://docs.soroush.tech/styled-system/docs/breakpoints/) guide.
 

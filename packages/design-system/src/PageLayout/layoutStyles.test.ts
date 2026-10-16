@@ -13,9 +13,9 @@ describe('layoutEntries', () => {
     const entries = layoutEntries(baseTheme)
     expect(entries.map(([media]) => media)).toEqual([
       null,
-      '@media screen and (min-width: 37.5em)',
-      '@media screen and (min-width: 75em)',
-      '@media screen and (min-width: 100em)',
+      '@media screen and (min-width: 600px)',
+      '@media screen and (min-width: 1200px)',
+      '@media screen and (min-width: 1600px)',
     ])
     const [, tablet] = entries[1]
     expect(tablet.bars).toEqual({ bottom: 8 })
@@ -59,7 +59,7 @@ describe('layoutStyles', () => {
     const theme = { ...baseTheme, layout: { base: entry, wide: { content: { columns: 3 } } } }
     expect(layoutStyles(theme as Theme, ({ content }) => ({ order: content.columns }))).toEqual({
       order: 2,
-      '@media screen and (min-width: 100em)': { order: 3 },
+      '@media screen and (min-width: 1600px)': { order: 3 },
     })
   })
 })

@@ -624,11 +624,11 @@ export const space: ThemeSpace = {
   auto: 'auto',
 }
 
-// em in a media query resolves against the browser's initial font size (16px): 600 / 1200 / 1600px.
+// Window widths, in px like the layout sizes they switch (the 280px panel, the 1200px container).
 export const breakpoints: ThemeBreakpoints = {
-  tablet: '37.5em',
-  web: '75em',
-  wide: '100em',
+  tablet: '600px',
+  web: '1200px',
+  wide: '1600px',
 }
 
 // Mobile-first: each breakpoint lists only what changes from the one before it.
