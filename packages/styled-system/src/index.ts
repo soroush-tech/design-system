@@ -47,7 +47,13 @@ export { flexbox } from '@soroush.tech/styled-system/flexbox'
 export { border, border as borders } from '@soroush.tech/styled-system/border'
 export { background } from '@soroush.tech/styled-system/background'
 export { position } from '@soroush.tech/styled-system/position'
-export { grid } from '@soroush.tech/styled-system/grid'
+export {
+  grid,
+  contentGrid,
+  contentGridStyles,
+  type ContentGridEntry,
+  type ContentGridValue,
+} from '@soroush.tech/styled-system/grid'
 export {
   shadow,
   shadow as boxShadow,

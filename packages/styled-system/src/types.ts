@@ -726,6 +726,24 @@ export interface GridAreaProps<ThemeType extends Theme = RequiredTheme> {
   gridArea?: ResponsiveValue<CSS.Property.GridArea, ThemeType>
 }
 
+/**
+ * Not in upstream styled-system: the content grid from `theme.layout` - `true` for the theme's
+ * own, or entries per breakpoint merged over it (`{ xl: { columns: 16 } }`).
+ */
+export interface ContentGridProps<ThemeType extends Theme = RequiredTheme> {
+  contentGrid?:
+    | boolean
+    | {
+        [key in BreakpointName<ThemeType>]?: {
+          columns?: number
+          margin?: ThemeValue<'space', ThemeType> | string
+          gutter?: ThemeValue<'space', ThemeType> | string
+          mode?: 'fluid' | 'fixed'
+          maxWidth?: string
+        }
+      }
+}
+
 export interface GridProps<ThemeType extends Theme = RequiredTheme>
   extends
     GridGapProps<ThemeType>,
