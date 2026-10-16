@@ -143,7 +143,10 @@ const parseResponsiveObject = (
 ): StyleObject => {
   const styles: StyleObject = {}
   for (const key in raw) {
-    const breakpoint = (breakpoints as Record<string, string | number>)[key]
+    // Own keys only: `constructor` or `toString` must not find Object.prototype's functions.
+    const breakpoint = Object.hasOwn(breakpoints, key)
+      ? (breakpoints as Record<string, string | number>)[key]
+      : undefined
     const value = raw[key]
     const style = sx(value, scale, props)
     if (breakpoint) {
