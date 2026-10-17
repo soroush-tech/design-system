@@ -113,16 +113,16 @@ SSR critical-CSS extraction (e.g. with `@emotion/server`) is a separate, opt-in 
 
 ### Inputs & forms
 
-| Component                                            | Purpose                                       |
-| ---------------------------------------------------- | --------------------------------------------- |
-| `Button`, `ButtonGroup`, `ToggleButton`              | Actions and toggles                           |
-| `TextInput`                                          | Text field                                    |
-| `Checkbox`, `Radio`, `Switch`                        | Selection controls                            |
-| `NativeSelect`                                       | Platform `<select>`                           |
-| `Select`                                             | Custom select built on `Popover` + `MenuItem` |
-| `MenuItem`                                           | Option row for `Select`'s listbox             |
-| `Form`, `FormControl`, `FormLabel`, `FormHelperText` | Form composition and labeling                 |
-| `Pagination`                                         | Page navigation control                       |
+| Component                                            | Purpose                                                                 |
+| ---------------------------------------------------- | ----------------------------------------------------------------------- |
+| `Button`, `ButtonGroup`, `ToggleButton`              | Actions and toggles                                                     |
+| `TextInput`                                          | Text field                                                              |
+| `Checkbox`, `Radio`, `Switch`                        | Selection controls                                                      |
+| `NativeSelect`                                       | Low-level platform `<select>` - not recommended; use `Select native`    |
+| `Select`                                             | The select to use - custom listbox, or `native` for the platform picker |
+| `MenuItem`                                           | Option row for `Select`'s listbox                                       |
+| `Form`, `FormControl`, `FormLabel`, `FormHelperText` | Form composition and labeling                                           |
+| `Pagination`                                         | Page navigation control                                                 |
 
 ### Feedback
 

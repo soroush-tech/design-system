@@ -24,14 +24,14 @@ Max 1600px, centered, 20px → 40px gutters at 600px, 48px bottom padding.
 import { styled } from '@soroush.tech/design-system'
 import { TOPBAR_HEIGHT } from './constants'
 
-const MainRoot = styled('main')({
+const MainRoot = styled('main')(({ theme }) => ({
   width: '100%',
   maxWidth: '1600px',
   margin: '0 auto',
   padding: '0 20px 48px',
   minHeight: `calc(100vh - ${TOPBAR_HEIGHT} - 1px)`,
-  '@media (min-width: 600px)': { padding: '0 40px 48px' },
-})
+  [theme.breakpoints.up('sm')]: { padding: '0 40px 48px' },
+}))
 
 export function Main({ children }: { children: React.ReactNode }) {
   return <MainRoot>{children}</MainRoot>
@@ -42,7 +42,7 @@ export function Main({ children }: { children: React.ReactNode }) {
 
 ## PageCard - the content surface
 
-White paper, 5px radius, hairline shadow, 20 → 30px padding at 800px.
+White paper, 5px radius, hairline shadow, 20 → 30px padding from `md` (840px).
 `flush` drops the padding for children that own their own (tables, setting rows,
 list rows).
 
@@ -57,7 +57,7 @@ export const PageCard = styled('section', {
   borderRadius: '5px',
   boxShadow: 'rgba(0, 0, 0, 0.05) 0 1px 3px 0',
   padding: flush ? 0 : '20px',
-  '@media (min-width: 800px)': { padding: flush ? 0 : '30px' },
+  [theme.breakpoints.up('md')]: { padding: flush ? 0 : '30px' },
 }))
 ```
 

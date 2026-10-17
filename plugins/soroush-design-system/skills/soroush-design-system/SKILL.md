@@ -77,8 +77,15 @@ from `/engine`.
 **`"use client"` on anything themed.** Emotion's theme context is client-side. Every
 file that calls `styled()` or reads `useTheme()` needs the directive.
 
-**Breakpoints are hand-written media queries**, mobile-first, at `600px` (chrome/rail)
-and `800px` (content density). Stay on those two numbers.
+**Breakpoints come from the theme.** They are window classes, each a range from its
+start: `xs` 0-599 (compact), `sm` 600-839, `md` 840-1199, `lg` 1200-1599, `xl` 1600+.
+Use responsive props (`p={{ xs: 2, md: 4 }}`), or the helpers for hand-written styles
+(`[theme.breakpoints.down('sm')]: { ... }`) - never a raw `@media (min-width: ...)`. Lay a
+page's columns out with `<Grid layout>` and `span` on its children.
+
+**Selects: always `Select`.** Never reach for `NativeSelect` - it is the low-level piece
+behind `<Select native>`. Use `Select` with `MenuItem` children; add `native` when you want
+the platform's own picker or a select that works with JavaScript off.
 
 **Fill the gaps locally, don't fork the package.** The library has no Tabs, no stat
 strip, no pill. Those live in the app as small composed components (see the layout kit)

@@ -1,6 +1,7 @@
 # Select
 
-A form select with a custom, themeable listbox - and a `native` escape hatch. It takes
+The select to use for every dropdown choice - always prefer it over `NativeSelect`. It is a form
+select with a custom, themeable listbox, and a `native` prop for the platform's own picker. It takes
 [`MenuItem`](../MenuItem/README.md) children as its options, supports single and multiple
 selection, and integrates with `Form` / `FormControl` context exactly like `NativeSelect` and
 `TextInput`.
@@ -23,7 +24,8 @@ import { MenuItem } from '@soroush.tech/design-system/MenuItem'
   `multiple`.
 - **`native={true}`** - delegates to [`NativeSelect`](../NativeSelect/README.md) (a real
   `<select>`), deriving its `options` from the `MenuItem` children's `value` + label. Single-select
-  only; `multiple` is ignored on this path.
+  only; `multiple` is ignored on this path. Use this - not `NativeSelect` directly - when you want
+  the platform's picker, or a select that works with JavaScript off.
 
 ## Props
 
