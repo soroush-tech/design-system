@@ -180,9 +180,10 @@ own display. `Grid` adds the **columns** on top of that frame:
 <Grid layout={{ maxWidth: '1280px', md: { columns: 6 } }}>...</Grid> // both
 ```
 
-- **The frame** - the margin as `padding-inline`; in fixed mode a `max-width` centred with
-  computed inline margins, so a frame that is itself a grid or flex item still stretches to its
-  parent.
+- **The frame** - the full width of its parent (`width: 100%`, border-box) with the margin as
+  `padding-inline`; in fixed mode capped by `max-width` and centred. It spans its parent in any
+  context - a block, a grid item, a flex column or row - so the frame owns its width: size it
+  with `maxWidth`, not `width`.
 - **Grid** - `grid-template-columns: repeat(N, minmax(0, 1fr))` and the gutter as `column-gap`.
 - **The gutter is the grid's `gap`** - its own `gap` or `columnGap` (`columnGap` wins), single,
   per class (`{ md: 4 }`) or as an array, sets `column-gap` at every class it covers; where it is

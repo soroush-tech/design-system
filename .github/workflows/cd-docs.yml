@@ -167,11 +167,15 @@ jobs:
             git worktree add --orphan -b docs-dist docs-dist
           }
 
+      # A publish never rebuilds an archived snapshot; a manual dispatch always does - that is the
+      # repair path.
       - name: Skip when the snapshot is already archived
         if: steps.resolve.outputs.skip == 'false'
         id: archived
+        env:
+          EVENT: ${{ github.event_name }}
         run: |
-          if node scripts/compose-docs-dist.mjs has "${{ matrix.package }}" "${{ steps.resolve.outputs.version }}" docs-dist; then
+          if [ "$EVENT" != "workflow_dispatch" ] && node scripts/compose-docs-dist.mjs has "${{ matrix.package }}" "${{ steps.resolve.outputs.version }}" docs-dist; then
             echo "done=true" >> "$GITHUB_OUTPUT"
           else
             echo "done=false" >> "$GITHUB_OUTPUT"
@@ -238,6 +242,11 @@ jobs:
             snapshot-src/apps/docs/build/client docs-dist
           cd docs-dist
           git add -A
+          # A repair that rebuilt the same files has nothing to commit.
+          if git diff --cached --quiet; then
+            echo "Snapshot unchanged."
+            exit 0
+          fi
           git -c user.name=github-actions -c user.email=github-actions@github.com \
             commit -m "snapshot: ${{ matrix.package }}@${{ steps.resolve.outputs.version }}"
           git push origin docs-dist

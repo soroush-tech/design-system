@@ -217,8 +217,12 @@ type RemovedBreakpoints = keyof {
   [K in keyof BreakpointOverrides as BreakpointOverrides[K] extends false ? K : never]: true
 }
 /** The theme's breakpoint names: the defaults, plus every override set to `true`, minus every one set to `false`. */
+// Every default and every override, written without a union so an un-augmented (empty)
+// overrides interface adds no `never` to one. The overridden defaults are omitted first: an
+// override such as `xl: false` against the default `xl: true` would reduce a plain
+// intersection to `never`.
 export type BreakpointKey = Exclude<
-  keyof DefaultBreakpoints | keyof BreakpointOverrides,
+  keyof (Omit<DefaultBreakpoints, keyof BreakpointOverrides> & BreakpointOverrides),
   RemovedBreakpoints
 >
 

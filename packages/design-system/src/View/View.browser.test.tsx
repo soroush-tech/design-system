@@ -5,7 +5,7 @@ import { Grid } from '../Grid'
 import { View } from './'
 
 // A fixed-mode frame's width comes from its parent's layout - only a real layout engine
-// resolves it. `auto` inline margins would shrink a grid or flex item to its content.
+// resolves it. Without a width of its own, a grid or flex item sizes to its content.
 const fixed = { mode: 'fixed', maxWidth: '1000px' } as const
 
 const frameBox = () => document.querySelector('[data-testid="frame"]')!.getBoundingClientRect()
@@ -32,6 +32,29 @@ describe('a fixed-mode frame (real layout)', () => {
       </Grid>
     )
     expect(frameBox().width).toBeCloseTo(1000, 0)
+  })
+
+  it('stretches inside a flex row too, capped and centred', () => {
+    renderWithTheme(
+      <Flex flexDirection="row" width="1400px">
+        <View layout={fixed} data-testid="frame">
+          short
+        </View>
+      </Flex>
+    )
+    expect(frameBox().width).toBeCloseTo(1000, 0)
+    expect(frameBox().left).toBeCloseTo(200, 0)
+  })
+
+  it('fills a flex row narrower than its max width', () => {
+    renderWithTheme(
+      <Flex flexDirection="row" width="800px">
+        <View layout={fixed} data-testid="frame">
+          short
+        </View>
+      </Flex>
+    )
+    expect(frameBox().width).toBeCloseTo(800, 0)
   })
 
   it('fills a parent narrower than its max width', () => {

@@ -14,9 +14,11 @@ const theme = {
 }
 
 const frame = (margin: string, maxWidth?: string) => ({
+  boxSizing: 'border-box',
+  width: '100%',
   paddingInline: margin,
   maxWidth: maxWidth ?? 'none',
-  marginInline: maxWidth ? `max(0px, calc((100% - ${maxWidth}) / 2))` : 0,
+  marginInline: maxWidth ? 'auto' : 0,
 })
 
 const columns = (count: number, gutter: string) => ({
@@ -79,16 +81,19 @@ describe('layoutGridStyles', () => {
   it('leaves out what an entry does not set, and keeps fixed without maxWidth unbounded', () => {
     expect(layoutGridStyles({ breakpoints: { xs: 0 } }, { xs: { mode: 'fixed' } })).toEqual({
       display: 'grid',
+      boxSizing: 'border-box',
+      width: '100%',
       maxWidth: 'none',
       marginInline: 0,
     })
   })
 
-  it('centres a fixed frame with computed margins, so a grid or flex item still stretches', () => {
-    // `auto` inline margins shrink a grid or flex item to its content.
+  it('gives a fixed frame the full width, capped by its max width and centred', () => {
+    // Without the width, a grid or flex item would size to its content.
     expect(layoutGridStyles(theme, true)['@media (width >= 1200px)']).toMatchObject({
+      width: '100%',
       maxWidth: '1200px',
-      marginInline: 'max(0px, calc((100% - 1200px) / 2))',
+      marginInline: 'auto',
     })
   })
 })

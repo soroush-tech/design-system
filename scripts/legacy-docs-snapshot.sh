@@ -24,11 +24,11 @@ cd "$dir"
 for pkg in $(git ls-tree --name-only "$tag:packages"); do
   # Only the packages this setup has (core's bench and the like stay out), and packages.md
   # is a file.
-  [ -d "packages/$pkg" ] && git ls-tree -d "$tag:packages/$pkg" >/dev/null 2>&1 || continue
+  [[ -d "packages/$pkg" ]] && git ls-tree -d "$tag:packages/$pkg" >/dev/null 2>&1 || continue
   pages=$(git ls-files "packages/$pkg/*.mdx")
   git rm -r -q "packages/$pkg"
   git checkout "$tag" -- "packages/$pkg"
-  [ -z "$pages" ] || git checkout "$LEGACY_SETUP" -- $pages
+  [[ -z "$pages" ]] || git checkout "$LEGACY_SETUP" -- $pages
 done
 
 # A workspace devDependency on core's benchmark package, which never moved here.
@@ -39,8 +39,8 @@ for entry in $(grep -oE "(markdownComponent|component)\('[A-Za-z]+'" "$registry"
   kind=${entry%%:*}
   name=${entry##*:}
   pkg=design-system
-  [ "$kind" = markdownComponent ] && pkg=markdown
-  [ -n "$(find "packages/$pkg/src" -path "*/$name/README.md")" ] && continue
+  [[ "$kind" == markdownComponent ]] && pkg=markdown
+  [[ -n "$(find "packages/$pkg/src" -path "*/$name/README.md")" ]] && continue
   echo "Not in $tag: $name - page and registry entry dropped."
   find "packages/$pkg/src" -name "$name.mdx" -delete
   sed -i -E "/$kind\('$name'/d" "$registry"

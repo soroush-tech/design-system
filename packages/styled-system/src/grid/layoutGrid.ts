@@ -45,15 +45,17 @@ const spaceValue = (theme: unknown, value: string | number) => {
   return typeof resolved === 'number' ? `${resolved}px` : resolved
 }
 
-// The frame: inline margin, and in fixed mode a centred max width. The centring margin is
-// computed rather than `auto`, so a fixed frame that is a grid or flex item still stretches -
-// auto margins would shrink it to its content.
+// The frame: inline margin, and in fixed mode a centred max width. It spans its parent in any
+// context - a block, a grid item, a flex column or a flex row, where neither `max-width` nor
+// margins make an item grow - and border-box keeps the margin inside that width.
 const frameDeclarations = (theme: unknown, { margin, mode, maxWidth }: LayoutGridEntry) => {
   const width = mode === 'fixed' && maxWidth !== undefined ? spaceValue(theme, maxWidth) : undefined
   return {
+    boxSizing: 'border-box',
+    width: '100%',
     paddingInline: margin === undefined ? undefined : spaceValue(theme, margin),
     maxWidth: width ?? 'none',
-    marginInline: width === undefined ? 0 : `max(0px, calc((100% - ${width}) / 2))`,
+    marginInline: width === undefined ? 0 : 'auto',
   }
 }
 
