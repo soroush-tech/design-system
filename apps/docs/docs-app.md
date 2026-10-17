@@ -51,6 +51,15 @@ running Jekyll over the build; both ride along in every build's output. The
 `VersionSwitcher` reads `/versions.json` from the domain root, so old snapshots list
 newer releases.
 
+Only stable tags are archived, and a manual dispatch takes an optional `version` to backfill
+one. Releases up to design-system 1.3.3 / styled-system 5.8.3 / markdown 1.2.2 were cut in
+soroush-tech/core and their tags hold only `packages/` - no docs app. For those,
+`scripts/legacy-docs-snapshot.sh` builds on the last 1.x setup of this repo (pinned in the
+script) with the tag's packages in place: the release's own READMEs, docs and components,
+the setup's pages and docs frame. A component the release did not have yet is dropped from
+the registry. Vite builds it without `tsc -b`, since styled-system before 5.8.0 does not type
+`gap`.
+
 ## Rules
 
 - Imports use the `src/`, `content/`, and `packages/` aliases. Never relative `../../`

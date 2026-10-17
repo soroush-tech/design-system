@@ -5,7 +5,8 @@ name: CD · Docs
 # Deploys docs.soroush.tech from the composed docs-dist branch: the live site rebuilds
 # on every CI-passed main push; a package publish freezes that package's section under
 # /<pkg>/<version>/, built once from the release's git tag and stored forever. Manual
-# dispatch backfills or repairs a single snapshot.
+# dispatch backfills or repairs a single snapshot. A tag from before the docs app (the
+# releases cut in soroush-tech/core) is built by scripts/legacy-docs-snapshot.sh.
 
 on:
   workflow_run:
@@ -22,6 +23,10 @@ on:
           - design-system
           - markdown
           - styled-system
+      version:
+        description: Stable version to snapshot, e.g. 1.3.3 (empty = the latest release)
+        required: false
+        type: string
 
 concurrency:
   group: cd-docs
@@ -122,19 +127,37 @@ jobs:
         env:
           PKG: ${{ matrix.package }}
           DISPATCH_PKG: ${{ inputs.package }}
+          DISPATCH_VERSION: ${{ inputs.version }}
         run: |
           if [ -n "$DISPATCH_PKG" ] && [ "$DISPATCH_PKG" != "$PKG" ]; then
             echo "skip=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          TAG=$(git tag --list "@soroush.tech/$PKG@*" | sort -V | tail -1)
+          # Stable releases only: an rc is never archived, and `sort -V` ranks 2.0.0-rc.1
+          # above 2.0.0.
+          if [ -n "$DISPATCH_VERSION" ]; then
+            if ! [[ "$DISPATCH_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+              echo "::error::$DISPATCH_VERSION is not a stable version."
+              exit 1
+            fi
+            TAG="@soroush.tech/$PKG@$DISPATCH_VERSION"
+            if ! git rev-parse -q --verify "refs/tags/$TAG" >/dev/null; then
+              echo "::error::No release tag $TAG."
+              exit 1
+            fi
+          else
+            TAG=$(git tag --list "@soroush.tech/$PKG@*" | grep -E '@[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -1)
+          fi
           if [ -z "$TAG" ]; then
             echo "No release tag for $PKG."
             echo "skip=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
+          # A tag from before the docs app holds only packages/ - built on the legacy setup.
+          if git cat-file -e "$TAG:apps/docs" 2>/dev/null; then legacy=false; else legacy=true; fi
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
           echo "version=${TAG##*@}" >> "$GITHUB_OUTPUT"
+          echo "legacy=$legacy" >> "$GITHUB_OUTPUT"
           echo "skip=false" >> "$GITHUB_OUTPUT"
 
       - name: Checkout docs-dist (create the orphan branch on first run)
@@ -155,11 +178,19 @@ jobs:
           fi
 
       # Build the docs app as it existed at the release tag - old prose, old components,
-      # old demos, all consistent. Tags older than the docs app cannot be built; the
-      # archive starts with the first release after the app shipped.
+      # old demos, all consistent. A tag older than the docs app gets the legacy setup with
+      # its own packages in place (see scripts/legacy-docs-snapshot.sh).
       - name: Checkout the release tag into a worktree
         if: steps.resolve.outputs.skip == 'false' && steps.archived.outputs.done == 'false'
-        run: git worktree add snapshot-src "${{ steps.resolve.outputs.tag }}"
+        env:
+          TAG: ${{ steps.resolve.outputs.tag }}
+          LEGACY: ${{ steps.resolve.outputs.legacy }}
+        run: |
+          if [ "$LEGACY" = "true" ]; then
+            bash scripts/legacy-docs-snapshot.sh "$TAG" snapshot-src
+          else
+            git worktree add snapshot-src "$TAG"
+          fi
 
       - name: Read Node.js version from the tag's .nvmrc
         if: steps.resolve.outputs.skip == 'false' && steps.archived.outputs.done == 'false'
@@ -181,13 +212,19 @@ jobs:
         env:
           DOCS_SECTION: ${{ matrix.package }}
           DOCS_BASE: /${{ matrix.package }}/${{ steps.resolve.outputs.version }}/
+          LEGACY: ${{ steps.resolve.outputs.legacy }}
         run: |
-          if [ ! -d apps/docs ]; then
-            echo "The docs app does not exist at this tag - nothing to archive."
-            exit 0
+          if [ "$LEGACY" = "true" ]; then
+            # The tag's packages change the dependency graph, so the lockfile follows. The
+            # old packages are built for the docs app, which is not type-checked against
+            # them (styled-system before 5.8.0 does not type `gap`) - vite builds it alone.
+            pnpm install --no-frozen-lockfile --ignore-scripts
+            pnpm --filter '@soroush.tech/docs^...' build
+            pnpm --filter @soroush.tech/docs exec vite build
+          else
+            pnpm install --frozen-lockfile --ignore-scripts
+            pnpm --filter @soroush.tech/docs build
           fi
-          pnpm install --frozen-lockfile --ignore-scripts
-          pnpm --filter @soroush.tech/docs build
 
       - name: Install the snapshot into docs-dist
         if: steps.resolve.outputs.skip == 'false' && steps.archived.outputs.done == 'false'
