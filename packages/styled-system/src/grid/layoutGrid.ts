@@ -101,11 +101,12 @@ export const layoutGrid = layoutParser('grid')
 /** The `layout` prop on a flex container: a wrapping row with the same gutter and margin. */
 export const layoutFlex = layoutParser('flex')
 
-// A child's width in a layout-grid flex row: N columns and the N - 1 gutters between them. The
-// fallbacks keep it a plain auto item outside a layout grid.
+// A child's width in a layout-grid flex row: N columns and the N - 1 gutters between them. No
+// fallbacks: outside a layout grid the variables are missing, so the declaration is invalid and
+// the browser ignores it - the item stays a plain flex item.
 const flexSpan = (n: number) => {
-  const columns = 'var(--layout-columns, 1)'
-  const gutter = 'var(--layout-gutter, 0px)'
+  const columns = 'var(--layout-columns)'
+  const gutter = 'var(--layout-gutter)'
   return `0 0 calc((100% - (${columns} - 1) * ${gutter}) / ${columns} * ${n} + ${n - 1} * ${gutter})`
 }
 

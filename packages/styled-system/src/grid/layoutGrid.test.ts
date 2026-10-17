@@ -85,10 +85,10 @@ describe('span', () => {
     const styles = span({ span: { xs: 4, md: 6 }, theme })
     expect(styles).toEqual({
       gridColumn: 'span 4',
-      flex: '0 0 calc((100% - (var(--layout-columns, 1) - 1) * var(--layout-gutter, 0px)) / var(--layout-columns, 1) * 4 + 3 * var(--layout-gutter, 0px))',
+      flex: '0 0 calc((100% - (var(--layout-columns) - 1) * var(--layout-gutter)) / var(--layout-columns) * 4 + 3 * var(--layout-gutter))',
       '@media (width >= 840px)': {
         gridColumn: 'span 6',
-        flex: '0 0 calc((100% - (var(--layout-columns, 1) - 1) * var(--layout-gutter, 0px)) / var(--layout-columns, 1) * 6 + 5 * var(--layout-gutter, 0px))',
+        flex: '0 0 calc((100% - (var(--layout-columns) - 1) * var(--layout-gutter)) / var(--layout-columns) * 6 + 5 * var(--layout-gutter))',
       },
     })
   })

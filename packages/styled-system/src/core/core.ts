@@ -157,12 +157,21 @@ const parseResponsiveObject = (
   return styles
 }
 
+// The queries for the theme's breakpoints - rebuilt whenever they change, so a theme switch applies.
+const queriesFor = (cache: ParserCache, theme: Props['theme']): ResponsiveQueries => {
+  const breakpoints = get(theme, 'breakpoints', defaults.breakpoints) as Breakpoints
+  if (theme?.disableStyledSystemCache || cache.breakpoints !== breakpoints || !cache.queries) {
+    cache.breakpoints = breakpoints
+    cache.queries = responsiveQueries(breakpoints)
+  }
+  return cache.queries
+}
+
 export const createParser = (config: ParserConfig): Parser => {
   const cache: ParserCache = {}
   const parse = ((props: Props): StyleObject => {
     let styles: StyleObject = {}
     let shouldSort = false
-    const isCacheDisabled = props.theme?.disableStyledSystemCache
 
     for (const key in props) {
       if (!config[key]) continue
@@ -171,25 +180,13 @@ export const createParser = (config: ParserConfig): Parser => {
       const scale = get(props.theme, sx.scale, sx.defaults)
 
       if (typeof raw === 'object') {
-        const breakpoints = get(props.theme, 'breakpoints', defaults.breakpoints) as Breakpoints
-        // recomputed whenever the theme's breakpoints change, so a theme switch takes effect
-        if (isCacheDisabled || cache.breakpoints !== breakpoints || !cache.queries) {
-          cache.breakpoints = breakpoints
-          cache.queries = responsiveQueries(breakpoints)
-        }
-        const queries = cache.queries
-        if (Array.isArray(raw)) {
-          styles = merge(styles, parseResponsiveStyle(queries.array, sx, scale, raw, props))
-          shouldSort = true
-          continue
-        }
-        if (raw !== null) {
-          styles = merge(
-            styles,
-            parseResponsiveObject(queries.keyed, sx, scale, raw as Record<string, unknown>, props)
-          )
-          shouldSort = true
-        }
+        if (raw === null) continue
+        const { array, keyed } = queriesFor(cache, props.theme)
+        const responsive = Array.isArray(raw)
+          ? parseResponsiveStyle(array, sx, scale, raw, props)
+          : parseResponsiveObject(keyed, sx, scale, raw as Record<string, unknown>, props)
+        styles = merge(styles, responsive)
+        shouldSort = true
         continue
       }
 

@@ -33,12 +33,11 @@ test.describe('without JavaScript, on a phone-width window', () => {
   test('a link in the drawer navigates', async ({ page }) => {
     await page.goto('/design-system/')
     await page.getByRole('button', { name: 'Open navigation' }).click()
-    // Let the 225ms slide-in finish: with scripts off, Playwright's stability check can't
+    // Wait for the slide-in to finish: with scripts off, Playwright's stability check can't
     // settle on an element that was still moving when it first looked.
-    const link = page.locator('#docs-nav').getByRole('link', { name: 'Installation' })
-    await expect(link).toBeVisible()
-    await page.waitForTimeout(400)
-    await link.click()
+    const drawer = page.locator('#docs-nav')
+    await expect.poll(() => drawer.evaluate((el) => el.getAnimations().length)).toBe(0)
+    await drawer.getByRole('link', { name: 'Installation' }).click()
     await expect(page).toHaveURL(/\/design-system\/getting-started\/installation\//)
   })
 })

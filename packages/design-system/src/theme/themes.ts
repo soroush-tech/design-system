@@ -212,13 +212,16 @@ export interface DefaultBreakpoints {
  */
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type -- an augmentation point
 export interface BreakpointOverrides {}
+// The default names an app removed by setting them to `false` in BreakpointOverrides.
+type RemovedBreakpoints = keyof {
+  [K in keyof BreakpointOverrides as BreakpointOverrides[K] extends false ? K : never]: true
+}
 /** The theme's breakpoint names: the defaults, plus every override set to `true`, minus every one set to `false`. */
 export type BreakpointKey = Exclude<
   keyof DefaultBreakpoints | keyof BreakpointOverrides,
-  {
-    [K in keyof BreakpointOverrides]: BreakpointOverrides[K] extends false ? K : never
-  }[keyof BreakpointOverrides]
+  RemovedBreakpoints
 >
+
 /**
  * `theme.breakpoints`: where each window class starts, ascending, in declared order. A key holds
  * from its value until the next key, so `xs: '0px'` applies everywhere until `sm` overrides it;
