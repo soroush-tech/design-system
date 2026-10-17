@@ -1,5 +1,6 @@
 import { AppBar } from '@soroush.tech/design-system/AppBar'
 import { Button } from '@soroush.tech/design-system/Button'
+import { DrawerToggle } from '@soroush.tech/design-system/Drawer'
 import { Flex } from '@soroush.tech/design-system/Flex'
 import { Icon } from '@soroush.tech/design-system/Icon'
 import { Link } from '@soroush.tech/design-system/Link'
@@ -10,21 +11,26 @@ import designSystemPkg from 'packages/design-system/package.json'
 import { useThemeMode } from 'src/theme/useThemeMode'
 
 export interface NavbarProps {
-  /** Opens the mobile navigation drawer; the menu button only renders when provided. */
-  onMenuClick?: () => void
+  /** The id of the mobile navigation drawer the menu button opens; no menu button without it. */
+  menuDrawer?: string
 }
 
-export function Navbar({ onMenuClick }: Readonly<NavbarProps> = {}) {
+export function Navbar({ menuDrawer }: Readonly<NavbarProps> = {}) {
   const { isDark, toggleTheme } = useThemeMode()
   return (
     <AppBar color="appBar" size="sm" position="sticky" top={0} zIndex={10}>
       <Flex alignItems="center" justifyContent="space-between" maxWidth="1440px" mx="auto">
         <Flex alignItems="center" gap={3}>
-          {onMenuClick && (
+          {menuDrawer && (
             <View display={{ xs: 'inline-flex', lg: 'none' }}>
-              <Button variant="text" size="sm" aria-label="Open navigation" onClick={onMenuClick}>
+              <DrawerToggle
+                drawer={menuDrawer}
+                variant="text"
+                size="sm"
+                aria-label="Open navigation"
+              >
                 <Icon name="menu" />
-              </Button>
+              </DrawerToggle>
             </View>
           )}
           <Link href="/" color="primary" style={{ textDecoration: 'none' }}>

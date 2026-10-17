@@ -19,10 +19,10 @@ const renderDocPage = (props: Parameters<typeof DocPage>[0]) => {
 describe('DocPage', () => {
   it('renders the sidebar nav and the markdown body', () => {
     renderDocPage({ source: '# Doc Title\n\nBody copy.' })
+    // The sidebar renders in the aside and in the mobile drawer; both are hidden at jsdom's width.
     expect(
-      // The sidebar's aside is display: none below the `lg` breakpoint, which jsdom applies.
-      screen.getByRole('navigation', { name: 'Design system documentation', hidden: true })
-    ).toBeInTheDocument()
+      screen.getAllByRole('navigation', { name: 'Design system documentation', hidden: true })
+    ).toHaveLength(2)
     expect(screen.getByRole('heading', { name: 'Doc Title' })).toBeInTheDocument()
     expect(screen.getByText('Body copy.')).toBeInTheDocument()
   })

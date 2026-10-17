@@ -14,7 +14,7 @@ Import every component from its own subpath.
 - **Card** - A surface component with an optional title, caption, and variant-based visual treatment.
 - **Quote** - A `View` with a fixed 2px primary left border - used for terminal readouts and markdown blockquotes.
 - **AppBar** - Renders as `<header>`.
-- **Drawer** - A panel that slides in from a screen edge, built on [`Modal`](https://docs.soroush.tech/design-system/components/modal/).
+- **Drawer** - A panel that slides in from a screen edge.
 - **Sidebar** - A collapsible vertical icon rail.
 
 ## Content & data display

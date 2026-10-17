@@ -1,34 +1,68 @@
 # Drawer
 
-A panel that slides in from a screen edge, built on [`Modal`](../Modal/README.md). It portals, dims the page with a backdrop, traps focus, locks body scroll, and closes on Escape (top modal only) or backdrop click - all inherited from Modal. The panel itself is a [`Paper`](../Paper/README.md), anchored to the chosen edge and animated with a per-anchor slide that respects `prefers-reduced-motion`. It renders on the `theme.zOrder.drawer` layer - above the app bar, below modals.
+A panel that slides in from a screen edge. It is an HTML `popover`: a `DrawerToggle` button opens
+and closes it through `popovertarget`, and the browser closes it on Escape or a click outside and
+shows it in the top layer, above everything. None of that needs JavaScript, so a drawer works on
+a prerendered page with scripts off - the mobile navigation menu, for example.
 
-This is the temporary/overlay drawer only (no permanent docking). The first consumer is the mobile navigation menu.
+With JavaScript, it can also be controlled from state (`isOpen` / `onClose`), and while open it
+moves focus inside, keeps Tab cycling within it, locks body scroll, and returns focus when it
+closes. The surface is a [`Paper`](../Paper/README.md) pinned to the chosen edge, with a slide-in
+that respects `prefers-reduced-motion`; the page behind is dimmed through the popover's
+`::backdrop`.
+
+## Usage
+
+```tsx
+import { Drawer, DrawerToggle } from '@soroush.tech/design-system/Drawer'
+
+<DrawerToggle drawer="nav" aria-label="Open navigation">
+  <Icon name="menu" />
+</DrawerToggle>
+
+<Drawer id="nav" anchor="left">
+  <Navigation />
+  <DrawerToggle drawer="nav" action="hide">Close</DrawerToggle>
+</Drawer>
+```
+
+Controlled, with JavaScript:
+
+```tsx
+const [isOpen, setIsOpen] = useState(false)
+
+<Drawer id="filters" anchor="right" isOpen={isOpen} onClose={() => setIsOpen(false)}>
+  <Filters />
+</Drawer>
+```
+
+The drawer's content is always in the page (hidden while closed), so it is server-rendered and
+indexable; `left` / `right` drawers fill the window's height, `top` / `bottom` its width.
 
 ---
 
 ## Props
 
-| Prop                 | Type                                                      | Default  | Description                                         |
-| -------------------- | --------------------------------------------------------- | -------- | --------------------------------------------------- |
-| `isOpen`             | `boolean`                                                 | -        | If true, the drawer is shown.                       |
-| `children`           | `ReactNode`                                               | -        | The drawer content.                                 |
-| `onClose`            | `(event, reason: 'escapeKey' \| 'backdropClick') => void` | -        | Fired on Escape (top modal only) or backdrop click. |
-| `anchor`             | `'left' \| 'right' \| 'top' \| 'bottom'`                  | `'left'` | Edge the drawer slides in from.                     |
-| `elevation`          | `0-24`                                                    | `16`     | Shadow depth of the panel, forwarded to `Paper`.    |
-| `transitionDuration` | `number`                                                  | `225`    | Slide duration in milliseconds.                     |
+| Prop                 | Type                                                | Default  | Description                                                          |
+| -------------------- | --------------------------------------------------- | -------- | -------------------------------------------------------------------- |
+| `id`                 | `string`                                            | -        | The id a `DrawerToggle`'s `drawer` names.                            |
+| `children`           | `ReactNode`                                         | -        | The drawer content.                                                  |
+| `isOpen`             | `boolean`                                           | -        | With JavaScript: open state, for controlled use.                     |
+| `onClose`            | `(event, reason: 'escapeKey' \| 'dismiss') => void` | -        | Fired when it closes by itself: Escape, a click outside, its toggle. |
+| `anchor`             | `'left' \| 'right' \| 'top' \| 'bottom'`            | `'left'` | Edge the drawer slides in from.                                      |
+| `elevation`          | `0-24`                                              | `16`     | Shadow depth of the panel, forwarded to `Paper`.                     |
+| `transitionDuration` | `number`                                            | `225`    | Slide duration in milliseconds.                                      |
+| `hasBackdrop`        | `boolean`                                           | `true`   | Dim the page behind the open drawer.                                 |
+| `shouldLockScroll`   | `boolean`                                           | `true`   | With JavaScript: lock body scroll while open.                        |
+| `shouldAutoFocus`    | `boolean`                                           | `true`   | With JavaScript: move focus into the drawer when it opens.           |
+| `shouldTrapFocus`    | `boolean`                                           | `true`   | With JavaScript: keep Tab cycling within the open drawer.            |
+| `shouldRestoreFocus` | `boolean`                                           | `true`   | With JavaScript: return focus to where it was when it closes.        |
 
-Also accepts every other `Modal` pass-through control - e.g. `hasBackdrop`, `shouldKeepMounted`, `shouldUsePortal`, `portalContainer`, `shouldLockScroll`, `shouldAutoFocus`, `shouldTrapFocus`, `shouldEnforceFocus`, `shouldRestoreFocus` - via `...modalProps`.
+## DrawerToggle
 
-`left` / `right` anchors fill the viewport height; `top` / `bottom` fill the width. The panel's cross-axis size is driven by its content.
+A [`Button`](../Button/README.md) that opens and closes a drawer. Takes every `Button` prop, plus:
 
----
-
-## Example
-
-```tsx
-const [isOpen, setIsOpen] = useState(false)
-
-<Drawer isOpen={isOpen} onClose={() => setIsOpen(false)} anchor="right">
-  <Navbar items={NAV_ITEMS} direction="vertical" gap={3} />
-</Drawer>
-```
+| Prop     | Type                           | Default    | Description                      |
+| -------- | ------------------------------ | ---------- | -------------------------------- |
+| `drawer` | `string`                       | -          | The `id` of the `Drawer`.        |
+| `action` | `'toggle' \| 'show' \| 'hide'` | `'toggle'` | What a click does to the drawer. |

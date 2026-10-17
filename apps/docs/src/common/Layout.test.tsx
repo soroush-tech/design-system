@@ -1,6 +1,5 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 import { ThemeModeProvider } from 'src/theme/ThemeModeProvider'
 import { Layout } from './Layout'
 
@@ -27,16 +26,17 @@ describe('Layout', () => {
     expect(screen.queryByRole('complementary', { hidden: true })).not.toBeInTheDocument()
   })
 
-  it('renders the sidebar in an aside and opens it in a drawer from the menu button', async () => {
-    const user = userEvent.setup()
+  it('renders the sidebar in an aside and in a drawer its menu button opens', () => {
     renderLayout(<div data-testid="nav">nav content</div>)
     // The aside is display: none below the `lg` breakpoint, which jsdom applies.
     expect(screen.getByRole('complementary', { hidden: true })).toBeInTheDocument()
-    expect(screen.getByTestId('nav')).toBeInTheDocument()
-    await user.click(screen.getByRole('button', { name: 'Open navigation' }))
-    // Drawer portals a second copy of the sidebar content.
+    // The drawer is a popover in the page, so the sidebar is there twice; the menu button
+    // opens it through popovertarget, which works without JavaScript (see the e2e test).
     expect(screen.getAllByTestId('nav')).toHaveLength(2)
-    await user.keyboard('{Escape}')
-    expect(screen.getAllByTestId('nav')).toHaveLength(1)
+    expect(screen.getByRole('button', { name: 'Open navigation' })).toHaveAttribute(
+      'popovertarget',
+      'docs-nav'
+    )
+    expect(document.getElementById('docs-nav')).toHaveAttribute('popover', 'auto')
   })
 })

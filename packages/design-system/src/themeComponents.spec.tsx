@@ -137,7 +137,7 @@ const cases: Case[] = [
     label: 'CircularProgress',
     ui: <CircularProgress />,
   },
-  { name: 'Drawer', slot: 'root', label: 'Drawer', ui: <Drawer isOpen>x</Drawer> },
+  { name: 'Drawer', slot: 'root', label: 'Drawer', ui: <Drawer id="drawer">x</Drawer> },
   { name: 'FormControl', slot: 'root', label: 'FormControl', ui: <FormControl>x</FormControl> },
   {
     name: 'FormHelperText',

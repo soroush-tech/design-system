@@ -70,7 +70,7 @@ None.
 | `src/Card/Card.tsx:36`                                           | `CardSurface`           | `Paper`                                                         | `Card`                   | `root` | `CardSurface`            |
 | `src/Checkbox/Checkbox.tsx:170`                                  | `CheckboxRoot`          | `label`                                                         | `Checkbox`               | `root` | `Checkbox`               |
 | `src/CircularProgress/CircularProgress.tsx:142`                  | `CircularProgressRoot`  | `span`                                                          | `CircularProgress`       | `root` | `CircularProgress`       |
-| `src/Drawer/Drawer.tsx:54`                                       | `DrawerPanel`           | `Paper`                                                         | `Drawer`                 | `root` | `Drawer`                 |
+| `src/Drawer/Drawer.tsx:67`                                       | `DrawerPanel`           | `div`                                                           | `Drawer`                 | `root` | `Drawer`                 |
 | `src/Flex/Flex.tsx:26`                                           | `Flex`                  | `View`                                                          | `Flex`                   | `root` | `flex`                   |
 | `src/FocusTrap/FocusTrap.tsx:7`                                  | `FocusTrapRoot`         | `div`                                                           | `FocusTrap`              | `root` | `FocusTrap`              |
 | `src/Form/Form.tsx:8`                                            | `FormRoot`              | `form`                                                          | `Form`                   | `root` | `Form`                   |
@@ -111,4 +111,4 @@ None.
 | `src/ToggleButton/ToggleButton/ToggleButton.tsx:50`              | `ToggleButtonRoot`      | `Button`                                                        | `ToggleButton`           | `root` | `ToggleButton`           |
 | `src/ToggleButton/ToggleButtonGroup/ToggleButtonGroup.tsx:39`    | `ToggleButtonGroupRoot` | `ButtonGroup`                                                   | `ToggleButtonGroup`      | `root` | `ToggleButtonGroup`      |
 | `src/Typography/Typography.tsx:89`                               | `TypographyBase`        | `p`                                                             | `Typography`             | `root` | `Typography`             |
-| `src/View/View.tsx:72`                                           | `View`                  | `div`                                                           | `View`                   | `root` | `View`                   |
+| `src/View/View.tsx:75`                                           | `View`                  | `div`                                                           | `View`                   | `root` | `View`                   |

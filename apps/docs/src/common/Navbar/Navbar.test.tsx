@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import designSystemPkg from 'packages/design-system/package.json'
@@ -28,16 +28,15 @@ describe('Navbar', () => {
     expect(toggle).toHaveTextContent('Dark')
   })
 
-  it('renders the menu button only when onMenuClick is provided', async () => {
-    const user = userEvent.setup()
-    const onMenuClick = vi.fn()
-    renderNavbar({ onMenuClick })
-    const menu = screen.getByRole('button', { name: 'Open navigation' })
-    await user.click(menu)
-    expect(onMenuClick).toHaveBeenCalledOnce()
+  it('renders a menu button that opens the named drawer', () => {
+    renderNavbar({ menuDrawer: 'docs-nav' })
+    expect(screen.getByRole('button', { name: 'Open navigation' })).toHaveAttribute(
+      'popovertarget',
+      'docs-nav'
+    )
   })
 
-  it('omits the menu button without onMenuClick', () => {
+  it('omits the menu button without a drawer', () => {
     renderNavbar()
     expect(screen.queryByRole('button', { name: 'Open navigation' })).not.toBeInTheDocument()
   })
