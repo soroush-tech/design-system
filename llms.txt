@@ -23,7 +23,7 @@ https://mcp.soroush.tech/mcp (or `npx -y @soroush.tech/mcp`).
 - [Card](https://docs.soroush.tech/design-system/components/card/): A surface component with an optional title, caption, and variant-based visual treatment. Extends `Paper` - all `Paper`, `Flex`, and space/layout props pass through.
 - [Quote](https://docs.soroush.tech/design-system/components/quote/): A `View` with a fixed 2px primary left border - used for terminal readouts and markdown
 - [AppBar](https://docs.soroush.tech/design-system/components/app-bar/): Renders as `<header>`. A top-level container for navigation, toolbars, and application headers. Applies a default elevation shadow from the theme and stretches to full width.
-- [Drawer](https://docs.soroush.tech/design-system/components/drawer/): A panel that slides in from a screen edge, built on [`Modal`](https://docs.soroush.tech/design-system/components/modal/). It portals, dims the page with a backdrop, traps focus, locks body scroll, and closes on Escape (top modal only) or backdrop click - all inherited from Modal. The panel itself is a [`Paper`](https://docs.soroush.tech/design-system/components/paper/), anchored to the chosen edge and animated with a per-anchor slide that respects `prefers-reduced-motion`. It renders on the `theme.zOrder.drawer` layer - above the app bar, below modals.
+- [Drawer](https://docs.soroush.tech/design-system/components/drawer/): A panel that slides in from a screen edge. It is an HTML `popover`: a `DrawerToggle` button opens
 - [Sidebar](https://docs.soroush.tech/design-system/components/sidebar/): A collapsible vertical icon rail. Collapsed, it shows icon-only `SidebarItem`s; open, each item's
 - [Typography](https://docs.soroush.tech/design-system/components/typography/): Renders as `<p>` by default. The `variant` prop controls both the visual scale and the HTML element. All styled-system prop groups are supported, plus five Typography-specific props.
 - [Link](https://docs.soroush.tech/design-system/components/link/): Renders as `<a>`. Composes `Typography` - all typographic scale, color, spacing, and layout props are inherited. Adds `underline`, and defaults `color` to `"primary"` and `variant` to `"inherit"`.
@@ -38,8 +38,8 @@ https://mcp.soroush.tech/mcp (or `npx -y @soroush.tech/mcp`).
 - [Checkbox](https://docs.soroush.tech/design-system/components/checkbox/): A binary toggle control. Supports controlled and uncontrolled usage, six semantic color palettes, two sizes, indeterminate state, and custom icons.
 - [Radio](https://docs.soroush.tech/design-system/components/radio/): A single-selection control for use within a group. Supports controlled checked state, six semantic color palettes, two sizes, and custom icons.
 - [Switch](https://docs.soroush.tech/design-system/components/switch/): A sliding toggle control. Supports controlled and uncontrolled usage, six semantic color palettes, two sizes, four visual variants, and custom thumb icons.
-- [NativeSelect](https://docs.soroush.tech/design-system/components/native-select/): A styled native `<select>` form control. Renders `options` data as `<option>` elements, shows a
-- [Select](https://docs.soroush.tech/design-system/components/select/): A form select with a custom, themeable listbox - and a `native` escape hatch. It takes
+- [NativeSelect](https://docs.soroush.tech/design-system/components/native-select/): Not the recommended select: use [`Select`](https://docs.soroush.tech/design-system/components/select/) - and `<Select native>` when you
+- [Select](https://docs.soroush.tech/design-system/components/select/): The select to use for every dropdown choice - always prefer it over `NativeSelect`. It is a form
 - [MenuItem](https://docs.soroush.tech/design-system/components/menu-item/): A single option row for [`Select`](https://docs.soroush.tech/design-system/components/select/)'s listbox, rendered as a semantic
 - [Form](https://docs.soroush.tech/design-system/components/form/): Renders a `<form>` and provides form-wide field defaults through `FormContext`. It is the **lowest
 - [FormControl](https://docs.soroush.tech/design-system/components/form-control/): Groups a label, control, and helper text into one accessible field and shares their state through React context. Works standalone or inside a [`Form`](https://docs.soroush.tech/design-system/components/form/).
@@ -71,6 +71,7 @@ https://mcp.soroush.tech/mcp (or `npx -y @soroush.tech/mcp`).
 - [Getting started](https://docs.soroush.tech/styled-system/docs/getting-started/)
 - [How it works](https://docs.soroush.tech/styled-system/docs/how-it-works/)
 - [Responsive styles](https://docs.soroush.tech/styled-system/docs/responsive-styles/)
+- [Breakpoints](https://docs.soroush.tech/styled-system/docs/breakpoints/)
 - [API](https://docs.soroush.tech/styled-system/docs/api/)
 - [Variants](https://docs.soroush.tech/styled-system/docs/variants/)
 - [Custom props](https://docs.soroush.tech/styled-system/docs/custom-props/)

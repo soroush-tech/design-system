@@ -23,7 +23,7 @@ https://mcp.soroush.tech/mcp (or `npx -y @soroush.tech/mcp`).
 - [Card](https://docs.soroush.tech/design-system/components/card/): A surface component with an optional title, caption, and variant-based visual treatment. Extends `Paper` - all `Paper`, `Flex`, and space/layout props pass through.
 - [Quote](https://docs.soroush.tech/design-system/components/quote/): A `View` with a fixed 2px primary left border - used for terminal readouts and markdown
 - [AppBar](https://docs.soroush.tech/design-system/components/app-bar/): Renders as `<header>`. A top-level container for navigation, toolbars, and application headers. Applies a default elevation shadow from the theme and stretches to full width.
-- [Drawer](https://docs.soroush.tech/design-system/components/drawer/): A panel that slides in from a screen edge, built on [`Modal`](https://docs.soroush.tech/design-system/components/modal/). It portals, dims the page with a backdrop, traps focus, locks body scroll, and closes on Escape (top modal only) or backdrop click - all inherited from Modal. The panel itself is a [`Paper`](https://docs.soroush.tech/design-system/components/paper/), anchored to the chosen edge and animated with a per-anchor slide that respects `prefers-reduced-motion`. It renders on the `theme.zOrder.drawer` layer - above the app bar, below modals.
+- [Drawer](https://docs.soroush.tech/design-system/components/drawer/): A panel that slides in from a screen edge. It is an HTML `popover`: a `DrawerToggle` button opens
 - [Sidebar](https://docs.soroush.tech/design-system/components/sidebar/): A collapsible vertical icon rail. Collapsed, it shows icon-only `SidebarItem`s; open, each item's
 - [Typography](https://docs.soroush.tech/design-system/components/typography/): Renders as `<p>` by default. The `variant` prop controls both the visual scale and the HTML element. All styled-system prop groups are supported, plus five Typography-specific props.
 - [Link](https://docs.soroush.tech/design-system/components/link/): Renders as `<a>`. Composes `Typography` - all typographic scale, color, spacing, and layout props are inherited. Adds `underline`, and defaults `color` to `"primary"` and `variant` to `"inherit"`.
@@ -38,8 +38,8 @@ https://mcp.soroush.tech/mcp (or `npx -y @soroush.tech/mcp`).
 - [Checkbox](https://docs.soroush.tech/design-system/components/checkbox/): A binary toggle control. Supports controlled and uncontrolled usage, six semantic color palettes, two sizes, indeterminate state, and custom icons.
 - [Radio](https://docs.soroush.tech/design-system/components/radio/): A single-selection control for use within a group. Supports controlled checked state, six semantic color palettes, two sizes, and custom icons.
 - [Switch](https://docs.soroush.tech/design-system/components/switch/): A sliding toggle control. Supports controlled and uncontrolled usage, six semantic color palettes, two sizes, four visual variants, and custom thumb icons.
-- [NativeSelect](https://docs.soroush.tech/design-system/components/native-select/): A styled native `<select>` form control. Renders `options` data as `<option>` elements, shows a
-- [Select](https://docs.soroush.tech/design-system/components/select/): A form select with a custom, themeable listbox - and a `native` escape hatch. It takes
+- [NativeSelect](https://docs.soroush.tech/design-system/components/native-select/): Not the recommended select: use [`Select`](https://docs.soroush.tech/design-system/components/select/) - and `<Select native>` when you
+- [Select](https://docs.soroush.tech/design-system/components/select/): The select to use for every dropdown choice - always prefer it over `NativeSelect`. It is a form
 - [MenuItem](https://docs.soroush.tech/design-system/components/menu-item/): A single option row for [`Select`](https://docs.soroush.tech/design-system/components/select/)'s listbox, rendered as a semantic
 - [Form](https://docs.soroush.tech/design-system/components/form/): Renders a `<form>` and provides form-wide field defaults through `FormContext`. It is the **lowest
 - [FormControl](https://docs.soroush.tech/design-system/components/form-control/): Groups a label, control, and helper text into one accessible field and shares their state through React context. Works standalone or inside a [`Form`](https://docs.soroush.tech/design-system/components/form/).
@@ -71,6 +71,7 @@ https://mcp.soroush.tech/mcp (or `npx -y @soroush.tech/mcp`).
 - [Getting started](https://docs.soroush.tech/styled-system/docs/getting-started/)
 - [How it works](https://docs.soroush.tech/styled-system/docs/how-it-works/)
 - [Responsive styles](https://docs.soroush.tech/styled-system/docs/responsive-styles/)
+- [Breakpoints](https://docs.soroush.tech/styled-system/docs/breakpoints/)
 - [API](https://docs.soroush.tech/styled-system/docs/api/)
 - [Variants](https://docs.soroush.tech/styled-system/docs/variants/)
 - [Custom props](https://docs.soroush.tech/styled-system/docs/custom-props/)
@@ -905,35 +906,69 @@ Combine with `color="backdrop"`, which resolves to the theme's pre-composited fr
 
 ## Drawer
 Import: `import { Drawer } from '@soroush.tech/design-system/Drawer'`
-A panel that slides in from a screen edge, built on [`Modal`](https://docs.soroush.tech/design-system/components/modal/). It portals, dims the page with a backdrop, traps focus, locks body scroll, and closes on Escape (top modal only) or backdrop click - all inherited from Modal. The panel itself is a [`Paper`](https://docs.soroush.tech/design-system/components/paper/), anchored to the chosen edge and animated with a per-anchor slide that respects `prefers-reduced-motion`. It renders on the `theme.zOrder.drawer` layer - above the app bar, below modals.
+A panel that slides in from a screen edge. It is an HTML `popover`: a `DrawerToggle` button opens
+and closes it through `popovertarget`, and the browser closes it on Escape or a click outside and
+shows it in the top layer, above everything. None of that needs JavaScript, so a drawer works on
+a prerendered page with scripts off - the mobile navigation menu, for example.
 
-This is the temporary/overlay drawer only (no permanent docking). The first consumer is the mobile navigation menu.
-## Props
+With JavaScript, it can also be controlled from state (`isOpen` / `onClose`), and while open it
+moves focus inside, keeps Tab cycling within it, locks body scroll, and returns focus when it
+closes. The surface is a [`Paper`](https://docs.soroush.tech/design-system/components/paper/) pinned to the chosen edge, with a slide-in
+that respects `prefers-reduced-motion`; the page behind is dimmed through the popover's
+`::backdrop`.
 
-| Prop                 | Type                                                      | Default  | Description                                         |
-| -------------------- | --------------------------------------------------------- | -------- | --------------------------------------------------- |
-| `isOpen`             | `boolean`                                                 | -        | If true, the drawer is shown.                       |
-| `children`           | `ReactNode`                                               | -        | The drawer content.                                 |
-| `onClose`            | `(event, reason: 'escapeKey' \| 'backdropClick') => void` | -        | Fired on Escape (top modal only) or backdrop click. |
-| `anchor`             | `'left' \| 'right' \| 'top' \| 'bottom'`                  | `'left'` | Edge the drawer slides in from.                     |
-| `elevation`          | `0-24`                                                    | `16`     | Shadow depth of the panel, forwarded to `Paper`.    |
-| `transitionDuration` | `number`                                                  | `225`    | Slide duration in milliseconds.                     |
+## Usage
 
-Also accepts every other `Modal` pass-through control - e.g. `hasBackdrop`, `shouldKeepMounted`, `shouldUsePortal`, `portalContainer`, `shouldLockScroll`, `shouldAutoFocus`, `shouldTrapFocus`, `shouldEnforceFocus`, `shouldRestoreFocus` - via `...modalProps`.
+```tsx
+import { Drawer, DrawerToggle } from '@soroush.tech/design-system/Drawer'
 
-`left` / `right` anchors fill the viewport height; `top` / `bottom` fill the width. The panel's cross-axis size is driven by its content.
+<DrawerToggle drawer="nav" aria-label="Open navigation">
+  <Icon name="menu" />
+</DrawerToggle>
 
----
+<Drawer id="nav" anchor="left">
+  <Navigation />
+  <DrawerToggle drawer="nav" action="hide">Close</DrawerToggle>
+</Drawer>
+```
 
-## Example
+Controlled, with JavaScript:
 
 ```tsx
 const [isOpen, setIsOpen] = useState(false)
 
-<Drawer isOpen={isOpen} onClose={() => setIsOpen(false)} anchor="right">
-  <Navbar items={NAV_ITEMS} direction="vertical" gap={3} />
+<Drawer id="filters" anchor="right" isOpen={isOpen} onClose={() => setIsOpen(false)}>
+  <Filters />
 </Drawer>
 ```
+
+The drawer's content is always in the page (hidden while closed), so it is server-rendered and
+indexable; `left` / `right` drawers fill the window's height, `top` / `bottom` its width.
+## Props
+
+| Prop                 | Type                                                | Default  | Description                                                          |
+| -------------------- | --------------------------------------------------- | -------- | -------------------------------------------------------------------- |
+| `id`                 | `string`                                            | -        | The id a `DrawerToggle`'s `drawer` names.                            |
+| `children`           | `ReactNode`                                         | -        | The drawer content.                                                  |
+| `isOpen`             | `boolean`                                           | -        | With JavaScript: open state, for controlled use.                     |
+| `onClose`            | `(event, reason: 'escapeKey' \| 'dismiss') => void` | -        | Fired when it closes by itself: Escape, a click outside, its toggle. |
+| `anchor`             | `'left' \| 'right' \| 'top' \| 'bottom'`            | `'left'` | Edge the drawer slides in from.                                      |
+| `elevation`          | `0-24`                                              | `16`     | Shadow depth of the panel, forwarded to `Paper`.                     |
+| `transitionDuration` | `number`                                            | `225`    | Slide duration in milliseconds.                                      |
+| `hasBackdrop`        | `boolean`                                           | `true`   | Dim the page behind the open drawer.                                 |
+| `shouldLockScroll`   | `boolean`                                           | `true`   | With JavaScript: lock body scroll while open.                        |
+| `shouldAutoFocus`    | `boolean`                                           | `true`   | With JavaScript: move focus into the drawer when it opens.           |
+| `shouldTrapFocus`    | `boolean`                                           | `true`   | With JavaScript: keep Tab cycling within the open drawer.            |
+| `shouldRestoreFocus` | `boolean`                                           | `true`   | With JavaScript: return focus to where it was when it closes.        |
+
+## DrawerToggle
+
+A [`Button`](https://docs.soroush.tech/design-system/components/button/) that opens and closes a drawer. Takes every `Button` prop, plus:
+
+| Prop     | Type                           | Default    | Description                      |
+| -------- | ------------------------------ | ---------- | -------------------------------- |
+| `drawer` | `string`                       | -          | The `id` of the `Drawer`.        |
+| `action` | `'toggle' \| 'show' \| 'hide'` | `'toggle'` | What a click does to the drawer. |
 
 ## Sidebar
 Import: `import { Sidebar } from '@soroush.tech/design-system/Sidebar'`
@@ -2758,7 +2793,10 @@ The hidden input carries `role="switch"` for screen reader semantics. `aria-chec
 
 ## NativeSelect
 Import: `import { NativeSelect } from '@soroush.tech/design-system/NativeSelect'`
-A styled native `<select>` form control. Renders `options` data as `<option>` elements, shows a
+Not the recommended select: use [`Select`](https://docs.soroush.tech/design-system/components/select/) - and `<Select native>` when you
+want the platform's own picker, which renders this component for you with the same `MenuItem`
+children as every other select. `NativeSelect` is the low-level building block behind it: a
+styled native `<select>` form control. Renders `options` data as `<option>` elements, shows a
 dropdown affordance icon, and integrates with `Form` / `FormControl` context the same way
 `TextInput` does. Being native, it is keyboard-operable, screen-reader friendly, and SSR-safe by
 default.
@@ -2827,7 +2865,8 @@ resolution order is explicit prop → `FormControl` → `Form` → default:
 
 ## Select
 Import: `import { Select } from '@soroush.tech/design-system/Select'`
-A form select with a custom, themeable listbox - and a `native` escape hatch. It takes
+The select to use for every dropdown choice - always prefer it over `NativeSelect`. It is a form
+select with a custom, themeable listbox, and a `native` prop for the platform's own picker. It takes
 [`MenuItem`](https://docs.soroush.tech/design-system/components/menu-item/) children as its options, supports single and multiple
 selection, and integrates with `Form` / `FormControl` context exactly like `NativeSelect` and
 `TextInput`.
@@ -2850,7 +2889,8 @@ import { MenuItem } from '@soroush.tech/design-system/MenuItem'
   `multiple`.
 - **`native={true}`** - delegates to [`NativeSelect`](https://docs.soroush.tech/design-system/components/native-select/) (a real
   `<select>`), deriving its `options` from the `MenuItem` children's `value` + label. Single-select
-  only; `multiple` is ignored on this path.
+  only; `multiple` is ignored on this path. Use this - not `NativeSelect` directly - when you want
+  the platform's picker, or a select that works with JavaScript off.
 ## Props
 
 | Prop                                            | Type                                               | Default                       | Description                                                                                                                           |
@@ -4430,6 +4470,164 @@ const brand = createTheme(baseTheme, {
 
 Two rules: new object-valued keys (like a `PaletteEntry`) must be supplied complete - components read `.main`/`.contrastText` at runtime; and TypeScript cannot verify at runtime that an augmented token was supplied - **always pair an augmentation with the matching override**.
 
+## Breakpoints and layout
+
+`theme.breakpoints` and `theme.layout` hold the page's layout system: where it changes, how many
+columns it has, its margins and gutters, its side panels and the top bar. Everything responsive is
+CSS - no component measures the window in JavaScript - so a prerendered page lays out the same
+with JavaScript off. The design system ships these as tokens and building blocks (`AppBar`,
+`Sidebar`, `Drawer`, `Grid`, `Flex`); each app composes its own pages from them.
+
+### `theme.breakpoints` - window classes
+
+Each key is a range: its value is where the range starts, and it holds until the next key. The
+theme writes the start because media queries are min-width. `xs` starts at 0, so it applies
+everywhere until `sm` overrides it.
+
+```ts
+breakpoints: { xs: '0px', sm: '600px', md: '840px', lg: '1200px', xl: '1600px' }
+```
+
+| Key  | Range       | Material 3 window class |
+| ---- | ----------- | ----------------------- |
+| `xs` | 0-599px     | compact                 |
+| `sm` | 600-839px   | medium                  |
+| `md` | 840-1199px  | expanded                |
+| `lg` | 1200-1599px | large                   |
+| `xl` | 1600px+     | extra-large             |
+
+They are window classes, not devices: a class is about the space the window has. Responsive props
+use them by name - each key from its size up - or by position:
+
+```tsx
+<View display={{ xs: 'none', md: 'block' }} />
+<View p={[2, 3, 4]} />                         // xs, sm, md
+<View p={{ xs: 2, cqSm: 4 }} />                // cq keys: container queries on the same sizes
+```
+
+For hand-written styles, `theme.breakpoints` carries the query helpers (also exported for
+`baseTheme` as `up`, `down`, `only`, `between`, `not` and `containerQueries`):
+
+```ts
+const Panel = styled.div(({ theme }) => ({
+  padding: 16,
+  [theme.breakpoints.down('sm')]: { padding: 8 }, // @media (width < 600px)
+  [theme.breakpoints.only('md')]: { padding: 24 }, // @media (840px <= width < 1200px)
+}))
+```
+
+Every form, the container queries, the units and the order blocks are written in are covered in
+the styled-system [Breakpoints](https://docs.soroush.tech/styled-system/docs/breakpoints/) guide.
+
+### `theme.layout` - layout tokens per window class
+
+`xs` is complete; each later class lists only what changes and is merged over the ones before it.
+With `baseTheme`:
+
+| Class | Columns | Margin / gutter | Content    | Start panel | End panel   | Top bar |
+| ----- | ------- | --------------- | ---------- | ----------- | ----------- | ------- |
+| `xs`  | 4       | 16 / 16         | fluid      | hidden      | hidden      | 64      |
+| `sm`  | 8       | 32 / 16         | fluid      | rail 72     | hidden      | 64      |
+| `md`  | 12      | 24 / 24         | fluid      | rail 72     | overlay 360 | 64      |
+| `lg`  | 12      | 24 / 24         | fixed 1200 | rail 72     | overlay 412 | 64      |
+| `xl`  | 12      | 24 / 24         | fixed 1600 | inline 280  | inline 412  | 64      |
+
+- **Units** - `margin` and `gutter` are `theme.space` keys, so they move with the spacing scale.
+  Bar heights, panel widths and `maxWidth` take a space key or any CSS length.
+- **Columns** - 1 to 16. 12 is the default from `md` up.
+- **Panels** - `start` and `end` follow the writing direction (they swap in RTL). `mode` is
+  `inline` (beside the content at `width`), `collapsed` (a rail at `railWidth`), `overlay` (over
+  the content at `width`) or `hidden`. A panel first declared at a later class needs its `mode`,
+  `width` and `railWidth` there.
+- **Bars** - `top` (and an optional `bottom`) heights; `0` removes an inherited bar.
+
+These are tokens: the app places its own `AppBar`, `Sidebar` and `Drawer` with them, and the
+design studio draws them on its frames.
+
+### The `layout` prop - the layout grid on a Grid or Flex
+
+`Grid` and `Flex` take a `layout` prop that turns the content tokens into CSS per window class:
+
+```tsx
+<Grid layout>...</Grid>                                // the theme's layout grid
+<Grid layout={{ lg: { columns: 16, gutter: 2 } }}>...</Grid> // its own at lg only
+<Grid layout={{ gutter: 8 }}>...</Grid>                // its own gutter at every class
+<Grid layout={{ gutter: 8, lg: { columns: 16 } }}>...</Grid> // both: gutter 8, 16 columns at lg
+```
+
+- **Grid** - `grid-template-columns: repeat(N, minmax(0, 1fr))`, the gutter as `column-gap`, the
+  margin as `padding-inline`, and `max-width` with `margin-inline: auto` when the mode is fixed.
+  Children place themselves with `span` (below) or `gridColumn` (`1 / -1`).
+- **Flex** - a wrapping row with the same gutter, margin and fixed mode.
+- **Both** set `--layout-columns` and `--layout-gutter` for each class.
+- **Children take `span`** - how many columns an element takes, on any `View`-based component:
+  `span={6}`, or per class `span={{ xs: 4, md: 6 }}`. In a Grid it is `grid-column: span N`; in a
+  Flex it is a width of N columns and the gutters between them, read from the variables above.
+  Outside a layout grid it does nothing.
+- A field in the value (`gutter: 8`) replaces the theme's at every class; whatever it does not
+  set still follows the theme. An entry under a class name replaces the theme's grid at that
+  class only, on top of the fields; the next class is back to the theme and the fields.
+  Explicit `gridTemplateColumns`, `flexDirection`, `gap` or padding props still win.
+
+The same page without the prop needs every value written out - and stops following the theme:
+
+```tsx
+<Grid
+  gridTemplateColumns={{
+    xs: 'repeat(4, minmax(0, 1fr))',
+    sm: 'repeat(8, minmax(0, 1fr))',
+    md: 'repeat(12, minmax(0, 1fr))',
+  }}
+  columnGap={{ xs: 2, md: 3 }}
+  px={{ xs: 2, sm: 4, md: 3 }}
+>
+  ...
+</Grid>
+```
+
+### Your own breakpoints and layout
+
+Override values with `createTheme`, like any scale:
+
+```ts
+const theme = createTheme(baseTheme, {
+  breakpoints: { md: '900px' },
+  layout: { lg: { content: { maxWidth: '1280px' } } },
+})
+```
+
+The helpers on `theme.breakpoints` are rebuilt from the merged sizes. `createTheme` merges, so
+it can change values and add a larger breakpoint after the existing ones, but not remove or rename
+one. To use your own names, declare them by augmenting `BreakpointOverrides` (`true` adds a name,
+`false` removes a default) and replace the scale and the layout on the base:
+
+```ts
+declare module '@soroush.tech/design-system/theme' {
+  interface BreakpointOverrides {
+    mobile: true
+    tablet: true
+    web: true
+    xs: false
+    sm: false
+    md: false
+    lg: false
+    xl: false
+  }
+}
+
+const theme = createTheme(
+  {
+    ...baseTheme,
+    breakpoints: withBreakpointHelpers({ mobile: '0px', tablet: '768px', web: '1280px' }),
+    layout: { mobile: { ...a complete entry... }, tablet: { ... }, web: { ... } },
+  },
+  {}
+)
+```
+
+Responsive props, `cq` keys (`cqTablet`), the helpers and the `layout` keys all follow the new
+names.
+
 ## The scale interfaces
 
 | Scale           | Key in Theme           | Interface                 |
@@ -4439,6 +4637,8 @@ Two rules: new object-valued keys (like a `PaletteEntry`) must be supplied compl
 | Backgrounds     | `theme.background`     | `ThemeBackground`         |
 | Borders         | `theme.border`         | `ThemeBorder`             |
 | Space           | `theme.space`          | `ThemeSpace`              |
+| Breakpoints     | `theme.breakpoints`    | `ThemeBreakpoints`        |
+| Layout          | `theme.layout`         | `ThemeLayout`             |
 | Sizes           | `theme.sizes`          | `ThemeSizes`              |
 | Radii           | `theme.radii`          | `ThemeRadii`              |
 | Border widths   | `theme.borderWidths`   | `ThemeBorderWidths`       |
