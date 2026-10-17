@@ -17,7 +17,8 @@ export type GapToken = keyof Theme['space']
 // it arrives through View's `space` parser and `SpaceProps`.
 /**
  * `layout` lays a wrapping row out from `theme.layout` - the theme's gutter and margin per
- * breakpoint, with `--layout-columns` / `--layout-gutter` for the children's `span`.
+ * breakpoint, with `--layout-columns` / `--layout-gutter` for the children's `span`. Entries
+ * work as on `Grid`: `layout={{ gutter: 8 }}` at every breakpoint, `{ md: { gutter: 4 } }` at one.
  */
 export interface FlexProps extends ViewProps, FlexboxProps<Theme>, LayoutGridProps<Theme> {}
 

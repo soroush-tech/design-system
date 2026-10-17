@@ -23,7 +23,8 @@ export type GapToken = keyof Theme['space']
 // and `SpaceProps`.
 /**
  * `layout` lays the grid out from `theme.layout` - the theme's columns, gutter and margin per
- * breakpoint, or its own for a named breakpoint: `layout={{ lg: { columns: 16 } }}`.
+ * breakpoint, its own at every breakpoint (`layout={{ gutter: 8 }}`), or its own for a named
+ * breakpoint: `layout={{ lg: { columns: 16 } }}`. Both mix: `{ gutter: 8, lg: { columns: 16 } }`.
  */
 export interface GridProps
   extends ViewProps, SystemGridProps<Theme>, FlexboxProps<Theme>, LayoutGridProps<Theme> {}

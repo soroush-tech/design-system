@@ -13,6 +13,7 @@ import type {
 import { baseTheme, createTheme } from '@soroush.tech/design-system/theme'
 import type { ButtonColor, ButtonVariant } from '@soroush.tech/design-system/Button'
 import type { CheckboxSize } from '@soroush.tech/design-system/Checkbox'
+import type { GridProps } from '@soroush.tech/design-system/Grid'
 import type { ViewBackgroundToken, ViewProps } from '@soroush.tech/design-system/View'
 
 declare module '@soroush.tech/design-system/theme' {
@@ -110,3 +111,8 @@ export const bogusLayout: ThemeOverride = { layout: { huge: { content: { columns
 export const bogusGutter: ThemeOverride = { layout: { md: { content: { gutter: '20px' } } } }
 // @ts-expect-error -- `xl` was removed, so it has no layout entry
 export const removedLayout: ThemeOverride = { layout: { xl: { content: { columns: 16 } } } }
+
+// The `layout` prop mixes fields for every breakpoint with entries for declared breakpoints.
+export const mixedLayout: GridProps['layout'] = { gutter: 4, ultra: { columns: 24 } }
+// @ts-expect-error -- `xl` was removed, so the layout prop has no entry for it
+export const removedGridLayout: GridProps['layout'] = { gutter: 4, xl: { columns: 16 } }

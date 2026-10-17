@@ -171,6 +171,8 @@ design studio draws them on its frames.
 ```tsx
 <Grid layout>...</Grid>                                // the theme's layout grid
 <Grid layout={{ lg: { columns: 16, gutter: 2 } }}>...</Grid> // its own at lg only
+<Grid layout={{ gutter: 8 }}>...</Grid>                // its own gutter at every class
+<Grid layout={{ gutter: 8, lg: { columns: 16 } }}>...</Grid> // both: gutter 8, 16 columns at lg
 ```
 
 - **Grid** - `grid-template-columns: repeat(N, minmax(0, 1fr))`, the gutter as `column-gap`, the
@@ -182,9 +184,10 @@ design studio draws them on its frames.
   `span={6}`, or per class `span={{ xs: 4, md: 6 }}`. In a Grid it is `grid-column: span N`; in a
   Flex it is a width of N columns and the gutters between them, read from the variables above.
   Outside a layout grid it does nothing.
-- An entry in the value replaces the theme's grid at the class it names only; the next class is
-  back to the theme. Explicit `gridTemplateColumns`, `flexDirection`, `gap` or padding props
-  still win.
+- A field in the value (`gutter: 8`) replaces the theme's at every class; whatever it does not
+  set still follows the theme. An entry under a class name replaces the theme's grid at that
+  class only, on top of the fields; the next class is back to the theme and the fields.
+  Explicit `gridTemplateColumns`, `flexDirection`, `gap` or padding props still win.
 
 The same page without the prop needs every value written out - and stops following the theme:
 

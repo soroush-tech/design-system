@@ -20,8 +20,13 @@ export interface LayoutGridEntry {
   maxWidth?: string | number
 }
 
-/** `true` for the theme's layout grid, or entries for named breakpoints that replace it there. */
-export type LayoutGridValue = boolean | Record<string, LayoutGridEntry>
+/**
+ * `true` for the theme's layout grid, or an entry: its fields replace the theme's at every
+ * breakpoint, and entries under breakpoint names replace it at that breakpoint only.
+ */
+export type LayoutGridValue =
+  | boolean
+  | Record<string, LayoutGridEntry | LayoutGridEntry[keyof LayoutGridEntry]>
 
 /** The container a layout grid is drawn on: column tracks, or a wrapping flex row. */
 export type LayoutGridDisplay = 'grid' | 'flex'
@@ -53,9 +58,11 @@ const declarations = (theme: unknown, display: LayoutGridDisplay, entry: LayoutG
 
 /**
  * The layout grid from `theme.layout`, per breakpoint: each breakpoint's `content` (columns,
- * margin, gutter, fluid or fixed), inherited mobile-first. An entry in `value` replaces the
- * theme's at the breakpoint it names only; the next breakpoint is back to the theme. Every
- * written block carries the full set, so no block inherits a stale `max-width`.
+ * margin, gutter, fluid or fixed), inherited mobile-first. A field in `value` replaces the
+ * theme's at every breakpoint (`{ gutter: 8 }`); an entry under a breakpoint name replaces it
+ * there only, on top of those fields (`{ gutter: 8, md: { columns: 6 } }`), and the next
+ * breakpoint is back to the theme. Every written block carries the full set, so no block
+ * inherits a stale `max-width`.
  */
 export const layoutGridStyles = (
   theme: unknown,
@@ -65,7 +72,13 @@ export const layoutGridStyles = (
   if (!value) return {}
   const breakpoints = get(theme, 'breakpoints', {}) as Breakpoints
   const layout = get(theme, 'layout', {}) as Record<string, { content?: LayoutGridEntry }>
-  const overrides = typeof value === 'object' ? value : {}
+  // Numbers and strings are fields for every breakpoint; objects are entries for the one they name.
+  const fields = typeof value === 'object' ? Object.entries(value) : []
+  const everywhere = Object.fromEntries(fields.filter(([, field]) => typeof field !== 'object'))
+  const overrides = Object.fromEntries(
+    fields.filter(([, field]) => typeof field === 'object')
+  ) as Record<string, LayoutGridEntry>
+  const hasEverywhere = Object.keys(everywhere).length > 0
   const { keyed } = responsiveQueries(breakpoints)
   const styles: StyleObject =
     display === 'grid'
@@ -75,7 +88,8 @@ export const layoutGridStyles = (
   let overridden = false
   for (const key of Object.keys(breakpoints)) {
     const layer = layout[key]?.content
-    const override = Object.hasOwn(overrides, key) ? overrides[key] : undefined
+    const named = Object.hasOwn(overrides, key) ? overrides[key] : undefined
+    const override = hasEverywhere || named ? { ...everywhere, ...named } : undefined
     themed = { ...themed, ...layer }
     // A block where the theme changes, where an override starts, or where one just ended.
     if (layer || override || overridden) {

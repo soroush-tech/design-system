@@ -726,23 +726,26 @@ export interface GridAreaProps<ThemeType extends Theme = RequiredTheme> {
   gridArea?: ResponsiveValue<CSS.Property.GridArea, ThemeType>
 }
 
+// One entry of the `layout` prop.
+interface LayoutGridEntryProps<ThemeType extends Theme> {
+  columns?: number
+  margin?: ThemeValue<'space', ThemeType> | string
+  gutter?: ThemeValue<'space', ThemeType> | string
+  mode?: 'fluid' | 'fixed'
+  maxWidth?: string
+}
+
 /**
  * Not in upstream styled-system: the layout grid from `theme.layout` on a Grid or Flex - `true`
- * for the theme's, or entries for named breakpoints that replace it there only
- * (`{ lg: { columns: 16 } }`).
+ * for the theme's, or an entry whose fields replace it at every breakpoint (`{ gutter: 8 }`),
+ * with entries under breakpoint names that replace it there only (`{ lg: { columns: 16 } }`).
  */
 export interface LayoutGridProps<ThemeType extends Theme = RequiredTheme> {
   layout?:
     | boolean
-    | {
-        [key in BreakpointName<ThemeType>]?: {
-          columns?: number
-          margin?: ThemeValue<'space', ThemeType> | string
-          gutter?: ThemeValue<'space', ThemeType> | string
-          mode?: 'fluid' | 'fixed'
-          maxWidth?: string
-        }
-      }
+    | (LayoutGridEntryProps<ThemeType> & {
+        [key in BreakpointName<ThemeType>]?: LayoutGridEntryProps<ThemeType>
+      })
 }
 
 /** Not in upstream styled-system: how many layout-grid columns the element takes. */

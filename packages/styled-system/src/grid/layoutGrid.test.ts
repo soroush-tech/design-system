@@ -50,6 +50,26 @@ describe('layoutGrid', () => {
     expect(styles['@media (width >= 1200px)']).toBeUndefined()
   })
 
+  it('applies a field at every breakpoint, the theme still changing what it does not set', () => {
+    const sparse = { ...theme, layout: { xs: theme.layout.xs, md: theme.layout.md } }
+    expect(layoutGridStyles(sparse, { gutter: '20px' })).toEqual({
+      display: 'grid',
+      ...block(4, '20px', '16px'),
+      '@media (width >= 600px)': block(4, '20px', '16px'),
+      '@media (width >= 840px)': block(12, '20px', '24px'),
+      '@media (width >= 1200px)': block(12, '20px', '24px'),
+      '@media (width >= 1600px)': block(12, '20px', '24px'),
+    })
+  })
+
+  it('applies an entry under a breakpoint name on top of the fields, there only', () => {
+    const styles = layoutGridStyles(theme, { gutter: 4, md: { columns: 6, gutter: 1 } })
+    expect(styles).toMatchObject(block(4, '32px', '16px'))
+    expect(styles['@media (width >= 600px)']).toEqual(block(8, '32px', '32px'))
+    expect(styles['@media (width >= 840px)']).toEqual(block(6, '8px', '24px'))
+    expect(styles['@media (width >= 1200px)']).toEqual(block(12, '32px', '24px', '1200px'))
+  })
+
   it('writes nothing without the prop, only display without layout tokens', () => {
     expect(layoutGrid({ theme })).toEqual({})
     expect(layoutGridStyles({ breakpoints: ['40em'] }, true)).toEqual({ display: 'grid' })
@@ -77,6 +97,15 @@ describe('layoutFlex', () => {
     })
     expect(styles.gridTemplateColumns).toBeUndefined()
     expect(styles['@media (width >= 840px)']).toMatchObject({ '--layout-columns': 12 })
+  })
+
+  it("keeps a field's gutter in --layout-gutter at every breakpoint, for the children's span", () => {
+    const styles = layoutFlex({ layout: { gutter: 4 }, theme })
+    expect(styles).toMatchObject({ '--layout-gutter': '32px' })
+    expect(styles['@media (width >= 840px)']).toMatchObject({
+      '--layout-columns': 12,
+      '--layout-gutter': '32px',
+    })
   })
 })
 
