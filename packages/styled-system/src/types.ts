@@ -726,13 +726,30 @@ export interface GridAreaProps<ThemeType extends Theme = RequiredTheme> {
   gridArea?: ResponsiveValue<CSS.Property.GridArea, ThemeType>
 }
 
-// One entry of the `layout` prop.
-interface LayoutGridEntryProps<ThemeType extends Theme> {
-  columns?: number
+// One entry of the `layout` prop on a frame: the margin and the max width.
+interface LayoutFrameEntryProps<ThemeType extends Theme> {
   margin?: ThemeValue<'space', ThemeType> | string
-  gutter?: ThemeValue<'space', ThemeType> | string
   mode?: 'fluid' | 'fixed'
   maxWidth?: string
+}
+
+// One entry of the `layout` prop on a grid or flex container: the frame plus its columns.
+interface LayoutGridEntryProps<ThemeType extends Theme> extends LayoutFrameEntryProps<ThemeType> {
+  columns?: number
+  gutter?: ThemeValue<'space', ThemeType> | string
+}
+
+/**
+ * Not in upstream styled-system: the page frame from `theme.layout` - its margin and max width
+ * per breakpoint, no columns. Takes the same values as {@link LayoutGridProps}, minus the
+ * column fields.
+ */
+export interface LayoutFrameProps<ThemeType extends Theme = RequiredTheme> {
+  layout?:
+    | boolean
+    | (LayoutFrameEntryProps<ThemeType> & {
+        [key in BreakpointName<ThemeType>]?: LayoutFrameEntryProps<ThemeType>
+      })
 }
 
 /**
@@ -748,9 +765,12 @@ export interface LayoutGridProps<ThemeType extends Theme = RequiredTheme> {
       })
 }
 
-/** Not in upstream styled-system: how many layout-grid columns the element takes. */
+/**
+ * Not in upstream styled-system: how many layout-grid columns the element takes, or `'full'`
+ * for the whole row.
+ */
 export interface SpanProps<ThemeType extends Theme = RequiredTheme> {
-  span?: ResponsiveValue<number, ThemeType>
+  span?: ResponsiveValue<number | 'full', ThemeType>
 }
 
 export interface GridProps<ThemeType extends Theme = RequiredTheme>

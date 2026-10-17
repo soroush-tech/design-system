@@ -123,7 +123,9 @@ describe('Grid', () => {
       expect(grid).not.toHaveAttribute('layout')
     })
 
-    it('lets gridTemplateColumns, gap and padding props win', () => {
+    // Only the base: from the next breakpoint up the layout's blocks win, so the layout owns
+    // column tracks, column spacing and inline padding - rows take rowGap.
+    it('lets gridTemplateColumns, gap and padding props reach the base breakpoint only', () => {
       renderWithTheme(
         <Grid layout gridTemplateColumns="1fr 1fr" columnGap={1} px={3}>
           content
@@ -132,6 +134,19 @@ describe('Grid', () => {
       const grid = screen.getByText('content')
       expect(getComputedStyle(grid).gridTemplateColumns).toBe('1fr 1fr')
       expect(grid).toHaveStyle({ columnGap: '8px', paddingLeft: '24px' })
+    })
+
+    it('writes the frame once: View draws it, Grid adds only the columns', () => {
+      renderWithTheme(<Grid layout>framed</Grid>)
+      const className = [...screen.getByText('framed').classList].at(-1)!
+      const css = [...document.styleSheets]
+        .flatMap((sheet) => [...sheet.cssRules])
+        .map((rule) => rule.cssText)
+        .filter((text) => text.includes(className))
+        .join('\n')
+      // The base rule and one block per later breakpoint of the base theme.
+      expect(css.match(/padding-inline/g)).toHaveLength(5)
+      expect(css.match(/grid-template-columns/g)).toHaveLength(5)
     })
   })
 })

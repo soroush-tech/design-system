@@ -119,9 +119,14 @@ Radii: `"sm"` (4px) · `"md"` (8px) · `"lg"` (16px)
 // Auto-fill responsive columns
 <Grid gridTemplateColumns="repeat(auto-fill, minmax(240px, 1fr))" gap={2} p={3} />
 
-// Child spanning columns - use gridColumn on a View/Box child
-<View gridColumn="1 / -1" />
+// The theme's layout grid: the frame and its columns; children take columns with `span`
+<Grid layout rowGap={4}>
+  <View span="full">a full-width row</View>
+  <View span={{ xs: 4, md: 6 }}>half from md</View>
+</Grid>
 ```
+
+With `layout`, the layout owns the column tracks, column spacing (`gutter`), inline padding and max width - an explicit `gridTemplateColumns`, `gap`, `columnGap` or padding does not override them from the second breakpoint up. Space rows with `rowGap`. A grid with tracks of its own (`repeat(auto-fill, ...)`) leaves `layout` off and sits inside a frame instead.
 
 ---
 

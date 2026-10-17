@@ -25,9 +25,15 @@ export type GapToken = keyof Theme['space']
  * `layout` lays the grid out from `theme.layout` - the theme's columns, gutter and margin per
  * breakpoint, its own at every breakpoint (`layout={{ gutter: 8 }}`), or its own for a named
  * breakpoint: `layout={{ lg: { columns: 16 } }}`. Both mix: `{ gutter: 8, lg: { columns: 16 } }`.
+ * View draws the frame (margin, max width); Grid adds the columns. The layout owns what it
+ * writes, so column spacing comes from `gutter` and rows take `rowGap`.
  */
 export interface GridProps
-  extends ViewProps, SystemGridProps<Theme>, FlexboxProps<Theme>, LayoutGridProps<Theme> {}
+  extends
+    Omit<ViewProps, 'layout'>,
+    SystemGridProps<Theme>,
+    FlexboxProps<Theme>,
+    LayoutGridProps<Theme> {}
 
 const shouldForwardProp = createShouldForwardProp([...props, 'layout'])
 
@@ -35,7 +41,5 @@ export const Grid = styled(View, {
   name: 'Grid',
   label: 'grid',
   shouldForwardProp,
-  // layout first, then `space` again: an explicit gridTemplateColumns, gap or padding
-  // prop still wins over the theme's grid.
   systemProps: [layoutGrid, grid, flexbox, space],
 })<GridProps>({ display: 'grid' })

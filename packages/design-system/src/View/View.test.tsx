@@ -133,5 +133,27 @@ describe('View', () => {
       expect(cell).toHaveStyle({ gridColumn: 'span 6' })
       expect(cell).not.toHaveAttribute('span')
     })
+
+    it('takes the whole row with span="full"', () => {
+      renderWithTheme(<View span="full">row</View>)
+      // Emotion minifies `1 / -1` to `1/-1` - the same value.
+      expect(screen.getByText('row')).toHaveStyle({ gridColumn: '1/-1', flex: '0 0 100%' })
+    })
+  })
+
+  describe('layout (the page frame)', () => {
+    // jsdom applies no media query, so the computed style is the base (xs) entry.
+    it("sits on the theme's frame without becoming a grid, and stays off the DOM", () => {
+      renderWithTheme(<View layout>framed</View>)
+      const frame = screen.getByText('framed')
+      expect(frame).toHaveStyle({ paddingInline: '16px', maxWidth: 'none', display: 'block' })
+      expect(getComputedStyle(frame).gridTemplateColumns).toBe('none')
+      expect(frame).not.toHaveAttribute('layout')
+    })
+
+    it('takes fields for every breakpoint', () => {
+      renderWithTheme(<View layout={{ margin: 0 }}>edge</View>)
+      expect(screen.getByText('edge')).toHaveStyle({ paddingInline: '0px' })
+    })
   })
 })

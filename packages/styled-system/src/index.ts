@@ -49,6 +49,7 @@ export { background } from '@soroush.tech/styled-system/background'
 export { position } from '@soroush.tech/styled-system/position'
 export {
   grid,
+  layoutFrame,
   layoutGrid,
   layoutFlex,
   span,

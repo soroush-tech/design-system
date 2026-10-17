@@ -19,8 +19,10 @@ export type GapToken = keyof Theme['space']
  * `layout` lays a wrapping row out from `theme.layout` - the theme's gutter and margin per
  * breakpoint, with `--layout-columns` / `--layout-gutter` for the children's `span`. Entries
  * work as on `Grid`: `layout={{ gutter: 8 }}` at every breakpoint, `{ md: { gutter: 4 } }` at one.
+ * View draws the frame; Flex adds the row. Column spacing comes from `gutter`, rows take `rowGap`.
  */
-export interface FlexProps extends ViewProps, FlexboxProps<Theme>, LayoutGridProps<Theme> {}
+export interface FlexProps
+  extends Omit<ViewProps, 'layout'>, FlexboxProps<Theme>, LayoutGridProps<Theme> {}
 
 const shouldForwardProp = createShouldForwardProp([...props, 'layout'])
 
@@ -28,6 +30,5 @@ export const Flex = styled(View, {
   name: 'Flex',
   label: 'flex',
   shouldForwardProp,
-  // layout first, then `space` again: flexbox, gap and padding props still win.
   systemProps: [layoutFlex, flexbox, space],
 })<FlexProps>({ display: 'flex', flexDirection: 'column' })

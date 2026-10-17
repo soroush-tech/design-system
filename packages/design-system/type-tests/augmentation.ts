@@ -116,3 +116,8 @@ export const removedLayout: ThemeOverride = { layout: { xl: { content: { columns
 export const mixedLayout: GridProps['layout'] = { gutter: 4, ultra: { columns: 24 } }
 // @ts-expect-error -- `xl` was removed, so the layout prop has no entry for it
 export const removedGridLayout: GridProps['layout'] = { gutter: 4, xl: { columns: 16 } }
+
+// On a View, `layout` is the frame alone: margin and max width, no columns.
+export const frameLayout: ViewProps['layout'] = { maxWidth: '1280px', ultra: { margin: 4 } }
+// @ts-expect-error -- columns belong to Grid and Flex, not to a frame
+export const frameColumns: ViewProps['layout'] = { columns: 4 }

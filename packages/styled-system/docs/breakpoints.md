@@ -119,6 +119,9 @@ The `layout` prop on design-system's `Grid` and `Flex` turns `theme.layout`'s to
 breakpoint: column tracks on a Grid, a wrapping row on a Flex, with the gutter, the margin, and a
 centred max width when the mode is fixed. `layout={{ lg: { columns: 16 } }}` replaces the theme's
 grid at `lg` only; `layout={{ gutter: 8 }}` replaces its gutter at every breakpoint, and the two
-mix (`{ gutter: 8, lg: { columns: 16 } }`). A child takes columns with `span` (`span={{ xs: 4, md: 6 }}`): `grid-column`
-in a Grid, a width of N columns and gutters in a Flex. Outside design-system, `layoutGridStyles(theme, value, 'grid' | 'flex')` writes
-the same styles in a style function. The design-system theming guide has the details.
+mix (`{ gutter: 8, lg: { columns: 16 } }`). On design-system's `View` the same prop is the frame
+alone (margin and max width, no columns). A child takes columns with `span` (`span={{ xs: 4, md: 6 }}`,
+or `span="full"` for the whole row): `grid-column` in a Grid, a width of N columns and gutters in
+a Flex. The parsers compose: `layoutFrame` writes the frame, `layoutGrid` / `layoutFlex` the
+columns on top. Outside design-system, `layoutGridStyles(theme, value, 'grid' | 'flex')` writes
+both in a style function. The design-system theming guide has the details.

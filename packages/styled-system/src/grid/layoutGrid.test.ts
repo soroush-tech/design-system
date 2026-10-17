@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { layoutFlex, layoutGrid, layoutGridStyles, span } from './layoutGrid'
+import { layoutFlex, layoutFrame, layoutGrid, layoutGridStyles, span } from './layoutGrid'
 
 const theme = {
   space: [0, 8, 16, 24, 32],
@@ -13,19 +13,27 @@ const theme = {
   },
 }
 
-const block = (columns: number, gutter: string, margin: string, maxWidth?: string) => ({
-  '--layout-columns': columns,
-  '--layout-gutter': gutter,
-  gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
-  columnGap: gutter,
+const frame = (margin: string, maxWidth?: string) => ({
   paddingInline: margin,
   maxWidth: maxWidth ?? 'none',
-  marginInline: maxWidth ? 'auto' : 0,
+  marginInline: maxWidth ? `max(0px, calc((100% - ${maxWidth}) / 2))` : 0,
 })
 
-describe('layoutGrid', () => {
+const columns = (count: number, gutter: string) => ({
+  '--layout-columns': count,
+  '--layout-gutter': gutter,
+  gridTemplateColumns: `repeat(${count}, minmax(0, 1fr))`,
+  columnGap: gutter,
+})
+
+const block = (count: number, gutter: string, margin: string, maxWidth?: string) => ({
+  ...columns(count, gutter),
+  ...frame(margin, maxWidth),
+})
+
+describe('layoutGridStyles', () => {
   it("writes the theme's layout grid per breakpoint, mobile-first", () => {
-    expect(layoutGrid({ layout: true, theme })).toEqual({
+    expect(layoutGridStyles(theme, true)).toEqual({
       display: 'grid',
       ...block(4, '16px', '16px'),
       '@media (width >= 600px)': block(8, '16px', '32px'),
@@ -80,8 +88,46 @@ describe('layoutGrid', () => {
     expect(layoutGridStyles({ breakpoints: { xs: 0 } }, { xs: { mode: 'fixed' } })).toEqual({
       display: 'grid',
       maxWidth: 'none',
-      marginInline: 'auto',
+      marginInline: 0,
     })
+  })
+
+  it('centres a fixed frame with computed margins, so a grid or flex item still stretches', () => {
+    // `auto` inline margins shrink a grid or flex item to its content.
+    const styles = layoutGridStyles(theme, true)
+    expect(styles['@media (width >= 1200px)']).toMatchObject({
+      maxWidth: '1200px',
+      marginInline: 'max(0px, calc((100% - 1200px) / 2))',
+    })
+  })
+})
+
+describe('layoutGrid / layoutFrame', () => {
+  it('splits the layout grid into its columns and its frame, with nothing written twice', () => {
+    const grid = layoutGrid({ layout: true, theme })
+    const frameOnly = layoutFrame({ layout: true, theme })
+    expect(grid).toEqual({
+      display: 'grid',
+      ...columns(4, '16px'),
+      '@media (width >= 600px)': columns(8, '16px'),
+      '@media (width >= 840px)': columns(12, '24px'),
+      '@media (width >= 1200px)': columns(12, '24px'),
+      '@media (width >= 1600px)': columns(12, '24px'),
+    })
+    expect(frameOnly).toEqual({
+      ...frame('16px'),
+      '@media (width >= 600px)': frame('32px'),
+      '@media (width >= 840px)': frame('24px'),
+      '@media (width >= 1200px)': frame('24px', '1200px'),
+      '@media (width >= 1600px)': frame('24px', '1600px'),
+    })
+  })
+
+  it('takes the same values on a frame: fields everywhere, entries at their breakpoint', () => {
+    const styles = layoutFrame({ layout: { maxWidth: '1280px', md: { margin: 0 } }, theme })
+    expect(styles).not.toHaveProperty('display')
+    expect(styles['@media (width >= 840px)']).toEqual(frame('0px'))
+    expect(styles['@media (width >= 1200px)']).toEqual(frame('24px', '1280px'))
   })
 })
 
@@ -119,6 +165,14 @@ describe('span', () => {
         gridColumn: 'span 6',
         flex: '0 0 calc((100% - (var(--layout-columns) - 1) * var(--layout-gutter)) / var(--layout-columns) * 6 + 5 * var(--layout-gutter))',
       },
+    })
+  })
+
+  it('takes the whole row with "full", whatever the column count', () => {
+    expect(span({ span: { xs: 'full', md: 6 }, theme })).toMatchObject({
+      gridColumn: '1 / -1',
+      flex: '0 0 100%',
+      '@media (width >= 840px)': { gridColumn: 'span 6' },
     })
   })
 })
