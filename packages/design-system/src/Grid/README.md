@@ -120,13 +120,13 @@ Radii: `"sm"` (4px) · `"md"` (8px) · `"lg"` (16px)
 <Grid gridTemplateColumns="repeat(auto-fill, minmax(240px, 1fr))" gap={2} p={3} />
 
 // The theme's layout grid: the frame and its columns; children take columns with `span`
-<Grid layout rowGap={4}>
+<Grid layout gap={4}>
   <View span="full">a full-width row</View>
   <View span={{ xs: 4, md: 6 }}>half from md</View>
 </Grid>
 ```
 
-With `layout`, the layout owns the column tracks, column spacing (`gutter`), inline padding and max width - an explicit `gridTemplateColumns`, `gap`, `columnGap` or padding does not override them from the second breakpoint up. Space rows with `rowGap`. A grid with tracks of its own (`repeat(auto-fill, ...)`) leaves `layout` off and sits inside a frame instead.
+With `layout`, the grid's own `gap` / `columnGap` is the gutter - single or responsive (`gap={{ xs: 2, md: 4 }}`) - and the theme's gutter applies where it is not set; `rowGap` spaces the rows alone. The layout owns the column tracks, inline padding and max width: an explicit `gridTemplateColumns` or padding does not override them from the second breakpoint up. A grid with tracks of its own (`repeat(auto-fill, ...)`) leaves `layout` off and sits inside a frame instead.
 
 ---
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { layoutFlex, layoutFrame, layoutGrid, layoutGridStyles, span } from './layoutGrid'
+import { layoutFrame, layoutGrid, layoutGridStyles, span } from './layoutGrid'
 
 const theme = {
   space: [0, 8, 16, 24, 32],
@@ -20,8 +20,6 @@ const frame = (margin: string, maxWidth?: string) => ({
 })
 
 const columns = (count: number, gutter: string) => ({
-  '--layout-columns': count,
-  '--layout-gutter': gutter,
   gridTemplateColumns: `repeat(${count}, minmax(0, 1fr))`,
   columnGap: gutter,
 })
@@ -43,39 +41,33 @@ describe('layoutGridStyles', () => {
     })
   })
 
-  it('applies an override at the breakpoint it names only', () => {
-    const styles = layoutGridStyles(theme, { lg: { columns: 16, gutter: '20px' } })
-    expect(styles['@media (width >= 1200px)']).toEqual(block(16, '20px', '24px', '1200px'))
-    // xl is back to the theme.
-    expect(styles['@media (width >= 1600px)']).toEqual(block(12, '24px', '24px', '1600px'))
+  it('holds an entry from its breakpoint up, like any responsive prop', () => {
+    const styles = layoutGridStyles(theme, { lg: { columns: 16 } })
+    expect(styles['@media (width >= 1200px)']).toEqual(block(16, '24px', '24px', '1200px'))
+    // xl keeps the 16 columns; only the theme's own xl change (its max width) is added.
+    expect(styles['@media (width >= 1600px)']).toEqual(block(16, '24px', '24px', '1600px'))
   })
 
-  it('restores the theme at the next breakpoint even when the theme has no entry there', () => {
+  it('writes a block only where something changes, until a later entry replaces it', () => {
     const sparse = { ...theme, layout: { xs: theme.layout.xs } }
-    const styles = layoutGridStyles(sparse, { sm: { columns: 6 } })
-    expect(styles['@media (width >= 600px)']).toMatchObject({ '--layout-columns': 6 })
-    expect(styles['@media (width >= 840px)']).toMatchObject({ '--layout-columns': 4 })
-    expect(styles['@media (width >= 1200px)']).toBeUndefined()
+    const styles = layoutGridStyles(sparse, { sm: { columns: 6 }, lg: { columns: 2 } })
+    expect(styles['@media (width >= 600px)']).toMatchObject({
+      gridTemplateColumns: 'repeat(6, minmax(0, 1fr))',
+    })
+    // md inherits sm's block through the min-width query.
+    expect(styles['@media (width >= 840px)']).toBeUndefined()
+    expect(styles['@media (width >= 1200px)']).toMatchObject({
+      gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+    })
   })
 
   it('applies a field at every breakpoint, the theme still changing what it does not set', () => {
     const sparse = { ...theme, layout: { xs: theme.layout.xs, md: theme.layout.md } }
-    expect(layoutGridStyles(sparse, { gutter: '20px' })).toEqual({
+    expect(layoutGridStyles(sparse, { margin: 1 })).toEqual({
       display: 'grid',
-      ...block(4, '20px', '16px'),
-      '@media (width >= 600px)': block(4, '20px', '16px'),
-      '@media (width >= 840px)': block(12, '20px', '24px'),
-      '@media (width >= 1200px)': block(12, '20px', '24px'),
-      '@media (width >= 1600px)': block(12, '20px', '24px'),
+      ...block(4, '16px', '8px'),
+      '@media (width >= 840px)': block(12, '24px', '8px'),
     })
-  })
-
-  it('applies an entry under a breakpoint name on top of the fields, there only', () => {
-    const styles = layoutGridStyles(theme, { gutter: 4, md: { columns: 6, gutter: 1 } })
-    expect(styles).toMatchObject(block(4, '32px', '16px'))
-    expect(styles['@media (width >= 600px)']).toEqual(block(8, '32px', '32px'))
-    expect(styles['@media (width >= 840px)']).toEqual(block(6, '8px', '24px'))
-    expect(styles['@media (width >= 1200px)']).toEqual(block(12, '32px', '24px', '1200px'))
   })
 
   it('writes nothing without the prop, only display without layout tokens', () => {
@@ -94,19 +86,51 @@ describe('layoutGridStyles', () => {
 
   it('centres a fixed frame with computed margins, so a grid or flex item still stretches', () => {
     // `auto` inline margins shrink a grid or flex item to its content.
-    const styles = layoutGridStyles(theme, true)
-    expect(styles['@media (width >= 1200px)']).toMatchObject({
+    expect(layoutGridStyles(theme, true)['@media (width >= 1200px)']).toMatchObject({
       maxWidth: '1200px',
       marginInline: 'max(0px, calc((100% - 1200px) / 2))',
     })
   })
 })
 
+describe('gap as the gutter', () => {
+  it('sets the column gap at every breakpoint from one value', () => {
+    const styles = layoutGridStyles(theme, true, 1)
+    expect(styles).toMatchObject(columns(4, '8px'))
+    expect(styles['@media (width >= 840px)']).toMatchObject(columns(12, '8px'))
+    expect(styles['@media (width >= 1600px)']).toMatchObject(columns(12, '8px'))
+  })
+
+  it("keeps the theme's gutter below the first breakpoint an object names", () => {
+    const styles = layoutGridStyles(theme, true, { md: 4 })
+    expect(styles).toMatchObject(columns(4, '16px'))
+    expect(styles['@media (width >= 600px)']).toMatchObject(columns(8, '16px'))
+    expect(styles['@media (width >= 840px)']).toMatchObject(columns(12, '32px'))
+    expect(styles['@media (width >= 1200px)']).toMatchObject({ columnGap: '32px' })
+  })
+
+  it('maps an array by position, skipping nulls and positions past the last breakpoint', () => {
+    const styles = layoutGridStyles(theme, true, [1, null, 3])
+    expect(styles).toMatchObject({ columnGap: '8px' })
+    // sm has no value of its own: xs's carries up.
+    expect(styles['@media (width >= 600px)']).toMatchObject({ columnGap: '8px' })
+    expect(styles['@media (width >= 840px)']).toMatchObject({ columnGap: '24px' })
+    const single = { ...theme, breakpoints: { xs: '0px' } }
+    expect(layoutGridStyles(single, true, [1, 2])).toMatchObject({ columnGap: '8px' })
+  })
+
+  it('reads columnGap over gap on a grid, and falls back to the theme without either', () => {
+    expect(layoutGrid({ layout: true, theme, gap: 1, columnGap: 4 })).toMatchObject({
+      columnGap: '32px',
+    })
+    expect(layoutGrid({ layout: true, theme, gap: 1 })).toMatchObject({ columnGap: '8px' })
+    expect(layoutGridStyles(theme, true, null)).toEqual(layoutGridStyles(theme, true))
+  })
+})
+
 describe('layoutGrid / layoutFrame', () => {
   it('splits the layout grid into its columns and its frame, with nothing written twice', () => {
-    const grid = layoutGrid({ layout: true, theme })
-    const frameOnly = layoutFrame({ layout: true, theme })
-    expect(grid).toEqual({
+    expect(layoutGrid({ layout: true, theme })).toEqual({
       display: 'grid',
       ...columns(4, '16px'),
       '@media (width >= 600px)': columns(8, '16px'),
@@ -114,7 +138,7 @@ describe('layoutGrid / layoutFrame', () => {
       '@media (width >= 1200px)': columns(12, '24px'),
       '@media (width >= 1600px)': columns(12, '24px'),
     })
-    expect(frameOnly).toEqual({
+    expect(layoutFrame({ layout: true, theme })).toEqual({
       ...frame('16px'),
       '@media (width >= 600px)': frame('32px'),
       '@media (width >= 840px)': frame('24px'),
@@ -123,56 +147,23 @@ describe('layoutGrid / layoutFrame', () => {
     })
   })
 
-  it('takes the same values on a frame: fields everywhere, entries at their breakpoint', () => {
+  it('takes the same values on a frame: fields everywhere, entries from their breakpoint up', () => {
     const styles = layoutFrame({ layout: { maxWidth: '1280px', md: { margin: 0 } }, theme })
     expect(styles).not.toHaveProperty('display')
     expect(styles['@media (width >= 840px)']).toEqual(frame('0px'))
-    expect(styles['@media (width >= 1200px)']).toEqual(frame('24px', '1280px'))
-  })
-})
-
-describe('layoutFlex', () => {
-  it('draws the same grid on a wrapping flex row, without column tracks', () => {
-    const styles = layoutFlex({ layout: true, theme })
-    expect(styles).toMatchObject({
-      display: 'flex',
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      '--layout-columns': 4,
-      columnGap: '16px',
-    })
-    expect(styles.gridTemplateColumns).toBeUndefined()
-    expect(styles['@media (width >= 840px)']).toMatchObject({ '--layout-columns': 12 })
-  })
-
-  it("keeps a field's gutter in --layout-gutter at every breakpoint, for the children's span", () => {
-    const styles = layoutFlex({ layout: { gutter: 4 }, theme })
-    expect(styles).toMatchObject({ '--layout-gutter': '32px' })
-    expect(styles['@media (width >= 840px)']).toMatchObject({
-      '--layout-columns': 12,
-      '--layout-gutter': '32px',
-    })
+    expect(styles['@media (width >= 1200px)']).toEqual(frame('0px', '1280px'))
   })
 })
 
 describe('span', () => {
-  it('writes the grid column and the flex basis from the layout grid, per breakpoint', () => {
-    const styles = span({ span: { xs: 4, md: 6 }, theme })
-    expect(styles).toEqual({
+  it('writes the grid column per breakpoint', () => {
+    expect(span({ span: { xs: 4, md: 6 }, theme })).toEqual({
       gridColumn: 'span 4',
-      flex: '0 0 calc((100% - (var(--layout-columns) - 1) * var(--layout-gutter)) / var(--layout-columns) * 4 + 3 * var(--layout-gutter))',
-      '@media (width >= 840px)': {
-        gridColumn: 'span 6',
-        flex: '0 0 calc((100% - (var(--layout-columns) - 1) * var(--layout-gutter)) / var(--layout-columns) * 6 + 5 * var(--layout-gutter))',
-      },
+      '@media (width >= 840px)': { gridColumn: 'span 6' },
     })
   })
 
   it('takes the whole row with "full", whatever the column count', () => {
-    expect(span({ span: { xs: 'full', md: 6 }, theme })).toMatchObject({
-      gridColumn: '1 / -1',
-      flex: '0 0 100%',
-      '@media (width >= 840px)': { gridColumn: 'span 6' },
-    })
+    expect(span({ span: 'full', theme })).toEqual({ gridColumn: '1 / -1' })
   })
 })

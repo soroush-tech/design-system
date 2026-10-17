@@ -23,10 +23,10 @@ export type GapToken = keyof Theme['space']
 // and `SpaceProps`.
 /**
  * `layout` lays the grid out from `theme.layout` - the theme's columns, gutter and margin per
- * breakpoint, its own at every breakpoint (`layout={{ gutter: 8 }}`), or its own for a named
- * breakpoint: `layout={{ lg: { columns: 16 } }}`. Both mix: `{ gutter: 8, lg: { columns: 16 } }`.
- * View draws the frame (margin, max width); Grid adds the columns. The layout owns what it
- * writes, so column spacing comes from `gutter` and rows take `rowGap`.
+ * breakpoint, its own at every breakpoint (`layout={{ maxWidth: '1280px' }}`), or its own from
+ * a named breakpoint up: `layout={{ lg: { columns: 16 } }}`. View draws the frame (margin, max
+ * width); Grid adds the columns. The gutter is the grid's own `gap` / `columnGap` where it sets
+ * one - single or responsive - and the theme's elsewhere; rows take `gap` or `rowGap`.
  */
 export interface GridProps
   extends

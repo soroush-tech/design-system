@@ -127,7 +127,7 @@ describe('View', () => {
   })
 
   describe('span (layout-grid columns)', () => {
-    it('takes N columns of a Grid or Flex layout parent, and stays off the DOM', () => {
+    it('takes N columns of a grid parent, and stays off the DOM', () => {
       renderWithTheme(<View span={6}>cell</View>)
       const cell = screen.getByText('cell')
       expect(cell).toHaveStyle({ gridColumn: 'span 6' })
@@ -137,7 +137,7 @@ describe('View', () => {
     it('takes the whole row with span="full"', () => {
       renderWithTheme(<View span="full">row</View>)
       // Emotion minifies `1 / -1` to `1/-1` - the same value.
-      expect(screen.getByText('row')).toHaveStyle({ gridColumn: '1/-1', flex: '0 0 100%' })
+      expect(screen.getByText('row')).toHaveStyle({ gridColumn: '1/-1' })
     })
   })
 

@@ -13,7 +13,7 @@ export interface LayoutGridEntry {
   columns?: number
   /** Inline padding - a `theme.space` key or a CSS length. */
   margin?: string | number
-  /** Gap between columns - a `theme.space` key or a CSS length. */
+  /** Gap between columns - a `theme.space` key or a CSS length. Set per element with `gap`. */
   gutter?: string | number
   /** `fluid` spans the space; `fixed` is a container centred at `maxWidth`. */
   mode?: 'fluid' | 'fixed'
@@ -22,17 +22,23 @@ export interface LayoutGridEntry {
 
 /**
  * `true` for the theme's layout grid, or an entry: its fields replace the theme's at every
- * breakpoint, and entries under breakpoint names replace it at that breakpoint only.
+ * breakpoint, and entries under breakpoint names replace it from that breakpoint up.
  */
 export type LayoutGridValue =
   | boolean
   | Record<string, LayoutGridEntry | LayoutGridEntry[keyof LayoutGridEntry]>
 
-/** The container a layout grid is drawn on: column tracks, or a wrapping flex row. */
-export type LayoutGridDisplay = 'grid' | 'flex'
+/** A `gap` / `columnGap` value: one value, an array by breakpoint position, or an object by name. */
+export type LayoutGridGap =
+  | string
+  | number
+  | null
+  | undefined
+  | Array<string | number | null>
+  | Record<string, string | number | null>
 
-// What one parser writes: the page frame (margin, max width), or the columns on top of it.
-type LayoutPart = 'frame' | LayoutGridDisplay
+// What one parser writes: the page frame (margin, max width), or the column grid on top of it.
+type LayoutPart = 'frame' | 'grid'
 
 const spaceValue = (theme: unknown, value: string | number) => {
   const resolved = get(theme, `space.${value}`, value) as string | number
@@ -51,125 +57,131 @@ const frameDeclarations = (theme: unknown, { margin, mode, maxWidth }: LayoutGri
   }
 }
 
-const columnDeclarations = (
-  theme: unknown,
-  display: LayoutGridDisplay,
-  { columns, gutter }: LayoutGridEntry
-) => {
-  const gap = gutter === undefined ? undefined : spaceValue(theme, gutter)
-  return {
-    // Children size themselves from these: `span` on a flex child, or any custom style.
-    '--layout-columns': columns,
-    '--layout-gutter': gap,
-    gridTemplateColumns:
-      display === 'grid' && columns !== undefined
-        ? `repeat(${columns}, minmax(0, 1fr))`
-        : undefined,
-    columnGap: gap,
-  }
-}
+const gridDeclarations = (theme: unknown, { columns, gutter }: LayoutGridEntry) => ({
+  gridTemplateColumns: columns === undefined ? undefined : `repeat(${columns}, minmax(0, 1fr))`,
+  columnGap: gutter === undefined ? undefined : spaceValue(theme, gutter),
+})
 
-const declarations = (theme: unknown, parts: LayoutPart[], entry: LayoutGridEntry) => {
-  const styles: StyleObject = Object.assign(
-    {},
-    ...parts.map((part) =>
-      part === 'frame' ? frameDeclarations(theme, entry) : columnDeclarations(theme, part, entry)
-    )
-  )
+const declarations = (theme: unknown, part: LayoutPart, entry: LayoutGridEntry) => {
+  const styles: StyleObject =
+    part === 'frame' ? frameDeclarations(theme, entry) : gridDeclarations(theme, entry)
   return Object.fromEntries(Object.entries(styles).filter(([, value]) => value !== undefined))
 }
 
-const DISPLAY: Record<LayoutPart, StyleObject> = {
-  frame: {},
-  grid: { display: 'grid' },
-  flex: { display: 'flex', flexDirection: 'row', flexWrap: 'wrap' },
+// The element's own `gap` as the gutter: one value is a field for every breakpoint; an array
+// (by position) or an object (by name) gives entries, each from its breakpoint up.
+const gapAsGutter = (
+  breakpoints: Breakpoints,
+  gap: LayoutGridGap
+): { field: LayoutGridEntry; entries: Record<string, LayoutGridEntry> } => {
+  if (gap === undefined || gap === null) return { field: {}, entries: {} }
+  if (typeof gap !== 'object') return { field: { gutter: gap }, entries: {} }
+  const names = Object.keys(breakpoints)
+  const pairs = Array.isArray(gap)
+    ? gap.map((value, index) => [names[index], value] as const)
+    : Object.entries(gap)
+  const entries: Record<string, LayoutGridEntry> = {}
+  for (const [name, value] of pairs) {
+    if (name !== undefined && value !== null) entries[name] = { gutter: value }
+  }
+  return { field: {}, entries }
 }
 
-const layoutStyles = (theme: unknown, value: LayoutGridValue | undefined, parts: LayoutPart[]) => {
+const layoutStyles = (
+  theme: unknown,
+  value: LayoutGridValue | undefined,
+  part: LayoutPart,
+  gap?: LayoutGridGap
+) => {
   if (!value) return {}
   const breakpoints = get(theme, 'breakpoints', {}) as Breakpoints
   const layout = get(theme, 'layout', {}) as Record<string, { content?: LayoutGridEntry }>
   // Numbers and strings are fields for every breakpoint; objects are entries for the one they name.
   const fields = typeof value === 'object' ? Object.entries(value) : []
-  const everywhere = Object.fromEntries(fields.filter(([, field]) => typeof field !== 'object'))
-  const overrides = Object.fromEntries(
+  const named = Object.fromEntries(
     fields.filter(([, field]) => typeof field === 'object')
   ) as Record<string, LayoutGridEntry>
+  const fromGap = gapAsGutter(breakpoints, gap)
+  const everywhere: LayoutGridEntry = {
+    ...Object.fromEntries(fields.filter(([, field]) => typeof field !== 'object')),
+    ...fromGap.field,
+  }
   const hasEverywhere = Object.keys(everywhere).length > 0
   const { keyed } = responsiveQueries(breakpoints)
-  const styles: StyleObject = Object.assign({}, ...parts.map((part) => DISPLAY[part]))
+  const styles: StyleObject = part === 'grid' ? { display: 'grid' } : {}
   let themed: LayoutGridEntry = {}
-  let overridden = false
-  for (const key of Object.keys(breakpoints)) {
+  let carried: LayoutGridEntry = {}
+  Object.keys(breakpoints).forEach((key, index) => {
     const layer = layout[key]?.content
-    const named = Object.hasOwn(overrides, key) ? overrides[key] : undefined
-    const override = hasEverywhere || named ? { ...everywhere, ...named } : undefined
+    const entry = Object.hasOwn(named, key) ? named[key] : undefined
+    const gapEntry = Object.hasOwn(fromGap.entries, key) ? fromGap.entries[key] : undefined
     themed = { ...themed, ...layer }
-    // A block where the theme changes, where an override starts, or where one just ended.
-    if (layer || override || overridden) {
-      const block = declarations(theme, parts, { ...themed, ...override })
+    // Mobile-first: an entry holds from its breakpoint up, until a later one replaces it.
+    carried = { ...carried, ...entry, ...gapEntry }
+    // A block wherever something changes - the min-width query carries it up to the next one.
+    if (layer || entry || gapEntry || (index === 0 && hasEverywhere)) {
+      const block = declarations(theme, part, { ...themed, ...everywhere, ...carried })
       const media = keyed.get(key)
       if (media) styles[media] = block
       else Object.assign(styles, block)
     }
-    overridden = override !== undefined
-  }
+  })
   return styles
 }
 
 /**
  * The layout grid from `theme.layout`, per breakpoint: each breakpoint's `content` (columns,
- * margin, gutter, fluid or fixed), inherited mobile-first. A field in `value` replaces the
- * theme's at every breakpoint (`{ gutter: 8 }`); an entry under a breakpoint name replaces it
- * there only, on top of those fields (`{ gutter: 8, md: { columns: 6 } }`), and the next
- * breakpoint is back to the theme. Every written block carries the full set, so no block
- * inherits a stale `max-width`. The layout owns what it writes - an explicit `gap`, padding or
- * `maxWidth` on the same element does not override it; rows take `rowGap`.
+ * margin, gutter, fluid or fixed), mobile-first. A field in `value` replaces the theme's at
+ * every breakpoint (`{ maxWidth: '1280px' }`); an entry under a breakpoint name replaces it
+ * from that breakpoint up, on top of those fields (`{ lg: { columns: 16 } }`). `gap` - the
+ * element's own `gap` / `columnGap` - sets the gutter the same way, single or responsive; where
+ * it is not set, the theme's gutter applies. Every written block carries the full set, so no
+ * block inherits a stale `max-width`. Rows take `rowGap` (or `gap`'s row half), never the layout.
  */
 export const layoutGridStyles = (
   theme: unknown,
   value: LayoutGridValue | undefined,
-  display: LayoutGridDisplay = 'grid'
-) => layoutStyles(theme, value, [display, 'frame'])
-
-const layoutParser = (part: LayoutPart) =>
-  Object.assign(
-    (props: Props) => layoutStyles(props.theme, props.layout as LayoutGridValue, [part]),
-    { config: {}, propNames: ['layout'], cache: {} }
-  ) as unknown as Parser
-
-/**
- * The `layout` prop as the page frame alone: the margin and, in fixed mode, the centred max
- * width per breakpoint - no columns, and `display` is left alone. Compose it with `layoutGrid`
- * or `layoutFlex` for the columns; {@link layoutGridStyles} writes both in a style function.
- */
-export const layoutFrame = layoutParser('frame')
-
-/** The `layout` prop's columns on a grid container: tracks, gutter, `--layout-*` variables. */
-export const layoutGrid = layoutParser('grid')
-
-/** The `layout` prop's columns on a flex container: a wrapping row with the same gutter. */
-export const layoutFlex = layoutParser('flex')
-
-// A child's width in a layout-grid flex row: N columns and the N - 1 gutters between them. No
-// fallbacks: outside a layout grid the variables are missing, so the declaration is invalid and
-// the browser ignores it - the item stays a plain flex item.
-const flexSpan = (n: number) => {
-  const columns = 'var(--layout-columns)'
-  const gutter = 'var(--layout-gutter)'
-  return `0 0 calc((100% - (${columns} - 1) * ${gutter}) / ${columns} * ${n} + ${n - 1} * ${gutter})`
+  gap?: LayoutGridGap
+) => {
+  const grid = layoutStyles(theme, value, 'grid', gap)
+  const frame = layoutStyles(theme, value, 'frame')
+  for (const [key, block] of Object.entries(frame)) {
+    grid[key] = key.startsWith('@') ? { ...(grid[key] as StyleObject), ...block } : block
+  }
+  return grid
 }
 
 /**
- * The `span` prop: how many layout-grid columns an element takes. It writes both
- * `grid-column: span N` (read by a Grid parent) and a flex basis from the parent's
- * `--layout-columns` / `--layout-gutter` (read by a Flex parent); each container ignores the
- * other's property. `span="full"` takes the whole row whatever the column count - in any grid,
- * layout grid or not. Responsive like any prop: `span={{ xs: 'full', md: 6 }}`.
+ * The `layout` prop as the page frame alone: the margin and, in fixed mode, the centred max
+ * width per breakpoint - no columns, and `display` is left alone. Every View-based component
+ * takes it; compose it with `layoutGrid` for the columns.
+ */
+export const layoutFrame = Object.assign(
+  (props: Props) => layoutStyles(props.theme, props.layout as LayoutGridValue, 'frame'),
+  { config: {}, propNames: ['layout'], cache: {} }
+) as unknown as Parser
+
+/**
+ * The `layout` prop's columns on a grid container: the tracks and the gutter. The gutter is the
+ * element's own `columnGap` or `gap` where it sets one, the theme's elsewhere - so `column-gap`
+ * has a single source and an explicit gap is never silently replaced.
+ */
+export const layoutGrid = Object.assign(
+  (props: Props) =>
+    layoutStyles(
+      props.theme,
+      props.layout as LayoutGridValue,
+      'grid',
+      (props.columnGap ?? props.gap) as LayoutGridGap
+    ),
+  { config: {}, propNames: ['layout'], cache: {} }
+) as unknown as Parser
+
+/**
+ * The `span` prop: how many columns of a grid an element takes - `grid-column: span N` - or
+ * `span="full"` for the whole row whatever the column count. Responsive like any prop:
+ * `span={{ xs: 'full', md: 6 }}`.
  */
 export const span = system({
-  span: (n: number | 'full') =>
-    n === 'full'
-      ? { gridColumn: '1 / -1', flex: '0 0 100%' }
-      : { gridColumn: `span ${n}`, flex: flexSpan(n) },
+  span: (n: number | 'full') => ({ gridColumn: n === 'full' ? '1 / -1' : `span ${n}` }),
 })

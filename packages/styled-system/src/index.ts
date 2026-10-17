@@ -51,12 +51,11 @@ export {
   grid,
   layoutFrame,
   layoutGrid,
-  layoutFlex,
   span,
   layoutGridStyles,
   type LayoutGridEntry,
   type LayoutGridValue,
-  type LayoutGridDisplay,
+  type LayoutGridGap,
 } from '@soroush.tech/styled-system/grid'
 export {
   shadow,
