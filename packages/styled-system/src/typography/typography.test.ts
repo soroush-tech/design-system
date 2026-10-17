@@ -49,6 +49,6 @@ it('passes the text-flow props through and supports responsive values', () => {
     })
   ).toEqual({
     whiteSpace: 'normal',
-    '@media screen and (min-width: 40em)': { whiteSpace: 'nowrap' },
+    '@media (width >= 40em)': { whiteSpace: 'nowrap' },
   })
 })

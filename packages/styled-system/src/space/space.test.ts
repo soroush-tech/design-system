@@ -35,7 +35,7 @@ describe('space', () => {
     it('resolves responsive arrays to media queries', () => {
       expect(gap({ gap: [1, 2], theme: { space: [0, 4, 8], breakpoints: ['40em'] } })).toEqual({
         gap: 4,
-        '@media screen and (min-width: 40em)': { gap: 8 },
+        '@media (width >= 40em)': { gap: 8 },
       })
     })
   })

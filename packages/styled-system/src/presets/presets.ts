@@ -3,7 +3,7 @@ import { border } from '@soroush.tech/styled-system/border'
 import { color } from '@soroush.tech/styled-system/color'
 import { compose, type Parser } from '@soroush.tech/styled-system/core'
 import { flexbox } from '@soroush.tech/styled-system/flexbox'
-import { grid } from '@soroush.tech/styled-system/grid'
+import { grid, span } from '@soroush.tech/styled-system/grid'
 import { layout } from '@soroush.tech/styled-system/layout'
 import { position } from '@soroush.tech/styled-system/position'
 import { shadow } from '@soroush.tech/styled-system/shadow'
@@ -22,6 +22,7 @@ export const all: Parser = compose(
   background,
   position,
   grid,
+  span,
   shadow,
   buttonStyle,
   textStyle,

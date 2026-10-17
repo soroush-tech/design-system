@@ -1,6 +1,7 @@
 // Typed rewrite of @styled-system/core (styled-system v5).
 // Public surface and observable behavior match upstream; internals are modern TS.
 import type * as CSS from 'csstype'
+import { responsiveQueries, type Breakpoints, type ResponsiveQueries } from './media'
 
 // Internal shape of the objects parsers build up (arbitrary CSS keys → values or
 // nested media-query/selector objects). Kept loose for the implementation.
@@ -19,7 +20,7 @@ export interface CSSObject extends CSS.Properties<CSSLength>, CSS.PropertiesHyph
 }
 
 export interface Theme {
-  breakpoints?: readonly (string | number)[] | Record<string, string | number>
+  breakpoints?: Breakpoints
   disableStyledSystemCache?: boolean
   [key: string]: any
 }
@@ -57,8 +58,8 @@ export type Config = SystemConfig
 export type ConfigFunction = StyleFn
 
 interface ParserCache {
-  breakpoints?: readonly (string | number)[] | Record<string, string | number>
-  media?: (string | null)[]
+  breakpoints?: Breakpoints
+  queries?: ResponsiveQueries
 }
 
 export interface Parser {
@@ -85,21 +86,21 @@ export const merge = (a: StyleObject, b: StyleObject): StyleObject => {
   return result
 }
 
-// sort object-value responsive styles
-const sort = (obj: StyleObject): StyleObject => {
+// order object-value responsive styles: plain styles first, then the query blocks in cascade order
+const sort = (obj: StyleObject, order: string[]): StyleObject => {
   const next: StyleObject = {}
-  Object.keys(obj)
-    .sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }))
-    .forEach((key) => {
-      next[key] = obj[key]
-    })
+  for (const key in obj) {
+    if (!order.includes(key)) next[key] = obj[key]
+  }
+  for (const key of order) {
+    if (key in obj) next[key] = obj[key]
+  }
   return next
 }
 
 const defaults = {
   breakpoints: [40, 52, 64].map((n) => n + 'em'),
 }
-const createMediaQuery = (n: string | number): string => `@media screen and (min-width: ${n})`
 const getValue = (n: unknown, scale: unknown): unknown => get(scale, n as string, n)
 
 export const get = (obj: any, key?: string | number, def?: any, p = 0, undef?: any): any => {
@@ -134,7 +135,7 @@ const parseResponsiveStyle = (
 }
 
 const parseResponsiveObject = (
-  breakpoints: ParserCache['breakpoints'],
+  keyed: ResponsiveQueries['keyed'],
   sx: StyleFn,
   scale: unknown,
   raw: Record<string, unknown>,
@@ -142,11 +143,10 @@ const parseResponsiveObject = (
 ): StyleObject => {
   const styles: StyleObject = {}
   for (const key in raw) {
-    const breakpoint = (breakpoints as Record<string, string | number>)[key]
-    const value = raw[key]
-    const style = sx(value, scale, props)
-    if (breakpoint) {
-      const media = createMediaQuery(breakpoint)
+    // A breakpoint name or its `cq<Name>` key; the base breakpoint and any other key are the base.
+    const media = keyed.get(key)
+    const style = sx(raw[key], scale, props)
+    if (media) {
       Object.assign(styles, {
         [media]: { ...(styles[media] as StyleObject), ...style },
       })
@@ -157,12 +157,21 @@ const parseResponsiveObject = (
   return styles
 }
 
+// The queries for the theme's breakpoints - rebuilt whenever they change, so a theme switch applies.
+const queriesFor = (cache: ParserCache, theme: Props['theme']): ResponsiveQueries => {
+  const breakpoints = get(theme, 'breakpoints', defaults.breakpoints) as Breakpoints
+  if (theme?.disableStyledSystemCache || cache.breakpoints !== breakpoints || !cache.queries) {
+    cache.breakpoints = breakpoints
+    cache.queries = responsiveQueries(breakpoints)
+  }
+  return cache.queries
+}
+
 export const createParser = (config: ParserConfig): Parser => {
   const cache: ParserCache = {}
   const parse = ((props: Props): StyleObject => {
     let styles: StyleObject = {}
     let shouldSort = false
-    const isCacheDisabled = props.theme?.disableStyledSystemCache
 
     for (const key in props) {
       if (!config[key]) continue
@@ -171,38 +180,21 @@ export const createParser = (config: ParserConfig): Parser => {
       const scale = get(props.theme, sx.scale, sx.defaults)
 
       if (typeof raw === 'object') {
-        cache.breakpoints =
-          (!isCacheDisabled && cache.breakpoints) ||
-          (get(props.theme, 'breakpoints', defaults.breakpoints) as ParserCache['breakpoints'])
-        if (Array.isArray(raw)) {
-          cache.media = (!isCacheDisabled && cache.media) || [
-            null,
-            ...(cache.breakpoints as (string | number)[]).map(createMediaQuery),
-          ]
-          styles = merge(styles, parseResponsiveStyle(cache.media, sx, scale, raw, props))
-          continue
-        }
-        if (raw !== null) {
-          styles = merge(
-            styles,
-            parseResponsiveObject(
-              cache.breakpoints,
-              sx,
-              scale,
-              raw as Record<string, unknown>,
-              props
-            )
-          )
-          shouldSort = true
-        }
+        if (raw === null) continue
+        const { array, keyed } = queriesFor(cache, props.theme)
+        const responsive = Array.isArray(raw)
+          ? parseResponsiveStyle(array, sx, scale, raw, props)
+          : parseResponsiveObject(keyed, sx, scale, raw as Record<string, unknown>, props)
+        styles = merge(styles, responsive)
+        shouldSort = true
         continue
       }
 
       Object.assign(styles, sx(raw, scale, props))
     }
 
-    if (shouldSort) {
-      styles = sort(styles)
+    if (shouldSort && cache.queries) {
+      styles = sort(styles, cache.queries.order)
     }
 
     return styles

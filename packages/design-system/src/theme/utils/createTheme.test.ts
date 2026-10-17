@@ -55,4 +55,15 @@ describe('createTheme', () => {
     expect((theme.background as Record<string, string>).tertiary).toBe('#0f0f0f')
     expect(theme.background.primary).toBe(baseTheme.background.primary)
   })
+
+  it('rebuilds the breakpoint helpers from the merged sizes', () => {
+    const theme = createTheme(baseTheme, { breakpoints: { md: '900px' } })
+    expect(theme.breakpoints.up('md')).toBe('@media (width >= 900px)')
+    expect(theme.breakpoints.only('sm')).toBe('@media (600px <= width < 900px)')
+    expect(Object.keys(theme.breakpoints)).toEqual(['xs', 'sm', 'md', 'lg', 'xl'])
+  })
+
+  it('keeps the base helpers when the breakpoints are untouched', () => {
+    expect(createTheme(baseTheme, { name: 'x' }).breakpoints).toBe(baseTheme.breakpoints)
+  })
 })

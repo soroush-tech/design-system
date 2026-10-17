@@ -99,10 +99,13 @@ space.large = space[3]
 
 ### Breakpoints
 
-Breakpoints are CSS lengths intended for use in media queries.
-In Styled System the breakpoints scale is used to create mobile-first responsive media queries based on array values.
+Breakpoints are where each range starts - CSS lengths as a list or as named breakpoints (a media
+condition or a full `@media` rule is passed through). In Styled System the breakpoints scale is used
+to create mobile-first responsive media queries, in range syntax, from array and object values.
+See [Breakpoints](./breakpoints.md) for the forms, the query helpers, container queries, the units,
+and the order blocks are written in.
 
-For example, using a margin value of `[ 0, 1, 2 ]` creates styles with multiple mobile-first min-width media queries.
+For example, using a margin value of `[ 0, 1, 2 ]` creates styles with mobile-first media queries.
 
 ```js
 // given this breakpoints scale:
@@ -118,10 +121,10 @@ m: [0, 1, 2]
 // Styled System outputs this style object
 {
   margin: 0,
-  '@media screen and (min-width: 40em)': {
+  '@media (width >= 40em)': {
     margin: '4px',
   },
-  '@media screen and (min-width: 52em)': {
+  '@media (width >= 52em)': {
     margin: '8px',
   }
 }
@@ -129,16 +132,15 @@ m: [0, 1, 2]
 
 #### Media Queries
 
-For convenience and for use with other styling approaches, a `mediaQueries` scale derived from the `breakpoints` scale can be added to the theme object.
+For hand-written styles, build the query helpers from the same scale instead of a separate
+`mediaQueries` scale - they stay in step with the breakpoints:
 
 ```js
-breakpoints: [ '40em', '52em', '64em' ]
+import { createMediaHelpers } from '@soroush.tech/styled-system'
 
-mediaQueries: {
-  small: `@media screen and (min-width: ${breakpoints[0]})`,
-  medium: `@media screen and (min-width: ${breakpoints[1]})`,
-  large: `@media screen and (min-width: ${breakpoints[2]})`,
-}
+const { up, down, only } = createMediaHelpers({ xs: 0, sm: '600px', md: '840px' })
+up('sm') // '@media (width >= 600px)'
+only('sm') // '@media (600px <= width < 840px)'
 ```
 
 ### Key Reference

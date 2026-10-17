@@ -14,6 +14,17 @@ export {
   createStyleFunction,
   compose,
   system,
+  createMediaQuery,
+  breakpointQueries,
+  createMediaHelpers,
+  createContainerQueries,
+  containerKey,
+  responsiveQueries,
+  type Breakpoints,
+  type BreakpointInput,
+  type QueryHelpers,
+  type ContainerQueries,
+  type ResponsiveQueries,
   type Parser,
   type Props,
   type StyleFn,
@@ -36,7 +47,16 @@ export { flexbox } from '@soroush.tech/styled-system/flexbox'
 export { border, border as borders } from '@soroush.tech/styled-system/border'
 export { background } from '@soroush.tech/styled-system/background'
 export { position } from '@soroush.tech/styled-system/position'
-export { grid } from '@soroush.tech/styled-system/grid'
+export {
+  grid,
+  layoutGrid,
+  layoutFlex,
+  span,
+  layoutGridStyles,
+  type LayoutGridEntry,
+  type LayoutGridValue,
+  type LayoutGridDisplay,
+} from '@soroush.tech/styled-system/grid'
 export {
   shadow,
   shadow as boxShadow,

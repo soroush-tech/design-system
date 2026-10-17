@@ -113,16 +113,16 @@ SSR critical-CSS extraction (e.g. with `@emotion/server`) is a separate, opt-in 
 
 ### Inputs & forms
 
-| Component                                            | Purpose                                       |
-| ---------------------------------------------------- | --------------------------------------------- |
-| `Button`, `ButtonGroup`, `ToggleButton`              | Actions and toggles                           |
-| `TextInput`                                          | Text field                                    |
-| `Checkbox`, `Radio`, `Switch`                        | Selection controls                            |
-| `NativeSelect`                                       | Platform `<select>`                           |
-| `Select`                                             | Custom select built on `Popover` + `MenuItem` |
-| `MenuItem`                                           | Option row for `Select`'s listbox             |
-| `Form`, `FormControl`, `FormLabel`, `FormHelperText` | Form composition and labeling                 |
-| `Pagination`                                         | Page navigation control                       |
+| Component                                            | Purpose                                                                 |
+| ---------------------------------------------------- | ----------------------------------------------------------------------- |
+| `Button`, `ButtonGroup`, `ToggleButton`              | Actions and toggles                                                     |
+| `TextInput`                                          | Text field                                                              |
+| `Checkbox`, `Radio`, `Switch`                        | Selection controls                                                      |
+| `NativeSelect`                                       | Low-level platform `<select>` - not recommended; use `Select native`    |
+| `Select`                                             | The select to use - custom listbox, or `native` for the platform picker |
+| `MenuItem`                                           | Option row for `Select`'s listbox                                       |
+| `Form`, `FormControl`, `FormLabel`, `FormHelperText` | Form composition and labeling                                           |
+| `Pagination`                                         | Page navigation control                                                 |
 
 ### Feedback
 
@@ -148,13 +148,14 @@ SSR critical-CSS extraction (e.g. with `@emotion/server`) is a separate, opt-in 
 
 Components never hardcode colors or sizes - props resolve against scales on the `Theme` object:
 
-| Group              | Scales                                                                                                |
-| ------------------ | ----------------------------------------------------------------------------------------------------- |
-| Color              | `palette` (main/light/dark/contrastText per color) · `text` · `background` · `border` · `colorScheme` |
-| Typography         | `typography` (variant map) · `fonts` · `fontSizes` · `fontWeights` · `lineHeights` · `letterSpacings` |
-| Space & shape      | `space` · `sizes` · `radii` · `borderWidths` · `shadows`                                              |
-| Component scales   | `avatar` (size steps) · `skeleton` (wave highlight)                                                   |
-| Layering & effects | `zOrder` (appBar/drawer/modal) · `blur` · `logoFilter` · `portraitBlend` · `portraitOpacity`          |
+| Group              | Scales                                                                                                 |
+| ------------------ | ------------------------------------------------------------------------------------------------------ |
+| Color              | `palette` (main/light/dark/contrastText per color) · `text` · `background` · `border` · `colorScheme`  |
+| Typography         | `typography` (variant map) · `fonts` · `fontSizes` · `fontWeights` · `lineHeights` · `letterSpacings`  |
+| Space & shape      | `space` · `sizes` · `radii` · `borderWidths` · `shadows`                                               |
+| Layout             | `breakpoints` (xs/sm/md/lg/xl window classes) · `layout` (columns, margins, panels, top bar per class) |
+| Component scales   | `avatar` (size steps) · `skeleton` (wave highlight)                                                    |
+| Layering & effects | `zOrder` (appBar/drawer/modal) · `blur` · `logoFilter` · `portraitBlend` · `portraitOpacity`           |
 
 Prop types are derived from the interface (`keyof Theme['text']`), so adding a token to `themes.ts` propagates everywhere automatically. See [`design-system.md`](./design-system.md) for the full scale table and the palette rules.
 
@@ -185,6 +186,19 @@ const [isDark, setIsDark] = useState(true)
 ```
 
 `createTheme(base, overrides)` (exported from `@soroush.tech/design-system/theme`) is the merge primitive: plain objects recurse, arrays (`shadows`, `fontSizes`) and functions replace wholesale, `undefined` values are ignored - keys are added or replaced, never removed.
+
+### Breakpoints and layout
+
+`theme.breakpoints` are Material 3's window classes, each a range from its start until the next:
+`xs` 0-599px (compact, the base), `sm` 600-839 (medium), `md` 840-1199 (expanded), `lg`
+1200-1599 (large), `xl` 1600+ (extra-large). Responsive props use them by name or position -
+`p={{ xs: 2, md: 4 }}`, `p={[2, 3, 4]}` - and `cqSm`-style keys write container queries;
+`theme.breakpoints.up('md')` and its siblings write queries for hand-written styles. Everything is
+CSS, so pages work with JavaScript off. `theme.layout` holds the layout tokens per class (columns,
+margins, gutters, side panels, top bar); `Grid` and `Flex` apply the column grid with
+`layout` / `layout={{ lg: { columns: 16 } }}`, and apps place `AppBar`, `Sidebar` and `Drawer`
+themselves. The full guide is the
+[Breakpoints and layout](./docs/theming.md#breakpoints-and-layout) section of the theming guide.
 
 ### Component defaults
 

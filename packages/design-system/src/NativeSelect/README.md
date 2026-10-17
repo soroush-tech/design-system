@@ -1,6 +1,9 @@
 # NativeSelect
 
-A styled native `<select>` form control. Renders `options` data as `<option>` elements, shows a
+Not the recommended select: use [`Select`](../Select/README.md) - and `<Select native>` when you
+want the platform's own picker, which renders this component for you with the same `MenuItem`
+children as every other select. `NativeSelect` is the low-level building block behind it: a
+styled native `<select>` form control. Renders `options` data as `<option>` elements, shows a
 dropdown affordance icon, and integrates with `Form` / `FormControl` context the same way
 `TextInput` does. Being native, it is keyboard-operable, screen-reader friendly, and SSR-safe by
 default.

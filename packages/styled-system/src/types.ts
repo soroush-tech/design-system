@@ -23,7 +23,8 @@ export type Scale = ObjectOrArray<number | string>
 export type TLengthStyledSystem = string | number
 
 export interface Theme<TLength = TLengthStyledSystem> {
-  breakpoints?: ObjectOrArray<number | string | symbol>
+  /** Sizes by name or position; a scale may also carry helper methods, which are not breakpoints. */
+  breakpoints?: ObjectOrArray<number | string | symbol> | Record<string, unknown>
   mediaQueries?: { [size: string]: string }
   space?: ObjectOrArray<CSS.Property.Margin<number | string>>
   fontSizes?: ObjectOrArray<CSS.Property.FontSize<number>>
@@ -55,11 +56,31 @@ export type ThemeValue<K extends keyof ThemeType, ThemeType, TVal = any> =
         ? F
         : never
 
+// The keys of a scale that hold sizes - methods such as `up` are not breakpoints.
+type SizeKeys<Scale> = Scale extends readonly unknown[]
+  ? never
+  : {
+      [K in keyof Scale]: Scale[K] extends (...args: never[]) => unknown ? never : K
+    }[keyof Scale] &
+      string
+
+/** The theme's breakpoint names (array indexes for a list scale). */
+export type BreakpointName<ThemeType extends Theme = RequiredTheme> =
+  | SizeKeys<NonNullable<ThemeType['breakpoints']>>
+  | number
+
+/**
+ * A responsive value: one value; an array mapped by position onto the breakpoints,
+ * mobile-first (`null` skips one); or an object keyed by breakpoint name, each from that
+ * size up, plus `cq<Name>` keys for the same sizes as container queries.
+ */
 export type ResponsiveValue<T, ThemeType extends Theme = RequiredTheme> =
   | T
   | null
   | Array<T | null>
-  | { [key in (ThemeValue<'breakpoints', ThemeType> & string) | number]?: T }
+  | ({ [key in BreakpointName<ThemeType>]?: T } & {
+      [key in `cq${Capitalize<SizeKeys<NonNullable<ThemeType['breakpoints']>>>}`]?: T
+    })
 
 // ---------------------------------------------------------------------------
 // space
@@ -215,6 +236,12 @@ export interface AspectRatioProps<ThemeType extends Theme = RequiredTheme> {
   aspectRatio?: ResponsiveValue<CSS.Property.AspectRatio, ThemeType>
 }
 
+/** Not in upstream styled-system: makes the element a query container. */
+export interface ContainerProps<ThemeType extends Theme = RequiredTheme> {
+  containerType?: ResponsiveValue<CSS.Property.ContainerType, ThemeType>
+  containerName?: ResponsiveValue<CSS.Property.ContainerName, ThemeType>
+}
+
 export interface LayoutProps<ThemeType extends Theme = RequiredTheme>
   extends
     WidthProps<ThemeType>,
@@ -226,6 +253,7 @@ export interface LayoutProps<ThemeType extends Theme = RequiredTheme>
     DisplayProps<ThemeType>,
     VerticalAlignProps<ThemeType>,
     AspectRatioProps<ThemeType>,
+    ContainerProps<ThemeType>,
     SizeProps<ThemeType>,
     OverflowProps<ThemeType> {}
 
@@ -696,6 +724,33 @@ export interface GridTemplateAreasProps<ThemeType extends Theme = RequiredTheme>
 
 export interface GridAreaProps<ThemeType extends Theme = RequiredTheme> {
   gridArea?: ResponsiveValue<CSS.Property.GridArea, ThemeType>
+}
+
+// One entry of the `layout` prop.
+interface LayoutGridEntryProps<ThemeType extends Theme> {
+  columns?: number
+  margin?: ThemeValue<'space', ThemeType> | string
+  gutter?: ThemeValue<'space', ThemeType> | string
+  mode?: 'fluid' | 'fixed'
+  maxWidth?: string
+}
+
+/**
+ * Not in upstream styled-system: the layout grid from `theme.layout` on a Grid or Flex - `true`
+ * for the theme's, or an entry whose fields replace it at every breakpoint (`{ gutter: 8 }`),
+ * with entries under breakpoint names that replace it there only (`{ lg: { columns: 16 } }`).
+ */
+export interface LayoutGridProps<ThemeType extends Theme = RequiredTheme> {
+  layout?:
+    | boolean
+    | (LayoutGridEntryProps<ThemeType> & {
+        [key in BreakpointName<ThemeType>]?: LayoutGridEntryProps<ThemeType>
+      })
+}
+
+/** Not in upstream styled-system: how many layout-grid columns the element takes. */
+export interface SpanProps<ThemeType extends Theme = RequiredTheme> {
+  span?: ResponsiveValue<number, ThemeType>
 }
 
 export interface GridProps<ThemeType extends Theme = RequiredTheme>

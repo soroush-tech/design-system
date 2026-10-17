@@ -1,10 +1,12 @@
 // Typed rewrite of @styled-system/css (styled-system v5).
-// Standalone - does not depend on ./core; carries its own get/responsive/scales.
+// Standalone - carries its own get/responsive/scales; from ./core it shares only the
+// media-query helper.
+import { responsiveQueries, type Breakpoints, type ResponsiveQueries } from '../core/media'
 
 export type CSSObject = Record<string, unknown>
 
 export interface CssTheme {
-  breakpoints?: (string | number)[]
+  breakpoints?: Breakpoints
   [key: string]: unknown
 }
 
@@ -161,12 +163,31 @@ const transforms = [
   {}
 )
 
+// An object value whose keys are all breakpoint names (or their `cq<Name>` keys) is a responsive
+// value; any other object is a nested selector. Breakpoint names are never CSS properties.
+const isResponsiveObject = (value: unknown, keyed: ResponsiveQueries['keyed']) =>
+  typeof value === 'object' &&
+  value !== null &&
+  !Array.isArray(value) &&
+  Object.keys(value).length > 0 &&
+  Object.keys(value).every((key) => keyed.has(key))
+
 export const responsive =
   (styles: CSSObject) =>
   (theme: CssTheme): CSSObject => {
     const next: CSSObject = {}
-    const breakpoints = get(theme, 'breakpoints', defaultBreakpoints) as (string | number)[]
-    const mediaQueries = [null, ...breakpoints.map((n) => `@media screen and (min-width: ${n})`)]
+    const blocks = new Map<string, CSSObject>()
+    const breakpoints = get(theme, 'breakpoints', defaultBreakpoints) as Breakpoints
+    const { array, keyed, order } = responsiveQueries(breakpoints)
+    const place = (key: string, media: string | null | undefined, value: unknown) => {
+      if (!media) {
+        next[key] = value
+        return
+      }
+      const block = blocks.get(media) ?? {}
+      blocks.set(media, block)
+      if (value != null) block[key] = value
+    }
 
     for (const key in styles) {
       const value =
@@ -175,22 +196,24 @@ export const responsive =
           : styles[key]
 
       if (value == null) continue
-      if (!Array.isArray(value)) {
+      if (Array.isArray(value)) {
+        value.slice(0, array.length).forEach((item, i) => place(key, array[i], item))
+      } else if (isResponsiveObject(value, keyed)) {
+        for (const [name, item] of Object.entries(value as CSSObject))
+          place(key, keyed.get(name), item)
+      } else {
         next[key] = value
-        continue
       }
-      const slice = value.slice(0, mediaQueries.length)
-      for (let i = 0; i < slice.length; i++) {
-        const media = mediaQueries[i]
-        if (!media) {
-          next[key] = slice[i]
-          continue
-        }
-        const block = (next[media] as CSSObject) || {}
-        next[media] = block
-        if (slice[i] == null) continue
-        block[key] = slice[i]
-      }
+    }
+
+    // Generated blocks come after the author's own keys, in cascade order; a block the author
+    // also wrote by hand (`[up('md')]: {...}`) is merged into.
+    for (const media of order) {
+      const block = blocks.get(media)
+      if (!block) continue
+      const own = next[media] as CSSObject | undefined
+      delete next[media]
+      next[media] = { ...own, ...block }
     }
 
     return next

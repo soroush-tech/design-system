@@ -2,6 +2,7 @@ import type { ElementType } from 'react'
 import type { CSSObject as EmotionCSSObject } from '@emotion/react'
 import { alpha, generateBoxShadow } from '../utils'
 import { spacing } from './utils/spacing'
+import { withBreakpointHelpers, type BreakpointHelpers } from './breakpoints'
 
 /** Design-system's own style-object shape - Emotion stays an internal implementation detail. */
 export type CSSObject = EmotionCSSObject
@@ -188,6 +189,100 @@ export interface ThemeSizes {
  * forces the matching icon size to be supplied.
  */
 export type ThemeIconSizes = { [K in keyof ThemeSizes]: string }
+/** The default breakpoint names - Material 3's window classes. */
+export interface DefaultBreakpoints {
+  /** compact: 0-599px - the base, applies everywhere until `sm` overrides it. */
+  xs: true
+  /** medium: 600-839px. */
+  sm: true
+  /** expanded: 840-1199px. */
+  md: true
+  /** large: 1200-1599px. */
+  lg: true
+  /** extra-large: 1600px and up. */
+  xl: true
+}
+/**
+ * Add, rename or remove breakpoints by augmenting this interface: `true` adds a name, `false`
+ * removes a default one.
+ *
+ *   declare module '@soroush.tech/design-system/theme' {
+ *     interface BreakpointOverrides { mobile: true; tablet: true; xs: false; sm: false }
+ *   }
+ */
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type -- an augmentation point
+export interface BreakpointOverrides {}
+// The default names an app removed by setting them to `false` in BreakpointOverrides.
+type RemovedBreakpoints = keyof {
+  [K in keyof BreakpointOverrides as BreakpointOverrides[K] extends false ? K : never]: true
+}
+/** The theme's breakpoint names: the defaults, plus every override set to `true`, minus every one set to `false`. */
+export type BreakpointKey = Exclude<
+  keyof DefaultBreakpoints | keyof BreakpointOverrides,
+  RemovedBreakpoints
+>
+
+/**
+ * `theme.breakpoints`: where each window class starts, ascending, in declared order. A key holds
+ * from its value until the next key, so `xs: '0px'` applies everywhere until `sm` overrides it;
+ * media queries are min-width, which is why the theme writes the start of each range. Responsive
+ * props map onto the keys by name, or by position for an array. A value is a CSS length; a
+ * media condition or a full `@media` rule is passed through, without the range helpers.
+ * `createTheme` appends a breakpoint you add after the existing ones, so it must be larger.
+ */
+export type ThemeBreakpoints = { [K in BreakpointKey]: string }
+/** A `theme.space` key - layout margins and gutters step on the spacing scale. */
+export type LayoutSpace = Exclude<keyof ThemeSpace, 'auto'>
+/** A `theme.space` key or a CSS length (a 280px panel is a size, not a spacing step). */
+export type LayoutLength = LayoutSpace | string
+/** Bar heights at the top and bottom of the page; `0` removes an inherited bar. */
+export interface LayoutBars {
+  top?: LayoutLength
+  bottom?: LayoutLength
+}
+/** A side panel: a track (`inline`), over the content (`overlay`), its rail (`collapsed`) or absent (`hidden`). */
+export interface LayoutPanel {
+  mode: 'inline' | 'overlay' | 'collapsed' | 'hidden'
+  /** Open width. */
+  width: LayoutLength
+  /** Collapsed width. */
+  railWidth: LayoutLength
+}
+/** Side panels by logical side - `start` and `end` flip in RTL. */
+export interface LayoutPanels {
+  start?: LayoutPanel
+  end?: LayoutPanel
+}
+/** The content columns, measured in the space the bars and inline panels leave. */
+export interface LayoutContent {
+  columns: number
+  /** Inline padding of the content. */
+  margin: LayoutSpace
+  /** Gap between columns. */
+  gutter: LayoutSpace
+  /** `fluid` spans the space; `fixed` is a container centred at `maxWidth`. */
+  mode: 'fluid' | 'fixed'
+  maxWidth?: LayoutLength
+}
+/** The page layout at one breakpoint. */
+export interface LayoutEntry {
+  bars: LayoutBars
+  panels: LayoutPanels
+  content: LayoutContent
+}
+/**
+ * `theme.layout`: layout tokens per breakpoint, merged mobile-first in breakpoint order. The
+ * first breakpoint's entry (`xs`) is complete; every later one lists only what changes. A panel
+ * first declared at a later breakpoint needs its `mode`, `width` and `railWidth` there. These
+ * are tokens: apps (and the studio) read them; nothing in the design system lays a page out.
+ */
+export type ThemeLayout = {
+  [K in BreakpointKey]?: {
+    bars?: LayoutBars
+    panels?: { [P in keyof LayoutPanels]?: Partial<LayoutPanel> }
+    content?: Partial<LayoutContent>
+  }
+}
 /** Style of one typography variant. */
 export interface TypographyVariantStyle {
   element: ElementType
@@ -421,6 +516,8 @@ export interface Theme {
   /** Optional per-component customization - see `ThemeComponents`. */
   components?: OpenScale<ThemeComponents>
   space: OpenScale<ThemeSpace>
+  breakpoints: OpenScale<ThemeBreakpoints & BreakpointHelpers>
+  layout: ThemeLayout
   border: OpenScale<ThemeBorder>
   text: OpenScale<ThemeText>
   background: OpenScale<ThemeBackground>
@@ -559,6 +656,43 @@ export const space: ThemeSpace = {
   auto: 'auto',
 }
 
+// Material 3's window classes, in px: each value is where its range starts.
+export const breakpoints = withBreakpointHelpers<ThemeBreakpoints>({
+  xs: '0px',
+  sm: '600px',
+  md: '840px',
+  lg: '1200px',
+  xl: '1600px',
+})
+
+// Mobile-first: `xs` is complete, each later class lists only what changes.
+export const layout: ThemeLayout = {
+  xs: {
+    bars: { top: 8 },
+    panels: {
+      start: { mode: 'hidden', width: '280px', railWidth: 9 },
+      end: { mode: 'hidden', width: '360px', railWidth: 9 },
+    },
+    content: { columns: 4, margin: 2, gutter: 2, mode: 'fluid' },
+  },
+  sm: {
+    panels: { start: { mode: 'collapsed' } },
+    content: { columns: 8, margin: 4 },
+  },
+  md: {
+    panels: { end: { mode: 'overlay' } },
+    content: { columns: 12, margin: 3, gutter: 3 },
+  },
+  lg: {
+    panels: { end: { width: '412px' } },
+    content: { mode: 'fixed', maxWidth: '1200px' },
+  },
+  xl: {
+    panels: { start: { mode: 'inline' }, end: { mode: 'inline' } },
+    content: { maxWidth: '1600px' },
+  },
+}
+
 export const typography: ThemeTypographyVariants = {
   h1: { element: 'h1', fontSize: 6, fontWeight: 'bold' },
   h2: { element: 'h2', fontSize: 5, fontWeight: 'bold' },
@@ -610,6 +744,8 @@ export const baseTheme: Theme = {
   icon,
   sizes,
   space,
+  breakpoints,
+  layout,
   zOrder,
   blur: '12px',
   colorScheme: 'dark',
@@ -696,3 +832,9 @@ export const baseTheme: Theme = {
   shadow,
   shadows,
 }
+
+/**
+ * The query helpers for `baseTheme`'s breakpoints, as plain functions. A theme with its own
+ * breakpoints has the same helpers on `theme.breakpoints`.
+ */
+export const { up, down, only, between, not, containerQueries } = breakpoints

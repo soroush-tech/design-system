@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react'
+import { type ReactNode } from 'react'
 import { Drawer } from '@soroush.tech/design-system/Drawer'
 import { Flex } from '@soroush.tech/design-system/Flex'
 import { Typography } from '@soroush.tech/design-system/Typography'
@@ -11,13 +11,16 @@ export interface LayoutProps {
   sidebar?: ReactNode
 }
 
+// The mobile navigation drawer's id - the navbar's menu button opens it through popovertarget,
+// so it works on the prerendered pages with JavaScript off.
+const NAV_DRAWER = 'docs-nav'
+
 export function Layout({ children, sidebar }: Readonly<LayoutProps>) {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   return (
     <Flex flexDirection="column" minHeight="100dvh">
-      <Navbar onMenuClick={sidebar ? () => setIsDrawerOpen(true) : undefined} />
+      <Navbar menuDrawer={sidebar ? NAV_DRAWER : undefined} />
       {sidebar && (
-        <Drawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} anchor="left">
+        <Drawer id={NAV_DRAWER} anchor="left">
           <View p={4} width="16rem">
             {sidebar}
           </View>
@@ -25,19 +28,19 @@ export function Layout({ children, sidebar }: Readonly<LayoutProps>) {
       )}
       <Flex flexDirection="row" flex="1 1 auto" width="100%">
         {sidebar && (
-          <Flex
+          // A View, not a Flex: Flex's own `display: flex` would override the hidden base.
+          <View
             as="aside"
-            flexDirection="column"
-            display={['none', 'none', 'block']}
+            display={{ xs: 'none', lg: 'block' }}
             width="16rem"
-            flex="0 0 auto"
+            minWidth="16rem"
             px={4}
             py={5}
             borderRight="1px solid"
             borderColor="light"
           >
             {sidebar}
-          </Flex>
+          </View>
         )}
         <Flex as="main" flexDirection="column" flex="1 1 auto" minWidth={0} px={4} py={5}>
           {children}

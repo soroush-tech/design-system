@@ -5,6 +5,7 @@ import { Button } from '../Button'
 import { Flex } from '../Flex'
 import { Typography } from '../Typography'
 import { Drawer } from './Drawer'
+import { DrawerToggle } from './DrawerToggle'
 
 const meta: Meta<typeof Drawer> = {
   title: 'Theme/Drawer',
@@ -45,33 +46,60 @@ export default meta
 type Story = StoryObj<typeof Drawer>
 type DrawerArgs = Partial<ComponentProps<typeof Drawer>>
 
-const DrawerDemo = (args: DrawerArgs) => {
-  const [isOpen, setIsOpen] = useState(false)
+const DrawerBody = ({ args, onClose }: { args: DrawerArgs; onClose?: () => void }) => {
   const isHorizontal = args.anchor === 'top' || args.anchor === 'bottom'
   return (
-    <>
-      <Button onClick={() => setIsOpen(true)}>Open drawer</Button>
-      <Drawer {...args} isOpen={isOpen} onClose={() => setIsOpen(false)}>
-        <Flex flexDirection="column" gap={3} p={4} width={isHorizontal ? '100%' : '260px'}>
-          <Typography variant="h6" m={0}>
-            Drawer
-          </Typography>
-          <Typography variant="body2" color="secondary" m={0}>
-            Slides in from the "{args.anchor}" edge. Press Escape or click the backdrop to close.
-          </Typography>
-          <Button onClick={() => setIsOpen(false)}>Close</Button>
-        </Flex>
-      </Drawer>
-    </>
+    <Flex flexDirection="column" gap={3} p={4} width={isHorizontal ? '100%' : '260px'}>
+      <Typography variant="h6" m={0}>
+        Drawer
+      </Typography>
+      <Typography variant="body2" color="secondary" m={0}>
+        Slides in from the "{args.anchor}" edge. Press Escape or click outside to close.
+      </Typography>
+      {onClose ? (
+        <Button onClick={onClose}>Close</Button>
+      ) : (
+        <DrawerToggle drawer={args.id ?? 'drawer'} action="hide">
+          Close
+        </DrawerToggle>
+      )}
+    </Flex>
   )
 }
 
+/** A `DrawerToggle` opens it and closes it - no state, and it works with JavaScript disabled. */
 export const Default: Story = {
   args: {
+    id: 'drawer',
     anchor: 'left',
     elevation: 16,
     hasBackdrop: true,
     transitionDuration: 225,
   },
-  render: (args) => <DrawerDemo {...args} />,
+  render: (args) => (
+    <>
+      <DrawerToggle drawer="drawer">Open drawer</DrawerToggle>
+      <Drawer {...args} id="drawer">
+        <DrawerBody args={args} />
+      </Drawer>
+    </>
+  ),
+}
+
+const ControlledDemo = (args: DrawerArgs) => {
+  const [isOpen, setIsOpen] = useState(false)
+  return (
+    <>
+      <Button onClick={() => setIsOpen(true)}>Open drawer</Button>
+      <Drawer {...args} id="controlled-drawer" isOpen={isOpen} onClose={() => setIsOpen(false)}>
+        <DrawerBody args={args} onClose={() => setIsOpen(false)} />
+      </Drawer>
+    </>
+  )
+}
+
+/** With JavaScript, `isOpen` and `onClose` control it from state. */
+export const Controlled: Story = {
+  args: { anchor: 'right', elevation: 16, hasBackdrop: true, transitionDuration: 225 },
+  render: (args) => <ControlledDemo {...args} />,
 }

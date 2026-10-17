@@ -67,7 +67,7 @@ describe('system / createParser', () => {
     const props = { m: [0, 4], theme: { space: [0, 4, 8] } }
     const expected = {
       margin: 0,
-      '@media screen and (min-width: 40em)': { margin: 4 },
+      '@media (width >= 40em)': { margin: 4 },
     }
     expect(parse(props)).toEqual(expected)
     expect(parse(props)).toEqual(expected)
@@ -77,7 +77,7 @@ describe('system / createParser', () => {
     const parse = system({ m: { property: 'margin', scale: 'space' } })
     expect(parse({ m: [0, null], theme: { space: [0, 4, 8] } })).toEqual({
       margin: 0,
-      '@media screen and (min-width: 40em)': {},
+      '@media (width >= 40em)': {},
     })
   })
 
@@ -90,7 +90,75 @@ describe('system / createParser', () => {
       })
     ).toEqual({
       margin: 0,
-      '@media screen and (min-width: 30em)': { margin: 4 },
+      '@media (width >= 30em)': { margin: 4 },
+    })
+  })
+
+  it('maps arrays onto named breakpoints in declared order', () => {
+    const parse = system({ m: { property: 'margin', scale: 'space' } })
+    const theme = { space: [0, 4, 8], breakpoints: { tablet: '37.5em', web: '(width >= 75em)' } }
+    expect(parse({ m: [0, 1, 2], theme })).toEqual({
+      margin: 0,
+      '@media (width >= 37.5em)': { margin: 4 },
+      '@media (width >= 75em)': { margin: 8 },
+    })
+  })
+
+  it('orders object styles by breakpoint, not by query text', () => {
+    const parse = system({
+      m: { property: 'margin', scale: 'space' },
+      p: { property: 'padding', scale: 'space' },
+    })
+    const theme = { space: [0, 4, 8], breakpoints: { web: '75em', wide: '(width >= 100em)' } }
+    const styles = parse({ p: { wide: 2, _: 1 }, m: { web: 1, _: 0 }, theme })
+    expect(Object.keys(styles)).toEqual([
+      'padding',
+      'margin',
+      '@media (width >= 75em)',
+      '@media (width >= 100em)',
+    ])
+  })
+
+  it('treats a breakpoint that starts at 0 as the base, in objects and arrays', () => {
+    const parse = system({ m: { property: 'margin', scale: 'space' } })
+    const theme = { space: [0, 4, 8], breakpoints: { xs: '0px', sm: '600px' } }
+    const expected = { margin: 4, '@media (width >= 600px)': { margin: 8 } }
+    expect(parse({ m: { xs: 1, sm: 2 }, theme })).toEqual(expected)
+    expect(parse({ m: [1, 2], theme })).toEqual(expected)
+  })
+
+  it('writes cq keys as container queries after the media blocks', () => {
+    const parse = system({ m: { property: 'margin', scale: 'space' } })
+    const theme = { space: [0, 4, 8], breakpoints: { xs: 0, sm: '600px' } }
+    const styles = parse({ m: { cqSm: 2, sm: 1, cqXs: 1 }, theme })
+    expect(styles).toEqual({
+      '@media (width >= 600px)': { margin: 4 },
+      '@container (width >= 0px)': { margin: 4 },
+      '@container (width >= 600px)': { margin: 8 },
+    })
+    expect(Object.keys(styles)).toEqual([
+      '@media (width >= 600px)',
+      '@container (width >= 0px)',
+      '@container (width >= 600px)',
+    ])
+  })
+
+  it('treats inherited names as base values, not breakpoints', () => {
+    const parse = system({ m: { property: 'margin', scale: 'space' } })
+    const theme = { space: [0, 4, 8], breakpoints: { web: '75em' } }
+    expect(parse({ m: { constructor: 1, toString: 2 }, theme })).toEqual({ margin: 8 })
+  })
+
+  it('follows a theme whose breakpoints change', () => {
+    const parse = system({ m: { property: 'margin', scale: 'space' } })
+    const space = [0, 4]
+    expect(parse({ m: [0, 1], theme: { space, breakpoints: ['30em'] } })).toEqual({
+      margin: 0,
+      '@media (width >= 30em)': { margin: 4 },
+    })
+    expect(parse({ m: [0, 1], theme: { space, breakpoints: { tablet: 600 } } })).toEqual({
+      margin: 0,
+      '@media (width >= 600px)': { margin: 4 },
     })
   })
 
@@ -105,7 +173,7 @@ describe('system / createParser', () => {
       parse({ m: [0, 4], theme: { space: [0, 4, 8], disableStyledSystemCache: true } })
     ).toEqual({
       margin: 0,
-      '@media screen and (min-width: 40em)': { margin: 4 },
+      '@media (width >= 40em)': { margin: 4 },
     })
   })
 

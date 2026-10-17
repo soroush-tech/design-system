@@ -664,9 +664,9 @@ Some style props include default, fallback scales if not defined in the `theme` 
 ```js
 // Default Breakpoints
 const breakpoints = ['40em', '52em', '64em']
-// @media screen and (min-width: 40em)
-// @media screen and (min-width: 52em)
-// @media screen and (min-width: 64em)
+// @media (width >= 40em)
+// @media (width >= 52em)
+// @media (width >= 64em)
 
 // default fontSizes
 const fontSizes = [12, 14, 16, 20, 24, 32, 48, 64, 72]

@@ -13,7 +13,8 @@ import type {
 import { baseTheme, createTheme } from '@soroush.tech/design-system/theme'
 import type { ButtonColor, ButtonVariant } from '@soroush.tech/design-system/Button'
 import type { CheckboxSize } from '@soroush.tech/design-system/Checkbox'
-import type { ViewBackgroundToken } from '@soroush.tech/design-system/View'
+import type { GridProps } from '@soroush.tech/design-system/Grid'
+import type { ViewBackgroundToken, ViewProps } from '@soroush.tech/design-system/View'
 
 declare module '@soroush.tech/design-system/theme' {
   interface ThemePalette {
@@ -34,6 +35,15 @@ declare module '@soroush.tech/design-system/theme' {
   }
   interface ThemeComponents {
     MyWidget?: ComponentConfig<{ mood?: 'calm' | 'loud' }, 'root' | 'handle'>
+  }
+  // Breakpoints renamed by the app: `ultra` added (createTheme appends it after `xl`), `xs`
+  // kept, `xl` removed - and a new layout field.
+  interface BreakpointOverrides {
+    ultra: true
+    xl: false
+  }
+  interface LayoutContent {
+    align?: 'start' | 'center'
   }
 }
 
@@ -58,6 +68,9 @@ export const bogusVariant: ButtonVariant = 'wiggly'
 export const override: ThemeOverride = {
   palette: { brand: { main: '#00ff88', light: '#66ffb2', dark: '#00b25f', contrastText: '#000' } },
   background: { tertiary: '#101418' },
+  // The augmented breakpoint gets a layout entry of its own.
+  breakpoints: { ultra: '2560px' },
+  layout: { ultra: { content: { columns: 24, align: 'center' } } },
   elevations: { low: '0 1px 2px', mid: '0 2px 6px', high: '0 6px 18px' },
   // theme.defaults accepts augmented keys - components then default to them.
   defaults: { size: 'xl', color: 'brand', bg: 'tertiary' },
@@ -80,3 +93,26 @@ export const override: ThemeOverride = {
   },
 }
 export const augmentedTheme: Theme = createTheme(baseTheme, override)
+
+// Responsive values take the theme's breakpoint names and their cq keys - not helper names,
+// not removed breakpoints.
+export const responsivePadding: ViewProps['p'] = { xs: 1, ultra: 3, cqUltra: 2 }
+// @ts-expect-error -- `up` is a helper on the scale, not a breakpoint
+export const helperAsBreakpoint: ViewProps['p'] = { up: 2 }
+// @ts-expect-error -- `xl` was removed by BreakpointOverrides
+export const removedBreakpoint: ViewProps['p'] = { xl: 2 }
+// The helpers follow the theme's names.
+export const ultraQuery: string = baseTheme.breakpoints.up('ultra')
+
+// Layout entries exist only for declared breakpoints; margins and gutters are space keys.
+// @ts-expect-error -- 'huge' is not a breakpoint
+export const bogusLayout: ThemeOverride = { layout: { huge: { content: { columns: 2 } } } }
+// @ts-expect-error -- a gutter is a theme.space key, not a length
+export const bogusGutter: ThemeOverride = { layout: { md: { content: { gutter: '20px' } } } }
+// @ts-expect-error -- `xl` was removed, so it has no layout entry
+export const removedLayout: ThemeOverride = { layout: { xl: { content: { columns: 16 } } } }
+
+// The `layout` prop mixes fields for every breakpoint with entries for declared breakpoints.
+export const mixedLayout: GridProps['layout'] = { gutter: 4, ultra: { columns: 24 } }
+// @ts-expect-error -- `xl` was removed, so the layout prop has no entry for it
+export const removedGridLayout: GridProps['layout'] = { gutter: 4, xl: { columns: 16 } }

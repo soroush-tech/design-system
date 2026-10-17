@@ -79,7 +79,10 @@ run `pnpm gen:publish-options` and commit the result.
 
 ## Publishing (cd-packages.yml)
 
-Manual dispatch, main-ref only, npm **Trusted Publishing** (OIDC id-token per run, no
+Manual dispatch with a `package` and a `channel` input (`alpha` | `rc` | `stable` - see the
+`prerelease` skill): `alpha` runs from any branch whose `ci-ok` passed and publishes
+`<target>-alpha.N` under the `alpha` dist-tag; `rc` and `stable` run from `main` only.
+`scripts/prerelease-versions.mjs` computes the versions in the checkout. npm **Trusted Publishing** (OIDC id-token per run, no
 NPM_TOKEN; `NODE_AUTH_TOKEN` must stay unset). Requires the `cd-packages` environment and the
 npm trusted-publisher config for this repo. Notes come from
 `packages/<pkg>/release-notes/<version>.md` - the run refuses to publish without the file, and

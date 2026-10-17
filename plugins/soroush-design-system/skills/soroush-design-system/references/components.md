@@ -14,7 +14,7 @@ Import every component from its own subpath.
 - **Card** - A surface component with an optional title, caption, and variant-based visual treatment.
 - **Quote** - A `View` with a fixed 2px primary left border - used for terminal readouts and markdown blockquotes.
 - **AppBar** - Renders as `<header>`.
-- **Drawer** - A panel that slides in from a screen edge, built on [`Modal`](https://docs.soroush.tech/design-system/components/modal/).
+- **Drawer** - A panel that slides in from a screen edge.
 - **Sidebar** - A collapsible vertical icon rail.
 
 ## Content & data display
@@ -35,8 +35,8 @@ Import every component from its own subpath.
 - **Checkbox** - A binary toggle control.
 - **Radio** - A single-selection control for use within a group.
 - **Switch** - A sliding toggle control.
-- **NativeSelect** - A styled native `<select>` form control.
-- **Select** - A form select with a custom, themeable listbox - and a `native` escape hatch.
+- **NativeSelect** - Not the recommended select: use [`Select`](https://docs.soroush.tech/design-system/components/select/) - and `<Select native>` when you want the platform's own picker, which renders this component for you with the same `MenuItem` children as every other select.
+- **Select** - The select to use for every dropdown choice - always prefer it over `NativeSelect`.
 - **MenuItem** - A single option row for [`Select`](https://docs.soroush.tech/design-system/components/select/)'s listbox, rendered as a semantic `<li role="option">`.
 - **Form** - Renders a `<form>` and provides form-wide field defaults through `FormContext`.
 - **FormControl** - Groups a label, control, and helper text into one accessible field and shares their state through React context.

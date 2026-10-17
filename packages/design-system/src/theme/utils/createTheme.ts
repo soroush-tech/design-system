@@ -1,4 +1,5 @@
 import type { Theme } from '../themes'
+import { withBreakpointHelpers } from '../breakpoints'
 
 /**
  * Recursive partial of a theme shape. Plain objects recurse; arrays and
@@ -41,9 +42,18 @@ const deepMerge = (base: Record<string, unknown>, overrides: Record<string, unkn
  * - `undefined` override values are ignored - a key can be added or replaced,
  *   never removed.
  * - Neither argument is mutated; untouched branches keep referential identity.
+ * - `breakpoints` gets its query helpers back, built from the merged sizes.
  */
-export const createTheme = (base: Theme, overrides: ThemeOverride): Theme =>
-  deepMerge(
+export const createTheme = (base: Theme, overrides: ThemeOverride): Theme => {
+  const theme = deepMerge(
     base as unknown as Record<string, unknown>,
     overrides as Record<string, unknown>
   ) as unknown as Theme
+  return withHelpers(theme)
+}
+
+/** A theme whose `breakpoints` carry the query helpers - added when a hand-built theme lacks them. */
+export const withHelpers = (theme: Theme): Theme =>
+  theme.breakpoints && !('up' in theme.breakpoints)
+    ? { ...theme, breakpoints: withBreakpointHelpers(theme.breakpoints) }
+    : theme

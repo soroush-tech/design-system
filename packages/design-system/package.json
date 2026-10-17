@@ -1,6 +1,6 @@
 {
   "name": "@soroush.tech/design-system",
-  "version": "1.3.4",
+  "version": "2.0.0",
   "description": "Emotion + @soroush.tech/styled-system React component library - token-driven light/dark themes, layout primitives, forms, and overlays.",
   "keywords": [
     "design-system",
@@ -16,11 +16,11 @@
   "homepage": "https://soroush.tech/design-system",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/soroush-tech/core.git",
+    "url": "git+https://github.com/soroush-tech/design-system.git",
     "directory": "packages/design-system"
   },
   "bugs": {
-    "url": "https://github.com/soroush-tech/core/issues"
+    "url": "https://github.com/soroush-tech/design-system/issues"
   },
   "type": "module",
   "sideEffects": false,
