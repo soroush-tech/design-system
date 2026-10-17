@@ -71,6 +71,7 @@
     "./theme": "./src/theme/index.ts",
     "./style": "./src/style/index.ts",
     "./utils": "./src/utils/index.ts",
+    "./testing": "./src/testing/index.ts",
     "./engine": "./src/engine/index.ts",
     "./utils/test/renderWithTheme": "./src/utils/test/renderWithTheme.tsx",
     "./utils/test/storiesArgs": "./src/utils/test/storiesArgs.ts",
@@ -459,6 +460,16 @@
         "require": {
           "types": "./dist/theme.d.cts",
           "default": "./dist/theme.cjs"
+        }
+      },
+      "./testing": {
+        "import": {
+          "types": "./dist/testing.d.mts",
+          "default": "./dist/testing.mjs"
+        },
+        "require": {
+          "types": "./dist/testing.d.cts",
+          "default": "./dist/testing.cjs"
         }
       },
       "./style": {
