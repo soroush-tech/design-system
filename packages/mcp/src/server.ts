@@ -112,7 +112,7 @@ export const createMcpServer = (bundle: ContentBundle = content): McpServer => {
           .describe('Limit to one package. Omit for everything.'),
       },
     },
-    async ({ package: pkg }) => text(renderInventory(bundle, pkg))
+    ({ package: pkg }) => text(renderInventory(bundle, pkg))
   )
 
   server.registerTool(
@@ -128,7 +128,7 @@ export const createMcpServer = (bundle: ContentBundle = content): McpServer => {
           .describe('Which README section to return. Defaults to "all".'),
       },
     },
-    async ({ name, part }) => {
+    ({ name, part }) => {
       const component = findComponent(name, bundle)
       if (!component) {
         const names = bundle.components.map((item) => item.name).join(', ')
@@ -150,7 +150,7 @@ export const createMcpServer = (bundle: ContentBundle = content): McpServer => {
           .describe('One scale, e.g. "space", "palette", "radii". Omit for all of them.'),
       },
     },
-    async ({ scale }) => text(renderTokens(bundle, scale))
+    ({ scale }) => text(renderTokens(bundle, scale))
   )
 
   server.registerTool(
@@ -160,7 +160,7 @@ export const createMcpServer = (bundle: ContentBundle = content): McpServer => {
         'List the available guides and references: installation, usage, theming, customization, app setup, the layout kit, the brand theme, and the styled-system docs.',
       inputSchema: {},
     },
-    async () => text(renderDocIndex(bundle))
+    () => text(renderDocIndex(bundle))
   )
 
   server.registerTool(
@@ -171,7 +171,7 @@ export const createMcpServer = (bundle: ContentBundle = content): McpServer => {
         id: z.string().describe('Doc id, e.g. "theming" or "styled-system/api".'),
       },
     },
-    async ({ id }) => {
+    ({ id }) => {
       const doc = findDoc(id, bundle)
       if (!doc) {
         const ids = bundle.docs.map((item) => item.id).join(', ')
@@ -190,7 +190,7 @@ export const createMcpServer = (bundle: ContentBundle = content): McpServer => {
         query: z.string().describe('Free-text query, e.g. "dark mode" or "focus trap".'),
       },
     },
-    async ({ query }) => {
+    ({ query }) => {
       const hits = search(bundle, query)
       if (!hits.length) return text(`No matches for "${query}".`)
       return text(

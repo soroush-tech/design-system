@@ -52,10 +52,8 @@ export interface ConfigStyle {
 export type SystemConfig = Record<string, boolean | StyleFn | ConfigStyle>
 export type ParserConfig = Record<string, StyleFn>
 
-// Upstream @types/styled-system names, aliased to our engine types for drop-in imports.
-export type styleFn = Parser
-export type Config = SystemConfig
-export type ConfigFunction = StyleFn
+// Upstream @types/styled-system names, re-exported under our engine types for drop-in imports.
+export type { Parser as styleFn, SystemConfig as Config, StyleFn as ConfigFunction }
 
 interface ParserCache {
   breakpoints?: Breakpoints

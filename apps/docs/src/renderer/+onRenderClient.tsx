@@ -1,12 +1,10 @@
 import { createRoot, hydrateRoot, type Root } from 'react-dom/client'
-import type { OnRenderClientAsync } from 'vike/types'
+import type { OnRenderClientSync } from 'vike/types'
 import { Bootstrap } from 'src/common/Bootstrap'
 import { applyHead } from './buildHead'
 
 let root: Root
-export const onRenderClient: OnRenderClientAsync = async (
-  pageContext
-): ReturnType<OnRenderClientAsync> => {
+export const onRenderClient: OnRenderClientSync = (pageContext): ReturnType<OnRenderClientSync> => {
   const page = <Bootstrap pageContext={pageContext} />
   const container = document.getElementById('root')!
   if (pageContext.isHydration) {

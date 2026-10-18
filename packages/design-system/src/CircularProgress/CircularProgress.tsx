@@ -193,7 +193,8 @@ export function CircularProgress({
       {...ariaProps}
       {...rest}
     >
-      <svg viewBox={`0 0 ${VIEWBOX} ${VIEWBOX}`} width="100%" height="100%">
+      {/* Decorative: the progressbar role and its label are on the root. */}
+      <svg viewBox={`0 0 ${VIEWBOX} ${VIEWBOX}`} width="100%" height="100%" aria-hidden="true">
         {showTrack && (
           <CircularProgressTrack cx={VIEWBOX / 2} cy={VIEWBOX / 2} r={r} strokeWidth={thickness} />
         )}

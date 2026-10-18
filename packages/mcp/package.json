@@ -1,6 +1,6 @@
 {
   "name": "@soroush.tech/mcp",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "MCP server for the @soroush.tech design system - serves the component inventory, every component README, and the theme token contract to AI coding tools.",
   "keywords": [
     "mcp",
