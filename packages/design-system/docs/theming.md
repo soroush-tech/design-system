@@ -298,7 +298,20 @@ names.
 | Icon sizes      | `theme.icon`           | `ThemeIconSizes`          |
 | Switch tokens   | `theme.switch`         | `ThemeSwitch`             |
 | Shadow tokens   | `theme.shadow`         | `ThemeShadow`             |
-| Defaults        | `theme.defaults`       | `ThemeDefaults`           |
-| Components      | `theme.components`     | `ThemeComponents`         |
+
+## The spacing scale
+
+`theme.space` steps on an 8px unit, and every step is a whole pixel. The same steps serve padding,
+margin, `gap` / `rowGap` / `columnGap`, the `layout` margin and the grid's gutter:
+
+| Step | `0` | `0.125` | `0.25` | `0.5` | `0.75` | `1` | `1.25` | `1.5` | `1.75` | `2` | `3` | `4` | `5` | `6` | `7` | `8` | `9` | `10` |
+| ---- | --- | ------- | ------ | ----- | ------ | --- | ------ | ----- | ------ | --- | --- | --- | --- | --- | --- | --- | --- | ---- |
+| px   | 0   | 1       | 2      | 4     | 6      | 8   | 10     | 12    | 14     | 16  | 24  | 32  | 40  | 48  | 56  | 64  | 72  | 80   |
+
+Below 4px, lines are border widths (`theme.borderWidths`). Use `0.125` and `0.25` only for a gap
+that should be a hairline - a 1px or 2px gap the background shows through, as in a grid of tiles
+on a coloured `Grid`: `<Grid layout gap={0.125} bg="grid">`.
+| Defaults | `theme.defaults` | `ThemeDefaults` |
+| Components | `theme.components` | `ThemeComponents` |
 
 The contract is verified against the real published d.ts by `type-tests/augmentation.ts` (`pnpm test:types`), so it can't silently break in a release.

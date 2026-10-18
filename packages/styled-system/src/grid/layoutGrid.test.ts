@@ -143,6 +143,18 @@ describe('gap as the gutter', () => {
     })
   })
 
+  it('resolves fractional steps of an object scale, as the space parser does', () => {
+    const fractional = {
+      space: { 0: 0, 0.125: '1px', 0.5: '4px', 1: '8px' },
+      breakpoints: { xs: '0px' },
+      layout: { xs: { content: { columns: 4, margin: 0.5 } } },
+    }
+    expect(layoutGridStyles(fractional, true, 0.125)).toMatchObject({
+      columnGap: '1px',
+      paddingInline: '4px',
+    })
+  })
+
   it('reads columnGap over gap on a grid, and falls back to the theme without either', () => {
     expect(layoutGrid({ layout: true, theme, gap: 1, columnGap: 4 })).toMatchObject({
       columnGap: '32px',

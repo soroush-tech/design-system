@@ -160,8 +160,13 @@ Reference tokens through the theme; a literal value in a component is a bug.
 - `theme.space.8` - 64px
 - `theme.space.9` - 72px
 - `theme.space.10` - 80px
+- `theme.space.0.125` - 1px
+- `theme.space.0.25` - 2px
 - `theme.space.0.5` - 4px
+- `theme.space.0.75` - 6px
+- `theme.space.1.25` - 10px
 - `theme.space.1.5` - 12px
+- `theme.space.1.75` - 14px
 - `theme.space.auto` - auto
 
 ## breakpoints

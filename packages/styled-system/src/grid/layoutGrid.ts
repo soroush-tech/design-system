@@ -40,8 +40,11 @@ export type LayoutGridGap =
 // What one parser writes: the page frame (margin, max width), or the column grid on top of it.
 type LayoutPart = 'frame' | 'grid'
 
+// The step is a key of the scale itself, not a dotted path: `space.0.5` would split at the decimal
+// point and miss every fractional step.
 const spaceValue = (theme: unknown, value: string | number) => {
-  const resolved = get(theme, `space.${value}`, value) as string | number
+  const scale = get(theme, 'space', {}) as Record<string | number, string | number | undefined>
+  const resolved = scale[value] ?? value
   return typeof resolved === 'number' ? `${resolved}px` : resolved
 }
 
