@@ -207,6 +207,8 @@ Generated code, agents and people write each layout intent one way:
 | ------------------------------------------------ | ----------------------------------------------------------- | --------------------------------------------------------- |
 | Content on the page frame, no columns            | `<View layout>`, or `<Flex layout>` for a flex stack or row | `maxWidth` + `mx="auto"` + `px`, a custom frame component |
 | A section on the theme's columns                 | `<Grid layout>`                                             | hand-written tracks on a page section, `Flex` with widths |
+| The app's layout                                 | `theme.layout`, built with `createTheme`                    | layout values written on every page                       |
+| A page's (or a region's) own layout              | `<LayoutProvider layout={...}>` around the page             | the same `layout` value on each section, a nested theme   |
 | A section's own columns, margin or max width     | `layout={{ md: { columns: 6 } }}`, `layout={{ maxWidth }}`  | helpers that repeat a value per class                     |
 | A section's own gutter                           | `gap={2}` / `gap={{ xs: 2, md: 4 }}` on the `Grid`          | a `gutter` field, `gap` and `columnGap` both              |
 | A child taking N columns                         | `span={6}` / `span={{ xs: 4, md: 6 }}`                      | `gridColumn="span 6"`                                     |

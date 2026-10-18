@@ -5,6 +5,7 @@
 // scale unions that component props derive from.
 import type {
   ComponentConfig,
+  LayoutProviderProps,
   Theme,
   PaletteEntry,
   SizeEntry,
@@ -120,6 +121,16 @@ export const removedGridLayout: GridProps['layout'] = { margin: 4, xl: { columns
 export const layoutGutter: GridProps['layout'] = { gutter: 4 }
 // ...and `gap` takes the augmented breakpoints like any responsive prop.
 export const gridGap: GridProps = { layout: true, gap: { xs: 2, ultra: 6 } }
+
+// A page layout takes the theme's own breakpoint names - augmented ones included - and only
+// the layout: there is no theme to replace.
+export const pageLayout: LayoutProviderProps['layout'] = {
+  ultra: { content: { maxWidth: '2000px' } },
+}
+// @ts-expect-error -- `xl` was removed, so a page layout has no entry for it
+export const removedPageLayout: LayoutProviderProps['layout'] = { xl: { content: { columns: 16 } } }
+// @ts-expect-error -- LayoutProvider changes the layout only; it takes no theme
+export const pageTheme: LayoutProviderProps = { layout: {}, theme: baseTheme, children: null }
 
 // On a View, `layout` is the frame alone: margin and max width, no columns.
 export const frameLayout: ViewProps['layout'] = { maxWidth: '1280px', ultra: { margin: 4 } }

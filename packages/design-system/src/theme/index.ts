@@ -1,6 +1,7 @@
 export * from './themes'
 export * from './breakpoints'
 export * from './ThemeProvider'
+export * from './LayoutProvider'
 export * from './utils/themeDefault'
 export * from './hooks/useTheme'
 export * from './hooks/useDefaultProps'
