@@ -174,13 +174,15 @@ jobs:
               cd "packages/$pkg" || exit 1
               name=$(node -p "require('./package.json').name") || exit 1
               version=$(node -p "require('./package.json').version") || exit 1
-              if npm view "$name@$version" version >/dev/null 2>&1; then
+              # --prefer-online throughout: npm caches a package's metadata for minutes, and a
+              # copy cached before this publish would hide the version it just published.
+              if npm view --prefer-online "$name@$version" version >/dev/null 2>&1; then
                 echo "⏭️ \`$name@$version\` already on npm - skipped (bump the version to release)." >> "$GITHUB_STEP_SUMMARY"
                 exit 0
               fi
               pnpm publish --no-git-checks --tag "$tag" || exit 1
               # A prerelease on `latest` would hand it to every user: stop loudly.
-              latest=$(npm view "$name" dist-tags.latest 2>/dev/null)
+              latest=$(npm view --prefer-online "$name" dist-tags.latest 2>/dev/null)
               case "$latest" in *-*) echo "::error::$name latest is now $latest - move it back with npm dist-tag"; exit 1 ;; esac
               echo "### 📦 Published \`$name@$version\` (\`$tag\`)" >> "$GITHUB_STEP_SUMMARY"
               echo "https://www.npmjs.com/package/$name/v/$version" >> "$GITHUB_STEP_SUMMARY"
@@ -218,7 +220,14 @@ jobs:
             name=$(PKG="$pkg" node -p "require('./packages/'+process.env.PKG+'/package.json').name")
             version=$(PKG="$pkg" node -p "require('./packages/'+process.env.PKG+'/package.json').version")
             tag="$name@$version"
-            if ! npm view "$name@$version" version >/dev/null 2>&1; then
+            # Ask the registry, not npm's cache - the Publish step's lookups cached this package's
+            # metadata from before the publish - and give a fresh version a minute to appear.
+            found=""
+            for attempt in 1 2 3 4 5 6; do
+              npm view --prefer-online "$name@$version" version >/dev/null 2>&1 && { found=1; break; }
+              sleep 10
+            done
+            if [ -z "$found" ]; then
               echo "⏭️ \`$tag\` is not on npm - no GitHub Release created." >> "$GITHUB_STEP_SUMMARY"
               continue
             fi
