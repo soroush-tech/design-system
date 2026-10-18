@@ -2,7 +2,8 @@ import { Button } from '@soroush.tech/design-system/Button'
 import { ButtonGroup } from '@soroush.tech/design-system/ButtonGroup'
 import { Flex } from '@soroush.tech/design-system/Flex'
 import { Icon } from '@soroush.tech/design-system/Icon'
-import { NativeSelect } from '@soroush.tech/design-system/NativeSelect'
+import { MenuItem } from '@soroush.tech/design-system/MenuItem'
+import { Select } from '@soroush.tech/design-system/Select'
 import { Typography } from '@soroush.tech/design-system/Typography'
 import { styled } from '@soroush.tech/design-system'
 import { useMarkdownContext } from '../MarkdownContext'
@@ -31,6 +32,14 @@ const DIAGRAM_OPTIONS = MERMAID_DIAGRAMS.map((diagram) => ({
 const DIAGRAM_SNIPPET_BY_VALUE: Record<string, string> = Object.fromEntries(
   MERMAID_DIAGRAMS.map((diagram) => [diagram.value, diagram.snippet])
 )
+
+// An action menu: each pick dispatches, and the empty value resets the field to its placeholder.
+const menuItems = (options: { label: string; value: string }[]) =>
+  options.map(({ label, value }) => (
+    <MenuItem key={value} value={value}>
+      {label}
+    </MenuItem>
+  ))
 
 const HEADING_BY_ID: Record<string, LinePrefixAction> = Object.fromEntries(
   HEADING_ACTIONS.map((action) => [action.id, action])
@@ -98,15 +107,17 @@ export function Toolbar() {
       role="toolbar"
       aria-label="Markdown formatting"
     >
-      <NativeSelect
+      <Select
+        native
         size="sm"
         variant="outlined"
         placeholder="Heading"
         value=""
-        options={HEADING_OPTIONS}
         onChange={(value) => dispatch(HEADING_BY_ID[String(value)])}
-        selectProps={{ 'aria-label': 'Heading level' }}
-      />
+        aria-label="Heading level"
+      >
+        {menuItems(HEADING_OPTIONS)}
+      </Select>
       {groupToolbarActions(TOOLBAR_ACTIONS).map((segment) =>
         segment.length > 1 ? (
           <ButtonGroup key={segment[0].id} borderRadius="sq" size="sm" variant="outlined">
@@ -129,26 +140,30 @@ export function Toolbar() {
       />
       <Flex flexDirection="row" gap={0} alignItems="stretch">
         {renderButton(INLINE_CODE_ACTION)}
-        <NativeSelect
+        <Select
+          native
           size="sm"
           variant="outlined"
           placeholder="Code"
           value=""
-          options={CODE_LANGUAGES}
           onChange={(value) => dispatch(codeBlockAction(String(value)))}
-          selectProps={{ 'aria-label': 'Code block language' }}
-        />
-        <NativeSelect
+          aria-label="Code block language"
+        >
+          {menuItems(CODE_LANGUAGES)}
+        </Select>
+        <Select
+          native
           size="sm"
           variant="outlined"
           placeholder="Diagram"
           value=""
-          options={DIAGRAM_OPTIONS}
           onChange={(value) =>
             dispatch(mermaidDiagramAction(DIAGRAM_SNIPPET_BY_VALUE[String(value)]))
           }
-          selectProps={{ 'aria-label': 'Mermaid diagram type' }}
-        />
+          aria-label="Mermaid diagram type"
+        >
+          {menuItems(DIAGRAM_OPTIONS)}
+        </Select>
       </Flex>
     </ToolbarRoot>
   )
