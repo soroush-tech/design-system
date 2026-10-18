@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Button } from '../Button'
 import { Typography } from '../Typography'
 import { View } from '../View'
+import { spaceTokens } from '../utils/test/storiesOptions'
 import { Popover, type PopoverProps, type PopoverOrigin } from './Popover'
 
 /** Story-only args: the object origins are split into select boxes for easy tweaking. */
@@ -190,7 +191,8 @@ const meta: Meta<PopoverStoryArgs> = {
     },
     marginThreshold: {
       control: { type: 'select' },
-      options: [0, 0.5, 1, 1.5, 2, 3, 4],
+      // Every space step but `auto`, which is not a distance.
+      options: spaceTokens.filter((token) => token !== 'auto'),
       description:
         'Minimum gap from the viewport edge as a spacing token (`theme.space`, e.g. `2` → 16px).',
       table: { category: 'Layout', defaultValue: { summary: '2' } },
