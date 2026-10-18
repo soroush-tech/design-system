@@ -1,8 +1,8 @@
-import{n as e}from"../chunks/chunk-aKtaBQYM.js";import{d as t,n,p as r,t as i}from"../chunks/chunk-CGewaduf.js";import{Z as a,i as o}from"../chunks/chunk-CHO0-FiM.js";import{t as s}from"../chunks/chunk-ClacxIjH.js";import{t as c}from"../chunks/chunk-fpGOofAq.js";var l=`# @soroush.tech/styled-system
+import{n as e}from"../chunks/chunk-aKtaBQYM.js";import{d as t,n,p as r,t as i}from"../chunks/chunk-CGewaduf.js";import{Z as a,i as o}from"../chunks/chunk-CHO0-FiM.js";import{t as s}from"../chunks/chunk-ClacxIjH.js";import{t as c}from"../chunks/chunk-DsfcmF0v.js";var l=`# @soroush.tech/styled-system
 
 [![npm version](https://img.shields.io/npm/v/@soroush.tech/styled-system.svg?cacheSeconds=86400)](https://www.npmjs.com/package/@soroush.tech/styled-system)
 [![npm downloads](https://img.shields.io/npm/dm/@soroush.tech/styled-system.svg?cacheSeconds=86400)](https://www.npmjs.com/package/@soroush.tech/styled-system)
-[![coverage](https://codecov.io/gh/soroush-tech/core/branch/main/graph/badge.svg?flag=styled-system)](https://app.codecov.io/gh/soroush-tech/core?flags%5B0%5D=styled-system)
+[![coverage](https://codecov.io/gh/soroush-tech/design-system/branch/main/graph/badge.svg?flag=styled-system)](https://app.codecov.io/gh/soroush-tech/design-system?flags%5B0%5D=styled-system)
 [![unpacked size](https://img.shields.io/npm/unpacked-size/@soroush.tech/styled-system.svg?cacheSeconds=86400)](https://www.npmjs.com/package/@soroush.tech/styled-system)
 [![types included](https://img.shields.io/npm/types/@soroush.tech/styled-system.svg?cacheSeconds=86400)](https://www.npmjs.com/package/@soroush.tech/styled-system)
 [![license](https://img.shields.io/npm/l/@soroush.tech/styled-system.svg?cacheSeconds=86400)](./LICENSE)
@@ -145,24 +145,24 @@ Types resolve under both modern module resolution (\`node16\`/\`nodenext\`/\`bun
 
 Full docs live in [\`docs/\`](./docs/README.md):
 
-- [Getting Started](https://github.com/soroush-tech/core/tree/main/packages/styled-system/docs/getting-started.md)
-- [Responsive Styles](https://github.com/soroush-tech/core/tree/main/packages/styled-system/docs/responsive-styles.md)
-- [How it Works](https://github.com/soroush-tech/core/tree/main/packages/styled-system/docs/how-it-works.md)
-- [Custom Props](https://github.com/soroush-tech/core/tree/main/packages/styled-system/docs/custom-props.md)
-- [Variants](https://github.com/soroush-tech/core/tree/main/packages/styled-system/docs/variants.md)
-- [API](https://github.com/soroush-tech/core/tree/main/packages/styled-system/docs/api.md)
-- [Reference Table](https://github.com/soroush-tech/core/tree/main/packages/styled-system/docs/table.md)
-- [TypeScript](https://github.com/soroush-tech/core/tree/main/packages/styled-system/docs/typescript.md)
-- [Guides](https://github.com/soroush-tech/core/tree/main/packages/styled-system/docs/guides/index.md)
+- [Getting Started](https://github.com/soroush-tech/design-system/tree/main/packages/styled-system/docs/getting-started.md)
+- [Responsive Styles](https://github.com/soroush-tech/design-system/tree/main/packages/styled-system/docs/responsive-styles.md)
+- [How it Works](https://github.com/soroush-tech/design-system/tree/main/packages/styled-system/docs/how-it-works.md)
+- [Custom Props](https://github.com/soroush-tech/design-system/tree/main/packages/styled-system/docs/custom-props.md)
+- [Variants](https://github.com/soroush-tech/design-system/tree/main/packages/styled-system/docs/variants.md)
+- [API](https://github.com/soroush-tech/design-system/tree/main/packages/styled-system/docs/api.md)
+- [Reference Table](https://github.com/soroush-tech/design-system/tree/main/packages/styled-system/docs/table.md)
+- [TypeScript](https://github.com/soroush-tech/design-system/tree/main/packages/styled-system/docs/typescript.md)
+- [Guides](https://github.com/soroush-tech/design-system/tree/main/packages/styled-system/docs/guides/index.md)
 
 Runnable demos live in the [examples repo](https://github.com/soroush-tech/examples/tree/main/styled-system).
 
 ## Release notes
 
 Per-version notes for every published release live in
-[\`release-notes/\`](https://github.com/soroush-tech/core/tree/main/packages/styled-system/release-notes).
+[\`release-notes/\`](https://github.com/soroush-tech/design-system/tree/main/packages/styled-system/release-notes).
 
 ## License
 
-MIT - a rewrite of styled-system (© 2017-2021 Brent Jackson), see [\`LICENSE\`](https://github.com/soroush-tech/core/tree/main/packages/styled-system/LICENSE).
+MIT - a rewrite of styled-system (© 2017-2021 Brent Jackson), see [\`LICENSE\`](https://github.com/soroush-tech/design-system/tree/main/packages/styled-system/LICENSE).
 `,u=e({default:()=>f}),d=a();function f(){return(0,d.jsxs)(n,{sidebar:(0,d.jsx)(s,{}),children:[(0,d.jsx)(o,{variant:`h1`,gutterBottom:!0,children:`Styled System`}),(0,d.jsx)(r,{source:l,stripChrome:!0}),(0,d.jsx)(c,{pkg:`styled-system`})]})}var p={hasServerOnlyHook:{type:`computed`,definedAtData:null,valueSerialized:{type:`js-serialized`,value:!0}},isClientRuntimeLoaded:{type:`computed`,definedAtData:null,valueSerialized:{type:`js-serialized`,value:!0}},onBeforeRenderEnv:{type:`computed`,definedAtData:null,valueSerialized:{type:`js-serialized`,value:null}},dataEnv:{type:`computed`,definedAtData:null,valueSerialized:{type:`js-serialized`,value:{server:!0}}},guardEnv:{type:`computed`,definedAtData:null,valueSerialized:{type:`js-serialized`,value:null}},onRenderClient:{type:`standard`,definedAtData:{filePathToShowToUser:`/src/renderer/+onRenderClient.tsx`,fileExportPathToShowToUser:[]},valueSerialized:{type:`plus-file`,exportValues:t}},Page:{type:`standard`,definedAtData:{filePathToShowToUser:`/src/pages/styled-system/index/+Page.tsx`,fileExportPathToShowToUser:[]},valueSerialized:{type:`plus-file`,exportValues:u}},hydrationCanBeAborted:{type:`standard`,definedAtData:{filePathToShowToUser:`/src/renderer/+config.ts`,fileExportPathToShowToUser:[`default`,`hydrationCanBeAborted`]},valueSerialized:{type:`js-serialized`,value:!0}},title:{type:`standard`,definedAtData:{filePathToShowToUser:`/src/pages/styled-system/index/+config.ts`,fileExportPathToShowToUser:[`default`,`title`]},valueSerialized:{type:`js-serialized`,value:`Styled System`}},description:{type:`standard`,definedAtData:{filePathToShowToUser:`/src/pages/styled-system/index/+config.ts`,fileExportPathToShowToUser:[`default`,`description`]},valueSerialized:{type:`js-serialized`,value:`Overview of @soroush.tech/styled-system: responsive style props, theme scales, and the system() builder.`}},Loading:{type:`standard`,definedAtData:{filePathToShowToUser:`vike-react/__internal/integration/Loading`,fileExportPathToShowToUser:[]},valueSerialized:{type:`pointer-import`,value:i}}};export{p as configValuesSerialized};
