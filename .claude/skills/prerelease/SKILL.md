@@ -35,8 +35,10 @@ nobody edits it.
   "version": "2.0.0"
   ```
 
-- One notes file per target: `release-notes/X.Y.Z.md`. Alphas need none; an rc's GitHub
-  pre-release shows the target's notes, so write them before the first rc.
+- One notes file per target: `release-notes/X.Y.Z.md` - never one per alpha or rc. It must exist
+  from the first alpha (the workflow checks the target's file on every channel), and it grows as
+  the alphas go: update it with each change rather than adding a file. An rc's GitHub
+  pre-release shows it, so it is complete before the first rc.
 - A prerelease never lands on `latest` - the workflow publishes with `--tag <channel>` and fails
   the run if `latest` ever points at a prerelease. That is also why the
   `check:release-notes` gate keeps passing: it compares `package.json` with `latest` only.
