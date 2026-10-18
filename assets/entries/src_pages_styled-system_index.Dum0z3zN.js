@@ -1,4 +1,4 @@
-import{n as e}from"../chunks/chunk-aKtaBQYM.js";import{d as t,n,p as r,t as i}from"../chunks/chunk-D41JADcx.js";import{Z as a,i as o}from"../chunks/chunk-B0AZ2N5B.js";import{t as s}from"../chunks/chunk-CoKs4fW2.js";import{t as c}from"../chunks/chunk-CyDF48gR.js";var l=`# @soroush.tech/styled-system
+import{n as e}from"../chunks/chunk-aKtaBQYM.js";import{d as t,n,p as r,t as i}from"../chunks/chunk-CGewaduf.js";import{Z as a,i as o}from"../chunks/chunk-CHO0-FiM.js";import{t as s}from"../chunks/chunk-ClacxIjH.js";import{t as c}from"../chunks/chunk-fpGOofAq.js";var l=`# @soroush.tech/styled-system
 
 [![npm version](https://img.shields.io/npm/v/@soroush.tech/styled-system.svg?cacheSeconds=86400)](https://www.npmjs.com/package/@soroush.tech/styled-system)
 [![npm downloads](https://img.shields.io/npm/dm/@soroush.tech/styled-system.svg?cacheSeconds=86400)](https://www.npmjs.com/package/@soroush.tech/styled-system)

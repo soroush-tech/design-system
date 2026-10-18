@@ -1,4 +1,4 @@
-import{n as e}from"../chunks/chunk-aKtaBQYM.js";import{d as t,t as n}from"../chunks/chunk-D41JADcx.js";import{Z as r}from"../chunks/chunk-B0AZ2N5B.js";import{t as i}from"../chunks/chunk-C4Zg0kby.js";var a=`# Installation
+import{n as e}from"../chunks/chunk-aKtaBQYM.js";import{d as t,t as n}from"../chunks/chunk-CGewaduf.js";import{Z as r}from"../chunks/chunk-CHO0-FiM.js";import{t as i}from"../chunks/chunk-CC-y8Qv9.js";var a=`# Installation
 
 Install the design system and its peer dependencies:
 
