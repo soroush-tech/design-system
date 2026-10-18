@@ -1,6 +1,6 @@
 [![npm version](https://img.shields.io/npm/v/@soroush.tech/markdown.svg?cacheSeconds=86400)](https://www.npmjs.com/package/@soroush.tech/markdown)
 [![npm downloads](https://img.shields.io/npm/dm/@soroush.tech/markdown.svg?cacheSeconds=86400)](https://www.npmjs.com/package/@soroush.tech/markdown)
-[![coverage](https://codecov.io/gh/soroush-tech/core/branch/main/graph/badge.svg?flag=markdown)](https://app.codecov.io/gh/soroush-tech/core?flags%5B0%5D=markdown)
+[![coverage](https://codecov.io/gh/soroush-tech/design-system/branch/main/graph/badge.svg?flag=markdown)](https://app.codecov.io/gh/soroush-tech/design-system?flags%5B0%5D=markdown)
 [![unpacked size](https://img.shields.io/npm/unpacked-size/@soroush.tech/markdown.svg?cacheSeconds=86400)](https://www.npmjs.com/package/@soroush.tech/markdown)
 [![types included](https://img.shields.io/npm/types/@soroush.tech/markdown.svg?cacheSeconds=86400)](https://www.npmjs.com/package/@soroush.tech/markdown)
 [![license](https://img.shields.io/npm/l/@soroush.tech/markdown.svg?cacheSeconds=86400)](./LICENSE)
@@ -9,7 +9,7 @@
 
 Compose a toolbar, a source editor, and a live preview however your UI needs - and every element is styled by your theme. The renderer works standalone too, turning any markdown string into themed components, with support for tables, task lists, strikethrough, autolinks, syntax-highlighted code, and mermaid diagrams.
 
-![The Preview renderer output - a heading, a formatted paragraph, a task list, a blockquote, a code block, a table, and a mermaid sequence diagram, all as themed components](https://raw.githubusercontent.com/soroush-tech/core/main/packages/markdown/src/assets/demo.png)
+![The Preview renderer output - a heading, a formatted paragraph, a task list, a blockquote, a code block, a table, and a mermaid sequence diagram, all as themed components](https://raw.githubusercontent.com/soroush-tech/design-system/main/packages/markdown/src/assets/demo.png)
 
 ## Why headless?
 
@@ -128,7 +128,7 @@ There is intentionally **no Edit·Split·Preview switch** - which panes to show,
 | `Editor`  | The source `<textarea>` - Tab-to-indent, selection, caret restore.                |
 | `Preview` | Renders a markdown string (its child) to themed components.                       |
 
-`Toolbar` and `Editor` must be rendered inside `Control`; `Preview` works anywhere. Import each directly from the package - there is no `Markdown.*` namespace. Full prop references live in the [source on GitHub](https://github.com/soroush-tech/core/tree/main/packages/markdown/src).
+`Toolbar` and `Editor` must be rendered inside `Control`; `Preview` works anywhere. Import each directly from the package - there is no `Markdown.*` namespace. Full prop references live in the [source on GitHub](https://github.com/soroush-tech/design-system/tree/main/packages/markdown/src).
 
 ## Customizing the look
 

@@ -79,6 +79,7 @@ Keep the **public API in `index.ts`** (the single entry); extract internal helpe
 Internal-only packages stay `"private": true` and consume source directly. To make a package publishable:
 
 - Drop `private`; add `version`, `description`, `keywords`, `license`, `author`, `repository.directory`, `homepage`, `files: ["dist"]`.
+- `repository.url` is this repo - `git+https://github.com/soroush-tech/design-system.git` - and `bugs.url` its issues. npm verifies a publish's provenance against `repository.url` and refuses one that names another repo (`E422 ... expected to match "https://github.com/soroush-tech/design-system" from provenance`), which is how markdown, still pointing at soroush-tech/core, failed to publish.
 - Build with **tsdown** (`format: ['esm', 'cjs']`, `dts: true`) → `dist/`. tsdown is preferred over tsup here: it emits declarations via Oxc/Rolldown and does **not** inject the deprecated `baseUrl` that breaks `.d.ts` under TypeScript 6.
 - Keep `exports → ./src/index.ts` for the monorepo, and use **`publishConfig`** to swap `exports`/`main`/`module`/`types` to `dist/` **only on publish** - so the app keeps consuming source while npm gets compiled output:
 

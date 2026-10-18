@@ -2,7 +2,7 @@
 
 [![npm version](https://img.shields.io/npm/v/@soroush.tech/design-system.svg?cacheSeconds=86400)](https://www.npmjs.com/package/@soroush.tech/design-system)
 [![npm downloads](https://img.shields.io/npm/dm/@soroush.tech/design-system.svg?cacheSeconds=86400)](https://www.npmjs.com/package/@soroush.tech/design-system)
-[![coverage](https://codecov.io/gh/soroush-tech/core/branch/main/graph/badge.svg?flag=design-system)](https://app.codecov.io/gh/soroush-tech/core?flags%5B0%5D=design-system)
+[![coverage](https://codecov.io/gh/soroush-tech/design-system/branch/main/graph/badge.svg?flag=design-system)](https://app.codecov.io/gh/soroush-tech/design-system?flags%5B0%5D=design-system)
 [![unpacked size](https://img.shields.io/npm/unpacked-size/@soroush.tech/design-system.svg?cacheSeconds=86400)](https://www.npmjs.com/package/@soroush.tech/design-system)
 [![types included](https://img.shields.io/npm/types/@soroush.tech/design-system.svg?cacheSeconds=86400)](https://www.npmjs.com/package/@soroush.tech/design-system)
 [![license](https://img.shields.io/npm/l/@soroush.tech/design-system.svg?cacheSeconds=86400)](./LICENSE)
@@ -324,4 +324,4 @@ The library takes inspiration from [Material UI](https://mui.com/) - its compone
 ## Release notes
 
 Per-version notes for every published release live in
-[`release-notes/`](https://github.com/soroush-tech/core/tree/main/packages/design-system/release-notes).
+[`release-notes/`](https://github.com/soroush-tech/design-system/tree/main/packages/design-system/release-notes).

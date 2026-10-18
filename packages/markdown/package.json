@@ -14,14 +14,14 @@
   ],
   "author": "Masoud Soroush <masoud@soroush.tech>",
   "license": "MIT",
-  "homepage": "https://soroush.tech",
+  "homepage": "https://soroush.tech/markdown",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/soroush-tech/core.git",
+    "url": "git+https://github.com/soroush-tech/design-system.git",
     "directory": "packages/markdown"
   },
   "bugs": {
-    "url": "https://github.com/soroush-tech/core/issues"
+    "url": "https://github.com/soroush-tech/design-system/issues"
   },
   "type": "module",
   "sideEffects": false,
