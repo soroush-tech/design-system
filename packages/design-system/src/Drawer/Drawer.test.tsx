@@ -155,5 +155,13 @@ describe('Drawer', () => {
         restorePopover = installPopover()
       }
     })
+
+    it('hides the panel where the browser cannot, instead of covering the page', () => {
+      renderDrawer()
+      // Emotion minifies the at-rule; the browser applies it only without `:popover-open`.
+      expect(styles()).toMatch(
+        /@supports not selector\(:popover-open\)\{\.[\w-]+\{display:none;\}\}/
+      )
+    })
   })
 })

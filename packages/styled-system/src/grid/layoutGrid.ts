@@ -79,14 +79,20 @@ const gapAsGutter = (
   if (gap === undefined || gap === null) return { field: {}, entries: {} }
   if (typeof gap !== 'object') return { field: { gutter: gap }, entries: {} }
   const names = Object.keys(breakpoints)
-  const pairs = Array.isArray(gap)
-    ? gap.map((value, index) => [names[index], value] as const)
-    : Object.entries(gap)
+  let base: string | number | null | undefined
+  let pairs: Array<readonly [string | undefined, string | number | null]> = Object.entries(gap)
+  if (Array.isArray(gap)) {
+    // As styled-system maps arrays: position 0 is the first breakpoint when it starts at 0, and
+    // the base below it otherwise - then that value is the field and the rest shift by one.
+    const offset = names.length > 0 && responsiveQueries(breakpoints).keyed.get(names[0]) ? 1 : 0
+    if (offset === 1) base = gap[0]
+    pairs = gap.map((value, index) => [names[index - offset], value] as const)
+  }
   const entries: Record<string, LayoutGridEntry> = {}
   for (const [name, value] of pairs) {
     if (name !== undefined && value !== null) entries[name] = { gutter: value }
   }
-  return { field: {}, entries }
+  return { field: base === null || base === undefined ? {} : { gutter: base }, entries }
 }
 
 const layoutStyles = (

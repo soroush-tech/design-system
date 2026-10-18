@@ -90,6 +90,7 @@ describe('installPopover', () => {
     element.removeAttribute('popover')
     const states = toggles(element)
     document.body.click()
+    expect(() => document.dispatchEvent(new MouseEvent('click', { bubbles: true }))).not.toThrow()
     button().click()
     expect(states).toEqual([])
   })

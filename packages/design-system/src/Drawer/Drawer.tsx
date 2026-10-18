@@ -89,6 +89,11 @@ const DrawerPanel = styled('div', {
   '@media (prefers-reduced-motion: reduce)': {
     '&:popover-open': { animation: 'none' },
   },
+  // Without the Popover API the browser never hides a closed popover, and this fixed panel would
+  // cover the page - so it stays hidden there.
+  '@supports not selector(:popover-open)': {
+    display: 'none',
+  },
 }))
 
 /**

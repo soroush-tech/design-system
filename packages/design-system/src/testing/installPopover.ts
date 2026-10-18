@@ -53,7 +53,9 @@ export function installPopover(): () => void {
     }
   }
   const onClick = (event: MouseEvent) => {
-    const button = (event.target as Element).closest('[popovertarget]')
+    // A click dispatched on the document itself has no element to search from.
+    if (!(event.target instanceof Element)) return
+    const button = event.target.closest('[popovertarget]')
     const target = button && document.getElementById(button.getAttribute('popovertarget')!)
     if (!target?.hasAttribute('popover')) return
     const action = button!.getAttribute('popovertargetaction') ?? 'toggle'

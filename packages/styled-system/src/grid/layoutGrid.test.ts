@@ -124,6 +124,25 @@ describe('gap as the gutter', () => {
     expect(layoutGridStyles(single, true, [1, 2])).toMatchObject({ columnGap: '8px' })
   })
 
+  it('maps an array like styled-system when the first breakpoint does not start at 0', () => {
+    // Position 0 is then the base below `sm` - the plain `gap` covers it - and position 1 is sm.
+    const scale = {
+      space: theme.space,
+      breakpoints: { sm: '600px', md: '840px' },
+      layout: { sm: { content: { columns: 8, gutter: 2 } }, md: { content: { columns: 12 } } },
+    }
+    const shifted = layoutGridStyles(scale, true, [1, 2])
+    expect(shifted['@media (width >= 600px)']).toMatchObject({ columnGap: '16px' })
+    expect(shifted['@media (width >= 840px)']).toMatchObject({ columnGap: '16px' })
+    // A null position keeps the base value, as the row half of `gap` does.
+    const held = layoutGridStyles(scale, true, [1, null, 3])
+    expect(held['@media (width >= 600px)']).toMatchObject({ columnGap: '8px' })
+    expect(held['@media (width >= 840px)']).toMatchObject({ columnGap: '24px' })
+    expect(layoutGridStyles(scale, true, [null, 2])['@media (width >= 600px)']).toMatchObject({
+      columnGap: '16px',
+    })
+  })
+
   it('reads columnGap over gap on a grid, and falls back to the theme without either', () => {
     expect(layoutGrid({ layout: true, theme, gap: 1, columnGap: 4 })).toMatchObject({
       columnGap: '32px',
