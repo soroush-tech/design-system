@@ -156,9 +156,14 @@ export interface ThemeLetterSpacings {
 export interface ThemeSpace {
   auto: string
   0: number | string
+  0.125: number | string
+  0.25: number | string
   0.5: number | string
+  0.75: number | string
   1: number | string
+  1.25: number | string
   1.5: number | string
+  1.75: number | string
   2: number | string
   3: number | string
   4: number | string
@@ -217,8 +222,12 @@ type RemovedBreakpoints = keyof {
   [K in keyof BreakpointOverrides as BreakpointOverrides[K] extends false ? K : never]: true
 }
 /** The theme's breakpoint names: the defaults, plus every override set to `true`, minus every one set to `false`. */
+// Every default and every override, written without a union so an un-augmented (empty)
+// overrides interface adds no `never` to one. The overridden defaults are omitted first: an
+// override such as `xl: false` against the default `xl: true` would reduce a plain
+// intersection to `never`.
 export type BreakpointKey = Exclude<
-  keyof DefaultBreakpoints | keyof BreakpointOverrides,
+  keyof (Omit<DefaultBreakpoints, keyof BreakpointOverrides> & BreakpointOverrides),
   RemovedBreakpoints
 >
 
@@ -641,9 +650,16 @@ export const sizes: ThemeSizes = {
 }
 export const space: ThemeSpace = {
   0: 0,
+  // Below 4px, lines are border widths (theme.borderWidths); use 0.125 and 0.25 only for a gap
+  // that should be a hairline - a 1px or 2px gap the background shows through.
+  0.125: spacing(0.125),
+  0.25: spacing(0.25),
   0.5: spacing(0.5),
+  0.75: spacing(0.75),
   1: spacing(1),
+  1.25: spacing(1.25),
   1.5: spacing(1.5),
+  1.75: spacing(1.75),
   2: spacing(2),
   3: spacing(3),
   4: spacing(4),

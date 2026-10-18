@@ -57,6 +57,30 @@ CSS `order` for placing a flex/grid item out of source order. Accepts a single v
 
 ---
 
+### `layout`
+
+Puts the element on the page frame from `theme.layout`: the inline margin and, in fixed mode, the centred max width, per breakpoint. No columns - the element keeps its own display, so text, articles and forms flow as usual (on a `Flex`, its flexbox stays as set). `Grid` takes the same prop and adds its columns on top.
+
+Values: `true` for the theme's frame; fields for every breakpoint (`{ maxWidth: '1280px' }`); entries from a breakpoint up (`{ md: { margin: 0 } }`); or both. A frame takes `margin`, `mode` and `maxWidth` - columns belong to `Grid`. The layout owns what it writes: the frame spans its parent (`width: 100%`, border-box, capped by `maxWidth` in fixed mode), and an explicit `width`, inline padding or `maxWidth` on the same element does not override it.
+
+```tsx
+<View as="article" layout py={6}>...</View>
+<View layout={{ maxWidth: '1280px' }}>...</View>
+```
+
+---
+
+### `span`
+
+How many columns of a grid parent the element takes (`grid-column: span N`), or `"full"` for the whole row in any grid - whatever its column count. Responsive like any prop.
+
+```tsx
+<View span={{ xs: 4, md: 6 }}>half from md</View>
+<View span="full">a full-width row</View>
+```
+
+---
+
 ## Styled-system props
 
 ### Space - `theme.space`

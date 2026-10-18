@@ -66,3 +66,33 @@ A [`Button`](../Button/README.md) that opens and closes a drawer. Takes every `B
 | -------- | ------------------------------ | ---------- | -------------------------------- |
 | `drawer` | `string`                       | -          | The `id` of the `Drawer`.        |
 | `action` | `'toggle' \| 'show' \| 'hide'` | `'toggle'` | What a click does to the drawer. |
+
+## Why `id` is required
+
+The toggle opens the drawer with plain HTML - `<button popovertarget="nav">` - which is what makes
+it work with JavaScript off, and `popovertarget` can only name an element by its `id`. The toggle
+usually lives far from the drawer (in an `AppBar`), so the pair is linked by name:
+`<Drawer id="nav">` and `<DrawerToggle drawer="nav">`.
+
+## Browsers without the Popover API
+
+Browsers before Safari 17 and Firefox 125 have no Popover API. There a drawer stays closed - a
+controlled `isOpen` does nothing rather than throwing - and the rest of the page keeps working.
+
+## Testing
+
+jsdom has no Popover API either. `installPopover` from `@soroush.tech/design-system/testing`
+stands in for it - show, hide, the `toggle` event, Escape and `DrawerToggle` clicks - and returns
+a function that removes it:
+
+```tsx
+import { installPopover } from '@soroush.tech/design-system/testing'
+
+let restore = () => {}
+beforeAll(() => {
+  restore = installPopover()
+})
+afterAll(() => restore())
+```
+
+The top layer, clicks outside and focus need a real browser.

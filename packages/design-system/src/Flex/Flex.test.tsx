@@ -105,27 +105,27 @@ describe('Flex', () => {
 
   describe('layout (theme.layout)', () => {
     // jsdom applies no media query, so the computed style is the base (xs) entry.
-    it("draws the theme's layout grid as a wrapping row", () => {
-      renderWithTheme(<Flex layout>row</Flex>)
-      const row = screen.getByText('row')
-      expect(row).toHaveStyle({
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        columnGap: '16px',
-        paddingInline: '16px',
-      })
-      expect(row.style.getPropertyValue('--layout-columns')).toBe('')
-      expect(getComputedStyle(row).getPropertyValue('--layout-columns').trim()).toBe('4')
-      expect(row).not.toHaveAttribute('layout')
+    it('puts the flex container on the page frame and keeps its own flexbox', () => {
+      renderWithTheme(<Flex layout>stack</Flex>)
+      const stack = screen.getByText('stack')
+      expect(stack).toHaveStyle({ display: 'flex', flexDirection: 'column', paddingInline: '16px' })
+      // The frame has no columns: no tracks, and no column gap of its own.
+      expect(stack).not.toHaveStyle({ columnGap: '16px' })
+      expect(stack).not.toHaveAttribute('layout')
     })
 
-    it('lets flexDirection and gap props win', () => {
+    it('takes flexbox and gap props as usual on the frame', () => {
       renderWithTheme(
-        <Flex layout flexDirection="column" columnGap={1}>
+        <Flex layout flexDirection="row" flexWrap="wrap" gap={1}>
           row
         </Flex>
       )
-      expect(screen.getByText('row')).toHaveStyle({ flexDirection: 'column', columnGap: '8px' })
+      expect(screen.getByText('row')).toHaveStyle({
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        gap: '8px',
+        paddingInline: '16px',
+      })
     })
   })
 })

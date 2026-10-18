@@ -21,7 +21,7 @@ export type ThemeOverride = DeepPartial<Theme>
 const isPlainObject = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value)
 
-const deepMerge = (base: Record<string, unknown>, overrides: Record<string, unknown>) => {
+export const deepMerge = (base: Record<string, unknown>, overrides: Record<string, unknown>) => {
   const merged: Record<string, unknown> = { ...base }
   for (const [key, value] of Object.entries(overrides)) {
     if (value === undefined) {

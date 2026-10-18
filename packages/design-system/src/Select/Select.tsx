@@ -357,6 +357,8 @@ export function Select({
         name={name}
         className={className}
         data-testid={dataTestid}
+        // The accessible name, as on the custom listbox's trigger.
+        selectProps={{ 'aria-label': ariaLabel, 'aria-labelledby': labelId }}
         {...spaceProps}
       />
     )

@@ -49,13 +49,13 @@ export { background } from '@soroush.tech/styled-system/background'
 export { position } from '@soroush.tech/styled-system/position'
 export {
   grid,
+  layoutFrame,
   layoutGrid,
-  layoutFlex,
   span,
   layoutGridStyles,
   type LayoutGridEntry,
   type LayoutGridValue,
-  type LayoutGridDisplay,
+  type LayoutGridGap,
 } from '@soroush.tech/styled-system/grid'
 export {
   shadow,

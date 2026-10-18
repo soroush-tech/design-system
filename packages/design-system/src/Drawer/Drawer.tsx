@@ -89,6 +89,11 @@ const DrawerPanel = styled('div', {
   '@media (prefers-reduced-motion: reduce)': {
     '&:popover-open': { animation: 'none' },
   },
+  // Without the Popover API the browser never hides a closed popover, and this fixed panel would
+  // cover the page - so it stays hidden there.
+  '@supports not selector(:popover-open)': {
+    display: 'none',
+  },
 }))
 
 /**
@@ -151,6 +156,9 @@ export function Drawer({
   useEffect(() => {
     if (isOpen === undefined || isOpen === isShownRef.current) return
     const panel = panelRef.current!
+    // Without the Popover API (jsdom, Safari before 17, Firefox before 125) there is nothing to
+    // call: the drawer stays closed instead of throwing.
+    if (typeof panel.showPopover !== 'function') return
     isShownRef.current = isOpen
     if (isOpen) {
       panel.showPopover()

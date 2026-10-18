@@ -298,7 +298,7 @@ export const NamedAreas: Story = {
 export const GapScale: Story = {
   render: () => (
     <Grid gridTemplateColumns="1fr" gap={0}>
-      {([0, 0.5, 1, 2, 3, 4] as const).map((g) => (
+      {([0, 0.125, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 3, 4] as const).map((g) => (
         <View key={g} mb={3}>
           <Typography variant="caption" as="div" color="secondary" mb={0.5}>
             gap={`{${g}}`}

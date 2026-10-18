@@ -45,6 +45,22 @@ describe('Select (native path)', () => {
     // Array value/defaultValue collapse to no selection; the browser shows the first option.
     expect(screen.getByRole('option', { name: '5' })).toHaveValue('5')
   })
+
+  it('keeps its accessible name from aria-label or labelId', () => {
+    renderWithTheme(
+      <>
+        <span id="lang">Language</span>
+        <Select native aria-label="Heading level">
+          {options}
+        </Select>
+        <Select native labelId="lang">
+          {options}
+        </Select>
+      </>
+    )
+    expect(screen.getByRole('combobox', { name: 'Heading level' }).tagName).toBe('SELECT')
+    expect(screen.getByRole('combobox', { name: 'Language' }).tagName).toBe('SELECT')
+  })
 })
 
 describe('Select (non-native)', () => {

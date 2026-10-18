@@ -1,29 +1,22 @@
-import { describe, it, expect, vi, beforeAll, afterEach } from 'vitest'
+import { describe, it, expect, vi, beforeAll, afterAll, afterEach } from 'vitest'
 import { act, cleanup, fireEvent, screen } from '@testing-library/react'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { baseTheme } from '../theme/themes'
+import { installPopover } from '../testing'
 import { Drawer, DrawerToggle } from './'
 
-// jsdom has no popover API: these stand in for the browser - show/hide fire `toggle` the way a
-// real popover does. The behaviour in a browser is covered by Drawer.browser.test.tsx.
-const toggle = (element: HTMLElement, newState: 'open' | 'closed') => {
-  const event = new Event('toggle')
-  Object.assign(event, { newState })
-  element.dispatchEvent(event)
-}
+// jsdom has no popover API: the published stand-in fires `toggle` the way a real popover does.
+// The behaviour in a browser is covered by Drawer.browser.test.tsx.
+let restorePopover = () => {}
 beforeAll(() => {
-  HTMLElement.prototype.showPopover = vi.fn(function (this: HTMLElement) {
-    toggle(this, 'open')
-  })
-  HTMLElement.prototype.hidePopover = vi.fn(function (this: HTMLElement) {
-    toggle(this, 'closed')
-  })
+  restorePopover = installPopover()
 })
+afterAll(() => restorePopover())
 
 afterEach(() => {
   cleanup()
   document.body.removeAttribute('style')
-  vi.clearAllMocks()
+  vi.restoreAllMocks()
 })
 
 const getPanel = () => document.getElementById('nav') as HTMLElement
@@ -94,46 +87,81 @@ describe('Drawer', () => {
     it('opens and closes from isOpen without reporting its own close', () => {
       const onClose = vi.fn()
       const { rerender } = renderDrawer({ isOpen: true, onClose })
-      expect(HTMLElement.prototype.showPopover).toHaveBeenCalledTimes(1)
+      expect(getPanel()).toBeVisible()
       rerender(
         <Drawer id="nav" isOpen={false} onClose={onClose}>
           <button type="button">inside</button>
         </Drawer>
       )
-      expect(HTMLElement.prototype.hidePopover).toHaveBeenCalledTimes(1)
+      expect(getPanel()).not.toBeVisible()
       expect(onClose).not.toHaveBeenCalled()
     })
 
     it('does nothing when isOpen matches the open state', () => {
+      const hide = vi.spyOn(HTMLElement.prototype, 'hidePopover')
       renderDrawer({ isOpen: false })
-      expect(HTMLElement.prototype.hidePopover).not.toHaveBeenCalled()
+      expect(hide).not.toHaveBeenCalled()
+    })
+
+    it('opens from its toggle button', () => {
+      renderWithTheme(
+        <>
+          <DrawerToggle drawer="nav">Menu</DrawerToggle>
+          <Drawer id="nav">
+            <button type="button">inside</button>
+          </Drawer>
+        </>
+      )
+      act(() => screen.getByRole('button', { name: 'Menu' }).click())
+      expect(getPanel()).toBeVisible()
     })
 
     it('reports a close by Escape as escapeKey and any other as dismiss', () => {
       const onClose = vi.fn()
       renderDrawer({ onClose })
-      act(() => toggle(getPanel(), 'open'))
-      fireEvent.keyDown(document, { key: 'Escape' })
-      act(() => toggle(getPanel(), 'closed'))
+      act(() => getPanel().showPopover())
+      act(() => {
+        fireEvent.keyDown(document, { key: 'Escape' })
+      })
       expect(onClose).toHaveBeenLastCalledWith(expect.any(Event), 'escapeKey')
-      act(() => toggle(getPanel(), 'open'))
-      act(() => toggle(getPanel(), 'closed'))
+      act(() => getPanel().showPopover())
+      act(() => getPanel().hidePopover())
       expect(onClose).toHaveBeenLastCalledWith(expect.any(Event), 'dismiss')
     })
 
     it('moves focus in and locks scroll while open, and undoes both on close', () => {
       renderDrawer()
-      act(() => toggle(getPanel(), 'open'))
+      act(() => getPanel().showPopover())
       expect(screen.getByText('inside')).toHaveFocus()
       expect(document.body.style.overflow).toBe('hidden')
-      act(() => toggle(getPanel(), 'closed'))
+      act(() => getPanel().hidePopover())
       expect(document.body.style.overflow).toBe('')
     })
 
     it('leaves scroll alone when shouldLockScroll is false', () => {
       renderDrawer({ shouldLockScroll: false })
-      act(() => toggle(getPanel(), 'open'))
+      act(() => getPanel().showPopover())
       expect(document.body.style.overflow).toBe('')
+    })
+  })
+
+  describe('without the Popover API (jsdom, older browsers)', () => {
+    it('stays closed from isOpen instead of throwing', () => {
+      restorePopover()
+      try {
+        expect(() => renderDrawer({ isOpen: true })).not.toThrow()
+        expect(document.body.style.overflow).toBe('')
+      } finally {
+        restorePopover = installPopover()
+      }
+    })
+
+    it('hides the panel where the browser cannot, instead of covering the page', () => {
+      renderDrawer()
+      // Emotion minifies the at-rule; the browser applies it only without `:popover-open`.
+      expect(styles()).toMatch(
+        /@supports not selector\(:popover-open\)\{\.[\w-]+\{display:none;\}\}/
+      )
     })
   })
 })

@@ -123,15 +123,49 @@ describe('Grid', () => {
       expect(grid).not.toHaveAttribute('layout')
     })
 
-    it('lets gridTemplateColumns, gap and padding props win', () => {
+    // The base rule only - from the next breakpoint up the layout's blocks win, so the layout
+    // owns the column tracks and the inline padding.
+    it('lets gridTemplateColumns and padding props reach the base breakpoint only', () => {
       renderWithTheme(
-        <Grid layout gridTemplateColumns="1fr 1fr" columnGap={1} px={3}>
+        <Grid layout gridTemplateColumns="1fr 1fr" px={3}>
           content
         </Grid>
       )
       const grid = screen.getByText('content')
       expect(getComputedStyle(grid).gridTemplateColumns).toBe('1fr 1fr')
-      expect(grid).toHaveStyle({ columnGap: '8px', paddingLeft: '24px' })
+      expect(grid).toHaveStyle({ paddingLeft: '24px' })
+    })
+
+    it('takes its gap as the gutter at every breakpoint, rows included', () => {
+      renderWithTheme(
+        <Grid layout gap={1}>
+          gapped
+        </Grid>
+      )
+      const grid = screen.getByText('gapped')
+      // jsdom does not expand the `gap` shorthand into row-gap; the browser does.
+      expect(grid).toHaveStyle({ columnGap: '8px', gap: '8px' })
+      const className = [...grid.classList].at(-1)!
+      const css = [...document.styleSheets]
+        .flatMap((sheet) => [...sheet.cssRules])
+        .map((rule) => rule.cssText)
+        .filter((text) => text.includes(className))
+        .join('\n')
+      // No breakpoint brings the theme's 16px / 24px gutter back.
+      expect(css.match(/column-gap: [^;]+/g)).toEqual(Array(5).fill('column-gap: 8px'))
+    })
+
+    it('writes the frame once: View draws it, Grid adds only the columns', () => {
+      renderWithTheme(<Grid layout>framed</Grid>)
+      const className = [...screen.getByText('framed').classList].at(-1)!
+      const css = [...document.styleSheets]
+        .flatMap((sheet) => [...sheet.cssRules])
+        .map((rule) => rule.cssText)
+        .filter((text) => text.includes(className))
+        .join('\n')
+      // The base rule and one block per later breakpoint of the base theme.
+      expect(css.match(/padding-inline/g)).toHaveLength(5)
+      expect(css.match(/grid-template-columns/g)).toHaveLength(5)
     })
   })
 })

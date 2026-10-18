@@ -1,6 +1,6 @@
 {
   "name": "@soroush.tech/markdown",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Headless, composable markdown editor + renderer for @soroush.tech/design-system - Control, Toolbar, Editor, and Preview built on react-markdown, remark-gfm, and rehype-highlight.",
   "keywords": [
     "markdown",
@@ -88,7 +88,7 @@
     "unified": "^11.0.5"
   },
   "peerDependencies": {
-    "@soroush.tech/design-system": "workspace:^",
+    "@soroush.tech/design-system": "^1.3.3 || ^2.0.0-alpha.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },

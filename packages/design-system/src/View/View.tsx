@@ -7,6 +7,7 @@ import type {
   PositionProps,
   FlexboxProps,
   SpanProps,
+  LayoutFrameProps,
 } from '@soroush.tech/styled-system'
 import {
   styled,
@@ -19,6 +20,7 @@ import {
   border,
   position,
   span,
+  layoutFrame,
   system,
 } from '../index'
 
@@ -45,7 +47,8 @@ export interface ViewProps
     SystemTypographyProps<Theme>,
     Omit<BorderProps<Theme>, 'borderColor' | 'borderWidth' | 'borderRadius'>,
     PositionProps<Theme>,
-    SpanProps<Theme> {
+    SpanProps<Theme>,
+    LayoutFrameProps<Theme> {
   bg?: ViewBackgroundToken
   /** Resolves against theme.border - light · primary · dark */
   borderColor?: ViewBorderColorToken
@@ -61,7 +64,7 @@ export interface ViewProps
 
 // aspectRatio needs no manual wiring since @soroush.tech/styled-system 5.8.0 - it
 // arrives through the `layout` parser and `LayoutProps`.
-const shouldForwardProp = createShouldForwardProp([...props, 'cursor', 'order'])
+const shouldForwardProp = createShouldForwardProp([...props, 'cursor', 'order', 'layout'])
 
 // bg → theme.background / borderColor → theme.border / opacity + cursor + order → raw
 const colorSystem = system({
@@ -76,5 +79,7 @@ export const View = styled('div', {
   name: 'View',
   label: 'View',
   shouldForwardProp,
-  systemProps: [space, layout, colorSystem, typography, border, position, span],
+  // layoutFrame last: `layout` owns the inline padding and max width it writes. Grid and Flex
+  // add the columns on top of this frame.
+  systemProps: [space, layout, colorSystem, typography, border, position, span, layoutFrame],
 })<ViewProps>()

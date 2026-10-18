@@ -115,10 +115,13 @@ block with the same query is merged into it.
 
 ## The layout grid
 
-The `layout` prop on design-system's `Grid` and `Flex` turns `theme.layout`'s tokens into CSS per
-breakpoint: column tracks on a Grid, a wrapping row on a Flex, with the gutter, the margin, and a
-centred max width when the mode is fixed. `layout={{ lg: { columns: 16 } }}` replaces the theme's
-grid at `lg` only; `layout={{ gutter: 8 }}` replaces its gutter at every breakpoint, and the two
-mix (`{ gutter: 8, lg: { columns: 16 } }`). A child takes columns with `span` (`span={{ xs: 4, md: 6 }}`): `grid-column`
-in a Grid, a width of N columns and gutters in a Flex. Outside design-system, `layoutGridStyles(theme, value, 'grid' | 'flex')` writes
-the same styles in a style function. The design-system theming guide has the details.
+The `layout` prop turns `theme.layout`'s tokens into CSS per breakpoint. On any design-system
+`View`-based component it is the page frame (the margin, and a centred max width when the mode is
+fixed); on `Grid` it adds the column tracks and the gutter - the grid's own `gap` / `columnGap`
+where it sets one, the theme's elsewhere. `layout={{ lg: { columns: 16 } }}` replaces the
+theme's columns from `lg` up, mobile-first; `layout={{ maxWidth: '1280px' }}` replaces its max
+width at every breakpoint, and the two mix. A child takes columns with `span`
+(`span={{ xs: 4, md: 6 }}`, or `span="full"` for the whole row): `grid-column`. The parsers
+compose: `layoutFrame` writes the frame, `layoutGrid` the columns on top. Outside design-system,
+`layoutGridStyles(theme, value, gap)` writes both in a style function. The design-system theming
+guide has the details.

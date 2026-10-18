@@ -164,30 +164,57 @@ With `baseTheme`:
 These are tokens: the app places its own `AppBar`, `Sidebar` and `Drawer` with them, and the
 design studio draws them on its frames.
 
-### The `layout` prop - the layout grid on a Grid or Flex
+### The `layout` prop - the page frame everywhere, the columns on a Grid
 
-`Grid` and `Flex` take a `layout` prop that turns the content tokens into CSS per window class:
+`layout` turns the content tokens into CSS per window class. On any `View`-based component -
+`Flex` included - it is the **frame**: the margin and the max width, and the element keeps its
+own display. `Grid` adds the **columns** on top of that frame:
 
 ```tsx
-<Grid layout>...</Grid>                                // the theme's layout grid
-<Grid layout={{ lg: { columns: 16, gutter: 2 } }}>...</Grid> // its own at lg only
-<Grid layout={{ gutter: 8 }}>...</Grid>                // its own gutter at every class
-<Grid layout={{ gutter: 8, lg: { columns: 16 } }}>...</Grid> // both: gutter 8, 16 columns at lg
+<View layout>...</View>                                // the theme's frame
+<Flex layout gap={3}>...</Flex>                        // the frame, a flex column inside
+<Grid layout>...</Grid>                                // the frame and the theme's columns
+<Grid layout gap={2}>...</Grid>                        // its own gutter: 16px at every class
+<Grid layout gap={{ xs: 2, md: 4 }}>...</Grid>         // 16px, then 32px from md up
+<Grid layout={{ lg: { columns: 16 } }}>...</Grid>      // 16 columns from lg up
+<Grid layout={{ maxWidth: '1280px', md: { columns: 6 } }}>...</Grid> // both
 ```
 
-- **Grid** - `grid-template-columns: repeat(N, minmax(0, 1fr))`, the gutter as `column-gap`, the
-  margin as `padding-inline`, and `max-width` with `margin-inline: auto` when the mode is fixed.
-  Children place themselves with `span` (below) or `gridColumn` (`1 / -1`).
-- **Flex** - a wrapping row with the same gutter, margin and fixed mode.
-- **Both** set `--layout-columns` and `--layout-gutter` for each class.
-- **Children take `span`** - how many columns an element takes, on any `View`-based component:
-  `span={6}`, or per class `span={{ xs: 4, md: 6 }}`. In a Grid it is `grid-column: span N`; in a
-  Flex it is a width of N columns and the gutters between them, read from the variables above.
-  Outside a layout grid it does nothing.
-- A field in the value (`gutter: 8`) replaces the theme's at every class; whatever it does not
-  set still follows the theme. An entry under a class name replaces the theme's grid at that
-  class only, on top of the fields; the next class is back to the theme and the fields.
-  Explicit `gridTemplateColumns`, `flexDirection`, `gap` or padding props still win.
+- **The frame** - the full width of its parent (`width: 100%`, border-box) with the margin as
+  `padding-inline`; in fixed mode capped by `max-width` and centred. It spans its parent in any
+  context - a block, a grid item, a flex column or row - so the frame owns its width: size it
+  with `maxWidth`, not `width`.
+- **Grid** - `grid-template-columns: repeat(N, minmax(0, 1fr))` and the gutter as `column-gap`.
+- **The gutter is the grid's `gap`** - its own `gap` or `columnGap` (`columnGap` wins), single,
+  per class (`{ md: 4 }`) or as an array, sets `column-gap` at every class it covers; where it is
+  not set, the theme's gutter applies. Rows take `gap`'s row half or `rowGap`. On a `Flex` or a
+  `View`, `gap` is plain flexbox spacing.
+- **Children take `span`** - how many columns of a grid an element takes, on any `View`-based
+  component: `span={6}`, per class `span={{ xs: 4, md: 6 }}`, or `span="full"` for the whole row
+  whatever the column count (`grid-column: 1 / -1`, in any grid).
+- A field in the value (`maxWidth: '1280px'`) replaces the theme's at every class; whatever it
+  does not set still follows the theme. An entry under a class name replaces it **from that class
+  up**, mobile-first like every responsive prop, on top of the fields.
+- **The layout owns the column tracks, inline padding and max width** it writes: an explicit
+  `gridTemplateColumns`, padding or `maxWidth` on the same element does not override them from the
+  second class up. A grid with tracks of its own leaves `layout` off and sits inside a frame.
+
+### Layout: one way per intent
+
+Generated code, agents and people write each layout intent one way:
+
+| Intent                                           | Write                                                       | Not                                                       |
+| ------------------------------------------------ | ----------------------------------------------------------- | --------------------------------------------------------- |
+| Content on the page frame, no columns            | `<View layout>`, or `<Flex layout>` for a flex stack or row | `maxWidth` + `mx="auto"` + `px`, a custom frame component |
+| A section on the theme's columns                 | `<Grid layout>`                                             | hand-written tracks on a page section, `Flex` with widths |
+| The app's layout                                 | `theme.layout`, built with `createTheme`                    | layout values written on every page                       |
+| A page's (or a region's) own layout              | `<LayoutProvider layout={...}>` around the page             | the same `layout` value on each section, a nested theme   |
+| A section's own columns, margin or max width     | `layout={{ md: { columns: 6 } }}`, `layout={{ maxWidth }}`  | helpers that repeat a value per class                     |
+| A section's own gutter                           | `gap={2}` / `gap={{ xs: 2, md: 4 }}` on the `Grid`          | a `gutter` field, `gap` and `columnGap` both              |
+| A child taking N columns                         | `span={6}` / `span={{ xs: 4, md: 6 }}`                      | `gridColumn="span 6"`                                     |
+| A child taking the whole row                     | `span="full"`                                               | `grid-column: 1 / -1`, `style`, column-count objects      |
+| Space between rows only                          | `rowGap`                                                    | margins on the children                                   |
+| A grid with tracks of its own (`auto-fill`, ...) | a plain `Grid` without `layout`, inside a frame             | `layout` plus `gridTemplateColumns`                       |
 
 The same page without the prop needs every value written out - and stops following the theme:
 
@@ -271,7 +298,20 @@ names.
 | Icon sizes      | `theme.icon`           | `ThemeIconSizes`          |
 | Switch tokens   | `theme.switch`         | `ThemeSwitch`             |
 | Shadow tokens   | `theme.shadow`         | `ThemeShadow`             |
-| Defaults        | `theme.defaults`       | `ThemeDefaults`           |
-| Components      | `theme.components`     | `ThemeComponents`         |
+
+## The spacing scale
+
+`theme.space` steps on an 8px unit, and every step is a whole pixel. The same steps serve padding,
+margin, `gap` / `rowGap` / `columnGap`, the `layout` margin and the grid's gutter:
+
+| Step | `0` | `0.125` | `0.25` | `0.5` | `0.75` | `1` | `1.25` | `1.5` | `1.75` | `2` | `3` | `4` | `5` | `6` | `7` | `8` | `9` | `10` |
+| ---- | --- | ------- | ------ | ----- | ------ | --- | ------ | ----- | ------ | --- | --- | --- | --- | --- | --- | --- | --- | ---- |
+| px   | 0   | 1       | 2      | 4     | 6      | 8   | 10     | 12    | 14     | 16  | 24  | 32  | 40  | 48  | 56  | 64  | 72  | 80   |
+
+Below 4px, lines are border widths (`theme.borderWidths`). Use `0.125` and `0.25` only for a gap
+that should be a hairline - a 1px or 2px gap the background shows through, as in a grid of tiles
+on a coloured `Grid`: `<Grid layout gap={0.125} bg="grid">`.
+| Defaults | `theme.defaults` | `ThemeDefaults` |
+| Components | `theme.components` | `ThemeComponents` |
 
 The contract is verified against the real published d.ts by `type-tests/augmentation.ts` (`pnpm test:types`), so it can't silently break in a release.

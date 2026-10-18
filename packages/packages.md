@@ -93,6 +93,11 @@ Internal-only packages stay `"private": true` and consume source directly. To ma
   ```
 
 - Declare the host framework as a **`peerDependency`** (e.g. `vite`); never bundle the peer.
+- A peer on a **sibling package** (markdown on design-system) is an explicit range covering every
+  major it supports - `"^1.3.3 || ^2.0.0-alpha.0"` - widened deliberately when a new major lands,
+  never `workspace:^`. pnpm freezes `workspace:^` to `^<the sibling's version at publish time>`,
+  so the published peer would exclude the next major until the package is republished. The
+  `devDependency` stays `workspace:*`, so the monorepo still builds against the local sibling.
 - `prepublishOnly: pnpm build`; verify the tarball with `pnpm pack` before publishing.
 
 ### Releasing to npm - always via pnpm, never `npm publish`
