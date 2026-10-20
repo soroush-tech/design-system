@@ -1,6 +1,7 @@
 import { appBarCatalog } from '../AppBar/AppBar.catalog'
 import { avatarCatalog } from '../Avatar/Avatar.catalog'
 import { backdropCatalog } from '../Backdrop/Backdrop.catalog'
+import { breadcrumbsCatalog } from '../Breadcrumbs/Breadcrumbs.catalog'
 import { buttonCatalog } from '../Button/Button.catalog'
 import { buttonGroupCatalog } from '../ButtonGroup/ButtonGroup.catalog'
 import { cardCatalog } from '../Card/Card.catalog'
@@ -78,6 +79,7 @@ export const catalogSources: Record<string, CatalogSource> = {
   AppBar: { entry: appBarCatalog, folder: 'AppBar' },
   Avatar: { entry: avatarCatalog, folder: 'Avatar' },
   Backdrop: { entry: backdropCatalog, folder: 'Backdrop' },
+  Breadcrumbs: { entry: breadcrumbsCatalog, folder: 'Breadcrumbs' },
   Button: { entry: buttonCatalog, folder: 'Button' },
   ButtonGroup: { entry: buttonGroupCatalog, folder: 'ButtonGroup' },
   Card: { entry: cardCatalog, folder: 'Card' },

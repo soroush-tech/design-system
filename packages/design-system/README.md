@@ -134,10 +134,11 @@ SSR critical-CSS extraction (e.g. with `@emotion/server`) is a separate, opt-in 
 
 ### Navigation & menus
 
-| Component | Purpose                                                                                                                                                                                                                                                                         |
-| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Menu`    | A trigger and the list of commands it opens - exports `MenuList` (the `role="menu"` list that owns the keyboard), `MenuDivider`, `MenuItems` (rows from data) and `ContextMenu` (the same list, opened at the pointer by a right-click) from `@soroush.tech/design-system/Menu` |
-| `Tabs`    | A row of tabs - exports `Tab`, `TabContext` (holds the value for a `TabList` and its panels), `TabList` (the `Tabs` of a `TabContext`), `TabPanel` (the content a tab shows) and `TabScrollButton` from `@soroush.tech/design-system/Tabs`                                      |
+| Component     | Purpose                                                                                                                                                                                                                                                                         |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Breadcrumbs` | The trail of links from a site's root to the current page - a long one collapses behind a button that shows it all                                                                                                                                                              |
+| `Menu`        | A trigger and the list of commands it opens - exports `MenuList` (the `role="menu"` list that owns the keyboard), `MenuDivider`, `MenuItems` (rows from data) and `ContextMenu` (the same list, opened at the pointer by a right-click) from `@soroush.tech/design-system/Menu` |
+| `Tabs`        | A row of tabs - exports `Tab`, `TabContext` (holds the value for a `TabList` and its panels), `TabList` (the `Tabs` of a `TabContext`), `TabPanel` (the content a tab shows) and `TabScrollButton` from `@soroush.tech/design-system/Tabs`                                      |
 
 ### Feedback
 

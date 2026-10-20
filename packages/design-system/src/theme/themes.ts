@@ -1,4 +1,4 @@
-import type { ElementType } from 'react'
+import type { ElementType, ReactNode } from 'react'
 import type { PaperElevation } from '../Paper/Paper'
 import type { CSSObject as EmotionCSSObject } from '@emotion/react'
 import { alpha, generateBoxShadow } from '../utils'
@@ -407,6 +407,16 @@ export interface ButtonVariants {
   text: true
 }
 
+/** The defaults a theme may set for every `Breadcrumbs` - its `expandLabel` gives a trail its language. */
+export interface BreadcrumbsOwnerState {
+  separator?: ReactNode
+  maxItems?: number
+  itemsBeforeCollapse?: number
+  itemsAfterCollapse?: number
+  expandLabel?: string
+  color?: keyof ThemeText
+}
+
 /** The resolved props Button's styled roots receive - what `ownerState` exposes. */
 export interface ButtonOwnerState {
   variant?: keyof ButtonVariants
@@ -536,6 +546,10 @@ export interface ThemeComponents {
   AppBar?: ComponentConfig
   Avatar?: ComponentConfig<Record<string, unknown>, 'root' | 'img'>
   Backdrop?: ComponentConfig
+  Breadcrumbs?: ComponentConfig<
+    BreadcrumbsOwnerState,
+    'root' | 'list' | 'item' | 'separator' | 'collapsed' | 'collapsedIcon'
+  >
   Button?: ComponentConfig<ButtonOwnerState, 'root' | 'label' | 'icon' | 'loader'>
   ButtonGroup?: ComponentConfig
   Card?: ComponentConfig<CardOwnerState, 'root' | 'title' | 'caption' | 'icon'>

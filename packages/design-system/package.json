@@ -32,6 +32,7 @@
     "./AppBar": "./src/AppBar/index.ts",
     "./Avatar": "./src/Avatar/index.ts",
     "./Backdrop": "./src/Backdrop/index.ts",
+    "./Breadcrumbs": "./src/Breadcrumbs/index.ts",
     "./Button": "./src/Button/index.ts",
     "./ButtonGroup": "./src/ButtonGroup/index.ts",
     "./Card": "./src/Card/index.ts",
@@ -123,6 +124,16 @@
         "require": {
           "types": "./dist/Backdrop.d.cts",
           "default": "./dist/Backdrop.cjs"
+        }
+      },
+      "./Breadcrumbs": {
+        "import": {
+          "types": "./dist/Breadcrumbs.d.mts",
+          "default": "./dist/Breadcrumbs.mjs"
+        },
+        "require": {
+          "types": "./dist/Breadcrumbs.d.cts",
+          "default": "./dist/Breadcrumbs.cjs"
         }
       },
       "./Button": {

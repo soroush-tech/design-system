@@ -3,6 +3,7 @@ import type { ExampleNode } from '../../catalog/types'
 import { AppBar } from '../../AppBar'
 import { Avatar } from '../../Avatar'
 import { Backdrop } from '../../Backdrop'
+import { Breadcrumbs } from '../../Breadcrumbs'
 import { Button } from '../../Button'
 import { ButtonGroup } from '../../ButtonGroup'
 import { Card } from '../../Card'
@@ -63,6 +64,7 @@ const COMPONENTS: Record<string, ElementType> = {
   AppBar,
   Avatar,
   Backdrop,
+  Breadcrumbs,
   Button,
   ButtonGroup,
   Card,

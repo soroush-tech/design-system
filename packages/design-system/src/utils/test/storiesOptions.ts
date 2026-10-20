@@ -76,6 +76,7 @@ export {
 } from '../../LinearProgress/LinearProgress.catalog'
 export { drawerAnchorValues as anchorTokens } from '../../Drawer/Drawer.catalog'
 export { modalScrollValues as modalScrollTokens } from '../../Modal/Modal.catalog'
+export { breadcrumbsSeparatorValues as breadcrumbsSeparatorTokens } from '../../Breadcrumbs/Breadcrumbs.catalog'
 export { menuItemRoleValues as menuItemRoleTokens } from '../../MenuItem/MenuItem.catalog'
 export { menuAlignValues as menuAlignTokens } from '../../Menu/Menu/Menu.catalog'
 export {

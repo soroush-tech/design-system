@@ -29,6 +29,7 @@ import { MenuList } from './Menu/MenuList'
 import { Modal } from './Modal'
 import { NativeSelect } from './NativeSelect'
 import { Pagination } from './Pagination'
+import { Breadcrumbs } from './Breadcrumbs'
 import { Paper } from './Paper'
 import { Popover } from './Popover'
 import { Pressable } from './Pressable'
@@ -113,6 +114,15 @@ const table = (
       </TableRow>
     </TableFooter>
   </Table>
+)
+
+// Collapsed, so every slot - the button and its icon too - is drawn.
+const breadcrumbs = (
+  <Breadcrumbs maxItems={2} expandLabel="Show path">
+    <span>a</span>
+    <span>b</span>
+    <span>c</span>
+  </Breadcrumbs>
 )
 
 const tabs = (
@@ -230,6 +240,17 @@ const cases: Case[] = [
     ui: <NativeSelect options={[{ label: 'Ten', value: 10 }]} defaultValue={10} />,
   },
   { name: 'Pagination', slot: 'root', label: 'PaginationNav', ui: <Pagination count={3} /> },
+  { name: 'Breadcrumbs', slot: 'root', label: 'Breadcrumbs', ui: breadcrumbs },
+  { name: 'Breadcrumbs', slot: 'list', label: 'BreadcrumbsList', ui: breadcrumbs },
+  { name: 'Breadcrumbs', slot: 'item', label: 'BreadcrumbsItem', ui: breadcrumbs },
+  { name: 'Breadcrumbs', slot: 'separator', label: 'BreadcrumbsSeparator', ui: breadcrumbs },
+  { name: 'Breadcrumbs', slot: 'collapsed', label: 'BreadcrumbsCollapsed', ui: breadcrumbs },
+  {
+    name: 'Breadcrumbs',
+    slot: 'collapsedIcon',
+    label: 'BreadcrumbsCollapsedIcon',
+    ui: breadcrumbs,
+  },
   { name: 'Pagination', slot: 'list', label: 'Pagination', ui: <Pagination count={3} /> },
   {
     name: 'PaginationItem',
