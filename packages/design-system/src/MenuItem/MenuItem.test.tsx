@@ -227,6 +227,9 @@ describe('MenuItem in a MenuList', () => {
       expect(control.closest('[aria-hidden="true"]')).not.toBeNull()
       // Siblings in a role="none" entry - a row can't hold a button.
       expect(row.parentElement).toHaveAttribute('role', 'none')
+      // The entry is the list item; the row in it a div - an li can't hold an li.
+      expect(row.parentElement!.tagName).toBe('LI')
+      expect(row.tagName).toBe('DIV')
       expect(control.closest('[role="none"]')).toBe(row.parentElement)
       expect(row).not.toContainElement(control)
     }

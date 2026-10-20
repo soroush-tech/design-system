@@ -493,10 +493,12 @@ export function MenuItem({
   const tick =
     role !== 'menuitem' && selected ? <Icon name="check" size="sm" color="inherit" /> : null
   const rowId = id ?? fallbackId
+  const hasSecondaryAction = secondaryAction != null
+  // In an entry - beside its submenu or its own control - the row is a div: the entry is the li.
   const row = (
     <MenuItemRoot
       {...rootProps}
-      as={hasSubmenu ? 'div' : as}
+      as={hasSubmenu || hasSecondaryAction ? 'div' : as}
       id={rowId}
       role={role}
       {...getRowAria({
@@ -529,7 +531,6 @@ export function MenuItem({
       )}
     </MenuItemRoot>
   )
-  const hasSecondaryAction = secondaryAction != null
   if (!hasSubmenu && !hasSecondaryAction) return row
   if (!hasSubmenu) {
     return (

@@ -150,8 +150,9 @@ export const CustomSeparators: Story = {
   ),
 }
 
+// A span: the current page's crumb is a paragraph, which can't hold a div.
 const withIcon = (name: IconName, label: string) => (
-  <Flex flexDirection="row" alignItems="center" gap={0.5}>
+  <Flex as="span" flexDirection="row" alignItems="center" gap={0.5}>
     <Icon name={name} size="sm" color="inherit" />
     {label}
   </Flex>

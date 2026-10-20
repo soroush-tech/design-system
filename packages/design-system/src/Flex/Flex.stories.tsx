@@ -95,6 +95,14 @@ const meta: Meta<typeof Flex> = {
     minHeight,
     maxWidth,
     maxHeight,
+    // Inherited from the element's attributes, so it isn't typed for the story - and Storybook
+    // would infer its type by walking the rendered items, which aren't data.
+    children: {
+      control: false,
+      type: { name: 'other', value: 'ReactNode' },
+      description: 'The flex items.',
+      table: { category: 'Content' },
+    },
   },
   args: exampleArgs(flexCatalog.example),
 }
