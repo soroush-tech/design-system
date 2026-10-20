@@ -561,6 +561,16 @@ const cases: Case[] = [
   { name: 'Tabs', slot: 'endContent', label: 'TabsEnd', ui: tabs },
   {
     name: 'Tabs',
+    slot: 'scrollButton',
+    label: 'TabsScrollButton',
+    ui: (
+      <Tabs overflowBehavior="scroll" scrollButtons="always">
+        <Tab label="t" />
+      </Tabs>
+    ),
+  },
+  {
+    name: 'Tabs',
     slot: 'overflowButton',
     label: 'TabsOverflowButton',
     ui: overflowingTabs,

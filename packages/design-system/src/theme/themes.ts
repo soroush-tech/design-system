@@ -478,6 +478,12 @@ export interface TabOwnerState {
   selectedBg?: keyof ThemeBackground
 }
 
+/** The defaults a theme may set for every `TabScrollButton`. */
+export interface TabScrollButtonOwnerState {
+  color?: keyof ThemePalette
+  textColor?: keyof ThemeText
+}
+
 /** Token-typed Typography props a theme may set for Card's title/caption slots. */
 export interface CardSlotTypographyProps {
   variant?: keyof ThemeTypographyVariants
@@ -588,6 +594,7 @@ export interface ThemeComponents {
   TablePaginationActions?: ComponentConfig
   TableRow?: ComponentConfig
   TableSortLabel?: ComponentConfig<Record<string, unknown>, 'root' | 'icon'>
+  TabScrollButton?: ComponentConfig<TabScrollButtonOwnerState>
   Tabs?: ComponentConfig<
     TabsOwnerState,
     | 'root'
