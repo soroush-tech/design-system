@@ -12,13 +12,13 @@ import { styled, get } from '../index'
 import { useDefaultProps } from '../theme'
 import { themeDefault } from '../theme/utils/themeDefault'
 import { Icon, type IconProps } from '../Icon'
-import { Typography, type TypographyProps } from '../Typography'
+import { Typography, type TypographyProps, type TypographyVariant } from '../Typography'
 
 export interface BreadcrumbsProps extends Omit<TypographyProps, 'children' | 'variant'> {
   /** The crumbs - the app's `Link`s, and the current page as `Typography` or a `Link` with `aria-current="page"`. */
   children?: ReactNode
   /** The trail's type - a `theme.typography` variant, given to its root `Typography`. Default: `'body1'`. */
-  typography?: TypographyProps['variant']
+  typography?: TypographyVariant
   /** Between two crumbs. Default: `'/'`. */
   separator?: ReactNode
   /** Past this many crumbs the trail collapses, a button standing for the ones between. Default: `8`. */
@@ -188,7 +188,8 @@ export function Breadcrumbs({
           index === 0
             ? [crumb]
             : [
-                <BreadcrumbsSeparator key={`separator-${index}`} aria-hidden>
+                // Keyed by the crumb it comes before - stable as crumbs come and go.
+                <BreadcrumbsSeparator key={`separator-${crumb.key}`} aria-hidden>
                   {separator}
                 </BreadcrumbsSeparator>,
                 crumb,

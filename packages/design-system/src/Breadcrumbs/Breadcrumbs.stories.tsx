@@ -139,8 +139,8 @@ export const CustomSeparators: Story = {
   parameters: { controls: { include: [] } },
   render: (args) => (
     <Flex gap={2}>
-      {(['›', '-', chevron] as const).map((separator, index) => (
-        <Breadcrumbs key={index} {...args} separator={separator}>
+      {Object.entries({ '›': '›', '-': '-', chevron }).map(([name, separator]) => (
+        <Breadcrumbs key={name} {...args} separator={separator}>
           {ancestor('Home')}
           {ancestor('Catalog')}
           {current('Accessories')}
