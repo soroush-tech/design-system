@@ -20,7 +20,9 @@ import { TableRow } from '../TableRow'
 import { TableCell } from '../TableCell'
 import { TableControl } from '../TableControl'
 import { useTablePagination } from '../hooks/useTablePagination'
+import { exampleArgs } from '../../utils/test/renderExample'
 import { TablePagination } from './TablePagination'
+import { tablePaginationCatalog } from './TablePagination.catalog'
 
 const meta: Meta<typeof TablePagination> = {
   title: 'Theme/Table/TablePagination',
@@ -50,11 +52,7 @@ const meta: Meta<typeof TablePagination> = {
       ],
     },
   },
-  args: {
-    count: 100,
-    page: 2,
-    rowsPerPage: 10,
-  },
+  args: exampleArgs(tablePaginationCatalog.example),
   argTypes: {
     count: paginationCount,
     page: {

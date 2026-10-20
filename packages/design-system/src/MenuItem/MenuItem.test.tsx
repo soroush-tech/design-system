@@ -1,7 +1,10 @@
 import { describe, it, expect, vi } from 'vitest'
 import { fireEvent, screen } from '@testing-library/react'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
-import { baseTheme } from '../theme/themes'
+import { baseTheme, createTheme, type Theme } from '../theme/themes'
+import { MenuList } from '../Menu/MenuList'
+import { ThemeProvider } from '../theme'
+import type { ReactNode } from 'react'
 import { MenuItem } from './MenuItem'
 
 describe('MenuItem', () => {
@@ -22,6 +25,13 @@ describe('MenuItem', () => {
     )
     fireEvent.click(screen.getByRole('option'))
     expect(onSelect).toHaveBeenCalledWith(7)
+  })
+
+  it('does not fire onSelect for an option without a value', () => {
+    const onSelect = vi.fn()
+    renderWithTheme(<MenuItem onSelect={onSelect}>Unset</MenuItem>)
+    fireEvent.click(screen.getByRole('option'))
+    expect(onSelect).not.toHaveBeenCalled()
   })
 
   it('does not fire onSelect when disabled', () => {
@@ -181,5 +191,227 @@ describe('MenuItem', () => {
     })
     fireEvent.focus(option)
     expect(option).not.toHaveClass('fv')
+  })
+})
+
+describe('MenuItem in a MenuList', () => {
+  const inMenu = (ui: React.ReactNode, onSelect?: (value: string | number) => void) =>
+    renderWithTheme(
+      <MenuList aria-label="Menu" onSelect={onSelect}>
+        {ui}
+      </MenuList>
+    )
+
+  it('puts a secondaryAction beside the row in its entry, out of the arrow keys', () => {
+    inMenu(
+      <>
+        <MenuItem value="a" secondaryAction={<button type="button">Close Alpha</button>}>
+          Alpha
+        </MenuItem>
+        <MenuItem
+          value="b"
+          submenu={null}
+          secondaryAction={<button type="button">Pin Beta</button>}
+        >
+          Beta
+        </MenuItem>
+      </>
+    )
+    for (const [name, action] of [
+      ['Alpha', 'Close Alpha'],
+      ['Beta', 'Pin Beta'],
+    ]) {
+      const row = screen.getByRole('menuitem', { name })
+      // The pointer's, hidden from assistive technology - a menu owns rows alone.
+      const control = screen.getByRole('button', { name: action, hidden: true })
+      expect(control.closest('[aria-hidden="true"]')).not.toBeNull()
+      // Siblings in a role="none" entry - a row can't hold a button.
+      expect(row.parentElement).toHaveAttribute('role', 'none')
+      // The entry is the list item; the row in it a div - an li can't hold an li.
+      expect(row.parentElement!.tagName).toBe('LI')
+      expect(row.tagName).toBe('DIV')
+      expect(control.closest('[role="none"]')).toBe(row.parentElement)
+      expect(row).not.toContainElement(control)
+    }
+    const alpha = screen.getByRole('menuitem', { name: 'Alpha' })
+    alpha.focus()
+    fireEvent.keyDown(alpha, { key: 'ArrowDown' })
+    expect(screen.getByRole('menuitem', { name: 'Beta' })).toHaveFocus()
+  })
+
+  it('renders a menuitem by default, with no aria-checked', () => {
+    inMenu(<MenuItem value="a">Alpha</MenuItem>)
+    const row = screen.getByRole('menuitem', { name: 'Alpha' })
+    expect(row).toHaveAttribute('tabindex', '-1')
+    expect(row).not.toHaveAttribute('aria-checked')
+    expect(row).not.toHaveAttribute('aria-selected')
+  })
+
+  it('sets aria-checked from selected on radio and checkbox rows, and ticks the checked one', () => {
+    inMenu(
+      <>
+        <MenuItem role="menuitemradio" selected>
+          main
+        </MenuItem>
+        <MenuItem role="menuitemcheckbox">Wrap</MenuItem>
+      </>
+    )
+    const checked = screen.getByRole('menuitemradio', { name: 'main' })
+    expect(checked).toHaveAttribute('aria-checked', 'true')
+    expect(checked.querySelector('svg')).toBeInTheDocument()
+    const unchecked = screen.getByRole('menuitemcheckbox', { name: 'Wrap' })
+    expect(unchecked).toHaveAttribute('aria-checked', 'false')
+    expect(unchecked.querySelector('svg')).not.toBeInTheDocument()
+  })
+
+  it('keeps a leading column on every row, holding the start icon when given', () => {
+    inMenu(
+      <>
+        <MenuItem startIcon={<span data-testid="folder" />}>Open</MenuItem>
+        <MenuItem>Save</MenuItem>
+      </>
+    )
+    expect(screen.getByTestId('folder')).toBeInTheDocument()
+    const save = screen.getByRole('menuitem', { name: 'Save' })
+    expect(save.firstElementChild).toHaveAttribute('aria-hidden', 'true')
+    expect(save.firstElementChild).toBeEmptyDOMElement()
+  })
+
+  it('shows a shortcut out of the accessible name, as aria-keyshortcuts when a string', () => {
+    inMenu(
+      <>
+        <MenuItem shortcut="Control+S">Save</MenuItem>
+        <MenuItem shortcut={<kbd>⌘O</kbd>}>Open</MenuItem>
+      </>
+    )
+    expect(screen.getByRole('menuitem', { name: 'Save' })).toHaveAttribute(
+      'aria-keyshortcuts',
+      'Control+S'
+    )
+    expect(screen.getByText('Control+S')).toHaveAttribute('aria-hidden', 'true')
+    expect(screen.getByRole('menuitem', { name: 'Open' })).not.toHaveAttribute('aria-keyshortcuts')
+  })
+
+  it('gives a note as the tooltip and accessible description', () => {
+    inMenu(
+      <MenuItem disabled note="Coming later">
+        Checkout
+      </MenuItem>
+    )
+    const row = screen.getByRole('menuitem', { name: 'Checkout' })
+    expect(row).toHaveAttribute('title', 'Coming later')
+    expect(row).toHaveAccessibleDescription('Coming later')
+    expect(row).toHaveAttribute('aria-disabled', 'true')
+  })
+
+  it('is chosen by a click, Enter, or Space on release', () => {
+    const onClick = vi.fn()
+    const onSelect = vi.fn()
+    inMenu(
+      <MenuItem value="save" onClick={onClick}>
+        Save
+      </MenuItem>,
+      onSelect
+    )
+    const row = screen.getByRole('menuitem', { name: 'Save' })
+    fireEvent.click(row)
+    expect(fireEvent.keyDown(row, { key: 'Enter' })).toBe(false)
+    expect(fireEvent.keyDown(row, { key: ' ' })).toBe(false)
+    expect(onClick).toHaveBeenCalledTimes(2)
+    fireEvent.keyUp(row, { key: ' ' })
+    expect(onClick).toHaveBeenCalledTimes(3)
+    expect(onSelect).toHaveBeenCalledTimes(3)
+    expect(onSelect).toHaveBeenCalledWith('save')
+  })
+
+  it('ignores other keys', () => {
+    const onClick = vi.fn()
+    inMenu(<MenuItem onClick={onClick}>Save</MenuItem>)
+    const row = screen.getByRole('menuitem', { name: 'Save' })
+    fireEvent.keyDown(row, { key: 'a' })
+    fireEvent.keyUp(row, { key: 'Enter' })
+    expect(onClick).not.toHaveBeenCalled()
+  })
+
+  it('is not chosen while disabled', () => {
+    const onClick = vi.fn()
+    inMenu(
+      <MenuItem disabled onClick={onClick}>
+        Save
+      </MenuItem>
+    )
+    const row = screen.getByRole('menuitem', { name: 'Save' })
+    fireEvent.click(row)
+    fireEvent.keyDown(row, { key: 'Enter' })
+    expect(onClick).not.toHaveBeenCalled()
+  })
+
+  it('takes focus as the pointer moves over it, unless disabled', () => {
+    inMenu(
+      <>
+        <MenuItem>Open</MenuItem>
+        <MenuItem disabled>Close</MenuItem>
+      </>
+    )
+    const open = screen.getByRole('menuitem', { name: 'Open' })
+    fireEvent.pointerMove(open)
+    expect(open).toHaveFocus()
+    fireEvent.pointerMove(open)
+    expect(open).toHaveFocus()
+    fireEvent.pointerMove(screen.getByRole('menuitem', { name: 'Close' }))
+    expect(open).toHaveFocus()
+  })
+
+  it('lets a press through so the row can take focus', () => {
+    inMenu(<MenuItem>Open</MenuItem>)
+    const event = new MouseEvent('mousedown', { bubbles: true, cancelable: true })
+    fireEvent(screen.getByRole('menuitem'), event)
+    expect(event.defaultPrevented).toBe(false)
+  })
+
+  it('colors the row with its text color, or the accent, and greys it out when disabled', () => {
+    inMenu(
+      <>
+        <MenuItem color="error">Accent</MenuItem>
+        <MenuItem textColor="secondary">Text</MenuItem>
+        <MenuItem disabled>Off</MenuItem>
+      </>
+    )
+    expect(screen.getByRole('menuitem', { name: 'Accent' })).toHaveStyle({
+      color: baseTheme.palette.error.main,
+    })
+    expect(screen.getByRole('menuitem', { name: 'Text' })).toHaveStyle({
+      color: baseTheme.text.secondary,
+    })
+    expect(screen.getByRole('menuitem', { name: 'Off' })).toHaveStyle({
+      color: baseTheme.text.disabled,
+    })
+  })
+})
+
+const withTheme = (theme: Theme) =>
+  function ThemedWrapper({ children }: { children: ReactNode }) {
+    return <ThemeProvider theme={theme}>{children}</ThemeProvider>
+  }
+
+describe('MenuItem theme defaults', () => {
+  it("takes its look from theme.components.MenuItem.defaultProps, under its list's", () => {
+    const theme = createTheme(baseTheme, {
+      components: {
+        MenuItem: {
+          defaultProps: { color: 'error', textColor: 'secondary', size: 'sm', dense: true },
+        },
+      },
+    })
+    renderWithTheme(
+      <MenuList aria-label="Edit">
+        <MenuItem>Cut</MenuItem>
+      </MenuList>,
+      { wrapper: withTheme(theme) }
+    )
+    expect(screen.getByRole('menuitem', { name: 'Cut' })).toHaveStyle({
+      color: baseTheme.text.secondary,
+      paddingTop: baseTheme.space[0.5],
+    })
   })
 })

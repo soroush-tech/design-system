@@ -1,6 +1,6 @@
-import { type ReactNode } from 'react'
-import { describe, it, expect, afterEach } from 'vitest'
-import { render, cleanup, fireEvent, screen } from '@testing-library/react'
+import { createRef, type ReactNode } from 'react'
+import { describe, it, expect, afterEach, vi } from 'vitest'
+import { act, render, cleanup, fireEvent, screen } from '@testing-library/react'
 import { ThemeProvider } from './theme'
 import { Flex } from './Flex'
 import { Grid } from './Grid'
@@ -13,6 +13,7 @@ import { Button } from './Button'
 import { ButtonGroup } from './ButtonGroup'
 import { Checkbox } from './Checkbox'
 import { CircularProgress } from './CircularProgress'
+import { ContextMenu } from './Menu/ContextMenu'
 import { Drawer } from './Drawer'
 import { FormControl } from './FormControl'
 import { FormHelperText } from './FormHelperText'
@@ -21,10 +22,14 @@ import { Icon } from './Icon'
 import { Image } from './Image'
 import { LinearProgress } from './LinearProgress'
 import { Link } from './Link'
+import { Menu } from './Menu/Menu'
+import { MenuDivider } from './Menu/MenuDivider'
 import { MenuItem } from './MenuItem'
+import { MenuList } from './Menu/MenuList'
 import { Modal } from './Modal'
 import { NativeSelect } from './NativeSelect'
 import { Pagination } from './Pagination'
+import { Breadcrumbs } from './Breadcrumbs'
 import { Paper } from './Paper'
 import { Popover } from './Popover'
 import { Pressable } from './Pressable'
@@ -43,12 +48,17 @@ import { TableHead } from './Table/TableHead'
 import { TablePagination } from './Table/TablePagination'
 import { TableRow } from './Table/TableRow'
 import { TableSortLabel } from './Table/TableSortLabel'
+import { TabPanel } from './Tabs/TabPanel'
+import { Tab, Tabs, TabContext, type TabsActions } from './Tabs'
 import { TextInput } from './TextInput'
 import { ToggleButton } from './ToggleButton/ToggleButton'
 import { ToggleButtonGroup } from './ToggleButton/ToggleButtonGroup'
 import { Typography } from './Typography'
 
-afterEach(cleanup)
+afterEach(() => {
+  cleanup()
+  vi.restoreAllMocks()
+})
 
 // A declaration no component sets on its own, so a match proves the override applied.
 const MARKER = { textIndent: '7px' }
@@ -106,6 +116,45 @@ const table = (
   </Table>
 )
 
+// Collapsed, so every slot - the button and its icon too - is drawn.
+const breadcrumbs = (
+  <Breadcrumbs maxItems={2} expandLabel="Show path">
+    <span>a</span>
+    <span>b</span>
+    <span>c</span>
+  </Breadcrumbs>
+)
+
+const tabs = (
+  <Tabs startContent={<span>s</span>} endContent={<span>e</span>}>
+    <Tab label="t" icon={<span>i</span>} closeLabel="c" secondaryAction={<span>a</span>} />
+  </Tabs>
+)
+
+// A row with room for one tab, so the second goes to the menu. jsdom lays nothing out: the
+// sizes are stubbed, then the row measured again.
+const overflowAction = createRef<TabsActions>()
+const overflowingTabs = (
+  <Tabs overflowBehavior="menu" overflowLabel="More" action={overflowAction} defaultValue={0}>
+    <Tab label="a" />
+    <Tab label="b" closeLabel="Close b" />
+  </Tabs>
+)
+const overflow = () => {
+  vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockReturnValue(100)
+  vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({
+    width: 100,
+    height: 100,
+  } as DOMRect)
+  act(() => overflowAction.current!.updateOverflow())
+}
+
+const tabPanel = (
+  <TabContext defaultValue="a">
+    <TabPanel value="a">p</TabPanel>
+  </TabContext>
+)
+
 const tablePagination = (
   <table>
     <tfoot>
@@ -151,6 +200,29 @@ const cases: Case[] = [
   { name: 'LinearProgress', slot: 'root', label: 'LinearProgress', ui: <LinearProgress /> },
   { name: 'Link', slot: 'root', label: 'Link', ui: <Link href="/">x</Link> },
   { name: 'MenuItem', slot: 'root', label: 'MenuItem', ui: <MenuItem value="a">A</MenuItem> },
+  { name: 'MenuList', slot: 'root', label: 'MenuList', ui: <MenuList /> },
+  {
+    name: 'ContextMenu',
+    slot: 'root',
+    label: 'ContextMenu',
+    ui: <ContextMenu target={<div>t</div>} />,
+  },
+  {
+    name: 'Menu',
+    slot: 'root',
+    label: 'Menu',
+    ui: <Menu trigger={<button type="button">m</button>} />,
+  },
+  {
+    name: 'MenuDivider',
+    slot: 'root',
+    label: 'MenuDivider',
+    ui: (
+      <ul>
+        <MenuDivider />
+      </ul>
+    ),
+  },
   {
     name: 'Modal',
     slot: 'root',
@@ -168,6 +240,17 @@ const cases: Case[] = [
     ui: <NativeSelect options={[{ label: 'Ten', value: 10 }]} defaultValue={10} />,
   },
   { name: 'Pagination', slot: 'root', label: 'PaginationNav', ui: <Pagination count={3} /> },
+  { name: 'Breadcrumbs', slot: 'root', label: 'Breadcrumbs', ui: breadcrumbs },
+  { name: 'Breadcrumbs', slot: 'list', label: 'BreadcrumbsList', ui: breadcrumbs },
+  { name: 'Breadcrumbs', slot: 'item', label: 'BreadcrumbsItem', ui: breadcrumbs },
+  { name: 'Breadcrumbs', slot: 'separator', label: 'BreadcrumbsSeparator', ui: breadcrumbs },
+  { name: 'Breadcrumbs', slot: 'collapsed', label: 'BreadcrumbsCollapsed', ui: breadcrumbs },
+  {
+    name: 'Breadcrumbs',
+    slot: 'collapsedIcon',
+    label: 'BreadcrumbsCollapsedIcon',
+    ui: breadcrumbs,
+  },
   { name: 'Pagination', slot: 'list', label: 'Pagination', ui: <Pagination count={3} /> },
   {
     name: 'PaginationItem',
@@ -193,6 +276,9 @@ const cases: Case[] = [
     ),
   },
   { name: 'Pressable', slot: 'root', label: 'Pressable', ui: <Pressable>p</Pressable> },
+  { name: 'Tabs', slot: 'root', label: 'Tabs', ui: tabs },
+  { name: 'Tab', slot: 'root', label: 'Tab', ui: tabs },
+  { name: 'TabPanel', slot: 'root', label: 'TabPanel', ui: tabPanel },
   { name: 'Quote', slot: 'root', label: 'Quote', ui: <Quote>q</Quote> },
   { name: 'Radio', slot: 'root', label: 'Radio', ui: <Radio /> },
   {
@@ -350,6 +436,79 @@ const cases: Case[] = [
     ),
   },
   {
+    name: 'MenuItem',
+    slot: 'startIcon',
+    label: 'MenuItemStartIcon',
+    ui: (
+      <MenuList>
+        <MenuItem shortcut="F2">A</MenuItem>
+      </MenuList>
+    ),
+  },
+  {
+    name: 'MenuItem',
+    slot: 'label',
+    label: 'MenuItemLabel',
+    ui: (
+      <MenuList>
+        <MenuItem shortcut="F2">A</MenuItem>
+      </MenuList>
+    ),
+  },
+  {
+    name: 'MenuItem',
+    slot: 'shortcut',
+    label: 'MenuItemShortcut',
+    ui: (
+      <MenuList>
+        <MenuItem shortcut="F2">A</MenuItem>
+      </MenuList>
+    ),
+  },
+  {
+    name: 'MenuItem',
+    slot: 'submenuIcon',
+    label: 'MenuItemSubmenuIcon',
+    ui: (
+      <MenuList>
+        <MenuItem submenu={null}>A</MenuItem>
+      </MenuList>
+    ),
+  },
+  {
+    name: 'MenuItem',
+    slot: 'secondaryAction',
+    label: 'MenuItemSecondaryAction',
+    ui: (
+      <MenuList>
+        <MenuItem secondaryAction={<span>x</span>}>A</MenuItem>
+      </MenuList>
+    ),
+  },
+  {
+    name: 'MenuItem',
+    slot: 'entry',
+    label: 'MenuItemEntry',
+    ui: (
+      <MenuList>
+        <MenuItem submenu={null}>A</MenuItem>
+      </MenuList>
+    ),
+  },
+  {
+    name: 'Menu',
+    slot: 'paper',
+    label: 'MenuPaper',
+    ui: <Menu trigger={<button type="button">m</button>} defaultOpen />,
+  },
+  {
+    name: 'ContextMenu',
+    slot: 'paper',
+    label: 'ContextMenuPaper',
+    ui: <ContextMenu target={<div>t</div>} />,
+    open: () => fireEvent.contextMenu(screen.getByText('t')),
+  },
+  {
     name: 'NativeSelect',
     slot: 'select',
     label: 'NativeSelectSelect',
@@ -425,6 +584,41 @@ const cases: Case[] = [
     ui: <TableSortLabel>Name</TableSortLabel>,
   },
   { name: 'TextInput', slot: 'input', label: 'TextInputInput', ui: <TextInput /> },
+  { name: 'Tabs', slot: 'list', label: 'TabsList', ui: tabs },
+  { name: 'Tabs', slot: 'indicator', label: 'TabsIndicator', ui: tabs },
+  { name: 'Tabs', slot: 'startContent', label: 'TabsStart', ui: tabs },
+  { name: 'Tabs', slot: 'endContent', label: 'TabsEnd', ui: tabs },
+  {
+    name: 'Tabs',
+    slot: 'scrollButton',
+    label: 'TabsScrollButton',
+    ui: (
+      <Tabs overflowBehavior="scroll" scrollButtons="always">
+        <Tab label="t" />
+      </Tabs>
+    ),
+  },
+  {
+    name: 'Tabs',
+    slot: 'overflowButton',
+    label: 'TabsOverflowButton',
+    ui: overflowingTabs,
+    open: overflow,
+  },
+  {
+    name: 'Tabs',
+    slot: 'overflowClose',
+    label: 'TabsOverflowClose',
+    ui: overflowingTabs,
+    open: () => {
+      overflow()
+      fireEvent.click(screen.getByRole('button', { name: 'More' }))
+    },
+  },
+  { name: 'Tab', slot: 'label', label: 'TabLabel', ui: tabs },
+  { name: 'Tab', slot: 'icon', label: 'TabIcon', ui: tabs },
+  { name: 'Tab', slot: 'secondaryAction', label: 'TabSecondaryAction', ui: tabs },
+  { name: 'Tab', slot: 'close', label: 'TabClose', ui: tabs },
 ]
 
 describe('theme.components styleOverrides', () => {

@@ -7,7 +7,9 @@ import {
 } from '../utils/test/storiesOptions'
 import { Flex } from '../Flex'
 import { Button } from '../Button'
+import { exampleArgs } from '../utils/test/renderExample'
 import { ButtonGroup } from './ButtonGroup'
+import { buttonGroupCatalog } from './ButtonGroup.catalog'
 
 const meta: Meta<typeof ButtonGroup> = {
   title: 'Theme/ButtonGroup',
@@ -16,13 +18,26 @@ const meta: Meta<typeof ButtonGroup> = {
   parameters: {
     layout: 'padded',
     controls: {
-      include: ['variant', 'color', 'size', 'orientation', 'borderRadius', 'disabled', 'fullWidth'],
+      include: [
+        'variant',
+        'color',
+        'size',
+        'orientation',
+        'borderRadius',
+        'disabled',
+        'fullWidth',
+        'as',
+      ],
     },
   },
-  args: {
-    'aria-label': 'Basic button group',
-  },
+  args: exampleArgs(buttonGroupCatalog.example),
   argTypes: {
+    as: {
+      control: { type: 'select' },
+      options: ['div', 'section', 'nav'],
+      description: 'Overrides the root element.',
+      table: { category: 'Layout', defaultValue: { summary: 'div' } },
+    },
     variant: {
       control: { type: 'select' },
       options: buttonVariantTokens,

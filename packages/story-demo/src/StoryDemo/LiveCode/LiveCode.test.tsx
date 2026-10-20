@@ -24,7 +24,9 @@ describe('LiveCode', () => {
         toolbar={<span>the toolbar</span>}
       />
     )
-    expect(await screen.findByRole('button', { name: 'live result' })).toBeInTheDocument()
+    const result = await screen.findByRole('button', { name: 'live result' })
+    // Straight on the demo surface, with no wrapper of the preview's own.
+    expect(result.parentElement).toHaveStyle({ display: 'flex' })
     expect(screen.getByText('the toolbar')).toBeInTheDocument()
     // The editor shows only the visible buffer - helpers stay hidden.
     const editor = document.querySelector('.prism-code')!

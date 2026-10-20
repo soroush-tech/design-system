@@ -9,7 +9,9 @@ import { Image } from '../Image'
 import { Paper } from '../Paper'
 import { Typography } from '../Typography'
 import { View } from '../View'
+import { exampleArgs } from '../utils/test/renderExample'
 import { Skeleton, type SkeletonProps } from './Skeleton'
+import { skeletonCatalog } from './Skeleton.catalog'
 const MEDIA_SIZES = '(min-width: 640px) min(30vw, 400px), 100vw'
 
 // Story-local stand-in for the app's imagetools `?as=picture` import - the package
@@ -20,10 +22,7 @@ const meta: Meta<typeof Skeleton> = {
   title: 'Theme/Skeleton',
   component: Skeleton,
   tags: ['autodocs'],
-  args: {
-    variant: 'text',
-    animation: 'pulse',
-  },
+  args: exampleArgs(skeletonCatalog.example),
   parameters: {
     layout: 'padded',
     controls: {

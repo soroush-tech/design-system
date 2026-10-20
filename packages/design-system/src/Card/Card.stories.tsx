@@ -11,7 +11,9 @@ import {
 import { cardVariantTokens } from '../utils/test/storiesOptions'
 import { Flex } from '../Flex'
 import { View } from '../View'
+import { exampleArgs } from '../utils/test/renderExample'
 import { Card } from './Card'
+import { cardCatalog } from './Card.catalog'
 
 const meta: Meta<typeof Card> = {
   title: 'Theme/Card',
@@ -86,11 +88,7 @@ export default meta
 type Story = StoryObj<typeof Card>
 
 export const Default: Story = {
-  args: {
-    title: 'Component',
-    caption: 'A flexible card surface with paper and bracketBox variants.',
-    p: 3,
-  },
+  args: exampleArgs(cardCatalog.example),
 }
 
 export const Paper: Story = {

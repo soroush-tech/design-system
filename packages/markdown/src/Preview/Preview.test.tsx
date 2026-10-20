@@ -64,6 +64,26 @@ describe('Preview', () => {
     }
   })
 
+  it("gives every heading GitHub's anchor id, so a link to its section lands on it", () => {
+    renderPreview()
+    for (let level = 1; level <= 6; level++) {
+      expect(screen.getByRole('heading', { level, name: `Heading ${level}` })).toHaveAttribute(
+        'id',
+        `heading-${level}`
+      )
+    }
+    const { container } = render(
+      <ThemeProvider theme={baseTheme}>
+        <Preview>{'## Rows from data\n\n## Rows from data\n\n### `MenuItem` props'}</Preview>
+      </ThemeProvider>
+    )
+    expect([...container.querySelectorAll('h2, h3')].map((heading) => heading.id)).toEqual([
+      'rows-from-data',
+      'rows-from-data-1',
+      'menuitem-props',
+    ])
+  })
+
   it('maps inline elements: paragraph, bold, italic and link', () => {
     renderPreview()
     expect(screen.getByText('bold').tagName).toBe('STRONG')

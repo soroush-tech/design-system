@@ -7,9 +7,14 @@ CodeSandbox export. The shown code is synthesized from the real story source - u
 imports, transitive helper closure, and args serialization included.
 
 The page prerenders a read-only view (composed via portable stories) and upgrades to the
-live editor after hydration once the scope resolves. Controls, the language toggle, and
-expand/collapse each regenerate the buffer from the story model, discarding manual edits;
-reset restores everything.
+live editor after hydration once the scope resolves - in the same layout (`DemoFrame`, with
+react-live's own editor read-only in `CodePanel`), so the page doesn't move. A story the code
+can't reproduce - one with decorators, a render it inherits from the meta, or args no code can
+hold (a rendered element) - stays on its read-only view, which shows it right. The code writes
+out the story's controls first, then every other arg it can hold (its data - `items`,
+`options`); the story's own declarations shadow the scope, so a helper named like a scope entry
+still works. Controls, the language toggle, and expand/collapse each regenerate the buffer from
+the story model, discarding manual edits; reset restores everything.
 
 ---
 

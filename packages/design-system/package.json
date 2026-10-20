@@ -32,6 +32,7 @@
     "./AppBar": "./src/AppBar/index.ts",
     "./Avatar": "./src/Avatar/index.ts",
     "./Backdrop": "./src/Backdrop/index.ts",
+    "./Breadcrumbs": "./src/Breadcrumbs/index.ts",
     "./Button": "./src/Button/index.ts",
     "./ButtonGroup": "./src/ButtonGroup/index.ts",
     "./Card": "./src/Card/index.ts",
@@ -49,6 +50,7 @@
     "./Image": "./src/Image/index.ts",
     "./LinearProgress": "./src/LinearProgress/index.ts",
     "./Link": "./src/Link/index.ts",
+    "./Menu": "./src/Menu/index.ts",
     "./MenuItem": "./src/MenuItem/index.ts",
     "./Modal": "./src/Modal/index.ts",
     "./NativeSelect": "./src/NativeSelect/index.ts",
@@ -64,10 +66,12 @@
     "./Skeleton": "./src/Skeleton/index.ts",
     "./Switch": "./src/Switch/index.ts",
     "./Table": "./src/Table/index.ts",
+    "./Tabs": "./src/Tabs/index.ts",
     "./TextInput": "./src/TextInput/index.ts",
     "./ToggleButton": "./src/ToggleButton/index.ts",
     "./Typography": "./src/Typography/index.ts",
     "./View": "./src/View/index.ts",
+    "./catalog": "./src/catalog/index.ts",
     "./theme": "./src/theme/index.ts",
     "./style": "./src/style/index.ts",
     "./utils": "./src/utils/index.ts",
@@ -120,6 +124,16 @@
         "require": {
           "types": "./dist/Backdrop.d.cts",
           "default": "./dist/Backdrop.cjs"
+        }
+      },
+      "./Breadcrumbs": {
+        "import": {
+          "types": "./dist/Breadcrumbs.d.mts",
+          "default": "./dist/Breadcrumbs.mjs"
+        },
+        "require": {
+          "types": "./dist/Breadcrumbs.d.cts",
+          "default": "./dist/Breadcrumbs.cjs"
         }
       },
       "./Button": {
@@ -292,6 +306,16 @@
           "default": "./dist/Link.cjs"
         }
       },
+      "./Menu": {
+        "import": {
+          "types": "./dist/Menu.d.mts",
+          "default": "./dist/Menu.mjs"
+        },
+        "require": {
+          "types": "./dist/Menu.d.cts",
+          "default": "./dist/Menu.cjs"
+        }
+      },
       "./MenuItem": {
         "import": {
           "types": "./dist/MenuItem.d.mts",
@@ -442,6 +466,16 @@
           "default": "./dist/Table.cjs"
         }
       },
+      "./Tabs": {
+        "import": {
+          "types": "./dist/Tabs.d.mts",
+          "default": "./dist/Tabs.mjs"
+        },
+        "require": {
+          "types": "./dist/Tabs.d.cts",
+          "default": "./dist/Tabs.cjs"
+        }
+      },
       "./TextInput": {
         "import": {
           "types": "./dist/TextInput.d.mts",
@@ -450,6 +484,16 @@
         "require": {
           "types": "./dist/TextInput.d.cts",
           "default": "./dist/TextInput.cjs"
+        }
+      },
+      "./catalog": {
+        "import": {
+          "types": "./dist/catalog.d.mts",
+          "default": "./dist/catalog.mjs"
+        },
+        "require": {
+          "types": "./dist/catalog.d.cts",
+          "default": "./dist/catalog.cjs"
         }
       },
       "./theme": {
@@ -570,6 +614,7 @@
   },
   "devDependencies": {
     "@emotion/css": "^11.13.5",
+    "@soroush.tech/docs-content": "workspace:*",
     "@soroush.tech/eslint-config": "workspace:*",
     "@storybook/addon-a11y": "^10.5.8",
     "@storybook/addon-docs": "^10.5.8",

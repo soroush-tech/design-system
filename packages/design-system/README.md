@@ -81,6 +81,14 @@ import { Global, globalStyles, CacheProvider, styleCache } from '@soroush.tech/d
 
 `Global` (retyped against this package's `Theme`) applies app-wide CSS and should render inside `ThemeProvider` so it resolves against the active theme. `globalStyles(theme)` is the base reset this package owns - box-sizing, margin/table resets, and theme-driven body colors - compose it into your own `Global` styles array alongside your app's own concerns (font-family, webfont loading, and anything else app-specific stay entirely app policy).
 
+The component catalog - every component as data, for tools that place and write components (a
+design tool's palette, a source writer) - lives at its own subpath and loads in plain Node
+([docs](./docs/catalog.md)):
+
+```ts
+import { catalog } from '@soroush.tech/design-system/catalog'
+```
+
 SSR critical-CSS extraction (e.g. with `@emotion/server`) is a separate, opt-in concern most apps never need - that's what `CacheProvider` and its paired `styleCache` instance are for.
 
 ---
@@ -120,9 +128,17 @@ SSR critical-CSS extraction (e.g. with `@emotion/server`) is a separate, opt-in 
 | `Checkbox`, `Radio`, `Switch`                        | Selection controls                                                      |
 | `NativeSelect`                                       | Low-level platform `<select>` - not recommended; use `Select native`    |
 | `Select`                                             | The select to use - custom listbox, or `native` for the platform picker |
-| `MenuItem`                                           | Option row for `Select`'s listbox                                       |
+| `MenuItem`                                           | Option row for `Select`'s listbox, and a menu row in a `MenuList`       |
 | `Form`, `FormControl`, `FormLabel`, `FormHelperText` | Form composition and labeling                                           |
 | `Pagination`                                         | Page navigation control                                                 |
+
+### Navigation & menus
+
+| Component     | Purpose                                                                                                                                                                                                                                                                         |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Breadcrumbs` | The trail of links from a site's root to the current page - a long one collapses behind a button that shows it all                                                                                                                                                              |
+| `Menu`        | A trigger and the list of commands it opens - exports `MenuList` (the `role="menu"` list that owns the keyboard), `MenuDivider`, `MenuItems` (rows from data) and `ContextMenu` (the same list, opened at the pointer by a right-click) from `@soroush.tech/design-system/Menu` |
+| `Tabs`        | A row of tabs - exports `Tab`, `TabContext` (holds the value for a `TabList` and its panels), `TabList` (the `Tabs` of a `TabContext`), `TabPanel` (the content a tab shows) and `TabScrollButton` from `@soroush.tech/design-system/Tabs`                                      |
 
 ### Feedback
 

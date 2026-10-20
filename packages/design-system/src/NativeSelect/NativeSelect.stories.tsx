@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { m, p, width, minWidth, maxWidth } from '../utils/test/storiesArgs'
+import { borderRadius, m, p, width, minWidth, maxWidth } from '../utils/test/storiesArgs'
 import {
   backgroundTokens,
   textInputColorTokens,
@@ -10,7 +10,9 @@ import {
 } from '../utils/test/storiesOptions'
 import { Flex } from '../Flex'
 import { Typography } from '../Typography'
+import { exampleArgs } from '../utils/test/renderExample'
 import { NativeSelect, type NativeSelectProps } from './NativeSelect'
+import { nativeSelectCatalog } from './NativeSelect.catalog'
 
 const platformOptions = [
   { label: 'Web', value: 'web' },
@@ -38,6 +40,8 @@ const meta: Meta<typeof NativeSelect> = {
         'textColor',
         'bg',
         'size',
+        'borderRadius',
+        'options',
         'disabled',
         'error',
         'required',
@@ -52,12 +56,14 @@ const meta: Meta<typeof NativeSelect> = {
       ],
     },
   },
-  args: {
-    options: platformOptions,
-    placeholder: 'Pick a platform',
-    variant: 'outlined',
-  },
+  args: exampleArgs(nativeSelectCatalog.example),
   argTypes: {
+    borderRadius,
+    options: {
+      control: 'object',
+      description: 'The options to populate the select with - `{ label, value }` each.',
+      table: { category: 'Content' },
+    },
     variant: {
       control: { type: 'select' },
       options: textInputVariantTokens,

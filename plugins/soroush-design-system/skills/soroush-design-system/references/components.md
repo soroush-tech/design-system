@@ -2,7 +2,7 @@
 
 # Components
 
-The 46 components shipped by the design system, and when to reach for each.
+The 71 components shipped by the design system, and when to reach for each.
 Import every component from its own subpath.
 
 ## Layout & surfaces
@@ -16,6 +16,7 @@ Import every component from its own subpath.
 - **AppBar** - Renders as `<header>`.
 - **Drawer** - A panel that slides in from a screen edge.
 - **Sidebar** - A collapsible vertical icon rail.
+- **SidebarItem** - One entry of a [`Sidebar`](https://docs.soroush.tech/design-system/components/sidebar/): an icon **pinned to the anchored edge** (it holds its position while the rail opens and closes) plus content shown while the rail is open - the `label` by default, or custom `children` (badges, counts, ...).
 
 ## Content & data display
 
@@ -25,24 +26,51 @@ Import every component from its own subpath.
 - **Image** - A styled-system `<img>` primitive.
 - **Avatar** - Displays a user image, initials, or icon in a consistently sized container.
 - **Table** - The root of the table family.
+- **TableBody** - The body section of a `Table`.
+- **TableCell** - A cell in a table.
+- **TableContainer** - Scroll wrapper for `Table`.
+- **TableControl** - Kills the sortable/paginated-table boilerplate: consumer-called hooks own the state (`useTableSort`, `useTablePagination`, `useTableSelection`), and `TableControl` takes the `data` plus the hook outputs and renders the visible rows inside `TableBody`.
+- **TableFooter** - The footer section of a `Table`.
+- **TableHead** - The header section of a `Table`.
+- **TablePagination** - A `TableCell`-based pagination control for placing inside `TableFooter > TableRow` - a rows-per-page `NativeSelect`, a displayed-rows range label, and the nav button cluster (`TablePaginationActions`).
+- **TablePaginationActions** - The first / previous / next / last icon-button cluster used inside `TablePagination`, exported separately for custom toolbars.
+- **TableRow** - A row in a table.
+- **TableSortLabel** - A button-based label for sortable column headers, placed inside a header `TableCell`.
 
 ## Inputs & forms
 
 - **Button** - Renders as `<button>`.
 - **ButtonGroup** - Groups related `Button` immediate children into a visually joined cluster - adjacent borders collapse and the group's `borderRadius` rounds only its outer corners (the first/last buttons keep their leading/trailing corners; every inner corner is squared).
 - **ToggleButton** - An individual toggle button (text or icon) - usable standalone or inside a `ToggleButtonGroup`.
+- **ToggleButtonGroup** - A `ButtonGroup` of `ToggleButton`s with single (exclusive) or multiple selection.
 - **TextInput** - A theme-aware text input primitive.
 - **Checkbox** - A binary toggle control.
 - **Radio** - A single-selection control for use within a group.
 - **Switch** - A sliding toggle control.
 - **NativeSelect** - Not the recommended select: use [`Select`](https://docs.soroush.tech/design-system/components/select/) - and `<Select native>` when you want the platform's own picker, which renders this component for you with the same `MenuItem` children as every other select.
 - **Select** - The select to use for every dropdown choice - always prefer it over `NativeSelect`.
-- **MenuItem** - A single option row for [`Select`](https://docs.soroush.tech/design-system/components/select/)'s listbox, rendered as a semantic `<li role="option">`.
+- **MenuItem** - A row of a list, in one of two roles:
 - **Form** - Renders a `<form>` and provides form-wide field defaults through `FormContext`.
 - **FormControl** - Groups a label, control, and helper text into one accessible field and shares their state through React context.
 - **FormLabel** - A field label built on [`Typography`](https://docs.soroush.tech/design-system/components/typography/), rendered as a `<label>`.
 - **FormHelperText** - Helper or error text for a field, built on [`Typography`](https://docs.soroush.tech/design-system/components/typography/) and rendered as a `<p>`.
 - **Pagination** - Page-number navigation for paging a list of arbitrary items (e.g. a blog index), with ellipsis ranges and optional first/last/prev/next controls.
+- **PaginationItem** - The individual item rendered inside `Pagination`.
+
+## Navigation & menus
+
+- **Breadcrumbs** - The trail of links from a site's root to the current page, so a page shows where it sits and every ancestor is one click away.
+- **Menu** - A trigger and the [`MenuList`](https://docs.soroush.tech/design-system/api/menu-list/) of commands it opens.
+- **ContextMenu** - A [`MenuList`](https://docs.soroush.tech/design-system/api/menu-list/) opened by a right-click over its target, at the pointer - or, from the keyboard, by the context-menu key or Shift+F10 at the focused element.
+- **MenuDivider** - A line between groups of rows in a [`MenuList`](https://docs.soroush.tech/design-system/api/menu-list/), rendered as `<li role="separator">`.
+- **MenuItems** - Menu rows from data - for menus that come from a list of commands.
+- **MenuList** - A list of commands, rendered as a semantic `<ul role="menu">`.
+- **Tabs** - A row of tabs.
+- **Tab** - One tab of a `Tabs` row: a label, an icon on any side of it, and - with a `closeLabel` - a close button of its own.
+- **TabContext** - Holds the selected value for a `TabList` and the `TabPanel`s beside it, wherever they sit - the tabs in a toolbar, the panels further down the page.
+- **TabList** - The `Tabs` of a `TabContext`: it shows the context's value and chooses through it, and links each tab to its `TabPanel` - the tab `aria-controls` its panel, and the panel is named by its tab.
+- **TabPanel** - The content a tab shows: a `role="tabpanel"` named by its tab, which in turn `aria-controls` it.
+- **TabScrollButton** - The button that scrolls a row of tabs.
 
 ## Feedback
 

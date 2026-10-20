@@ -1,23 +1,38 @@
-import { Preview, type PreviewSlotProps } from '@soroush.tech/markdown/Preview'
-
-// The pre slot's type requires children, but Preview supplies them - only the
-// margin override travels through the slot.
-const SLOT_PROPS: PreviewSlotProps = { pre: { my: 0 } as PreviewSlotProps['pre'] }
+import { useMemo } from 'react'
+import { Editor } from 'react-live'
+import { styled } from '@soroush.tech/design-system'
+import { useTheme } from '@soroush.tech/design-system/theme'
+import { prismTheme } from '../../utils/prismTheme'
 
 export interface CodePanelProps {
   /** The demo source to display. */
   code: string
-  /** Sets the fence language so highlighting matches the toggle. */
+  /** Sets the highlighting language so it matches the toggle. */
   language: 'ts' | 'js'
 }
 
 /**
- * The read-only code panel: the demo source rendered as a fenced block through the
- * markdown `Preview`, which highlights it with the theme's syntax tokens and provides
- * the hover copy button via `CodeBlock`.
+ * The read-only code panel: react-live's own editor, switched off - the live editor's very
+ * markup and highlighting, so a demo turning live doesn't change its code's size. Only the
+ * editor is imported; react-live's evaluator stays in the lazily loaded `LiveCode`.
  */
+// What the editable editor sets on its element, set here too: long lines wrap alike, and a tab
+// is as wide - a read-only and a live panel of the same code are one size.
+const ReadOnlyEditor = styled('div', { name: 'StoryDemo', slot: 'codePanel', label: 'CodePanel' })({
+  '& pre': { whiteSpace: 'pre-wrap', tabSize: 2 },
+})
+
 export function CodePanel({ code, language }: Readonly<CodePanelProps>) {
-  const fence = language === 'ts' ? 'tsx' : 'jsx'
-  // The block sits flush inside the demo card - the card provides the spacing.
-  return <Preview slotProps={SLOT_PROPS}>{`\`\`\`${fence}\n${code}\n\`\`\``}</Preview>
+  const theme = useTheme()
+  const editorTheme = useMemo(() => prismTheme(theme.syntax!), [theme])
+  return (
+    <ReadOnlyEditor>
+      <Editor
+        code={code}
+        language={language === 'ts' ? 'tsx' : 'jsx'}
+        theme={editorTheme}
+        disabled
+      />
+    </ReadOnlyEditor>
+  )
 }

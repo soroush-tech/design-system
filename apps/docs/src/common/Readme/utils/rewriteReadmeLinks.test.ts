@@ -19,6 +19,18 @@ describe('rewriteReadmeLink', () => {
     )
   })
 
+  it("resolves a family member to its API page, and keeps a link's section", () => {
+    expect(rewriteReadmeLink('../MenuList/README.md')).toBe('/design-system/api/menu-list/')
+    expect(rewriteReadmeLink('../Menu/MenuItems/README.md')).toBe('/design-system/api/menu-items/')
+    expect(rewriteReadmeLink('../../MenuItem/README.md#submenus')).toBe(
+      '/design-system/api/menu-item/#submenus'
+    )
+    expect(rewriteReadmeLink('../Menu/')).toBe('/design-system/components/menu/')
+    expect(rewriteReadmeLink('../../docs/customization.md#slot-props')).toBe(
+      '/design-system/customization/how-to/#slot-props'
+    )
+  })
+
   it('resolves a linked component to its own package section', () => {
     expect(rewriteReadmeLink('../Mermaid/README.md')).toBe('/markdown/components/mermaid/')
   })

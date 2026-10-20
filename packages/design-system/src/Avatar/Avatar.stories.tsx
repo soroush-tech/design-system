@@ -8,7 +8,9 @@ import {
 } from '../utils/test/storiesOptions'
 import { Flex } from '../Flex'
 import { Typography } from '../Typography'
+import { exampleArgs } from '../utils/test/renderExample'
 import { Avatar } from './Avatar'
+import { avatarCatalog } from './Avatar.catalog'
 
 const DEMO_IMG = '/soroush.svg'
 
@@ -17,6 +19,7 @@ const meta: Meta<typeof Avatar> = {
   component: Avatar,
   tags: ['autodocs'],
   args: {
+    ...exampleArgs(avatarCatalog.example),
     ring: false,
   },
   parameters: {

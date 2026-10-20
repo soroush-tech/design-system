@@ -37,6 +37,7 @@ import LastPageIcon from './icons/LastPage'
 import LinkIcon from './icons/Link'
 import LockIcon from './icons/Lock'
 import MenuIcon from './icons/Menu'
+import MoreHorizIcon from './icons/MoreHoriz'
 import NeurologyIcon from './icons/Neurology'
 import PsychologyIcon from './icons/Psychology'
 import RebaseEditIcon from './icons/RebaseEdit'
@@ -97,6 +98,7 @@ export const icons = {
   link: LinkIcon,
   lock: LockIcon,
   menu: MenuIcon,
+  more_horiz: MoreHorizIcon,
   neurology: NeurologyIcon,
   psychology: PsychologyIcon,
   rebase_edit: RebaseEditIcon,

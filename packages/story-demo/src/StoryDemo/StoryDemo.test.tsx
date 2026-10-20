@@ -193,6 +193,39 @@ describe('StoryDemo', () => {
     expect((await screen.findByTestId('live-scope')).textContent).toBe('Marker')
   })
 
+  it("leaves out of the scope the names the story declares itself, so its helpers don't clash", async () => {
+    renderDemo({ storyName: 'Default', scope: { Marker: 1, label: 'from the scope', items: [] } })
+    expect((await screen.findByTestId('live-scope')).textContent).toBe('Marker')
+  })
+
+  it("stays on its rendered view when the code can't reproduce it - decorators, element args", async () => {
+    const withElementArgs = {
+      ...stories,
+      Default: { args: { children: <span>an element</span>, onClick: () => {} } },
+    } as unknown as StoriesModule
+    const withMetaRender = {
+      ...stories,
+      default: { ...stories.default, render: () => <span>the meta's render</span> },
+    } as unknown as StoriesModule
+    for (const props of [
+      { storyName: 'Decorated' },
+      { storyName: 'Default', stories: withElementArgs },
+      { storyName: 'Default', stories: withMetaRender },
+    ]) {
+      const { unmount } = renderDemo({ ...props, scope: { Marker: 1 } })
+      await waitFor(() => expect(document.querySelector('pre.prism-code')).toBeInTheDocument())
+      expect(screen.queryByTestId('live-editor')).not.toBeInTheDocument()
+      unmount()
+    }
+    // A handler arg changes nothing on screen: such a story still goes live.
+    const withHandler = {
+      ...stories,
+      Default: { args: { children: 'Sample', onClick: () => {} } },
+    } as unknown as StoriesModule
+    renderDemo({ storyName: 'Default', stories: withHandler, scope: { Marker: 1 } })
+    expect(await screen.findByTestId('live-editor')).toBeInTheDocument()
+  })
+
   it('keeps the read-only view when the scope loader fails', async () => {
     renderDemo({ storyName: 'Default', scope: () => Promise.reject(new Error('offline')) })
     await waitFor(() => expect(document.querySelector('pre')).toBeInTheDocument())

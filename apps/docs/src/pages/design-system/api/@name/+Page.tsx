@@ -2,7 +2,7 @@ import { Link } from '@soroush.tech/design-system/Link'
 import { Typography } from '@soroush.tech/design-system/Typography'
 import { View } from '@soroush.tech/design-system/View'
 import { CodeBlock } from '@soroush.tech/markdown/CodeBlock'
-import { componentBySlug } from 'src/common/nav'
+import { componentBySlug, importSubpathOf, kebabCase } from 'src/common/nav'
 import { sectionPath } from 'src/common/sectionPath'
 import { DocsNav } from 'src/common/DocsNav/DocsNav'
 import { Layout } from 'src/common/Layout'
@@ -19,8 +19,14 @@ export default function Page() {
   const slug = routeParams.name
   const item = componentBySlug.get(slug)
   const name = item?.name ?? 'Component'
-  const { api } = splitReadme(readmeForSlug(slug))
-  const importSnippet = `import { ${name} } from '@soroush.tech/design-system/${name}'`
+  const { intro, api } = splitReadme(readmeForSlug(slug))
+  const importSnippet = `import { ${name} } from '@soroush.tech/design-system/${item ? importSubpathOf(item) : name}'`
+  // A family member's demos are under its own heading on its family's page - a PascalCase
+  // name's heading id is the name in lower case.
+  const demosPath = item?.family
+    ? `/components/${kebabCase(item.family)}/#${item.name.toLowerCase()}`
+    : `/components/${slug}/`
+  const demosName = item?.family ?? name
   const sourceDir = item ? item.readmePath.replace(/\/README\.md$/, '') : ''
   return (
     <Layout sidebar={<DocsNav />}>
@@ -31,14 +37,16 @@ export default function Page() {
         API reference for the {name} component: its props with their token values and defaults, the
         styled-system prop groups, and forwarded HTML attributes.
       </Typography>
+      {/* A family member has no page of its own, so what it is and how it composes is here. */}
+      {item?.family && <Readme source={intro} stripChrome />}
       <View as="section" my={4}>
         <Typography variant="h4" as="h2" gutterBottom>
           Demos
         </Typography>
         <Typography variant="body1">
           For usage examples, visit the component demo page:{' '}
-          <Link href={sectionPath('design-system', `/components/${slug}/`)} color="primary">
-            {name}
+          <Link href={sectionPath('design-system', demosPath)} color="primary">
+            {demosName}
           </Link>
         </Typography>
       </View>

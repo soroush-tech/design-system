@@ -1,7 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { bg, p, m, borderRadius } from '../utils/test/storiesArgs'
 import { Typography } from '../Typography'
+import { exampleArgs } from '../utils/test/renderExample'
 import { Quote } from './Quote'
+import { quoteCatalog } from './Quote.catalog'
 
 const meta: Meta<typeof Quote> = {
   title: 'Theme/Quote',
@@ -11,7 +13,7 @@ const meta: Meta<typeof Quote> = {
     layout: 'padded',
     controls: { include: ['bg', 'p', 'm', 'borderRadius'] },
   },
-  args: { bg: 'terminal', p: 3 },
+  args: exampleArgs(quoteCatalog.example),
   argTypes: { bg, p, m, borderRadius },
   render: (args) => (
     <Quote {...args}>

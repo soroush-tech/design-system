@@ -65,22 +65,21 @@ export const jsLiteral = (value: unknown): string => {
 }
 
 /**
- * The arg names worth writing out: the include-listed ones that are present and
- * serializable, in include order, plus `aria-label` (kept for a11y fidelity even when
- * it is not a control).
+ * The arg names worth writing out, each present and serializable: the include-listed ones in
+ * include order, then `aria-label` (kept for a11y fidelity even when it is not a control),
+ * then every other arg the code can hold - a story's data (`items`, `options`) renders
+ * nothing without it, control or not.
  */
 const presentableKeys = (
   args: Record<string, unknown>,
   include: readonly string[],
   extras: readonly string[]
 ): string[] => {
-  const keys = include.filter(
-    (key) => key !== 'children' && args[key] !== undefined && isSerializableArg(args[key])
-  )
-  for (const extra of extras) {
-    if (args[extra] !== undefined && isSerializableArg(args[extra]) && !keys.includes(extra)) {
-      keys.push(extra)
-    }
+  const isWritable = (key: string) => args[key] !== undefined && isSerializableArg(args[key])
+  const keys = include.filter((key) => key !== 'children' && isWritable(key))
+  for (const key of [...extras, ...Object.keys(args)]) {
+    const isExtraOrData = extras.includes(key) || key !== 'children'
+    if (isExtraOrData && isWritable(key) && !keys.includes(key)) keys.push(key)
   }
   return keys
 }

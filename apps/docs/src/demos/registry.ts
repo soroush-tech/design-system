@@ -29,6 +29,11 @@ const storyTitle = (stories: StoriesModule, storyName: string): string => {
   return custom ?? storyName.replaceAll(/([a-z0-9])([A-Z])/g, '$1 $2')
 }
 
+// A story tagged `!autodocs` stays out of the docs pages, as it does out of Storybook's -
+// one that needs the whole window, say, rather than a demo's frame.
+const isOnDocsPages = (stories: StoriesModule, storyName: string): boolean =>
+  !(stories[storyName] as { tags?: string[] } | undefined)?.tags?.includes('!autodocs')
+
 // Keyed by component name (the stories file's basename), each component's stories in
 // the order the author wrote them.
 const demosByComponent = new Map<string, DemoEntry[]>()
@@ -37,13 +42,15 @@ for (const [path, stories] of Object.entries(modules)) {
   const source = sources[path]
   demosByComponent.set(
     component,
-    listStoryNames(source).map((storyName) => ({
-      path: `${component}/${storyName}`,
-      title: storyTitle(stories, storyName),
-      stories,
-      source,
-      storyName,
-    }))
+    listStoryNames(source)
+      .filter((storyName) => isOnDocsPages(stories, storyName))
+      .map((storyName) => ({
+        path: `${component}/${storyName}`,
+        title: storyTitle(stories, storyName),
+        stories,
+        source,
+        storyName,
+      }))
   )
 }
 

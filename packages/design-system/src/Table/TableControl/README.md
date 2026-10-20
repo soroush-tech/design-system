@@ -41,7 +41,7 @@ const pagination = useTablePagination({ defaultRowsPerPage: 10 })
 ## The hooks
 
 `useTableSort`, `useTablePagination`, and `useTableSelection` live in
-[`@soroush.tech/design-system/Table/hooks/`](../hooks/README.md) - see that README for their full APIs. In short:
+[`@soroush.tech/design-system/Table/hooks/`](https://github.com/soroush-tech/design-system/blob/main/packages/design-system/src/Table/hooks/README.md) - see that README for their full APIs. In short:
 
 - **`useTableSort(keys, onChange?)`** - column-keyed entries that spread onto `TableSortLabel`;
   per-column direction memory, always-flip toggle (first click sorts `'desc'`)
@@ -50,7 +50,7 @@ const pagination = useTablePagination({ defaultRowsPerPage: 10 })
 - **`useTableSelection(keys, onChange?)`** - key-based selection that survives paging and
   re-sorting; `all`/`row(key)` entries spread onto `Checkbox`
 
-## TableControl
+## Props
 
 | Prop           | Type                                   | Default  | Description                                                                                                                        |
 | -------------- | -------------------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------- |

@@ -38,5 +38,5 @@ Also supports `space` props on the root.
   translucent `main` for `text`).
 - Children must be immediate `Button`s (or components that read `ButtonGroupContext`).
 - This design system's buttons are flat (no elevation), so no `shouldDisableElevation` prop exists.
-- A split button (dropdown-driven action) is a composition of `ButtonGroup` + a menu and needs a
-  `Menu` component, which the design system doesn't have yet.
+- A split button (a dropdown-driven action) isn't built in yet: a [`Menu`](../Menu/) wraps its
+  trigger in a box of its own, which the group can't join to its buttons.

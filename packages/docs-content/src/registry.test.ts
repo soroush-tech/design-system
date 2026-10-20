@@ -5,7 +5,12 @@ import {
   categoryOf,
   componentBySlug,
   componentCategories,
+  componentLinkPath,
+  componentPagePath,
+  importSubpathOf,
   markdownComponents,
+  memberComponents,
+  membersOf,
   styledSystemDocSlug,
   styledSystemDocs,
   styledSystemGuides,
@@ -49,6 +54,23 @@ describe('component registry', () => {
     }
   })
 
+  it('every family member has its README on disk', () => {
+    for (const item of memberComponents) {
+      expect(designSystemReadmes.has(item.readmePath), `${item.readmePath} missing`).toBe(true)
+    }
+  })
+
+  it("every member README on disk is registered under its folder's family", () => {
+    const registered = new Set(memberComponents.map((item) => item.readmePath))
+    for (const suffix of designSystemReadmes) {
+      const [family, member, file] = suffix.split('/')
+      // A member's README sits beside its family's primary; hooks/ and the like are not members.
+      if (file && family !== member && isPascalCase(member)) {
+        expect(registered.has(suffix), `${suffix} not registered`).toBe(true)
+      }
+    }
+  })
+
   it('every registered component has its MDX page beside its README', () => {
     // Component pages are mandatory: the docs route renders the MDX and nothing else,
     // so a missing page fails the prerender. Catch it here instead.
@@ -82,6 +104,26 @@ describe('component registry', () => {
   it('reports the category a component sits under', () => {
     expect(categoryOf(componentBySlug.get('button')!)).toBe('Inputs & forms')
     expect(categoryOf(componentBySlug.get('preview')!)).toBeUndefined()
+  })
+
+  it("files a member under its family's category, its subpath and its page", () => {
+    const menuList = componentBySlug.get('menu-list')!
+    const menu = componentBySlug.get('menu')!
+    expect(membersOf(menu)).toContain(menuList)
+    expect(membersOf(componentBySlug.get('button')!)).toEqual([])
+    expect(categoryOf(menuList)).toBe(categoryOf(menu))
+    expect(importSubpathOf(menuList)).toBe('Menu')
+    expect(importSubpathOf(menu)).toBe('Menu')
+    expect(componentPagePath(menuList)).toBe('/api/menu-list/')
+    expect(componentPagePath(menu)).toBe('/components/menu/')
+  })
+
+  it("sends a link to a README's section to the page that shows it", () => {
+    const menuItem = componentBySlug.get('menu-item')!
+    const preview = componentBySlug.get('preview')!
+    expect(componentLinkPath(menuItem)).toBe('/components/menu-item/')
+    expect(componentLinkPath(menuItem, '#submenus')).toBe('/api/menu-item/#submenus')
+    expect(componentLinkPath(preview, '#props')).toBe('/components/preview/#props')
   })
 
   it('maps styled-system doc files to URL segments', () => {

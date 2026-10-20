@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url'
 import mdx from '@mdx-js/rollup'
 import react from '@vitejs/plugin-react'
 import rehypeHighlight from 'rehype-highlight'
+import rehypeSlug from 'rehype-slug'
 import remarkGfm from 'remark-gfm'
 import vike from 'vike/plugin'
 import sitemap from './vite/sitemapPlugin'
@@ -31,7 +32,8 @@ export default defineConfig({
         include: /\.mdx$/,
         providerImportSource: '@mdx-js/react',
         remarkPlugins: [remarkGfm],
-        rehypePlugins: [[rehypeHighlight, { ignoreMissing: true }]],
+        // Headings take GitHub's anchor ids, as the markdown Preview gives READMEs.
+        rehypePlugins: [rehypeSlug, [rehypeHighlight, { ignoreMissing: true }]],
       }),
     },
     react(),

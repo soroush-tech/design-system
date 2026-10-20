@@ -1,13 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { gap, maxHeight, maxWidth, minHeight, minWidth } from '../utils/test/storiesArgs'
 import {
+  flexAlignContentTokens,
   flexAlignItemsTokens,
   flexDirectionTokens,
   flexJustifyContentTokens,
   flexWrapTokens,
 } from '../utils/test/storiesOptions'
 import { View } from '../View'
+import { exampleArgs } from '../utils/test/renderExample'
 import { Flex } from './Flex'
+import { flexCatalog } from './Flex.catalog'
 
 const meta: Meta<typeof Flex> = {
   title: 'Theme/Flex',
@@ -27,6 +30,7 @@ const meta: Meta<typeof Flex> = {
         'justifyContent',
         'alignItems',
         'flexWrap',
+        'alignContent',
         'gap',
         'p',
         'm',
@@ -48,6 +52,12 @@ const meta: Meta<typeof Flex> = {
     },
   },
   argTypes: {
+    alignContent: {
+      control: { type: 'select' },
+      options: flexAlignContentTokens,
+      description: "How wrapped lines share the cross axis's free space - only with `flexWrap`.",
+      table: { category: 'Layout', defaultValue: { summary: 'normal' } },
+    },
     flexDirection: {
       control: { type: 'select' },
       options: flexDirectionTokens,
@@ -85,29 +95,16 @@ const meta: Meta<typeof Flex> = {
     minHeight,
     maxWidth,
     maxHeight,
+    // Inherited from the element's attributes, so it isn't typed for the story - and Storybook
+    // would infer its type by walking the rendered items, which aren't data.
+    children: {
+      control: false,
+      type: { name: 'other', value: 'ReactNode' },
+      description: 'The flex items.',
+      table: { category: 'Content' },
+    },
   },
-  args: {
-    flexDirection: 'column',
-    gap: 2,
-    p: 2,
-    width: '360px',
-    height: '280px',
-    bg: 'secondary',
-    borderRadius: 'sm',
-    children: (
-      <>
-        <View p={2} bg="primary" borderRadius="sm">
-          A
-        </View>
-        <View p={2} bg="primary" borderRadius="sm">
-          B
-        </View>
-        <View p={2} bg="primary" borderRadius="sm">
-          C
-        </View>
-      </>
-    ),
-  },
+  args: exampleArgs(flexCatalog.example),
 }
 
 export default meta

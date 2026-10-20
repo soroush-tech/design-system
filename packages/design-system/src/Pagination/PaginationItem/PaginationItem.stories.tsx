@@ -6,7 +6,9 @@ import {
   paginationSize,
 } from '@soroush.tech/design-system/utils/test/storiesArgs'
 import { Flex } from '@soroush.tech/design-system/Flex'
+import { exampleArgs } from '../../utils/test/renderExample'
 import { PaginationItem } from './PaginationItem'
+import { paginationItemCatalog } from './PaginationItem.catalog'
 
 const meta: Meta<typeof PaginationItem> = {
   title: 'Theme/Pagination/PaginationItem',
@@ -15,14 +17,27 @@ const meta: Meta<typeof PaginationItem> = {
   parameters: {
     layout: 'centered',
     controls: {
-      include: ['type', 'page', 'isSelected', 'color', 'variant', 'shape', 'size', 'disabled'],
+      include: [
+        'type',
+        'page',
+        'isSelected',
+        'color',
+        'variant',
+        'shape',
+        'size',
+        'disabled',
+        'as',
+      ],
     },
   },
-  args: {
-    type: 'page',
-    page: 1,
-  },
+  args: exampleArgs(paginationItemCatalog.example),
   argTypes: {
+    as: {
+      control: { type: 'select' },
+      options: ['button', 'a'],
+      description: "Overrides the root element - `'a'` for an item that is a link.",
+      table: { category: 'Layout', defaultValue: { summary: 'button' } },
+    },
     type: {
       control: { type: 'select' },
       options: ['page', 'first', 'previous', 'next', 'last', 'start-ellipsis', 'end-ellipsis'],

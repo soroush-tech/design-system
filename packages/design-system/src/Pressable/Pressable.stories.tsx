@@ -6,7 +6,9 @@ import {
 import { Flex } from '@soroush.tech/design-system/Flex'
 import { Icon } from '@soroush.tech/design-system/Icon'
 import { Typography } from '@soroush.tech/design-system/Typography'
+import { exampleArgs } from '../utils/test/renderExample'
 import { Pressable } from './Pressable'
+import { pressableCatalog } from './Pressable.catalog'
 
 const meta: Meta<typeof Pressable> = {
   title: 'Theme/Pressable',
@@ -22,15 +24,34 @@ const meta: Meta<typeof Pressable> = {
         'activeOpacity',
         'disabled',
         'href',
+        'target',
+        'rel',
+        'type',
         'p',
         'borderRadius',
       ],
     },
   },
-  args: {
-    children: 'Press me',
-  },
+  args: exampleArgs(pressableCatalog.example),
   argTypes: {
+    target: {
+      control: { type: 'select' },
+      options: ['_self', '_blank', '_parent', '_top'],
+      description: 'Anchor `target` - only meaningful with `href`.',
+      table: { category: 'Behavior' },
+    },
+    rel: {
+      control: 'text',
+      description: 'Anchor `rel` - only meaningful with `href`.',
+      table: { category: 'Behavior' },
+    },
+    type: {
+      control: { type: 'select' },
+      options: ['button', 'submit', 'reset'],
+      description:
+        'Emitted only for `as="button"`, so a surface in a form never submits by accident.',
+      table: { category: 'Behavior', defaultValue: { summary: 'button' } },
+    },
     as: {
       control: { type: 'inline-radio' },
       options: ['div', 'button', 'span'],

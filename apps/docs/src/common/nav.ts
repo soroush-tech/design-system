@@ -2,6 +2,7 @@ import {
   allComponents,
   componentCategories,
   markdownComponents,
+  membersOf,
   styledSystemDocSlug,
   styledSystemDocs,
   styledSystemGuides,
@@ -57,10 +58,13 @@ export const designSystemNav: NavGroup[] = [
   })),
   {
     label: 'Component API',
-    items: allComponents.map((item) => ({
-      label: `${item.name} API`,
-      href: sectionPath('design-system', `/api/${item.slug}/`),
-    })),
+    // A family's members follow it: each has an API page, its demos on the family's page.
+    items: allComponents
+      .flatMap((item) => [item, ...membersOf(item)])
+      .map((item) => ({
+        label: `${item.name} API`,
+        href: sectionPath('design-system', `/api/${item.slug}/`),
+      })),
   },
   {
     label: 'Customization',

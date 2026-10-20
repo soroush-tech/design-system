@@ -96,6 +96,12 @@ describe('renderers', () => {
     expect(renderInventory(content, 'nope')).toContain('Available packages')
   })
 
+  it("lists a family's members after it, each marked as part of it", () => {
+    const inventory = renderInventory(content, 'design-system')
+    expect(inventory).toContain('- **MenuList** (@soroush.tech/design-system, part of Menu) - ')
+    expect(inventory.indexOf('**MenuList**')).toBeGreaterThan(inventory.indexOf('**Menu**'))
+  })
+
   it('falls back to the intro when a README has no such section', () => {
     const sparse: ComponentRecord = { ...component, api: '', examples: '' }
     const rendered = renderComponent(sparse, 'api')

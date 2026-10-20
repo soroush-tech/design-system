@@ -1,4 +1,5 @@
-import type { ElementType } from 'react'
+import type { ElementType, ReactNode } from 'react'
+import type { PaperElevation } from '../Paper/Paper'
 import type { CSSObject as EmotionCSSObject } from '@emotion/react'
 import { alpha, generateBoxShadow } from '../utils'
 import { spacing } from './utils/spacing'
@@ -406,6 +407,16 @@ export interface ButtonVariants {
   text: true
 }
 
+/** The defaults a theme may set for every `Breadcrumbs` - its `expandLabel` gives a trail its language. */
+export interface BreadcrumbsOwnerState {
+  separator?: ReactNode
+  maxItems?: number
+  itemsBeforeCollapse?: number
+  itemsAfterCollapse?: number
+  expandLabel?: string
+  color?: keyof ThemeText
+}
+
 /** The resolved props Button's styled roots receive - what `ownerState` exposes. */
 export interface ButtonOwnerState {
   variant?: keyof ButtonVariants
@@ -414,6 +425,78 @@ export interface ButtonOwnerState {
   shape?: 'square' | 'rounded' | 'pill'
   fullWidth?: boolean
   disabled?: boolean
+}
+
+/** Tabs' look values - augment to register new ones (then style them via `variants`). */
+export interface TabsVariants {
+  underline: true
+  boxed: true
+  enclosed: true
+}
+
+/** The resolved props Tabs' styled elements receive - what `ownerState` exposes. */
+export interface TabsOwnerState {
+  variant?: keyof TabsVariants
+  color?: keyof ThemePalette
+  size?: keyof ThemeSizes
+  orientation?: 'horizontal' | 'vertical'
+  fullWidth?: boolean
+  hasDivider?: boolean
+  selectedBg?: keyof ThemeBackground
+}
+
+/** The defaults a theme may set for every `Menu`. */
+export interface MenuOwnerState {
+  align?: 'start' | 'end'
+  marginThreshold?: keyof ThemeSpace
+  elevation?: PaperElevation
+  layer?: keyof ThemeZOrder
+  color?: keyof ThemePalette
+  textColor?: keyof ThemeText
+  size?: keyof ThemeSizes
+  dense?: boolean
+}
+
+/** The defaults a theme may set for every `ContextMenu` - a `Menu`'s, placed at the pointer. */
+export type ContextMenuOwnerState = Omit<MenuOwnerState, 'align'>
+
+/** The defaults a theme may set for every `MenuList` - and so for its rows. */
+export interface MenuListOwnerState {
+  color?: keyof ThemePalette
+  textColor?: keyof ThemeText
+  size?: keyof ThemeSizes
+  dense?: boolean
+  shouldWrap?: boolean
+}
+
+/** The defaults a theme may set for every `MenuItem` - a list's own values win. */
+export interface MenuItemOwnerState {
+  color?: keyof ThemePalette
+  textColor?: keyof ThemeText
+  size?: keyof ThemeSizes
+  dense?: boolean
+}
+
+/** The defaults a theme may set for every `Tab`. */
+export interface TabOwnerState {
+  isWrapped?: boolean
+  bg?: keyof ThemeBackground
+  borderRadius?: keyof ThemeRadii
+  color?: keyof ThemePalette
+  textColor?: keyof ThemeText
+  size?: keyof ThemeSizes
+  selectedBg?: keyof ThemeBackground
+}
+
+/** The defaults a theme may set for every `TabScrollButton`. */
+export interface TabScrollButtonOwnerState {
+  color?: keyof ThemePalette
+  textColor?: keyof ThemeText
+}
+
+/** The defaults a theme may set for every `TabPanel`. */
+export interface TabPanelOwnerState {
+  shouldKeepMounted?: boolean
 }
 
 /** Token-typed Typography props a theme may set for Card's title/caption slots. */
@@ -463,11 +546,16 @@ export interface ThemeComponents {
   AppBar?: ComponentConfig
   Avatar?: ComponentConfig<Record<string, unknown>, 'root' | 'img'>
   Backdrop?: ComponentConfig
+  Breadcrumbs?: ComponentConfig<
+    BreadcrumbsOwnerState,
+    'root' | 'list' | 'item' | 'separator' | 'collapsed' | 'collapsedIcon'
+  >
   Button?: ComponentConfig<ButtonOwnerState, 'root' | 'label' | 'icon' | 'loader'>
   ButtonGroup?: ComponentConfig
   Card?: ComponentConfig<CardOwnerState, 'root' | 'title' | 'caption' | 'icon'>
   Checkbox?: ComponentConfig<Record<string, unknown>, 'root' | 'input' | 'icon'>
   CircularProgress?: ComponentConfig<Record<string, unknown>, 'root' | 'track' | 'circle'>
+  ContextMenu?: ComponentConfig<ContextMenuOwnerState, 'root' | 'paper'>
   Drawer?: ComponentConfig
   Flex?: ComponentConfig
   FocusTrap?: ComponentConfig
@@ -483,7 +571,20 @@ export interface ThemeComponents {
     'root' | 'track' | 'dash' | 'bar' | 'traveler' | 'segment' | 'secondaryBar'
   >
   Link?: ComponentConfig
-  MenuItem?: ComponentConfig<Record<string, unknown>, 'root' | 'check'>
+  Menu?: ComponentConfig<MenuOwnerState, 'root' | 'paper'>
+  MenuDivider?: ComponentConfig
+  MenuItem?: ComponentConfig<
+    MenuItemOwnerState,
+    | 'root'
+    | 'check'
+    | 'startIcon'
+    | 'label'
+    | 'shortcut'
+    | 'submenuIcon'
+    | 'entry'
+    | 'secondaryAction'
+  >
+  MenuList?: ComponentConfig<MenuListOwnerState>
   Modal?: ComponentConfig
   NativeSelect?: ComponentConfig<Record<string, unknown>, 'root' | 'select' | 'icon'>
   Pagination?: ComponentConfig<Record<string, unknown>, 'root' | 'list'>
@@ -501,6 +602,7 @@ export interface ThemeComponents {
   SidebarItem?: ComponentConfig
   Skeleton?: ComponentConfig<Record<string, unknown>, 'root' | 'content'>
   Switch?: ComponentConfig<Record<string, unknown>, 'root' | 'input' | 'track' | 'thumb'>
+  Tab?: ComponentConfig<TabOwnerState, 'root' | 'label' | 'icon' | 'secondaryAction' | 'close'>
   Table?: ComponentConfig
   TableBody?: ComponentConfig
   TableCell?: ComponentConfig
@@ -511,6 +613,19 @@ export interface ThemeComponents {
   TablePaginationActions?: ComponentConfig
   TableRow?: ComponentConfig
   TableSortLabel?: ComponentConfig<Record<string, unknown>, 'root' | 'icon'>
+  TabPanel?: ComponentConfig<TabPanelOwnerState>
+  TabScrollButton?: ComponentConfig<TabScrollButtonOwnerState>
+  Tabs?: ComponentConfig<
+    TabsOwnerState,
+    | 'root'
+    | 'list'
+    | 'indicator'
+    | 'startContent'
+    | 'endContent'
+    | 'scrollButton'
+    | 'overflowButton'
+    | 'overflowClose'
+  >
   TextInput?: ComponentConfig<Record<string, unknown>, 'root' | 'input'>
   ToggleButton?: ComponentConfig
   ToggleButtonGroup?: ComponentConfig

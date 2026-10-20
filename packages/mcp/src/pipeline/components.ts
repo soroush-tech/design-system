@@ -3,6 +3,8 @@ import {
   absoluteReadmeLinks,
   allDocComponents,
   categoryOf,
+  componentPagePath,
+  importSubpathOf,
   splitReadme,
   stripReadmeChrome,
   type ComponentNavItem,
@@ -16,7 +18,7 @@ const packageNameFor = (pkg: string): string => `@soroush.tech/${pkg}`
 
 /** The subpath import a consumer writes for a component. */
 export const importPathFor = (item: ComponentNavItem): string =>
-  `import { ${item.name} } from '${packageNameFor(item.pkg)}/${item.name}'`
+  `import { ${item.name} } from '${packageNameFor(item.pkg)}/${importSubpathOf(item)}'`
 
 // Markdown prose only: skip headings, badges, block quotes, HTML, and table or rule
 // syntax, so the summary is the first real sentence a reader would see.
@@ -89,11 +91,12 @@ export const buildComponents = (): ComponentRecord[] =>
       pkg: item.pkg,
       packageName: packageNameFor(item.pkg),
       category: categoryOf(item),
+      family: item.family,
       importPath: importPathFor(item),
       summary: summarize(intro),
       intro: stripReadmeChrome(intro),
       api,
       examples,
-      url: `${DOCS_URL}/${item.pkg}/components/${item.slug}/`,
+      url: `${DOCS_URL}/${item.pkg}${componentPagePath(item)}`,
     }
   })

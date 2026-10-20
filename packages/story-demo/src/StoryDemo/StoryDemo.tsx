@@ -1,6 +1,5 @@
 import { lazy, Suspense, useEffect, useMemo, useState, type ComponentType } from 'react'
 import { composeStory } from '@storybook/react-vite'
-import { Flex } from '@soroush.tech/design-system/Flex'
 import { Typography } from '@soroush.tech/design-system/Typography'
 import { View } from '@soroush.tech/design-system/View'
 import { useCopyToClipboard } from '@soroush.tech/hooks/useCopyToClipboard'
@@ -8,10 +7,12 @@ import { buildDemoModule } from '../utils/buildDemoModule'
 import { controlsFor, controlsInclude, type ControlsAnnotations } from '../utils/controlsFor'
 import { openInCodeSandbox } from '../utils/openInCodeSandbox'
 import { parseStoriesSource } from '../utils/parseStoriesSource'
+import { isSerializableArg } from '../utils/serializeJsxProps'
 import { snippetToModule } from '../utils/snippetToModule'
 import { tsToJs } from '../utils/tsToJs'
 import { CodePanel } from './CodePanel'
 import { ControlsPanel } from './ControlsPanel'
+import { DemoFrame } from './DemoFrame'
 import { DemoToolbar } from './DemoToolbar'
 
 // Loaded after mount so react-live and its editor stay out of the initial bundle -
@@ -114,7 +115,30 @@ export function StoryDemo({
       ) as unknown as ComposedStory,
     [storyExport, meta]
   )
+  // The live code is the story's own render with its args written out. A story whose picture
+  // takes more - decorators around it, a render it inherits from the meta, or args no code can
+  // hold (a rendered element) - stays on its rendered view, which shows it right; a handler arg
+  // changes nothing on screen.
+  const isReproducible = useMemo(() => {
+    const annotationsOf = (annotations: unknown) =>
+      annotations as { decorators?: unknown[]; render?: unknown }
+    const decoratorsOf = (annotations: unknown) => annotationsOf(annotations).decorators ?? []
+    const isUnwritable = (value: unknown) =>
+      value !== undefined && typeof value !== 'function' && !isSerializableArg(value)
+    const hasDecorators = [...decoratorsOf(meta), ...decoratorsOf(storyExport)].length > 0
+    const hasMetaRender =
+      annotationsOf(meta).render !== undefined && annotationsOf(storyExport).render === undefined
+    return !hasDecorators && !hasMetaRender && !Object.values(Composed.args).some(isUnwritable)
+  }, [meta, storyExport, Composed])
   const parsed = useMemo(() => parseStoriesSource(source), [source])
+  // The story's own declarations shadow the scope: react-live passes the scope in as the
+  // evaluated code's parameters, which a helper of the same name - a story's `icon` beside
+  // the theme's - can't redeclare.
+  const storyScope = useMemo(() => {
+    if (liveScope === null || !isReproducible) return null
+    const ownNames = new Set(parsed.declarations.flatMap((declaration) => declaration.names))
+    return Object.fromEntries(Object.entries(liveScope).filter(([name]) => !ownNames.has(name)))
+  }, [liveScope, isReproducible, parsed])
   const parsedStory = parsed.stories.get(storyName)
   const controls = useMemo(
     () => controlsFor(meta, storyExport as ControlsAnnotations),
@@ -202,25 +226,16 @@ export function StoryDemo({
     <ControlsPanel controls={controls} values={mergedArgs} onChange={handleControlChange} />
   )
   const readonlyBody = (
-    <>
-      <Flex
-        p={5}
-        bg="paper"
-        borderRadius="md"
-        flexDirection="row"
-        flexWrap="wrap"
-        alignItems="center"
-        justifyContent="center"
-        gap={3}
-      >
-        <Composed {...argOverrides} />
-      </Flex>
-      {toolbar}
-      {controlsPanel}
-      <View px={2} pb={2}>
-        <CodePanel code={generatedCode} language={language} />
-      </View>
-    </>
+    <DemoFrame
+      preview={<Composed {...argOverrides} />}
+      toolbar={
+        <>
+          {toolbar}
+          {controlsPanel}
+        </>
+      }
+      code={<CodePanel code={generatedCode} language={language} />}
+    />
   )
 
   return (
@@ -234,7 +249,7 @@ export function StoryDemo({
         </Typography>
       )}
       <View borderWidth="thin" borderColor="light" borderRadius="md">
-        {liveScope === null ? (
+        {storyScope === null ? (
           readonlyBody
         ) : (
           <Suspense fallback={readonlyBody}>
@@ -242,7 +257,7 @@ export function StoryDemo({
               key={generation}
               code={generatedCode}
               language={language}
-              scope={liveScope}
+              scope={storyScope}
               helpersText={demoModule.helpersText}
               onCodeChange={setEditedCode}
               toolbar={

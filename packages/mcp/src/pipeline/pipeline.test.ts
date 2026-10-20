@@ -18,7 +18,8 @@ describe('component pipeline', () => {
   it('gives every component a summary, an import line, and a docs URL', () => {
     for (const component of components) {
       expect(component.summary, `${component.name} has no summary`).not.toBe('')
-      expect(component.importPath).toContain(`from '${component.packageName}/${component.name}'`)
+      const subpath = component.family ?? component.name
+      expect(component.importPath).toContain(`from '${component.packageName}/${subpath}'`)
       expect(component.url.startsWith('https://docs.soroush.tech/')).toBe(true)
     }
   })
@@ -44,6 +45,15 @@ describe('component pipeline', () => {
     expect(importPathFor(allDocComponents.find((item) => item.name === 'Card')!)).toBe(
       "import { Card } from '@soroush.tech/design-system/Card'"
     )
+  })
+
+  it("imports a family member from its family's subpath, and points at its API page", () => {
+    const menuList = components.find((c) => c.name === 'MenuList')!
+    expect(menuList.importPath).toBe("import { MenuList } from '@soroush.tech/design-system/Menu'")
+    expect(menuList.family).toBe('Menu')
+    expect(menuList.category).toBe(components.find((c) => c.name === 'Menu')!.category)
+    expect(menuList.url).toBe('https://docs.soroush.tech/design-system/api/menu-list/')
+    expect(menuList.api).toContain('|')
   })
 })
 

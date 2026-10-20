@@ -12,7 +12,9 @@ import {
 import { Flex } from '../Flex'
 import { Typography } from '../Typography'
 import { MenuItem } from '../MenuItem'
+import { exampleArgs } from '../utils/test/renderExample'
 import { Select, type SelectProps, type SelectValue } from './Select'
+import { selectCatalog } from './Select.catalog'
 
 const platformItems = [
   <MenuItem key="web" value="web">
@@ -40,6 +42,7 @@ const meta: Meta<typeof Select> = {
         'native',
         'multiple',
         'autoWidth',
+        'defaultOpen',
         'variant',
         'color',
         'textColor',
@@ -60,12 +63,13 @@ const meta: Meta<typeof Select> = {
       ],
     },
   },
-  args: {
-    children: platformItems,
-    placeholder: 'Pick a platform',
-    variant: 'outlined',
-  },
+  args: exampleArgs(selectCatalog.example),
   argTypes: {
+    defaultOpen: {
+      control: 'boolean',
+      description: 'Open at first, uncontrolled - takes effect when the story is reloaded.',
+      table: { category: 'Behavior', defaultValue: { summary: 'false' } },
+    },
     native: {
       control: 'boolean',
       description: 'Render a native `<select>` (single-select) instead of the custom listbox.',

@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { textColorTokens } from '../utils/test/storiesOptions'
+import { exampleArgs } from '../utils/test/renderExample'
 import { Icon } from './Icon'
+import { iconCatalog } from './Icon.catalog'
 import { icons } from './icons'
 
 const iconNames = Object.keys(icons)
@@ -15,11 +17,7 @@ const meta: Meta<typeof Icon> = {
       include: ['name', 'color', 'size'],
     },
   },
-  args: {
-    name: 'hub',
-    color: 'primary',
-    size: '3rem',
-  },
+  args: exampleArgs(iconCatalog.example),
   argTypes: {
     name: {
       control: { type: 'select' },
