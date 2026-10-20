@@ -1,5 +1,6 @@
 export * from './ContextMenu'
 export * from './Menu'
 export * from './MenuDivider'
+export * from './MenuItems'
 export * from './MenuList'
 export * from './MenuListContext'
