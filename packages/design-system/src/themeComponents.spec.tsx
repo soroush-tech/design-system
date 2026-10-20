@@ -1,6 +1,6 @@
-import { type ReactNode } from 'react'
-import { describe, it, expect, afterEach } from 'vitest'
-import { render, cleanup, fireEvent, screen } from '@testing-library/react'
+import { createRef, type ReactNode } from 'react'
+import { describe, it, expect, afterEach, vi } from 'vitest'
+import { act, render, cleanup, fireEvent, screen } from '@testing-library/react'
 import { ThemeProvider } from './theme'
 import { Flex } from './Flex'
 import { Grid } from './Grid'
@@ -22,6 +22,7 @@ import { Image } from './Image'
 import { LinearProgress } from './LinearProgress'
 import { Link } from './Link'
 import { MenuItem } from './MenuItem'
+import { MenuList } from './Menu/MenuList'
 import { Modal } from './Modal'
 import { NativeSelect } from './NativeSelect'
 import { Pagination } from './Pagination'
@@ -151,6 +152,7 @@ const cases: Case[] = [
   { name: 'LinearProgress', slot: 'root', label: 'LinearProgress', ui: <LinearProgress /> },
   { name: 'Link', slot: 'root', label: 'Link', ui: <Link href="/">x</Link> },
   { name: 'MenuItem', slot: 'root', label: 'MenuItem', ui: <MenuItem value="a">A</MenuItem> },
+  { name: 'MenuList', slot: 'root', label: 'MenuList', ui: <MenuList /> },
   {
     name: 'Modal',
     slot: 'root',

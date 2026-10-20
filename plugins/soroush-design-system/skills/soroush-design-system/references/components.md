@@ -2,7 +2,7 @@
 
 # Components
 
-The 46 components shipped by the design system, and when to reach for each.
+The 47 components shipped by the design system, and when to reach for each.
 Import every component from its own subpath.
 
 ## Layout & surfaces
@@ -43,6 +43,10 @@ Import every component from its own subpath.
 - **FormLabel** - A field label built on [`Typography`](https://docs.soroush.tech/design-system/components/typography/), rendered as a `<label>`.
 - **FormHelperText** - Helper or error text for a field, built on [`Typography`](https://docs.soroush.tech/design-system/components/typography/) and rendered as a `<p>`.
 - **Pagination** - Page-number navigation for paging a list of arbitrary items (e.g. a blog index), with ellipsis ranges and optional first/last/prev/next controls.
+
+## Navigation & menus
+
+- **MenuList** - A list of commands, rendered as a semantic `<ul role="menu">`.
 
 ## Feedback
 

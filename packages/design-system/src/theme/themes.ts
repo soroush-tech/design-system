@@ -416,6 +416,15 @@ export interface ButtonOwnerState {
   disabled?: boolean
 }
 
+/** The defaults a theme may set for every `MenuList` - and so for its rows. */
+export interface MenuListOwnerState {
+  color?: keyof ThemePalette
+  textColor?: keyof ThemeText
+  size?: keyof ThemeSizes
+  dense?: boolean
+  shouldWrap?: boolean
+}
+
 /** Token-typed Typography props a theme may set for Card's title/caption slots. */
 export interface CardSlotTypographyProps {
   variant?: keyof ThemeTypographyVariants
@@ -484,6 +493,7 @@ export interface ThemeComponents {
   >
   Link?: ComponentConfig
   MenuItem?: ComponentConfig<Record<string, unknown>, 'root' | 'check'>
+  MenuList?: ComponentConfig<MenuListOwnerState>
   Modal?: ComponentConfig
   NativeSelect?: ComponentConfig<Record<string, unknown>, 'root' | 'select' | 'icon'>
   Pagination?: ComponentConfig<Record<string, unknown>, 'root' | 'list'>
