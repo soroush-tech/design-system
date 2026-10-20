@@ -429,6 +429,9 @@ export interface MenuOwnerState {
   dense?: boolean
 }
 
+/** The defaults a theme may set for every `ContextMenu` - a `Menu`'s, placed at the pointer. */
+export type ContextMenuOwnerState = Omit<MenuOwnerState, 'align'>
+
 /** The defaults a theme may set for every `MenuList` - and so for its rows. */
 export interface MenuListOwnerState {
   color?: keyof ThemePalette
@@ -498,6 +501,7 @@ export interface ThemeComponents {
   Card?: ComponentConfig<CardOwnerState, 'root' | 'title' | 'caption' | 'icon'>
   Checkbox?: ComponentConfig<Record<string, unknown>, 'root' | 'input' | 'icon'>
   CircularProgress?: ComponentConfig<Record<string, unknown>, 'root' | 'track' | 'circle'>
+  ContextMenu?: ComponentConfig<ContextMenuOwnerState, 'root' | 'paper'>
   Drawer?: ComponentConfig
   Flex?: ComponentConfig
   FocusTrap?: ComponentConfig

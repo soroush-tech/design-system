@@ -13,6 +13,7 @@ import { Button } from './Button'
 import { ButtonGroup } from './ButtonGroup'
 import { Checkbox } from './Checkbox'
 import { CircularProgress } from './CircularProgress'
+import { ContextMenu } from './Menu/ContextMenu'
 import { Drawer } from './Drawer'
 import { FormControl } from './FormControl'
 import { FormHelperText } from './FormHelperText'
@@ -155,6 +156,12 @@ const cases: Case[] = [
   { name: 'Link', slot: 'root', label: 'Link', ui: <Link href="/">x</Link> },
   { name: 'MenuItem', slot: 'root', label: 'MenuItem', ui: <MenuItem value="a">A</MenuItem> },
   { name: 'MenuList', slot: 'root', label: 'MenuList', ui: <MenuList /> },
+  {
+    name: 'ContextMenu',
+    slot: 'root',
+    label: 'ContextMenu',
+    ui: <ContextMenu target={<div>t</div>} />,
+  },
   {
     name: 'Menu',
     slot: 'root',
@@ -434,6 +441,13 @@ const cases: Case[] = [
     slot: 'paper',
     label: 'MenuPaper',
     ui: <Menu trigger={<button type="button">m</button>} defaultOpen />,
+  },
+  {
+    name: 'ContextMenu',
+    slot: 'paper',
+    label: 'ContextMenuPaper',
+    ui: <ContextMenu target={<div>t</div>} />,
+    open: () => fireEvent.contextMenu(screen.getByText('t')),
   },
   {
     name: 'NativeSelect',
