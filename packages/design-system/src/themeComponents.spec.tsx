@@ -47,6 +47,7 @@ import { TableHead } from './Table/TableHead'
 import { TablePagination } from './Table/TablePagination'
 import { TableRow } from './Table/TableRow'
 import { TableSortLabel } from './Table/TableSortLabel'
+import { TabPanel } from './Tabs/TabPanel'
 import { Tab, Tabs, TabContext, type TabsActions } from './Tabs'
 import { TextInput } from './TextInput'
 import { ToggleButton } from './ToggleButton/ToggleButton'
@@ -137,6 +138,12 @@ const overflow = () => {
   } as DOMRect)
   act(() => overflowAction.current!.updateOverflow())
 }
+
+const tabPanel = (
+  <TabContext defaultValue="a">
+    <TabPanel value="a">p</TabPanel>
+  </TabContext>
+)
 
 const tablePagination = (
   <table>
@@ -250,6 +257,7 @@ const cases: Case[] = [
   { name: 'Pressable', slot: 'root', label: 'Pressable', ui: <Pressable>p</Pressable> },
   { name: 'Tabs', slot: 'root', label: 'Tabs', ui: tabs },
   { name: 'Tab', slot: 'root', label: 'Tab', ui: tabs },
+  { name: 'TabPanel', slot: 'root', label: 'TabPanel', ui: tabPanel },
   { name: 'Quote', slot: 'root', label: 'Quote', ui: <Quote>q</Quote> },
   { name: 'Radio', slot: 'root', label: 'Radio', ui: <Radio /> },
   {
