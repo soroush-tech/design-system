@@ -35,11 +35,17 @@ const meta: Meta<typeof Pagination> = {
         'shouldShowLastButton',
         'shouldHidePrevButton',
         'shouldHideNextButton',
+        'aria-label',
       ],
     },
   },
   args: exampleArgs(paginationCatalog.example),
   argTypes: {
+    'aria-label': {
+      control: 'text',
+      description: "The navigation landmark's label.",
+      table: { category: 'Content', defaultValue: { summary: 'pagination navigation' } },
+    },
     count: {
       control: { type: 'number', min: 0 },
       description: 'Total number of pages.',

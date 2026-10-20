@@ -22,6 +22,16 @@ export const flexAlignItemsValues = [
   'center',
   'baseline',
 ] satisfies NonNullable<FlexProps['alignItems']>[]
+export const flexAlignContentValues = [
+  'normal',
+  'flex-start',
+  'flex-end',
+  'center',
+  'stretch',
+  'space-between',
+  'space-around',
+  'space-evenly',
+] satisfies NonNullable<FlexProps['alignContent']>[]
 export const flexWrapValues = ['nowrap', 'wrap', 'wrap-reverse'] satisfies NonNullable<
   FlexProps['flexWrap']
 >[]
@@ -54,6 +64,7 @@ export const flexCatalog = defineCatalogEntry<FlexProps>()({
     flexDirection: { values: flexDirectionValues, default: 'column' },
     justifyContent: { values: flexJustifyContentValues },
     alignItems: { values: flexAlignItemsValues },
+    alignContent: { values: flexAlignContentValues },
     flexWrap: { values: flexWrapValues, default: 'nowrap' },
     gap: { scale: 'space' },
     bg: { scale: 'background' },

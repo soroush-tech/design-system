@@ -1,6 +1,6 @@
 import { useState, type ComponentProps } from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { modalScrollTokens } from '../utils/test/storiesOptions'
+import { modalScrollTokens, zOrderTokens } from '../utils/test/storiesOptions'
 import { Button } from '../Button'
 import { Paper } from '../Paper'
 import { Flex } from '../Flex'
@@ -17,6 +17,7 @@ const meta: Meta<typeof Modal> = {
     controls: {
       include: [
         'scroll',
+        'layer',
         'hasBackdrop',
         'shouldUsePortal',
         'shouldKeepMounted',
@@ -29,6 +30,12 @@ const meta: Meta<typeof Modal> = {
     },
   },
   argTypes: {
+    layer: {
+      control: { type: 'select' },
+      options: zOrderTokens,
+      description: 'Stacking layer - resolves from `theme.zOrder`.',
+      table: { category: 'Layout', defaultValue: { summary: 'modal' } },
+    },
     scroll: {
       control: { type: 'inline-radio' },
       options: modalScrollTokens,

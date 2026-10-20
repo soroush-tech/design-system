@@ -254,7 +254,7 @@ describe("a tab's own look", () => {
     )
     expect(tab('A')).toHaveStyle({
       color: baseTheme.palette.error.main,
-      paddingTop: space[sizes.sm.paddingTop],
+      paddingLeft: space[sizes.sm.paddingLeft],
     })
     expect(tab('A').parentElement).toHaveStyle({ backgroundColor: baseTheme.background.default })
     expect(tab('B')).toHaveStyle({ color: baseTheme.text.secondary })
@@ -297,6 +297,40 @@ describe("a tab's own look", () => {
     expect(indicator).toHaveStyle({ backgroundColor: baseTheme.palette.warning.main })
     fireEvent.click(tab('B'))
     expect(indicator).toHaveStyle({ backgroundColor: baseTheme.palette.primary.main })
+  })
+
+  it("keeps a smaller tab's label on its row's line - the row's tallest top and bottom padding, its own sides", () => {
+    renderWithTheme(
+      <Tabs aria-label="Views" defaultValue="a">
+        <Tab value="a" label="A" />
+        <Tab value="b" label="B" size="sm" />
+      </Tabs>
+    )
+    expect(tab('B')).toHaveStyle({
+      paddingTop: space[sizes.md.paddingTop],
+      paddingBottom: space[sizes.md.paddingBottom],
+      paddingLeft: space[sizes.sm.paddingLeft],
+      fontSize: `${baseTheme.fontSizes[sizes.sm.fontSize]}px`,
+    })
+  })
+
+  it('stays compact when every tab is small, and down a column each tab keeps its own', () => {
+    const theme = createTheme(baseTheme, { components: { Tab: { defaultProps: { size: 'sm' } } } })
+    renderWithTheme(
+      <>
+        <Tabs aria-label="Row" defaultValue="a">
+          <Tab value="a" label="Small row" />
+        </Tabs>
+        <Tabs aria-label="Column" orientation="vertical" defaultValue="a">
+          <Tab value="a" label="Tall" size="lg" />
+          <Tab value="b" label="Short" />
+        </Tabs>
+        <Tabs aria-label="Empty" />
+      </>,
+      { wrapper: withTheme(theme) }
+    )
+    expect(tab('Small row')).toHaveStyle({ paddingTop: space[sizes.sm.paddingTop] })
+    expect(tab('Short')).toHaveStyle({ paddingTop: space[sizes.sm.paddingTop] })
   })
 
   it("runs an enclosed row's line under every other tab in the selected tab's color", () => {

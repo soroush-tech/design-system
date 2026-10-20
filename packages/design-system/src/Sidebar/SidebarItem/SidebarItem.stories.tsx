@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { icons } from '../../Icon/icons'
+import { buttonColorTokens, textInputSizeTokens } from '../../utils/test/storiesOptions'
 import { Sidebar } from '../Sidebar'
 import { exampleArgs } from '../../utils/test/renderExample'
 import { SidebarItem } from './SidebarItem'
@@ -13,10 +14,22 @@ const meta: Meta<typeof SidebarItem> = {
   tags: ['autodocs'],
   parameters: {
     layout: 'padded',
-    controls: { include: ['icon', 'label', 'variant', 'isSelected', 'disabled'] },
+    controls: { include: ['icon', 'label', 'variant', 'color', 'size', 'isSelected', 'disabled'] },
   },
   args: exampleArgs(sidebarItemCatalog.example),
   argTypes: {
+    color: {
+      control: { type: 'select' },
+      options: buttonColorTokens,
+      description: 'Palette the selected fill and press highlight derive from.',
+      table: { category: 'Visual', defaultValue: { summary: 'primary' } },
+    },
+    size: {
+      control: { type: 'select' },
+      options: textInputSizeTokens,
+      description: 'Padding and font size - resolves against `theme.sizes`.',
+      table: { category: 'Layout', defaultValue: { summary: 'sm' } },
+    },
     icon: {
       control: 'select',
       options: iconNames,

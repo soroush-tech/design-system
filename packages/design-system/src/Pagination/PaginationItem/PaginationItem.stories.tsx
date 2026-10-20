@@ -17,11 +17,27 @@ const meta: Meta<typeof PaginationItem> = {
   parameters: {
     layout: 'centered',
     controls: {
-      include: ['type', 'page', 'isSelected', 'color', 'variant', 'shape', 'size', 'disabled'],
+      include: [
+        'type',
+        'page',
+        'isSelected',
+        'color',
+        'variant',
+        'shape',
+        'size',
+        'disabled',
+        'as',
+      ],
     },
   },
   args: exampleArgs(paginationItemCatalog.example),
   argTypes: {
+    as: {
+      control: { type: 'select' },
+      options: ['button', 'a'],
+      description: "Overrides the root element - `'a'` for an item that is a link.",
+      table: { category: 'Layout', defaultValue: { summary: 'button' } },
+    },
     type: {
       control: { type: 'select' },
       options: ['page', 'first', 'previous', 'next', 'last', 'start-ellipsis', 'end-ellipsis'],

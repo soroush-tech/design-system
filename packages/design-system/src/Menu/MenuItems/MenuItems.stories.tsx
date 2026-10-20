@@ -24,7 +24,15 @@ const meta: Meta<typeof MenuItems> = {
   args: { items },
   parameters: {
     layout: 'padded',
-    controls: { include: [] },
+    controls: { include: ['items'] },
+  },
+  argTypes: {
+    items: {
+      control: 'object',
+      description:
+        "The rows as data: a row's props with its `label`, `{ type: 'divider' }`, or a row with a `submenu` of more entries.",
+      table: { category: 'Content' },
+    },
   },
   decorators: [
     (Story) => (

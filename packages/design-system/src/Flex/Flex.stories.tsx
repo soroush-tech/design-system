@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { gap, maxHeight, maxWidth, minHeight, minWidth } from '../utils/test/storiesArgs'
 import {
+  flexAlignContentTokens,
   flexAlignItemsTokens,
   flexDirectionTokens,
   flexJustifyContentTokens,
@@ -29,6 +30,7 @@ const meta: Meta<typeof Flex> = {
         'justifyContent',
         'alignItems',
         'flexWrap',
+        'alignContent',
         'gap',
         'p',
         'm',
@@ -50,6 +52,12 @@ const meta: Meta<typeof Flex> = {
     },
   },
   argTypes: {
+    alignContent: {
+      control: { type: 'select' },
+      options: flexAlignContentTokens,
+      description: "How wrapped lines share the cross axis's free space - only with `flexWrap`.",
+      table: { category: 'Layout', defaultValue: { summary: 'normal' } },
+    },
     flexDirection: {
       control: { type: 'select' },
       options: flexDirectionTokens,

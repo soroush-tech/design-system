@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { gap } from '../utils/test/storiesArgs'
+import { bg, gap } from '../utils/test/storiesArgs'
 import {
   gridAlignContentTokens,
   gridAlignItemsTokens,
@@ -49,11 +49,13 @@ const meta: Meta<typeof Grid> = {
         'alignContent',
         'justifyItems',
         'p',
+        'bg',
         'm',
       ],
     },
   },
   argTypes: {
+    bg,
     gridTemplateColumns: {
       control: 'text',
       description: `Defines column track sizes. ${RAW_CSS}\n\n**Examples:** \`"repeat(3, 1fr)"\` · \`"200px 1fr"\` · \`"repeat(auto-fill, minmax(240px, 1fr))"\``,

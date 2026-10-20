@@ -37,6 +37,9 @@ export interface TabsContextValue {
   selectedBg?: keyof Theme['background']
   /** The selected tab's color - the row's line (indicator, enclosed divider) is drawn in it. */
   selectedColor: keyof Theme['palette']
+  /** The row's tallest top and bottom padding, which every tab of a horizontal row takes. */
+  rowPaddingTop: Theme['sizes'][keyof Theme['sizes']]['paddingTop']
+  rowPaddingBottom: Theme['sizes'][keyof Theme['sizes']]['paddingBottom']
   /** What was set on the row itself - it beats the theme's defaults for every tab. */
   rowProps: TabRowProps
   shouldSelectOnFocus: boolean

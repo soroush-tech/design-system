@@ -14,10 +14,39 @@ const meta: Meta<typeof Drawer> = {
   parameters: {
     layout: 'centered',
     controls: {
-      include: ['anchor', 'elevation', 'hasBackdrop', 'transitionDuration'],
+      include: [
+        'anchor',
+        'elevation',
+        'hasBackdrop',
+        'transitionDuration',
+        'shouldLockScroll',
+        'shouldAutoFocus',
+        'shouldTrapFocus',
+        'shouldRestoreFocus',
+      ],
     },
   },
   argTypes: {
+    shouldLockScroll: {
+      control: 'boolean',
+      description: 'With JavaScript: lock body scroll while open.',
+      table: { category: 'Behavior', defaultValue: { summary: 'true' } },
+    },
+    shouldAutoFocus: {
+      control: 'boolean',
+      description: 'With JavaScript: move focus into the drawer when it opens.',
+      table: { category: 'Focus', defaultValue: { summary: 'true' } },
+    },
+    shouldTrapFocus: {
+      control: 'boolean',
+      description: 'With JavaScript: keep Tab cycling within the open drawer.',
+      table: { category: 'Focus', defaultValue: { summary: 'true' } },
+    },
+    shouldRestoreFocus: {
+      control: 'boolean',
+      description: 'With JavaScript: return focus to where it was when it closes.',
+      table: { category: 'Focus', defaultValue: { summary: 'true' } },
+    },
     anchor: {
       control: { type: 'inline-radio' },
       options: anchorTokens,

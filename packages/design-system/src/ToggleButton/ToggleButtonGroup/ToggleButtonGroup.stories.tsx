@@ -4,6 +4,7 @@ import {
   buttonColorTokens,
   tableSizeTokens,
 } from '@soroush.tech/design-system/utils/test/storiesOptions'
+import { borderRadius } from '@soroush.tech/design-system/utils/test/storiesArgs'
 import { Flex } from '@soroush.tech/design-system/Flex'
 import { ToggleButton } from '../ToggleButton'
 import { ToggleButtonGroup, type ToggleButtonGroupProps } from './ToggleButtonGroup'
@@ -16,10 +17,22 @@ const meta: Meta<typeof ToggleButtonGroup> = {
   parameters: {
     layout: 'padded',
     controls: {
-      include: ['isExclusive', 'color', 'size', 'orientation', 'disabled', 'fullWidth'],
+      include: [
+        'isExclusive',
+        'color',
+        'size',
+        'borderRadius',
+        'orientation',
+        'disabled',
+        'fullWidth',
+      ],
     },
   },
   argTypes: {
+    borderRadius: {
+      ...borderRadius,
+      description: "Rounds the group's outer corners only - resolves from `theme.radii`.",
+    },
     isExclusive: {
       control: 'boolean',
       description: 'Only one child value can be selected at a time.',

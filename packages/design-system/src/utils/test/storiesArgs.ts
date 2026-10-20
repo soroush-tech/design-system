@@ -10,6 +10,12 @@ import {
   positionTokens,
   spaceTokens,
   tableSizeTokens,
+  tabsOrientationTokens,
+  tabsOverflowBehaviorTokens,
+  tabsScrollButtonsTokens,
+  tabsVariantTokens,
+  textColorTokens,
+  textInputSizeTokens,
 } from './storiesOptions'
 
 // ─── Visual ──────────────────────────────────────────────────────────────────
@@ -184,4 +190,111 @@ export const shouldShowLastButton = {
   control: 'boolean',
   description: 'Shows the last-page button.',
   table: { category: 'Behavior', defaultValue: { summary: 'false' } },
+} as const
+
+// ─── Tabs ──────────────────────────────────────────────────────────────────────
+// Shared by the Tabs and TabList story families - a TabList takes every Tabs prop but the value.
+export const tabsVariant = {
+  control: { type: 'select' },
+  options: tabsVariantTokens,
+  description: 'The look: an indicator under the selected tab, or the selected tab boxed.',
+  table: { category: 'Visual', defaultValue: { summary: 'underline' } },
+} as const
+export const tabsOrientation = {
+  control: { type: 'select' },
+  options: tabsOrientationTokens,
+  description: 'Horizontal or vertical tabs.',
+  table: { category: 'Layout', defaultValue: { summary: 'horizontal' } },
+} as const
+export const tabsColor = {
+  control: { type: 'select' },
+  options: buttonColorTokens,
+  description: "The indicator's or outline's color - resolves to `theme.palette`.",
+  table: { category: 'Visual', defaultValue: { summary: 'primary' } },
+} as const
+export const tabsTextColor = {
+  control: { type: 'select' },
+  options: textColorTokens,
+  description: "The labels' color - resolves against `theme.text`.",
+  table: { category: 'Visual', defaultValue: { summary: 'primary' } },
+} as const
+export const tabsSize = {
+  control: { type: 'select' },
+  options: textInputSizeTokens,
+  description: 'Density - resolves against `theme.sizes`.',
+  table: { category: 'Layout', defaultValue: { summary: 'md' } },
+} as const
+export const tabsFullWidth = {
+  control: 'boolean',
+  description: "The tabs share the row's width equally.",
+  table: { category: 'Layout', defaultValue: { summary: 'false' } },
+} as const
+export const tabsIsCentered = {
+  control: 'boolean',
+  description: 'The tabs sit in the middle of the row.',
+  table: { category: 'Layout', defaultValue: { summary: 'false' } },
+} as const
+export const tabsShouldSelectOnFocus = {
+  control: 'boolean',
+  description: 'Moving focus with the arrow keys selects as it goes.',
+  table: { category: 'Behavior', defaultValue: { summary: 'false' } },
+} as const
+export const tabsOverflowBehavior = {
+  control: { type: 'select' },
+  options: tabsOverflowBehaviorTokens,
+  description: "What the row does when its tabs don't fit.",
+  table: { category: 'Behavior', defaultValue: { summary: 'none' } },
+} as const
+export const tabsOverflowLabel = {
+  control: 'text',
+  description: "Names the button that opens the menu of the tabs that don't fit.",
+  table: { category: 'Content' },
+} as const
+export const tabsScrollButtons = {
+  control: { type: 'select' },
+  options: tabsScrollButtonsTokens,
+  description: 'When a scrolling row shows its scroll buttons.',
+  table: { category: 'Behavior', defaultValue: { summary: 'auto' } },
+} as const
+export const tabsShouldShowScrollButtonsOnMobile = {
+  control: 'boolean',
+  description: 'Show the scroll buttons on narrow screens too.',
+  table: { category: 'Behavior', defaultValue: { summary: 'false' } },
+} as const
+export const tabsHasVisibleScrollbar = {
+  control: 'boolean',
+  description: "Show the list's scrollbar.",
+  table: { category: 'Visual', defaultValue: { summary: 'false' } },
+} as const
+export const tabsBg = {
+  control: { type: 'select' },
+  options: backgroundTokens,
+  description: "The tab strip's ground - resolves against `theme.background`.",
+  table: { category: 'Visual' },
+} as const
+export const tabsSelectedBg = {
+  control: { type: 'select' },
+  options: backgroundTokens,
+  description: "The selected tab's ground - give its TabPanel the same bg.",
+  table: {
+    category: 'Visual',
+    defaultValue: { summary: 'paper when boxed, or enclosed without a divider' },
+  },
+} as const
+export const tabsHasDivider = {
+  control: 'boolean',
+  description:
+    "A line along the row's foot, under its own content too - round the selected tab in the enclosed look.",
+  table: { category: 'Visual', defaultValue: { summary: 'true, false when boxed' } },
+} as const
+export const tabsAriaLabel = {
+  control: 'text',
+  description: 'Names the tablist.',
+  table: { category: 'Content' },
+} as const
+export const tabsAs = {
+  control: { type: 'select' },
+  options: ['div', 'nav'],
+  description: 'A tablist, or with `nav` a navigation of buttons or links marked `aria-current`.',
+  table: { category: 'Behavior', defaultValue: { summary: 'div' } },
 } as const

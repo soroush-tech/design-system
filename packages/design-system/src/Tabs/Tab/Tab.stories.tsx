@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Button } from '../../Button'
 import { Flex } from '../../Flex'
 import { Icon, type IconName, type IconProps } from '../../Icon'
+import { icons } from '../../Icon/icons'
 import { Menu, MenuDivider } from '../../Menu'
 import { MenuItem } from '../../MenuItem'
 import { Typography } from '../../Typography'
@@ -19,6 +20,15 @@ import { Tabs } from '../Tabs'
 import { tabCatalog } from './Tab.catalog'
 import { Tab } from './Tab'
 
+// The icon control picks one by name; the tab is given that icon, at the small size.
+const iconNames = Object.keys(icons) as IconName[]
+const iconMapping = {
+  none: undefined,
+  ...Object.fromEntries(
+    iconNames.map((name) => [name, <Icon key={name} name={name} size="sm" color="inherit" />])
+  ),
+}
+
 const meta: Meta<typeof Tab> = {
   title: 'Theme/Tabs/Tab',
   component: Tab,
@@ -28,6 +38,7 @@ const meta: Meta<typeof Tab> = {
     controls: {
       include: [
         'label',
+        'icon',
         'iconPosition',
         'color',
         'textColor',
@@ -47,6 +58,13 @@ const meta: Meta<typeof Tab> = {
     label: {
       control: 'text',
       description: "The tab's label.",
+      table: { category: 'Content' },
+    },
+    icon: {
+      control: { type: 'select' },
+      options: ['none', ...iconNames],
+      mapping: iconMapping,
+      description: "The tab's icon - yours, at the size you give it; here one by name, small.",
       table: { category: 'Content' },
     },
     iconPosition: {

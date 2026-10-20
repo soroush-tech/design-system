@@ -343,6 +343,7 @@ interface TabEntry {
   icon?: ReactNode
   closeLabel?: string
   color?: keyof Theme['palette']
+  size?: keyof Theme['sizes']
 }
 
 type TabEntryProps = Partial<Omit<TabEntry, 'disabled'>> & { disabled?: boolean }
@@ -353,11 +354,22 @@ type TabEntryProps = Partial<Omit<TabEntry, 'disabled'>> & { disabled?: boolean 
 const readTabs = (children: ReactNode): TabEntry[] =>
   Children.toArray(children).flatMap((child, index) => {
     if (!isValidElement(child)) return []
-    const { value, disabled, label, icon, closeLabel, color } = (
+    const { value, disabled, label, icon, closeLabel, color, size } = (
       child as ReactElement<TabEntryProps>
     ).props
-    return [{ value: value ?? index, disabled: disabled ?? false, label, icon, closeLabel, color }]
+    return [
+      { value: value ?? index, disabled: disabled ?? false, label, icon, closeLabel, color, size },
+    ]
   })
+
+type SpaceStep = Theme['sizes'][keyof Theme['sizes']]['paddingTop']
+
+// The largest of a row's padding steps - none for a row without tabs.
+const getLargestSpace = (steps: SpaceStep[]): SpaceStep | undefined =>
+  steps.reduce<SpaceStep | undefined>(
+    (largest, step) => (largest === undefined || Number(step) > Number(largest) ? step : largest),
+    undefined
+  )
 
 // The one tab in the page's tab order: the selected tab, or else the first enabled one.
 const getFocusableValue = (children: ReactNode, selectedValue: TabValue | null) => {
@@ -445,6 +457,17 @@ export function Tabs({
   const tabDp = useDefaultProps('Tab')
   const selectedTab = readTabs(children).find((tab) => tab.value === selectedValue)
   const selectedColor = selectedTab?.color ?? colorProp ?? tabDp.color ?? color
+  // A row's tabs share its tallest top and bottom padding - a tab's own size sets its type and
+  // its sides - so a smaller tab, stretched to the row's height, keeps its label on the others'
+  // line. Down a column each tab keeps its own.
+  const tabSizes = readTabs(children).map(
+    (tab) => theme.sizes[tab.size ?? sizeProp ?? tabDp.size ?? size]
+  )
+  const rowPaddingTop =
+    getLargestSpace(tabSizes.map((tabSize) => tabSize.paddingTop)) ?? theme.sizes[size].paddingTop
+  const rowPaddingBottom =
+    getLargestSpace(tabSizes.map((tabSize) => tabSize.paddingBottom)) ??
+    theme.sizes[size].paddingBottom
   // What was set on the row itself, for its tabs - it beats the theme's defaults for every tab.
   const rowProps = useMemo<TabRowProps>(
     () => ({ color: colorProp, textColor, size: sizeProp, selectedBg: selectedBgProp }),
@@ -470,6 +493,8 @@ export function Tabs({
       hasDivider,
       selectedBg,
       selectedColor,
+      rowPaddingTop,
+      rowPaddingBottom,
       rowProps,
       shouldSelectOnFocus,
       shouldShowScrollButtonsOnMobile,
@@ -491,6 +516,8 @@ export function Tabs({
       hasDivider,
       selectedBg,
       selectedColor,
+      rowPaddingTop,
+      rowPaddingBottom,
       rowProps,
       shouldSelectOnFocus,
       shouldShowScrollButtonsOnMobile,
@@ -509,10 +536,16 @@ export function Tabs({
       return
     }
     indicator.style.display = 'block'
+    // Along one axis only: the other's measure, left from before the orientation changed,
+    // goes, so the line takes its styled thickness and edge again.
     if (isVertical) {
+      indicator.style.left = ''
+      indicator.style.width = ''
       indicator.style.top = `${selected.offsetTop}px`
       indicator.style.height = `${selected.offsetHeight}px`
     } else {
+      indicator.style.top = ''
+      indicator.style.height = ''
       indicator.style.left = `${selected.offsetLeft}px`
       indicator.style.width = `${selected.offsetWidth}px`
     }

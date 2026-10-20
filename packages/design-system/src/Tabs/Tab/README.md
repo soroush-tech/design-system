@@ -29,7 +29,7 @@ others' labels at its foot, level with its own.
 | `iconPosition`    | `'start' \| 'end' \| 'top' \| 'bottom'` | `'top'`                          | Where `icon` sits around the label.                                                 |
 | `color`           | `keyof Theme['palette']`                | its `Tabs`'                      | The tab's accent - its selected label, outline and indicator, and its hover tint.   |
 | `textColor`       | `keyof Theme['text']`                   | its `Tabs`'                      | The label's color.                                                                  |
-| `size`            | `keyof Theme['sizes']`                  | its `Tabs`'                      | Density - the label's padding and font size.                                        |
+| `size`            | `keyof Theme['sizes']`                  | its `Tabs`'                      | Density - the label's font size and side padding; across a row, the row's tallest.  |
 | `bg`              | `keyof Theme['background']`             | -                                | The tab's ground while unselected.                                                  |
 | `selectedBg`      | `keyof Theme['background']`             | its `Tabs`' `selectedBg`         | The tab's ground while selected.                                                    |
 | `borderRadius`    | `keyof Theme['radii']`                  | `'sm'` boxed or enclosed         | Its corner radius - in the enclosed look only the corners away from the divider.    |

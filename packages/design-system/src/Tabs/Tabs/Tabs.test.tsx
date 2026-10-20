@@ -358,6 +358,21 @@ describe('Tabs', () => {
       expect(indicator()).toHaveStyle({ top: '30px', height: '24px' })
     })
 
+    it('drops the other axis when the orientation changes, so the line keeps its thickness', () => {
+      measure({ offsetLeft: 40, offsetWidth: 90, offsetTop: 30, offsetHeight: 24 })
+      const views = (orientation: TabsProps['orientation']) => (
+        <Tabs aria-label="Views" defaultValue="system" orientation={orientation}>
+          <Tab value="canvas" label="Canvas" />
+          <Tab value="system" label="Design system" />
+        </Tabs>
+      )
+      const { rerender } = renderWithTheme(views('horizontal'))
+      rerender(views('vertical'))
+      expect(indicator().style).toMatchObject({ left: '', width: '', top: '30px', height: '24px' })
+      rerender(views('horizontal'))
+      expect(indicator().style).toMatchObject({ top: '', height: '', left: '40px', width: '90px' })
+    })
+
     it('re-measures through action.updateIndicator', () => {
       const action = createRef<TabsActions>()
       measure({ offsetLeft: 10, offsetWidth: 50 })

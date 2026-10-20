@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import {
   buttonColorTokens,
   spaceTokens,
+  textColorTokens,
   textInputSizeTokens,
   zOrderTokens,
 } from '../../utils/test/storiesOptions'
@@ -26,6 +27,7 @@ const meta: Meta<typeof ContextMenu> = {
         'layer',
         'emptyLabel',
         'color',
+        'textColor',
         'size',
         'dense',
         'aria-label',
@@ -67,6 +69,12 @@ const meta: Meta<typeof ContextMenu> = {
       control: { type: 'select' },
       options: buttonColorTokens,
       description: 'Accent color for every row - resolves to `theme.palette`.',
+      table: { category: 'Visual' },
+    },
+    textColor: {
+      control: { type: 'select' },
+      options: textColorTokens,
+      description: "Every row's text color - resolves against `theme.text`.",
       table: { category: 'Visual' },
     },
     size: {

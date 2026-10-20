@@ -18,11 +18,26 @@ const meta: Meta<typeof ButtonGroup> = {
   parameters: {
     layout: 'padded',
     controls: {
-      include: ['variant', 'color', 'size', 'orientation', 'borderRadius', 'disabled', 'fullWidth'],
+      include: [
+        'variant',
+        'color',
+        'size',
+        'orientation',
+        'borderRadius',
+        'disabled',
+        'fullWidth',
+        'as',
+      ],
     },
   },
   args: exampleArgs(buttonGroupCatalog.example),
   argTypes: {
+    as: {
+      control: { type: 'select' },
+      options: ['div', 'section', 'nav'],
+      description: 'Overrides the root element.',
+      table: { category: 'Layout', defaultValue: { summary: 'div' } },
+    },
     variant: {
       control: { type: 'select' },
       options: buttonVariantTokens,

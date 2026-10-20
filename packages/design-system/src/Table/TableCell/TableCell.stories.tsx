@@ -34,7 +34,6 @@ const meta: Meta<typeof TableCell> = {
     layout: 'padded',
     controls: {
       include: [
-        // component
         'variant',
         'align',
         'size',
@@ -42,27 +41,30 @@ const meta: Meta<typeof TableCell> = {
         'sortDirection',
         'hasEllipsis',
         'scope',
-        // color
         'color',
         'bg',
         'borderColor',
-        // typography
         'fontFamily',
         'fontSize',
         'fontWeight',
         'lineHeight',
         'letterSpacing',
-        // space
         'p',
         'm',
-        // border
         'border',
         'borderWidth',
         'borderStyle',
+        'as',
       ],
     },
   },
   argTypes: {
+    as: {
+      control: { type: 'select' },
+      options: ['td', 'th'],
+      description: 'Overrides the resolved `th` / `td` element.',
+      table: { category: 'Layout', defaultValue: { summary: 'computed' } },
+    },
     variant: {
       control: { type: 'select' },
       options: tableCellVariantTokens,

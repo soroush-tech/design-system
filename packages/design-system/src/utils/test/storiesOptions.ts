@@ -46,6 +46,7 @@ export {
   flexDirectionValues as flexDirectionTokens,
   flexJustifyContentValues as flexJustifyContentTokens,
   flexAlignItemsValues as flexAlignItemsTokens,
+  flexAlignContentValues as flexAlignContentTokens,
   flexWrapValues as flexWrapTokens,
 } from '../../Flex/Flex.catalog'
 export {

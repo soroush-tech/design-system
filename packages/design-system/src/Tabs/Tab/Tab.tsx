@@ -82,6 +82,9 @@ interface TabStyleProps {
   borderRadius?: keyof Theme['radii']
   /** The row's line color - the selected tab's - which an unselected tab's stretch of it takes. */
   lineColor: keyof Theme['palette']
+  /** The row's tallest top and bottom padding, in place of the tab's own across a row. */
+  rowPaddingTop: Theme['sizes'][keyof Theme['sizes']]['paddingTop']
+  rowPaddingBottom: Theme['sizes'][keyof Theme['sizes']]['paddingBottom']
 }
 
 const shouldForwardProp = createShouldForwardProp([
@@ -100,6 +103,8 @@ const shouldForwardProp = createShouldForwardProp([
   'bg',
   'borderRadius',
   'lineColor',
+  'rowPaddingTop',
+  'rowPaddingBottom',
 ])
 
 // The enclosed look: the selected tab outlined, its corners away from the divider rounded - open
@@ -216,6 +221,9 @@ const TabLabel = styled('button', {
   isDisabled,
   iconPlacement,
   isWrapped,
+  isVertical,
+  rowPaddingTop,
+  rowPaddingBottom,
 }) => {
   const { paddingTop, paddingBottom, paddingLeft, paddingRight, fontSize } = theme.sizes[sizeToken]
   const main = get(theme, `palette.${color}.main`)
@@ -238,8 +246,9 @@ const TabLabel = styled('button', {
     flex: 1,
     minWidth: 0,
     margin: 0,
-    paddingTop: theme.space[paddingTop],
-    paddingBottom: theme.space[paddingBottom],
+    // Across a row, the row's: its labels share a line whatever each tab's size.
+    paddingTop: theme.space[isVertical ? paddingTop : rowPaddingTop],
+    paddingBottom: theme.space[isVertical ? paddingBottom : rowPaddingBottom],
     paddingLeft: theme.space[paddingLeft],
     paddingRight: theme.space[paddingRight],
     fontFamily: theme.fonts.body,
@@ -406,6 +415,8 @@ export function Tab({
     bg,
     borderRadius,
     lineColor: tabs.selectedColor,
+    rowPaddingTop: tabs.rowPaddingTop,
+    rowPaddingBottom: tabs.rowPaddingBottom,
   }
   return (
     <TabRoot

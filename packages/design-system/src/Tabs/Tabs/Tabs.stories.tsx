@@ -1,16 +1,27 @@
 import { Children, isValidElement, useState, type ReactNode } from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { p } from '../../utils/test/storiesArgs'
 import {
-  backgroundTokens,
-  buttonColorTokens,
-  tabsOrientationTokens,
-  tabsOverflowBehaviorTokens,
-  tabsScrollButtonsTokens,
-  tabsVariantTokens,
-  textColorTokens,
-  textInputSizeTokens,
-} from '../../utils/test/storiesOptions'
+  p,
+  tabsVariant,
+  tabsOrientation,
+  tabsColor,
+  tabsTextColor,
+  tabsSize,
+  tabsFullWidth,
+  tabsIsCentered,
+  tabsShouldSelectOnFocus,
+  tabsOverflowBehavior,
+  tabsOverflowLabel,
+  tabsScrollButtons,
+  tabsShouldShowScrollButtonsOnMobile,
+  tabsHasVisibleScrollbar,
+  tabsBg,
+  tabsSelectedBg,
+  tabsHasDivider,
+  tabsAriaLabel,
+  tabsAs,
+} from '../../utils/test/storiesArgs'
+import { tabsVariantTokens } from '../../utils/test/storiesOptions'
 import { Button } from '../../Button'
 import { Icon } from '../../Icon'
 import { Menu, MenuDivider } from '../../Menu'
@@ -54,6 +65,7 @@ const meta: Meta<typeof Tabs> = {
         'bg',
         'selectedBg',
         'aria-label',
+        'as',
         'p',
       ],
     },
@@ -69,104 +81,24 @@ const meta: Meta<typeof Tabs> = {
     shouldSelectOnFocus: false,
   },
   argTypes: {
-    variant: {
-      control: { type: 'select' },
-      options: tabsVariantTokens,
-      description: 'The look: an indicator under the selected tab, or the selected tab boxed.',
-      table: { category: 'Visual', defaultValue: { summary: 'underline' } },
-    },
-    orientation: {
-      control: { type: 'select' },
-      options: tabsOrientationTokens,
-      description: 'Horizontal or vertical tabs.',
-      table: { category: 'Layout', defaultValue: { summary: 'horizontal' } },
-    },
-    color: {
-      control: { type: 'select' },
-      options: buttonColorTokens,
-      description: "The indicator's or outline's color - resolves to `theme.palette`.",
-      table: { category: 'Visual', defaultValue: { summary: 'primary' } },
-    },
-    textColor: {
-      control: { type: 'select' },
-      options: textColorTokens,
-      description: "The labels' color - resolves against `theme.text`.",
-      table: { category: 'Visual', defaultValue: { summary: 'primary' } },
-    },
-    size: {
-      control: { type: 'select' },
-      options: textInputSizeTokens,
-      description: 'Density - resolves against `theme.sizes`.',
-      table: { category: 'Layout', defaultValue: { summary: 'md' } },
-    },
-    fullWidth: {
-      control: 'boolean',
-      description: "The tabs share the row's width equally.",
-      table: { category: 'Layout', defaultValue: { summary: 'false' } },
-    },
-    isCentered: {
-      control: 'boolean',
-      description: 'The tabs sit in the middle of the row.',
-      table: { category: 'Layout', defaultValue: { summary: 'false' } },
-    },
-    shouldSelectOnFocus: {
-      control: 'boolean',
-      description: 'Moving focus with the arrow keys selects as it goes.',
-      table: { category: 'Behavior', defaultValue: { summary: 'false' } },
-    },
-    overflowBehavior: {
-      control: { type: 'select' },
-      options: tabsOverflowBehaviorTokens,
-      description: "What the row does when its tabs don't fit.",
-      table: { category: 'Behavior', defaultValue: { summary: 'none' } },
-    },
-    overflowLabel: {
-      control: 'text',
-      description: "Names the button that opens the menu of the tabs that don't fit.",
-      table: { category: 'Content' },
-    },
-    scrollButtons: {
-      control: { type: 'select' },
-      options: tabsScrollButtonsTokens,
-      description: 'When a scrolling row shows its scroll buttons.',
-      table: { category: 'Behavior', defaultValue: { summary: 'auto' } },
-    },
-    shouldShowScrollButtonsOnMobile: {
-      control: 'boolean',
-      description: 'Show the scroll buttons on narrow screens too.',
-      table: { category: 'Behavior', defaultValue: { summary: 'false' } },
-    },
-    hasVisibleScrollbar: {
-      control: 'boolean',
-      description: "Show the list's scrollbar.",
-      table: { category: 'Visual', defaultValue: { summary: 'false' } },
-    },
-    bg: {
-      control: { type: 'select' },
-      options: backgroundTokens,
-      description: "The tab strip's ground - resolves against `theme.background`.",
-      table: { category: 'Visual' },
-    },
-    selectedBg: {
-      control: { type: 'select' },
-      options: backgroundTokens,
-      description: "The selected tab's ground - give its TabPanel the same bg.",
-      table: {
-        category: 'Visual',
-        defaultValue: { summary: 'paper when boxed, or enclosed without a divider' },
-      },
-    },
-    hasDivider: {
-      control: 'boolean',
-      description:
-        "A line along the row's foot, under its own content too - round the selected tab in the enclosed look.",
-      table: { category: 'Visual', defaultValue: { summary: 'true, false when boxed' } },
-    },
-    'aria-label': {
-      control: 'text',
-      description: 'Names the tablist.',
-      table: { category: 'Content' },
-    },
+    variant: tabsVariant,
+    orientation: tabsOrientation,
+    color: tabsColor,
+    textColor: tabsTextColor,
+    size: tabsSize,
+    fullWidth: tabsFullWidth,
+    isCentered: tabsIsCentered,
+    shouldSelectOnFocus: tabsShouldSelectOnFocus,
+    overflowBehavior: tabsOverflowBehavior,
+    overflowLabel: tabsOverflowLabel,
+    scrollButtons: tabsScrollButtons,
+    shouldShowScrollButtonsOnMobile: tabsShouldShowScrollButtonsOnMobile,
+    hasVisibleScrollbar: tabsHasVisibleScrollbar,
+    bg: tabsBg,
+    selectedBg: tabsSelectedBg,
+    hasDivider: tabsHasDivider,
+    'aria-label': tabsAriaLabel,
+    as: tabsAs,
     p,
   },
 }

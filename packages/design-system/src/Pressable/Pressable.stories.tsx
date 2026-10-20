@@ -24,6 +24,9 @@ const meta: Meta<typeof Pressable> = {
         'activeOpacity',
         'disabled',
         'href',
+        'target',
+        'rel',
+        'type',
         'p',
         'borderRadius',
       ],
@@ -31,6 +34,24 @@ const meta: Meta<typeof Pressable> = {
   },
   args: exampleArgs(pressableCatalog.example),
   argTypes: {
+    target: {
+      control: { type: 'select' },
+      options: ['_self', '_blank', '_parent', '_top'],
+      description: 'Anchor `target` - only meaningful with `href`.',
+      table: { category: 'Behavior' },
+    },
+    rel: {
+      control: 'text',
+      description: 'Anchor `rel` - only meaningful with `href`.',
+      table: { category: 'Behavior' },
+    },
+    type: {
+      control: { type: 'select' },
+      options: ['button', 'submit', 'reset'],
+      description:
+        'Emitted only for `as="button"`, so a surface in a form never submits by accident.',
+      table: { category: 'Behavior', defaultValue: { summary: 'button' } },
+    },
     as: {
       control: { type: 'inline-radio' },
       options: ['div', 'button', 'span'],
