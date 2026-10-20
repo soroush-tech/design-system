@@ -83,6 +83,7 @@ export {
   tabsOverflowBehaviorValues as tabsOverflowBehaviorTokens,
   tabsScrollButtonsValues as tabsScrollButtonsTokens,
 } from '../../Tabs/Tabs/Tabs.catalog'
+export { tabIconPositionValues as tabIconPositionTokens } from '../../Tabs/Tab/Tab.catalog'
 export { pressableFeedbackValues as pressableFeedbackTokens } from '../../Pressable/Pressable.catalog'
 export {
   switchVariantValues as switchVariantTokens,

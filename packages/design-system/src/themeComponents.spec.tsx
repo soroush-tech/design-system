@@ -249,6 +249,7 @@ const cases: Case[] = [
   },
   { name: 'Pressable', slot: 'root', label: 'Pressable', ui: <Pressable>p</Pressable> },
   { name: 'Tabs', slot: 'root', label: 'Tabs', ui: tabs },
+  { name: 'Tab', slot: 'root', label: 'Tab', ui: tabs },
   { name: 'Quote', slot: 'root', label: 'Quote', ui: <Quote>q</Quote> },
   { name: 'Radio', slot: 'root', label: 'Radio', ui: <Radio /> },
   {
@@ -575,6 +576,10 @@ const cases: Case[] = [
       fireEvent.click(screen.getByRole('button', { name: 'More' }))
     },
   },
+  { name: 'Tab', slot: 'label', label: 'TabLabel', ui: tabs },
+  { name: 'Tab', slot: 'icon', label: 'TabIcon', ui: tabs },
+  { name: 'Tab', slot: 'secondaryAction', label: 'TabSecondaryAction', ui: tabs },
+  { name: 'Tab', slot: 'close', label: 'TabClose', ui: tabs },
 ]
 
 describe('theme.components styleOverrides', () => {

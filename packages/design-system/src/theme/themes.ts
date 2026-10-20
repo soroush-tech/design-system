@@ -467,6 +467,17 @@ export interface MenuItemOwnerState {
   dense?: boolean
 }
 
+/** The defaults a theme may set for every `Tab`. */
+export interface TabOwnerState {
+  isWrapped?: boolean
+  bg?: keyof ThemeBackground
+  borderRadius?: keyof ThemeRadii
+  color?: keyof ThemePalette
+  textColor?: keyof ThemeText
+  size?: keyof ThemeSizes
+  selectedBg?: keyof ThemeBackground
+}
+
 /** Token-typed Typography props a theme may set for Card's title/caption slots. */
 export interface CardSlotTypographyProps {
   variant?: keyof ThemeTypographyVariants
@@ -566,6 +577,7 @@ export interface ThemeComponents {
   SidebarItem?: ComponentConfig
   Skeleton?: ComponentConfig<Record<string, unknown>, 'root' | 'content'>
   Switch?: ComponentConfig<Record<string, unknown>, 'root' | 'input' | 'track' | 'thumb'>
+  Tab?: ComponentConfig<TabOwnerState, 'root' | 'label' | 'icon' | 'secondaryAction' | 'close'>
   Table?: ComponentConfig
   TableBody?: ComponentConfig
   TableCell?: ComponentConfig

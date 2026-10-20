@@ -2,7 +2,7 @@
 
 # Components
 
-The 52 components shipped by the design system, and when to reach for each.
+The 53 components shipped by the design system, and when to reach for each.
 Import every component from its own subpath.
 
 ## Layout & surfaces
@@ -52,6 +52,7 @@ Import every component from its own subpath.
 - **MenuItems** - Menu rows from data - for menus that come from a list of commands.
 - **MenuList** - A list of commands, rendered as a semantic `<ul role="menu">`.
 - **Tabs** - A row of tabs.
+- **Tab** - One tab of a `Tabs` row: a label, an icon on any side of it, and - with a `closeLabel` - a close button of its own.
 
 ## Feedback
 
