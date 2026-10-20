@@ -1,4 +1,5 @@
 import type { ElementType } from 'react'
+import type { PaperElevation } from '../Paper/Paper'
 import type { CSSObject as EmotionCSSObject } from '@emotion/react'
 import { alpha, generateBoxShadow } from '../utils'
 import { spacing } from './utils/spacing'
@@ -416,6 +417,18 @@ export interface ButtonOwnerState {
   disabled?: boolean
 }
 
+/** The defaults a theme may set for every `Menu`. */
+export interface MenuOwnerState {
+  align?: 'start' | 'end'
+  marginThreshold?: keyof ThemeSpace
+  elevation?: PaperElevation
+  layer?: keyof ThemeZOrder
+  color?: keyof ThemePalette
+  textColor?: keyof ThemeText
+  size?: keyof ThemeSizes
+  dense?: boolean
+}
+
 /** The defaults a theme may set for every `MenuList` - and so for its rows. */
 export interface MenuListOwnerState {
   color?: keyof ThemePalette
@@ -500,6 +513,7 @@ export interface ThemeComponents {
     'root' | 'track' | 'dash' | 'bar' | 'traveler' | 'segment' | 'secondaryBar'
   >
   Link?: ComponentConfig
+  Menu?: ComponentConfig<MenuOwnerState, 'root' | 'paper'>
   MenuDivider?: ComponentConfig
   MenuItem?: ComponentConfig<
     MenuItemOwnerState,

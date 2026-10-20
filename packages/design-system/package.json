@@ -49,6 +49,7 @@
     "./Image": "./src/Image/index.ts",
     "./LinearProgress": "./src/LinearProgress/index.ts",
     "./Link": "./src/Link/index.ts",
+    "./Menu": "./src/Menu/index.ts",
     "./MenuItem": "./src/MenuItem/index.ts",
     "./Modal": "./src/Modal/index.ts",
     "./NativeSelect": "./src/NativeSelect/index.ts",
@@ -291,6 +292,16 @@
         "require": {
           "types": "./dist/Link.d.cts",
           "default": "./dist/Link.cjs"
+        }
+      },
+      "./Menu": {
+        "import": {
+          "types": "./dist/Menu.d.mts",
+          "default": "./dist/Menu.mjs"
+        },
+        "require": {
+          "types": "./dist/Menu.d.cts",
+          "default": "./dist/Menu.cjs"
         }
       },
       "./MenuItem": {

@@ -76,6 +76,7 @@ export {
 export { drawerAnchorValues as anchorTokens } from '../../Drawer/Drawer.catalog'
 export { modalScrollValues as modalScrollTokens } from '../../Modal/Modal.catalog'
 export { menuItemRoleValues as menuItemRoleTokens } from '../../MenuItem/MenuItem.catalog'
+export { menuAlignValues as menuAlignTokens } from '../../Menu/Menu/Menu.catalog'
 export { pressableFeedbackValues as pressableFeedbackTokens } from '../../Pressable/Pressable.catalog'
 export {
   switchVariantValues as switchVariantTokens,

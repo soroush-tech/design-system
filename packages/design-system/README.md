@@ -132,6 +132,12 @@ SSR critical-CSS extraction (e.g. with `@emotion/server`) is a separate, opt-in 
 | `Form`, `FormControl`, `FormLabel`, `FormHelperText` | Form composition and labeling                                           |
 | `Pagination`                                         | Page navigation control                                                 |
 
+### Navigation & menus
+
+| Component | Purpose                                                                                                                                                                                                                                                                         |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Menu`    | A trigger and the list of commands it opens - exports `MenuList` (the `role="menu"` list that owns the keyboard), `MenuDivider`, `MenuItems` (rows from data) and `ContextMenu` (the same list, opened at the pointer by a right-click) from `@soroush.tech/design-system/Menu` |
+
 ### Feedback
 
 | Component                            | Purpose                                        |

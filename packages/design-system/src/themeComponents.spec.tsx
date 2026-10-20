@@ -21,6 +21,7 @@ import { Icon } from './Icon'
 import { Image } from './Image'
 import { LinearProgress } from './LinearProgress'
 import { Link } from './Link'
+import { Menu } from './Menu/Menu'
 import { MenuDivider } from './Menu/MenuDivider'
 import { MenuItem } from './MenuItem'
 import { MenuList } from './Menu/MenuList'
@@ -154,6 +155,12 @@ const cases: Case[] = [
   { name: 'Link', slot: 'root', label: 'Link', ui: <Link href="/">x</Link> },
   { name: 'MenuItem', slot: 'root', label: 'MenuItem', ui: <MenuItem value="a">A</MenuItem> },
   { name: 'MenuList', slot: 'root', label: 'MenuList', ui: <MenuList /> },
+  {
+    name: 'Menu',
+    slot: 'root',
+    label: 'Menu',
+    ui: <Menu trigger={<button type="button">m</button>} />,
+  },
   {
     name: 'MenuDivider',
     slot: 'root',
@@ -421,6 +428,12 @@ const cases: Case[] = [
         <MenuItem submenu={null}>A</MenuItem>
       </MenuList>
     ),
+  },
+  {
+    name: 'Menu',
+    slot: 'paper',
+    label: 'MenuPaper',
+    ui: <Menu trigger={<button type="button">m</button>} defaultOpen />,
   },
   {
     name: 'NativeSelect',

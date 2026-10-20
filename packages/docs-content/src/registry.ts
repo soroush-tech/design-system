@@ -84,6 +84,10 @@ export const componentCategories: ComponentCategory[] = [
     ],
   },
   {
+    label: 'Navigation & menus',
+    items: [component('Menu', true)],
+  },
+  {
     label: 'Feedback',
     items: [
       component('CircularProgress'),
