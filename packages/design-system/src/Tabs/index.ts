@@ -1,4 +1,5 @@
 export * from './Tab'
 export * from './TabContext'
+export * from './TabList'
 export * from './TabScrollButton'
 export * from './Tabs'

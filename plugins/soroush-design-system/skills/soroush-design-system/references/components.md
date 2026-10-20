@@ -2,7 +2,7 @@
 
 # Components
 
-The 55 components shipped by the design system, and when to reach for each.
+The 56 components shipped by the design system, and when to reach for each.
 Import every component from its own subpath.
 
 ## Layout & surfaces
@@ -54,6 +54,7 @@ Import every component from its own subpath.
 - **Tabs** - A row of tabs.
 - **Tab** - One tab of a `Tabs` row: a label, an icon on any side of it, and - with a `closeLabel` - a close button of its own.
 - **TabContext** - Holds the selected value for a `TabList` and the `TabPanel`s beside it, wherever they sit - the tabs in a toolbar, the panels further down the page.
+- **TabList** - The `Tabs` of a `TabContext`: it shows the context's value and chooses through it, and links each tab to its `TabPanel` - the tab `aria-controls` its panel, and the panel is named by its tab.
 - **TabScrollButton** - The button that scrolls a row of tabs.
 
 ## Feedback
