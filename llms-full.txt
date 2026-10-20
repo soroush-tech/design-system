@@ -25,27 +25,52 @@ https://mcp.soroush.tech/mcp (or `npx -y @soroush.tech/mcp`).
 - [AppBar](https://docs.soroush.tech/design-system/components/app-bar/): Renders as `<header>`. A top-level container for navigation, toolbars, and application headers. Applies a default elevation shadow from the theme and stretches to full width.
 - [Drawer](https://docs.soroush.tech/design-system/components/drawer/): A panel that slides in from a screen edge. It is an HTML `popover`: a `DrawerToggle` button opens
 - [Sidebar](https://docs.soroush.tech/design-system/components/sidebar/): A collapsible vertical icon rail. Collapsed, it shows icon-only `SidebarItem`s; open, each item's
+- [SidebarItem](https://docs.soroush.tech/design-system/api/sidebar-item/): One entry of a [`Sidebar`](https://docs.soroush.tech/design-system/components/sidebar/): an icon **pinned to the anchored edge** (it
 - [Typography](https://docs.soroush.tech/design-system/components/typography/): Renders as `<p>` by default. The `variant` prop controls both the visual scale and the HTML element. All styled-system prop groups are supported, plus five Typography-specific props.
 - [Link](https://docs.soroush.tech/design-system/components/link/): Renders as `<a>`. Composes `Typography` - all typographic scale, color, spacing, and layout props are inherited. Adds `underline`, and defaults `color` to `"primary"` and `variant` to `"inherit"`.
 - [Icon](https://docs.soroush.tech/design-system/components/icon/): Renders a themeable SVG icon from the central registry. Consumers pass a `name`; `Icon` owns every `?react` import and maps the name to its component.
 - [Image](https://docs.soroush.tech/design-system/components/image/): A styled-system `<img>` primitive. Accepts all layout, space, background, and position props from the theme, plus `objectFit` / `objectPosition` for common image sizing patterns and `borderRadius` for rounded corners.
 - [Avatar](https://docs.soroush.tech/design-system/components/avatar/): Displays a user image, initials, or icon in a consistently sized container. Supports three shapes, four preset sizes, an optional ring outline, and automatic image-error fallback. All styles derive from theme tokens.
 - [Table](https://docs.soroush.tech/design-system/components/table/): The root of the table family. Renders a `<table>` with collapsed borders and full width, and
+- [TableBody](https://docs.soroush.tech/design-system/api/table-body/): The body section of a `Table`. Renders `<tbody>` and provides `TableSectionContext` = `'body'`,
+- [TableCell](https://docs.soroush.tech/design-system/api/table-cell/): A cell in a table. Renders `<th scope="col">` inside a `TableHead` and `<td>` elsewhere - driven
+- [TableContainer](https://docs.soroush.tech/design-system/api/table-container/): Scroll wrapper for `Table`. Extends `View` and adds `overflow-x: auto`, so wide tables scroll
+- [TableControl](https://docs.soroush.tech/design-system/api/table-control/): Kills the sortable/paginated-table boilerplate: consumer-called hooks own the state
+- [TableFooter](https://docs.soroush.tech/design-system/api/table-footer/): The footer section of a `Table`. Renders `<tfoot>` and provides `TableSectionContext` = `'footer'`,
+- [TableHead](https://docs.soroush.tech/design-system/api/table-head/): The header section of a `Table`. Renders `<thead>` and provides `TableSectionContext` = `'head'`,
+- [TablePagination](https://docs.soroush.tech/design-system/api/table-pagination/): A `TableCell`-based pagination control for placing inside `TableFooter > TableRow` - a
+- [TablePaginationActions](https://docs.soroush.tech/design-system/api/table-pagination-actions/): The first / previous / next / last icon-button cluster used inside `TablePagination`, exported
+- [TableRow](https://docs.soroush.tech/design-system/api/table-row/): A row in a table. Renders `<tr>` with optional hover and selected shading.
+- [TableSortLabel](https://docs.soroush.tech/design-system/api/table-sort-label/): A button-based label for sortable column headers, placed inside a header `TableCell`. Renders the
 - [Button](https://docs.soroush.tech/design-system/components/button/): Renders as `<button>`. Sharp corners, uppercase, bold, tight letter-spacing - matching the Kinetic Architecture aesthetic. Supports three visual variants, six semantic color palettes, three sizes, start/end icon slots, full-width mode, and a loading state with configurable indicator position.
 - [ButtonGroup](https://docs.soroush.tech/design-system/components/button-group/): Groups related `Button` immediate children into a visually joined cluster - adjacent borders
 - [ToggleButton](https://docs.soroush.tech/design-system/components/toggle-button/): An individual toggle button (text or icon) - usable standalone or inside a `ToggleButtonGroup`.
+- [ToggleButtonGroup](https://docs.soroush.tech/design-system/api/toggle-button-group/): A `ButtonGroup` of `ToggleButton`s with single (exclusive) or multiple selection.
 - [TextInput](https://docs.soroush.tech/design-system/components/text-input/): A theme-aware text input primitive. Supports controlled and uncontrolled usage, multiline (textarea), error and disabled states, and all standard form attributes.
 - [Checkbox](https://docs.soroush.tech/design-system/components/checkbox/): A binary toggle control. Supports controlled and uncontrolled usage, six semantic color palettes, two sizes, indeterminate state, and custom icons.
 - [Radio](https://docs.soroush.tech/design-system/components/radio/): A single-selection control for use within a group. Supports controlled checked state, six semantic color palettes, two sizes, and custom icons.
 - [Switch](https://docs.soroush.tech/design-system/components/switch/): A sliding toggle control. Supports controlled and uncontrolled usage, six semantic color palettes, two sizes, four visual variants, and custom thumb icons.
 - [NativeSelect](https://docs.soroush.tech/design-system/components/native-select/): Not the recommended select: use [`Select`](https://docs.soroush.tech/design-system/components/select/) - and `<Select native>` when you
 - [Select](https://docs.soroush.tech/design-system/components/select/): The select to use for every dropdown choice - always prefer it over `NativeSelect`. It is a form
-- [MenuItem](https://docs.soroush.tech/design-system/components/menu-item/): A single option row for [`Select`](https://docs.soroush.tech/design-system/components/select/)'s listbox, rendered as a semantic
+- [MenuItem](https://docs.soroush.tech/design-system/components/menu-item/): A row of a list, in one of two roles:
 - [Form](https://docs.soroush.tech/design-system/components/form/): Renders a `<form>` and provides form-wide field defaults through `FormContext`. It is the **lowest
 - [FormControl](https://docs.soroush.tech/design-system/components/form-control/): Groups a label, control, and helper text into one accessible field and shares their state through React context. Works standalone or inside a [`Form`](https://docs.soroush.tech/design-system/components/form/).
 - [FormLabel](https://docs.soroush.tech/design-system/components/form-label/): A field label built on [`Typography`](https://docs.soroush.tech/design-system/components/typography/), rendered as a `<label>`. Reads the control `id` and `required` flag from [`FormControl`](https://docs.soroush.tech/design-system/components/form-control/) context so association and the required indicator wire automatically.
 - [FormHelperText](https://docs.soroush.tech/design-system/components/form-helper-text/): Helper or error text for a field, built on [`Typography`](https://docs.soroush.tech/design-system/components/typography/) and rendered as a `<p>`. Reads its `id` and error state from [`FormControl`](https://docs.soroush.tech/design-system/components/form-control/) context and registers its presence so the control points `aria-describedby` at it only while it is rendered.
 - [Pagination](https://docs.soroush.tech/design-system/components/pagination/): Page-number navigation for paging a list of arbitrary items (e.g. a blog index), with ellipsis
+- [PaginationItem](https://docs.soroush.tech/design-system/api/pagination-item/): The individual item rendered inside `Pagination`. Its `type` determines what it renders: a page
+- [Breadcrumbs](https://docs.soroush.tech/design-system/components/breadcrumbs/): The trail of links from a site's root to the current page, so a page shows where it sits and every
+- [Menu](https://docs.soroush.tech/design-system/components/menu/): A trigger and the [`MenuList`](https://docs.soroush.tech/design-system/api/menu-list/) of commands it opens. It isn't modal: no
+- [ContextMenu](https://docs.soroush.tech/design-system/api/context-menu/): A [`MenuList`](https://docs.soroush.tech/design-system/api/menu-list/) opened by a right-click over its target, at the pointer - or,
+- [MenuDivider](https://docs.soroush.tech/design-system/api/menu-divider/): A line between groups of rows in a [`MenuList`](https://docs.soroush.tech/design-system/api/menu-list/), rendered as
+- [MenuItems](https://docs.soroush.tech/design-system/api/menu-items/): Menu rows from data - for menus that come from a list of commands. Each entry is a row (a
+- [MenuList](https://docs.soroush.tech/design-system/api/menu-list/): A list of commands, rendered as a semantic `<ul role="menu">`. It owns the keyboard: the arrow
+- [Tabs](https://docs.soroush.tech/design-system/components/tabs/): A row of tabs. By default it is a `tablist`: one tab in the page's tab order, the arrow keys of
+- [Tab](https://docs.soroush.tech/design-system/api/tab/): One tab of a `Tabs` row: a label, an icon on any side of it, and - with a `closeLabel` - a close
+- [TabContext](https://docs.soroush.tech/design-system/api/tab-context/): Holds the selected value for a `TabList` and the `TabPanel`s beside it, wherever they sit - the
+- [TabList](https://docs.soroush.tech/design-system/api/tab-list/): The `Tabs` of a `TabContext`: it shows the context's value and chooses through it, and links each
+- [TabPanel](https://docs.soroush.tech/design-system/api/tab-panel/): The content a tab shows: a `role="tabpanel"` named by its tab, which in turn `aria-controls` it.
+- [TabScrollButton](https://docs.soroush.tech/design-system/api/tab-scroll-button/): The button that scrolls a row of tabs. A `Tabs` with `overflowBehavior="scroll"` shows one at each
 - [CircularProgress](https://docs.soroush.tech/design-system/components/circular-progress/): Renders a circular loading indicator. Supports `indeterminate` (looping) and `determinate` (value-driven) variants. The stroke color is set via CSS `currentColor`; the `color` prop resolves to `theme.palette[color].main`.
 - [LinearProgress](https://docs.soroush.tech/design-system/components/linear-progress/): Renders a horizontal loading bar - the linear counterpart of `CircularProgress`. Supports `indeterminate` (looping), `determinate` (value-driven), and `query` (reversed loop) variants, plus a `buffer` mode on top of `determinate`. All fills use CSS `currentColor`; the `color` prop resolves to `theme.palette[color].main`.
 - [Skeleton](https://docs.soroush.tech/design-system/components/skeleton/): Displays a low-fidelity placeholder while content loads, reducing layout shift and signalling a loading state. Supports three shapes, two animations (or none), explicit or child-inferred dimensions, and derives all colors from theme tokens.
@@ -591,7 +616,7 @@ Raw CSS cursor value (e.g. `"pointer"`, `"default"`).
 Import: `import { Card } from '@soroush.tech/design-system/Card'`
 A surface component with an optional title, caption, and variant-based visual treatment. Extends `Paper` - all `Paper`, `Flex`, and space/layout props pass through.
 
-Theme-customizable via `theme.components.Card` - slots `root` / `title` / `caption` for `styleOverrides`, plus `defaultProps.titleProps`/`.captionProps` (token-typed) to restyle the title/caption Typography app-wide; per-instance `titleProps`/`captionProps` always win. See [`docs/customization.md`](../../docs/customization.md#slot-props--customizing-composed-sub-elements).
+Theme-customizable via `theme.components.Card` - slots `root` / `title` / `caption` for `styleOverrides`, plus `defaultProps.titleProps`/`.captionProps` (token-typed) to restyle the title/caption Typography app-wide; per-instance `titleProps`/`captionProps` always win. See [`docs/customization.md`](https://docs.soroush.tech/design-system/customization/how-to/#slot-props---customizing-composed-sub-elements).
 ## Card-specific props
 
 ### `variant`
@@ -1138,6 +1163,79 @@ The width animation lives on `rail`, runs 200ms, and honors `prefers-reduced-mot
 
 Customize via `theme.components.Sidebar.styleOverrides`.
 
+## SidebarItem
+Import: `import { SidebarItem } from '@soroush.tech/design-system/Sidebar'`
+One entry of a [`Sidebar`](https://docs.soroush.tech/design-system/components/sidebar/): an icon **pinned to the anchored edge** (it
+holds its position while the rail opens and closes) plus content shown while the rail is open -
+the `label` by default, or custom `children` (badges, counts, ...). The `label` is always the
+accessible name, so collapsed icon-only items stay screen-reader friendly. On a right-anchored
+rail the open content renders to the icon's left.
+
+Built on [`Pressable`](https://docs.soroush.tech/design-system/components/pressable/), so it carries button semantics with only the
+styling declared here - no inherited uppercase, bold weight, or letter-spacing from the button
+family. It renders Pressable's default element, meaning `role="button"`, a tab stop, and
+Enter/Space activation, with `disabled` expressed as `aria-disabled`. Selection styling and
+`aria-pressed` are its own; every `Pressable` prop (`disabled`, `color`, `href`, `as`, spacing, ...)
+passes through. Must render inside a `Sidebar`, which provides the open state and anchor via
+`SidebarContext`.
+
+## Usage
+
+```tsx
+<SidebarItem
+  icon="history"
+  label="Gist history"
+  isSelected={panel === 'gists'}
+  onSelect={() => setPanel('gists')}
+/>
+
+// Custom open-state content - the label stays the accessible name:
+<SidebarItem icon="edit_note" label="Drafts">
+  <span>Drafts (3)</span>
+</SidebarItem>
+```
+
+Under a [`Sidebar`](https://docs.soroush.tech/design-system/components/sidebar/) with `hasPanel`, `children` mean something different:
+they become the contents of the rail's panel column, shown while this item is selected, and the
+row falls back to the `label`. The item then also carries `aria-expanded` and, while selected,
+`aria-controls` pointing at the panel.
+
+The children are **ported** into the panel via [`Portal`](https://docs.soroush.tech/design-system/components/portal/), not handed
+upward - so they remain declared here and keep this item's context, state, and handlers, and the
+item may sit at any depth in the rail. Being ported, they are client-only: nothing renders into
+the panel during server rendering.
+
+```tsx
+<Sidebar aria-label="Editor panels" isOpen={isOpen} hasPanel>
+  <SidebarItem icon="folder" label="Directory" isSelected={isDirectory} onSelect={showDirectory}>
+    <DirectoryTree /> {/* the panel, not the row */}
+  </SidebarItem>
+</Sidebar>
+```
+## Props
+
+Also accepts every `Pressable` prop except `feedback` and `activeOpacity`, which the variant
+decides (`plain` gets none, everything else gets the press highlight).
+
+| Prop         | Type                              | Default     | Description                                                                                    |
+| ------------ | --------------------------------- | ----------- | ---------------------------------------------------------------------------------------------- |
+| `icon`       | `IconName`                        | -           | Icon shown in both states, pinned to the anchored edge.                                        |
+| `label`      | `string`                          | -           | Accessible name; also the default visible content while open.                                  |
+| `variant`    | `'text' \| 'outlined' \| 'plain'` | `'text'`    | `text` is borderless (selection via fill); `plain` also drops fill, hover, and press feedback. |
+| `size`       | `'sm' \| 'md' \| 'lg'`            | `'sm'`      | Padding and font size - resolves against `theme.sizes`.                                        |
+| `color`      | `PaletteColor`                    | `'primary'` | Palette the selected fill and press highlight derive from.                                     |
+| `children`   | `ReactNode`                       | -           | Open-state content instead of the label - or the panel's content under `hasPanel`.             |
+| `isSelected` | `boolean`                         | -           | Active state - drives `aria-pressed` and the selected fill.                                    |
+| `onSelect`   | `() => void`                      | -           | Fired when the item is activated. Runs after any `onClick`.                                    |
+
+## Theming
+
+| Slot   | Element            |
+| ------ | ------------------ |
+| `root` | The item's button. |
+
+Customize via `theme.components.SidebarItem.styleOverrides`.
+
 ## Typography
 Import: `import { Typography } from '@soroush.tech/design-system/Typography'`
 Renders as `<p>` by default. The `variant` prop controls both the visual scale and the HTML element. All styled-system prop groups are supported, plus five Typography-specific props.
@@ -1524,11 +1622,11 @@ Icons live as generated TSX components in `icons/` - the package has no bundler 
 The `name` prop is typed from the registry keys (`IconName`), so new icons get autocomplete and type-checking automatically. `Icon.test.tsx` renders every registry entry and asserts the `fill="none"` contract, so a bad generation fails the suite instead of shipping.
 ## Props
 
-| Prop    | Type                  | Default     | Description                                                           |
-| ------- | --------------------- | ----------- | --------------------------------------------------------------------- |
-| `name`  | `IconName`            | -           | Registry key of the icon to render (required).                        |
-| `color` | `keyof Theme['text']` | `'primary'` | Icon colour - resolves from `theme.text`, applied via `currentColor`. |
-| `size`  | `string \| number`    | `'1.5rem'`  | Sets both width and height (icons are square).                        |
+| Prop    | Type                                       | Default           | Description                                                               |
+| ------- | ------------------------------------------ | ----------------- | ------------------------------------------------------------------------- |
+| `name`  | `IconName`                                 | -                 | Registry key of the icon to render (required).                            |
+| `color` | `keyof Theme['text']`                      | `'primary'`       | Icon colour - resolves from `theme.text`, applied via `currentColor`.     |
+| `size`  | `'sm' \| 'md' \| 'lg' \| string \| number` | `'lg'` (`1.5rem`) | Both width and height (icons are square): a theme icon size, or a length. |
 
 Also accepts `LayoutProps`, `SpaceProps`, and any passthrough SVG attribute (`className`, `data-*`, `aria-*`). Renders `aria-hidden` by default - pass `aria-hidden={false}` and an `aria-label` for meaningful icons.
 
@@ -1887,6 +1985,357 @@ merge - prefer row-level bottom borders over full cell borders when rounding.
 hasEllipsis, color }` - consumed by `TableCell`, `TableSortLabel`, and `TableRow`. Per-component
 props override the inherited values.
 
+## TableBody
+Import: `import { TableBody } from '@soroush.tech/design-system/Table'`
+The body section of a `Table`. Renders `<tbody>` and provides `TableSectionContext` = `'body'`,
+which makes descendant `TableCell`s render as `<td>`.
+
+```tsx
+<Table>
+  <TableBody>
+    <TableRow>
+      <TableCell>web</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>
+```
+## Props
+
+| Prop          | Type                        | Default   | Description                 |
+| ------------- | --------------------------- | --------- | --------------------------- |
+| `color`       | `keyof Theme['text']`       | -         | Text color.                 |
+| `bg`          | `keyof Theme['background']` | -         | Background color.           |
+| `borderColor` | `keyof Theme['border']`     | -         | Border color.               |
+| `as`          | `ElementType`               | `'tbody'` | Overrides the root element. |
+
+Also supports styled-system `space` and `border` props.
+
+## TableCell
+Import: `import { TableCell } from '@soroush.tech/design-system/Table'`
+A cell in a table. Renders `<th scope="col">` inside a `TableHead` and `<td>` elsewhere - driven
+by `TableSectionContext` - and inherits `size` / `cellPadding` from the enclosing `Table` via
+`TableContext`. Explicit props override both contexts.
+
+```tsx
+<TableHead>
+  <TableRow>
+    <TableCell sortDirection="asc">Name</TableCell> {/* <th scope="col" aria-sort="ascending"> */}
+    <TableCell align="right">Amount</TableCell>
+  </TableRow>
+</TableHead>
+```
+## Props
+
+| Prop            | Type                                                      | Default           | Description                                                                                                                                                                               |
+| --------------- | --------------------------------------------------------- | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `variant`       | `'head' \| 'body' \| 'footer'`                            | _inherited_       | Cell type - overrides the enclosing section. `head` renders `<th scope="col">`.                                                                                                           |
+| `align`         | `'inherit' \| 'left' \| 'right' \| 'center' \| 'justify'` | `'inherit'`       | Text alignment. `inherit` follows the `Table`'s `align` and neutralises the browser's default `<th>` centering, so header and body cells align the same. Numbers should be right-aligned. |
+| `size`          | `keyof Theme['sizes']`                                    | _inherited_       | Cell density (padding + font size) - overrides the `Table`'s `size`.                                                                                                                      |
+| `cellPadding`   | `'normal' \| 'none'`                                      | _inherited_       | Padding mode - overrides the `Table`'s `cellPadding`. `'none'` zeroes padding.                                                                                                            |
+| `sortDirection` | `'asc' \| 'desc'`                                         | -                 | Sets `aria-sort` (`ascending`/`descending`) - pair with `TableSortLabel` for the control.                                                                                                 |
+| `hasEllipsis`   | `boolean`                                                 | _inherited_       | Truncates overflowing text with an ellipsis (`overflow: hidden` + `nowrap`). Inherits the `Table`'s `hasEllipsis`; needs a constrained width (e.g. `maxWidth`) to kick in.                |
+| `scope`         | `string`                                                  | `'col'` on `<th>` | Native scope attribute - required for screen-reader table navigation.                                                                                                                     |
+| `color`         | `keyof Theme['text']`                                     | -                 | Text color.                                                                                                                                                                               |
+| `bg`            | `keyof Theme['background']`                               | -                 | Background color.                                                                                                                                                                         |
+| `as`            | `ElementType`                                             | _computed_        | Overrides the resolved `th`/`td` element.                                                                                                                                                 |
+
+Also supports styled-system `space`, `typography`, and `border` props.
+
+## Row dividers
+
+Every cell carries a default bottom border (`thin solid`) so rows are visually separated out of
+the box - it lives on the cell (not the row) because `<tr>` borders don't render in the separate
+border model used by rounded tables. Its **color cascades from the enclosing `Table`'s
+`borderColor`** (default `light`); a cell's own `borderColor` overrides it, and `borderBottom="none"`
+removes the divider entirely.
+
+## Sticky headers
+
+When the enclosing `Table` sets `hasStickyHeader`, header cells get `position: sticky; top: 0`
+plus an opaque default background (`theme.background.paper`) so scrolled rows don't bleed through
+
+- override it with the `bg` prop. Wrap the table in a `TableContainer` with a bounded height to
+  see the effect.
+
+## TableContainer
+Import: `import { TableContainer } from '@soroush.tech/design-system/Table'`
+Scroll wrapper for `Table`. Extends `View` and adds `overflow-x: auto`, so wide tables scroll
+horizontally inside it instead of breaking the page layout. Give it a bounded `maxHeight` to make
+`Table`'s `hasStickyHeader` stick.
+
+```tsx
+<TableContainer maxHeight="320px">
+  <Table hasStickyHeader>...</Table>
+</TableContainer>
+```
+## Props
+
+Accepts every `View` prop - `bg`, `borderColor`, `borderWidth`, `borderRadius`, spacing, layout,
+position, and `as` (default `'div'`). See `@soroush.tech/design-system/View/README.md`.
+
+## TableControl
+Import: `import { TableControl } from '@soroush.tech/design-system/Table'`
+Kills the sortable/paginated-table boilerplate: consumer-called hooks own the state
+(`useTableSort`, `useTablePagination`, `useTableSelection`), and `TableControl` takes the `data`
+plus the hook outputs and renders the visible rows inside `TableBody`. No context, no changes to
+any other component - every wire is explicit and spreadable.
+
+```tsx
+const sort = useTableSort(['name', 'latency'])
+const pagination = useTablePagination({ defaultRowsPerPage: 10 })
+
+<Table size="sm">
+  <TableHead>
+    <TableRow>
+      <TableCell sortDirection={sort.name.isActive ? sort.name.direction : undefined}>
+        <TableSortLabel {...sort.name}>Service</TableSortLabel>
+      </TableCell>
+      <TableCell align="right" sortDirection={sort.latency.isActive ? sort.latency.direction : undefined}>
+        <TableSortLabel {...sort.latency}>Latency (ms)</TableSortLabel>
+      </TableCell>
+    </TableRow>
+  </TableHead>
+  <TableBody>
+    <TableControl data={services} sort={sort} pagination={pagination}>
+      {(row) => (
+        <TableRow key={row.name} isHoverable>
+          <TableCell>{row.name}</TableCell>
+          <TableCell align="right">{row.latency}</TableCell>
+        </TableRow>
+      )}
+    </TableControl>
+  </TableBody>
+  <TableFooter>
+    <TableRow>
+      <TablePagination count={services.length} {...pagination} />
+    </TableRow>
+  </TableFooter>
+</Table>
+```
+
+## The hooks
+
+`useTableSort`, `useTablePagination`, and `useTableSelection` live in
+[`@soroush.tech/design-system/Table/hooks/`](https://github.com/soroush-tech/design-system/blob/main/packages/design-system/src/Table/hooks/README.md) - see that README for their full APIs. In short:
+
+- **`useTableSort(keys, onChange?)`** - column-keyed entries that spread onto `TableSortLabel`;
+  per-column direction memory, always-flip toggle (first click sorts `'desc'`)
+- **`useTablePagination({ defaultPage?, defaultRowsPerPage? })`** - mirrors `TablePagination`'s
+  props for one-spread wiring; page-size change resets to page 0
+- **`useTableSelection(keys, onChange?)`** - key-based selection that survives paging and
+  re-sorting; `all`/`row(key)` entries spread onto `Checkbox`
+## Props
+
+| Prop           | Type                                   | Default  | Description                                                                                                                        |
+| -------------- | -------------------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `data`         | `readonly T[]`                         | -        | The full dataset. **Required.**                                                                                                    |
+| `sort`         | `TableSortMap`                         | -        | Sort map from `useTableSort` - the `isActive` entry drives the ordering.                                                           |
+| `pagination`   | `{ page, rowsPerPage }`                | -        | Paging state from `useTablePagination` - drives the visible slice.                                                                 |
+| `sortFunction` | `(a: T, b: T, orderBy: K) => number`   | built-in | Custom sort (ascending; the direction flips it). Receives the **active column key**, so different columns can use different logic. |
+| `children`     | `(row: T, index: number) => ReactNode` | -        | Row renderer. **Required.**                                                                                                        |
+
+- Default comparator handles strings and numbers; no active column → data order untouched.
+- Per-column custom sorting - branch on the key `sortFunction` receives:
+
+  ```tsx
+  <TableControl
+    data={services}
+    sort={sort}
+    sortFunction={(a, b, orderBy) =>
+      orderBy === 'name' ? a.name.localeCompare(b.name) : a.latency - b.latency
+    }
+  >
+  ```
+
+- `rowsPerPage: -1` disables slicing; the page is clamped so a shrinking dataset never strands
+  the view on an empty page.
+- Renders the rows in a fragment - no wrapper element, so the output stays valid `<tr>` children
+  of `<tbody>`. Both `sort` and `pagination` are optional (sort-only / paging-only tables work).
+
+## TableFooter
+Import: `import { TableFooter } from '@soroush.tech/design-system/Table'`
+The footer section of a `Table`. Renders `<tfoot>` and provides `TableSectionContext` = `'footer'`,
+which makes descendant `TableCell`s render as `<td>`. The natural home for totals rows and
+`TablePagination`.
+
+```tsx
+<Table>
+  <TableFooter>
+    <TableRow>
+      <TableCell colSpan={3}>Total</TableCell>
+    </TableRow>
+  </TableFooter>
+</Table>
+```
+## Props
+
+| Prop          | Type                        | Default   | Description                 |
+| ------------- | --------------------------- | --------- | --------------------------- |
+| `color`       | `keyof Theme['text']`       | -         | Text color.                 |
+| `bg`          | `keyof Theme['background']` | -         | Background color.           |
+| `borderColor` | `keyof Theme['border']`     | -         | Border color.               |
+| `as`          | `ElementType`               | `'tfoot'` | Overrides the root element. |
+
+Also supports styled-system `space` and `border` props.
+
+## TableHead
+Import: `import { TableHead } from '@soroush.tech/design-system/Table'`
+The header section of a `Table`. Renders `<thead>` and provides `TableSectionContext` = `'head'`,
+which makes descendant `TableCell`s render as `<th scope="col">`.
+
+```tsx
+<Table>
+  <TableHead>
+    <TableRow>
+      <TableCell>Name</TableCell>
+    </TableRow>
+  </TableHead>
+</Table>
+```
+## Props
+
+| Prop    | Type                        | Default   | Description                 |
+| ------- | --------------------------- | --------- | --------------------------- |
+| `color` | `keyof Theme['text']`       | -         | Text color.                 |
+| `bg`    | `keyof Theme['background']` | -         | Background color.           |
+| `as`    | `ElementType`               | `'thead'` | Overrides the root element. |
+
+Also supports styled-system `space` and `border` props.
+
+## TablePagination
+Import: `import { TablePagination } from '@soroush.tech/design-system/Table'`
+A `TableCell`-based pagination control for placing inside `TableFooter > TableRow` - a
+rows-per-page `NativeSelect`, a displayed-rows range label, and the nav button cluster
+(`TablePaginationActions`). **Controlled only**: the consumer owns `page` and `rowsPerPage`.
+
+Pages are **zero-based** (array-friendly), unlike the standalone `Pagination` (1-based, URL-friendly).
+
+```tsx
+<TableFooter>
+  <TableRow>
+    <TablePagination
+      count={rows.length}
+      page={page}
+      rowsPerPage={rowsPerPage}
+      onPageChange={setPage}
+      onRowsPerPageChange={setRowsPerPage}
+    />
+  </TableRow>
+</TableFooter>
+```
+## Props
+
+| Prop                                             | Type                                                | Default             | Description                                                           |
+| ------------------------------------------------ | --------------------------------------------------- | ------------------- | --------------------------------------------------------------------- |
+| `count`                                          | `number`                                            | -                   | Total rows; `-1` = unknown (server-side). **Required.**               |
+| `page`                                           | `number`                                            | -                   | Zero-based current page. **Required.**                                |
+| `rowsPerPage`                                    | `number`                                            | -                   | Rows per page; `-1` shows all rows. **Required.**                     |
+| `onPageChange`                                   | `(page: number) => void`                            | -                   | Fired with the target zero-based page. **Required.**                  |
+| `onRowsPerPageChange`                            | `(rowsPerPage: number) => void`                     | -                   | Fired with the new rows-per-page value.                               |
+| `rowsPerPageOptions`                             | `Array<number \| { label: string; value: number }>` | `[10, 25, 50, 100]` | Selector options; fewer than two hides the selector. `-1` = all rows. |
+| `disabled`                                       | `boolean`                                           | `false`             | Disables all controls.                                                |
+| `shouldShowFirstButton` / `shouldShowLastButton` | `boolean`                                           | `false`             | Adds first/last-page buttons.                                         |
+| `rowsPerPageLabel`                               | `ReactNode`                                         | `'Rows per page:'`  | Selector label.                                                       |
+| `displayedRowsLabel`                             | `({ from, to, count, page }) => ReactNode`          | `1-10 of 57`        | Range label; unknown count renders `more than {to}`.                  |
+| `getItemAriaLabel`                               | `(type) => string`                                  | `Go to {type} page` | Accessible names for the nav buttons.                                 |
+| `colSpan`                                        | `number`                                            | `1000`              | Spans the footer row.                                                 |
+| `as`                                             | `ElementType`                                       | `'td'`              | Overrides the root element (via `TableCell`).                         |
+
+Also accepts `TableCell` styling props (`size`, `cellPadding`, `color`, `bg`, spacing, border).
+
+## TablePaginationActions
+
+The first/previous/next/last icon-button cluster, exported separately for custom toolbars.
+See [`TablePaginationActions/README.md`](https://docs.soroush.tech/design-system/api/table-pagination-actions/) for its props and boundary rules.
+
+## TablePaginationActions
+Import: `import { TablePaginationActions } from '@soroush.tech/design-system/Table'`
+The first / previous / next / last icon-button cluster used inside `TablePagination`, exported
+separately for custom toolbars. Composes `PaginationItem`'s nav types; boundary state is derived
+from `count` / `page` / `rowsPerPage`.
+
+```tsx
+<TablePaginationActions
+  count={rows.length}
+  page={page}
+  rowsPerPage={rowsPerPage}
+  onPageChange={setPage}
+  getItemAriaLabel={(type) => `Go to ${type} page`}
+/>
+```
+## Props
+
+| Prop                                             | Type                     | Default | Description                                                       |
+| ------------------------------------------------ | ------------------------ | ------- | ----------------------------------------------------------------- |
+| `count` / `page` / `rowsPerPage`                 | `number`                 | -       | Pagination state used to derive boundary disabling. **Required.** |
+| `onPageChange`                                   | `(page: number) => void` | -       | Fired with the target zero-based page. **Required.**              |
+| `getItemAriaLabel`                               | `(type) => string`       | -       | Accessible name per button. **Required.**                         |
+| `disabled`                                       | `boolean`                | `false` | Disables all buttons.                                             |
+| `shouldShowFirstButton` / `shouldShowLastButton` | `boolean`                | `false` | Adds first/last buttons.                                          |
+| `size`                                           | `keyof Theme['sizes']`   | `'sm'`  | Button density.                                                   |
+
+Boundary rules: backward buttons disable on page 0; forward buttons disable on the last page
+(`ceil(count / rowsPerPage) - 1`); with `count === -1` next stays enabled and last is disabled;
+`rowsPerPage === -1` is a single page holding all rows.
+
+## TableRow
+Import: `import { TableRow } from '@soroush.tech/design-system/Table'`
+A row in a table. Renders `<tr>` with optional hover and selected shading.
+
+```tsx
+<TableRow isHoverable isSelected={row.id === selectedId}>
+  <TableCell>web</TableCell>
+</TableRow>
+```
+## Props
+
+| Prop          | Type                        | Default     | Description                                                                                                                |
+| ------------- | --------------------------- | ----------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `isHoverable` | `boolean`                   | `false`     | Shades the row on hover with `theme.palette[color].light`.                                                                 |
+| `isSelected`  | `boolean`                   | `false`     | Fills the row with `theme.palette[color].dark` + contrast text.                                                            |
+| `color`       | `PaletteColor`              | `'primary'` | Palette color driving the hover/selected shading (`theme.palette[color]`) - falls back to the enclosing `Table`'s `color`. |
+| `bg`          | `keyof Theme['background']` | -           | Background color.                                                                                                          |
+| `as`          | `ElementType`               | `'tr'`      | Overrides the root element.                                                                                                |
+
+Also supports styled-system `space` and `border` props.
+
+## TableSortLabel
+Import: `import { TableSortLabel } from '@soroush.tech/design-system/Table'`
+A button-based label for sortable column headers, placed inside a header `TableCell`. Renders the
+column label with a directional sort arrow appended; sort state is owned by the consumer - the
+component renders the control and forwards `onClick`.
+
+Pair it with `TableCell`'s `sortDirection` prop so screen readers get `aria-sort` on the cell.
+
+```tsx
+<TableCell sortDirection={isSorted ? direction : undefined}>
+  <TableSortLabel isActive={isSorted} direction={direction} onClick={() => handleSort('name')}>
+    Name
+  </TableSortLabel>
+</TableCell>
+```
+## Props
+
+| Prop                 | Type                      | Default              | Description                                                                                                                                                                                         |
+| -------------------- | ------------------------- | -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `isActive`           | `boolean`                 | `false`              | Marks the currently-sorted column - shows the icon fully opaque.                                                                                                                                    |
+| `direction`          | `'asc' \| 'desc'`         | `'asc'`              | Current sort direction - `desc` rotates the arrow 180°.                                                                                                                                             |
+| `shouldHideSortIcon` | `boolean`                 | `true` _(inherited)_ | Hides the inactive sort icon, revealing it on hover/focus. Set `false` to keep it always visible (dimmed). Inherited from the enclosing `Table` via `TableContext`; the explicit prop overrides it. |
+| `iconName`           | `IconName`                | `'arrow_upward'`     | Sort arrow icon from the Icon registry.                                                                                                                                                             |
+| `iconProps`          | `Omit<IconProps, 'name'>` | -                    | Extra props for the sort arrow icon.                                                                                                                                                                |
+| `children`           | `ReactNode`               | -                    | Label contents - the arrow is appended automatically.                                                                                                                                               |
+
+Native button attributes (`onClick`, `aria-label`, `disabled`, ...) and `space` props pass through.
+`type` defaults to `'button'` so it never submits a form.
+
+## Notes
+
+- Implemented as a lean inline button that inherits the cell's typography **and color** - the
+  active column keeps the header's color; the sort icon alone signals the state.
+- By default the inactive icon is hidden and revealed (dimmed) on hover or keyboard focus; the
+  active column's icon is always fully opaque. Set `shouldHideSortIcon={false}` - per label or
+  once on the `Table` - to keep inactive icons permanently visible (dimmed).
+
 ## Button
 Import: `import { Button } from '@soroush.tech/design-system/Button'`
 Renders as `<button>`. Sharp corners, uppercase, bold, tight letter-spacing - matching the Kinetic Architecture aesthetic. Supports three visual variants, six semantic color palettes, three sizes, start/end icon slots, full-width mode, and a loading state with configurable indicator position.
@@ -2129,8 +2578,8 @@ Also supports `space` props on the root.
   translucent `main` for `text`).
 - Children must be immediate `Button`s (or components that read `ButtonGroupContext`).
 - This design system's buttons are flat (no elevation), so no `shouldDisableElevation` prop exists.
-- A split button (dropdown-driven action) is a composition of `ButtonGroup` + a menu and needs a
-  `Menu` component, which the design system doesn't have yet.
+- A split button (a dropdown-driven action) isn't built in yet: a [`Menu`](https://docs.soroush.tech/design-system/components/menu/) wraps its
+  trigger in a box of its own, which the group can't join to its buttons.
 
 ## ToggleButton
 Import: `import { ToggleButton } from '@soroush.tech/design-system/ToggleButton'`
@@ -2164,6 +2613,56 @@ from `ToggleButtonGroupContext` and color / size / disabled / fullWidth from `Bu
 
 All other `Button` props (except `variant` / `href` / `target` / `rel`) pass through. `type`
 defaults to `'button'`. Icon-only buttons need an `aria-label`.
+
+## ToggleButtonGroup
+Import: `import { ToggleButtonGroup } from '@soroush.tech/design-system/ToggleButton'`
+A `ButtonGroup` of `ToggleButton`s with single (exclusive) or multiple selection.
+Built on `ButtonGroup`: joined corners, merged borders, orientation, `borderRadius`, and the
+color / size / disabled / fullWidth broadcast are all inherited; this component adds the
+selection state (via `ToggleButtonGroupContext`) and restores the active-color border edge on
+selected children. Renders `role="group"` (give it an accessible label). **Controlled** - the
+consumer owns `value`.
+
+```tsx
+const [platform, setPlatform] = useState('web')
+
+<ToggleButtonGroup isExclusive value={platform} onChange={setPlatform} aria-label="Platform">
+  <ToggleButton value="web">Web</ToggleButton>
+  <ToggleButton value="android">Android</ToggleButton>
+  <ToggleButton value="ios">iOS</ToggleButton>
+</ToggleButtonGroup>
+```
+## Props
+
+| Prop           | Type                                                  | Default        | Description                                                                         |
+| -------------- | ----------------------------------------------------- | -------------- | ----------------------------------------------------------------------------------- |
+| `value`        | `string \| number \| Array<string \| number> \| null` | `null`         | Selected value(s) - single when `isExclusive`, array otherwise.                     |
+| `onChange`     | `(value) => void`                                     | -              | Next selection: single value or `null` (exclusive), array possibly empty otherwise. |
+| `isExclusive`  | `boolean`                                             | `false`        | Only one child value can be selected at a time.                                     |
+| `color`        | `keyof Theme['palette']`                              | `'default'`    | Selected-state color for all children.                                              |
+| `size`         | `keyof Theme['sizes']`                                | `'md'`         | Density for all children.                                                           |
+| `orientation`  | `'horizontal' \| 'vertical'`                          | `'horizontal'` | Layout flow direction.                                                              |
+| `borderRadius` | `keyof Theme['radii']`                                | `'md'`         | Rounds the group's outer corners only.                                              |
+| `disabled`     | `boolean`                                             | `false`        | Disables all children.                                                              |
+| `fullWidth`    | `boolean`                                             | `false`        | Group fills its container; children share the width.                                |
+
+All other `ButtonGroup` props (except `variant`) pass through, including `space` props.
+
+## Enforcing at least one active value
+
+Deselection is allowed by default (`null` / `[]`). To require one active option, guard in your
+handler instead of a prop:
+
+```tsx
+const handleChange = (next) => {
+  if (next !== null && (!Array.isArray(next) || next.length > 0)) setValue(next)
+}
+```
+
+## Accessibility
+
+- The group renders `role="group"` - always provide `aria-label` or `aria-labelledby`.
+- Each `ToggleButton` reflects its state via `aria-pressed` and sits in DOM/tab order.
 
 ## TextInput
 Import: `import { TextInput } from '@soroush.tech/design-system/TextInput'`
@@ -3017,10 +3516,15 @@ The trigger keeps focus while the listbox is open and points at the active row v
 
 ## MenuItem
 Import: `import { MenuItem } from '@soroush.tech/design-system/MenuItem'`
-A single option row for [`Select`](https://docs.soroush.tech/design-system/components/select/)'s listbox, rendered as a semantic
-`<li role="option">`. On its own it renders a styled, static row; inside a `Select` the
-selection, highlight, density, and accent props are injected automatically - you only supply
-`value` and the label.
+A row of a list, in one of two roles:
+
+- **An option of [`Select`](https://docs.soroush.tech/design-system/components/select/)'s listbox**, rendered as a semantic
+  `<li role="option">`. Inside a `Select` the selection, highlight, density, and accent props are
+  injected automatically - you only supply `value` and the label. On its own it renders a styled,
+  static row.
+- **A menu row** inside a [`MenuList`](https://docs.soroush.tech/design-system/components/menu/): a `menuitem` (or `menuitemradio` /
+  `menuitemcheckbox`) with a leading icon column, its label and a trailing shortcut, chosen by a
+  click, Enter or Space.
 
 ```tsx
 import { Select } from '@soroush.tech/design-system/Select'
@@ -3032,27 +3536,103 @@ import { MenuItem } from '@soroush.tech/design-system/MenuItem'
   <MenuItem value="ios">iOS</MenuItem>
 </Select>
 ```
+
+```tsx
+import { MenuList } from '@soroush.tech/design-system/Menu'
+import { MenuItem } from '@soroush.tech/design-system/MenuItem'
+
+;<MenuList aria-label="File" onSelect={run}>
+  <MenuItem value="open" startIcon={<Icon name="folder" size="sm" />} shortcut="Control+O">
+    Open...
+  </MenuItem>
+  <MenuItem value="share" disabled note="Coming later">
+    Share...
+  </MenuItem>
+  <MenuItem value="wrap" role="menuitemcheckbox" selected={isWrapped}>
+    Wrap lines
+  </MenuItem>
+</MenuList>
+```
 ## Props
 
-| Prop                    | Type                                | Default        | Description                                                                                          |
-| ----------------------- | ----------------------------------- | -------------- | ---------------------------------------------------------------------------------------------------- |
-| `value`                 | `string \| number`                  | -              | The value this option represents - reported to `Select`'s `onChange`. **Required.**                  |
-| `children`              | `ReactNode`                         | -              | The option label.                                                                                    |
-| `as`                    | `ElementType`                       | `'li'`         | The element used for the root node.                                                                  |
-| `disabled`              | `boolean`                           | `false`        | Disables the option - it cannot be highlighted or selected.                                          |
-| `selected`              | `boolean`                           | `false`        | Marks the option as the current selection. **Injected by `Select`.**                                 |
-| `highlighted`           | `boolean`                           | `false`        | Marks the option as the keyboard-highlighted row. **Injected by `Select`.**                          |
-| `multiple`              | `boolean`                           | `false`        | Reserves a leading checkmark slot for multi-select menus. **Injected by `Select`.**                  |
-| `color`                 | `keyof Theme['palette']`            | `'primary'`    | Accent color for hover/selected shading - resolves to `theme.palette[color]`.                        |
-| `textColor`             | `keyof Theme['text']`               | color's `main` | Base text color of the row - resolves against `theme.text`. Falls back to the accent color's `main`. |
-| `size`                  | `keyof Theme['sizes']`              | `'md'`         | Density token - resolves against `theme.sizes`.                                                      |
-| `dense`                 | `boolean`                           | `false`        | Compact vertical padding, independent of `size`.                                                     |
-| `disableGutters`        | `boolean`                           | `false`        | Remove the left and right padding.                                                                   |
-| `divider`               | `boolean`                           | `false`        | Add a 1px bottom border to separate the row.                                                         |
-| `autoFocus`             | `boolean`                           | `false`        | Focus the row on first mount, and whenever `autoFocus` flips from `false` to `true`.                 |
-| `focusVisibleClassName` | `string`                            | -              | Class applied only while the row has keyboard focus - a `:focus-visible` hook.                       |
-| `onSelect`              | `(value: string \| number) => void` | -              | Fired with `value` when the option is chosen. **Injected by `Select`.**                              |
-| `id`                    | `string`                            | -              | DOM id. `Select` assigns one so the trigger can reference it via `aria-activedescendant`.            |
+| Prop                    | Type                                | Default        | Description                                                                                                                                                     |
+| ----------------------- | ----------------------------------- | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `value`                 | `string \| number`                  | -              | The value this row represents - reported to `Select`'s `onChange` or `MenuList`'s `onSelect`. **Required inside a `Select`.**                                   |
+| `children`              | `ReactNode`                         | -              | The row label.                                                                                                                                                  |
+| `as`                    | `ElementType`                       | `'li'`         | The element used for the root node.                                                                                                                             |
+| `disabled`              | `boolean`                           | `false`        | Disables the row - it cannot be highlighted or chosen. In a menu the keys skip it.                                                                              |
+| `selected`              | `boolean`                           | `false`        | Marks the row as the current selection. **Injected by `Select`**; in a menu it sets `aria-checked` on `menuitemradio` / `menuitemcheckbox` rows and ticks them. |
+| `highlighted`           | `boolean`                           | `false`        | Marks the option as the keyboard-highlighted row. **Injected by `Select`.**                                                                                     |
+| `multiple`              | `boolean`                           | `false`        | Reserves a leading checkmark slot for multi-select menus. **Injected by `Select`.**                                                                             |
+| `color`                 | `keyof Theme['palette']`            | `'primary'`    | Accent color for hover/selected shading - resolves to `theme.palette[color]`.                                                                                   |
+| `textColor`             | `keyof Theme['text']`               | color's `main` | Base text color of the row - resolves against `theme.text`. Falls back to the accent color's `main`.                                                            |
+| `size`                  | `keyof Theme['sizes']`              | `'md'`         | Density token - resolves against `theme.sizes`.                                                                                                                 |
+| `dense`                 | `boolean`                           | `false`        | Compact vertical padding, independent of `size`.                                                                                                                |
+| `disableGutters`        | `boolean`                           | `false`        | Remove the left and right padding.                                                                                                                              |
+| `divider`               | `boolean`                           | `false`        | Add a 1px bottom border to separate the row.                                                                                                                    |
+| `autoFocus`             | `boolean`                           | `false`        | Focus the row on first mount, and whenever `autoFocus` flips from `false` to `true`.                                                                            |
+| `focusVisibleClassName` | `string`                            | -              | Class applied only while the row has keyboard focus - a `:focus-visible` hook.                                                                                  |
+| `onSelect`              | `(value: string \| number) => void` | -              | Fired with `value` when the option is chosen. **Injected by `Select`.**                                                                                         |
+| `id`                    | `string`                            | -              | DOM id. `Select` assigns one so the trigger can reference it via `aria-activedescendant`.                                                                       |
+
+### Menu row props
+
+Used inside a `MenuList`; ignored by `Select`. `color`, `textColor`, `size` and `dense` default to
+the `MenuList`'s own.
+
+| Prop              | Type                                                  | Default      | Description                                                                                                                                                                                                                                                                          |
+| ----------------- | ----------------------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `role`            | `'menuitem' \| 'menuitemradio' \| 'menuitemcheckbox'` | `'menuitem'` | A command, the current choice of a group, or an on/off setting.                                                                                                                                                                                                                      |
+| `startIcon`       | `ReactNode`                                           | -            | An icon in the leading column. Every row keeps the column, so labels line up; a checked row shows a tick there.                                                                                                                                                                      |
+| `shortcut`        | `ReactNode`                                           | -            | The row's keyboard shortcut, shown quieter at its end and kept out of its name. A string is also given to the row as `aria-keyshortcuts`.                                                                                                                                            |
+| `note`            | `string`                                              | -            | Why the row is off - its tooltip and accessible description.                                                                                                                                                                                                                         |
+| `onClick`         | `(event) => void`                                     | -            | Fired when the row is chosen, by a click, Enter or Space.                                                                                                                                                                                                                            |
+| `submenu`         | `ReactNode`                                           | -            | The rows of a submenu this row opens, beside it. `null` or `[]` is a submenu with nothing in it yet. A row with a submenu opens it rather than being chosen.                                                                                                                         |
+| `emptyLabel`      | `ReactNode`                                           | -            | Shown as one disabled row in an empty submenu ("Coming soon"); without it, the submenu stays empty.                                                                                                                                                                                  |
+| `secondaryAction` | `ReactNode`                                           | -            | A control of the row's own beside it - a close button. It sits with the row in its `role="none"` entry, out of the arrow keys and hidden from assistive technology (a menu owns rows alone): give it `tabIndex={-1}`, and the row a key of its own through `MenuList`'s `onKeyDown`. |
+
+### Submenus
+
+```tsx
+<MenuItem
+  submenu={[
+    <MenuItem key="main" value="main" role="menuitemradio" selected>
+      main
+    </MenuItem>,
+    <MenuItem key="feat" value="feat/menu" role="menuitemradio">
+      feat/menu
+    </MenuItem>,
+  ]}
+>
+  Local branches
+</MenuItem>
+<MenuItem submenu={null} emptyLabel="Coming soon">
+  Remote branches
+</MenuItem>
+```
+
+A row can't contain rows, so the row and its submenu sit side by side in a `role="none"` entry;
+the row is `aria-haspopup="menu"` with `aria-expanded`, and shows a chevron that mirrors right to
+left.
+
+- **Focus decides the submenu.** A row opens its submenu when it takes focus - by the keys or by
+  the pointer, which moves focus as it goes - so it is already open when Right is pressed. Focus
+  moving to a sibling row closes it.
+- **Keys.** Right, Enter or Space go into the submenu's first enabled row; Left or Escape close it
+  and come back to the row. Right to left, Left and Right swap. Each list moves only between its
+  own rows.
+- **Choosing** a row anywhere in a submenu is the outer list's choice (`onSelect`) and, in a
+  `Menu`, closes the whole menu.
+- **Placement.** Beside the row, on the side away from the menu's `align` edge (to the right of a
+  start-aligned menu, left to right), or the other side when the window has no room - and a
+  submenu that opened the other way takes its own submenus that way too, so they go on away
+  from the menu rather than back over it. With room on neither side - a phone-width window - it
+  opens under the row instead, or over it near the bottom, so it never covers the row it came
+  from.
+
+### Rows from data
+
+Rows can come as data instead - see [`MenuItems`](https://docs.soroush.tech/design-system/api/menu-items/).
 
 ## Notes
 
@@ -3061,7 +3641,9 @@ import { MenuItem } from '@soroush.tech/design-system/MenuItem'
 - Hover and selected shading are derived from `theme.palette[color]` with hex-suffix opacity, so
   the row stays on-theme in both color schemes.
 - `mousedown` is prevented so clicking an option does not blur `Select`'s trigger - the trigger
-  keeps focus for its `aria-activedescendant` model.
+  keeps focus for its `aria-activedescendant` model. A menu row takes focus itself instead, and the
+  pointer moves focus as it goes, so one row is highlighted at a time.
+- A disabled menu row keeps pointer events, so its `note` tooltip shows on hover.
 
 ## Form
 Import: `import { Form } from '@soroush.tech/design-system/Form'`
@@ -3334,6 +3916,773 @@ const { items } = usePagination({ count: 10, onChange })
 - Every actionable item has an accessible name via `getItemAriaLabel`; the current page carries
   `aria-current="page"`.
 - Ellipses render as non-interactive, `aria-hidden` list items.
+
+## PaginationItem
+Import: `import { PaginationItem } from '@soroush.tech/design-system/Pagination'`
+The individual item rendered inside `Pagination`. Its `type` determines what it renders: a page
+number button, a first/previous/next/last nav control (with the matching registry icon), or a
+non-interactive ellipsis.
+
+```tsx
+<PaginationItem page={3} isSelected />
+<PaginationItem type="next" onClick={goNext} />
+<PaginationItem type="start-ellipsis" />
+```
+## Props
+
+| Prop         | Type                                                                                        | Default      | Description                                                     |
+| ------------ | ------------------------------------------------------------------------------------------- | ------------ | --------------------------------------------------------------- |
+| `type`       | `'page' \| 'first' \| 'previous' \| 'next' \| 'last' \| 'start-ellipsis' \| 'end-ellipsis'` | `'page'`     | What the item renders. Ellipses render as a span, not a button. |
+| `page`       | `ReactNode`                                                                                 | -            | The page number/content for `type="page"`.                      |
+| `isSelected` | `boolean`                                                                                   | `false`      | Active styling + `aria-current="page"`.                         |
+| `color`      | `keyof Theme['palette']`                                                                    | `'primary'`  | Selected-state color.                                           |
+| `variant`    | `'text' \| 'outlined'`                                                                      | `'text'`     | Item style.                                                     |
+| `shape`      | `'circular' \| 'rounded'`                                                                   | `'circular'` | Corner shape - circular pill or `theme.radii.md`.               |
+| `size`       | `keyof Theme['sizes']`                                                                      | `'md'`       | Item dimensions and font size.                                  |
+| `disabled`   | `boolean`                                                                                   | `false`      | Disables the item.                                              |
+| `as`         | `ElementType`                                                                               | `'button'`   | Overrides the root element (e.g. `'a'` for router links).       |
+
+Native button attributes (`onClick`, `aria-label`, ...) and `space` props pass through. Nav icons
+come from the Icon registry: `first_page`, `chevron_left`, `chevron_right`, `last_page`.
+
+## Breadcrumbs
+Import: `import { Breadcrumbs } from '@soroush.tech/design-system/Breadcrumbs'`
+The trail of links from a site's root to the current page, so a page shows where it sits and every
+ancestor is one click away. A `nav` landmark named by `aria-label`, its crumbs an ordered list with
+a separator between two; past `maxItems` the trail collapses to its first and last crumbs and a
+button that shows them all.
+
+The crumbs are yours - a `Link` for each ancestor, and the current page as `Typography` or a `Link`
+marked `aria-current="page"`. The trail lays them out, separates and collapses them; it styles
+none of them, so a router's link drops in as a crumb.
+
+```tsx
+import { Breadcrumbs } from '@soroush.tech/design-system/Breadcrumbs'
+import { Link } from '@soroush.tech/design-system/Link'
+import { Typography } from '@soroush.tech/design-system/Typography'
+
+;<Breadcrumbs aria-label="Breadcrumb" expandLabel="Show path">
+  <Link href="/" underline="hover" color="inherit">
+    Home
+  </Link>
+  <Link href="/catalog" underline="hover" color="inherit">
+    Catalog
+  </Link>
+  <Typography color="primary" aria-current="page">
+    Accessories
+  </Typography>
+</Breadcrumbs>
+```
+## Props
+
+| Prop                  | Type                                     | Default       | Description                                                                                                                 |
+| --------------------- | ---------------------------------------- | ------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `children`            | `ReactNode`                              | -             | The crumbs. Children that aren't elements are skipped.                                                                      |
+| `as`                  | `ElementType`                            | `'nav'`       | The root element.                                                                                                           |
+| `separator`           | `ReactNode`                              | `'/'`         | Between two crumbs, hidden from assistive technology. An icon separator mirrors right to left.                              |
+| `maxItems`            | `number`                                 | `8`           | Past this many crumbs, only the first `itemsBeforeCollapse` and last `itemsAfterCollapse` show, with a button between them. |
+| `itemsBeforeCollapse` | `number`                                 | `1`           | Crumbs shown before the button when collapsed.                                                                              |
+| `itemsAfterCollapse`  | `number`                                 | `1`           | Crumbs shown after the button when collapsed. When the two cover every crumb, nothing collapses.                            |
+| `expandLabel`         | `string`                                 | -             | Names the button that shows the whole trail - no built-in text, so give it whenever the trail can collapse.                 |
+| `slots`               | `{ collapsedIcon?: ElementType }`        | -             | An icon of your own in the button, in place of `more_horiz`.                                                                |
+| `slotProps`           | `{ collapsedIcon?: Partial<IconProps> }` | -             | Props for the button's icon.                                                                                                |
+| `color`               | `keyof Theme['text']`                    | `'secondary'` | The trail's and its separators' color - the root is a `Typography`.                                                         |
+| `typography`          | `keyof Theme['typography']`              | `'body1'`     | The trail's type - the variant its root `Typography` takes.                                                                 |
+| `align`               | `TypographyAlign`                        | -             | Text alignment.                                                                                                             |
+| `aria-label`          | `string`                                 | -             | Names the landmark - always give one.                                                                                       |
+
+It takes every other `Typography` prop too - the styled-system space, layout and position props,
+`className`, `id` and `data-testid` - but `variant`, which is `typography` here: `variant` names a
+component's look.
+
+## Collapsing
+
+A long trail shows its first and last crumbs and a button between them. Pressing it shows the
+whole trail and moves focus to its first link, so focus isn't lost with the button. It stays open.
+
+## Customization
+
+`theme.components.Breadcrumbs` styles the `root`, the `list` (`ol`), each `item` (`li`), the
+`separator`, the `collapsed` button and its `collapsedIcon`. Its `defaultProps` set `separator`,
+`maxItems`, `itemsBeforeCollapse`, `itemsAfterCollapse`, `color` - and `expandLabel`, which gives
+every trail the app's language:
+
+```tsx
+createTheme(baseTheme, {
+  components: {
+    Breadcrumbs: { defaultProps: { expandLabel: 'Afficher le chemin', separator: '›' } },
+  },
+})
+```
+
+## Accessibility
+
+- Name the trail with `aria-label` - a `nav` landmark that's easy to find.
+- Mark the current page's crumb `aria-current="page"`.
+- The crumbs are an ordered list; the separators are hidden from assistive technology.
+- The collapsed button is a native `button` named by `expandLabel`.
+
+## Menu
+Import: `import { Menu } from '@soroush.tech/design-system/Menu'`
+A trigger and the [`MenuList`](https://docs.soroush.tech/design-system/api/menu-list/) of commands it opens. It isn't modal: no
+focus trap, no scroll lock, nothing laid over the page, so the pointer passes over it and the
+page stays usable around it. The list is placed `position: fixed` in the window, under the
+trigger, so a panel that scrolls or clips its content can't cut it off - but it stays inside the
+menu's own box in the DOM, so focus moving inside it is still focus inside the menu.
+
+```tsx
+import { Menu, MenuDivider } from '@soroush.tech/design-system/Menu'
+import { MenuItem } from '@soroush.tech/design-system/MenuItem'
+import { Button } from '@soroush.tech/design-system/Button'
+
+;<Menu trigger={<Button variant="text">main</Button>} onSelect={run}>
+  <MenuItem value="new">New branch...</MenuItem>
+  <MenuItem value="checkout" disabled note="Coming later">
+    Checkout tag or revision...
+  </MenuItem>
+  <MenuDivider />
+  <MenuItem value="rename">Rename...</MenuItem>
+</Menu>
+```
+## Props
+
+| Prop              | Type                                       | Default        | Description                                                                                                                                                                             |
+| ----------------- | ------------------------------------------ | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `trigger`         | `ReactElement`                             | -              | The element that opens the menu - a `Button`, a `Pressable`. It is given `aria-haspopup`, `aria-expanded` and `aria-controls`; its own `onClick` / `onKeyDown` still run. **Required.** |
+| `children`        | `ReactNode`                                | -              | `MenuItem` rows and `MenuDivider`s.                                                                                                                                                     |
+| `isOpen`          | `boolean`                                  | -              | Controlled open state. When set, the menu only asks to open or close, through `onOpen` / `onClose`.                                                                                     |
+| `defaultOpen`     | `boolean`                                  | `false`        | Uncontrolled initial open state.                                                                                                                                                        |
+| `onOpen`          | `() => void`                               | -              | Fired when the menu asks to open.                                                                                                                                                       |
+| `onClose`         | `(event, reason: MenuCloseReason) => void` | -              | Fired when the menu asks to close: `'escapeKey'`, `'select'` (a row chosen), `'triggerClick'` or `'blur'`.                                                                              |
+| `onStep`          | `(step: -1 \| 1) => void`                  | -              | Fired when Left or Right has nowhere further to go inside the menu, so a menu bar can step to the next menu. Swapped right to left.                                                     |
+| `onSelect`        | `(value: string \| number) => void`        | -              | Fired with a row's `value` when a row that has one is chosen.                                                                                                                           |
+| `align`           | `'start' \| 'end'`                         | `'start'`      | Which edge of the trigger the list lines up with. Mirrored right to left.                                                                                                               |
+| `marginThreshold` | `keyof Theme['space']`                     | `2`            | The least room between the list and the window's edge.                                                                                                                                  |
+| `elevation`       | `PaperElevation` (0-24)                    | `8`            | Shadow depth of the surface.                                                                                                                                                            |
+| `layer`           | `keyof Theme['zOrder']`                    | `'modal'`      | Stacking layer - `modal` keeps a menu opened in a dialog above it.                                                                                                                      |
+| `emptyLabel`      | `ReactNode`                                | -              | Shown as one disabled row when the menu has no rows ("Coming soon"); without it, the list stays empty.                                                                                  |
+| `color`           | `keyof Theme['palette']`                   | -              | Accent color for every row.                                                                                                                                                             |
+| `textColor`       | `keyof Theme['text']`                      | -              | Base text color for every row.                                                                                                                                                          |
+| `size`            | `keyof Theme['sizes']`                     | -              | Density token for every row.                                                                                                                                                            |
+| `dense`           | `boolean`                                  | -              | Compact vertical padding for every row.                                                                                                                                                 |
+| `aria-label`      | `string`                                   | trigger's name | Names the list. Without it the trigger names it (`aria-labelledby`).                                                                                                                    |
+| `className`       | `string`                                   | -              | Class on the menu's root.                                                                                                                                                               |
+
+## Keyboard
+
+| Where       | Key                 | Does                                                                         |
+| ----------- | ------------------- | ---------------------------------------------------------------------------- |
+| The trigger | Enter / Space       | Opens the menu (a click), focusing the checked row or the first enabled one  |
+| The trigger | ArrowDown / ArrowUp | Opens the menu, focusing the checked row or the first enabled one            |
+| The list    | Escape              | Closes the menu and gives focus back to the trigger                          |
+| The list    | Enter / Space       | Chooses the focused row, closes the menu and gives focus back to the trigger |
+| The list    | Left / Right        | `onStep(-1)` / `onStep(1)`, when set                                         |
+| The list    | Tab                 | Focus leaves - the menu closes and focus stays where it went                 |
+
+The arrow keys, Home, End and type-ahead inside the list are [`MenuList`](https://docs.soroush.tech/design-system/api/menu-list/)'s.
+
+## Notes
+
+- **Placement.** Under the trigger, lined up with its start or end edge; above it when there's
+  no room below; moved only as far as it must to stay `marginThreshold` inside the window. It
+  follows the trigger on scroll and resize, and is hidden until first placed so it never shows at
+  the wrong spot. It can't grow taller than the window.
+- **Not portaled, not `Popover`.** `Popover` is a modal - it moves focus in, traps it and hides
+  the rest of the page from assistive technology, which suits a dialog and not a menu. The list is
+  fixed in the window instead, inside the menu's box, so closing when focus leaves works and rows
+  are found by their nearest `role="menu"`. An ancestor with a `transform`, `filter` or
+  `contain` - a zoom wrapper, a sliding drawer - makes itself the containing block of
+  `position: fixed`; the list measures where it landed and moves back by the difference, so it
+  still opens against its trigger. A scaling transform still scales it.
+- **Submenus.** A `MenuItem` with `submenu` opens a nested list beside it, placed and drawn
+  the way the menu's own list is - see [`MenuItem`'s submenus](https://docs.soroush.tech/design-system/api/menu-item/#submenus).
+  Escape in a submenu closes only that submenu.
+- **A menu bar.** Hold `isOpen` for each menu and step between them with `onStep`.
+- The list renders nothing until the menu opens, so it costs nothing on the server.
+
+## ContextMenu
+Import: `import { ContextMenu } from '@soroush.tech/design-system/Menu'`
+A [`MenuList`](https://docs.soroush.tech/design-system/api/menu-list/) opened by a right-click over its target, at the pointer - or,
+from the keyboard, by the context-menu key or Shift+F10 at the focused element. It is placed and
+closes as [`Menu`](https://docs.soroush.tech/design-system/components/menu/) does, and gives focus back to where it was. The browser's own
+context menu is held back only when this one opens.
+
+```tsx
+import { ContextMenu } from '@soroush.tech/design-system/Menu'
+import { MenuItem } from '@soroush.tech/design-system/MenuItem'
+
+;<ContextMenu target={<Canvas />} aria-label="Canvas" onSelect={run}>
+  <MenuItem value="paste" shortcut="Control+V">
+    Paste
+  </MenuItem>
+  <MenuItem value="select-all">Select all</MenuItem>
+</ContextMenu>
+```
+
+Rows can come as data instead, with `items` - the same entries
+[`MenuItems`](https://docs.soroush.tech/design-system/api/menu-items/) renders:
+
+```tsx
+<ContextMenu
+  target={<Canvas />}
+  items={[
+    { value: 'paste', label: 'Paste', shortcut: 'Control+V' },
+    { type: 'divider' },
+    { label: 'Align', submenu: [{ value: 'left', label: 'Left' }] },
+  ]}
+/>
+```
+## Props
+
+| Prop              | Type                                       | Default   | Description                                                                                                  |
+| ----------------- | ------------------------------------------ | --------- | ------------------------------------------------------------------------------------------------------------ |
+| `target`          | `ReactElement`                             | -         | The element whose right-click opens the menu. Its own `onContextMenu` / `onKeyDown` still run. **Required.** |
+| `children`        | `ReactNode`                                | -         | `MenuItem` rows and `MenuDivider`s.                                                                          |
+| `items`           | `MenuItemData[]`                           | -         | The rows as data, in place of `children`.                                                                    |
+| `onClose`         | `(event, reason: MenuCloseReason) => void` | -         | Fired when the menu closes: `'escapeKey'`, `'select'` or `'blur'`.                                           |
+| `onSelect`        | `(value: string \| number) => void`        | -         | Fired with a row's `value` when a row that has one is chosen.                                                |
+| `marginThreshold` | `keyof Theme['space']`                     | `2`       | The least room between the list and the window's edge.                                                       |
+| `elevation`       | `PaperElevation` (0-24)                    | `8`       | Shadow depth of the surface.                                                                                 |
+| `layer`           | `keyof Theme['zOrder']`                    | `'modal'` | Stacking layer.                                                                                              |
+| `emptyLabel`      | `ReactNode`                                | -         | Shown as one disabled row when the menu has no rows; without it, the list stays empty.                       |
+| `color`           | `keyof Theme['palette']`                   | -         | Accent color for every row.                                                                                  |
+| `textColor`       | `keyof Theme['text']`                      | -         | Base text color for every row.                                                                               |
+| `size`            | `keyof Theme['sizes']`                     | -         | Density token for every row.                                                                                 |
+| `dense`           | `boolean`                                  | -         | Compact vertical padding for every row.                                                                      |
+| `aria-label`      | `string`                                   | -         | Names the list.                                                                                              |
+| `className`       | `string`                                   | -         | Class on the menu's root.                                                                                    |
+
+## Notes
+
+- **Placement.** Its top-left corner at the pointer (top-right, right to left), moved above or to
+  the other side where the window has no room, and kept `marginThreshold` inside it. From the
+  keyboard it opens at the focused element's bottom start corner.
+- **Layout.** The root is `display: contents`, so wrapping a target changes nothing about how it
+  lays out. Its surface has a `paper` slot of its own, over `Menu`'s:
+  `theme.components.Menu.styleOverrides.paper` styles every menu's surface,
+  `theme.components.ContextMenu.styleOverrides.paper` only this one's.
+- Submenus, the keys inside the list and focus following the pointer are the same as in a `Menu`.
+
+## MenuDivider
+Import: `import { MenuDivider } from '@soroush.tech/design-system/Menu'`
+A line between groups of rows in a [`MenuList`](https://docs.soroush.tech/design-system/api/menu-list/), rendered as
+`<li role="separator">`. The arrow keys pass over it.
+
+```tsx
+import { MenuDivider, MenuList } from '@soroush.tech/design-system/Menu'
+import { MenuItem } from '@soroush.tech/design-system/MenuItem'
+
+;<MenuList aria-label="Edit">
+  <MenuItem>Cut</MenuItem>
+  <MenuItem>Copy</MenuItem>
+  <MenuDivider />
+  <MenuItem>Select all</MenuItem>
+</MenuList>
+```
+## Props
+
+| Prop        | Type     | Default | Description             |
+| ----------- | -------- | ------- | ----------------------- |
+| `className` | `string` | -       | Class on the separator. |
+
+## Notes
+
+- The line is `theme.borderWidths.thin` in `theme.border.light`, with `0.5` space above and below.
+
+## MenuItems
+Import: `import { MenuItems } from '@soroush.tech/design-system/Menu'`
+Menu rows from data - for menus that come from a list of commands. Each entry is a row (a
+[`MenuItem`](https://docs.soroush.tech/design-system/components/menu-item/)'s menu row props, with its label as `label` and its
+submenu as more entries) or `{ type: 'divider' }`. It renders the same `MenuItem`s and
+[`MenuDivider`](https://docs.soroush.tech/design-system/api/menu-divider/)s JSX would, inside a [`MenuList`](https://docs.soroush.tech/design-system/api/menu-list/).
+[`Menu`](https://docs.soroush.tech/design-system/components/menu/) and [`ContextMenu`](https://docs.soroush.tech/design-system/api/context-menu/) take the same array as
+`items`.
+
+```tsx
+import { MenuItems, MenuList, type MenuItemData } from '@soroush.tech/design-system/Menu'
+
+const items: MenuItemData[] = [
+  { value: 'new', label: 'New branch...', shortcut: 'Control+B' },
+  { value: 'checkout', label: 'Checkout...', disabled: true, note: 'Coming later' },
+  { type: 'divider' },
+  {
+    label: 'Local branches',
+    submenu: [{ value: 'main', label: 'main', role: 'menuitemradio', selected: true }],
+  },
+  { label: 'Remote branches', submenu: [], emptyLabel: 'Coming soon' },
+]
+
+;<MenuList aria-label="Branch" onSelect={run}>
+  <MenuItems items={items} />
+</MenuList>
+```
+## Props
+
+| Prop    | Type             | Default | Description                                           |
+| ------- | ---------------- | ------- | ----------------------------------------------------- |
+| `items` | `MenuItemData[]` | -       | The rows: `MenuItemRowData` or `{ type: 'divider' }`. |
+
+A `MenuItemRowData` takes `value`, `label`, `role`, `selected`, `disabled`, `startIcon`,
+`shortcut`, `note`, `onClick`, `submenu` (more entries; `null` or `[]` is an empty submenu) and
+`emptyLabel` - each as on a `MenuItem`.
+
+## Notes
+
+- A row's key is its `value`, else its position - give rows that move a `value`.
+- It renders rows only; it lays nothing out and takes no theme slots of its own.
+
+## MenuList
+Import: `import { MenuList } from '@soroush.tech/design-system/Menu'`
+A list of commands, rendered as a semantic `<ul role="menu">`. It owns the keyboard: the arrow
+keys, Home and End move focus between its rows, skipping disabled ones, and typing jumps to a row
+by its label. Its rows are [`MenuItem`](https://docs.soroush.tech/design-system/components/menu-item/)s, which inside a `MenuList` render
+as menu rows (`menuitem`, `menuitemradio`, `menuitemcheckbox`) rather than `Select` options, and
+[`MenuDivider`](https://docs.soroush.tech/design-system/api/menu-divider/)s between groups.
+
+A `MenuList` renders in place - a menu embedded in a panel or a sidebar. It moves focus between
+its rows, but doesn't move focus into itself unless `shouldAutoFocus` is set.
+
+```tsx
+import { MenuDivider, MenuList } from '@soroush.tech/design-system/Menu'
+import { MenuItem } from '@soroush.tech/design-system/MenuItem'
+
+;<MenuList aria-label="Branch" onSelect={(value) => run(value)}>
+  <MenuItem value="new" shortcut="Control+B">
+    New branch...
+  </MenuItem>
+  <MenuItem value="checkout" disabled note="Coming later">
+    Checkout tag or revision...
+  </MenuItem>
+  <MenuDivider />
+  <MenuItem value="main" role="menuitemradio" selected>
+    main
+  </MenuItem>
+  <MenuItem value="feat/menu" role="menuitemradio">
+    feat/menu
+  </MenuItem>
+</MenuList>
+```
+## Props
+
+| Prop              | Type                                | Default | Description                                                                                  |
+| ----------------- | ----------------------------------- | ------- | -------------------------------------------------------------------------------------------- |
+| `children`        | `ReactNode`                         | -       | `MenuItem` rows and `MenuDivider`s.                                                          |
+| `onSelect`        | `(value: string \| number) => void` | -       | Fired with a row's `value` when a row that has one is chosen.                                |
+| `shouldWrap`      | `boolean`                           | `true`  | Carry the arrow keys past the last row to the first, and back.                               |
+| `shouldAutoFocus` | `boolean`                           | `false` | Focus the checked row, or the first enabled one, on mount; the list itself when it has none. |
+| `color`           | `keyof Theme['palette']`            | -       | Accent color for every row - its focus shading. A row's own `color` wins.                    |
+| `textColor`       | `keyof Theme['text']`               | -       | Base text color for every row. A row's own `textColor` wins.                                 |
+| `size`            | `keyof Theme['sizes']`              | -       | Density token for every row. A row's own `size` wins.                                        |
+| `dense`           | `boolean`                           | -       | Compact vertical padding for every row. A row's own `dense` wins.                            |
+| `onKeyDown`       | `(event) => void`                   | -       | Fired for every key pressed in the list, after its own handling.                             |
+| `aria-label`      | `string`                            | -       | Names the menu.                                                                              |
+| `aria-labelledby` | `string`                            | -       | Names the menu after another element.                                                        |
+| `id`              | `string`                            | -       | DOM id.                                                                                      |
+| `className`       | `string`                            | -       | Class on the list.                                                                           |
+
+Plus the styled-system **space** (`m`, `p`, ...) and **layout** (`width`, `maxHeight`, ...)
+props. The list has `0.5` vertical padding and no margin by default.
+
+## Keyboard
+
+| Key                 | Does                                                                                  |
+| ------------------- | ------------------------------------------------------------------------------------- |
+| ArrowDown / ArrowUp | Focus the next / previous enabled row, wrapping unless `shouldWrap` is off            |
+| Home / End          | Focus the first / last enabled row                                                    |
+| A printable key     | Focus the next row whose label starts with it; keys typed within 500ms build a prefix |
+| Enter / Space       | Choose the focused row                                                                |
+
+## Notes
+
+- Rows are found in the DOM by their nearest `role="menu"`, so a list nested inside another
+  (a submenu) keeps its rows and its keys to itself.
+- The pointer moves focus as it goes over a row, so the row under the pointer and the row the keys
+  move are always the same one, and one row is highlighted at a time.
+- Type-ahead matches a row's label only - not its icon, shortcut or note.
+
+## Tabs
+Import: `import { Tabs } from '@soroush.tech/design-system/Tabs'`
+A row of tabs. By default it is a `tablist`: one tab in the page's tab order, the arrow keys of
+its orientation moving between tabs, Enter or Space selecting. With `as="nav"` the same look
+is a navigation of buttons or links, the current one marked `aria-current="page"`. The row can
+carry content of its own before and after the tabs - an icon, a toolbar, a "+" button.
+
+```tsx
+import { Tab, Tabs } from '@soroush.tech/design-system/Tabs'
+
+;<Tabs value={value} onChange={setValue} textColor="secondary" color="secondary" aria-label="Items">
+  <Tab value="one" label="Item One" />
+  <Tab value="two" label="Item Two" icon={<Icon name="folder" size="sm" />} />
+  <Tab value="three" label="Item Three" disabled />
+</Tabs>
+```
+
+`Tabs` holds its own value (`defaultValue`) or takes it (`value` / `onChange`). To show a panel for
+each tab, put the tabs in a `TabContext` as a `TabList` - it links each tab to its `TabPanel`:
+
+```tsx
+import { Tab, TabContext, TabList, TabPanel } from '@soroush.tech/design-system/Tabs'
+
+;<TabContext value={value}>
+  <TabList onChange={setValue} aria-label="Items">
+    <Tab label="Item One" value="1" />
+    <Tab label="Item Two" value="2" />
+  </TabList>
+  <TabPanel value="1">...</TabPanel>
+  <TabPanel value="2">...</TabPanel>
+</TabContext>
+```
+
+The family: `Tabs`, `Tab`, `TabContext`, `TabList`, `TabPanel` and `TabScrollButton`.
+## Tabs props
+
+| Prop                  | Type                                                     | Default                                       | Description                                                                                                                                                                                                                    |
+| --------------------- | -------------------------------------------------------- | --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `children`            | `ReactNode`                                              | -                                             | `Tab`s.                                                                                                                                                                                                                        |
+| `value`               | `string \| number \| null`                               | -                                             | The selected tab's value - `null` for none. Controlled with `onChange`.                                                                                                                                                        |
+| `defaultValue`        | `string \| number \| null`                               | -                                             | The selected tab's value at first, when uncontrolled.                                                                                                                                                                          |
+| `onChange`            | `(value: string \| number) => void`                      | -                                             | Fired with a tab's value when it is chosen.                                                                                                                                                                                    |
+| `onTabClose`          | `(value: string \| number) => void`                      | -                                             | Fired with a closable tab's value when its close button, a middle click or Delete closes it. Removing it and picking the next selection are the app's.                                                                         |
+| `as`                  | `'div' \| 'nav'`                                         | `'div'`                                       | `'nav'` makes it a navigation (`aria-current="page"`) rather than a `tablist`.                                                                                                                                                 |
+| `orientation`         | `'horizontal' \| 'vertical'`                             | `'horizontal'`                                | Vertical tabs stack, with Up and Down for the keys.                                                                                                                                                                            |
+| `variant`             | `keyof TabsVariants`                                     | `'underline'`                                 | `'underline'` - an indicator slides under the selected tab; `'boxed'` - the selected tab is outlined on a raised ground; `'enclosed'` - the selected tab is outlined on its top and sides, open onto the divider. Augmentable. |
+| `color`               | `keyof Theme['palette']`                                 | `'primary'`                                   | The indicator's or outline's color.                                                                                                                                                                                            |
+| `textColor`           | `keyof Theme['text']`                                    | `'primary'`                                   | The labels' color.                                                                                                                                                                                                             |
+| `size`                | `keyof Theme['sizes']`                                   | `'md'`                                        | Density token.                                                                                                                                                                                                                 |
+| `fullWidth`           | `boolean`                                                | `false`                                       | The tabs share the row's width equally.                                                                                                                                                                                        |
+| `isCentered`          | `boolean`                                                | `false`                                       | The tabs sit in the middle of the row.                                                                                                                                                                                         |
+| `shouldSelectOnFocus` | `boolean`                                                | `false`                                       | Moving focus with the arrow keys selects as it goes.                                                                                                                                                                           |
+| `hasDivider`          | `boolean`                                                | `true`, `false` when boxed                    | A line along the row's foot (a column's end side), under its own content too. In the enclosed look it runs round the selected tab; without it there is no border - the selected tab stands out by `selectedBg`.                |
+| `bg`                  | `keyof Theme['background']`                              | -                                             | The tab strip's ground.                                                                                                                                                                                                        |
+| `selectedBg`          | `keyof Theme['background']`                              | `'paper'` boxed or enclosed without a divider | The selected tab's ground. Give its `TabPanel` the same `bg` and the two read as one.                                                                                                                                          |
+| `slots`               | `{ scrollButton?: ComponentType<TabScrollButtonProps> }` | -                                             | A scroll button of your own, in place of `TabScrollButton` - given the same props.                                                                                                                                             |
+| `startContent`        | `ReactNode`                                              | -                                             | Before the tabs, a space from them. Keeps its own tab stops; the arrow keys don't reach it.                                                                                                                                    |
+| `endContent`          | `ReactNode`                                              | -                                             | After the tabs, a space from them. Keeps its own tab stops; the arrow keys don't reach it.                                                                                                                                     |
+| `action`              | `Ref<TabsActions>`                                       | -                                             | `updateIndicator()` - re-measures the selected tab after a font loads or a label changes.                                                                                                                                      |
+| `aria-label`          | `string`                                                 | -                                             | Names the tablist (or the navigation).                                                                                                                                                                                         |
+| `aria-labelledby`     | `string`                                                 | -                                             | Names it after another element.                                                                                                                                                                                                |
+
+Plus the styled-system **space** props (`m`, `p`, ...) on the row.
+
+### Scrolling tabs
+
+```tsx
+<Tabs overflowBehavior="scroll" scrollButtons="auto" aria-label="Components">
+  {components.map((name) => (
+    <Tab key={name} value={name} label={name} />
+  ))}
+</Tabs>
+```
+
+With `overflowBehavior="scroll"` the list scrolls along its orientation when its tabs don't fit.
+
+| Prop                              | Type                            | Default  | Description                                                                                                                                        |
+| --------------------------------- | ------------------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `overflowBehavior`                | `'scroll' \| 'menu' \| 'none'`  | `'none'` | What the row does when its tabs don't fit - scroll, or list the ones that don't in a menu (below).                                                 |
+| `scrollButtons`                   | `'auto' \| 'always' \| 'never'` | `'auto'` | `auto` - shown while the tabs overflow, each only while tabs are out of view its way; `always` - both, the one at an end disabled; `never` - none. |
+| `shouldShowScrollButtonsOnMobile` | `boolean`                       | `false`  | Show the buttons on narrow screens too, where swiping does the job.                                                                                |
+| `hasVisibleScrollbar`             | `boolean`                       | `false`  | Show the list's scrollbar.                                                                                                                         |
+
+- A button scrolls by the list's visible size - smoothly, unless the user prefers reduced motion.
+- The buttons are `aria-hidden` and out of the tab order: the arrow keys already reach every tab.
+- Selecting a tab, by key, click or `value`, scrolls it fully into view.
+- Vertical tabs scroll up and down; right to left, the buttons and scrolling are mirrored.
+- `action.updateOverflow()` re-reads the overflow, as `updateIndicator()` re-measures.
+
+### Tabs that don't fit go to a menu
+
+```tsx
+<Tabs overflowBehavior="menu" overflowLabel="More tabs" aria-label="Files">
+  {files.map((name) => (
+    <Tab key={name} value={name} label={name} closeLabel={`Close ${name}`} />
+  ))}
+</Tabs>
+```
+
+With `overflowBehavior="menu"` the row draws the tabs that fit **whole** and lists the rest in a
+`Menu` behind a button at the list's end. Nothing scrolls, and no tab is cut by the edge.
+
+| Prop            | Type     | Default | Description                                                                    |
+| --------------- | -------- | ------- | ------------------------------------------------------------------------------ |
+| `overflowLabel` | `string` | -       | Names the button that opens the menu of the tabs that don't fit ("More tabs"). |
+
+- **The rule:** the tab in the page's tab order - the selected one, or the first enabled one -
+  counts first, then the others in order while the next still fits whole with the gap. The first
+  that doesn't ends the row, and every one after it goes to the menu, even a later short one, so
+  the row never reads out of order. The kept tab is drawn even when it alone is larger than the
+  room, cut by the list.
+- **The room** is the list's size along its orientation less its padding, so `startContent`,
+  `endContent` and the button take theirs first. Each tab's size is remembered from when it was
+  drawn, so one put in the menu comes back when the room grows; the row is measured after every
+  render and whenever the list resizes. Vertical tabs fit down the column.
+- **The menu** lines up with the list's end, mirrored right to left. Each hidden tab is a row -
+  its label, or its icon - and choosing one selects it, which brings it into the row. A closable
+  tab's row has its ✕ beside it (`MenuItem`'s `secondaryAction`) - the pointer's, hidden from
+  assistive technology as a tab's is - and Delete on the row closes it too; both fire
+  `onTabClose`.
+- Prerendered, or wherever nothing is laid out (jsdom), every tab is drawn and the button isn't.
+- `action.updateOverflow()` measures again.
+
+## Tab, TabContext, TabList and TabPanel
+
+- `Tab` - one tab: its label, icons, and close button.
+- `TabContext` - holds the value for a `TabList` and its panels.
+- `TabList` - the `Tabs` of a `TabContext`, each tab linked to its panel.
+- `TabPanel` - the content a tab shows.
+
+## Keyboard
+
+| Key                                             | Does                                                                                          |
+| ----------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| Right / Left (horizontal), Down / Up (vertical) | The next / previous enabled tab, coming round at the ends. Left and Right swap right to left. |
+| Home / End                                      | The first / last enabled tab                                                                  |
+| Enter / Space                                   | Selects the focused tab                                                                       |
+| Tab                                             | Leaves the tabs - into `endContent`, or the panel                                             |
+
+A navigation (`as="nav"`) keeps every tab in the page's tab order instead, as links are.
+
+## Notes
+
+- Every tab keeps the same width selected or not - its border is there, transparent, until it
+  is selected - so nothing in the row moves when the selection or the pointer does.
+- The divider is drawn inside the row, so it adds no height. It runs under `startContent` and
+  `endContent` too - the space between them and the tabs is theirs, so the line carries on
+  through it. The enclosed look draws it piece by piece, the selected tab leaving its piece out,
+  so the opening shows whatever is behind the row - a page, a `Paper`, a `Card`.
+- `TabsVariants` is augmentable, as `ButtonVariants` is: register a look, then style it through
+  `theme.components.Tabs.variants`.
+- A tab points `aria-controls` at its panel only in a `TabList`, whose `TabContext` is where
+  `TabPanel`s live - tabs that hold their own value have no panel to point at.
+
+## Tab
+Import: `import { Tab } from '@soroush.tech/design-system/Tabs'`
+One tab of a `Tabs` row: a label, an icon on any side of it, and - with a `closeLabel` - a close
+button of its own.
+
+```tsx
+<Tabs aria-label="Views" defaultValue="canvas">
+  <Tab value="canvas" label="Canvas" />
+  <Tab
+    value="system"
+    label="Design system"
+    icon={<Icon name="folder" size="sm" />}
+    iconPosition="start"
+  />
+</Tabs>
+```
+
+The icon is yours, at the size you give it - the tab places it and sizes nothing. Every
+label in a row sits on one line: a tab made taller by an icon above its label leaves the
+others' labels at its foot, level with its own.
+## Props
+
+| Prop              | Type                                    | Default                          | Description                                                                         |
+| ----------------- | --------------------------------------- | -------------------------------- | ----------------------------------------------------------------------------------- |
+| `value`           | `string \| number`                      | its position                     | What the tab is chosen as.                                                          |
+| `label`           | `ReactNode`                             | -                                | The tab's label.                                                                    |
+| `icon`            | `ReactNode`                             | -                                | The tab's icon, at the size you give it.                                            |
+| `iconPosition`    | `'start' \| 'end' \| 'top' \| 'bottom'` | `'top'`                          | Where `icon` sits around the label.                                                 |
+| `color`           | `keyof Theme['palette']`                | its `Tabs`'                      | The tab's accent - its selected label, outline and indicator, and its hover tint.   |
+| `textColor`       | `keyof Theme['text']`                   | its `Tabs`'                      | The label's color.                                                                  |
+| `size`            | `keyof Theme['sizes']`                  | its `Tabs`'                      | Density - the label's font size and side padding; across a row, the row's tallest.  |
+| `bg`              | `keyof Theme['background']`             | -                                | The tab's ground while unselected.                                                  |
+| `selectedBg`      | `keyof Theme['background']`             | its `Tabs`' `selectedBg`         | The tab's ground while selected.                                                    |
+| `borderRadius`    | `keyof Theme['radii']`                  | `'sm'` boxed or enclosed         | Its corner radius - in the enclosed look only the corners away from the divider.    |
+| `isWrapped`       | `boolean`                               | `false`                          | The label may take two lines.                                                       |
+| `disabled`        | `boolean`                               | `false`                          | The tab can't be chosen, and the arrow keys pass it.                                |
+| `href`            | `string`                                | -                                | A link, for a navigation of pages.                                                  |
+| `as`              | `ElementType`                           | `'button'`, or `'a'` with `href` | The element the tab is rendered as.                                                 |
+| `onClick`         | `(event) => void`                       | -                                | Fired when the tab is pressed.                                                      |
+| `title`           | `string`                                | -                                | Hover text.                                                                         |
+| `closeLabel`      | `string`                                | -                                | Makes the tab closable: its close button's tooltip. Delete closes it from the keys. |
+| `secondaryAction` | `ReactNode`                             | -                                | A control of the tab's own after its label - a kebab menu, a badge.                 |
+
+Like a table cell, a tab takes its row's look and its own value wins: the tab's prop, then what
+is set on its `Tabs`, then `theme.components.Tab.defaultProps`, then the row's own default. In the
+`underline` look the row's indicator takes the selected tab's `color`.
+
+## Closable tabs
+
+```tsx
+<Tabs value={view} onChange={setView} onTabClose={closeTab}>
+  <Tab value="canvas" label="Canvas" />
+  <Tab value="button" label="Button" closeLabel="Close Button" />
+</Tabs>
+```
+
+A tab with a `closeLabel` has a ✕ after its label: a button of its own beside the tab, outside
+the page's tab order. It shows on the selected tab and under the pointer, and keeps its room on
+the others, so nothing shifts when the pointer crosses a tab. A middle click on the tab and
+Delete on the focused tab close it too. A tab without a `closeLabel` never closes.
+
+The ✕ is the pointer's: a `tablist` owns tabs alone, so it is hidden from assistive technology,
+with `closeLabel` as its tooltip. The keys' way is Delete, which the tab announces
+(`aria-keyshortcuts="Delete"`).
+
+## A menu of the tab's own
+
+```tsx
+<Tab
+  value="light"
+  label="Light"
+  secondaryAction={
+    <Menu
+      align="end"
+      trigger={
+        <Button size="sm" variant="text" aria-label="Light options">
+          ⋮
+        </Button>
+      }
+    >
+      <MenuItem value="rename">Rename...</MenuItem>
+      <MenuItem value="delete">Delete</MenuItem>
+    </Menu>
+  }
+/>
+```
+
+The secondary action sits beside the tab, not inside it, and keeps its own keys: in an open menu
+the arrow keys, Home and End move through its rows, not between the tabs.
+
+## TabContext
+Import: `import { TabContext } from '@soroush.tech/design-system/Tabs'`
+Holds the selected value for a `TabList` and the `TabPanel`s beside it, wherever they sit - the
+tabs in a toolbar, the panels further down the page. It renders nothing of its own.
+
+```tsx
+<TabContext defaultValue="layers">
+  <TabList aria-label="Left panel">
+    <Tab value="layers" label="Layers" />
+    <Tab value="assets" label="Assets" />
+  </TabList>
+  <TabPanel value="layers">...</TabPanel>
+  <TabPanel value="assets">...</TabPanel>
+</TabContext>
+```
+## Props
+
+| Prop           | Type                                | Default | Description                                           |
+| -------------- | ----------------------------------- | ------- | ----------------------------------------------------- |
+| `value`        | `string \| number \| null`          | -       | The selected tab's value. Controlled with `onChange`. |
+| `defaultValue` | `string \| number \| null`          | `null`  | The selected tab's value at first.                    |
+| `onChange`     | `(value: string \| number) => void` | -       | Fired with a tab's value when it is chosen.           |
+
+## TabList
+Import: `import { TabList } from '@soroush.tech/design-system/Tabs'`
+The `Tabs` of a `TabContext`: it shows the context's value and chooses through it, and links each
+tab to its `TabPanel` - the tab `aria-controls` its panel, and the panel is named by its tab.
+
+```tsx
+import { Tab, TabContext, TabList, TabPanel } from '@soroush.tech/design-system/Tabs'
+
+const [value, setValue] = useState('1')
+
+;<TabContext value={value}>
+  <TabList onChange={setValue} aria-label="Item tabs">
+    <Tab label="Item One" value="1" />
+    <Tab label="Item Two" value="2" />
+  </TabList>
+  <TabPanel value="1" shouldKeepMounted>
+    ...
+  </TabPanel>
+  <TabPanel value="2" shouldKeepMounted>
+    ...
+  </TabPanel>
+</TabContext>
+```
+## Props
+
+Every `Tabs` prop but `value` and `defaultValue`, which are the `TabContext`'s. `onChange` fires
+with the chosen tab's value, after the `TabContext` has taken it.
+
+A `Tabs` on its own holds or takes its own value and points at no panel; a `TabList` is how tabs
+join a `TabContext`.
+
+## TabPanel
+Import: `import { TabPanel } from '@soroush.tech/design-system/Tabs'`
+The content a tab shows: a `role="tabpanel"` named by its tab, which in turn `aria-controls` it.
+It is shown only while its tab is selected, and sits in a
+[`TabContext`](https://docs.soroush.tech/design-system/api/tab-context/) beside its `TabList` - which is what links
+the two, wherever they are in the tree.
+
+```tsx
+import { Tab, TabContext, TabList, TabPanel } from '@soroush.tech/design-system/Tabs'
+
+;<TabContext defaultValue="layers">
+  <TabList aria-label="Left panel">
+    <Tab value="layers" label="Layers" />
+    <Tab value="assets" label="Assets" />
+  </TabList>
+  <TabPanel value="layers">...</TabPanel>
+  <TabPanel value="assets" shouldKeepMounted>
+    ...
+  </TabPanel>
+</TabContext>
+```
+## Props
+
+| Prop                | Type                        | Default | Description                                               |
+| ------------------- | --------------------------- | ------- | --------------------------------------------------------- |
+| `value`             | `string \| number`          | -       | The value of the tab this panel belongs to. **Required.** |
+| `children`          | `ReactNode`                 | -       | The panel's content.                                      |
+| `shouldKeepMounted` | `boolean`                   | `false` | Keep the content mounted while the panel is hidden.       |
+| `bg`                | `keyof Theme['background']` | -       | The panel's ground - match its tab's `selectedBg`.        |
+| `borderRadius`      | `keyof Theme['radii']`      | -       | The panel's corner radius.                                |
+| `className`         | `string`                    | -       | Class on the panel.                                       |
+
+Plus the styled-system **space** props (`m`, `p`, ...).
+
+## Notes
+
+- The panel takes focus (`tabIndex={0}`), so Tab moves from the tabs into it even when its
+  content has nothing focusable.
+- Outside a `TabContext` it throws - there is no tab to link it to.
+
+## TabScrollButton
+Import: `import { TabScrollButton } from '@soroush.tech/design-system/Tabs'`
+The button that scrolls a row of tabs. A `Tabs` with `overflowBehavior="scroll"` shows one at each
+end while its tabs overflow; it is out of the tab order and hidden from assistive technology,
+since the arrow keys already reach every tab.
+
+```tsx
+import {
+  Tab,
+  Tabs,
+  TabScrollButton,
+  type TabScrollButtonProps,
+} from '@soroush.tech/design-system/Tabs'
+
+// A button of your own, in place of the default one.
+function Arrow(props: TabScrollButtonProps) {
+  return <TabScrollButton {...props}>{props.direction === 'start' ? '‹' : '›'}</TabScrollButton>
+}
+
+;<Tabs overflowBehavior="scroll" slots={{ scrollButton: Arrow }} aria-label="Components">
+  {names.map((name) => (
+    <Tab key={name} value={name} label={name} />
+  ))}
+</Tabs>
+```
+## Props
+
+| Prop          | Type                         | Default                          | Description                                                      |
+| ------------- | ---------------------------- | -------------------------------- | ---------------------------------------------------------------- |
+| `direction`   | `'start' \| 'end'`           | -                                | Which way it scrolls the row. **Required.**                      |
+| `orientation` | `'horizontal' \| 'vertical'` | its `Tabs`', else `'horizontal'` | The row's orientation - a chevron left/right, or up/down.        |
+| `disabled`    | `boolean`                    | `false`                          | Nowhere further to scroll this way - kept, but off.              |
+| `isHidden`    | `boolean`                    | `false`                          | Nowhere further to scroll this way - hidden, keeping its room.   |
+| `color`       | `keyof theme.palette`        | the selected tab's               | Its stretch of an enclosed row's divider.                        |
+| `textColor`   | `keyof theme.text`           | its `Tabs`', else `'primary'`    | The chevron's color.                                             |
+| `onClick`     | `(event) => void`            | -                                | Fired when pressed. In a `Tabs`, it scrolls by the visible size. |
+| `children`    | `ReactNode`                  | a chevron                        | What it shows.                                                   |
+
+A replacement given through `slots.scrollButton` receives these same props from the `Tabs`.
+
+Its styles are `theme.components.Tabs.styleOverrides.scrollButton`. Inside a `Tabs` it takes the
+row's look - its stretch of the divider in the enclosed look - and hides on narrow screens unless
+the `Tabs` has `shouldShowScrollButtonsOnMobile`. As a tab's, its own value wins: its `color`,
+then `theme.components.TabScrollButton.defaultProps`, then the row's line - the selected tab's
+color; its `textColor`, then the row's, then the theme's `defaultProps`, then the row's default.
 
 ## CircularProgress
 Import: `import { CircularProgress } from '@soroush.tech/design-system/CircularProgress'`
@@ -4197,6 +5546,8 @@ and **diagram** props all flow through `slotProps`:
 ## Notes
 
 - GFM is enabled (`remark-gfm`): tables, strikethrough, task lists, autolinks.
+- Every heading has the id GitHub gives its anchor (`rehype-slug`): `## Rows from data` is
+  `#rows-from-data`, so a `#section` link lands on it.
 - Fenced code blocks render through `CodeBlock` - horizontally scrollable, themed to
   `theme.syntax`, with a copy-to-clipboard button.
 
@@ -4788,7 +6139,7 @@ const brand = createTheme(baseTheme, {
 
 The `Theme/Customization` Storybook story renders all three mechanisms under a customized theme and is locked by Chromatic - it is the living contract.
 
-Every styled element is registered - the `ThemeComponents` interface in `src/theme/themes.ts` is the authoritative key/slot list, so `styleOverrides` reaches every root and every sub-element slot (Switch's `track`/`thumb`/`input`, Select's `listbox`, LinearProgress's bars, ...), including the layout primitives `View`/`Flex`/`Grid`. Two cautions: an override on `View`/`Flex`/`Grid` cascades into the internals of every composed component (use those keys for app-wide policy only), and hidden/structural slots (`input`, `valueGhost`, `positioner`) carry accessibility or layout behavior - restyle their looks, not their geometry/visibility. Note that `defaultProps` is honored only by components that resolve props through `useDefaultProps` (currently `Button` and `Card`); everywhere else, use `styleOverrides`/`variants`.
+Every styled element is registered - the `ThemeComponents` interface in `src/theme/themes.ts` is the authoritative key/slot list, so `styleOverrides` reaches every root and every sub-element slot (Switch's `track`/`thumb`/`input`, Select's `listbox`, LinearProgress's bars, ...), including the layout primitives `View`/`Flex`/`Grid`. Two cautions: an override on `View`/`Flex`/`Grid` cascades into the internals of every composed component (use those keys for app-wide policy only), and hidden/structural slots (`input`, `valueGhost`, `positioner`) carry accessibility or layout behavior - restyle their looks, not their geometry/visibility. Note that `defaultProps` is honored only by components that resolve props through `useDefaultProps` (currently `Breadcrumbs`, `Button`, `Card`, `Pressable`, `Tabs`, `Tab`, `TabScrollButton`, `TabPanel`, `Menu`, `ContextMenu`, `MenuList` and `MenuItem`); everywhere else, use `styleOverrides`/`variants`.
 
 ---
 
