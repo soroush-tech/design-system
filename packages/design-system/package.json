@@ -65,6 +65,7 @@
     "./Skeleton": "./src/Skeleton/index.ts",
     "./Switch": "./src/Switch/index.ts",
     "./Table": "./src/Table/index.ts",
+    "./Tabs": "./src/Tabs/index.ts",
     "./TextInput": "./src/TextInput/index.ts",
     "./ToggleButton": "./src/ToggleButton/index.ts",
     "./Typography": "./src/Typography/index.ts",
@@ -452,6 +453,16 @@
         "require": {
           "types": "./dist/Table.d.cts",
           "default": "./dist/Table.cjs"
+        }
+      },
+      "./Tabs": {
+        "import": {
+          "types": "./dist/Tabs.d.mts",
+          "default": "./dist/Tabs.mjs"
+        },
+        "require": {
+          "types": "./dist/Tabs.d.cts",
+          "default": "./dist/Tabs.cjs"
         }
       },
       "./TextInput": {

@@ -417,6 +417,24 @@ export interface ButtonOwnerState {
   disabled?: boolean
 }
 
+/** Tabs' look values - augment to register new ones (then style them via `variants`). */
+export interface TabsVariants {
+  underline: true
+  boxed: true
+  enclosed: true
+}
+
+/** The resolved props Tabs' styled elements receive - what `ownerState` exposes. */
+export interface TabsOwnerState {
+  variant?: keyof TabsVariants
+  color?: keyof ThemePalette
+  size?: keyof ThemeSizes
+  orientation?: 'horizontal' | 'vertical'
+  fullWidth?: boolean
+  hasDivider?: boolean
+  selectedBg?: keyof ThemeBackground
+}
+
 /** The defaults a theme may set for every `Menu`. */
 export interface MenuOwnerState {
   align?: 'start' | 'end'
@@ -558,6 +576,17 @@ export interface ThemeComponents {
   TablePaginationActions?: ComponentConfig
   TableRow?: ComponentConfig
   TableSortLabel?: ComponentConfig<Record<string, unknown>, 'root' | 'icon'>
+  Tabs?: ComponentConfig<
+    TabsOwnerState,
+    | 'root'
+    | 'list'
+    | 'indicator'
+    | 'startContent'
+    | 'endContent'
+    | 'scrollButton'
+    | 'overflowButton'
+    | 'overflowClose'
+  >
   TextInput?: ComponentConfig<Record<string, unknown>, 'root' | 'input'>
   ToggleButton?: ComponentConfig
   ToggleButtonGroup?: ComponentConfig

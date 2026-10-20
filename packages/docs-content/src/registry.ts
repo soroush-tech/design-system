@@ -85,7 +85,7 @@ export const componentCategories: ComponentCategory[] = [
   },
   {
     label: 'Navigation & menus',
-    items: [component('Menu', true)],
+    items: [component('Menu', true), component('Tabs', true)],
   },
   {
     label: 'Feedback',

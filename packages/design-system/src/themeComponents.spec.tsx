@@ -47,12 +47,16 @@ import { TableHead } from './Table/TableHead'
 import { TablePagination } from './Table/TablePagination'
 import { TableRow } from './Table/TableRow'
 import { TableSortLabel } from './Table/TableSortLabel'
+import { Tab, Tabs, TabContext, type TabsActions } from './Tabs'
 import { TextInput } from './TextInput'
 import { ToggleButton } from './ToggleButton/ToggleButton'
 import { ToggleButtonGroup } from './ToggleButton/ToggleButtonGroup'
 import { Typography } from './Typography'
 
-afterEach(cleanup)
+afterEach(() => {
+  cleanup()
+  vi.restoreAllMocks()
+})
 
 // A declaration no component sets on its own, so a match proves the override applied.
 const MARKER = { textIndent: '7px' }
@@ -109,6 +113,30 @@ const table = (
     </TableFooter>
   </Table>
 )
+
+const tabs = (
+  <Tabs startContent={<span>s</span>} endContent={<span>e</span>}>
+    <Tab label="t" icon={<span>i</span>} closeLabel="c" secondaryAction={<span>a</span>} />
+  </Tabs>
+)
+
+// A row with room for one tab, so the second goes to the menu. jsdom lays nothing out: the
+// sizes are stubbed, then the row measured again.
+const overflowAction = createRef<TabsActions>()
+const overflowingTabs = (
+  <Tabs overflowBehavior="menu" overflowLabel="More" action={overflowAction} defaultValue={0}>
+    <Tab label="a" />
+    <Tab label="b" closeLabel="Close b" />
+  </Tabs>
+)
+const overflow = () => {
+  vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockReturnValue(100)
+  vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({
+    width: 100,
+    height: 100,
+  } as DOMRect)
+  act(() => overflowAction.current!.updateOverflow())
+}
 
 const tablePagination = (
   <table>
@@ -220,6 +248,7 @@ const cases: Case[] = [
     ),
   },
   { name: 'Pressable', slot: 'root', label: 'Pressable', ui: <Pressable>p</Pressable> },
+  { name: 'Tabs', slot: 'root', label: 'Tabs', ui: tabs },
   { name: 'Quote', slot: 'root', label: 'Quote', ui: <Quote>q</Quote> },
   { name: 'Radio', slot: 'root', label: 'Radio', ui: <Radio /> },
   {
@@ -525,6 +554,27 @@ const cases: Case[] = [
     ui: <TableSortLabel>Name</TableSortLabel>,
   },
   { name: 'TextInput', slot: 'input', label: 'TextInputInput', ui: <TextInput /> },
+  { name: 'Tabs', slot: 'list', label: 'TabsList', ui: tabs },
+  { name: 'Tabs', slot: 'indicator', label: 'TabsIndicator', ui: tabs },
+  { name: 'Tabs', slot: 'startContent', label: 'TabsStart', ui: tabs },
+  { name: 'Tabs', slot: 'endContent', label: 'TabsEnd', ui: tabs },
+  {
+    name: 'Tabs',
+    slot: 'overflowButton',
+    label: 'TabsOverflowButton',
+    ui: overflowingTabs,
+    open: overflow,
+  },
+  {
+    name: 'Tabs',
+    slot: 'overflowClose',
+    label: 'TabsOverflowClose',
+    ui: overflowingTabs,
+    open: () => {
+      overflow()
+      fireEvent.click(screen.getByRole('button', { name: 'More' }))
+    },
+  },
 ]
 
 describe('theme.components styleOverrides', () => {
