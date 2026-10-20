@@ -19,8 +19,14 @@ export function Navbar({ menuDrawer }: Readonly<NavbarProps> = {}) {
   const { isDark, toggleTheme } = useThemeMode()
   return (
     <AppBar color="appBar" size="sm" position="sticky" top={0} zIndex={10}>
-      <Flex alignItems="center" justifyContent="space-between" maxWidth="1440px" mx="auto">
-        <Flex alignItems="center" gap={3}>
+      <Flex
+        flexDirection="row"
+        alignItems="center"
+        justifyContent="space-between"
+        maxWidth="1440px"
+        mx="auto"
+      >
+        <Flex flexDirection="row" alignItems="center" gap={3}>
           {menuDrawer && (
             <View display={{ xs: 'inline-flex', lg: 'none' }}>
               <DrawerToggle
@@ -40,7 +46,7 @@ export function Navbar({ menuDrawer }: Readonly<NavbarProps> = {}) {
           </Link>
           <Chip>v{designSystemPkg.version}</Chip>
         </Flex>
-        <Flex alignItems="center" gap={3}>
+        <Flex flexDirection="row" alignItems="center" gap={3}>
           <View display={{ xs: 'none', lg: 'inline-flex' }}>
             <Flex flexDirection="row" gap={3}>
               <Link href="/design-system/" color="secondary">

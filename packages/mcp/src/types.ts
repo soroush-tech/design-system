@@ -13,6 +13,8 @@ export interface ComponentRecord {
   packageName: string
   /** Category in the component taxonomy; markdown components are uncategorized. */
   category?: string
+  /** For a member of a family (`MenuList` of `Menu`), the family - its subpath is the family's. */
+  family?: string
   /** The exact import statement for this component. */
   importPath: string
   /** First prose sentence of the README - a one-line summary. */

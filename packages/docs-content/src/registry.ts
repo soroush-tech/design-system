@@ -11,6 +11,8 @@ export interface ComponentNavItem {
   slug: string
   /** README path suffix inside packages/<pkg>/src/ - used to find the raw source. */
   readmePath: string
+  /** For a member of a family (`MenuList` of `Menu`), the family: its subpath and its page. */
+  family?: string
 }
 
 export interface ComponentCategory {
@@ -112,6 +114,62 @@ export const allComponents: ComponentNavItem[] = componentCategories.flatMap(
   (category) => category.items
 )
 
+// Each family's members, their READMEs beside the primary's (`Menu/MenuList/README.md`).
+// A member has no page of its own - an API page each, its demos on the family's page - and
+// stays out of the categories, so the sidebar's groups and the catalog list families.
+const FAMILY_MEMBERS: Record<string, string[]> = {
+  Menu: ['ContextMenu', 'MenuDivider', 'MenuItems', 'MenuList'],
+  Pagination: ['PaginationItem'],
+  Sidebar: ['SidebarItem'],
+  Table: [
+    'TableBody',
+    'TableCell',
+    'TableContainer',
+    'TableControl',
+    'TableFooter',
+    'TableHead',
+    'TablePagination',
+    'TablePaginationActions',
+    'TableRow',
+    'TableSortLabel',
+  ],
+  Tabs: ['Tab', 'TabContext', 'TabList', 'TabPanel', 'TabScrollButton'],
+  ToggleButton: ['ToggleButtonGroup'],
+}
+
+/** Every family member, in its family's order. */
+export const memberComponents: ComponentNavItem[] = Object.entries(FAMILY_MEMBERS).flatMap(
+  ([family, names]) =>
+    names.map((name) => ({
+      pkg: 'design-system' as const,
+      name,
+      slug: kebabCase(name),
+      readmePath: `${family}/${name}/README.md`,
+      family,
+    }))
+)
+
+/** A family's members; none for a component that isn't one. */
+export const membersOf = (item: ComponentNavItem): ComponentNavItem[] =>
+  memberComponents.filter((member) => member.family === item.name)
+
+/** Where a component's docs live in its section: its page, or a member's API page. */
+export const componentPagePath = (item: ComponentNavItem): string =>
+  item.family ? `/api/${item.slug}/` : `/components/${item.slug}/`
+
+/**
+ * Where a link to a component's README lands. A `#section` is in its reference - everything
+ * from its props on - which a design-system component's API page shows; markdown components
+ * have no API page, their whole README is on theirs.
+ */
+export const componentLinkPath = (item: ComponentNavItem, section = ''): string =>
+  section && item.pkg === 'design-system'
+    ? `/api/${item.slug}/${section}`
+    : `${componentPagePath(item)}${section}`
+
+/** The subpath a component is imported from - a member's is its family's. */
+export const importSubpathOf = (item: ComponentNavItem): string => item.family ?? item.name
+
 /** The markdown package's component library - flat, no categories. */
 export const markdownComponents: ComponentNavItem[] = [
   markdownComponent('Preview'),
@@ -123,14 +181,19 @@ export const markdownComponents: ComponentNavItem[] = [
   markdownComponent('Mermaid'),
 ]
 
-/** Every component with a docs page, across packages. Slugs are globally unique. */
-export const allDocComponents: ComponentNavItem[] = [...allComponents, ...markdownComponents]
+/** Every documented component, family members included, across packages. Slugs are globally unique. */
+export const allDocComponents: ComponentNavItem[] = [
+  ...allComponents.flatMap((item) => [item, ...membersOf(item)]),
+  ...markdownComponents,
+]
 
 export const componentBySlug = new Map(allDocComponents.map((item) => [item.slug, item]))
 
 /** The category label a component sits under; markdown components are uncategorized. */
 export const categoryOf = (item: ComponentNavItem): string | undefined =>
-  componentCategories.find((category) => category.items.includes(item))?.label
+  componentCategories.find((category) =>
+    category.items.some((entry) => entry === item || entry.name === item.family)
+  )?.label
 
 /** The styled-system package's docs files, as (label, file-path-under-docs/) pairs. */
 export const styledSystemDocs: Array<{ label: string; file: string }> = [

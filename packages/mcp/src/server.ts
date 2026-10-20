@@ -10,7 +10,7 @@ export const SERVER_NAME = 'soroush-design-system'
 const text = (body: string) => ({ content: [{ type: 'text' as const, text: body }] })
 
 const componentLine = (component: ComponentRecord): string =>
-  `- **${component.name}** (${component.packageName}) - ${component.summary}`
+  `- **${component.name}** (${component.packageName}${component.family ? `, part of ${component.family}` : ''}) - ${component.summary}`
 
 /** The inventory, grouped by category so a reader can scan by intent. */
 export const renderInventory = (bundle: ContentBundle, pkg?: string): string => {

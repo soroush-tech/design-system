@@ -2,6 +2,7 @@ import { createContext, useContext, type ReactNode } from 'react'
 import ReactMarkdown, { type Components, type Options } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeHighlight from 'rehype-highlight'
+import rehypeSlug from 'rehype-slug'
 import { styled } from '@soroush.tech/design-system'
 import { Quote, type QuoteProps } from '@soroush.tech/design-system/Quote'
 import { Checkbox, type CheckboxProps } from '@soroush.tech/design-system/Checkbox'
@@ -27,8 +28,13 @@ import { Mermaid, type MermaidProps } from '../Mermaid'
 import { MERMAID_LANGUAGE, isMermaidBlock, mermaidSource } from './mermaidBlock'
 
 const remarkPlugins: Options['remarkPlugins'] = [remarkGfm]
-// `ignoreMissing` keeps unknown fence languages from throwing - they render unhighlighted.
-const rehypePlugins: Options['rehypePlugins'] = [[rehypeHighlight, { ignoreMissing: true }]]
+// Every heading takes an id from its text, the way GitHub names its anchors - so a link to a
+// file's `#section` lands on that heading here too. `ignoreMissing` keeps unknown fence
+// languages from throwing - they render unhighlighted.
+const rehypePlugins: Options['rehypePlugins'] = [
+  rehypeSlug,
+  [rehypeHighlight, { ignoreMissing: true }],
+]
 
 // Keeps the content within its (flex-item) column on narrow viewports: shrink to fit,
 // never exceed the container, and break long URLs/tokens instead of overflowing. Wide
@@ -88,33 +94,33 @@ function slotted<P>(render: (slotProps: PreviewSlotProps, props: P) => ReactNode
 }
 
 const components: Components = {
-  h1: slotted(({ h1 }, { children }) => (
-    <Typography mt={2} variant="h1" color="primary" gutterBottom {...h1}>
+  h1: slotted(({ h1 }, { id, children }) => (
+    <Typography id={id} mt={2} variant="h1" color="primary" gutterBottom {...h1}>
       {children}
     </Typography>
   )),
-  h2: slotted(({ h2 }, { children }) => (
-    <Typography mt={2} variant="h2" color="primary" gutterBottom {...h2}>
+  h2: slotted(({ h2 }, { id, children }) => (
+    <Typography id={id} mt={2} variant="h2" color="primary" gutterBottom {...h2}>
       {children}
     </Typography>
   )),
-  h3: slotted(({ h3 }, { children }) => (
-    <Typography mt={2} variant="h3" color="primary" gutterBottom {...h3}>
+  h3: slotted(({ h3 }, { id, children }) => (
+    <Typography id={id} mt={2} variant="h3" color="primary" gutterBottom {...h3}>
       {children}
     </Typography>
   )),
-  h4: slotted(({ h4 }, { children }) => (
-    <Typography mt={2} variant="h4" gutterBottom {...h4}>
+  h4: slotted(({ h4 }, { id, children }) => (
+    <Typography id={id} mt={2} variant="h4" gutterBottom {...h4}>
       {children}
     </Typography>
   )),
-  h5: slotted(({ h5 }, { children }) => (
-    <Typography mt={2} variant="h5" gutterBottom {...h5}>
+  h5: slotted(({ h5 }, { id, children }) => (
+    <Typography id={id} mt={2} variant="h5" gutterBottom {...h5}>
       {children}
     </Typography>
   )),
-  h6: slotted(({ h6 }, { children }) => (
-    <Typography mt={2} variant="h6" gutterBottom {...h6}>
+  h6: slotted(({ h6 }, { id, children }) => (
+    <Typography id={id} mt={2} variant="h6" gutterBottom {...h6}>
       {children}
     </Typography>
   )),

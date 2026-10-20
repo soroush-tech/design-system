@@ -11,7 +11,10 @@ import { fileURLToPath } from 'node:url'
 import {
   absoluteReadmeLinks,
   allComponents,
+  componentPagePath,
+  importSubpathOf,
   markdownComponents,
+  membersOf,
   splitReadme,
   stripReadmeChrome,
   styledSystemDocSlug,
@@ -24,7 +27,10 @@ import { loadPackageFile, loadReadme } from '@soroush.tech/docs-content/node'
 const SITE_URL = process.env.VITE_SITE_URL ?? 'https://docs.soroush.tech'
 
 const componentUrl = (item: ComponentNavItem): string =>
-  `${SITE_URL}/${item.pkg}/components/${item.slug}/`
+  `${SITE_URL}/${item.pkg}${componentPagePath(item)}`
+
+// A family's members follow it, each linked to its API page.
+const designSystemComponents = allComponents.flatMap((item) => [item, ...membersOf(item)])
 
 const firstLine = (markdown: string): string =>
   stripReadmeChrome(markdown)
@@ -57,7 +63,7 @@ export const renderIndex = (): string =>
     '',
     '## Components',
     '',
-    ...allComponents.map(link),
+    ...designSystemComponents.map(link),
     '',
     '## Markdown components',
     '',
@@ -81,12 +87,12 @@ export const renderFull = (): string =>
     '',
     '# Component reference',
     '',
-    ...[...allComponents, ...markdownComponents].flatMap((item) => {
+    ...[...designSystemComponents, ...markdownComponents].flatMap((item) => {
       const { intro, api, examples } = splitReadme(absoluteReadmeLinks(loadReadme(item)))
       return [
         `## ${item.name}`,
         '',
-        `Import: \`import { ${item.name} } from '@soroush.tech/${item.pkg}/${item.name}'\``,
+        `Import: \`import { ${item.name} } from '@soroush.tech/${item.pkg}/${importSubpathOf(item)}'\``,
         '',
         stripReadmeChrome(intro),
         api,

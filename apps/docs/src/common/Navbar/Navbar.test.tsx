@@ -19,6 +19,15 @@ describe('Navbar', () => {
     expect(screen.getByText(`v${designSystemPkg.version}`)).toBeInTheDocument()
   })
 
+  it('lays the bar out in one row: the wordmark and version, then the links and the toggle', () => {
+    renderNavbar()
+    const brand = screen.getByRole('link', { name: 'SOROUSH.DESIGN' }).parentElement!
+    const actions = screen.getByRole('button', { name: 'Toggle color scheme' }).parentElement!
+    for (const row of [brand.parentElement!, brand, actions]) {
+      expect(row).toHaveStyle({ flexDirection: 'row' })
+    }
+  })
+
   it('toggles the color scheme', async () => {
     const user = userEvent.setup()
     renderNavbar()

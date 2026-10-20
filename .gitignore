@@ -16,6 +16,7 @@ pnpm-debug.log*
 *.sw?
 .claude/settings.local.json
 .claude/worktrees
+.plan
 
 # Coverage
 coverage

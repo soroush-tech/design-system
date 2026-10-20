@@ -9,18 +9,18 @@ const theme = createTheme(baseTheme, { syntax: syntaxDark })
 const renderWithTheme = (ui: ReactNode) => render(<ThemeProvider theme={theme}>{ui}</ThemeProvider>)
 
 describe('CodePanel', () => {
-  it('renders the code as a highlighted block with a copy affordance', () => {
-    const { container, getByRole } = renderWithTheme(
-      <CodePanel code={'const a: number = 1'} language="ts" />
-    )
-    expect(container.querySelector('pre')).toHaveTextContent('const a: number = 1')
-    // Highlighting produces hljs token spans that CodeBlock re-tints from the theme.
-    expect(container.querySelector('.hljs-keyword')).toBeInTheDocument()
-    expect(getByRole('button', { name: 'Copy code' })).toBeInTheDocument()
+  it("renders the code highlighted in the live editor's own markup, not editable", () => {
+    const { container } = renderWithTheme(<CodePanel code={'const a: number = 1'} language="ts" />)
+    const pre = container.querySelector('pre.prism-code')!
+    expect(pre).toHaveTextContent('const a: number = 1')
+    expect(pre.querySelector('.token.keyword')).toHaveTextContent('const')
+    expect(pre).not.toHaveAttribute('contenteditable', 'true')
+    // Wrapped and tabbed as the editable editor is, so the two are one size.
+    expect(pre).toHaveStyle({ whiteSpace: 'pre-wrap', tabSize: '2' })
   })
 
-  it('fences as jsx when the language toggle is on js', () => {
+  it('highlights as jsx when the language toggle is on js', () => {
     const { container } = renderWithTheme(<CodePanel code={'<i>hi</i>'} language="js" />)
-    expect(container.querySelector('code')).toHaveClass('language-jsx')
+    expect(container.querySelector('pre')).toHaveClass('language-jsx')
   })
 })

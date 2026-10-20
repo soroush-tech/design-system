@@ -56,5 +56,7 @@ and **diagram** props all flow through `slotProps`:
 ## Notes
 
 - GFM is enabled (`remark-gfm`): tables, strikethrough, task lists, autolinks.
+- Every heading has the id GitHub gives its anchor (`rehype-slug`): `## Rows from data` is
+  `#rows-from-data`, so a `#section` link lands on it.
 - Fenced code blocks render through `CodeBlock` - horizontally scrollable, themed to
   `theme.syntax`, with a copy-to-clipboard button.

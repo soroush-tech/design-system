@@ -73,6 +73,17 @@ describe('serializeJsxProps', () => {
     )
   })
 
+  it("writes a story's data after its controls, so the code renders what the story does", () => {
+    const options = [{ value: 'web', label: 'Web' }]
+    const args = { options, variant: 'outlined', onChange: () => {} }
+    expect(serializeJsxProps('NativeSelect', args, ['variant'])).toBe(
+      "<NativeSelect variant=\"outlined\" options={[{ value: 'web', label: 'Web' }]} />"
+    )
+    expect(serializeArgsLiteral(args, ['variant'])).toBe(
+      "{ variant: 'outlined', options: [{ value: 'web', label: 'Web' }] }"
+    )
+  })
+
   it('renders numeric children and bare elements', () => {
     expect(serializeJsxProps('Badge', { children: 3 }, [])).toBe('<Badge>3</Badge>')
     expect(serializeJsxProps('Divider', {}, [])).toBe('<Divider />')

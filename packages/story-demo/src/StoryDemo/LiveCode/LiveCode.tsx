@@ -1,12 +1,10 @@
-import { useCallback, useMemo, type ReactNode } from 'react'
+import { Fragment, useCallback, useMemo, type ReactNode } from 'react'
 import { LiveError, LivePreview, LiveProvider } from 'react-live'
 import { useTheme } from '@soroush.tech/design-system/theme'
-import { Flex } from '@soroush.tech/design-system/Flex'
-import { Typography } from '@soroush.tech/design-system/Typography'
-import { View } from '@soroush.tech/design-system/View'
 import { prepareLiveCode } from '../../utils/prepareLiveCode'
 import { snippetToModule } from '../../utils/snippetToModule'
 import { prismTheme } from '../../utils/prismTheme'
+import { DemoFrame } from '../DemoFrame'
 import { TrackedEditor } from '../TrackedEditor'
 
 export interface LiveCodeProps {
@@ -54,34 +52,13 @@ export function LiveCode({
       transformCode={transformCode}
       theme={editorTheme}
     >
-      <Flex
-        p={5}
-        bg="paper"
-        borderRadius="md"
-        flexDirection="row"
-        flexWrap="wrap"
-        alignItems="center"
-        justifyContent="center"
-        gap={3}
-      >
-        <LivePreview />
-      </Flex>
-      <Typography variant="caption" color="error" as="div" mt={1} px={2}>
-        <LiveError style={{ margin: 0, whiteSpace: 'pre-wrap', fontFamily: 'inherit' }} />
-      </Typography>
-      {toolbar}
-      <View px={2} pb={2}>
-        <View
-          bg="terminal"
-          borderRadius="md"
-          borderColor="light"
-          borderWidth="thin"
-          maxWidth="100%"
-          overflow="auto"
-        >
-          <TrackedEditor onCodeChange={onCodeChange} />
-        </View>
-      </View>
+      <DemoFrame
+        // No wrapper of its own: the demo sits straight on the surface, as the read-only one does.
+        preview={<LivePreview Component={Fragment} />}
+        error={<LiveError style={{ margin: 0, whiteSpace: 'pre-wrap', fontFamily: 'inherit' }} />}
+        toolbar={toolbar}
+        code={<TrackedEditor onCodeChange={onCodeChange} />}
+      />
     </LiveProvider>
   )
 }
