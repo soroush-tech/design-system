@@ -37,7 +37,7 @@ Import every component from its own subpath.
 - **Switch** - A sliding toggle control.
 - **NativeSelect** - Not the recommended select: use [`Select`](https://docs.soroush.tech/design-system/components/select/) - and `<Select native>` when you want the platform's own picker, which renders this component for you with the same `MenuItem` children as every other select.
 - **Select** - The select to use for every dropdown choice - always prefer it over `NativeSelect`.
-- **MenuItem** - A single option row for [`Select`](https://docs.soroush.tech/design-system/components/select/)'s listbox, rendered as a semantic `<li role="option">`.
+- **MenuItem** - A row of a list, in one of two roles:
 - **Form** - Renders a `<form>` and provides form-wide field defaults through `FormContext`.
 - **FormControl** - Groups a label, control, and helper text into one accessible field and shares their state through React context.
 - **FormLabel** - A field label built on [`Typography`](https://docs.soroush.tech/design-system/components/typography/), rendered as a `<label>`.

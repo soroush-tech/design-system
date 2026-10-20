@@ -27,10 +27,10 @@ The `name` prop is typed from the registry keys (`IconName`), so new icons get a
 
 ## Props
 
-| Prop    | Type                  | Default     | Description                                                           |
-| ------- | --------------------- | ----------- | --------------------------------------------------------------------- |
-| `name`  | `IconName`            | -           | Registry key of the icon to render (required).                        |
-| `color` | `keyof Theme['text']` | `'primary'` | Icon colour - resolves from `theme.text`, applied via `currentColor`. |
-| `size`  | `string \| number`    | `'1.5rem'`  | Sets both width and height (icons are square).                        |
+| Prop    | Type                                       | Default           | Description                                                               |
+| ------- | ------------------------------------------ | ----------------- | ------------------------------------------------------------------------- |
+| `name`  | `IconName`                                 | -                 | Registry key of the icon to render (required).                            |
+| `color` | `keyof Theme['text']`                      | `'primary'`       | Icon colour - resolves from `theme.text`, applied via `currentColor`.     |
+| `size`  | `'sm' \| 'md' \| 'lg' \| string \| number` | `'lg'` (`1.5rem`) | Both width and height (icons are square): a theme icon size, or a length. |
 
 Also accepts `LayoutProps`, `SpaceProps`, and any passthrough SVG attribute (`className`, `data-*`, `aria-*`). Renders `aria-hidden` by default - pass `aria-hidden={false}` and an `aria-label` for meaningful icons.

@@ -128,7 +128,7 @@ SSR critical-CSS extraction (e.g. with `@emotion/server`) is a separate, opt-in 
 | `Checkbox`, `Radio`, `Switch`                        | Selection controls                                                      |
 | `NativeSelect`                                       | Low-level platform `<select>` - not recommended; use `Select native`    |
 | `Select`                                             | The select to use - custom listbox, or `native` for the platform picker |
-| `MenuItem`                                           | Option row for `Select`'s listbox                                       |
+| `MenuItem`                                           | Option row for `Select`'s listbox, and a menu row in a `MenuList`       |
 | `Form`, `FormControl`, `FormLabel`, `FormHelperText` | Form composition and labeling                                           |
 | `Pagination`                                         | Page navigation control                                                 |
 

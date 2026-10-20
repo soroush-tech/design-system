@@ -352,6 +352,66 @@ const cases: Case[] = [
     ),
   },
   {
+    name: 'MenuItem',
+    slot: 'startIcon',
+    label: 'MenuItemStartIcon',
+    ui: (
+      <MenuList>
+        <MenuItem shortcut="F2">A</MenuItem>
+      </MenuList>
+    ),
+  },
+  {
+    name: 'MenuItem',
+    slot: 'label',
+    label: 'MenuItemLabel',
+    ui: (
+      <MenuList>
+        <MenuItem shortcut="F2">A</MenuItem>
+      </MenuList>
+    ),
+  },
+  {
+    name: 'MenuItem',
+    slot: 'shortcut',
+    label: 'MenuItemShortcut',
+    ui: (
+      <MenuList>
+        <MenuItem shortcut="F2">A</MenuItem>
+      </MenuList>
+    ),
+  },
+  {
+    name: 'MenuItem',
+    slot: 'submenuIcon',
+    label: 'MenuItemSubmenuIcon',
+    ui: (
+      <MenuList>
+        <MenuItem submenu={null}>A</MenuItem>
+      </MenuList>
+    ),
+  },
+  {
+    name: 'MenuItem',
+    slot: 'secondaryAction',
+    label: 'MenuItemSecondaryAction',
+    ui: (
+      <MenuList>
+        <MenuItem secondaryAction={<span>x</span>}>A</MenuItem>
+      </MenuList>
+    ),
+  },
+  {
+    name: 'MenuItem',
+    slot: 'entry',
+    label: 'MenuItemEntry',
+    ui: (
+      <MenuList>
+        <MenuItem submenu={null}>A</MenuItem>
+      </MenuList>
+    ),
+  },
+  {
     name: 'NativeSelect',
     slot: 'select',
     label: 'NativeSelectSelect',

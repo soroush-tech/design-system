@@ -425,6 +425,14 @@ export interface MenuListOwnerState {
   shouldWrap?: boolean
 }
 
+/** The defaults a theme may set for every `MenuItem` - a list's own values win. */
+export interface MenuItemOwnerState {
+  color?: keyof ThemePalette
+  textColor?: keyof ThemeText
+  size?: keyof ThemeSizes
+  dense?: boolean
+}
+
 /** Token-typed Typography props a theme may set for Card's title/caption slots. */
 export interface CardSlotTypographyProps {
   variant?: keyof ThemeTypographyVariants
@@ -492,7 +500,17 @@ export interface ThemeComponents {
     'root' | 'track' | 'dash' | 'bar' | 'traveler' | 'segment' | 'secondaryBar'
   >
   Link?: ComponentConfig
-  MenuItem?: ComponentConfig<Record<string, unknown>, 'root' | 'check'>
+  MenuItem?: ComponentConfig<
+    MenuItemOwnerState,
+    | 'root'
+    | 'check'
+    | 'startIcon'
+    | 'label'
+    | 'shortcut'
+    | 'submenuIcon'
+    | 'entry'
+    | 'secondaryAction'
+  >
   MenuList?: ComponentConfig<MenuListOwnerState>
   Modal?: ComponentConfig
   NativeSelect?: ComponentConfig<Record<string, unknown>, 'root' | 'select' | 'icon'>

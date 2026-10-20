@@ -5,6 +5,7 @@ import { useTheme } from '../theme'
 import { type TextColorToken } from '../Typography'
 import { icons, type IconName } from './icons'
 import { themeDefault } from '../theme/utils/themeDefault'
+import type { ThemeIconSizes } from '../theme/themes'
 
 export interface IconProps
   extends
@@ -15,8 +16,11 @@ export interface IconProps
   name: IconName
   /** Resolves against theme.text - applied as `color`, which the SVG inherits via `currentColor`. */
   color?: TextColorToken
-  /** Sets both width and height (icons are square). */
-  size?: string | number
+  /**
+   * Sets both width and height (icons are square): one of the theme's icon sizes (`'sm'`, `'md'`,
+   * `'lg'`), or any CSS length. Default: the theme's `iconSize`, else `'lg'`.
+   */
+  size?: keyof ThemeIconSizes | (string & {}) | number
 }
 
 const shouldForwardProp = createShouldForwardProp([...props])
@@ -36,7 +40,12 @@ const StyledIcon = styled('svg', {
 
 export function Icon({ name, color, size, ...rest }: Readonly<IconProps>) {
   const theme = useTheme()
-  const resolvedSize = size ?? theme.icon[themeDefault(theme, 'iconSize', 'lg')]
+  // A name of the theme's icon sizes is that size; anything else is a length as it stands.
+  const named =
+    typeof size === 'string' && Object.hasOwn(theme.icon, size)
+      ? theme.icon[size as keyof ThemeIconSizes]
+      : size
+  const resolvedSize = named ?? theme.icon[themeDefault(theme, 'iconSize', 'lg')]
   return (
     <StyledIcon
       as={icons[name]}

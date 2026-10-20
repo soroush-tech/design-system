@@ -24,6 +24,20 @@ describe('Icon', () => {
     expect(container.querySelector('svg')).toHaveStyle({ width: '2rem', height: '2rem' })
   })
 
+  it('reads a size named for one of the theme icon sizes as that size', () => {
+    const { container } = renderWithTheme(
+      <>
+        <Icon name="hub" size="sm" />
+        <Icon name="hub" size="md" />
+        <Icon name="hub" size={20} />
+      </>
+    )
+    const [sm, md, number] = container.querySelectorAll('svg')
+    expect(sm).toHaveStyle({ width: '1rem', height: '1rem' })
+    expect(md).toHaveStyle({ width: '1.25rem', height: '1.25rem' })
+    expect(number).toHaveStyle({ width: '20px', height: '20px' })
+  })
+
   it('resolves fill from the color prop via currentColor', () => {
     // color → CSS `color`; `fill: currentColor` resolves to it (theme.text.secondary)
     const { container } = renderWithTheme(<Icon name="hub" color="secondary" />)

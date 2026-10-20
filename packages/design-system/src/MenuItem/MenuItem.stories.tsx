@@ -6,7 +6,9 @@ import {
   textInputSizeTokens,
 } from '../utils/test/storiesOptions'
 import { Paper } from '../Paper'
+import { exampleArgs } from '../utils/test/renderExample'
 import { MenuItem } from './MenuItem'
+import { menuItemCatalog } from './MenuItem.catalog'
 
 const meta: Meta<typeof MenuItem> = {
   title: 'Theme/MenuItem',
@@ -34,8 +36,7 @@ const meta: Meta<typeof MenuItem> = {
     },
   },
   args: {
-    value: 'web',
-    children: 'Web',
+    ...exampleArgs(menuItemCatalog.example),
     color: 'primary',
     size: 'md',
   },
