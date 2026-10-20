@@ -41,7 +41,7 @@ const meta: Meta<typeof Breadcrumbs> = {
         'itemsAfterCollapse',
         'expandLabel',
         'color',
-        'variant',
+        'typography',
         'aria-label',
         'as',
         'p',
@@ -84,7 +84,7 @@ const meta: Meta<typeof Breadcrumbs> = {
       description: "The trail's and its separators' color - resolves against `theme.text`.",
       table: { category: 'Visual', defaultValue: { summary: 'secondary' } },
     },
-    variant: {
+    typography: {
       control: { type: 'select' },
       options: typographyVariantTokens,
       description: "The trail's type - resolves against `theme.typography`.",

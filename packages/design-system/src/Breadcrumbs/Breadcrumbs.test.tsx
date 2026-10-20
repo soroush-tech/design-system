@@ -98,8 +98,8 @@ describe('Breadcrumbs', () => {
     expect(screen.getByTestId('collapsed-icon').tagName.toLowerCase()).toBe('svg')
   })
 
-  it('is a Typography: its color and variant reach the root, and as changes the element', () => {
-    trail(['first', 'second'], { as: 'div', color: 'error', variant: 'caption' })
+  it('is a Typography: its color and typography reach the root, and as changes the element', () => {
+    trail(['first', 'second'], { as: 'div', color: 'error', typography: 'caption' })
     const root = list().parentElement!
     expect(root.tagName).toBe('DIV')
     expect(root).toHaveStyle({

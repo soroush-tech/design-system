@@ -14,9 +14,11 @@ import { themeDefault } from '../theme/utils/themeDefault'
 import { Icon, type IconProps } from '../Icon'
 import { Typography, type TypographyProps } from '../Typography'
 
-export interface BreadcrumbsProps extends Omit<TypographyProps, 'children'> {
+export interface BreadcrumbsProps extends Omit<TypographyProps, 'children' | 'variant'> {
   /** The crumbs - the app's `Link`s, and the current page as `Typography` or a `Link` with `aria-current="page"`. */
   children?: ReactNode
+  /** The trail's type - a `theme.typography` variant, given to its root `Typography`. Default: `'body1'`. */
+  typography?: TypographyProps['variant']
   /** Between two crumbs. Default: `'/'`. */
   separator?: ReactNode
   /** Past this many crumbs the trail collapses, a button standing for the ones between. Default: `8`. */
@@ -120,6 +122,7 @@ export function Breadcrumbs({
   itemsAfterCollapse: itemsAfterCollapseProp,
   expandLabel: expandLabelProp,
   color: colorProp,
+  typography,
   slots,
   slotProps,
   ...rest
@@ -179,7 +182,7 @@ export function Breadcrumbs({
     : crumbs
 
   return (
-    <BreadcrumbsRoot as={as} color={color} {...rest}>
+    <BreadcrumbsRoot as={as} color={color} variant={typography} {...rest}>
       <BreadcrumbsList ref={listRef}>
         {shown.flatMap((crumb, index) =>
           index === 0

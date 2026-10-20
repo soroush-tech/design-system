@@ -41,12 +41,13 @@ import { Typography } from '@soroush.tech/design-system/Typography'
 | `slots`               | `{ collapsedIcon?: ElementType }`        | -             | An icon of your own in the button, in place of `more_horiz`.                                                                |
 | `slotProps`           | `{ collapsedIcon?: Partial<IconProps> }` | -             | Props for the button's icon.                                                                                                |
 | `color`               | `keyof Theme['text']`                    | `'secondary'` | The trail's and its separators' color - the root is a `Typography`.                                                         |
-| `variant`             | `keyof Theme['typography']`              | `'body1'`     | The trail's type.                                                                                                           |
+| `typography`          | `keyof Theme['typography']`              | `'body1'`     | The trail's type - the variant its root `Typography` takes.                                                                 |
 | `align`               | `TypographyAlign`                        | -             | Text alignment.                                                                                                             |
 | `aria-label`          | `string`                                 | -             | Names the landmark - always give one.                                                                                       |
 
 It takes every other `Typography` prop too - the styled-system space, layout and position props,
-`className`, `id` and `data-testid`.
+`className`, `id` and `data-testid` - but `variant`, which is `typography` here: `variant` names a
+component's look.
 
 ## Collapsing
 

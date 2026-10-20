@@ -32,7 +32,7 @@ export const breadcrumbsCatalog = defineCatalogEntry<BreadcrumbsProps>()({
     itemsBeforeCollapse: { values: [0, 1, 2], default: 1 },
     itemsAfterCollapse: { values: [1, 2], default: 1 },
     color: { scale: 'text', default: 'secondary' },
-    variant: { scale: 'typography', default: 'body1' },
+    typography: { scale: 'typography', default: 'body1' },
   },
   content: { children: 'children' },
 })
