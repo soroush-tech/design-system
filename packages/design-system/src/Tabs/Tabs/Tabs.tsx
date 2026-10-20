@@ -294,26 +294,29 @@ const OverflowButton = styled('button', {
   slot: 'overflowButton',
   label: 'TabsOverflowButton',
   shouldForwardProp,
-})<TabsStyleProps>(({ theme, ...styleProps }) => ({
-  ...getEnclosedPieceStyle(theme, styleProps),
-  appearance: 'none' as const,
-  display: 'grid',
-  placeItems: 'center',
-  flex: '1 1 auto',
-  ...(styleProps.orientation === 'vertical'
-    ? { minHeight: theme.space[5] }
-    : { minWidth: theme.icon.lg }),
-  padding: 0,
-  border: 'none',
-  backgroundColor: 'transparent',
-  color: get(theme, 'text.primary'),
-  cursor: 'pointer',
-  outline: 'none',
-  '&:focus-visible': {
-    outline: `${theme.borderWidths.base} solid ${get(theme, `palette.${styleProps.color}.main`)}`,
-    outlineOffset: `-${theme.borderWidths.base}`,
-  },
-}))
+})<TabsStyleProps>(({ theme, ...styleProps }) => {
+  const main = get(theme, `palette.${styleProps.color}.main`)
+  return {
+    ...getEnclosedPieceStyle(theme, styleProps),
+    appearance: 'none' as const,
+    display: 'grid',
+    placeItems: 'center',
+    flex: '1 1 auto',
+    ...(styleProps.orientation === 'vertical'
+      ? { minHeight: theme.space[5] }
+      : { minWidth: theme.icon.lg }),
+    padding: 0,
+    border: 'none',
+    backgroundColor: 'transparent',
+    color: get(theme, 'text.primary'),
+    cursor: 'pointer',
+    outline: 'none',
+    '&:focus-visible': {
+      outline: `${theme.borderWidths.base} solid ${main}`,
+      outlineOffset: `-${theme.borderWidths.base}`,
+    },
+  }
+})
 
 // A closable tab's close button, beside its row in the menu.
 const OverflowClose = styled('button', {
@@ -321,20 +324,23 @@ const OverflowClose = styled('button', {
   slot: 'overflowClose',
   label: 'TabsOverflowClose',
   shouldForwardProp,
-})<Pick<TabsStyleProps, 'color'>>(({ theme, color }) => ({
-  appearance: 'none' as const,
-  display: 'grid',
-  placeItems: 'center',
-  width: theme.icon.sm,
-  height: theme.icon.sm,
-  padding: 0,
-  border: 'none',
-  borderRadius: theme.radii.sm,
-  backgroundColor: 'transparent',
-  color: get(theme, 'text.secondary'),
-  cursor: 'pointer',
-  '&:hover': { backgroundColor: `${get(theme, `palette.${color}.main`)}1F` },
-}))
+})<Pick<TabsStyleProps, 'color'>>(({ theme, color }) => {
+  const main = get(theme, `palette.${color}.main`)
+  return {
+    appearance: 'none' as const,
+    display: 'grid',
+    placeItems: 'center',
+    width: theme.icon.sm,
+    height: theme.icon.sm,
+    padding: 0,
+    border: 'none',
+    borderRadius: theme.radii.sm,
+    backgroundColor: 'transparent',
+    color: get(theme, 'text.secondary'),
+    cursor: 'pointer',
+    '&:hover': { backgroundColor: `${main}1F` },
+  }
+})
 
 interface TabEntry {
   value: TabValue
@@ -612,7 +618,7 @@ export function Tabs({
 
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     // The keys are a tab's: a tab's secondary action - a menu, a field - keeps its own.
-    if (isNavigation || !(event.target as HTMLElement).hasAttribute('data-tab')) return
+    if (isNavigation || (event.target as HTMLElement).dataset.tab === undefined) return
     const list = event.currentTarget
     const forward = isRtl(list) ? 'ArrowLeft' : 'ArrowRight'
     const backward = isRtl(list) ? 'ArrowRight' : 'ArrowLeft'

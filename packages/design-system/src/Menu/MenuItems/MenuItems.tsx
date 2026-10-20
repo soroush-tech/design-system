@@ -39,8 +39,13 @@ const isDivider = (item: MenuItemData): item is MenuDividerData =>
  * would, so the two behave alike - inside a `MenuList`, a `Menu` or a `ContextMenu`.
  */
 export function MenuItems({ items }: Readonly<MenuItemsProps>) {
+  // A divider is keyed by its place among the dividers: adding or moving a row doesn't change it.
+  let dividers = 0
   return items.map((item, index) => {
-    if (isDivider(item)) return <MenuDivider key={`divider-${index}`} />
+    if (isDivider(item)) {
+      dividers += 1
+      return <MenuDivider key={`divider-${dividers}`} />
+    }
     const { label, submenu, ...row } = item
     // An empty submenu stays empty (`null`), so the row shows its `emptyLabel`.
     const submenuRows = submenu?.length ? <MenuItems items={submenu} /> : null

@@ -23,5 +23,6 @@ export function getNextRow(
   const offset = step === 'next' ? 1 : -1
   const target = index + offset
   if (target >= 0 && target < enabled.length) return enabled[target]
-  return shouldWrap ? enabled.at(target < 0 ? -1 : 0) : undefined
+  if (!shouldWrap) return undefined
+  return target < 0 ? enabled.at(-1) : enabled[0]
 }

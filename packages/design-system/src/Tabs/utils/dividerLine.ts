@@ -7,7 +7,8 @@ import type { TabsVariants } from '../../theme'
  */
 export const getDividerShadow = (theme: Theme, isVertical: boolean, color: string): string => {
   const thin = theme.borderWidths.thin
-  return `inset ${isVertical ? `-${thin} 0` : `0 -${thin}`} 0 ${color}`
+  const offset = isVertical ? `-${thin} 0` : `0 -${thin}`
+  return `inset ${offset} 0 ${color}`
 }
 
 /** The divider's color: the accent in the enclosed look, which outlines the tab in it too. */

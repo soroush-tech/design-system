@@ -135,7 +135,7 @@ export const Default: Story = {
   render: (args) => <Menu {...args} trigger={<Button variant="outlined">main</Button>} />,
 }
 
-function Branches(args: Partial<MenuProps>) {
+function Branches(args: Readonly<Partial<MenuProps>>) {
   const [branch, setBranch] = useState('main')
   return (
     <Menu
@@ -193,7 +193,7 @@ export const Empty: Story = {
 
 const barMenus = ['File', 'Edit', 'View']
 
-function MenuBar(args: Partial<MenuProps>) {
+function MenuBar(args: Readonly<Partial<MenuProps>>) {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
   const step = (index: number) => (direction: MenuStep) =>
     setOpenIndex((index + direction + barMenus.length) % barMenus.length)
@@ -228,7 +228,7 @@ export const ControlledMenuBar: Story = {
   ),
 }
 
-function BranchMenu(args: Partial<MenuProps>) {
+function BranchMenu(args: Readonly<Partial<MenuProps>>) {
   const [branch, setBranch] = useState('main')
   const local = ['main', 'feat/menu', 'fix/tabs']
   return (

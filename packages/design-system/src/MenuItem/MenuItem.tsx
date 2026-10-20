@@ -14,7 +14,11 @@ import { Icon } from '../Icon'
 import { styled, type Theme, createShouldForwardProp, get } from '../index'
 import { useDefaultProps, useTheme } from '../theme'
 import { themeDefault } from '../theme/utils/themeDefault'
-import { useMenuListContext, type MenuItemValue } from '../Menu/MenuListContext'
+import {
+  useMenuListContext,
+  type MenuItemValue,
+  type MenuListContextValue,
+} from '../Menu/MenuListContext'
 import { Submenu } from './Submenu'
 import { useSubmenu } from './useSubmenu'
 
@@ -293,6 +297,47 @@ function isKeyboardFocus(element: Element): boolean {
   }
 }
 
+type RowLook = Pick<MenuItemProps, 'color' | 'textColor' | 'size' | 'dense'>
+
+// A row's look: its own prop, then its list's, then theme.components.MenuItem.defaultProps,
+// then theme.defaults, then the literal.
+function useRowLook(own: RowLook, menu: MenuListContextValue | null) {
+  const theme = useTheme()
+  const dp = useDefaultProps('MenuItem')
+  return {
+    color: own.color ?? menu?.color ?? dp.color ?? themeDefault(theme, 'color', 'primary'),
+    size: own.size ?? menu?.size ?? dp.size ?? themeDefault(theme, 'size', 'md'),
+    textColor: own.textColor ?? menu?.textColor ?? dp.textColor,
+    dense: own.dense ?? menu?.dense ?? dp.dense ?? false,
+  }
+}
+
+interface RowAriaState {
+  role: MenuItemRole
+  selected: boolean
+  hasSubmenu: boolean
+  isSubmenuOpen: boolean
+  submenuId: string
+  shortcut: ReactNode
+  note?: string
+  noteId: string
+}
+
+// What a menu row announces: the submenu it opens and whether it's open, whether it's checked,
+// its keys, and why it is off.
+const getRowAria = (state: RowAriaState) => ({
+  'aria-haspopup': state.hasSubmenu ? ('menu' as const) : undefined,
+  'aria-expanded': state.hasSubmenu ? state.isSubmenuOpen : undefined,
+  'aria-controls': state.isSubmenuOpen ? state.submenuId : undefined,
+  'aria-checked': state.role === 'menuitem' ? undefined : state.selected,
+  'aria-keyshortcuts': typeof state.shortcut === 'string' ? state.shortcut : undefined,
+  'aria-describedby': state.note ? state.noteId : undefined,
+})
+
+// The class names given, without the ones left out - none at all when every one is.
+const joinClassNames = (...names: (string | false | undefined)[]) =>
+  names.filter(Boolean).join(' ') || undefined
+
 /**
  * @description A row of a list. Inside a `MenuList` it is a menu row - a `menuitem`
  * (or `menuitemradio` / `menuitemcheckbox`) with a leading icon column, its label and a
@@ -329,16 +374,12 @@ export function MenuItem({
   className,
   'data-testid': dataTestid,
 }: Readonly<MenuItemProps>) {
-  const theme = useTheme()
   const menu = useMenuListContext()
   const isMenu = menu !== null
-  // Resolution: explicit prop → the enclosing list's → theme.components.MenuItem.defaultProps
-  // → theme.defaults → literal fallback.
-  const dp = useDefaultProps('MenuItem')
-  const color = colorProp ?? menu?.color ?? dp.color ?? themeDefault(theme, 'color', 'primary')
-  const size = sizeProp ?? menu?.size ?? dp.size ?? themeDefault(theme, 'size', 'md')
-  const textColor = textColorProp ?? menu?.textColor ?? dp.textColor
-  const dense = denseProp ?? menu?.dense ?? dp.dense ?? false
+  const { color, size, textColor, dense } = useRowLook(
+    { color: colorProp, size: sizeProp, textColor: textColorProp, dense: denseProp },
+    menu
+  )
   const rootRef = useRef<HTMLLIElement>(null)
   const [isFocusVisible, setIsFocusVisible] = useState(false)
   const noteId = useId()
@@ -409,9 +450,7 @@ export function MenuItem({
     setIsFocusVisible(false)
   }
 
-  const rootClassName =
-    [className, isFocusVisible ? focusVisibleClassName : undefined].filter(Boolean).join(' ') ||
-    undefined
+  const rootClassName = joinClassNames(className, isFocusVisible && focusVisibleClassName)
 
   const rootProps = {
     as,
@@ -451,8 +490,8 @@ export function MenuItem({
     )
   }
 
-  const isCheckable = role !== 'menuitem'
-  const tick = isCheckable && selected ? <Icon name="check" size="sm" color="inherit" /> : null
+  const tick =
+    role !== 'menuitem' && selected ? <Icon name="check" size="sm" color="inherit" /> : null
   const rowId = id ?? fallbackId
   const row = (
     <MenuItemRoot
@@ -460,12 +499,16 @@ export function MenuItem({
       as={hasSubmenu ? 'div' : as}
       id={rowId}
       role={role}
-      aria-haspopup={hasSubmenu ? 'menu' : undefined}
-      aria-expanded={hasSubmenu ? isSubmenuOpen : undefined}
-      aria-controls={isSubmenuOpen ? submenuId : undefined}
-      aria-checked={isCheckable ? selected : undefined}
-      aria-keyshortcuts={typeof shortcut === 'string' ? shortcut : undefined}
-      aria-describedby={note ? noteId : undefined}
+      {...getRowAria({
+        role,
+        selected,
+        hasSubmenu,
+        isSubmenuOpen,
+        submenuId,
+        shortcut,
+        note,
+        noteId,
+      })}
       title={note}
       onKeyDown={handleKeyDown}
       onKeyUp={handleKeyUp}

@@ -110,7 +110,7 @@ type Story = StoryObj<typeof Tabs>
  * The tabs with a content area for the chosen one - under a row, beside a column - so a story
  * shows the content change as tabs are chosen.
  */
-function WithContent({ args, children }: { args: Story['args']; children?: ReactNode }) {
+function WithContent({ args, children }: Readonly<{ args: Story['args']; children?: ReactNode }>) {
   const [value, setValue] = useState<string | number>(args?.value ?? args?.defaultValue ?? 0)
   const isVertical = args?.orientation === 'vertical'
   const tabs = children ?? args?.children
@@ -374,7 +374,7 @@ export const Closable: Story = {
 }
 
 // A tab's own menu, opened from its secondary action.
-function ThemeMenu({ name }: { name: string }) {
+function ThemeMenu({ name }: Readonly<{ name: string }>) {
   return (
     <Menu
       align="end"
@@ -550,7 +550,7 @@ const customTheme = createTheme(baseTheme, {
 })
 
 // A scroll button of your own - the Tabs hands it the same props as its own.
-function ArrowButton(props: TabScrollButtonProps) {
+function ArrowButton(props: Readonly<TabScrollButtonProps>) {
   return <TabScrollButton {...props}>{props.direction === 'start' ? '‹' : '›'}</TabScrollButton>
 }
 

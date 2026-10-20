@@ -169,6 +169,7 @@ const TabRoot = styled('div', {
 }) => {
   const main = get(theme, `palette.${color}.main`)
   const isBoxed = variant === 'boxed'
+  const outlineColor = isBoxed && isSelected ? `${main}59` : 'transparent'
   const raised = get(theme, 'background.paper')
   // Selected, the Tabs' selectedBg; otherwise the tab's own bg.
   const groundKey = isSelected && selectedBg ? selectedBg : bg
@@ -187,7 +188,7 @@ const TabRoot = styled('div', {
     flexBasis: fullWidth ? 0 : 'auto',
     minWidth: 0,
     backgroundColor: ground,
-    border: `${theme.borderWidths.thin} solid ${isBoxed && isSelected ? `${main}59` : 'transparent'}`,
+    border: `${theme.borderWidths.thin} solid ${outlineColor}`,
     borderRadius: radius,
     ...(variant === 'enclosed' &&
       getEnclosedEdgeStyle(
@@ -229,6 +230,8 @@ const TabLabel = styled('button', {
   const main = get(theme, `palette.${color}.main`)
   const idleColor = get(theme, `text.${textColor ?? 'primary'}`)
   const selectedColor = variant === 'boxed' ? idleColor : main
+  let labelColor = isSelected ? selectedColor : idleColor
+  if (isDisabled) labelColor = get(theme, 'text.disabled')
   const isBeside = iconPlacement === 'start' || iconPlacement === 'end'
   return {
     appearance: 'none' as const,
@@ -257,7 +260,7 @@ const TabLabel = styled('button', {
     whiteSpace: isWrapped ? ('normal' as const) : ('nowrap' as const),
     textAlign: 'center' as const,
     textDecoration: 'none',
-    color: isDisabled ? get(theme, 'text.disabled') : isSelected ? selectedColor : idleColor,
+    color: labelColor,
     backgroundColor: 'transparent',
     border: 'none',
     borderRadius: 'inherit',
@@ -285,24 +288,27 @@ const TabClose = styled('button', {
   slot: 'close',
   label: 'TabClose',
   shouldForwardProp,
-})<Pick<TabStyleProps, 'color' | 'isSelected'>>(({ theme, color, isSelected }) => ({
-  appearance: 'none' as const,
-  display: 'grid',
-  placeItems: 'center',
-  alignSelf: 'center',
-  flexShrink: 0,
-  width: theme.icon.sm,
-  height: theme.icon.sm,
-  padding: 0,
-  marginInlineEnd: theme.space[0.5],
-  border: 'none',
-  borderRadius: theme.radii.sm,
-  backgroundColor: 'transparent',
-  color: 'inherit',
-  cursor: 'pointer',
-  visibility: isSelected ? ('visible' as const) : ('hidden' as const),
-  '&:hover': { backgroundColor: `${get(theme, `palette.${color}.main`)}1F` },
-}))
+})<Pick<TabStyleProps, 'color' | 'isSelected'>>(({ theme, color, isSelected }) => {
+  const main = get(theme, `palette.${color}.main`)
+  return {
+    appearance: 'none' as const,
+    display: 'grid',
+    placeItems: 'center',
+    alignSelf: 'center',
+    flexShrink: 0,
+    width: theme.icon.sm,
+    height: theme.icon.sm,
+    padding: 0,
+    marginInlineEnd: theme.space[0.5],
+    border: 'none',
+    borderRadius: theme.radii.sm,
+    backgroundColor: 'transparent',
+    color: 'inherit',
+    cursor: 'pointer',
+    visibility: isSelected ? ('visible' as const) : ('hidden' as const),
+    '&:hover': { backgroundColor: `${main}1F` },
+  }
+})
 
 const IconSlot = styled('span', { name: 'Tab', slot: 'icon', label: 'TabIcon' })({
   display: 'inline-flex',
