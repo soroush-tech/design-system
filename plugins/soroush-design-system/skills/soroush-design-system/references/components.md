@@ -2,7 +2,7 @@
 
 # Components
 
-The 47 components shipped by the design system, and when to reach for each.
+The 48 components shipped by the design system, and when to reach for each.
 Import every component from its own subpath.
 
 ## Layout & surfaces
@@ -46,6 +46,7 @@ Import every component from its own subpath.
 
 ## Navigation & menus
 
+- **MenuDivider** - A line between groups of rows in a [`MenuList`](https://docs.soroush.tech/design-system/api/menu-list/), rendered as `<li role="separator">`.
 - **MenuList** - A list of commands, rendered as a semantic `<ul role="menu">`.
 
 ## Feedback

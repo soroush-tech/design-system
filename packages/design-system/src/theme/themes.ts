@@ -500,6 +500,7 @@ export interface ThemeComponents {
     'root' | 'track' | 'dash' | 'bar' | 'traveler' | 'segment' | 'secondaryBar'
   >
   Link?: ComponentConfig
+  MenuDivider?: ComponentConfig
   MenuItem?: ComponentConfig<
     MenuItemOwnerState,
     | 'root'

@@ -21,6 +21,7 @@ import { Icon } from './Icon'
 import { Image } from './Image'
 import { LinearProgress } from './LinearProgress'
 import { Link } from './Link'
+import { MenuDivider } from './Menu/MenuDivider'
 import { MenuItem } from './MenuItem'
 import { MenuList } from './Menu/MenuList'
 import { Modal } from './Modal'
@@ -153,6 +154,16 @@ const cases: Case[] = [
   { name: 'Link', slot: 'root', label: 'Link', ui: <Link href="/">x</Link> },
   { name: 'MenuItem', slot: 'root', label: 'MenuItem', ui: <MenuItem value="a">A</MenuItem> },
   { name: 'MenuList', slot: 'root', label: 'MenuList', ui: <MenuList /> },
+  {
+    name: 'MenuDivider',
+    slot: 'root',
+    label: 'MenuDivider',
+    ui: (
+      <ul>
+        <MenuDivider />
+      </ul>
+    ),
+  },
   {
     name: 'Modal',
     slot: 'root',
