@@ -7,7 +7,9 @@ import {
   flexWrapTokens,
 } from '../utils/test/storiesOptions'
 import { View } from '../View'
+import { exampleArgs } from '../utils/test/renderExample'
 import { Flex } from './Flex'
+import { flexCatalog } from './Flex.catalog'
 
 const meta: Meta<typeof Flex> = {
   title: 'Theme/Flex',
@@ -86,28 +88,7 @@ const meta: Meta<typeof Flex> = {
     maxWidth,
     maxHeight,
   },
-  args: {
-    flexDirection: 'column',
-    gap: 2,
-    p: 2,
-    width: '360px',
-    height: '280px',
-    bg: 'secondary',
-    borderRadius: 'sm',
-    children: (
-      <>
-        <View p={2} bg="primary" borderRadius="sm">
-          A
-        </View>
-        <View p={2} bg="primary" borderRadius="sm">
-          B
-        </View>
-        <View p={2} bg="primary" borderRadius="sm">
-          C
-        </View>
-      </>
-    ),
-  },
+  args: exampleArgs(flexCatalog.example),
 }
 
 export default meta

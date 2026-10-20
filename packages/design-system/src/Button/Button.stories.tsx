@@ -13,7 +13,9 @@ import {
 } from '../utils/test/storiesOptions'
 import { Flex } from '../Flex'
 import { Typography } from '../Typography'
+import { exampleArgs } from '../utils/test/renderExample'
 import { Button } from './Button'
+import { buttonCatalog } from './Button.catalog'
 
 const meta: Meta<typeof Button> = {
   title: 'Theme/Button',
@@ -40,7 +42,7 @@ const meta: Meta<typeof Button> = {
     },
   },
   args: {
-    children: 'Action',
+    ...exampleArgs(buttonCatalog.example),
     onClick: fn(),
   },
   argTypes: {

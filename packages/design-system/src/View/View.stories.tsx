@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { View } from './View'
+import { viewCatalog } from './View.catalog'
 import {
   aspectRatio,
   bg,
@@ -18,6 +19,7 @@ import {
   position,
   width,
 } from '../utils/test/storiesArgs'
+import { exampleArgs } from '../utils/test/renderExample'
 
 const meta: Meta<typeof View> = {
   title: 'Theme/View',
@@ -70,9 +72,7 @@ const meta: Meta<typeof View> = {
     aspectRatio,
     order,
   },
-  args: {
-    children: 'View content',
-  },
+  args: exampleArgs(viewCatalog.example),
 }
 
 export default meta

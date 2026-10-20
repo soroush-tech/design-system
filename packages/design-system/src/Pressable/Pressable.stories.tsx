@@ -6,7 +6,9 @@ import {
 import { Flex } from '@soroush.tech/design-system/Flex'
 import { Icon } from '@soroush.tech/design-system/Icon'
 import { Typography } from '@soroush.tech/design-system/Typography'
+import { exampleArgs } from '../utils/test/renderExample'
 import { Pressable } from './Pressable'
+import { pressableCatalog } from './Pressable.catalog'
 
 const meta: Meta<typeof Pressable> = {
   title: 'Theme/Pressable',
@@ -27,9 +29,7 @@ const meta: Meta<typeof Pressable> = {
       ],
     },
   },
-  args: {
-    children: 'Press me',
-  },
+  args: exampleArgs(pressableCatalog.example),
   argTypes: {
     as: {
       control: { type: 'inline-radio' },

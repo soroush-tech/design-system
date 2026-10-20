@@ -12,7 +12,9 @@ import {
 import { Flex } from '../Flex'
 import { Typography } from '../Typography'
 import { MenuItem } from '../MenuItem'
+import { exampleArgs } from '../utils/test/renderExample'
 import { Select, type SelectProps, type SelectValue } from './Select'
+import { selectCatalog } from './Select.catalog'
 
 const platformItems = [
   <MenuItem key="web" value="web">
@@ -60,11 +62,7 @@ const meta: Meta<typeof Select> = {
       ],
     },
   },
-  args: {
-    children: platformItems,
-    placeholder: 'Pick a platform',
-    variant: 'outlined',
-  },
+  args: exampleArgs(selectCatalog.example),
   argTypes: {
     native: {
       control: 'boolean',

@@ -7,7 +7,9 @@ import { TableRow } from '../TableRow'
 import { TableCell } from '../TableCell'
 import { TableControl } from '../TableControl'
 import { useTableSort } from '../hooks/useTableSort'
+import { exampleArgs } from '../../utils/test/renderExample'
 import { TableSortLabel } from './TableSortLabel'
+import { tableSortLabelCatalog } from './TableSortLabel.catalog'
 
 const meta: Meta<typeof TableSortLabel> = {
   title: 'Theme/Table/TableSortLabel',
@@ -19,11 +21,7 @@ const meta: Meta<typeof TableSortLabel> = {
       include: ['children', 'isActive', 'direction', 'shouldHideSortIcon', 'iconName', 'p', 'm'],
     },
   },
-  args: {
-    children: 'Name',
-    isActive: true,
-    direction: 'asc',
-  },
+  args: exampleArgs(tableSortLabelCatalog.example),
   argTypes: {
     children: {
       control: 'text',

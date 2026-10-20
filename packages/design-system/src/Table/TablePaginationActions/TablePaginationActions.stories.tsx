@@ -7,7 +7,9 @@ import {
 } from '@soroush.tech/design-system/utils/test/storiesArgs'
 import { Flex } from '@soroush.tech/design-system/Flex'
 import { Typography } from '@soroush.tech/design-system/Typography'
+import { exampleArgs } from '../../utils/test/renderExample'
 import { TablePaginationActions } from './TablePaginationActions'
+import { tablePaginationActionsCatalog } from './TablePaginationActions.catalog'
 
 const meta: Meta<typeof TablePaginationActions> = {
   title: 'Theme/Table/TablePaginationActions',
@@ -28,9 +30,7 @@ const meta: Meta<typeof TablePaginationActions> = {
     },
   },
   args: {
-    count: 100,
-    page: 2,
-    rowsPerPage: 10,
+    ...exampleArgs(tablePaginationActionsCatalog.example),
     getItemAriaLabel: (type) => `Go to ${type} page`,
     onPageChange: () => {},
   },

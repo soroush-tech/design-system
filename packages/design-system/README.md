@@ -81,6 +81,14 @@ import { Global, globalStyles, CacheProvider, styleCache } from '@soroush.tech/d
 
 `Global` (retyped against this package's `Theme`) applies app-wide CSS and should render inside `ThemeProvider` so it resolves against the active theme. `globalStyles(theme)` is the base reset this package owns - box-sizing, margin/table resets, and theme-driven body colors - compose it into your own `Global` styles array alongside your app's own concerns (font-family, webfont loading, and anything else app-specific stay entirely app policy).
 
+The component catalog - every component as data, for tools that place and write components (a
+design tool's palette, a source writer) - lives at its own subpath and loads in plain Node
+([docs](./docs/catalog.md)):
+
+```ts
+import { catalog } from '@soroush.tech/design-system/catalog'
+```
+
 SSR critical-CSS extraction (e.g. with `@emotion/server`) is a separate, opt-in concern most apps never need - that's what `CacheProvider` and its paired `styleCache` instance are for.
 
 ---

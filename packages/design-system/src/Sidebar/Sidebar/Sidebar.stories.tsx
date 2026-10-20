@@ -3,7 +3,9 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { bg } from '@soroush.tech/design-system/utils/test/storiesArgs'
 import { Flex } from '@soroush.tech/design-system/Flex'
 import { Typography } from '@soroush.tech/design-system/Typography'
+import { exampleArgs } from '../../utils/test/renderExample'
 import { Sidebar } from './Sidebar'
+import { sidebarCatalog } from './Sidebar.catalog'
 import { SidebarItem } from '../SidebarItem'
 
 const meta: Meta<typeof Sidebar> = {
@@ -26,11 +28,7 @@ const meta: Meta<typeof Sidebar> = {
       ],
     },
   },
-  args: {
-    isOpen: false,
-    anchor: 'left',
-    'aria-label': 'Editor panels',
-  },
+  args: exampleArgs(sidebarCatalog.example),
   argTypes: {
     isOpen: {
       control: 'boolean',

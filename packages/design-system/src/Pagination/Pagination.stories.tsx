@@ -10,7 +10,9 @@ import {
 } from '../utils/test/storiesArgs'
 import { Flex } from '../Flex'
 import { Typography } from '../Typography'
+import { exampleArgs } from '../utils/test/renderExample'
 import { Pagination } from './Pagination'
+import { paginationCatalog } from './Pagination.catalog'
 
 const meta: Meta<typeof Pagination> = {
   title: 'Theme/Pagination/Pagination',
@@ -36,9 +38,7 @@ const meta: Meta<typeof Pagination> = {
       ],
     },
   },
-  args: {
-    count: 10,
-  },
+  args: exampleArgs(paginationCatalog.example),
   argTypes: {
     count: {
       control: { type: 'number', min: 0 },

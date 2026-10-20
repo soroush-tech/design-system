@@ -1,7 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { icons } from '../../Icon/icons'
 import { Sidebar } from '../Sidebar'
+import { exampleArgs } from '../../utils/test/renderExample'
 import { SidebarItem } from './SidebarItem'
+import { sidebarItemCatalog } from './SidebarItem.catalog'
 
 const iconNames = Object.keys(icons)
 
@@ -13,11 +15,7 @@ const meta: Meta<typeof SidebarItem> = {
     layout: 'padded',
     controls: { include: ['icon', 'label', 'variant', 'isSelected', 'disabled'] },
   },
-  args: {
-    icon: 'folder',
-    label: 'Directory',
-    variant: 'text',
-  },
+  args: exampleArgs(sidebarItemCatalog.example),
   argTypes: {
     icon: {
       control: 'select',

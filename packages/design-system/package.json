@@ -68,6 +68,7 @@
     "./ToggleButton": "./src/ToggleButton/index.ts",
     "./Typography": "./src/Typography/index.ts",
     "./View": "./src/View/index.ts",
+    "./catalog": "./src/catalog/index.ts",
     "./theme": "./src/theme/index.ts",
     "./style": "./src/style/index.ts",
     "./utils": "./src/utils/index.ts",
@@ -452,6 +453,16 @@
           "default": "./dist/TextInput.cjs"
         }
       },
+      "./catalog": {
+        "import": {
+          "types": "./dist/catalog.d.mts",
+          "default": "./dist/catalog.mjs"
+        },
+        "require": {
+          "types": "./dist/catalog.d.cts",
+          "default": "./dist/catalog.cjs"
+        }
+      },
       "./theme": {
         "import": {
           "types": "./dist/theme.d.mts",
@@ -570,6 +581,7 @@
   },
   "devDependencies": {
     "@emotion/css": "^11.13.5",
+    "@soroush.tech/docs-content": "workspace:*",
     "@soroush.tech/eslint-config": "workspace:*",
     "@storybook/addon-a11y": "^10.5.8",
     "@storybook/addon-docs": "^10.5.8",

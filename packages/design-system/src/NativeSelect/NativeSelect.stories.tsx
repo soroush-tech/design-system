@@ -10,7 +10,9 @@ import {
 } from '../utils/test/storiesOptions'
 import { Flex } from '../Flex'
 import { Typography } from '../Typography'
+import { exampleArgs } from '../utils/test/renderExample'
 import { NativeSelect, type NativeSelectProps } from './NativeSelect'
+import { nativeSelectCatalog } from './NativeSelect.catalog'
 
 const platformOptions = [
   { label: 'Web', value: 'web' },
@@ -52,11 +54,7 @@ const meta: Meta<typeof NativeSelect> = {
       ],
     },
   },
-  args: {
-    options: platformOptions,
-    placeholder: 'Pick a platform',
-    variant: 'outlined',
-  },
+  args: exampleArgs(nativeSelectCatalog.example),
   argTypes: {
     variant: {
       control: { type: 'select' },

@@ -6,7 +6,9 @@ import {
   paginationSize,
 } from '@soroush.tech/design-system/utils/test/storiesArgs'
 import { Flex } from '@soroush.tech/design-system/Flex'
+import { exampleArgs } from '../../utils/test/renderExample'
 import { PaginationItem } from './PaginationItem'
+import { paginationItemCatalog } from './PaginationItem.catalog'
 
 const meta: Meta<typeof PaginationItem> = {
   title: 'Theme/Pagination/PaginationItem',
@@ -18,10 +20,7 @@ const meta: Meta<typeof PaginationItem> = {
       include: ['type', 'page', 'isSelected', 'color', 'variant', 'shape', 'size', 'disabled'],
     },
   },
-  args: {
-    type: 'page',
-    page: 1,
-  },
+  args: exampleArgs(paginationItemCatalog.example),
   argTypes: {
     type: {
       control: { type: 'select' },

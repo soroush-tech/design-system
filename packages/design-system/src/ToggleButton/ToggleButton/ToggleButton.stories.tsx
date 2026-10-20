@@ -5,7 +5,9 @@ import {
   tableSizeTokens,
 } from '@soroush.tech/design-system/utils/test/storiesOptions'
 import { Icon } from '@soroush.tech/design-system/Icon'
+import { exampleArgs } from '../../utils/test/renderExample'
 import { ToggleButton } from './ToggleButton'
+import { toggleButtonCatalog } from './ToggleButton.catalog'
 
 const meta: Meta<typeof ToggleButton> = {
   title: 'Theme/ToggleButton/ToggleButton',
@@ -17,10 +19,7 @@ const meta: Meta<typeof ToggleButton> = {
       include: ['value', 'isSelected', 'color', 'size', 'fullWidth', 'disabled', 'loading'],
     },
   },
-  args: {
-    value: 'check',
-    children: 'Check',
-  },
+  args: exampleArgs(toggleButtonCatalog.example),
   argTypes: {
     value: {
       control: 'text',
