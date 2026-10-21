@@ -122,7 +122,7 @@ function Plans() {
 // One of every input, each in the form's defaults - its size, color, disabled and width.
 export const EveryInput: Story = {
   args: { size: 'md', color: 'primary', fullWidth: true },
-  parameters: { controls: { include: ['size', 'color', 'disabled', 'fullWidth'] } },
+  parameters: { controls: { include: ['size', 'color', 'textColor', 'disabled', 'fullWidth'] } },
   render: (args) => (
     <Form {...args} onSubmit={(event) => event.preventDefault()}>
       <Flex flexDirection="column" gap={4} maxWidth="520px">

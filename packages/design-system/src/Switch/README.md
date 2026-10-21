@@ -224,3 +224,7 @@ The hidden input carries `role="switch"` for screen reader semantics. `aria-chec
 // Form usage
 <Switch id="notifications" required>Accept notifications</Switch>
 ```
+
+In a `Form` or `FormControl` it takes the field's `size`, `color` and `disabled` state, its `id` and
+`required`, and its helper text as the description - an own prop winning. The neutral `default`
+color is the label's `text.secondary`; the others are the palette's accent.
