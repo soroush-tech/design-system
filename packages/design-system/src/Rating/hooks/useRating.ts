@@ -7,7 +7,8 @@ import {
 } from 'react'
 import { isRtl } from '../../utils/isRtl'
 import { useControlled } from '../../utils/useControlled'
-import { getHoverValue, roundToPrecision } from '../utils/precision'
+import { roundToPrecision } from '../../utils/precision'
+import { getHoverValue } from '../utils/precision'
 
 export interface UseRatingParams {
   /** The controlled rating - `null` for none, `undefined` leaves it uncontrolled. */

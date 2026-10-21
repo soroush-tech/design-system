@@ -407,6 +407,21 @@ export interface ButtonVariants {
   text: true
 }
 
+/** The defaults a theme may set for every `NumberField` - its button labels give it a language. */
+export interface NumberFieldOwnerState {
+  variant?: 'default' | 'outlined' | 'text' | 'underline'
+  size?: keyof ThemeSizes
+  color?: keyof ThemePalette
+  spinButtons?: 'stacked' | 'sides' | 'none'
+  step?: number
+  smallStep?: number
+  largeStep?: number
+  shouldSnapOnStep?: boolean
+  shouldScrubOnWheel?: boolean
+  incrementLabel?: string
+  decrementLabel?: string
+}
+
 /** The defaults a theme may set for every `Rating`. */
 export interface RatingOwnerState {
   max?: number
@@ -603,6 +618,10 @@ export interface ThemeComponents {
   Pressable?: ComponentConfig<PressableOwnerState>
   Quote?: ComponentConfig
   Radio?: ComponentConfig<Record<string, unknown>, 'root' | 'input' | 'icon'>
+  NumberField?: ComponentConfig<
+    NumberFieldOwnerState,
+    'root' | 'input' | 'spinButtons' | 'increment' | 'decrement'
+  >
   Rating?: ComponentConfig<
     RatingOwnerState,
     'root' | 'item' | 'icon' | 'decimal' | 'input' | 'text' | 'emptyLabel'

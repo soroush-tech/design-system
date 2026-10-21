@@ -54,6 +54,7 @@
     "./MenuItem": "./src/MenuItem/index.ts",
     "./Modal": "./src/Modal/index.ts",
     "./NativeSelect": "./src/NativeSelect/index.ts",
+    "./NumberField": "./src/NumberField/index.ts",
     "./Pagination": "./src/Pagination/index.ts",
     "./Paper": "./src/Paper/index.ts",
     "./Popover": "./src/Popover/index.ts",
@@ -345,6 +346,16 @@
         "require": {
           "types": "./dist/NativeSelect.d.cts",
           "default": "./dist/NativeSelect.cjs"
+        }
+      },
+      "./NumberField": {
+        "import": {
+          "types": "./dist/NumberField.d.mts",
+          "default": "./dist/NumberField.mjs"
+        },
+        "require": {
+          "types": "./dist/NumberField.d.cts",
+          "default": "./dist/NumberField.cjs"
         }
       },
       "./Pagination": {

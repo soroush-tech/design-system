@@ -28,6 +28,7 @@ import { menuItemsCatalog } from '../Menu/MenuItems/MenuItems.catalog'
 import { menuListCatalog } from '../Menu/MenuList/MenuList.catalog'
 import { modalCatalog } from '../Modal/Modal.catalog'
 import { nativeSelectCatalog } from '../NativeSelect/NativeSelect.catalog'
+import { numberFieldCatalog } from '../NumberField/NumberField.catalog'
 import { paginationCatalog } from '../Pagination/Pagination.catalog'
 import { paginationItemCatalog } from '../Pagination/PaginationItem/PaginationItem.catalog'
 import { paperCatalog } from '../Paper/Paper.catalog'
@@ -107,6 +108,7 @@ export const catalogSources: Record<string, CatalogSource> = {
   MenuList: { entry: menuListCatalog, folder: 'Menu', family: 'Menu' },
   Modal: { entry: modalCatalog, folder: 'Modal' },
   NativeSelect: { entry: nativeSelectCatalog, folder: 'NativeSelect' },
+  NumberField: { entry: numberFieldCatalog, folder: 'NumberField' },
   Pagination: { entry: paginationCatalog, folder: 'Pagination' },
   PaginationItem: { entry: paginationItemCatalog, folder: 'Pagination', family: 'Pagination' },
   Paper: { entry: paperCatalog, folder: 'Paper' },

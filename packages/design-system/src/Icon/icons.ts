@@ -1,4 +1,5 @@
 import AccountTreeIcon from './icons/AccountTree'
+import AddIcon from './icons/Add'
 import AdsClickIcon from './icons/AdsClick'
 import AnalyticsIcon from './icons/Analytics'
 import ArchitectureIcon from './icons/Architecture'
@@ -42,6 +43,7 @@ import NeurologyIcon from './icons/Neurology'
 import PsychologyIcon from './icons/Psychology'
 import RebaseEditIcon from './icons/RebaseEdit'
 import RefreshIcon from './icons/Refresh'
+import RemoveIcon from './icons/Remove'
 import SchemaIcon from './icons/Schema'
 import SecurityIcon from './icons/Security'
 import SettingsInputComponentIcon from './icons/SettingsInputComponent'
@@ -62,6 +64,7 @@ import ZoomOutIcon from './icons/ZoomOut'
 /** Registry of available icons, keyed by their asset file name. */
 export const icons = {
   account_tree: AccountTreeIcon,
+  add: AddIcon,
   ads_click: AdsClickIcon,
   analytics: AnalyticsIcon,
   architecture: ArchitectureIcon,
@@ -105,6 +108,7 @@ export const icons = {
   psychology: PsychologyIcon,
   rebase_edit: RebaseEditIcon,
   refresh: RefreshIcon,
+  remove: RemoveIcon,
   schema: SchemaIcon,
   security: SecurityIcon,
   settings_input_component: SettingsInputComponentIcon,

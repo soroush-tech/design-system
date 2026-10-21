@@ -14,7 +14,7 @@ import { useFormControl } from '../FormControl'
 import { FormControlContext } from '../FormControl/FormControlContext'
 import { Icon } from '../Icon'
 import { useRating } from './hooks/useRating'
-import { roundToPrecision } from './utils/precision'
+import { roundToPrecision } from '../utils/precision'
 
 export interface RatingProps extends SpaceProps<Theme> {
   /** The rating - `null` for none. Controlled with `onChange`. */

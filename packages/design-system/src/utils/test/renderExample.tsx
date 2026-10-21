@@ -28,6 +28,7 @@ import { MenuItem } from '../../MenuItem'
 import { MenuList } from '../../Menu/MenuList'
 import { Modal } from '../../Modal'
 import { NativeSelect } from '../../NativeSelect'
+import { NumberField } from '../../NumberField'
 import { Pagination, PaginationItem } from '../../Pagination'
 import { Paper } from '../../Paper'
 import { Popover } from '../../Popover'
@@ -91,6 +92,7 @@ const COMPONENTS: Record<string, ElementType> = {
   MenuList,
   Modal,
   NativeSelect,
+  NumberField,
   Pagination,
   PaginationItem,
   Paper,

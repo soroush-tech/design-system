@@ -29,6 +29,7 @@ import { MenuList } from './Menu/MenuList'
 import { Modal } from './Modal'
 import { NativeSelect } from './NativeSelect'
 import { Pagination } from './Pagination'
+import { NumberField } from './NumberField'
 import { Rating } from './Rating'
 import { Breadcrumbs } from './Breadcrumbs'
 import { Paper } from './Paper'
@@ -116,6 +117,9 @@ const table = (
     </TableFooter>
   </Table>
 )
+
+// Both buttons drawn, so every slot - the stacked pair and each of them - is.
+const numberField = <NumberField defaultValue={1} />
 
 // Fractional and named, so every slot - the steps of an icon, the "no rating" radio - is drawn.
 const rating = <Rating precision={0.5} max={2} emptyLabelText="None" />
@@ -244,6 +248,11 @@ const cases: Case[] = [
     ui: <NativeSelect options={[{ label: 'Ten', value: 10 }]} defaultValue={10} />,
   },
   { name: 'Pagination', slot: 'root', label: 'PaginationNav', ui: <Pagination count={3} /> },
+  { name: 'NumberField', slot: 'root', label: 'NumberField', ui: numberField },
+  { name: 'NumberField', slot: 'input', label: 'NumberFieldInput', ui: numberField },
+  { name: 'NumberField', slot: 'spinButtons', label: 'NumberFieldSpinButtons', ui: numberField },
+  { name: 'NumberField', slot: 'increment', label: 'NumberFieldIncrement', ui: numberField },
+  { name: 'NumberField', slot: 'decrement', label: 'NumberFieldDecrement', ui: numberField },
   { name: 'Rating', slot: 'root', label: 'Rating', ui: rating },
   { name: 'Rating', slot: 'item', label: 'RatingItem', ui: rating },
   { name: 'Rating', slot: 'icon', label: 'RatingIcon', ui: rating },
