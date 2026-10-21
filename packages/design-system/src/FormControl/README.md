@@ -2,7 +2,7 @@
 
 Groups a label, control, and helper text into one accessible field and shares their state through React context. Works standalone or inside a [`Form`](../Form/README.md).
 
-**Architecture:** `FormControl` renders a `View` and provides `FormControlContext`. It auto-generates an `id` via `useId()` (override with the `id` prop) and derives `helperId = ${id}-helper`. Descendant controls read field state through [`useFormControl`](#useformcontrol); `FormLabel` reads the `id` for `htmlFor`; `FormHelperText` registers its presence so the control points `aria-describedby` at it only while it is rendered - no dangling reference, no manual wiring.
+**Architecture:** `FormControl` renders a `View` and provides `FormControlContext`. It auto-generates an `id` via `useId()` (override with the `id` prop) and derives `helperId = ${id}-helper` and `labelId = ${id}-label`. Descendant controls read field state through [`useFormControl`](#useformcontrol); `FormLabel` reads the `id` for `htmlFor`; `FormHelperText` registers its presence so the control points `aria-describedby` at it only while it is rendered - no dangling reference, no manual wiring. `FormLabel` registers too, giving a group control (a rating, which a `for` can't label) its `labelId` to name itself by.
 
 ---
 
@@ -58,7 +58,7 @@ All `View` props pass through to the root (space, layout, etc.), except `color`,
 
 ## `useFormControl`
 
-Hook consumed by controls (`TextInput`, `Checkbox`, `Radio`) and by `Field`. Merges the control's explicit props with `FormControl` and `Form` context per the override chain and returns the resolved `{ id, error, disabled, required, size, fullWidth, color, 'aria-describedby' }`. Uniform defaults (`size`, the booleans) are applied here; `color` is left for each control to default, since its domain differs (e.g. `Checkbox` adds `"default"`).
+Hook consumed by controls (`TextInput`, `Checkbox`, `Radio`) and by `Field`. Merges the control's explicit props with `FormControl` and `Form` context per the override chain and returns the resolved `{ id, error, disabled, required, size, fullWidth, color, 'aria-describedby', labelId }` - `labelId` only while a `FormLabel` is rendered. Uniform defaults (`size`, the booleans) are applied here; `color` is left for each control to default, since its domain differs (e.g. `Checkbox` adds `"default"`).
 
 ---
 

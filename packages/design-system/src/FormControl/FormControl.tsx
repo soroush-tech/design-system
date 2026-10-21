@@ -41,12 +41,17 @@ export function FormControl({
   const generatedId = useId()
   const resolvedId = id ?? generatedId
   const helperId = `${resolvedId}-helper`
+  const labelId = `${resolvedId}-label`
   const [hasHelperText, setHasHelperText] = useState(false)
+  const [hasLabel, setHasLabel] = useState(false)
 
   const value = useMemo(
     () => ({
       id: resolvedId,
       helperId,
+      labelId,
+      hasLabel,
+      setHasLabel,
       error,
       disabled,
       required,
@@ -60,6 +65,8 @@ export function FormControl({
     [
       resolvedId,
       helperId,
+      labelId,
+      hasLabel,
       error,
       disabled,
       required,

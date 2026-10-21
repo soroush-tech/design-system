@@ -35,6 +35,7 @@ import { Portal } from '../../Portal'
 import { Pressable } from '../../Pressable'
 import { Quote } from '../../Quote'
 import { Radio } from '../../Radio'
+import { Rating } from '../../Rating'
 import { Select } from '../../Select'
 import { Sidebar, SidebarItem } from '../../Sidebar'
 import { Skeleton } from '../../Skeleton'
@@ -98,6 +99,7 @@ const COMPONENTS: Record<string, ElementType> = {
   Pressable,
   Quote,
   Radio,
+  Rating,
   Select,
   Sidebar,
   SidebarItem,

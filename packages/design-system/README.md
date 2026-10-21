@@ -126,6 +126,7 @@ SSR critical-CSS extraction (e.g. with `@emotion/server`) is a separate, opt-in 
 | `Button`, `ButtonGroup`, `ToggleButton`              | Actions and toggles                                                     |
 | `TextInput`                                          | Text field                                                              |
 | `Checkbox`, `Radio`, `Switch`                        | Selection controls                                                      |
+| `Rating`                                             | A row of icons the user sets as a rating, or a read-only display of one |
 | `NativeSelect`                                       | Low-level platform `<select>` - not recommended; use `Select native`    |
 | `Select`                                             | The select to use - custom listbox, or `native` for the platform picker |
 | `MenuItem`                                           | Option row for `Select`'s listbox, and a menu row in a `MenuList`       |

@@ -9,6 +9,9 @@ import { useFormControl } from './useFormControl'
 const control = (overrides: Partial<FormControlContextValue> = {}): FormControlContextValue => ({
   id: 'field-1',
   helperId: 'field-1-helper',
+  labelId: 'field-1-label',
+  hasLabel: false,
+  setHasLabel: () => {},
   hasHelperText: false,
   setHasHelperText: () => {},
   ...overrides,
@@ -38,6 +41,7 @@ describe('useFormControl', () => {
         color: undefined,
         textColor: undefined,
         'aria-describedby': undefined,
+        labelId: undefined,
       })
     })
   })
@@ -173,6 +177,16 @@ describe('useFormControl', () => {
         wrapper: withProviders(undefined, control({ hasHelperText: false })),
       })
       expect(result.current['aria-describedby']).toBeUndefined()
+    })
+  })
+
+  describe('labelId', () => {
+    it('is the label id only while a label is rendered', () => {
+      const wrapper = (hasLabel: boolean) => withProviders(undefined, control({ hasLabel }))
+      const present = renderHook(() => useFormControl(), { wrapper: wrapper(true) })
+      expect(present.result.current.labelId).toBe('field-1-label')
+      const absent = renderHook(() => useFormControl(), { wrapper: wrapper(false) })
+      expect(absent.result.current.labelId).toBeUndefined()
     })
   })
 })

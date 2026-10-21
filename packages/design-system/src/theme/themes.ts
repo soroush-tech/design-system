@@ -407,6 +407,15 @@ export interface ButtonVariants {
   text: true
 }
 
+/** The defaults a theme may set for every `Rating`. */
+export interface RatingOwnerState {
+  max?: number
+  precision?: number
+  highlightSelectedOnly?: boolean
+  size?: keyof ThemeSizes
+  color?: keyof ThemePalette
+}
+
 /** The defaults a theme may set for every `Breadcrumbs` - its `expandLabel` gives a trail its language. */
 export interface BreadcrumbsOwnerState {
   separator?: ReactNode
@@ -594,6 +603,10 @@ export interface ThemeComponents {
   Pressable?: ComponentConfig<PressableOwnerState>
   Quote?: ComponentConfig
   Radio?: ComponentConfig<Record<string, unknown>, 'root' | 'input' | 'icon'>
+  Rating?: ComponentConfig<
+    RatingOwnerState,
+    'root' | 'item' | 'icon' | 'decimal' | 'input' | 'text' | 'emptyLabel'
+  >
   Select?: ComponentConfig<
     Record<string, unknown>,
     'root' | 'value' | 'valueArea' | 'valueGhost' | 'listbox'

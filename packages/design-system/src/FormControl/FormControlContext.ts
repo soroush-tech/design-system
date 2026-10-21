@@ -15,6 +15,12 @@ export interface FormControlContextValue {
   color?: keyof Theme['palette']
   /** Text color for label/helper/input content - resolves against `theme.text`. */
   textColor?: keyof Theme['text']
+  /** Id of the FormLabel node - a group control (a radio group, a rating) names itself by it. */
+  labelId: string
+  /** Whether a FormLabel is currently rendered - a control points at it only while it is. */
+  hasLabel: boolean
+  /** Stable setter FormLabel calls to register/unregister its presence. */
+  setHasLabel: (present: boolean) => void
   /** Whether a FormHelperText is currently rendered - drives `aria-describedby` on the control. */
   hasHelperText: boolean
   /** Stable setter FormHelperText calls to register/unregister its presence. */

@@ -2,6 +2,7 @@ import { screen } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { FormHelperText } from '../FormHelperText'
+import { FormLabel } from '../FormLabel'
 import { FormControl } from './FormControl'
 import { useFormControl } from './useFormControl'
 
@@ -19,6 +20,7 @@ const Probe = () => {
       data-color={fc.color ?? ''}
       data-textcolor={fc.textColor ?? ''}
       data-describedby={fc['aria-describedby'] ?? ''}
+      data-labelid={fc.labelId ?? ''}
     />
   )
 }
@@ -93,5 +95,21 @@ describe('FormControl', () => {
       </FormControl>
     )
     expect(screen.getByTestId('probe')).toHaveAttribute('data-describedby', 'email-helper')
+  })
+
+  it('exposes the label id once a label is rendered, and drops it when it goes', () => {
+    const view = (hasLabel: boolean) => (
+      <FormControl id="email">
+        <Probe />
+        {hasLabel && <FormLabel>Email</FormLabel>}
+      </FormControl>
+    )
+    const { rerender } = renderWithTheme(view(false))
+    expect(screen.getByTestId('probe')).toHaveAttribute('data-labelid', '')
+    rerender(view(true))
+    expect(screen.getByTestId('probe')).toHaveAttribute('data-labelid', 'email-label')
+    expect(screen.getByText('Email')).toHaveAttribute('id', 'email-label')
+    rerender(view(false))
+    expect(screen.getByTestId('probe')).toHaveAttribute('data-labelid', '')
   })
 })

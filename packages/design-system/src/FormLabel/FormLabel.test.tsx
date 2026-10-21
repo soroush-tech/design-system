@@ -22,6 +22,21 @@ describe('FormLabel', () => {
     expect(screen.getByText('Email')).toHaveAttribute('for', 'email')
   })
 
+  it('takes the FormControl label id, or an explicit id', () => {
+    const { rerender } = renderWithTheme(
+      <FormControl id="email">
+        <FormLabel>Email</FormLabel>
+      </FormControl>
+    )
+    expect(screen.getByText('Email')).toHaveAttribute('id', 'email-label')
+    rerender(
+      <FormControl id="email">
+        <FormLabel id="mine">Email</FormLabel>
+      </FormControl>
+    )
+    expect(screen.getByText('Email')).toHaveAttribute('id', 'mine')
+  })
+
   it('uses an explicit htmlFor over context', () => {
     renderWithTheme(
       <FormControl id="ctx">

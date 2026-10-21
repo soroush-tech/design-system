@@ -49,6 +49,8 @@ import SmartToyIcon from './icons/SmartToy'
 import SmartphoneIcon from './icons/Smartphone'
 import SpeedIcon from './icons/Speed'
 import StacksIcon from './icons/Stacks'
+import StarIcon from './icons/Star'
+import StarBorderIcon from './icons/StarBorder'
 import TableIcon from './icons/Table'
 import TerminalIcon from './icons/Terminal'
 import VisibilityIcon from './icons/Visibility'
@@ -110,6 +112,8 @@ export const icons = {
   smartphone: SmartphoneIcon,
   speed: SpeedIcon,
   stacks: StacksIcon,
+  star: StarIcon,
+  star_border: StarBorderIcon,
   table: TableIcon,
   terminal: TerminalIcon,
   visibility: VisibilityIcon,

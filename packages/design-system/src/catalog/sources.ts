@@ -36,6 +36,7 @@ import { portalCatalog } from '../Portal/Portal.catalog'
 import { pressableCatalog } from '../Pressable/Pressable.catalog'
 import { quoteCatalog } from '../Quote/Quote.catalog'
 import { radioCatalog } from '../Radio/Radio.catalog'
+import { ratingCatalog } from '../Rating/Rating.catalog'
 import { selectCatalog } from '../Select/Select.catalog'
 import { sidebarCatalog } from '../Sidebar/Sidebar/Sidebar.catalog'
 import { sidebarItemCatalog } from '../Sidebar/SidebarItem/SidebarItem.catalog'
@@ -114,6 +115,7 @@ export const catalogSources: Record<string, CatalogSource> = {
   Pressable: { entry: pressableCatalog, folder: 'Pressable' },
   Quote: { entry: quoteCatalog, folder: 'Quote' },
   Radio: { entry: radioCatalog, folder: 'Radio' },
+  Rating: { entry: ratingCatalog, folder: 'Rating' },
   Select: { entry: selectCatalog, folder: 'Select' },
   Sidebar: { entry: sidebarCatalog, folder: 'Sidebar' },
   SidebarItem: { entry: sidebarItemCatalog, folder: 'Sidebar', family: 'Sidebar' },

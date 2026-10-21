@@ -61,6 +61,7 @@
     "./Pressable": "./src/Pressable/index.ts",
     "./Quote": "./src/Quote/index.ts",
     "./Radio": "./src/Radio/index.ts",
+    "./Rating": "./src/Rating/index.ts",
     "./Select": "./src/Select/index.ts",
     "./Sidebar": "./src/Sidebar/index.ts",
     "./Skeleton": "./src/Skeleton/index.ts",
@@ -414,6 +415,16 @@
         "require": {
           "types": "./dist/Radio.d.cts",
           "default": "./dist/Radio.cjs"
+        }
+      },
+      "./Rating": {
+        "import": {
+          "types": "./dist/Rating.d.mts",
+          "default": "./dist/Rating.mjs"
+        },
+        "require": {
+          "types": "./dist/Rating.d.cts",
+          "default": "./dist/Rating.cjs"
         }
       },
       "./Select": {

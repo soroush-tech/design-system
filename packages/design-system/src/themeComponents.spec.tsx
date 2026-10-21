@@ -29,6 +29,7 @@ import { MenuList } from './Menu/MenuList'
 import { Modal } from './Modal'
 import { NativeSelect } from './NativeSelect'
 import { Pagination } from './Pagination'
+import { Rating } from './Rating'
 import { Breadcrumbs } from './Breadcrumbs'
 import { Paper } from './Paper'
 import { Popover } from './Popover'
@@ -115,6 +116,9 @@ const table = (
     </TableFooter>
   </Table>
 )
+
+// Fractional and named, so every slot - the steps of an icon, the "no rating" radio - is drawn.
+const rating = <Rating precision={0.5} max={2} emptyLabelText="None" />
 
 // Collapsed, so every slot - the button and its icon too - is drawn.
 const breadcrumbs = (
@@ -240,6 +244,13 @@ const cases: Case[] = [
     ui: <NativeSelect options={[{ label: 'Ten', value: 10 }]} defaultValue={10} />,
   },
   { name: 'Pagination', slot: 'root', label: 'PaginationNav', ui: <Pagination count={3} /> },
+  { name: 'Rating', slot: 'root', label: 'Rating', ui: rating },
+  { name: 'Rating', slot: 'item', label: 'RatingItem', ui: rating },
+  { name: 'Rating', slot: 'icon', label: 'RatingIcon', ui: rating },
+  { name: 'Rating', slot: 'decimal', label: 'RatingDecimal', ui: rating },
+  { name: 'Rating', slot: 'input', label: 'RatingInput', ui: rating },
+  { name: 'Rating', slot: 'text', label: 'RatingText', ui: rating },
+  { name: 'Rating', slot: 'emptyLabel', label: 'RatingEmptyLabel', ui: rating },
   { name: 'Breadcrumbs', slot: 'root', label: 'Breadcrumbs', ui: breadcrumbs },
   { name: 'Breadcrumbs', slot: 'list', label: 'BreadcrumbsList', ui: breadcrumbs },
   { name: 'Breadcrumbs', slot: 'item', label: 'BreadcrumbsItem', ui: breadcrumbs },
