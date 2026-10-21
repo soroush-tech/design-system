@@ -2,7 +2,7 @@
 
 # Components
 
-The 74 components shipped by the design system, and when to reach for each.
+The 75 components shipped by the design system, and when to reach for each.
 Import every component from its own subpath.
 
 ## Layout & surfaces
@@ -49,6 +49,7 @@ Import every component from its own subpath.
 - **Rating** - A row of icons the user sets as a rating - or, read-only, a display of one.
 - **NumberField** - A field for a number.
 - **InputRange** - A slider: one value on a range, or two or more thumbs for a range of values.
+- **TransferList** - Two lists, and the buttons that move the checked items from one to the other.
 - **Switch** - A sliding toggle control.
 - **NativeSelect** - Not the recommended select: use [`Select`](https://docs.soroush.tech/design-system/components/select/) - and `<Select native>` when you want the platform's own picker, which renders this component for you with the same `MenuItem` children as every other select.
 - **Select** - The select to use for every dropdown choice - always prefer it over `NativeSelect`.

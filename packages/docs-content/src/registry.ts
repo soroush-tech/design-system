@@ -77,6 +77,7 @@ export const componentCategories: ComponentCategory[] = [
       component('Rating'),
       component('NumberField'),
       component('InputRange'),
+      component('TransferList'),
       component('Switch'),
       component('NativeSelect'),
       component('Select'),

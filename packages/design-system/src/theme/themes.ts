@@ -443,6 +443,18 @@ export interface RatingOwnerState {
   color?: keyof ThemePalette
 }
 
+/** The defaults a theme may set for every `TransferList` - its button labels give it a language. */
+export interface TransferListOwnerState {
+  size?: keyof ThemeSizes
+  color?: keyof ThemePalette
+  shouldShowMoveAll?: boolean
+  hasSelectAll?: boolean
+  moveAllRightLabel?: string
+  moveRightLabel?: string
+  moveLeftLabel?: string
+  moveAllLeftLabel?: string
+}
+
 /** The defaults a theme may set for every `Breadcrumbs` - its `expandLabel` gives a trail its language. */
 export interface BreadcrumbsOwnerState {
   separator?: ReactNode
@@ -633,6 +645,10 @@ export interface ThemeComponents {
   InputRange?: ComponentConfig<
     InputRangeOwnerState,
     'root' | 'rail' | 'track' | 'thumb' | 'mark' | 'markLabel' | 'valueLabel' | 'input'
+  >
+  TransferList?: ComponentConfig<
+    TransferListOwnerState,
+    'root' | 'list' | 'header' | 'title' | 'count' | 'items' | 'item' | 'controls' | 'icon'
   >
   NumberField?: ComponentConfig<
     NumberFieldOwnerState,

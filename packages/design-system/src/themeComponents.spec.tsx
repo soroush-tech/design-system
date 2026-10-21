@@ -56,6 +56,7 @@ import { Tab, Tabs, TabContext, type TabsActions } from './Tabs'
 import { TextInput } from './TextInput'
 import { ToggleButton } from './ToggleButton/ToggleButton'
 import { ToggleButtonGroup } from './ToggleButton/ToggleButtonGroup'
+import { TransferList } from './TransferList'
 import { Typography } from './Typography'
 
 afterEach(() => {
@@ -133,6 +134,19 @@ const inputRange = (
 const numberField = <NumberField defaultValue={1} />
 
 // Fractional and named, so every slot - the steps of an icon, the "no rating" radio - is drawn.
+// Both lists with a header, a checked row and a title, so every slot - the count and the icons too - is drawn.
+const transferList = (
+  <TransferList
+    items={[
+      { value: 'a', label: 'A' },
+      { value: 'b', label: 'B' },
+    ]}
+    defaultValue={['b']}
+    leftLabel="Left"
+    rightLabel="Right"
+    hasSelectAll
+  />
+)
 const rating = <Rating precision={0.5} max={2} emptyLabelText="None" />
 
 // Collapsed, so every slot - the button and its icon too - is drawn.
@@ -399,6 +413,15 @@ const cases: Case[] = [
       </ToggleButtonGroup>
     ),
   },
+  { name: 'TransferList', slot: 'root', label: 'TransferList', ui: transferList },
+  { name: 'TransferList', slot: 'list', label: 'TransferListList', ui: transferList },
+  { name: 'TransferList', slot: 'header', label: 'TransferListHeader', ui: transferList },
+  { name: 'TransferList', slot: 'title', label: 'TransferListTitle', ui: transferList },
+  { name: 'TransferList', slot: 'count', label: 'TransferListCount', ui: transferList },
+  { name: 'TransferList', slot: 'items', label: 'TransferListItems', ui: transferList },
+  { name: 'TransferList', slot: 'item', label: 'TransferListItem', ui: transferList },
+  { name: 'TransferList', slot: 'controls', label: 'TransferListControls', ui: transferList },
+  { name: 'TransferList', slot: 'icon', label: 'TransferListIcon', ui: transferList },
   { name: 'Typography', slot: 'root', label: 'Typography', ui: <Typography>t</Typography> },
   { name: 'View', slot: 'root', label: 'View', ui: <View>v</View> },
   { name: 'Flex', slot: 'root', label: 'flex', ui: <Flex>f</Flex> },

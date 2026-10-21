@@ -64,6 +64,7 @@ import { tableSortLabelCatalog } from '../Table/TableSortLabel/TableSortLabel.ca
 import { textInputCatalog } from '../TextInput/TextInput.catalog'
 import { toggleButtonCatalog } from '../ToggleButton/ToggleButton/ToggleButton.catalog'
 import { toggleButtonGroupCatalog } from '../ToggleButton/ToggleButtonGroup/ToggleButtonGroup.catalog'
+import { transferListCatalog } from '../TransferList/TransferList.catalog'
 import { typographyCatalog } from '../Typography/Typography.catalog'
 import { viewCatalog } from '../View/View.catalog'
 import type { CatalogEntry } from './types'
@@ -153,6 +154,7 @@ export const catalogSources: Record<string, CatalogSource> = {
     folder: 'ToggleButton',
     family: 'ToggleButton',
   },
+  TransferList: { entry: transferListCatalog, folder: 'TransferList' },
   Typography: { entry: typographyCatalog, folder: 'Typography' },
   View: { entry: viewCatalog, folder: 'View' },
 }

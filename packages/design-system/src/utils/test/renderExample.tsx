@@ -59,6 +59,7 @@ import { TabPanel } from '../../Tabs/TabPanel'
 import { Tab, TabContext, TabList, TabScrollButton, Tabs } from '../../Tabs'
 import { TextInput } from '../../TextInput'
 import { ToggleButton, ToggleButtonGroup } from '../../ToggleButton'
+import { TransferList } from '../../TransferList'
 import { Typography } from '../../Typography'
 import { View } from '../../View'
 
@@ -129,6 +130,7 @@ const COMPONENTS: Record<string, ElementType> = {
   TextInput,
   ToggleButton,
   ToggleButtonGroup,
+  TransferList,
   Typography,
   View,
 }

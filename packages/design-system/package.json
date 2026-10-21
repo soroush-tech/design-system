@@ -72,6 +72,7 @@
     "./Tabs": "./src/Tabs/index.ts",
     "./TextInput": "./src/TextInput/index.ts",
     "./ToggleButton": "./src/ToggleButton/index.ts",
+    "./TransferList": "./src/TransferList/index.ts",
     "./Typography": "./src/Typography/index.ts",
     "./View": "./src/View/index.ts",
     "./catalog": "./src/catalog/index.ts",
@@ -567,6 +568,16 @@
         "require": {
           "types": "./dist/ToggleButton.d.cts",
           "default": "./dist/ToggleButton.cjs"
+        }
+      },
+      "./TransferList": {
+        "import": {
+          "types": "./dist/TransferList.d.mts",
+          "default": "./dist/TransferList.mjs"
+        },
+        "require": {
+          "types": "./dist/TransferList.d.cts",
+          "default": "./dist/TransferList.cjs"
         }
       },
       "./Typography": {
