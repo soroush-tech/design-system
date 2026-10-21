@@ -133,7 +133,14 @@ export const EveryInput: Story = {
         </FormControl>
         <FormControl>
           <FormLabel>Number</FormLabel>
-          <NumberField variant="outlined" defaultValue={3} min={0} max={10} />
+          <NumberField
+            variant="outlined"
+            defaultValue={3}
+            min={0}
+            max={10}
+            incrementLabel="Increase"
+            decrementLabel="Decrease"
+          />
           <FormHelperText>Typed or stepped, from 0 to 10.</FormHelperText>
         </FormControl>
         <FormControl>

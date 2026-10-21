@@ -291,7 +291,7 @@ export function Select({
   iconProps,
   id: idProp,
   name,
-  labelId,
+  labelId: labelIdProp,
   'aria-label': ariaLabel,
   className,
   'data-testid': dataTestid,
@@ -308,6 +308,8 @@ export function Select({
     textColor: textColorProp,
   })
   const { id, error, disabled, required, size, fullWidth } = fc
+  // A combobox is no native control, so its `FormLabel` names it through `aria-labelledby`.
+  const labelId = labelIdProp ?? fc.labelId
   const theme = useTheme()
   const color = fc.color ?? themeDefault(theme, 'color', 'primary')
   const bg = bgProp ?? themeDefault(theme, 'inputBg', 'terminal')

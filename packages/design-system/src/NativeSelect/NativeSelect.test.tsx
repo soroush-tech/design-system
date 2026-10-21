@@ -89,6 +89,22 @@ describe('NativeSelect', () => {
     expect(screen.getByRole('combobox')).not.toBeDisabled()
   })
 
+  it('sets its value in its color, a textColor winning over it', () => {
+    const { container } = renderWithTheme(
+      <>
+        <NativeSelect options={options} color="error" data-testid="follows" />
+        <NativeSelect options={options} color="error" textColor="info" data-testid="wins" />
+      </>
+    )
+    const root = (id: string) => container.querySelector(`[data-testid="${id}"]`)
+    expect(root('follows')).toHaveStyle({ color: baseTheme.palette.error.main })
+    expect(root('wins')).toHaveStyle({ color: baseTheme.text.info })
+    // The open list is painted in the same color as the value.
+    expect(root('follows')?.querySelector('select')).toHaveStyle({
+      color: baseTheme.palette.error.main,
+    })
+  })
+
   it('applies the error border color on the root', () => {
     const { container } = renderWithTheme(
       <NativeSelect

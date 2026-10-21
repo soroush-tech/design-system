@@ -291,6 +291,17 @@ describe('NumberField', () => {
     expect(screen.getByTestId('field')).toHaveStyle({ padding: baseTheme.space[1], width: '200px' })
   })
 
+  it('sets its value in its color, a textColor winning over it', () => {
+    renderWithTheme(
+      <>
+        <NumberField color="error" data-testid="follows" />
+        <NumberField color="error" textColor="info" data-testid="wins" />
+      </>
+    )
+    expect(screen.getByTestId('follows')).toHaveStyle({ color: baseTheme.palette.error.main })
+    expect(screen.getByTestId('wins')).toHaveStyle({ color: baseTheme.text.info })
+  })
+
   it('takes a frame, a size, colors and the full width of its room', () => {
     renderWithTheme(
       <NumberField

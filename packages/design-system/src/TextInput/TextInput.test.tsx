@@ -508,9 +508,20 @@ describe('TextInput', () => {
   // ─── textColor ─────────────────────────────────────────────────────────────────
 
   describe('textColor', () => {
-    it('defaults the text color to text.primary', () => {
+    it('defaults the text color to the accent color, as a Select does', () => {
       renderWithTheme(<TextInput data-testid="root" />)
-      expect(screen.getByTestId('root')).toHaveStyle({ color: baseTheme.text.primary })
+      expect(screen.getByTestId('root')).toHaveStyle({ color: baseTheme.palette.primary.main })
+    })
+
+    it('follows its color, and a textColor wins over it', () => {
+      renderWithTheme(
+        <>
+          <TextInput color="error" data-testid="follows" />
+          <TextInput color="error" textColor="info" data-testid="wins" />
+        </>
+      )
+      expect(screen.getByTestId('follows')).toHaveStyle({ color: baseTheme.palette.error.main })
+      expect(screen.getByTestId('wins')).toHaveStyle({ color: baseTheme.text.info })
     })
 
     it('applies an explicit textColor token to the text color', () => {

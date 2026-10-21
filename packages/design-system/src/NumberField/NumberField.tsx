@@ -79,7 +79,7 @@ export interface NumberFieldProps
 interface RootStyle
   extends SpaceProps<Theme>, Pick<LayoutProps<Theme>, 'width' | 'minWidth' | 'maxWidth'> {
   color: keyof Theme['palette']
-  textColor: keyof Theme['text']
+  textColor?: keyof Theme['text']
   variant: NumberFieldVariant
   isError: boolean
   isDisabled: boolean
@@ -110,7 +110,7 @@ const frameStyle = ({
     alignItems: 'stretch',
     transition: 'border-color 0.15s ease',
     backgroundColor: get(theme, `background.${themeDefault(theme, 'inputBg', 'terminal')}`),
-    color: get(theme, `text.${textColor}`),
+    color: textColor ? get(theme, `text.${textColor}`) : get(theme, `palette.${color}.main`),
     fontFamily: get(theme, 'fonts.body'),
     lineHeight: get(theme, 'lineHeights.base'),
     borderColor: border,
@@ -330,7 +330,8 @@ export function NumberField({
     textColor: textColorProp,
   })
   const color = fc.color ?? themeDefault(theme, 'color', 'primary')
-  const textColor = fc.textColor ?? themeDefault(theme, 'accentTextColor', 'primary')
+  // Left undefined so the value falls back to the accent color's `main`.
+  const textColor = fc.textColor
   const variant = variantProp ?? dp.variant ?? themeDefault(theme, 'inputVariant', 'default')
   const spinButtons = spinButtonsProp ?? dp.spinButtons ?? 'stacked'
   const step = stepProp ?? dp.step ?? 1
