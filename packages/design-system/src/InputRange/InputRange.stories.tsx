@@ -279,6 +279,47 @@ export const NonLinearScale: Story = {
   ),
 }
 
+// The number alone says little to a screen reader: `getAriaValueText` says what it means - here,
+// "30 minutes" - for each thumb, as `aria-valuetext`. The visible label can say the same.
+const minutes = (value: number) => (value === 1 ? '1 minute' : `${value} minutes`)
+
+export const WithAriaValueText: Story = {
+  args: {
+    min: 0,
+    max: 60,
+    step: 5,
+    shiftStep: 15,
+    defaultValue: 30,
+    valueLabel: 'auto',
+    'aria-label': 'Timer',
+  },
+  render: (args) => (
+    <View paddingTop={4}>
+      <InputRange
+        key={JSON.stringify(args.defaultValue)}
+        {...args}
+        getAriaValueText={minutes}
+        formatValueLabel={minutes}
+      />
+    </View>
+  ),
+}
+
+// With a range, `getAriaValueText` and `getAriaLabel` both get the thumb's index.
+export const RangeWithAriaValueText: Story = {
+  args: { min: 0, max: 24, defaultValue: [9, 17], valueLabel: 'auto', 'aria-label': undefined },
+  render: (args) => (
+    <View paddingTop={4}>
+      <InputRange
+        {...args}
+        getAriaLabel={(index) => (index === 0 ? 'Opens at' : 'Closes at')}
+        getAriaValueText={(value) => `${value}:00`}
+        formatValueLabel={(value) => `${value}:00`}
+      />
+    </View>
+  ),
+}
+
 // A slider and a number field on one value: the field is typed, the slider is dragged.
 function WithNumberField(args: Readonly<InputRangeProps>) {
   const [value, setValue] = useState<number | null>(30)
