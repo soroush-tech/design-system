@@ -1,7 +1,8 @@
 import { useMemo, useState, type ChangeEvent, type KeyboardEvent } from 'react'
 import { clamp } from '../../utils/clamp'
 import { useControlled } from '../../utils/useControlled'
-import { addExact, formatNumber, getNumberSyntax, parseNumber, snapToStep } from '../utils/number'
+import { addExact, snapToStep } from '../../utils/precision'
+import { formatNumber, getNumberSyntax, parseNumber } from '../utils/number'
 
 export interface UseNumberFieldParams {
   /** The number - `null` for none, `undefined` leaves it uncontrolled. */

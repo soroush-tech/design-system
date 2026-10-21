@@ -407,6 +407,18 @@ export interface ButtonVariants {
   text: true
 }
 
+/** The defaults a theme may set for every `InputRange`. */
+export interface InputRangeOwnerState {
+  size?: keyof ThemeSizes
+  color?: keyof ThemePalette
+  orientation?: 'horizontal' | 'vertical'
+  track?: 'normal' | false | 'inverted'
+  step?: number | null
+  shiftStep?: number
+  valueLabel?: 'auto' | 'on' | 'off'
+  shouldSwapThumbs?: boolean
+}
+
 /** The defaults a theme may set for every `NumberField` - its button labels give it a language. */
 export interface NumberFieldOwnerState {
   variant?: 'default' | 'outlined' | 'text' | 'underline'
@@ -618,6 +630,10 @@ export interface ThemeComponents {
   Pressable?: ComponentConfig<PressableOwnerState>
   Quote?: ComponentConfig
   Radio?: ComponentConfig<Record<string, unknown>, 'root' | 'input' | 'icon'>
+  InputRange?: ComponentConfig<
+    InputRangeOwnerState,
+    'root' | 'rail' | 'track' | 'thumb' | 'mark' | 'markLabel' | 'valueLabel' | 'input'
+  >
   NumberField?: ComponentConfig<
     NumberFieldOwnerState,
     'root' | 'input' | 'spinButtons' | 'increment' | 'decrement'

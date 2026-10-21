@@ -29,6 +29,7 @@ import { MenuList } from './Menu/MenuList'
 import { Modal } from './Modal'
 import { NativeSelect } from './NativeSelect'
 import { Pagination } from './Pagination'
+import { InputRange } from './InputRange'
 import { NumberField } from './NumberField'
 import { Rating } from './Rating'
 import { Breadcrumbs } from './Breadcrumbs'
@@ -116,6 +117,16 @@ const table = (
       </TableRow>
     </TableFooter>
   </Table>
+)
+
+// Marked, labelled and with two thumbs, so every slot - the marks and their labels, each thumb's
+// value label and input - is drawn.
+const inputRange = (
+  <InputRange
+    defaultValue={[10, 60]}
+    marks={[{ value: 0, label: 'min' }, { value: 100 }]}
+    valueLabel="on"
+  />
 )
 
 // Both buttons drawn, so every slot - the stacked pair and each of them - is.
@@ -248,6 +259,14 @@ const cases: Case[] = [
     ui: <NativeSelect options={[{ label: 'Ten', value: 10 }]} defaultValue={10} />,
   },
   { name: 'Pagination', slot: 'root', label: 'PaginationNav', ui: <Pagination count={3} /> },
+  { name: 'InputRange', slot: 'root', label: 'InputRange', ui: inputRange },
+  { name: 'InputRange', slot: 'rail', label: 'InputRangeRail', ui: inputRange },
+  { name: 'InputRange', slot: 'track', label: 'InputRangeTrack', ui: inputRange },
+  { name: 'InputRange', slot: 'thumb', label: 'InputRangeThumb', ui: inputRange },
+  { name: 'InputRange', slot: 'mark', label: 'InputRangeMark', ui: inputRange },
+  { name: 'InputRange', slot: 'markLabel', label: 'InputRangeMarkLabel', ui: inputRange },
+  { name: 'InputRange', slot: 'valueLabel', label: 'InputRangeValueLabel', ui: inputRange },
+  { name: 'InputRange', slot: 'input', label: 'InputRangeInput', ui: inputRange },
   { name: 'NumberField', slot: 'root', label: 'NumberField', ui: numberField },
   { name: 'NumberField', slot: 'input', label: 'NumberFieldInput', ui: numberField },
   { name: 'NumberField', slot: 'spinButtons', label: 'NumberFieldSpinButtons', ui: numberField },

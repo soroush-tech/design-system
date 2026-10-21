@@ -19,6 +19,7 @@ import { formLabelCatalog } from '../FormLabel/FormLabel.catalog'
 import { gridCatalog } from '../Grid/Grid.catalog'
 import { iconCatalog } from '../Icon/Icon.catalog'
 import { imageCatalog } from '../Image/Image.catalog'
+import { inputRangeCatalog } from '../InputRange/InputRange.catalog'
 import { linearProgressCatalog } from '../LinearProgress/LinearProgress.catalog'
 import { linkCatalog } from '../Link/Link.catalog'
 import { menuCatalog } from '../Menu/Menu/Menu.catalog'
@@ -99,6 +100,7 @@ export const catalogSources: Record<string, CatalogSource> = {
   Grid: { entry: gridCatalog, folder: 'Grid' },
   Icon: { entry: iconCatalog, folder: 'Icon' },
   Image: { entry: imageCatalog, folder: 'Image' },
+  InputRange: { entry: inputRangeCatalog, folder: 'InputRange' },
   LinearProgress: { entry: linearProgressCatalog, folder: 'LinearProgress' },
   Link: { entry: linkCatalog, folder: 'Link' },
   Menu: { entry: menuCatalog, folder: 'Menu' },

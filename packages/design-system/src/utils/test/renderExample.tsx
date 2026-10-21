@@ -20,6 +20,7 @@ import { FormLabel } from '../../FormLabel'
 import { Grid } from '../../Grid'
 import { Icon } from '../../Icon'
 import { Image } from '../../Image'
+import { InputRange } from '../../InputRange'
 import { LinearProgress } from '../../LinearProgress'
 import { Link } from '../../Link'
 import { Menu } from '../../Menu/Menu'
@@ -84,6 +85,7 @@ const COMPONENTS: Record<string, ElementType> = {
   Grid,
   Icon,
   Image,
+  InputRange,
   LinearProgress,
   Link,
   Menu,

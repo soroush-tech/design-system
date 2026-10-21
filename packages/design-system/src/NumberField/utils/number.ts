@@ -62,15 +62,3 @@ export function parseNumber(text: string, syntax: NumberSyntax): number | null {
   const signed = isNegative ? -parsed : parsed
   return syntax.isPercent ? Number((signed / 100).toFixed(getDecimalPrecision(parsed) + 2)) : signed
 }
-
-/** The number moved by `delta`, with no float noise - `0.1 + 0.2` is `0.3`. */
-export function addExact(value: number, delta: number): number {
-  const decimals = Math.max(getDecimalPrecision(value), getDecimalPrecision(delta))
-  return Number((value + delta).toFixed(decimals))
-}
-
-/** The nearest number on the grid of `step`, counted from `origin`. */
-export function snapToStep(value: number, step: number, origin: number): number {
-  const decimals = Math.max(getDecimalPrecision(step), getDecimalPrecision(origin))
-  return Number((Math.round((value - origin) / step) * step + origin).toFixed(decimals))
-}

@@ -12,3 +12,15 @@ export function roundToPrecision(value: number | null, precision: number): numbe
   const nearest = Math.round(value / precision) * precision
   return Number(nearest.toFixed(getDecimalPrecision(precision)))
 }
+
+/** The number moved by `delta`, with no float noise - `0.1 + 0.2` is `0.3`. */
+export function addExact(value: number, delta: number): number {
+  const decimals = Math.max(getDecimalPrecision(value), getDecimalPrecision(delta))
+  return Number((value + delta).toFixed(decimals))
+}
+
+/** The nearest number on the grid of `step`, counted from `origin`. */
+export function snapToStep(value: number, step: number, origin: number): number {
+  const decimals = Math.max(getDecimalPrecision(step), getDecimalPrecision(origin))
+  return Number((Math.round((value - origin) / step) * step + origin).toFixed(decimals))
+}

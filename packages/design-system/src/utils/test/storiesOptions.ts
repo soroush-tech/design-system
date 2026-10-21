@@ -81,6 +81,11 @@ export {
   numberFieldSpinButtonsValues as numberFieldSpinButtonsTokens,
   numberFieldVariantValues as numberFieldVariantTokens,
 } from '../../NumberField/NumberField.catalog'
+export {
+  inputRangeOrientationValues as inputRangeOrientationTokens,
+  inputRangeTrackValues as inputRangeTrackTokens,
+  inputRangeValueLabelValues as inputRangeValueLabelTokens,
+} from '../../InputRange/InputRange.catalog'
 export { ratingPrecisionValues as ratingPrecisionTokens } from '../../Rating/Rating.catalog'
 export { menuItemRoleValues as menuItemRoleTokens } from '../../MenuItem/MenuItem.catalog'
 export { menuAlignValues as menuAlignTokens } from '../../Menu/Menu/Menu.catalog'

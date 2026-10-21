@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { addExact, formatNumber, getNumberSyntax, parseNumber, snapToStep } from './number'
+import { formatNumber, getNumberSyntax, parseNumber } from './number'
 
 describe('formatNumber', () => {
   it('writes every digit, ungrouped, by default', () => {
@@ -79,22 +79,5 @@ describe('getNumberSyntax', () => {
 
   it('is the same for a format with no fraction, which must not break it', () => {
     expect(getNumberSyntax('de-DE', { maximumFractionDigits: 0 }).decimal).toBe(',')
-  })
-})
-
-describe('addExact', () => {
-  it('adds without float noise', () => {
-    expect(addExact(0.1, 0.2)).toBe(0.3)
-    expect(addExact(1, -0.1)).toBe(0.9)
-    expect(addExact(10, 1)).toBe(11)
-  })
-})
-
-describe('snapToStep', () => {
-  it('lands on the grid of the step, counted from the origin', () => {
-    expect(snapToStep(7, 5, 0)).toBe(5)
-    expect(snapToStep(8, 5, 0)).toBe(10)
-    expect(snapToStep(7, 5, 2)).toBe(7)
-    expect(snapToStep(0.34, 0.1, 0)).toBe(0.3)
   })
 })

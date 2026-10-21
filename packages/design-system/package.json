@@ -48,6 +48,7 @@
     "./Grid": "./src/Grid/index.ts",
     "./Icon": "./src/Icon/index.ts",
     "./Image": "./src/Image/index.ts",
+    "./InputRange": "./src/InputRange/index.ts",
     "./LinearProgress": "./src/LinearProgress/index.ts",
     "./Link": "./src/Link/index.ts",
     "./Menu": "./src/Menu/index.ts",
@@ -286,6 +287,16 @@
         "require": {
           "types": "./dist/Image.d.cts",
           "default": "./dist/Image.cjs"
+        }
+      },
+      "./InputRange": {
+        "import": {
+          "types": "./dist/InputRange.d.mts",
+          "default": "./dist/InputRange.mjs"
+        },
+        "require": {
+          "types": "./dist/InputRange.d.cts",
+          "default": "./dist/InputRange.cjs"
         }
       },
       "./LinearProgress": {

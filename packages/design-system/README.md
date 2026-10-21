@@ -126,6 +126,7 @@ SSR critical-CSS extraction (e.g. with `@emotion/server`) is a separate, opt-in 
 | `Button`, `ButtonGroup`, `ToggleButton`              | Actions and toggles                                                                       |
 | `TextInput`                                          | Text field                                                                                |
 | `Checkbox`, `Radio`, `Switch`                        | Selection controls                                                                        |
+| `InputRange`                                         | A slider - one value on a range, or two or more thumbs for a range of values              |
 | `NumberField`                                        | A field for a number - read in its locale, clamped to a range, stepped by keys or buttons |
 | `Rating`                                             | A row of icons the user sets as a rating, or a read-only display of one                   |
 | `NativeSelect`                                       | Low-level platform `<select>` - not recommended; use `Select native`                      |
