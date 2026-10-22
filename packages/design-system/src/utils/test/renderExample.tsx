@@ -13,6 +13,7 @@ import { Alert, AlertTitle } from '../../Alert'
 import { Fab } from '../../Fab'
 import { Snackbar } from '../../Snackbar'
 import { Tooltip } from '../../Tooltip'
+import { Autocomplete } from '../../Autocomplete'
 import { AppBar } from '../../AppBar'
 import { Avatar } from '../../Avatar'
 import { Backdrop } from '../../Backdrop'
@@ -95,6 +96,7 @@ const COMPONENTS: Record<string, ElementType> = {
   Fab,
   Snackbar,
   Tooltip,
+  Autocomplete,
   AppBar,
   Avatar,
   Backdrop,

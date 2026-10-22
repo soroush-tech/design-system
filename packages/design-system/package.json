@@ -32,6 +32,7 @@
     "./Accordion": "./src/Accordion/index.ts",
     "./Alert": "./src/Alert/index.ts",
     "./AppBar": "./src/AppBar/index.ts",
+    "./Autocomplete": "./src/Autocomplete/index.ts",
     "./Avatar": "./src/Avatar/index.ts",
     "./Backdrop": "./src/Backdrop/index.ts",
     "./Badge": "./src/Badge/index.ts",
@@ -140,6 +141,16 @@
         "require": {
           "types": "./dist/AppBar.d.cts",
           "default": "./dist/AppBar.cjs"
+        }
+      },
+      "./Autocomplete": {
+        "import": {
+          "types": "./dist/Autocomplete.d.mts",
+          "default": "./dist/Autocomplete.mjs"
+        },
+        "require": {
+          "types": "./dist/Autocomplete.d.cts",
+          "default": "./dist/Autocomplete.cjs"
         }
       },
       "./Avatar": {

@@ -10,6 +10,7 @@ import { alertTitleCatalog } from '../Alert/AlertTitle/AlertTitle.catalog'
 import { fabCatalog } from '../Fab/Fab.catalog'
 import { snackbarCatalog } from '../Snackbar/Snackbar.catalog'
 import { tooltipCatalog } from '../Tooltip/Tooltip.catalog'
+import { autocompleteCatalog } from '../Autocomplete/Autocomplete.catalog'
 import { appBarCatalog } from '../AppBar/AppBar.catalog'
 import { avatarCatalog } from '../Avatar/Avatar.catalog'
 import { backdropCatalog } from '../Backdrop/Backdrop.catalog'
@@ -109,6 +110,7 @@ export const catalogSources: Record<string, CatalogSource> = {
   Fab: { entry: fabCatalog, folder: 'Fab' },
   Snackbar: { entry: snackbarCatalog, folder: 'Snackbar' },
   Tooltip: { entry: tooltipCatalog, folder: 'Tooltip' },
+  Autocomplete: { entry: autocompleteCatalog, folder: 'Autocomplete' },
   AppBar: { entry: appBarCatalog, folder: 'AppBar' },
   Avatar: { entry: avatarCatalog, folder: 'Avatar' },
   Backdrop: { entry: backdropCatalog, folder: 'Backdrop' },

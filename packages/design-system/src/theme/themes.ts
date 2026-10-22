@@ -462,6 +462,20 @@ export interface RatingOwnerState {
   color?: keyof ThemePalette
 }
 
+/** The defaults a theme may set for every `Autocomplete` - its labels give it a language. */
+export interface AutocompleteOwnerState {
+  variant?: 'default' | 'outlined' | 'text' | 'underline'
+  size?: keyof ThemeSizes
+  color?: keyof ThemePalette
+  shouldAllowFreeText?: boolean
+  layer?: keyof ThemeZOrder
+  clearLabel?: string
+  openLabel?: string
+  closeLabel?: string
+  loadingText?: string
+  noOptionsText?: string
+}
+
 /** The defaults a theme may set for every `Tooltip`. */
 export interface TooltipOwnerState {
   placement?:
@@ -781,6 +795,21 @@ export interface ThemeComponents {
   TransferList?: ComponentConfig<
     TransferListOwnerState,
     'root' | 'list' | 'header' | 'title' | 'count' | 'items' | 'item' | 'controls' | 'icon'
+  >
+  Autocomplete?: ComponentConfig<
+    AutocompleteOwnerState,
+    | 'root'
+    | 'tags'
+    | 'input'
+    | 'clearIndicator'
+    | 'popupIndicator'
+    | 'popup'
+    | 'listbox'
+    | 'group'
+    | 'groupLabel'
+    | 'groupItems'
+    | 'option'
+    | 'status'
   >
   NumberField?: ComponentConfig<
     NumberFieldOwnerState,

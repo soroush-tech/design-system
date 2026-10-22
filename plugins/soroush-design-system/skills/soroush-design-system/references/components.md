@@ -2,7 +2,7 @@
 
 # Components
 
-The 92 components shipped by the design system, and when to reach for each.
+The 93 components shipped by the design system, and when to reach for each.
 Import every component from its own subpath.
 
 ## Layout & surfaces
@@ -44,6 +44,7 @@ Import every component from its own subpath.
 
 ## Inputs & forms
 
+- **Autocomplete** - A field whose text finds an option in a list: a `role="combobox"` input with a `role="listbox"` below it (in a `Portal`, placed under the field and flipped for want of room), `aria-activedescendant` on the highlighted option.
 - **Fab** - A floating action button: the one main action of a page, circular - its icon - or extended, a pill with a label.
 - **Button** - Renders as `<button>`.
 - **ButtonGroup** - Groups related `Button` immediate children into a visually joined cluster - adjacent borders collapse and the group's `borderRadius` rounds only its outer corners (the first/last buttons keep their leading/trailing corners; every inner corner is squared).

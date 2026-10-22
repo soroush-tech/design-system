@@ -69,6 +69,7 @@ export const componentCategories: ComponentCategory[] = [
   {
     label: 'Inputs & forms',
     items: [
+      component('Autocomplete'),
       component('Fab'),
       component('Button'),
       component('ButtonGroup'),

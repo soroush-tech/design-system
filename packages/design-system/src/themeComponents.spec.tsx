@@ -58,6 +58,7 @@ import { ToggleButton } from './ToggleButton/ToggleButton'
 import { ToggleButtonGroup } from './ToggleButton/ToggleButtonGroup'
 import { TransferList } from './TransferList'
 import { Collapse } from './Collapse'
+import { Autocomplete } from './Autocomplete'
 import { Tooltip } from './Tooltip'
 import { Snackbar } from './Snackbar'
 import { Fab } from './Fab'
@@ -187,6 +188,16 @@ const tooltip = (
   <Tooltip title="Tip" defaultOpen hasArrow>
     <button type="button">Target</button>
   </Tooltip>
+)
+// Every part drawn, so each styled element is.
+const autocomplete = (
+  <Autocomplete
+    multiple
+    options={['a', 'b']}
+    defaultValue={['a']}
+    clearLabel="Clear"
+    aria-label="Letters"
+  />
 )
 // Open, so the root, the wrapper and the inner box are all drawn.
 const collapse = (
@@ -513,6 +524,21 @@ const cases: Case[] = [
   { name: 'Snackbar', slot: 'action', label: 'SnackbarAction', ui: snackbar },
   { name: 'Tooltip', slot: 'root', label: 'Tooltip', ui: tooltip },
   { name: 'Tooltip', slot: 'arrow', label: 'TooltipArrow', ui: tooltip },
+  { name: 'Autocomplete', slot: 'root', label: 'Autocomplete', ui: autocomplete },
+  { name: 'Autocomplete', slot: 'tags', label: 'AutocompleteTags', ui: autocomplete },
+  { name: 'Autocomplete', slot: 'input', label: 'AutocompleteInput', ui: autocomplete },
+  {
+    name: 'Autocomplete',
+    slot: 'clearIndicator',
+    label: 'AutocompleteClearIndicator',
+    ui: autocomplete,
+  },
+  {
+    name: 'Autocomplete',
+    slot: 'popupIndicator',
+    label: 'AutocompletePopupIndicator',
+    ui: autocomplete,
+  },
   { name: 'Collapse', slot: 'root', label: 'Collapse', ui: collapse },
   { name: 'Collapse', slot: 'wrapper', label: 'CollapseWrapper', ui: collapse },
   { name: 'Collapse', slot: 'inner', label: 'CollapseInner', ui: collapse },
