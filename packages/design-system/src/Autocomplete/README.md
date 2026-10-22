@@ -57,6 +57,10 @@ import { Autocomplete } from '@soroush.tech/design-system/Autocomplete'
 `variant`, `size`, `color`, `shouldAllowFreeText`, `layer` and the labels - so a theme gives every
 `Autocomplete` its language.
 
+## Server rendering
+
+The list of options is drawn in a `Portal`, which renders nothing on the server: it is absent from server-rendered and prerendered HTML, and mounts on the client when it opens (on a click, hover, focus or key, or when the app sets it open). One that starts open, by its open prop, is still closed in the static HTML and opens on hydration. Its trigger renders on the server as usual.
+
 ## Accessibility
 
 - The input is the WAI-ARIA combobox with a list: `aria-expanded`, `aria-controls`, `aria-autocomplete="list"`,

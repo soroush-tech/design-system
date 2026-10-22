@@ -52,6 +52,10 @@ function Example() {
 | `shouldKeepMounted`                                                                 | `boolean`                                            | `false`                                   | Keep the content mounted while closed.                                                         |
 | `layer`                                                                             | `keyof Theme['zOrder']`                              | `'modal'`                                 | Stacking layer.                                                                                |
 
+## Server rendering
+
+The popover is drawn in a `Portal`, which renders nothing on the server: it is absent from server-rendered and prerendered HTML, and mounts on the client when it opens (on a click, hover, focus or key, or when the app sets it open). One that starts open, by its open prop, is still closed in the static HTML and opens on hydration. Its trigger renders on the server as usual.
+
 ## Notes
 
 - Positioning is a pure function (`utils/computePopoverPosition`): it places the paper so its

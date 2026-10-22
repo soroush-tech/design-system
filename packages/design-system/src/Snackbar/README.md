@@ -48,6 +48,10 @@ reason.
 and the `action`. Its `defaultProps` set `anchorOrigin`, `autoHideDuration`, `resumeHideDuration` and
 `layer`. The `snackbar` key of `theme.zOrder` is its layer.
 
+## Server rendering
+
+The snackbar is drawn in a `Portal`, which renders nothing on the server: it is absent from server-rendered and prerendered HTML, and mounts on the client when it opens (on a click, hover, focus or key, or when the app sets it open). One that starts open, by its open prop, is still closed in the static HTML and opens on hydration. Its trigger renders on the server as usual.
+
 ## Accessibility
 
 - `role="status"` is a polite live region: it is read when the user is idle.

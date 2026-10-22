@@ -38,6 +38,10 @@ When content is too tall for the viewport, `scroll` controls where it scrolls:
 
 ---
 
+## Server rendering
+
+The modal and its backdrop are drawn in a `Portal`, which renders nothing on the server: it is absent from server-rendered and prerendered HTML, and mounts on the client when it opens (on a click, hover, focus or key, or when the app sets it open). One that starts open, by its open prop, is still closed in the static HTML and opens on hydration. Its trigger renders on the server as usual.
+
 ## Example
 
 ```tsx
