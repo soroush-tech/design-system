@@ -9,6 +9,7 @@ import {
 } from '../../Accordion'
 import { Chip } from '../../Chip'
 import { Badge } from '../../Badge'
+import { Alert, AlertTitle } from '../../Alert'
 import { AppBar } from '../../AppBar'
 import { Avatar } from '../../Avatar'
 import { Backdrop } from '../../Backdrop'
@@ -86,6 +87,8 @@ const COMPONENTS: Record<string, ElementType> = {
   AccordionSummary,
   Chip,
   Badge,
+  Alert,
+  AlertTitle,
   AppBar,
   Avatar,
   Backdrop,

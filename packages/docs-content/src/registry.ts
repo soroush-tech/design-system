@@ -97,6 +97,7 @@ export const componentCategories: ComponentCategory[] = [
   {
     label: 'Feedback',
     items: [
+      component('Alert', true),
       component('Badge'),
       component('Chip'),
       component('CircularProgress'),
@@ -135,6 +136,7 @@ export const allComponents: ComponentNavItem[] = componentCategories.flatMap(
 // A member has no page of its own - an API page each, its demos on the family's page - and
 // stays out of the categories, so the sidebar's groups and the catalog list families.
 const FAMILY_MEMBERS: Record<string, string[]> = {
+  Alert: ['AlertTitle'],
   Accordion: ['AccordionActions', 'AccordionDetails', 'AccordionGroup', 'AccordionSummary'],
   Menu: ['ContextMenu', 'MenuDivider', 'MenuItems', 'MenuList'],
   Pagination: ['PaginationItem'],

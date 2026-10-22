@@ -460,6 +460,14 @@ export interface RatingOwnerState {
   color?: keyof ThemePalette
 }
 
+/** The defaults a theme may set for every `Alert` - its `closeLabel` gives it a language. */
+export interface AlertOwnerState {
+  severity?: 'success' | 'info' | 'warning' | 'error'
+  variant?: 'standard' | 'contained' | 'outlined'
+  closeLabel?: string
+  role?: 'alert' | 'status'
+}
+
 /** The defaults a theme may set for every `Badge`. */
 export interface BadgeOwnerState {
   max?: number
@@ -704,6 +712,8 @@ export interface ThemeComponents {
     InputRangeOwnerState,
     'root' | 'rail' | 'track' | 'thumb' | 'mark' | 'markLabel' | 'valueLabel' | 'input'
   >
+  Alert?: ComponentConfig<AlertOwnerState, 'root' | 'icon' | 'message' | 'action' | 'closeButton'>
+  AlertTitle?: ComponentConfig
   Badge?: ComponentConfig<BadgeOwnerState, 'root' | 'badge' | 'label'>
   Chip?: ComponentConfig<
     ChipOwnerState,

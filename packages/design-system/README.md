@@ -147,13 +147,14 @@ SSR critical-CSS extraction (e.g. with `@emotion/server`) is a separate, opt-in 
 
 ### Feedback
 
-| Component                            | Purpose                                                         |
-| ------------------------------------ | --------------------------------------------------------------- |
-| `Badge`                              | A count or a dot anchored over another element                  |
-| `Chip`                               | A compact tag: a label, an icon or avatar, a click and a delete |
-| `CircularProgress`, `LinearProgress` | Determinate/indeterminate progress indicators                   |
-| `Skeleton`                           | Loading placeholder with pulse/wave animations                  |
-| `Backdrop`                           | Dimmed overlay behind modal surfaces                            |
+| Component                            | Purpose                                                                                                                           |
+| ------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
+| `Alert`                              | An inline message with a severity, an icon, a title and an action - exports `AlertTitle` from `@soroush.tech/design-system/Alert` |
+| `Badge`                              | A count or a dot anchored over another element                                                                                    |
+| `Chip`                               | A compact tag: a label, an icon or avatar, a click and a delete                                                                   |
+| `CircularProgress`, `LinearProgress` | Determinate/indeterminate progress indicators                                                                                     |
+| `Skeleton`                           | Loading placeholder with pulse/wave animations                                                                                    |
+| `Backdrop`                           | Dimmed overlay behind modal surfaces                                                                                              |
 
 ### Transitions
 

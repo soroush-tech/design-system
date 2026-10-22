@@ -2,7 +2,7 @@
 
 # Components
 
-The 87 components shipped by the design system, and when to reach for each.
+The 89 components shipped by the design system, and when to reach for each.
 Import every component from its own subpath.
 
 ## Layout & surfaces
@@ -83,6 +83,8 @@ Import every component from its own subpath.
 
 ## Feedback
 
+- **Alert** - An inline message with a severity: an icon, the message, an optional `AlertTitle`, an action and a close control.
+- **AlertTitle** - The title of an `Alert`: its first line of the message, in a heavier weight.
 - **Badge** - A count or a dot anchored over another element.
 - **Chip** - A compact tag: a label, an optional icon or avatar, and - given `onClick` - a button, and - given `onDelete` - a delete control.
 - **CircularProgress** - Renders a circular loading indicator.

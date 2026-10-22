@@ -58,6 +58,7 @@ import { ToggleButton } from './ToggleButton/ToggleButton'
 import { ToggleButtonGroup } from './ToggleButton/ToggleButtonGroup'
 import { TransferList } from './TransferList'
 import { Collapse } from './Collapse'
+import { Alert, AlertTitle } from './Alert'
 import { Badge } from './Badge'
 import { Chip } from './Chip'
 import {
@@ -166,6 +167,13 @@ const badge = (
   <Badge badgeContent={4} badgeLabel="4 unread">
     <span>Inbox</span>
   </Badge>
+)
+// An alert with a title, an action and a close control, so every part is drawn.
+const alert = (
+  <Alert onClose={() => {}} closeLabel="Close" action={<span />}>
+    <AlertTitle>Title</AlertTitle>
+    Message
+  </Alert>
 )
 // Open, so the root, the wrapper and the inner box are all drawn.
 const collapse = (
@@ -479,6 +487,12 @@ const cases: Case[] = [
   { name: 'Badge', slot: 'root', label: 'Badge', ui: badge },
   { name: 'Badge', slot: 'badge', label: 'BadgeMark', ui: badge },
   { name: 'Badge', slot: 'label', label: 'BadgeLabel', ui: badge },
+  { name: 'Alert', slot: 'root', label: 'Alert', ui: alert },
+  { name: 'Alert', slot: 'icon', label: 'AlertIcon', ui: alert },
+  { name: 'Alert', slot: 'message', label: 'AlertMessage', ui: alert },
+  { name: 'Alert', slot: 'action', label: 'AlertAction', ui: alert },
+  { name: 'Alert', slot: 'closeButton', label: 'AlertCloseButton', ui: alert },
+  { name: 'AlertTitle', slot: 'root', label: 'AlertTitle', ui: alert },
   { name: 'Collapse', slot: 'root', label: 'Collapse', ui: collapse },
   { name: 'Collapse', slot: 'wrapper', label: 'CollapseWrapper', ui: collapse },
   { name: 'Collapse', slot: 'inner', label: 'CollapseInner', ui: collapse },

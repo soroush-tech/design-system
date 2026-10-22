@@ -7,6 +7,7 @@ import ArrowBackIcon from './icons/ArrowBack'
 import ArrowForwardIcon from './icons/ArrowForward'
 import ArrowUpwardIcon from './icons/ArrowUpward'
 import CheckIcon from './icons/Check'
+import CheckCircleIcon from './icons/CheckCircle'
 import ChevronLeftIcon from './icons/ChevronLeft'
 import ChevronRightIcon from './icons/ChevronRight'
 import ChecklistIcon from './icons/Checklist'
@@ -19,6 +20,7 @@ import DatabaseIcon from './icons/Database'
 import DesktopWindowsIcon from './icons/DesktopWindows'
 import DnsIcon from './icons/Dns'
 import EditNoteIcon from './icons/EditNote'
+import ErrorCircleIcon from './icons/ErrorCircle'
 import ExpandLessIcon from './icons/ExpandLess'
 import ExpandMoreIcon from './icons/ExpandMore'
 import ExternalLinkIcon from './icons/ExternalLink'
@@ -33,6 +35,7 @@ import GroupsIcon from './icons/Groups'
 import HistoryIcon from './icons/History'
 import HubIcon from './icons/Hub'
 import ImageIcon from './icons/Image'
+import InfoIcon from './icons/Info'
 import LanguageIcon from './icons/Language'
 import LastPageIcon from './icons/LastPage'
 import LinkIcon from './icons/Link'
@@ -72,6 +75,7 @@ export const icons = {
   arrow_forward: ArrowForwardIcon,
   arrow_upward: ArrowUpwardIcon,
   check: CheckIcon,
+  check_circle: CheckCircleIcon,
   chevron_left: ChevronLeftIcon,
   chevron_right: ChevronRightIcon,
   checklist: ChecklistIcon,
@@ -84,6 +88,7 @@ export const icons = {
   desktop_windows: DesktopWindowsIcon,
   dns: DnsIcon,
   edit_note: EditNoteIcon,
+  error: ErrorCircleIcon,
   expand_less: ExpandLessIcon,
   expand_more: ExpandMoreIcon,
   external_link: ExternalLinkIcon,
@@ -98,6 +103,7 @@ export const icons = {
   history: HistoryIcon,
   hub: HubIcon,
   image: ImageIcon,
+  info: InfoIcon,
   language: LanguageIcon,
   last_page: LastPageIcon,
   link: LinkIcon,
