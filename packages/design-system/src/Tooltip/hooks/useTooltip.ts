@@ -1,0 +1,132 @@
+import { useCallback, useEffect, useRef, type SyntheticEvent } from 'react'
+import { useControlled } from '../../utils/useControlled'
+
+export interface UseTooltipParams {
+  /** Whether it is shown - `undefined` leaves it to the hook. */
+  isOpen?: boolean
+  defaultOpen: boolean
+  onOpen?: (event: Event | SyntheticEvent) => void
+  onClose?: (event: Event | SyntheticEvent) => void
+  /** How long the pointer or the focus rests on the child before it opens, in milliseconds. */
+  enterDelay: number
+  /** How long after they leave before it closes. */
+  leaveDelay: number
+  /** How long a touch is held before it opens. */
+  enterTouchDelay: number
+  /** How long after a touch ends before it closes. */
+  leaveTouchDelay: number
+  shouldOpenOnHover: boolean
+  shouldOpenOnFocus: boolean
+  shouldOpenOnTouch: boolean
+}
+
+type Handler = (event: SyntheticEvent) => void
+
+// Keyboard focus - not a press with the pointer - is what a tooltip answers.
+const isKeyboardFocus = (event: SyntheticEvent) => {
+  try {
+    return (event.target as Element).matches(':focus-visible')
+  } catch {
+    // A browser with no :focus-visible takes every focus as keyboard focus.
+    return true
+  }
+}
+
+/**
+ * The state of a tooltip: whether it is open (its own, or its owner's), the timers that open and
+ * close it, and the handlers its child and the tooltip itself take. Opening and closing are
+ * delayed; moving from the child onto the tooltip does not close it, so its text can be read and
+ * selected (WCAG 1.4.13); Escape closes it at once.
+ */
+export function useTooltip({
+  isOpen: isOpenProp,
+  defaultOpen,
+  onOpen,
+  onClose,
+  enterDelay,
+  leaveDelay,
+  enterTouchDelay,
+  leaveTouchDelay,
+  shouldOpenOnHover,
+  shouldOpenOnFocus,
+  shouldOpenOnTouch,
+}: Readonly<UseTooltipParams>) {
+  const [isOpen, setIsOpen] = useControlled({ controlled: isOpenProp, default: defaultOpen })
+  const timer = useRef<number | undefined>(undefined)
+  const latest = useRef({ isOpen, isOpenProp, onOpen, onClose })
+  useEffect(() => {
+    latest.current = { isOpen, isOpenProp, onOpen, onClose }
+  })
+
+  const clear = useCallback(() => window.clearTimeout(timer.current), [])
+
+  // Asks to open or close after a delay; the last ask wins.
+  const ask = useCallback(
+    (next: boolean, event: Event | SyntheticEvent, delay: number) => {
+      clear()
+      timer.current = window.setTimeout(() => {
+        const current = latest.current
+        if (current.isOpen === next) return
+        if (current.isOpenProp === undefined) setIsOpen(next)
+        ;(next ? current.onOpen : current.onClose)?.(event)
+      }, delay)
+    },
+    [clear, setIsOpen]
+  )
+
+  useEffect(() => clear, [clear])
+
+  useEffect(() => {
+    if (!isOpen) return undefined
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') ask(false, event, 0)
+    }
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [isOpen, ask])
+
+  const childHandlers: Record<
+    | 'onMouseEnter'
+    | 'onMouseLeave'
+    | 'onFocus'
+    | 'onBlur'
+    | 'onTouchStart'
+    | 'onTouchEnd'
+    | 'onTouchCancel',
+    Handler
+  > = {
+    onMouseEnter: (event) => {
+      if (shouldOpenOnHover) ask(true, event, enterDelay)
+    },
+    onMouseLeave: (event) => {
+      if (shouldOpenOnHover) ask(false, event, leaveDelay)
+    },
+    onFocus: (event) => {
+      if (shouldOpenOnFocus && isKeyboardFocus(event)) ask(true, event, enterDelay)
+    },
+    onBlur: (event) => {
+      if (shouldOpenOnFocus) ask(false, event, leaveDelay)
+    },
+    onTouchStart: (event) => {
+      if (shouldOpenOnTouch) ask(true, event, enterTouchDelay)
+    },
+    onTouchEnd: (event) => {
+      if (shouldOpenOnTouch) ask(false, event, leaveTouchDelay)
+    },
+    onTouchCancel: (event) => {
+      if (shouldOpenOnTouch) ask(false, event, leaveTouchDelay)
+    },
+  }
+
+  // On the tooltip: a pointer that has moved onto it keeps it open, and closes it as it leaves.
+  const surfaceHandlers = {
+    onMouseEnter: () => {
+      if (shouldOpenOnHover) clear()
+    },
+    onMouseLeave: (event: SyntheticEvent) => {
+      if (shouldOpenOnHover) ask(false, event, leaveDelay)
+    },
+  }
+
+  return { isOpen, childHandlers, surfaceHandlers }
+}

@@ -2,7 +2,7 @@
 
 # Components
 
-The 91 components shipped by the design system, and when to reach for each.
+The 92 components shipped by the design system, and when to reach for each.
 Import every component from its own subpath.
 
 ## Layout & surfaces
@@ -104,6 +104,7 @@ Import every component from its own subpath.
 
 ## Overlay & behavior
 
+- **Tooltip** - A short description of one child, shown on hover, keyboard focus and a long touch - a `role="tooltip"` in a `Portal`, placed beside its child and flipped for want of room.
 - **Portal** - Renders its children into a DOM node outside the parent component hierarchy - the document body by default.
 - **FocusTrap** - Keeps keyboard focus within its children while active.
 - **Modal** - A low-level, accessible overlay primitive.

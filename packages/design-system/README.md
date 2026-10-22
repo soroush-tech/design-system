@@ -167,13 +167,14 @@ SSR critical-CSS extraction (e.g. with `@emotion/server`) is a separate, opt-in 
 
 ### Overlay & behavior primitives
 
-| Component       | Purpose                                                          |
-| --------------- | ---------------------------------------------------------------- |
-| `Portal`        | Renders children into a DOM node outside the parent hierarchy    |
-| `FocusTrap`     | Keeps focus inside a subtree                                     |
-| `Modal`         | Dialog primitive composing `Portal`, `Backdrop`, and `FocusTrap` |
-| `Popover`       | Anchored floating surface built on `Modal`                       |
-| `ThemeProvider` | Supplies the theme and global styles to the app                  |
+| Component       | Purpose                                                                             |
+| --------------- | ----------------------------------------------------------------------------------- |
+| `Tooltip`       | A short description of one element, shown on hover, keyboard focus and a long touch |
+| `Portal`        | Renders children into a DOM node outside the parent hierarchy                       |
+| `FocusTrap`     | Keeps focus inside a subtree                                                        |
+| `Modal`         | Dialog primitive composing `Portal`, `Backdrop`, and `FocusTrap`                    |
+| `Popover`       | Anchored floating surface built on `Modal`                                          |
+| `ThemeProvider` | Supplies the theme and global styles to the app                                     |
 
 ---
 

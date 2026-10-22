@@ -121,6 +121,7 @@ export const componentCategories: ComponentCategory[] = [
   {
     label: 'Overlay & behavior',
     items: [
+      component('Tooltip'),
       component('Portal'),
       component('FocusTrap'),
       component('Modal'),

@@ -12,6 +12,7 @@ import { Badge } from '../../Badge'
 import { Alert, AlertTitle } from '../../Alert'
 import { Fab } from '../../Fab'
 import { Snackbar } from '../../Snackbar'
+import { Tooltip } from '../../Tooltip'
 import { AppBar } from '../../AppBar'
 import { Avatar } from '../../Avatar'
 import { Backdrop } from '../../Backdrop'
@@ -93,6 +94,7 @@ const COMPONENTS: Record<string, ElementType> = {
   AlertTitle,
   Fab,
   Snackbar,
+  Tooltip,
   AppBar,
   Avatar,
   Backdrop,

@@ -462,6 +462,33 @@ export interface RatingOwnerState {
   color?: keyof ThemePalette
 }
 
+/** The defaults a theme may set for every `Tooltip`. */
+export interface TooltipOwnerState {
+  placement?:
+    | 'top'
+    | 'top-start'
+    | 'top-end'
+    | 'bottom'
+    | 'bottom-start'
+    | 'bottom-end'
+    | 'left'
+    | 'left-start'
+    | 'left-end'
+    | 'right'
+    | 'right-start'
+    | 'right-end'
+  hasArrow?: boolean
+  enterDelay?: number
+  leaveDelay?: number
+  enterTouchDelay?: number
+  leaveTouchDelay?: number
+  shouldDescribeChild?: boolean
+  shouldOpenOnHover?: boolean
+  shouldOpenOnFocus?: boolean
+  shouldOpenOnTouch?: boolean
+  layer?: keyof ThemeZOrder
+}
+
 /** The defaults a theme may set for every `Snackbar`. */
 export interface SnackbarOwnerState {
   anchorOrigin?: {
@@ -732,6 +759,7 @@ export interface ThemeComponents {
     InputRangeOwnerState,
     'root' | 'rail' | 'track' | 'thumb' | 'mark' | 'markLabel' | 'valueLabel' | 'input'
   >
+  Tooltip?: ComponentConfig<TooltipOwnerState, 'root' | 'arrow'>
   Snackbar?: ComponentConfig<SnackbarOwnerState, 'root' | 'content' | 'message' | 'action'>
   Fab?: ComponentConfig<FabOwnerState, 'root'>
   Alert?: ComponentConfig<AlertOwnerState, 'root' | 'icon' | 'message' | 'action' | 'closeButton'>

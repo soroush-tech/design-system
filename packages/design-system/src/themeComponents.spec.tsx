@@ -58,6 +58,7 @@ import { ToggleButton } from './ToggleButton/ToggleButton'
 import { ToggleButtonGroup } from './ToggleButton/ToggleButtonGroup'
 import { TransferList } from './TransferList'
 import { Collapse } from './Collapse'
+import { Tooltip } from './Tooltip'
 import { Snackbar } from './Snackbar'
 import { Fab } from './Fab'
 import { Alert, AlertTitle } from './Alert'
@@ -181,6 +182,12 @@ const alert = (
 const fab = <Fab aria-label="Add">+</Fab>
 // An open snackbar with an action, so every part is drawn.
 const snackbar = <Snackbar defaultOpen message="Saved" action={<span />} />
+// An open tooltip with an arrow, so every part is drawn.
+const tooltip = (
+  <Tooltip title="Tip" defaultOpen hasArrow>
+    <button type="button">Target</button>
+  </Tooltip>
+)
 // Open, so the root, the wrapper and the inner box are all drawn.
 const collapse = (
   <Collapse isShown shouldAppear={false}>
@@ -504,6 +511,8 @@ const cases: Case[] = [
   { name: 'Snackbar', slot: 'content', label: 'SnackbarContent', ui: snackbar },
   { name: 'Snackbar', slot: 'message', label: 'SnackbarMessage', ui: snackbar },
   { name: 'Snackbar', slot: 'action', label: 'SnackbarAction', ui: snackbar },
+  { name: 'Tooltip', slot: 'root', label: 'Tooltip', ui: tooltip },
+  { name: 'Tooltip', slot: 'arrow', label: 'TooltipArrow', ui: tooltip },
   { name: 'Collapse', slot: 'root', label: 'Collapse', ui: collapse },
   { name: 'Collapse', slot: 'wrapper', label: 'CollapseWrapper', ui: collapse },
   { name: 'Collapse', slot: 'inner', label: 'CollapseInner', ui: collapse },

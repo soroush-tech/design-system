@@ -82,6 +82,7 @@
     "./Tabs": "./src/Tabs/index.ts",
     "./TextInput": "./src/TextInput/index.ts",
     "./ToggleButton": "./src/ToggleButton/index.ts",
+    "./Tooltip": "./src/Tooltip/index.ts",
     "./TransferList": "./src/TransferList/index.ts",
     "./Typography": "./src/Typography/index.ts",
     "./View": "./src/View/index.ts",
@@ -629,6 +630,16 @@
         "require": {
           "types": "./dist/TextInput.d.cts",
           "default": "./dist/TextInput.cjs"
+        }
+      },
+      "./Tooltip": {
+        "import": {
+          "types": "./dist/Tooltip.d.mts",
+          "default": "./dist/Tooltip.mjs"
+        },
+        "require": {
+          "types": "./dist/Tooltip.d.cts",
+          "default": "./dist/Tooltip.cjs"
         }
       },
       "./Zoom": {
