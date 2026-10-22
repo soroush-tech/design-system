@@ -58,6 +58,7 @@ import { ToggleButton } from './ToggleButton/ToggleButton'
 import { ToggleButtonGroup } from './ToggleButton/ToggleButtonGroup'
 import { TransferList } from './TransferList'
 import { Collapse } from './Collapse'
+import { Badge } from './Badge'
 import { Chip } from './Chip'
 import {
   Accordion,
@@ -159,6 +160,12 @@ const chip = (
     <Chip label="Tag" icon={<span />} onDelete={() => {}} deleteLabel="Remove" />
     <Chip label="Tag" avatar={<span />} />
   </>
+)
+// A badge with content and a label, so every part is drawn.
+const badge = (
+  <Badge badgeContent={4} badgeLabel="4 unread">
+    <span>Inbox</span>
+  </Badge>
 )
 // Open, so the root, the wrapper and the inner box are all drawn.
 const collapse = (
@@ -469,6 +476,9 @@ const cases: Case[] = [
   { name: 'Chip', slot: 'icon', label: 'ChipIcon', ui: chip },
   { name: 'Chip', slot: 'avatar', label: 'ChipAvatar', ui: chip },
   { name: 'Chip', slot: 'deleteIcon', label: 'ChipDeleteIcon', ui: chip },
+  { name: 'Badge', slot: 'root', label: 'Badge', ui: badge },
+  { name: 'Badge', slot: 'badge', label: 'BadgeMark', ui: badge },
+  { name: 'Badge', slot: 'label', label: 'BadgeLabel', ui: badge },
   { name: 'Collapse', slot: 'root', label: 'Collapse', ui: collapse },
   { name: 'Collapse', slot: 'wrapper', label: 'CollapseWrapper', ui: collapse },
   { name: 'Collapse', slot: 'inner', label: 'CollapseInner', ui: collapse },

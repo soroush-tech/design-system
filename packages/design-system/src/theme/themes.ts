@@ -460,6 +460,15 @@ export interface RatingOwnerState {
   color?: keyof ThemePalette
 }
 
+/** The defaults a theme may set for every `Badge`. */
+export interface BadgeOwnerState {
+  max?: number
+  variant?: 'standard' | 'dot'
+  color?: keyof ThemePalette
+  anchorOrigin?: { vertical: 'top' | 'bottom'; horizontal: 'start' | 'end' }
+  overlap?: 'rectangular' | 'circular'
+}
+
 /** The defaults a theme may set for every `Chip` - its `deleteLabel` gives it a language. */
 export interface ChipOwnerState {
   variant?: 'contained' | 'outlined'
@@ -695,6 +704,7 @@ export interface ThemeComponents {
     InputRangeOwnerState,
     'root' | 'rail' | 'track' | 'thumb' | 'mark' | 'markLabel' | 'valueLabel' | 'input'
   >
+  Badge?: ComponentConfig<BadgeOwnerState, 'root' | 'badge' | 'label'>
   Chip?: ComponentConfig<
     ChipOwnerState,
     'root' | 'body' | 'label' | 'icon' | 'avatar' | 'deleteIcon'

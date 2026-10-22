@@ -2,7 +2,7 @@
 
 # Components
 
-The 86 components shipped by the design system, and when to reach for each.
+The 87 components shipped by the design system, and when to reach for each.
 Import every component from its own subpath.
 
 ## Layout & surfaces
@@ -83,6 +83,7 @@ Import every component from its own subpath.
 
 ## Feedback
 
+- **Badge** - A count or a dot anchored over another element.
 - **Chip** - A compact tag: a label, an optional icon or avatar, and - given `onClick` - a button, and - given `onDelete` - a delete control.
 - **CircularProgress** - Renders a circular loading indicator.
 - **LinearProgress** - Renders a horizontal loading bar - the linear counterpart of `CircularProgress`.
