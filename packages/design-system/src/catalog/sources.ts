@@ -1,3 +1,8 @@
+import { accordionActionsCatalog } from '../Accordion/AccordionActions/AccordionActions.catalog'
+import { accordionCatalog } from '../Accordion/Accordion/Accordion.catalog'
+import { accordionDetailsCatalog } from '../Accordion/AccordionDetails/AccordionDetails.catalog'
+import { accordionGroupCatalog } from '../Accordion/AccordionGroup/AccordionGroup.catalog'
+import { accordionSummaryCatalog } from '../Accordion/AccordionSummary/AccordionSummary.catalog'
 import { appBarCatalog } from '../AppBar/AppBar.catalog'
 import { avatarCatalog } from '../Avatar/Avatar.catalog'
 import { backdropCatalog } from '../Backdrop/Backdrop.catalog'
@@ -85,6 +90,11 @@ export interface CatalogSource {
 
 /** Every component, keyed by its export name. */
 export const catalogSources: Record<string, CatalogSource> = {
+  Accordion: { entry: accordionCatalog, folder: 'Accordion' },
+  AccordionActions: { entry: accordionActionsCatalog, folder: 'Accordion', family: 'Accordion' },
+  AccordionDetails: { entry: accordionDetailsCatalog, folder: 'Accordion', family: 'Accordion' },
+  AccordionGroup: { entry: accordionGroupCatalog, folder: 'Accordion', family: 'Accordion' },
+  AccordionSummary: { entry: accordionSummaryCatalog, folder: 'Accordion', family: 'Accordion' },
   AppBar: { entry: appBarCatalog, folder: 'AppBar' },
   Avatar: { entry: avatarCatalog, folder: 'Avatar' },
   Backdrop: { entry: backdropCatalog, folder: 'Backdrop' },

@@ -118,6 +118,7 @@ SSR critical-CSS extraction (e.g. with `@emotion/server`) is a separate, opt-in 
 | `Image`      | Image with styled-system props                                                                                                                                                                                                               |
 | `Avatar`     | User/entity avatar                                                                                                                                                                                                                           |
 | `Table`      | Compound data table - exports `TableContainer`, `TableHead`, `TableBody`, `TableFooter`, `TableRow`, `TableCell`, `TablePagination`, `TablePaginationActions`, `TableSortLabel`, and `TableControl` from `@soroush.tech/design-system/Table` |
+| `Accordion`  | A heading that opens and closes a region - exports `AccordionSummary`, `AccordionDetails`, `AccordionActions` and `AccordionGroup` from `@soroush.tech/design-system/Accordion`                                                              |
 
 ### Inputs & forms
 

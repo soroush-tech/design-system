@@ -29,6 +29,7 @@
   ],
   "exports": {
     ".": "./src/index.ts",
+    "./Accordion": "./src/Accordion/index.ts",
     "./AppBar": "./src/AppBar/index.ts",
     "./Avatar": "./src/Avatar/index.ts",
     "./Backdrop": "./src/Backdrop/index.ts",
@@ -103,6 +104,16 @@
         "require": {
           "types": "./dist/index.d.cts",
           "default": "./dist/index.cjs"
+        }
+      },
+      "./Accordion": {
+        "import": {
+          "types": "./dist/Accordion.d.mts",
+          "default": "./dist/Accordion.mjs"
+        },
+        "require": {
+          "types": "./dist/Accordion.d.cts",
+          "default": "./dist/Accordion.cjs"
         }
       },
       "./AppBar": {

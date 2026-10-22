@@ -63,6 +63,7 @@ export const componentCategories: ComponentCategory[] = [
       component('Image'),
       component('Avatar'),
       component('Table', true),
+      component('Accordion', true),
     ],
   },
   {
@@ -132,6 +133,7 @@ export const allComponents: ComponentNavItem[] = componentCategories.flatMap(
 // A member has no page of its own - an API page each, its demos on the family's page - and
 // stays out of the categories, so the sidebar's groups and the catalog list families.
 const FAMILY_MEMBERS: Record<string, string[]> = {
+  Accordion: ['AccordionActions', 'AccordionDetails', 'AccordionGroup', 'AccordionSummary'],
   Menu: ['ContextMenu', 'MenuDivider', 'MenuItems', 'MenuList'],
   Pagination: ['PaginationItem'],
   Sidebar: ['SidebarItem'],

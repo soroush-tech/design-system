@@ -58,6 +58,13 @@ import { ToggleButton } from './ToggleButton/ToggleButton'
 import { ToggleButtonGroup } from './ToggleButton/ToggleButtonGroup'
 import { TransferList } from './TransferList'
 import { Collapse } from './Collapse'
+import {
+  Accordion,
+  AccordionActions,
+  AccordionDetails,
+  AccordionGroup,
+  AccordionSummary,
+} from './Accordion'
 import { Typography } from './Typography'
 
 afterEach(() => {
@@ -135,6 +142,16 @@ const inputRange = (
 const numberField = <NumberField defaultValue={1} />
 
 // Fractional and named, so every slot - the steps of an icon, the "no rating" radio - is drawn.
+// Open, with every part, so each styled element is drawn.
+const accordion = (
+  <AccordionGroup>
+    <Accordion defaultExpanded>
+      <AccordionSummary>Title</AccordionSummary>
+      <AccordionDetails>Body</AccordionDetails>
+      <AccordionActions>Save</AccordionActions>
+    </Accordion>
+  </AccordionGroup>
+)
 // Open, so the root, the wrapper and the inner box are all drawn.
 const collapse = (
   <Collapse isShown shouldAppear={false}>
@@ -429,6 +446,15 @@ const cases: Case[] = [
   { name: 'TransferList', slot: 'item', label: 'TransferListItem', ui: transferList },
   { name: 'TransferList', slot: 'controls', label: 'TransferListControls', ui: transferList },
   { name: 'TransferList', slot: 'icon', label: 'TransferListIcon', ui: transferList },
+  { name: 'Accordion', slot: 'root', label: 'Accordion', ui: accordion },
+  { name: 'Accordion', slot: 'region', label: 'AccordionRegion', ui: accordion },
+  { name: 'AccordionSummary', slot: 'root', label: 'AccordionSummary', ui: accordion },
+  { name: 'AccordionSummary', slot: 'button', label: 'AccordionSummaryButton', ui: accordion },
+  { name: 'AccordionSummary', slot: 'content', label: 'AccordionSummaryContent', ui: accordion },
+  { name: 'AccordionSummary', slot: 'icon', label: 'AccordionSummaryIcon', ui: accordion },
+  { name: 'AccordionDetails', slot: 'root', label: 'AccordionDetails', ui: accordion },
+  { name: 'AccordionActions', slot: 'root', label: 'AccordionActions', ui: accordion },
+  { name: 'AccordionGroup', slot: 'root', label: 'AccordionGroup', ui: accordion },
   { name: 'Collapse', slot: 'root', label: 'Collapse', ui: collapse },
   { name: 'Collapse', slot: 'wrapper', label: 'CollapseWrapper', ui: collapse },
   { name: 'Collapse', slot: 'inner', label: 'CollapseInner', ui: collapse },

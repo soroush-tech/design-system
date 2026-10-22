@@ -1,5 +1,12 @@
 import { createElement, type ElementType, type ReactNode } from 'react'
 import type { ExampleNode } from '../../catalog/types'
+import {
+  Accordion,
+  AccordionActions,
+  AccordionDetails,
+  AccordionGroup,
+  AccordionSummary,
+} from '../../Accordion'
 import { AppBar } from '../../AppBar'
 import { Avatar } from '../../Avatar'
 import { Backdrop } from '../../Backdrop'
@@ -70,6 +77,11 @@ import { View } from '../../View'
 
 // Every component a catalog example may name.
 const COMPONENTS: Record<string, ElementType> = {
+  Accordion,
+  AccordionActions,
+  AccordionDetails,
+  AccordionGroup,
+  AccordionSummary,
   AppBar,
   Avatar,
   Backdrop,

@@ -460,6 +460,21 @@ export interface RatingOwnerState {
   color?: keyof ThemePalette
 }
 
+/** The defaults a theme may set for every `Accordion`. */
+export interface AccordionOwnerState {
+  hasGutters?: boolean
+}
+
+/** The defaults a theme may set for every `AccordionSummary`. */
+export interface AccordionSummaryOwnerState {
+  headingLevel?: 1 | 2 | 3 | 4 | 5 | 6
+}
+
+/** The defaults a theme may set for every `AccordionGroup`. */
+export interface AccordionGroupOwnerState {
+  isExclusive?: boolean
+}
+
 /** The defaults a theme may set for every `Collapse`. */
 export interface CollapseOwnerState {
   orientation?: 'vertical' | 'horizontal'
@@ -672,6 +687,14 @@ export interface ThemeComponents {
     InputRangeOwnerState,
     'root' | 'rail' | 'track' | 'thumb' | 'mark' | 'markLabel' | 'valueLabel' | 'input'
   >
+  Accordion?: ComponentConfig<AccordionOwnerState, 'root' | 'region'>
+  AccordionSummary?: ComponentConfig<
+    AccordionSummaryOwnerState,
+    'root' | 'button' | 'content' | 'icon'
+  >
+  AccordionDetails?: ComponentConfig
+  AccordionActions?: ComponentConfig
+  AccordionGroup?: ComponentConfig<AccordionGroupOwnerState>
   Collapse?: ComponentConfig<CollapseOwnerState, 'root' | 'wrapper' | 'inner'>
   TransferList?: ComponentConfig<
     TransferListOwnerState,

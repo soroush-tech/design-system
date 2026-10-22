@@ -2,7 +2,7 @@
 
 # Components
 
-The 80 components shipped by the design system, and when to reach for each.
+The 85 components shipped by the design system, and when to reach for each.
 Import every component from its own subpath.
 
 ## Layout & surfaces
@@ -36,6 +36,11 @@ Import every component from its own subpath.
 - **TablePaginationActions** - The first / previous / next / last icon-button cluster used inside `TablePagination`, exported separately for custom toolbars.
 - **TableRow** - A row in a table.
 - **TableSortLabel** - A button-based label for sortable column headers, placed inside a header `TableCell`.
+- **Accordion** - A heading that opens and closes a region of content.
+- **AccordionActions** - The foot of an `Accordion` region: its buttons, at the end of a row.
+- **AccordionDetails** - What an `Accordion` opens: the padded body of its region.
+- **AccordionGroup** - A column of accordions that move by the keys - ArrowDown and ArrowUp step between their summaries, round the ends, Home and End go to the first and the last, and one that is off is skipped - and, with `isExclusive`, keep one open at a time.
+- **AccordionSummary** - The header of an `Accordion`: a button in a heading that opens and closes it.
 
 ## Inputs & forms
 
