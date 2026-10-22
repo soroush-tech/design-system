@@ -218,14 +218,18 @@ describe('TransferList', () => {
   })
 
   describe('error', () => {
-    it('marks the group invalid', () => {
+    it('draws the lists in the error color', () => {
       renderWithTheme(list({ error: true }))
-      expect(screen.getByTestId('transfer')).toHaveAttribute('aria-invalid', 'true')
+      lists().forEach((items) =>
+        expect(items.parentElement).toHaveStyle({ borderColor: baseTheme.palette.error.main })
+      )
     })
 
     it('does not by default', () => {
       renderWithTheme(list())
-      expect(screen.getByTestId('transfer')).not.toHaveAttribute('aria-invalid')
+      lists().forEach((items) =>
+        expect(items.parentElement).not.toHaveStyle({ borderColor: baseTheme.palette.error.main })
+      )
     })
   })
 
@@ -241,7 +245,9 @@ describe('TransferList', () => {
       const group = screen.getByRole('group', { name: 'Fruit' })
       expect(group).toHaveAttribute('id', 'fruit')
       expect(group).toHaveAccessibleDescription('Pick some.')
-      expect(group).toHaveAttribute('aria-invalid', 'true')
+      expect(box('Apple').closest('[data-side]')).toHaveStyle({
+        borderColor: baseTheme.palette.error.main,
+      })
     })
 
     it('takes the disabled state of the field', () => {

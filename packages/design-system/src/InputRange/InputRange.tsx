@@ -438,7 +438,7 @@ export function InputRange({
   // A thumb has no identity but its place among the thumbs: its key is its place under this slider's id.
   const thumbKeys = values.map((_, position) => `${baseId}-${position}`)
   const trackStart = valueToPercent(range.isRange ? values[0] : min, min, max)
-  const trackEnd = valueToPercent(values[values.length - 1], min, max)
+  const trackEnd = valueToPercent(values.at(-1)!, min, max)
   const isInverted = track === 'inverted'
   const axis = { size: fc.size, orientation }
   const isDragging = range.active !== -1
@@ -446,7 +446,7 @@ export function InputRange({
   // A mark is lit while the track - or, inverted, its gap - covers it.
   const isMarkActive = (mark: number) => {
     if (track === false) return false
-    const covered = mark >= values[0] && mark <= values[values.length - 1]
+    const covered = mark >= values[0] && mark <= values.at(-1)!
     return range.isRange || isInverted ? covered !== isInverted : mark <= values[0]
   }
 

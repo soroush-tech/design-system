@@ -314,7 +314,6 @@ export function TransferList({
       aria-label={ariaLabel}
       aria-labelledby={ariaLabelledby ?? fc.labelId}
       aria-describedby={ariaDescribedby ?? fc['aria-describedby']}
-      aria-invalid={fc.error || undefined}
       {...spaceProps}
     >
       <List

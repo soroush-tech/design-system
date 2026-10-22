@@ -87,7 +87,7 @@ export function areValuesEqual(a: readonly number[], b: readonly number[]): bool
   return a.length === b.length && a.every((value, index) => value === b[index])
 }
 
-const KEYS = [
+const KEYS = new Set([
   'ArrowUp',
   'ArrowDown',
   'ArrowLeft',
@@ -96,10 +96,10 @@ const KEYS = [
   'PageDown',
   'Home',
   'End',
-]
+])
 
 /** Whether the slider takes the key. */
-export const isRangeKey = (key: string) => KEYS.includes(key)
+export const isRangeKey = (key: string) => KEYS.has(key)
 
 export interface KeyParams {
   key: string
@@ -129,10 +129,10 @@ function getMarkValue({ key, value, isRtl, marks }: KeyParams): number | null {
   const values = marks.map((mark) => mark.value)
   if (values.length === 0) return null
   if (key === 'Home') return values[0]
-  if (key === 'End') return values[values.length - 1]
+  if (key === 'End') return values.at(-1)!
   if (downKeys(isRtl).includes(key))
     return [...values].reverse().find((mark) => mark < value) ?? values[0]
-  return values.find((mark) => mark > value) ?? values[values.length - 1]
+  return values.find((mark) => mark > value) ?? values.at(-1)!
 }
 
 /** The value a key moves a thumb to - `null` when the key moves nothing. */

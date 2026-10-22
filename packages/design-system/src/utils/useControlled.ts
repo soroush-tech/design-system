@@ -17,5 +17,6 @@ export function useControlled<T>({
   default: defaultValue,
 }: UseControlledParams<T>): [T, (value: T) => void] {
   const [state, setState] = useState(defaultValue)
-  return [controlled === undefined ? state : controlled, setState]
+  const isControlled = controlled !== undefined
+  return [isControlled ? controlled : state, setState]
 }
