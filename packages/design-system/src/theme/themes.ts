@@ -460,6 +460,13 @@ export interface RatingOwnerState {
   color?: keyof ThemePalette
 }
 
+/** The defaults a theme may set for every `Fab`. */
+export interface FabOwnerState {
+  variant?: 'circular' | 'extended'
+  color?: keyof ThemePalette
+  size?: keyof ThemeSizes
+}
+
 /** The defaults a theme may set for every `Alert` - its `closeLabel` gives it a language. */
 export interface AlertOwnerState {
   severity?: 'success' | 'info' | 'warning' | 'error'
@@ -712,6 +719,7 @@ export interface ThemeComponents {
     InputRangeOwnerState,
     'root' | 'rail' | 'track' | 'thumb' | 'mark' | 'markLabel' | 'valueLabel' | 'input'
   >
+  Fab?: ComponentConfig<FabOwnerState, 'root'>
   Alert?: ComponentConfig<AlertOwnerState, 'root' | 'icon' | 'message' | 'action' | 'closeButton'>
   AlertTitle?: ComponentConfig
   Badge?: ComponentConfig<BadgeOwnerState, 'root' | 'badge' | 'label'>

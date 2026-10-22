@@ -44,6 +44,7 @@
     "./CircularProgress": "./src/CircularProgress/index.ts",
     "./Collapse": "./src/Collapse/index.ts",
     "./Drawer": "./src/Drawer/index.ts",
+    "./Fab": "./src/Fab/index.ts",
     "./Fade": "./src/Fade/index.ts",
     "./Flex": "./src/Flex/index.ts",
     "./FocusTrap": "./src/FocusTrap/index.ts",
@@ -257,6 +258,16 @@
         "require": {
           "types": "./dist/Drawer.d.cts",
           "default": "./dist/Drawer.cjs"
+        }
+      },
+      "./Fab": {
+        "import": {
+          "types": "./dist/Fab.d.mts",
+          "default": "./dist/Fab.mjs"
+        },
+        "require": {
+          "types": "./dist/Fab.d.cts",
+          "default": "./dist/Fab.cjs"
         }
       },
       "./Fade": {

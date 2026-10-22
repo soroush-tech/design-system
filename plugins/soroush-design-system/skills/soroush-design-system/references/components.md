@@ -2,7 +2,7 @@
 
 # Components
 
-The 89 components shipped by the design system, and when to reach for each.
+The 90 components shipped by the design system, and when to reach for each.
 Import every component from its own subpath.
 
 ## Layout & surfaces
@@ -44,6 +44,7 @@ Import every component from its own subpath.
 
 ## Inputs & forms
 
+- **Fab** - A floating action button: the one main action of a page, circular - its icon - or extended, a pill with a label.
 - **Button** - Renders as `<button>`.
 - **ButtonGroup** - Groups related `Button` immediate children into a visually joined cluster - adjacent borders collapse and the group's `borderRadius` rounds only its outer corners (the first/last buttons keep their leading/trailing corners; every inner corner is squared).
 - **ToggleButton** - An individual toggle button (text or icon) - usable standalone or inside a `ToggleButtonGroup`.

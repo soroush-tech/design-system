@@ -124,6 +124,7 @@ SSR critical-CSS extraction (e.g. with `@emotion/server`) is a separate, opt-in 
 
 | Component                                            | Purpose                                                                                   |
 | ---------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `Fab`                                                | A floating action button: the one main action of a page, circular or extended             |
 | `Button`, `ButtonGroup`, `ToggleButton`              | Actions and toggles                                                                       |
 | `TextInput`                                          | Text field                                                                                |
 | `Checkbox`, `Radio`, `Switch`                        | Selection controls                                                                        |

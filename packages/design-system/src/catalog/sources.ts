@@ -7,6 +7,7 @@ import { chipCatalog } from '../Chip/Chip.catalog'
 import { badgeCatalog } from '../Badge/Badge.catalog'
 import { alertCatalog } from '../Alert/Alert/Alert.catalog'
 import { alertTitleCatalog } from '../Alert/AlertTitle/AlertTitle.catalog'
+import { fabCatalog } from '../Fab/Fab.catalog'
 import { appBarCatalog } from '../AppBar/AppBar.catalog'
 import { avatarCatalog } from '../Avatar/Avatar.catalog'
 import { backdropCatalog } from '../Backdrop/Backdrop.catalog'
@@ -103,6 +104,7 @@ export const catalogSources: Record<string, CatalogSource> = {
   Badge: { entry: badgeCatalog, folder: 'Badge' },
   Alert: { entry: alertCatalog, folder: 'Alert' },
   AlertTitle: { entry: alertTitleCatalog, folder: 'Alert', family: 'Alert' },
+  Fab: { entry: fabCatalog, folder: 'Fab' },
   AppBar: { entry: appBarCatalog, folder: 'AppBar' },
   Avatar: { entry: avatarCatalog, folder: 'Avatar' },
   Backdrop: { entry: backdropCatalog, folder: 'Backdrop' },

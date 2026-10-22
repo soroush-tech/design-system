@@ -58,6 +58,7 @@ import { ToggleButton } from './ToggleButton/ToggleButton'
 import { ToggleButtonGroup } from './ToggleButton/ToggleButtonGroup'
 import { TransferList } from './TransferList'
 import { Collapse } from './Collapse'
+import { Fab } from './Fab'
 import { Alert, AlertTitle } from './Alert'
 import { Badge } from './Badge'
 import { Chip } from './Chip'
@@ -175,6 +176,8 @@ const alert = (
     Message
   </Alert>
 )
+// A fab with its root drawn.
+const fab = <Fab aria-label="Add">+</Fab>
 // Open, so the root, the wrapper and the inner box are all drawn.
 const collapse = (
   <Collapse isShown shouldAppear={false}>
@@ -493,6 +496,7 @@ const cases: Case[] = [
   { name: 'Alert', slot: 'action', label: 'AlertAction', ui: alert },
   { name: 'Alert', slot: 'closeButton', label: 'AlertCloseButton', ui: alert },
   { name: 'AlertTitle', slot: 'root', label: 'AlertTitle', ui: alert },
+  { name: 'Fab', slot: 'root', label: 'Fab', ui: fab },
   { name: 'Collapse', slot: 'root', label: 'Collapse', ui: collapse },
   { name: 'Collapse', slot: 'wrapper', label: 'CollapseWrapper', ui: collapse },
   { name: 'Collapse', slot: 'inner', label: 'CollapseInner', ui: collapse },
