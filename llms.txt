@@ -49,6 +49,10 @@ https://mcp.soroush.tech/mcp (or `npx -y @soroush.tech/mcp`).
 - [TextInput](https://docs.soroush.tech/design-system/components/text-input/): A theme-aware text input primitive. Supports controlled and uncontrolled usage, multiline (textarea), error and disabled states, and all standard form attributes.
 - [Checkbox](https://docs.soroush.tech/design-system/components/checkbox/): A binary toggle control. Supports controlled and uncontrolled usage, six semantic color palettes, two sizes, indeterminate state, and custom icons.
 - [Radio](https://docs.soroush.tech/design-system/components/radio/): A single-selection control for use within a group. Supports controlled checked state, six semantic color palettes, two sizes, and custom icons.
+- [Rating](https://docs.soroush.tech/design-system/components/rating/): A row of icons the user sets as a rating - or, read-only, a display of one. A group of visually
+- [NumberField](https://docs.soroush.tech/design-system/components/number-field/): A field for a number. A text input - so what is typed is the user's until it is settled - that
+- [InputRange](https://docs.soroush.tech/design-system/components/input-range/): A slider: one value on a range, or two or more thumbs for a range of values. Each thumb is a
+- [TransferList](https://docs.soroush.tech/design-system/components/transfer-list/): Two lists, and the buttons that move the checked items from one to the other. Each list is a list of
 - [Switch](https://docs.soroush.tech/design-system/components/switch/): A sliding toggle control. Supports controlled and uncontrolled usage, six semantic color palettes, two sizes, four visual variants, and custom thumb icons.
 - [NativeSelect](https://docs.soroush.tech/design-system/components/native-select/): Not the recommended select: use [`Select`](https://docs.soroush.tech/design-system/components/select/) - and `<Select native>` when you
 - [Select](https://docs.soroush.tech/design-system/components/select/): The select to use for every dropdown choice - always prefer it over `NativeSelect`. It is a form

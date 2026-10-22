@@ -49,6 +49,10 @@ https://mcp.soroush.tech/mcp (or `npx -y @soroush.tech/mcp`).
 - [TextInput](https://docs.soroush.tech/design-system/components/text-input/): A theme-aware text input primitive. Supports controlled and uncontrolled usage, multiline (textarea), error and disabled states, and all standard form attributes.
 - [Checkbox](https://docs.soroush.tech/design-system/components/checkbox/): A binary toggle control. Supports controlled and uncontrolled usage, six semantic color palettes, two sizes, indeterminate state, and custom icons.
 - [Radio](https://docs.soroush.tech/design-system/components/radio/): A single-selection control for use within a group. Supports controlled checked state, six semantic color palettes, two sizes, and custom icons.
+- [Rating](https://docs.soroush.tech/design-system/components/rating/): A row of icons the user sets as a rating - or, read-only, a display of one. A group of visually
+- [NumberField](https://docs.soroush.tech/design-system/components/number-field/): A field for a number. A text input - so what is typed is the user's until it is settled - that
+- [InputRange](https://docs.soroush.tech/design-system/components/input-range/): A slider: one value on a range, or two or more thumbs for a range of values. Each thumb is a
+- [TransferList](https://docs.soroush.tech/design-system/components/transfer-list/): Two lists, and the buttons that move the checked items from one to the other. Each list is a list of
 - [Switch](https://docs.soroush.tech/design-system/components/switch/): A sliding toggle control. Supports controlled and uncontrolled usage, six semantic color palettes, two sizes, four visual variants, and custom thumb icons.
 - [NativeSelect](https://docs.soroush.tech/design-system/components/native-select/): Not the recommended select: use [`Select`](https://docs.soroush.tech/design-system/components/select/) - and `<Select native>` when you
 - [Select](https://docs.soroush.tech/design-system/components/select/): The select to use for every dropdown choice - always prefer it over `NativeSelect`. It is a form
@@ -2690,7 +2694,7 @@ Default: `"primary"`.
 
 Text color of the typed value - resolves against `theme.text` (`primary`, `secondary`, `error`, ...). Inherited from `Form`/`FormControl` context when not set.
 
-Default: `"primary"`.
+Default: the accent `color`'s `main`, so changing `color` changes the text too, as a `Select` does.
 
 ---
 
@@ -3128,6 +3132,402 @@ const [selected, setSelected] = useState('a')
 <Radio inputProps={{ 'aria-label': 'Option A', tabIndex: 0 }} />
 ```
 
+## Rating
+Import: `import { Rating } from '@soroush.tech/design-system/Rating'`
+A row of icons the user sets as a rating - or, read-only, a display of one. A group of visually
+hidden native radio inputs, so the keys (Tab to the rating, the arrows to change it), assistive
+technology and forms work as the platform's. Hovering previews the value under the pointer, and
+pressing the chosen item clears it.
+
+Every label is yours - an item's name (`getLabelText`) and the "no rating" radio (`emptyLabelText`) -
+so the rating carries no language of its own.
+
+```tsx
+import { Rating } from '@soroush.tech/design-system/Rating'
+
+;<Rating
+  aria-label="Quality"
+  value={rating}
+  onChange={(event, value) => setRating(value)}
+  getLabelText={(value) => `${value} of 5`}
+/>
+```
+## Props
+
+| Prop                    | Type                                     | Default                          | Description                                                                                   |
+| ----------------------- | ---------------------------------------- | -------------------------------- | --------------------------------------------------------------------------------------------- |
+| `value`                 | `number \| null`                         | -                                | The rating - `null` for none. Controlled with `onChange`.                                     |
+| `defaultValue`          | `number \| null`                         | `null`                           | The rating at first, when uncontrolled.                                                       |
+| `onChange`              | `(event, value: number \| null) => void` | -                                | Fired when the rating changes - `null` when it is cleared.                                    |
+| `onChangeActive`        | `(event, value: number) => void`         | -                                | Fired as the hovered value changes - `-1` when the pointer leaves.                            |
+| `max`                   | `number`                                 | `5`                              | How many items.                                                                               |
+| `precision`             | `number`                                 | `1`                              | The least step - `0.5` for halves. The rating is rounded to it.                               |
+| `highlightSelectedOnly` | `boolean`                                | `false`                          | Only the chosen item is filled, not every one up to it.                                       |
+| `icon`                  | `ReactNode`                              | the `star` icon                  | The filled item.                                                                              |
+| `emptyIcon`             | `ReactNode`                              | the `star_border` icon           | The empty item.                                                                               |
+| `getLabelText`          | `(value: number) => string`              | its number                       | The accessible name of an item, and of a read-only rating.                                    |
+| `emptyLabelText`        | `string`                                 | -                                | Names the "no rating" radio, which clears the rating from the keys. None is drawn without it. |
+| `readOnly`              | `boolean`                                | `false`                          | A display: `role="img"`, named by `getLabelText`, not focusable, taking no pointer.           |
+| `size`                  | `keyof Theme['sizes']`                   | its `FormControl`'s, `'md'`      | The icons' size - `theme.icon`.                                                               |
+| `color`                 | `keyof Theme['palette']`                 | its `FormControl`'s, `'warning'` | The filled items' color.                                                                      |
+| `disabled`              | `boolean`                                | its `FormControl`'s              | Draws the radios off: nothing is submitted, the pointer does nothing.                         |
+| `required`              | `boolean`                                | its `FormControl`'s              | Marks the radios required, and the group `aria-required`.                                     |
+| `error`                 | `boolean`                                | its `FormControl`'s              | The empty items take the error color, and the group is `aria-invalid`.                        |
+| `name`                  | `string`                                 | generated                        | The radios' name - what a form submits the rating as.                                         |
+| `id`                    | `string`                                 | its `FormControl`'s              | On the group.                                                                                 |
+| `aria-label`            | `string`                                 | -                                | Names the group - or its `FormLabel` does, in a `FormControl`.                                |
+
+It takes the styled-system space props, `className` and `data-testid` too.
+
+## Precision
+
+With `precision` below 1 each item holds the steps in it - halves at `0.5` - and the pointer picks
+the nearest one. A rating is rounded to its precision: `2.3` at `0.5` is `2.5`.
+
+## Keys and the pointer
+
+Tab focuses the current rating (or the first item when there is none); the arrow keys move between
+items, as native radios do. While the pointer is over the rating it sets the value, and a key and a
+press at once is the press. Pressing the chosen item again clears it - `onChange(event, null)` -
+but a key doesn't: give `emptyLabelText` for the keys' way to no rating.
+
+## In a `FormControl`
+
+Its `FormLabel` names the group (`aria-labelledby` - a `for` would turn a click on the label into a
+press on an item), its `FormHelperText` describes it, and the field's `size`, `color`, `error`,
+`disabled` and `required` apply, an own prop winning:
+
+```tsx
+<FormControl error>
+  <FormLabel>Quality</FormLabel>
+  <Rating emptyLabelText="No rating" />
+  <FormHelperText>Choose how it was.</FormHelperText>
+</FormControl>
+```
+
+## Customization
+
+`theme.components.Rating` styles the `root`, each `item` (the label of an icon), the `icon`, the
+`decimal` holding a fractional item's steps, the visually hidden `input` and `text`, and the
+`emptyLabel`. Its `defaultProps` set `max`, `precision`, `highlightSelectedOnly`, `size` and `color`.
+
+## Accessibility
+
+- A group of native radios: Tab focuses the current rating, the arrows change it. Name the group with
+  `aria-label`, or a `FormLabel`.
+- Each radio's name is its `getLabelText` - give a function in the app's language; the default is the number.
+- Filled and empty items differ in shape (a solid and an outlined star) as well as color. If color is
+  the only difference in your icons, show the value as text too (WCAG 1.4.1).
+- A read-only rating is one image, `role="img"`, named by its rating.
+
+## NumberField
+Import: `import { NumberField } from '@soroush.tech/design-system/NumberField'`
+A field for a number. A text input - so what is typed is the user's until it is settled - that
+reads and writes the number in its locale, clamps it to a range, and steps by the arrow keys,
+Home/End, the mouse wheel and buttons that repeat while held. It is a `role="spinbutton"`, so the
+number and its range are announced, and a hidden input carries the raw number to a form.
+
+Every label is yours - the buttons' (`incrementLabel`, `decrementLabel`) - so the field carries no
+language of its own.
+
+```tsx
+import { NumberField } from '@soroush.tech/design-system/NumberField'
+
+;<NumberField
+  aria-label="Quantity"
+  value={quantity}
+  onChange={setQuantity}
+  min={1}
+  max={99}
+  incrementLabel="Increase"
+  decrementLabel="Decrease"
+/>
+```
+## Props
+
+| Prop                                        | Type                                               | Default                             | Description                                                                             |
+| ------------------------------------------- | -------------------------------------------------- | ----------------------------------- | --------------------------------------------------------------------------------------- |
+| `value`                                     | `number \| null`                                   | -                                   | The number - `null` for none. Controlled with `onChange`.                               |
+| `defaultValue`                              | `number \| null`                                   | `null`                              | The number at first, when uncontrolled.                                                 |
+| `onChange`                                  | `(value: number \| null) => void`                  | -                                   | Fired as the number changes - as it is typed, stepped or cleared.                       |
+| `onChangeCommitted`                         | `(value: number \| null) => void`                  | -                                   | Fired when the number is settled: on blur, Enter, a step or Home/End.                   |
+| `min` / `max`                               | `number`                                           | -                                   | The range. What is typed or stepped is clamped to it when settled.                      |
+| `step` / `smallStep` / `largeStep`          | `number`                                           | `1` / `0.1` / `10`                  | What the arrow keys and buttons step by; with Alt held; with Shift held.                |
+| `format`                                    | `Intl.NumberFormatOptions`                         | every digit, ungrouped              | How the number is shown - `{ style: 'percent' }`, `{ minimumFractionDigits: 2 }`...     |
+| `locale`                                    | `string`                                           | the document's                      | How the number is written and read.                                                     |
+| `shouldSnapOnStep`                          | `boolean`                                          | `false`                             | A step lands on the grid of `step`, counted from `min` (or 0).                          |
+| `shouldScrubOnWheel`                        | `boolean`                                          | `false`                             | The wheel steps the number while the field is focused.                                  |
+| `spinButtons`                               | `'stacked' \| 'sides' \| 'none'`                   | `'stacked'`                         | The step buttons: an up and a down at the end, a minus and a plus either side, or none. |
+| `incrementLabel` / `decrementLabel`         | `string`                                           | -                                   | Name the buttons - no built-in text.                                                    |
+| `variant`                                   | `'default' \| 'outlined' \| 'underline' \| 'text'` | `theme.defaults.inputVariant`       | The frame, as on `TextInput`.                                                           |
+| `size`                                      | `keyof Theme['sizes']`                             | its `FormControl`'s, `'md'`         | Padding and font size.                                                                  |
+| `color`                                     | `keyof Theme['palette']`                           | its `FormControl`'s, `'primary'`    | The focus border and button hover.                                                      |
+| `textColor`                                 | `keyof Theme['text']`                              | its `FormControl`'s, `color`'s main | The number's color.                                                                     |
+| `error` / `disabled` / `required`           | `boolean`                                          | its `FormControl`'s                 | The error border and `aria-invalid`; off; marked required.                              |
+| `readOnly`                                  | `boolean`                                          | `false`                             | Takes no change: the keys, the wheel and the buttons do nothing.                        |
+| `fullWidth`                                 | `boolean`                                          | its `FormControl`'s                 | Fills its container.                                                                    |
+| `name`                                      | `string`                                           | -                                   | What a form submits the raw number as.                                                  |
+| `id`                                        | `string`                                           | its `FormControl`'s                 | On the field, which a `FormLabel` targets.                                              |
+| `placeholder`, `autoFocus`, `aria-label`... |                                                    |                                     | On the field.                                                                           |
+
+It takes the styled-system space props, `width`, `minWidth`, `maxWidth`, `className` and
+`data-testid` too.
+
+## Typing and settling
+
+What is typed is the user's: `12.` stays as typed while it is told as `12`, and text that is not
+yet a number - a lone minus - waits to be finished. The number is settled on blur or Enter: it is
+written again in its format, clamped to `min`/`max`, and `onChangeCommitted` is told. Text that
+never became a number settles back to the last one; empty text settles to `null`.
+
+A locale's digits and decimal mark are read as well as written - `1,5` in `de-DE`, `١٢٫٥` in
+`ar-EG` - and a percent format reads `50%` as `0.5`.
+
+## Keys, the wheel and the buttons
+
+| Key                 | Does                                                                |
+| ------------------- | ------------------------------------------------------------------- |
+| ArrowUp / ArrowDown | Step by `step`; with Alt by `smallStep`; with Shift by `largeStep`. |
+| Home / End          | Go to `min` / `max` - when there is one.                            |
+| Enter               | Settle what is typed.                                               |
+
+Steps add without float noise (`0.1 + 0.2` is `0.3`), start from `0` when there is no number, and
+stop at the range. The buttons step on a press and repeat while held, after a pause; they are out
+of the tab order, since the keys already step, and are off at the range's ends.
+
+## In a `FormControl`
+
+Its `FormLabel` targets the field, its `FormHelperText` describes it, and the field's `size`,
+`color`, `error`, `disabled` and `required` apply, an own prop winning.
+
+```tsx
+<FormControl>
+  <FormLabel>Quantity</FormLabel>
+  <NumberField min={1} max={99} incrementLabel="Increase" decrementLabel="Decrease" />
+  <FormHelperText>Between 1 and 99.</FormHelperText>
+</FormControl>
+```
+
+## Customization
+
+`theme.components.NumberField` styles the `root`, the `input`, the `spinButtons` pair and each
+`increment` / `decrement` button. Its `defaultProps` set `variant`, `size`, `color`, `spinButtons`,
+the three steps, `shouldSnapOnStep`, `shouldScrubOnWheel` - and the two button labels, which give
+every field the app's language.
+
+## Accessibility
+
+- A `role="spinbutton"` text input with `aria-valuenow`, `aria-valuemin` and `aria-valuemax`: the
+  number and its range are announced; name it with a `FormLabel` or `aria-label`.
+- The step buttons are `aria-label`led (give them text in the app's language) and out of the tab
+  order; the keys do the same.
+- `error` sets `aria-invalid`; helper text is read as the field's description.
+
+## InputRange
+Import: `import { InputRange } from '@soroush.tech/design-system/InputRange'`
+A slider: one value on a range, or two or more thumbs for a range of values. Each thumb is a
+visually hidden native `<input type="range">`, so the keys (the arrows, Page, Home and End),
+assistive technology and forms work as the platform's; the pointer drags a thumb, touch included.
+
+Every name is yours - each thumb's (`getAriaLabel`, or a `FormLabel`), and the text of its value
+(`getAriaValueText`) - so the slider carries no language of its own.
+
+```tsx
+import { InputRange } from '@soroush.tech/design-system/InputRange'
+
+// One thumb
+;<InputRange
+  aria-label="Volume"
+  value={volume}
+  onChange={(_event, value) => setVolume(value as number)}
+/>
+
+// A range - one thumb for each value
+;<InputRange
+  value={[20, 70]}
+  onChange={(_event, value) => setRange(value as number[])}
+  getAriaLabel={(index) => (index === 0 ? 'Least price' : 'Greatest price')}
+  valueLabel="auto"
+/>
+```
+## Props
+
+| Prop                                 | Type                                          | Default                          | Description                                                                                                        |
+| ------------------------------------ | --------------------------------------------- | -------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `value`                              | `number \| number[]`                          | -                                | One thumb for a number, one per entry for an array - an empty one is a thumb at `min`. Controlled with `onChange`. |
+| `defaultValue`                       | `number \| number[]`                          | `min`                            | The value at first, when uncontrolled.                                                                             |
+| `onChange`                           | `(event, value, activeThumb: number) => void` | -                                | Fired as the value changes. `event.target` is `{ value, name }`, as a form library reads it.                       |
+| `onChangeCommitted`                  | `(event, value) => void`                      | -                                | Fired when a change is done: on release, and after every key.                                                      |
+| `min` / `max`                        | `number`                                      | `0` / `100`                      | The range.                                                                                                         |
+| `step`                               | `number \| null`                              | `1`                              | The step. `null` limits the value to `marks`.                                                                      |
+| `shiftStep`                          | `number`                                      | `10`                             | PageUp, PageDown and Shift with an arrow.                                                                          |
+| `marks`                              | `boolean \| { value, label? }[]`              | `false`                          | `true` marks every step; or the marks, each with the label it shows under it.                                      |
+| `orientation`                        | `'horizontal' \| 'vertical'`                  | `'horizontal'`                   | A vertical slider is `12rem` tall unless given a `height`.                                                         |
+| `track`                              | `'normal' \| false \| 'inverted'`             | `'normal'`                       | The line between the thumbs - `'inverted'` fills the rest, `false` draws none.                                     |
+| `scale`                              | `(value: number) => number`                   | itself                           | The value as it is shown and announced - not what is stored.                                                       |
+| `valueLabel`                         | `'off' \| 'auto' \| 'on'`                     | `'off'`                          | When a thumb shows its value: never, while hovered or focused, or always.                                          |
+| `formatValueLabel`                   | `(value: number, index: number) => ReactNode` | the scaled value                 | What the label says.                                                                                               |
+| `getAriaLabel`                       | `(index: number) => string`                   | -                                | Names each thumb. A range needs one; a single thumb may take `aria-label`.                                         |
+| `getAriaValueText`                   | `(value: number, index: number) => string`    | -                                | The value's text for each thumb, where the number alone isn't clear.                                               |
+| `shouldSwapThumbs`                   | `boolean`                                     | `true`                           | A thumb passes its neighbour, taking its place. Without it, it stops at its neighbour.                             |
+| `size`                               | `keyof Theme['sizes']`                        | its `FormControl`'s, `'md'`      | The thumb's size (`theme.icon`) and the rail's thickness.                                                          |
+| `color`                              | `keyof Theme['palette']`                      | its `FormControl`'s, `'primary'` | The track's and the thumbs' color.                                                                                 |
+| `disabled`                           | `boolean`                                     | its `FormControl`'s              | Dimmed; the inputs are off and the pointer does nothing.                                                           |
+| `error`                              | `boolean`                                     | its `FormControl`'s              | The track and thumbs take the error color, and the inputs are `aria-invalid`.                                      |
+| `name`                               | `string`                                      | -                                | What a form submits each thumb's value as - one entry for each thumb.                                              |
+| `id`                                 | `string`                                      | its `FormControl`'s              | On the first thumb's input, which a `FormLabel` targets.                                                           |
+| `aria-label`, `aria-labelledby`, ... |                                               |                                  | On each thumb's input.                                                                                             |
+
+It takes the styled-system space props, `width`, `height`, `minWidth`, `maxWidth`, `minHeight`,
+`maxHeight`, `className` and `data-testid` too.
+
+## Keys
+
+| Key                  | Does                                                                           |
+| -------------------- | ------------------------------------------------------------------------------ |
+| ArrowUp, ArrowRight  | Up by `step` (with Shift, by `shiftStep`). ArrowRight goes down right to left. |
+| ArrowDown, ArrowLeft | Down by `step` (with Shift, by `shiftStep`). ArrowLeft goes up right to left.  |
+| PageUp, PageDown     | Up and down by `shiftStep`.                                                    |
+| Home, End            | To `min` and `max`.                                                            |
+
+With `step={null}` the arrows and Page keys go to the next mark the way they point and stop at the
+last; Home and End go to the first and last mark. Each key tells `onChangeCommitted`, even at an end.
+
+## The pointer
+
+A press sets the value under it - on the nearest thumb, the later one on a tie - and a drag follows
+the pointer, held by pointer capture even past the slider's box; touch drags a thumb, not the page.
+`onChange` is told only when the value changes, `onChangeCommitted` once on release. A release that
+never came - another element took it - ends the drag on the next move.
+
+In a range, a thumb dragged past its neighbour swaps places with it, the values staying sorted
+(`shouldSwapThumbs={false}` stops it at its neighbour instead).
+
+## In a `FormControl`
+
+Its `FormLabel` targets the first thumb and names every thumb (`aria-labelledby`), its
+`FormHelperText` describes them, and the field's `size`, `color`, `error` and `disabled` apply, an
+own prop winning.
+
+```tsx
+<FormControl>
+  <FormLabel>Volume</FormLabel>
+  <InputRange defaultValue={30} />
+  <FormHelperText>Loud or quiet.</FormHelperText>
+</FormControl>
+```
+
+A slider always has a value, so it takes no `required`.
+
+## Customization
+
+`theme.components.InputRange` styles the `root`, the `rail`, the `track`, each `thumb`, the `mark`s
+and their `markLabel`s, the `valueLabel` and each `input`. Its `defaultProps` set `size`, `color`,
+`orientation`, `track`, `step`, `shiftStep`, `valueLabel` and `shouldSwapThumbs`.
+
+## Accessibility
+
+- Each thumb is a native range input - a `slider` with `aria-valuemin`, `aria-valuemax` and
+  `aria-valuenow` (as `scale` shows them) and `aria-orientation`.
+- Name every thumb: `aria-label` for one, `getAriaLabel` for a range, or a `FormLabel`. Give
+  `getAriaValueText` where the number alone isn't clear ("30 minutes").
+- The value label and mark labels are decoration, hidden from assistive technology.
+- Right to left, the horizontal arrows and the pointer's direction are mirrored.
+
+## TransferList
+Import: `import { TransferList } from '@soroush.tech/design-system/TransferList'`
+Two lists, and the buttons that move the checked items from one to the other. Each list is a list of
+rows whose checkbox is the row - one tab stop, the label toggles it - so keys, assistive technology
+and the platform's checkboxes work as they always do.
+
+Every name is yours - the lists' titles and the four buttons' - so it carries no language of its own.
+
+```tsx
+import { TransferList } from '@soroush.tech/design-system/TransferList'
+
+;<TransferList
+  items={[
+    { value: 'apple', label: 'Apple' },
+    { value: 'banana', label: 'Banana' },
+    { value: 'date', label: 'Date', disabled: true },
+  ]}
+  value={chosen}
+  onChange={setChosen}
+  leftLabel="Choices"
+  rightLabel="Chosen"
+  moveRightLabel="Move the checked items right"
+  moveLeftLabel="Move the checked items left"
+/>
+```
+## Props
+
+| Prop                                                                       | Type                                              | Default                     | Description                                                                             |
+| -------------------------------------------------------------------------- | ------------------------------------------------- | --------------------------- | --------------------------------------------------------------------------------------- |
+| `items`                                                                    | `{ value: string \| number, label, disabled? }[]` | -                           | Every item, on either side. Each `value` is unique.                                     |
+| `value`                                                                    | `(string \| number)[]`                            | -                           | The values on the right. Controlled with `onChange`.                                    |
+| `defaultValue`                                                             | `(string \| number)[]`                            | `[]`                        | The values on the right at first, when uncontrolled.                                    |
+| `onChange`                                                                 | `(value: (string \| number)[]) => void`           | -                           | Fired as items move, with the values now on the right.                                  |
+| `leftLabel` / `rightLabel`                                                 | `string`                                          | -                           | The lists' titles, which name them.                                                     |
+| `moveAllRightLabel`, `moveRightLabel`, `moveLeftLabel`, `moveAllLeftLabel` | `string`                                          | -                           | Name the four buttons.                                                                  |
+| `shouldShowMoveAll`                                                        | `boolean`                                         | `false`                     | Adds the buttons that move every enabled item at once.                                  |
+| `hasSelectAll`                                                             | `boolean`                                         | `false`                     | A checkbox in each list's header - all, some or none checked - and the count beside it. |
+| `getCountLabel`                                                            | `(checked: number, total: number) => string`      | `` `${checked}/${total}` `` | What the count says.                                                                    |
+| `size`                                                                     | `keyof Theme['sizes']`                            | its `FormControl`'s, `'md'` | The checkboxes' and buttons' size.                                                      |
+| `color`                                                                    | `keyof Theme['palette']`                          | its `FormControl`'s         | The checkboxes' and buttons' color.                                                     |
+| `disabled`                                                                 | `boolean`                                         | its `FormControl`'s         | Dimmed; every checkbox and button is off.                                               |
+| `error`                                                                    | `boolean`                                         | its `FormControl`'s         | The lists take the error color.                                                         |
+| `id`                                                                       | `string`                                          | its `FormControl`'s         | On the group.                                                                           |
+| `aria-label`, `aria-labelledby`, `aria-describedby`                        |                                                   |                             | On the group. An own one wins over its `FormControl`'s.                                 |
+
+It takes the styled-system space props, `className` and `data-testid` too.
+
+## Moving
+
+- **Move right** and **move left** take the checked items of their list, and are off while none is
+  checked.
+- **Move all** (`shouldShowMoveAll`) takes every enabled item of its list, and is off when there are
+  none.
+- A moved item is unchecked. The items keep their own order on each side - the order of `items` -
+  and `onChange` is told the new values on the right.
+- A disabled item stays where it is: it can't be checked, and move-all leaves it.
+
+With `hasSelectAll`, each list's header has a checkbox - checked when every enabled item of the list
+is, indeterminate when some are - that checks or unchecks them all, and the count of the checked
+items out of the list's.
+
+## In a `FormControl`
+
+Its `FormLabel` names the group (`aria-labelledby`), its `FormHelperText` describes it, and the
+field's `size`, `color`, `error` and `disabled` apply, an own prop winning.
+
+```tsx
+<FormControl>
+  <FormLabel>Fruit</FormLabel>
+  <TransferList items={items} leftLabel="Choices" rightLabel="Chosen" />
+  <FormHelperText>Choose any.</FormHelperText>
+</FormControl>
+```
+
+## Customization
+
+`theme.components.TransferList` styles the `root`, each `list` with its `header`, `title` and
+`count`, the `items` (the scrolling list of rows), each `item`, the `controls` and their `icon`.
+Its `defaultProps` set `size`, `color`, `shouldShowMoveAll`, `hasSelectAll` and the four buttons'
+labels.
+
+## Accessibility
+
+- The group is a `role="group"`. Each list is a `role="list"` named by its title, each row a
+  `role="listitem"` whose checkbox is named by its label (`aria-labelledby`).
+- Name every button: `moveRightLabel`, `moveLeftLabel` and, with `shouldShowMoveAll`, the two
+  move-all labels - an icon alone says nothing.
+- The header checkbox is named by its list's title.
+- Right to left, the lists swap sides and the chevrons turn around.
+
+## Not included
+
+A public `List`, drag and drop, and a touch layout - the buttons are the way to move items.
+
 ## Switch
 Import: `import { Switch } from '@soroush.tech/design-system/Switch'`
 A sliding toggle control. Supports controlled and uncontrolled usage, six semantic color palettes, two sizes, four visual variants, and custom thumb icons.
@@ -3349,6 +3749,10 @@ The hidden input carries `role="switch"` for screen reader semantics. `aria-chec
 <Switch id="notifications" required>Accept notifications</Switch>
 ```
 
+In a `Form` it takes the form's `size`, `color` and `disabled` state; in a `FormControl`, the field's
+those too, and its `id`, `required` and helper text as the description - an own prop winning. The neutral `default`
+color is the label's `text.secondary`; the others are the palette's accent.
+
 ## NativeSelect
 Import: `import { NativeSelect } from '@soroush.tech/design-system/NativeSelect'`
 Not the recommended select: use [`Select`](https://docs.soroush.tech/design-system/components/select/) - and `<Select native>` when you
@@ -3385,7 +3789,7 @@ import { NativeSelect } from '@soroush.tech/design-system/NativeSelect'
 | `variant`      | `'default' \| 'outlined' \| 'text' \| 'underline'`  | `'default'`     | Visual style - mirrors `TextInput`'s variants.                                                       |
 | `color`        | `keyof Theme['palette']`                            | `'primary'`     | Focus/active border color - resolves to `theme.palette[color]`. Inherited from `FormControl`/`Form`. |
 | `bg`           | `keyof Theme['background']`                         | `'terminal'`    | Background color - resolves against `theme.background`.                                              |
-| `textColor`    | `keyof Theme['text']`                               | `'primary'`     | Text color of the selected value. Inherited from `FormControl`/`Form`.                               |
+| `textColor`    | `keyof Theme['text']`                               | `color`'s main  | Text color of the selected value. Inherited from `FormControl`/`Form`.                               |
 | `size`         | `keyof Theme['sizes']`                              | `'md'`          | Controls padding and font size. Inherited from `FormControl`/`Form`.                                 |
 | `disabled`     | `boolean`                                           | `false`         | Disables the select. Inherited from `FormControl`/`Form`.                                            |
 | `error`        | `boolean`                                           | `false`         | Applies the error border color. Inherited from `FormControl`.                                        |
@@ -3710,7 +4114,7 @@ const form = useMyForm() // TanStack Form instance
 Import: `import { FormControl } from '@soroush.tech/design-system/FormControl'`
 Groups a label, control, and helper text into one accessible field and shares their state through React context. Works standalone or inside a [`Form`](https://docs.soroush.tech/design-system/components/form/).
 
-**Architecture:** `FormControl` renders a `View` and provides `FormControlContext`. It auto-generates an `id` via `useId()` (override with the `id` prop) and derives `helperId = ${id}-helper`. Descendant controls read field state through [`useFormControl`](#useformcontrol); `FormLabel` reads the `id` for `htmlFor`; `FormHelperText` registers its presence so the control points `aria-describedby` at it only while it is rendered - no dangling reference, no manual wiring.
+**Architecture:** `FormControl` renders a `View` and provides `FormControlContext`. It auto-generates an `id` via `useId()` (override with the `id` prop) and derives `helperId = ${id}-helper` and `labelId = ${id}-label`. Descendant controls read field state through [`useFormControl`](#useformcontrol); `FormLabel` reads the `id` for `htmlFor`; `FormHelperText` registers its presence so the control points `aria-describedby` at it only while it is rendered - no dangling reference, no manual wiring. `FormLabel` registers too, giving a group control (a rating, which a `for` can't label) its `labelId` to name itself by.
 
 ## Override chain
 
@@ -3761,7 +4165,7 @@ All `View` props pass through to the root (space, layout, etc.), except `color`,
 
 ## `useFormControl`
 
-Hook consumed by controls (`TextInput`, `Checkbox`, `Radio`) and by `Field`. Merges the control's explicit props with `FormControl` and `Form` context per the override chain and returns the resolved `{ id, error, disabled, required, size, fullWidth, color, 'aria-describedby' }`. Uniform defaults (`size`, the booleans) are applied here; `color` is left for each control to default, since its domain differs (e.g. `Checkbox` adds `"default"`).
+Hook consumed by controls (`TextInput`, `Checkbox`, `Radio`) and by `Field`. Merges the control's explicit props with `FormControl` and `Form` context per the override chain and returns the resolved `{ id, error, disabled, required, size, fullWidth, color, 'aria-describedby', labelId }` - `labelId` only while a `FormLabel` is rendered, and the id it renders - its own `id`, if it is given one. Uniform defaults (`size`, the booleans) are applied here; `color` is left for each control to default, since its domain differs (e.g. `Checkbox` adds `"default"`).
 
 ---
 ## Examples
@@ -6139,7 +6543,7 @@ const brand = createTheme(baseTheme, {
 
 The `Theme/Customization` Storybook story renders all three mechanisms under a customized theme and is locked by Chromatic - it is the living contract.
 
-Every styled element is registered - the `ThemeComponents` interface in `src/theme/themes.ts` is the authoritative key/slot list, so `styleOverrides` reaches every root and every sub-element slot (Switch's `track`/`thumb`/`input`, Select's `listbox`, LinearProgress's bars, ...), including the layout primitives `View`/`Flex`/`Grid`. Two cautions: an override on `View`/`Flex`/`Grid` cascades into the internals of every composed component (use those keys for app-wide policy only), and hidden/structural slots (`input`, `valueGhost`, `positioner`) carry accessibility or layout behavior - restyle their looks, not their geometry/visibility. Note that `defaultProps` is honored only by components that resolve props through `useDefaultProps` (currently `Breadcrumbs`, `Button`, `Card`, `Pressable`, `Tabs`, `Tab`, `TabScrollButton`, `TabPanel`, `Menu`, `ContextMenu`, `MenuList` and `MenuItem`); everywhere else, use `styleOverrides`/`variants`.
+Every styled element is registered - the `ThemeComponents` interface in `src/theme/themes.ts` is the authoritative key/slot list, so `styleOverrides` reaches every root and every sub-element slot (Switch's `track`/`thumb`/`input`, Select's `listbox`, LinearProgress's bars, ...), including the layout primitives `View`/`Flex`/`Grid`. Two cautions: an override on `View`/`Flex`/`Grid` cascades into the internals of every composed component (use those keys for app-wide policy only), and hidden/structural slots (`input`, `valueGhost`, `positioner`) carry accessibility or layout behavior - restyle their looks, not their geometry/visibility. Note that `defaultProps` is honored only by components that resolve props through `useDefaultProps` (currently `Breadcrumbs`, `Button`, `Card`, `Pressable`, `Rating`, `NumberField`, `InputRange`, `TransferList`, `Tabs`, `Tab`, `TabScrollButton`, `TabPanel`, `Menu`, `ContextMenu`, `MenuList` and `MenuItem`); everywhere else, use `styleOverrides`/`variants`.
 
 ---
 
