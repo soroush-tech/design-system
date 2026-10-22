@@ -11,6 +11,7 @@ import { Chip } from '../../Chip'
 import { Badge } from '../../Badge'
 import { Alert, AlertTitle } from '../../Alert'
 import { Fab } from '../../Fab'
+import { Snackbar } from '../../Snackbar'
 import { AppBar } from '../../AppBar'
 import { Avatar } from '../../Avatar'
 import { Backdrop } from '../../Backdrop'
@@ -91,6 +92,7 @@ const COMPONENTS: Record<string, ElementType> = {
   Alert,
   AlertTitle,
   Fab,
+  Snackbar,
   AppBar,
   Avatar,
   Backdrop,

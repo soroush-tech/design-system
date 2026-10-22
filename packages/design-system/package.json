@@ -76,6 +76,7 @@
     "./Sidebar": "./src/Sidebar/index.ts",
     "./Skeleton": "./src/Skeleton/index.ts",
     "./Slide": "./src/Slide/index.ts",
+    "./Snackbar": "./src/Snackbar/index.ts",
     "./Switch": "./src/Switch/index.ts",
     "./Table": "./src/Table/index.ts",
     "./Tabs": "./src/Tabs/index.ts",
@@ -578,6 +579,16 @@
         "require": {
           "types": "./dist/Slide.d.cts",
           "default": "./dist/Slide.cjs"
+        }
+      },
+      "./Snackbar": {
+        "import": {
+          "types": "./dist/Snackbar.d.mts",
+          "default": "./dist/Snackbar.mjs"
+        },
+        "require": {
+          "types": "./dist/Snackbar.d.cts",
+          "default": "./dist/Snackbar.cjs"
         }
       },
       "./Switch": {

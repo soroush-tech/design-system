@@ -2,7 +2,7 @@
 
 # Components
 
-The 90 components shipped by the design system, and when to reach for each.
+The 91 components shipped by the design system, and when to reach for each.
 Import every component from its own subpath.
 
 ## Layout & surfaces
@@ -84,6 +84,7 @@ Import every component from its own subpath.
 
 ## Feedback
 
+- **Snackbar** - A transient message in a corner of the window, through a `Portal`.
 - **Alert** - An inline message with a severity: an icon, the message, an optional `AlertTitle`, an action and a close control.
 - **AlertTitle** - The title of an `Alert`: its first line of the message, in a heavier weight.
 - **Badge** - A count or a dot anchored over another element.

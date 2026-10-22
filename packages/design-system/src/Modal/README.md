@@ -8,22 +8,22 @@ Stacking, scroll-lock (with scrollbar-width compensation), and background `aria-
 
 ## Props
 
-| Prop                 | Type                                                      | Default | Description                                         |
-| -------------------- | --------------------------------------------------------- | ------- | --------------------------------------------------- |
-| `isOpen`             | `boolean`                                                 | -       | If true, the modal is shown.                        |
-| `children`           | `ReactNode`                                               | -       | A single content element.                           |
-| `onClose`            | `(event, reason: 'escapeKey' \| 'backdropClick') => void` | -       | Fired on Escape (top modal only) or backdrop click. |
-| `hasBackdrop`        | `boolean`                                                 | `true`  | Render the dimmed backdrop.                         |
-| `shouldKeepMounted`  | `boolean`                                                 | `false` | Keep children mounted while closed.                 |
-| `shouldUsePortal`    | `boolean`                                                 | `true`  | Portal the modal into `portalContainer`.            |
-| `portalContainer`    | `HTMLElement \| (() => HTMLElement \| null) \| null`      | body    | Portal target, or a function returning one.         |
-| `shouldLockScroll`   | `boolean`                                                 | `true`  | Lock body scroll while open.                        |
-| `shouldAutoFocus`    | `boolean`                                                 | `true`  | Move focus into the modal on open.                  |
-| `shouldTrapFocus`    | `boolean`                                                 | `true`  | Trap `Tab` focus within the modal.                  |
-| `shouldEnforceFocus` | `boolean`                                                 | `true`  | Pull focus back into the modal whenever it escapes. |
-| `shouldRestoreFocus` | `boolean`                                                 | `true`  | Restore focus to the trigger on close.              |
-| `scroll`             | `'paper' \| 'body'`                                       | `paper` | Where long content scrolls. See below.              |
-| `layer`              | `'appBar' \| 'drawer' \| 'modal'`                         | `modal` | Stacking layer, resolved from `theme.zOrder`.       |
+| Prop                 | Type                                                      | Default  | Description                                         |
+| -------------------- | --------------------------------------------------------- | -------- | --------------------------------------------------- |
+| `isOpen`             | `boolean`                                                 | -        | If true, the modal is shown.                        |
+| `children`           | `ReactNode`                                               | -        | A single content element.                           |
+| `onClose`            | `(event, reason: 'escapeKey' \| 'backdropClick') => void` | -        | Fired on Escape (top modal only) or backdrop click. |
+| `hasBackdrop`        | `boolean`                                                 | `true`   | Render the dimmed backdrop.                         |
+| `shouldKeepMounted`  | `boolean`                                                 | `false`  | Keep children mounted while closed.                 |
+| `shouldUsePortal`    | `boolean`                                                 | `true`   | Portal the modal into `portalContainer`.            |
+| `portalContainer`    | `HTMLElement \| (() => HTMLElement \| null) \| null`      | body     | Portal target, or a function returning one.         |
+| `shouldLockScroll`   | `boolean`                                                 | `true`   | Lock body scroll while open.                        |
+| `shouldAutoFocus`    | `boolean`                                                 | `true`   | Move focus into the modal on open.                  |
+| `shouldTrapFocus`    | `boolean`                                                 | `true`   | Trap `Tab` focus within the modal.                  |
+| `shouldEnforceFocus` | `boolean`                                                 | `true`   | Pull focus back into the modal whenever it escapes. |
+| `shouldRestoreFocus` | `boolean`                                                 | `true`   | Restore focus to the trigger on close.              |
+| `scroll`             | `'paper' \| 'body'`                                       | `paper`  | Where long content scrolls. See below.              |
+| `layer`              | `'appBar'                                                 | 'drawer' | 'modal'                                             | 'snackbar' | 'tooltip'`\| 'drawer' \| 'modal'` | `modal` | Stacking layer, resolved from `theme.zOrder`. |
 
 The content element should carry its own dialog semantics (`role="dialog"`, `aria-modal`, a label). Modal's root is `role="presentation"`.
 

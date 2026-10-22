@@ -209,6 +209,8 @@ Reference tokens through the theme; a literal value in a component is a bug.
 - `theme.zOrder.appBar` - 1100
 - `theme.zOrder.drawer` - 1200
 - `theme.zOrder.modal` - 1300
+- `theme.zOrder.snackbar` - 1400
+- `theme.zOrder.tooltip` - 1500
 
 ## transitions
 

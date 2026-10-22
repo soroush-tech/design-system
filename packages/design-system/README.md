@@ -150,6 +150,7 @@ SSR critical-CSS extraction (e.g. with `@emotion/server`) is a separate, opt-in 
 
 | Component                            | Purpose                                                                                                                           |
 | ------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
+| `Snackbar`                           | A transient message in a corner of the window, with auto-hide and an action                                                       |
 | `Alert`                              | An inline message with a severity, an icon, a title and an action - exports `AlertTitle` from `@soroush.tech/design-system/Alert` |
 | `Badge`                              | A count or a dot anchored over another element                                                                                    |
 | `Chip`                               | A compact tag: a label, an icon or avatar, a click and a delete                                                                   |
@@ -180,14 +181,14 @@ SSR critical-CSS extraction (e.g. with `@emotion/server`) is a separate, opt-in 
 
 Components never hardcode colors or sizes - props resolve against scales on the `Theme` object:
 
-| Group              | Scales                                                                                                 |
-| ------------------ | ------------------------------------------------------------------------------------------------------ |
-| Color              | `palette` (main/light/dark/contrastText per color) · `text` · `background` · `border` · `colorScheme`  |
-| Typography         | `typography` (variant map) · `fonts` · `fontSizes` · `fontWeights` · `lineHeights` · `letterSpacings`  |
-| Space & shape      | `space` · `sizes` · `radii` · `borderWidths` · `shadows`                                               |
-| Layout             | `breakpoints` (xs/sm/md/lg/xl window classes) · `layout` (columns, margins, panels, top bar per class) |
-| Component scales   | `avatar` (size steps) · `skeleton` (wave highlight)                                                    |
-| Layering & effects | `zOrder` (appBar/drawer/modal) · `blur` · `logoFilter` · `portraitBlend` · `portraitOpacity`           |
+| Group              | Scales                                                                                                        |
+| ------------------ | ------------------------------------------------------------------------------------------------------------- |
+| Color              | `palette` (main/light/dark/contrastText per color) · `text` · `background` · `border` · `colorScheme`         |
+| Typography         | `typography` (variant map) · `fonts` · `fontSizes` · `fontWeights` · `lineHeights` · `letterSpacings`         |
+| Space & shape      | `space` · `sizes` · `radii` · `borderWidths` · `shadows`                                                      |
+| Layout             | `breakpoints` (xs/sm/md/lg/xl window classes) · `layout` (columns, margins, panels, top bar per class)        |
+| Component scales   | `avatar` (size steps) · `skeleton` (wave highlight)                                                           |
+| Layering & effects | `zOrder` (appBar/drawer/modal/snackbar/tooltip) · `blur` · `logoFilter` · `portraitBlend` · `portraitOpacity` |
 
 Prop types are derived from the interface (`keyof Theme['text']`), so adding a token to `themes.ts` propagates everywhere automatically. See [`design-system.md`](./design-system.md) for the full scale table and the palette rules.
 

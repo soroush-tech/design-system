@@ -108,6 +108,8 @@ export interface ThemeZOrder {
   appBar: number
   drawer: number
   modal: number
+  snackbar: number
+  tooltip: number
 }
 /** The durations of `theme.transitions.duration`, in milliseconds. */
 export interface ThemeTransitionDuration {
@@ -460,6 +462,17 @@ export interface RatingOwnerState {
   color?: keyof ThemePalette
 }
 
+/** The defaults a theme may set for every `Snackbar`. */
+export interface SnackbarOwnerState {
+  anchorOrigin?: {
+    vertical: 'top' | 'bottom'
+    horizontal: 'start' | 'center' | 'end'
+  }
+  autoHideDuration?: number
+  resumeHideDuration?: number
+  layer?: keyof ThemeZOrder
+}
+
 /** The defaults a theme may set for every `Fab`. */
 export interface FabOwnerState {
   variant?: 'circular' | 'extended'
@@ -719,6 +732,7 @@ export interface ThemeComponents {
     InputRangeOwnerState,
     'root' | 'rail' | 'track' | 'thumb' | 'mark' | 'markLabel' | 'valueLabel' | 'input'
   >
+  Snackbar?: ComponentConfig<SnackbarOwnerState, 'root' | 'content' | 'message' | 'action'>
   Fab?: ComponentConfig<FabOwnerState, 'root'>
   Alert?: ComponentConfig<AlertOwnerState, 'root' | 'icon' | 'message' | 'action' | 'closeButton'>
   AlertTitle?: ComponentConfig
@@ -860,6 +874,8 @@ export const zOrder = {
   appBar: 1100,
   drawer: 1200,
   modal: 1300,
+  snackbar: 1400,
+  tooltip: 1500,
 }
 
 // Leaving is quicker than entering, and both ease out of the way: the user is waiting on neither.
