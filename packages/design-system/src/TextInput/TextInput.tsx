@@ -35,7 +35,7 @@ export interface TextInputProps
   components?: { Input?: ElementType; Root?: ElementType }
   /** Focus/active border color - resolves to `theme.palette[color].main`. Default: 'primary', overridable via `theme.defaults.color`. */
   color?: TextInputColor
-  /** Text color of the typed value - resolves against `theme.text`. Default: 'primary', overridable via `theme.defaults.accentTextColor`. */
+  /** Text color of the typed value - resolves against `theme.text`. Default: the accent `color`'s `main`. */
   textColor?: TextInputTextColor
   /** Disables the input. */
   disabled?: boolean
@@ -122,13 +122,15 @@ const baseStyle = {
 // Plain function - get() for safe dot-notation traversal.
 // system() raw function skipped here: createParser iterates props with for...in which
 // doesn't see 'variant' reliably in this styled context. Destructuring is reliable.
+// Without a `textColor` the value is set in the accent `color`, as a Select's is.
 const backgroundStyle = ({
   theme,
-  textColor = themeDefault(theme, 'accentTextColor', 'primary'),
+  textColor,
+  color = themeDefault(theme, 'color', 'primary'),
 }: TextInputRootProps & { theme: Theme }) => {
   return {
     backgroundColor: get(theme, `background.${themeDefault(theme, 'inputBg', 'terminal')}`),
-    color: get(theme, `text.${textColor}`),
+    color: textColor ? get(theme, `text.${textColor}`) : get(theme, `palette.${color}.main`),
     fontFamily: get(theme, 'fonts.body'),
     fontSize: get(theme, 'fontSizes.1'),
     lineHeight: get(theme, 'lineHeights.base'),
@@ -331,7 +333,8 @@ export function TextInput({
   const { id, error, disabled, required, size, fullWidth } = fc
   const theme = useTheme()
   const color = fc.color ?? themeDefault(theme, 'color', 'primary')
-  const textColor = fc.textColor ?? themeDefault(theme, 'accentTextColor', 'primary')
+  // Left undefined so the value falls back to the accent color's `main`.
+  const textColor = fc.textColor
   const variant = variantProp ?? themeDefault(theme, 'inputVariant', 'default')
 
   const isAutoResize = resize

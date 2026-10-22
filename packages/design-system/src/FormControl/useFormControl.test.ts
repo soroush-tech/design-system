@@ -9,6 +9,9 @@ import { useFormControl } from './useFormControl'
 const control = (overrides: Partial<FormControlContextValue> = {}): FormControlContextValue => ({
   id: 'field-1',
   helperId: 'field-1-helper',
+  labelId: 'field-1-label',
+  registeredLabelId: null,
+  setLabelId: () => {},
   hasHelperText: false,
   setHasHelperText: () => {},
   ...overrides,
@@ -38,6 +41,7 @@ describe('useFormControl', () => {
         color: undefined,
         textColor: undefined,
         'aria-describedby': undefined,
+        labelId: undefined,
       })
     })
   })
@@ -173,6 +177,17 @@ describe('useFormControl', () => {
         wrapper: withProviders(undefined, control({ hasHelperText: false })),
       })
       expect(result.current['aria-describedby']).toBeUndefined()
+    })
+  })
+
+  describe('labelId', () => {
+    it('is the id of the label rendered, and none while there is no label', () => {
+      const wrapper = (registeredLabelId: string | null) =>
+        withProviders(undefined, control({ registeredLabelId }))
+      const present = renderHook(() => useFormControl(), { wrapper: wrapper('mine') })
+      expect(present.result.current.labelId).toBe('mine')
+      const absent = renderHook(() => useFormControl(), { wrapper: wrapper(null) })
+      expect(absent.result.current.labelId).toBeUndefined()
     })
   })
 })

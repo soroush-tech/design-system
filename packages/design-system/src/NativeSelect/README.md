@@ -35,7 +35,7 @@ import { NativeSelect } from '@soroush.tech/design-system/NativeSelect'
 | `variant`      | `'default' \| 'outlined' \| 'text' \| 'underline'`  | `'default'`     | Visual style - mirrors `TextInput`'s variants.                                                       |
 | `color`        | `keyof Theme['palette']`                            | `'primary'`     | Focus/active border color - resolves to `theme.palette[color]`. Inherited from `FormControl`/`Form`. |
 | `bg`           | `keyof Theme['background']`                         | `'terminal'`    | Background color - resolves against `theme.background`.                                              |
-| `textColor`    | `keyof Theme['text']`                               | `'primary'`     | Text color of the selected value. Inherited from `FormControl`/`Form`.                               |
+| `textColor`    | `keyof Theme['text']`                               | `color`'s main  | Text color of the selected value. Inherited from `FormControl`/`Form`.                               |
 | `size`         | `keyof Theme['sizes']`                              | `'md'`          | Controls padding and font size. Inherited from `FormControl`/`Form`.                                 |
 | `disabled`     | `boolean`                                           | `false`         | Disables the select. Inherited from `FormControl`/`Form`.                                            |
 | `error`        | `boolean`                                           | `false`         | Applies the error border color. Inherited from `FormControl`.                                        |

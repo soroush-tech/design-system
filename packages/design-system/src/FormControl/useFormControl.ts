@@ -29,6 +29,8 @@ export interface ResolvedFormControl {
   textColor?: keyof Theme['text']
   /** Points at the helper text id only while one is rendered - avoids a dangling reference. */
   'aria-describedby'?: string
+  /** The FormLabel's id while one is rendered - for a group control, which a `for` can't label. */
+  labelId?: string
 }
 
 /**
@@ -51,5 +53,6 @@ export function useFormControl(overrides: FormControlOverrides = {}): ResolvedFo
     color: overrides.color ?? control?.color ?? form.color,
     textColor: overrides.textColor ?? control?.textColor ?? form.textColor,
     'aria-describedby': control?.hasHelperText ? control.helperId : undefined,
+    labelId: control?.registeredLabelId ?? undefined,
   }
 }

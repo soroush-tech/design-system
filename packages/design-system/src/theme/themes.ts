@@ -407,6 +407,54 @@ export interface ButtonVariants {
   text: true
 }
 
+/** The defaults a theme may set for every `InputRange`. */
+export interface InputRangeOwnerState {
+  size?: keyof ThemeSizes
+  color?: keyof ThemePalette
+  orientation?: 'horizontal' | 'vertical'
+  track?: 'normal' | false | 'inverted'
+  step?: number | null
+  shiftStep?: number
+  valueLabel?: 'auto' | 'on' | 'off'
+  shouldSwapThumbs?: boolean
+}
+
+/** The defaults a theme may set for every `NumberField` - its button labels give it a language. */
+export interface NumberFieldOwnerState {
+  variant?: 'default' | 'outlined' | 'text' | 'underline'
+  size?: keyof ThemeSizes
+  color?: keyof ThemePalette
+  spinButtons?: 'stacked' | 'sides' | 'none'
+  step?: number
+  smallStep?: number
+  largeStep?: number
+  shouldSnapOnStep?: boolean
+  shouldScrubOnWheel?: boolean
+  incrementLabel?: string
+  decrementLabel?: string
+}
+
+/** The defaults a theme may set for every `Rating`. */
+export interface RatingOwnerState {
+  max?: number
+  precision?: number
+  highlightSelectedOnly?: boolean
+  size?: keyof ThemeSizes
+  color?: keyof ThemePalette
+}
+
+/** The defaults a theme may set for every `TransferList` - its button labels give it a language. */
+export interface TransferListOwnerState {
+  size?: keyof ThemeSizes
+  color?: keyof ThemePalette
+  shouldShowMoveAll?: boolean
+  hasSelectAll?: boolean
+  moveAllRightLabel?: string
+  moveRightLabel?: string
+  moveLeftLabel?: string
+  moveAllLeftLabel?: string
+}
+
 /** The defaults a theme may set for every `Breadcrumbs` - its `expandLabel` gives a trail its language. */
 export interface BreadcrumbsOwnerState {
   separator?: ReactNode
@@ -594,6 +642,22 @@ export interface ThemeComponents {
   Pressable?: ComponentConfig<PressableOwnerState>
   Quote?: ComponentConfig
   Radio?: ComponentConfig<Record<string, unknown>, 'root' | 'input' | 'icon'>
+  InputRange?: ComponentConfig<
+    InputRangeOwnerState,
+    'root' | 'rail' | 'track' | 'thumb' | 'mark' | 'markLabel' | 'valueLabel' | 'input'
+  >
+  TransferList?: ComponentConfig<
+    TransferListOwnerState,
+    'root' | 'list' | 'header' | 'title' | 'count' | 'items' | 'item' | 'controls' | 'icon'
+  >
+  NumberField?: ComponentConfig<
+    NumberFieldOwnerState,
+    'root' | 'input' | 'spinButtons' | 'increment' | 'decrement'
+  >
+  Rating?: ComponentConfig<
+    RatingOwnerState,
+    'root' | 'item' | 'icon' | 'decimal' | 'input' | 'text' | 'emptyLabel'
+  >
   Select?: ComponentConfig<
     Record<string, unknown>,
     'root' | 'value' | 'valueArea' | 'valueGhost' | 'listbox'

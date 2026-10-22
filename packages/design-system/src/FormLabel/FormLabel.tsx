@@ -1,4 +1,4 @@
-import { useContext, type ComponentType, type ReactNode } from 'react'
+import { useContext, useEffect, type ComponentType, type ReactNode } from 'react'
 import { styled } from '../index'
 import { Typography, type TypographyProps } from '../Typography'
 import { FormControlContext } from '../FormControl/FormControlContext'
@@ -29,6 +29,7 @@ export function FormLabel({
   children,
   required,
   htmlFor,
+  id,
   color,
   ...rest
 }: Readonly<FormLabelProps>) {
@@ -36,11 +37,26 @@ export function FormLabel({
   const form = useContext(FormContext)
   const isRequired = required ?? control?.required ?? false
   const resolvedFor = htmlFor ?? control?.id
+  const renderedId = id ?? control?.labelId
+  // Registers the id it renders, so a group control names itself by it only while it is rendered.
+  const setLabelId = control?.setLabelId
+  useEffect(() => {
+    if (!setLabelId || !renderedId) return undefined
+    setLabelId(renderedId)
+    return () => setLabelId(null)
+  }, [setLabelId, renderedId])
   // Explicit color wins, then per-field `textColor`, then form-wide `textColor`.
   const resolvedColor = color ?? control?.textColor ?? form.textColor
 
   return (
-    <FormLabelRoot as="label" htmlFor={resolvedFor} variant="body2" {...rest} color={resolvedColor}>
+    <FormLabelRoot
+      as="label"
+      id={renderedId}
+      htmlFor={resolvedFor}
+      variant="body2"
+      {...rest}
+      color={resolvedColor}
+    >
       {children}
       {isRequired ? ' *' : ''}
     </FormLabelRoot>

@@ -3,6 +3,9 @@ import { describe, it, expect, vi } from 'vitest'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { baseTheme } from '../theme/themes'
 import { Switch, type SwitchSize } from '../Switch'
+import { Form } from '../Form'
+import { FormControl } from '../FormControl'
+import { FormHelperText } from '../FormHelperText'
 
 describe('Switch', () => {
   // ─── element ─────────────────────────────────────────────────────────────────
@@ -134,7 +137,7 @@ describe('Switch', () => {
   // ─── color ────────────────────────────────────────────────────────────────────
 
   describe('color', () => {
-    it('resolves theme.palette[color].main for all color tokens', () => {
+    it('resolves theme.palette[color].main for the color tokens, and text.secondary for the neutral one', () => {
       const colors = [
         'default',
         'primary',
@@ -146,7 +149,9 @@ describe('Switch', () => {
       ] as const
       colors.forEach((color) => {
         const { unmount } = renderWithTheme(<Switch color={color} data-testid="sw" />)
-        expect(screen.getByTestId('sw')).toHaveStyle({ color: baseTheme.palette[color].main })
+        expect(screen.getByTestId('sw')).toHaveStyle({
+          color: color === 'default' ? baseTheme.text.secondary : baseTheme.palette[color].main,
+        })
         unmount()
       })
     })
@@ -372,6 +377,56 @@ describe('Switch', () => {
     it('forwards className to the root', () => {
       renderWithTheme(<Switch className="custom" data-testid="sw" />)
       expect(screen.getByTestId('sw')).toHaveClass('custom')
+    })
+  })
+
+  // ─── Form and FormControl context ─────────────────────────────────────────────
+
+  describe('form context', () => {
+    it('takes its color from the Form, an own color winning', () => {
+      renderWithTheme(
+        <Form color="error">
+          <Switch data-testid="inherits" />
+          <Switch color="info" data-testid="own" />
+        </Form>
+      )
+      expect(screen.getByTestId('inherits')).toHaveStyle({ color: baseTheme.palette.error.main })
+      expect(screen.getByTestId('own')).toHaveStyle({ color: baseTheme.palette.info.main })
+    })
+
+    it('takes its size and disabled state from the Form', () => {
+      renderWithTheme(
+        <Form size="lg" disabled>
+          <Switch aria-label="Wifi" />
+        </Form>
+      )
+      expect(screen.getByRole('switch')).toBeDisabled()
+    })
+
+    it('takes its id, required state and helper text from a FormControl', () => {
+      renderWithTheme(
+        <FormControl id="wifi" required>
+          <Switch />
+          <FormHelperText>Needs a network.</FormHelperText>
+        </FormControl>
+      )
+      const input = screen.getByRole('switch')
+      expect(input).toHaveAttribute('id', 'wifi')
+      expect(input).toBeRequired()
+      expect(input).toHaveAccessibleDescription('Needs a network.')
+    })
+
+    it('lets an own id, required state and description win', () => {
+      renderWithTheme(
+        <FormControl id="wifi" required>
+          <Switch id="own" aria-describedby="own-help" disabled />
+          <FormHelperText>Needs a network.</FormHelperText>
+        </FormControl>
+      )
+      const input = screen.getByRole('switch')
+      expect(input).toHaveAttribute('id', 'own')
+      expect(input).toHaveAttribute('aria-describedby', 'own-help')
+      expect(input).toBeDisabled()
     })
   })
 })

@@ -34,7 +34,7 @@ export interface NativeSelectProps
   borderRadius?: keyof Theme['radii']
   /** Focus/active border color - resolves to `theme.palette[color].main`. Default: 'primary', overridable via `theme.defaults.color`. */
   color?: NativeSelectColor
-  /** Text color of the selected value - resolves against `theme.text`. Default: 'primary', overridable via `theme.defaults.accentTextColor`. */
+  /** Text color of the selected value - resolves against `theme.text`. Default: the accent `color`'s `main`. */
   textColor?: NativeSelectTextColor
   /** Background color - resolves against `theme.background`. Default: `'terminal'`. */
   bg?: NativeSelectBackgroundToken
@@ -97,14 +97,16 @@ const baseStyle = {
   transition: 'border-color 0.15s ease',
 }
 
+// Without a `textColor` the value is set in the accent `color`, as a Select's is.
 const backgroundStyle = ({
   theme,
-  textColor = themeDefault(theme, 'accentTextColor', 'primary'),
+  textColor,
+  color = themeDefault(theme, 'color', 'primary'),
   bg = themeDefault(theme, 'inputBg', 'terminal'),
 }: NativeSelectRootProps & { theme: Theme }) => {
   return {
     backgroundColor: get(theme, `background.${bg}`),
-    color: get(theme, `text.${textColor}`),
+    color: textColor ? get(theme, `text.${textColor}`) : get(theme, `palette.${color}.main`),
     fontFamily: get(theme, 'fonts.body'),
     fontSize: get(theme, 'fontSizes.1'),
     lineHeight: get(theme, 'lineHeights.base'),
@@ -187,11 +189,12 @@ const NativeSelectRoot = styled('div', {
 type StyledNativeSelectProps = {
   sizeToken: NativeSelectSize
   bg?: NativeSelectBackgroundToken
-  textColor: NativeSelectTextColor
+  textColor?: NativeSelectTextColor
+  accent: NativeSelectColor
 }
 
 const shouldForwardNativeSelectProps = (prop: string) =>
-  prop !== 'sizeToken' && prop !== 'bg' && prop !== 'textColor'
+  prop !== 'sizeToken' && prop !== 'bg' && prop !== 'textColor' && prop !== 'accent'
 
 // Trailing padding leaves room for the absolutely-positioned dropdown icon.
 const sizeVariants = ({ theme, sizeToken }: StyledNativeSelectProps & { theme: Theme }) => {
@@ -213,9 +216,10 @@ const selectSurface = ({
   theme,
   bg = themeDefault(theme, 'inputBg', 'terminal'),
   textColor,
+  accent,
 }: StyledNativeSelectProps & { theme: Theme }) => {
   const backgroundColor = get(theme, `background.${bg}`)
-  const color = get(theme, `text.${textColor}`)
+  const color = textColor ? get(theme, `text.${textColor}`) : get(theme, `palette.${accent}.main`)
   return {
     backgroundColor,
     color,
@@ -301,7 +305,8 @@ export function NativeSelect({
   const { id, error, disabled, required, size, fullWidth } = fc
   const theme = useTheme()
   const color = fc.color ?? themeDefault(theme, 'color', 'primary')
-  const textColor = fc.textColor ?? themeDefault(theme, 'accentTextColor', 'primary')
+  // Left undefined so the value falls back to the accent color's `main`.
+  const textColor = fc.textColor
   const variant = variantProp ?? themeDefault(theme, 'inputVariant', 'default')
 
   // The DOM casts option values to strings - map back to the option's original
@@ -339,6 +344,7 @@ export function NativeSelect({
         sizeToken={size}
         bg={bg}
         textColor={textColor}
+        accent={color}
         value={value}
         defaultValue={uncontrolledDefault}
         onChange={handleChange}

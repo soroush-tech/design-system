@@ -19,6 +19,7 @@ import { formLabelCatalog } from '../FormLabel/FormLabel.catalog'
 import { gridCatalog } from '../Grid/Grid.catalog'
 import { iconCatalog } from '../Icon/Icon.catalog'
 import { imageCatalog } from '../Image/Image.catalog'
+import { inputRangeCatalog } from '../InputRange/InputRange.catalog'
 import { linearProgressCatalog } from '../LinearProgress/LinearProgress.catalog'
 import { linkCatalog } from '../Link/Link.catalog'
 import { menuCatalog } from '../Menu/Menu/Menu.catalog'
@@ -28,6 +29,7 @@ import { menuItemsCatalog } from '../Menu/MenuItems/MenuItems.catalog'
 import { menuListCatalog } from '../Menu/MenuList/MenuList.catalog'
 import { modalCatalog } from '../Modal/Modal.catalog'
 import { nativeSelectCatalog } from '../NativeSelect/NativeSelect.catalog'
+import { numberFieldCatalog } from '../NumberField/NumberField.catalog'
 import { paginationCatalog } from '../Pagination/Pagination.catalog'
 import { paginationItemCatalog } from '../Pagination/PaginationItem/PaginationItem.catalog'
 import { paperCatalog } from '../Paper/Paper.catalog'
@@ -36,6 +38,7 @@ import { portalCatalog } from '../Portal/Portal.catalog'
 import { pressableCatalog } from '../Pressable/Pressable.catalog'
 import { quoteCatalog } from '../Quote/Quote.catalog'
 import { radioCatalog } from '../Radio/Radio.catalog'
+import { ratingCatalog } from '../Rating/Rating.catalog'
 import { selectCatalog } from '../Select/Select.catalog'
 import { sidebarCatalog } from '../Sidebar/Sidebar/Sidebar.catalog'
 import { sidebarItemCatalog } from '../Sidebar/SidebarItem/SidebarItem.catalog'
@@ -61,6 +64,7 @@ import { tableSortLabelCatalog } from '../Table/TableSortLabel/TableSortLabel.ca
 import { textInputCatalog } from '../TextInput/TextInput.catalog'
 import { toggleButtonCatalog } from '../ToggleButton/ToggleButton/ToggleButton.catalog'
 import { toggleButtonGroupCatalog } from '../ToggleButton/ToggleButtonGroup/ToggleButtonGroup.catalog'
+import { transferListCatalog } from '../TransferList/TransferList.catalog'
 import { typographyCatalog } from '../Typography/Typography.catalog'
 import { viewCatalog } from '../View/View.catalog'
 import type { CatalogEntry } from './types'
@@ -97,6 +101,7 @@ export const catalogSources: Record<string, CatalogSource> = {
   Grid: { entry: gridCatalog, folder: 'Grid' },
   Icon: { entry: iconCatalog, folder: 'Icon' },
   Image: { entry: imageCatalog, folder: 'Image' },
+  InputRange: { entry: inputRangeCatalog, folder: 'InputRange' },
   LinearProgress: { entry: linearProgressCatalog, folder: 'LinearProgress' },
   Link: { entry: linkCatalog, folder: 'Link' },
   Menu: { entry: menuCatalog, folder: 'Menu' },
@@ -106,6 +111,7 @@ export const catalogSources: Record<string, CatalogSource> = {
   MenuList: { entry: menuListCatalog, folder: 'Menu', family: 'Menu' },
   Modal: { entry: modalCatalog, folder: 'Modal' },
   NativeSelect: { entry: nativeSelectCatalog, folder: 'NativeSelect' },
+  NumberField: { entry: numberFieldCatalog, folder: 'NumberField' },
   Pagination: { entry: paginationCatalog, folder: 'Pagination' },
   PaginationItem: { entry: paginationItemCatalog, folder: 'Pagination', family: 'Pagination' },
   Paper: { entry: paperCatalog, folder: 'Paper' },
@@ -114,6 +120,7 @@ export const catalogSources: Record<string, CatalogSource> = {
   Pressable: { entry: pressableCatalog, folder: 'Pressable' },
   Quote: { entry: quoteCatalog, folder: 'Quote' },
   Radio: { entry: radioCatalog, folder: 'Radio' },
+  Rating: { entry: ratingCatalog, folder: 'Rating' },
   Select: { entry: selectCatalog, folder: 'Select' },
   Sidebar: { entry: sidebarCatalog, folder: 'Sidebar' },
   SidebarItem: { entry: sidebarItemCatalog, folder: 'Sidebar', family: 'Sidebar' },
@@ -147,6 +154,7 @@ export const catalogSources: Record<string, CatalogSource> = {
     folder: 'ToggleButton',
     family: 'ToggleButton',
   },
+  TransferList: { entry: transferListCatalog, folder: 'TransferList' },
   Typography: { entry: typographyCatalog, folder: 'Typography' },
   View: { entry: viewCatalog, folder: 'View' },
 }

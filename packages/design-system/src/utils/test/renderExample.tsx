@@ -20,6 +20,7 @@ import { FormLabel } from '../../FormLabel'
 import { Grid } from '../../Grid'
 import { Icon } from '../../Icon'
 import { Image } from '../../Image'
+import { InputRange } from '../../InputRange'
 import { LinearProgress } from '../../LinearProgress'
 import { Link } from '../../Link'
 import { Menu } from '../../Menu/Menu'
@@ -28,6 +29,7 @@ import { MenuItem } from '../../MenuItem'
 import { MenuList } from '../../Menu/MenuList'
 import { Modal } from '../../Modal'
 import { NativeSelect } from '../../NativeSelect'
+import { NumberField } from '../../NumberField'
 import { Pagination, PaginationItem } from '../../Pagination'
 import { Paper } from '../../Paper'
 import { Popover } from '../../Popover'
@@ -35,6 +37,7 @@ import { Portal } from '../../Portal'
 import { Pressable } from '../../Pressable'
 import { Quote } from '../../Quote'
 import { Radio } from '../../Radio'
+import { Rating } from '../../Rating'
 import { Select } from '../../Select'
 import { Sidebar, SidebarItem } from '../../Sidebar'
 import { Skeleton } from '../../Skeleton'
@@ -56,6 +59,7 @@ import { TabPanel } from '../../Tabs/TabPanel'
 import { Tab, TabContext, TabList, TabScrollButton, Tabs } from '../../Tabs'
 import { TextInput } from '../../TextInput'
 import { ToggleButton, ToggleButtonGroup } from '../../ToggleButton'
+import { TransferList } from '../../TransferList'
 import { Typography } from '../../Typography'
 import { View } from '../../View'
 
@@ -82,6 +86,7 @@ const COMPONENTS: Record<string, ElementType> = {
   Grid,
   Icon,
   Image,
+  InputRange,
   LinearProgress,
   Link,
   Menu,
@@ -90,6 +95,7 @@ const COMPONENTS: Record<string, ElementType> = {
   MenuList,
   Modal,
   NativeSelect,
+  NumberField,
   Pagination,
   PaginationItem,
   Paper,
@@ -98,6 +104,7 @@ const COMPONENTS: Record<string, ElementType> = {
   Pressable,
   Quote,
   Radio,
+  Rating,
   Select,
   Sidebar,
   SidebarItem,
@@ -123,6 +130,7 @@ const COMPONENTS: Record<string, ElementType> = {
   TextInput,
   ToggleButton,
   ToggleButtonGroup,
+  TransferList,
   Typography,
   View,
 }

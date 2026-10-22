@@ -3,6 +3,8 @@ import { fireEvent, screen, within } from '@testing-library/react'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { baseTheme } from '../theme/themes'
 import { MenuItem } from '../MenuItem'
+import { FormControl } from '../FormControl'
+import { FormLabel } from '../FormLabel'
 import { Select } from './Select'
 
 const options = [
@@ -467,5 +469,32 @@ describe('Select (non-native)', () => {
     openMenu()
     expect(screen.getByText('Group label')).toBeInTheDocument()
     expect(screen.getByRole('option', { name: 'One' })).toBeInTheDocument()
+  })
+})
+
+describe('Select in a FormControl', () => {
+  it('is named by its FormLabel, though a combobox is no native control', () => {
+    renderWithTheme(
+      <FormControl>
+        <FormLabel>Platform</FormLabel>
+        <Select>
+          <MenuItem value="web">Web</MenuItem>
+        </Select>
+      </FormControl>
+    )
+    expect(screen.getByRole('combobox', { name: 'Platform' })).toBeInTheDocument()
+  })
+
+  it('lets an own labelId win over its FormControl label', () => {
+    renderWithTheme(
+      <FormControl>
+        <FormLabel>Platform</FormLabel>
+        <span id="own-label">Own</span>
+        <Select labelId="own-label">
+          <MenuItem value="web">Web</MenuItem>
+        </Select>
+      </FormControl>
+    )
+    expect(screen.getByRole('combobox', { name: 'Own' })).toBeInTheDocument()
   })
 })

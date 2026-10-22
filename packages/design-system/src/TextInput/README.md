@@ -29,7 +29,7 @@ Default: `"primary"`.
 
 Text color of the typed value - resolves against `theme.text` (`primary`, `secondary`, `error`, ...). Inherited from `Form`/`FormControl` context when not set.
 
-Default: `"primary"`.
+Default: the accent `color`'s `main`, so changing `color` changes the text too, as a `Select` does.
 
 ---
 

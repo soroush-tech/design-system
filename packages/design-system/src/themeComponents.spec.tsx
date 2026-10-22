@@ -29,6 +29,9 @@ import { MenuList } from './Menu/MenuList'
 import { Modal } from './Modal'
 import { NativeSelect } from './NativeSelect'
 import { Pagination } from './Pagination'
+import { InputRange } from './InputRange'
+import { NumberField } from './NumberField'
+import { Rating } from './Rating'
 import { Breadcrumbs } from './Breadcrumbs'
 import { Paper } from './Paper'
 import { Popover } from './Popover'
@@ -53,6 +56,7 @@ import { Tab, Tabs, TabContext, type TabsActions } from './Tabs'
 import { TextInput } from './TextInput'
 import { ToggleButton } from './ToggleButton/ToggleButton'
 import { ToggleButtonGroup } from './ToggleButton/ToggleButtonGroup'
+import { TransferList } from './TransferList'
 import { Typography } from './Typography'
 
 afterEach(() => {
@@ -115,6 +119,35 @@ const table = (
     </TableFooter>
   </Table>
 )
+
+// Marked, labelled and with two thumbs, so every slot - the marks and their labels, each thumb's
+// value label and input - is drawn.
+const inputRange = (
+  <InputRange
+    defaultValue={[10, 60]}
+    marks={[{ value: 0, label: 'min' }, { value: 100 }]}
+    valueLabel="on"
+  />
+)
+
+// Both buttons drawn, so every slot - the stacked pair and each of them - is.
+const numberField = <NumberField defaultValue={1} />
+
+// Fractional and named, so every slot - the steps of an icon, the "no rating" radio - is drawn.
+// Both lists with a header, a checked row and a title, so every slot - the count and the icons too - is drawn.
+const transferList = (
+  <TransferList
+    items={[
+      { value: 'a', label: 'A' },
+      { value: 'b', label: 'B' },
+    ]}
+    defaultValue={['b']}
+    leftLabel="Left"
+    rightLabel="Right"
+    hasSelectAll
+  />
+)
+const rating = <Rating precision={0.5} max={2} emptyLabelText="None" />
 
 // Collapsed, so every slot - the button and its icon too - is drawn.
 const breadcrumbs = (
@@ -240,6 +273,26 @@ const cases: Case[] = [
     ui: <NativeSelect options={[{ label: 'Ten', value: 10 }]} defaultValue={10} />,
   },
   { name: 'Pagination', slot: 'root', label: 'PaginationNav', ui: <Pagination count={3} /> },
+  { name: 'InputRange', slot: 'root', label: 'InputRange', ui: inputRange },
+  { name: 'InputRange', slot: 'rail', label: 'InputRangeRail', ui: inputRange },
+  { name: 'InputRange', slot: 'track', label: 'InputRangeTrack', ui: inputRange },
+  { name: 'InputRange', slot: 'thumb', label: 'InputRangeThumb', ui: inputRange },
+  { name: 'InputRange', slot: 'mark', label: 'InputRangeMark', ui: inputRange },
+  { name: 'InputRange', slot: 'markLabel', label: 'InputRangeMarkLabel', ui: inputRange },
+  { name: 'InputRange', slot: 'valueLabel', label: 'InputRangeValueLabel', ui: inputRange },
+  { name: 'InputRange', slot: 'input', label: 'InputRangeInput', ui: inputRange },
+  { name: 'NumberField', slot: 'root', label: 'NumberField', ui: numberField },
+  { name: 'NumberField', slot: 'input', label: 'NumberFieldInput', ui: numberField },
+  { name: 'NumberField', slot: 'spinButtons', label: 'NumberFieldSpinButtons', ui: numberField },
+  { name: 'NumberField', slot: 'increment', label: 'NumberFieldIncrement', ui: numberField },
+  { name: 'NumberField', slot: 'decrement', label: 'NumberFieldDecrement', ui: numberField },
+  { name: 'Rating', slot: 'root', label: 'Rating', ui: rating },
+  { name: 'Rating', slot: 'item', label: 'RatingItem', ui: rating },
+  { name: 'Rating', slot: 'icon', label: 'RatingIcon', ui: rating },
+  { name: 'Rating', slot: 'decimal', label: 'RatingDecimal', ui: rating },
+  { name: 'Rating', slot: 'input', label: 'RatingInput', ui: rating },
+  { name: 'Rating', slot: 'text', label: 'RatingText', ui: rating },
+  { name: 'Rating', slot: 'emptyLabel', label: 'RatingEmptyLabel', ui: rating },
   { name: 'Breadcrumbs', slot: 'root', label: 'Breadcrumbs', ui: breadcrumbs },
   { name: 'Breadcrumbs', slot: 'list', label: 'BreadcrumbsList', ui: breadcrumbs },
   { name: 'Breadcrumbs', slot: 'item', label: 'BreadcrumbsItem', ui: breadcrumbs },
@@ -360,6 +413,15 @@ const cases: Case[] = [
       </ToggleButtonGroup>
     ),
   },
+  { name: 'TransferList', slot: 'root', label: 'TransferList', ui: transferList },
+  { name: 'TransferList', slot: 'list', label: 'TransferListList', ui: transferList },
+  { name: 'TransferList', slot: 'header', label: 'TransferListHeader', ui: transferList },
+  { name: 'TransferList', slot: 'title', label: 'TransferListTitle', ui: transferList },
+  { name: 'TransferList', slot: 'count', label: 'TransferListCount', ui: transferList },
+  { name: 'TransferList', slot: 'items', label: 'TransferListItems', ui: transferList },
+  { name: 'TransferList', slot: 'item', label: 'TransferListItem', ui: transferList },
+  { name: 'TransferList', slot: 'controls', label: 'TransferListControls', ui: transferList },
+  { name: 'TransferList', slot: 'icon', label: 'TransferListIcon', ui: transferList },
   { name: 'Typography', slot: 'root', label: 'Typography', ui: <Typography>t</Typography> },
   { name: 'View', slot: 'root', label: 'View', ui: <View>v</View> },
   { name: 'Flex', slot: 'root', label: 'flex', ui: <Flex>f</Flex> },
