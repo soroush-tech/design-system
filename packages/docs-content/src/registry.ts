@@ -103,6 +103,16 @@ export const componentCategories: ComponentCategory[] = [
     ],
   },
   {
+    label: 'Transitions',
+    items: [
+      component('Collapse'),
+      component('Fade'),
+      component('Grow'),
+      component('Slide'),
+      component('Zoom'),
+    ],
+  },
+  {
     label: 'Overlay & behavior',
     items: [
       component('Portal'),

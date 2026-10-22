@@ -57,6 +57,7 @@ import { TextInput } from './TextInput'
 import { ToggleButton } from './ToggleButton/ToggleButton'
 import { ToggleButtonGroup } from './ToggleButton/ToggleButtonGroup'
 import { TransferList } from './TransferList'
+import { Collapse } from './Collapse'
 import { Typography } from './Typography'
 
 afterEach(() => {
@@ -134,6 +135,12 @@ const inputRange = (
 const numberField = <NumberField defaultValue={1} />
 
 // Fractional and named, so every slot - the steps of an icon, the "no rating" radio - is drawn.
+// Open, so the root, the wrapper and the inner box are all drawn.
+const collapse = (
+  <Collapse isShown shouldAppear={false}>
+    Content
+  </Collapse>
+)
 // Both lists with a header, a checked row and a title, so every slot - the count and the icons too - is drawn.
 const transferList = (
   <TransferList
@@ -422,6 +429,9 @@ const cases: Case[] = [
   { name: 'TransferList', slot: 'item', label: 'TransferListItem', ui: transferList },
   { name: 'TransferList', slot: 'controls', label: 'TransferListControls', ui: transferList },
   { name: 'TransferList', slot: 'icon', label: 'TransferListIcon', ui: transferList },
+  { name: 'Collapse', slot: 'root', label: 'Collapse', ui: collapse },
+  { name: 'Collapse', slot: 'wrapper', label: 'CollapseWrapper', ui: collapse },
+  { name: 'Collapse', slot: 'inner', label: 'CollapseInner', ui: collapse },
   { name: 'Typography', slot: 'root', label: 'Typography', ui: <Typography>t</Typography> },
   { name: 'View', slot: 'root', label: 'View', ui: <View>v</View> },
   { name: 'Flex', slot: 'root', label: 'flex', ui: <Flex>f</Flex> },

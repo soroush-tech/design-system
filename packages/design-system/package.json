@@ -38,7 +38,9 @@
     "./Card": "./src/Card/index.ts",
     "./Checkbox": "./src/Checkbox/index.ts",
     "./CircularProgress": "./src/CircularProgress/index.ts",
+    "./Collapse": "./src/Collapse/index.ts",
     "./Drawer": "./src/Drawer/index.ts",
+    "./Fade": "./src/Fade/index.ts",
     "./Flex": "./src/Flex/index.ts",
     "./FocusTrap": "./src/FocusTrap/index.ts",
     "./Form": "./src/Form/index.ts",
@@ -46,6 +48,7 @@
     "./FormHelperText": "./src/FormHelperText/index.ts",
     "./FormLabel": "./src/FormLabel/index.ts",
     "./Grid": "./src/Grid/index.ts",
+    "./Grow": "./src/Grow/index.ts",
     "./Icon": "./src/Icon/index.ts",
     "./Image": "./src/Image/index.ts",
     "./InputRange": "./src/InputRange/index.ts",
@@ -67,6 +70,7 @@
     "./Select": "./src/Select/index.ts",
     "./Sidebar": "./src/Sidebar/index.ts",
     "./Skeleton": "./src/Skeleton/index.ts",
+    "./Slide": "./src/Slide/index.ts",
     "./Switch": "./src/Switch/index.ts",
     "./Table": "./src/Table/index.ts",
     "./Tabs": "./src/Tabs/index.ts",
@@ -75,6 +79,7 @@
     "./TransferList": "./src/TransferList/index.ts",
     "./Typography": "./src/Typography/index.ts",
     "./View": "./src/View/index.ts",
+    "./Zoom": "./src/Zoom/index.ts",
     "./catalog": "./src/catalog/index.ts",
     "./theme": "./src/theme/index.ts",
     "./style": "./src/style/index.ts",
@@ -190,6 +195,16 @@
           "default": "./dist/CircularProgress.cjs"
         }
       },
+      "./Collapse": {
+        "import": {
+          "types": "./dist/Collapse.d.mts",
+          "default": "./dist/Collapse.mjs"
+        },
+        "require": {
+          "types": "./dist/Collapse.d.cts",
+          "default": "./dist/Collapse.cjs"
+        }
+      },
       "./Drawer": {
         "import": {
           "types": "./dist/Drawer.d.mts",
@@ -198,6 +213,16 @@
         "require": {
           "types": "./dist/Drawer.d.cts",
           "default": "./dist/Drawer.cjs"
+        }
+      },
+      "./Fade": {
+        "import": {
+          "types": "./dist/Fade.d.mts",
+          "default": "./dist/Fade.mjs"
+        },
+        "require": {
+          "types": "./dist/Fade.d.cts",
+          "default": "./dist/Fade.cjs"
         }
       },
       "./Flex": {
@@ -268,6 +293,16 @@
         "require": {
           "types": "./dist/Grid.d.cts",
           "default": "./dist/Grid.cjs"
+        }
+      },
+      "./Grow": {
+        "import": {
+          "types": "./dist/Grow.d.mts",
+          "default": "./dist/Grow.mjs"
+        },
+        "require": {
+          "types": "./dist/Grow.d.cts",
+          "default": "./dist/Grow.cjs"
         }
       },
       "./Icon": {
@@ -480,6 +515,16 @@
           "default": "./dist/Skeleton.cjs"
         }
       },
+      "./Slide": {
+        "import": {
+          "types": "./dist/Slide.d.mts",
+          "default": "./dist/Slide.mjs"
+        },
+        "require": {
+          "types": "./dist/Slide.d.cts",
+          "default": "./dist/Slide.cjs"
+        }
+      },
       "./Switch": {
         "import": {
           "types": "./dist/Switch.d.mts",
@@ -518,6 +563,16 @@
         "require": {
           "types": "./dist/TextInput.d.cts",
           "default": "./dist/TextInput.cjs"
+        }
+      },
+      "./Zoom": {
+        "import": {
+          "types": "./dist/Zoom.d.mts",
+          "default": "./dist/Zoom.mjs"
+        },
+        "require": {
+          "types": "./dist/Zoom.d.cts",
+          "default": "./dist/Zoom.cjs"
         }
       },
       "./catalog": {

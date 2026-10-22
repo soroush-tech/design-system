@@ -210,6 +210,15 @@ Reference tokens through the theme; a literal value in a component is a bug.
 - `theme.zOrder.drawer` - 1200
 - `theme.zOrder.modal` - 1300
 
+## transitions
+
+- `theme.transitions.duration.short` - 150
+- `theme.transitions.duration.standard` - 250
+- `theme.transitions.duration.long` - 375
+- `theme.transitions.easing.standard` - cubic-bezier(0.4, 0, 0.2, 1)
+- `theme.transitions.easing.enter` - cubic-bezier(0, 0, 0.2, 1)
+- `theme.transitions.easing.exit` - cubic-bezier(0.4, 0, 1, 1)
+
 ## blur
 
 - `theme.blur` - 12px

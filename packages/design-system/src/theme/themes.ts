@@ -109,6 +109,23 @@ export interface ThemeZOrder {
   drawer: number
   modal: number
 }
+/** The durations of `theme.transitions.duration`, in milliseconds. */
+export interface ThemeTransitionDuration {
+  short: number
+  standard: number
+  long: number
+}
+/** The easings of `theme.transitions.easing` - CSS timing functions. */
+export interface ThemeTransitionEasing {
+  standard: string
+  enter: string
+  exit: string
+}
+/** How long and how smoothly things move - read by `Collapse`, `Fade`, `Grow`, `Slide` and `Zoom`. */
+export interface ThemeTransitions {
+  duration: OpenScale<ThemeTransitionDuration>
+  easing: OpenScale<ThemeTransitionEasing>
+}
 export interface ThemeRadii {
   sq: string
   sm: string
@@ -443,6 +460,15 @@ export interface RatingOwnerState {
   color?: keyof ThemePalette
 }
 
+/** The defaults a theme may set for every `Collapse`. */
+export interface CollapseOwnerState {
+  orientation?: 'vertical' | 'horizontal'
+  collapsedSize?: string | number
+  timeout?: number | { enter: number; exit: number }
+  easing?: keyof ThemeTransitionEasing
+  shouldAppear?: boolean
+}
+
 /** The defaults a theme may set for every `TransferList` - its button labels give it a language. */
 export interface TransferListOwnerState {
   size?: keyof ThemeSizes
@@ -646,6 +672,7 @@ export interface ThemeComponents {
     InputRangeOwnerState,
     'root' | 'rail' | 'track' | 'thumb' | 'mark' | 'markLabel' | 'valueLabel' | 'input'
   >
+  Collapse?: ComponentConfig<CollapseOwnerState, 'root' | 'wrapper' | 'inner'>
   TransferList?: ComponentConfig<
     TransferListOwnerState,
     'root' | 'list' | 'header' | 'title' | 'count' | 'items' | 'item' | 'controls' | 'icon'
@@ -733,6 +760,7 @@ export interface Theme {
   fontWeights: OpenScale<ThemeFontWeights>
   palette: OpenScale<ThemePalette>
   zOrder: OpenScale<ThemeZOrder>
+  transitions: ThemeTransitions
 }
 
 export { createTheme, type ThemeOverride, type DeepPartial } from './utils/createTheme'
@@ -769,6 +797,16 @@ export const zOrder = {
   appBar: 1100,
   drawer: 1200,
   modal: 1300,
+}
+
+// Leaving is quicker than entering, and both ease out of the way: the user is waiting on neither.
+export const transitions = {
+  duration: { short: 150, standard: 250, long: 375 },
+  easing: {
+    standard: 'cubic-bezier(0.4, 0, 0.2, 1)',
+    enter: 'cubic-bezier(0, 0, 0.2, 1)',
+    exit: 'cubic-bezier(0.4, 0, 1, 1)',
+  },
 }
 
 export const fontSizes = [12, 14, 16, 20, 24, 32, 48]
@@ -942,6 +980,7 @@ export const baseTheme: Theme = {
   breakpoints,
   layout,
   zOrder,
+  transitions,
   blur: '12px',
   colorScheme: 'dark',
   palette: {

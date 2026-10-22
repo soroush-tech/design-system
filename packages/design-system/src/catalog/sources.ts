@@ -6,6 +6,11 @@ import { buttonCatalog } from '../Button/Button.catalog'
 import { buttonGroupCatalog } from '../ButtonGroup/ButtonGroup.catalog'
 import { cardCatalog } from '../Card/Card.catalog'
 import { checkboxCatalog } from '../Checkbox/Checkbox.catalog'
+import { collapseCatalog } from '../Collapse/Collapse.catalog'
+import { fadeCatalog } from '../Fade/Fade.catalog'
+import { growCatalog } from '../Grow/Grow.catalog'
+import { slideCatalog } from '../Slide/Slide.catalog'
+import { zoomCatalog } from '../Zoom/Zoom.catalog'
 import { contextMenuCatalog } from '../Menu/ContextMenu/ContextMenu.catalog'
 import { circularProgressCatalog } from '../CircularProgress/CircularProgress.catalog'
 import { drawerCatalog } from '../Drawer/Drawer.catalog'
@@ -88,6 +93,11 @@ export const catalogSources: Record<string, CatalogSource> = {
   ButtonGroup: { entry: buttonGroupCatalog, folder: 'ButtonGroup' },
   Card: { entry: cardCatalog, folder: 'Card' },
   Checkbox: { entry: checkboxCatalog, folder: 'Checkbox' },
+  Collapse: { entry: collapseCatalog, folder: 'Collapse' },
+  Fade: { entry: fadeCatalog, folder: 'Fade' },
+  Grow: { entry: growCatalog, folder: 'Grow' },
+  Slide: { entry: slideCatalog, folder: 'Slide' },
+  Zoom: { entry: zoomCatalog, folder: 'Zoom' },
   ContextMenu: { entry: contextMenuCatalog, folder: 'Menu', family: 'Menu' },
   CircularProgress: { entry: circularProgressCatalog, folder: 'CircularProgress' },
   Drawer: { entry: drawerCatalog, folder: 'Drawer' },

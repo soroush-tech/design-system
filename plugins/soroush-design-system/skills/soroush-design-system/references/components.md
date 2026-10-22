@@ -2,7 +2,7 @@
 
 # Components
 
-The 75 components shipped by the design system, and when to reach for each.
+The 80 components shipped by the design system, and when to reach for each.
 Import every component from its own subpath.
 
 ## Layout & surfaces
@@ -82,6 +82,14 @@ Import every component from its own subpath.
 - **LinearProgress** - Renders a horizontal loading bar - the linear counterpart of `CircularProgress`.
 - **Skeleton** - Displays a low-fidelity placeholder while content loads, reducing layout shift and signalling a loading state.
 - **Backdrop** - A dimmed, full-viewport scrim rendered behind a modal's content.
+
+## Transitions
+
+- **Collapse** - Opens and closes its content by its height - or, horizontal, its width.
+- **Fade** - Fades one child in and out by its opacity.
+- **Grow** - Grows one child in from a little smaller, fading as it does, and shrinks it out.
+- **Slide** - Slides one child in from an edge of the window and back out.
+- **Zoom** - Zooms one child in from nothing and out to nothing.
 
 ## Overlay & behavior
 

@@ -8,6 +8,11 @@ import { Button } from '../../Button'
 import { ButtonGroup } from '../../ButtonGroup'
 import { Card } from '../../Card'
 import { Checkbox } from '../../Checkbox'
+import { Collapse } from '../../Collapse'
+import { Fade } from '../../Fade'
+import { Grow } from '../../Grow'
+import { Slide } from '../../Slide'
+import { Zoom } from '../../Zoom'
 import { CircularProgress } from '../../CircularProgress'
 import { ContextMenu } from '../../Menu/ContextMenu'
 import { Drawer, DrawerToggle } from '../../Drawer'
@@ -73,6 +78,11 @@ const COMPONENTS: Record<string, ElementType> = {
   ButtonGroup,
   Card,
   Checkbox,
+  Collapse,
+  Fade,
+  Grow,
+  Slide,
+  Zoom,
   CircularProgress,
   ContextMenu,
   Drawer,

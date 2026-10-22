@@ -87,6 +87,9 @@ export {
   inputRangeValueLabelValues as inputRangeValueLabelTokens,
 } from '../../InputRange/InputRange.catalog'
 export { ratingPrecisionValues as ratingPrecisionTokens } from '../../Rating/Rating.catalog'
+export { transitionEasingValues as transitionEasingTokens } from '../transitionCatalog'
+export { collapseOrientationValues as collapseOrientationTokens } from '../../Collapse/Collapse.catalog'
+export { slideDirectionValues as slideDirectionTokens } from '../../Slide/Slide.catalog'
 export { menuItemRoleValues as menuItemRoleTokens } from '../../MenuItem/MenuItem.catalog'
 export { menuAlignValues as menuAlignTokens } from '../../Menu/Menu/Menu.catalog'
 export {

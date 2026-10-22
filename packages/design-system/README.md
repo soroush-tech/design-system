@@ -152,6 +152,13 @@ SSR critical-CSS extraction (e.g. with `@emotion/server`) is a separate, opt-in 
 | `Skeleton`                           | Loading placeholder with pulse/wave animations |
 | `Backdrop`                           | Dimmed overlay behind modal surfaces           |
 
+### Transitions
+
+| Component                       | Purpose                                                            |
+| ------------------------------- | ------------------------------------------------------------------ |
+| `Collapse`                      | Opens and closes its content by its height, or its width           |
+| `Fade`, `Grow`, `Slide`, `Zoom` | Show and hide one child by opacity, scale, an edge or from nothing |
+
 ### Overlay & behavior primitives
 
 | Component       | Purpose                                                          |
