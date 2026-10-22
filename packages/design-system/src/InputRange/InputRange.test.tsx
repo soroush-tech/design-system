@@ -55,6 +55,14 @@ const pointer = (
 }
 
 describe('InputRange', () => {
+  it('draws one thumb, at the least, for an empty range value - given or controlled', () => {
+    const { rerender } = renderWithTheme(range({ defaultValue: [], min: 5 }))
+    expect(sliders()).toHaveLength(1)
+    expect(slider()).toHaveValue('5')
+    rerender(range({ value: [], min: 5, onChange: () => {} }))
+    expect(sliders()).toHaveLength(1)
+  })
+
   it('has one native range input for a number, with its range and value', () => {
     renderWithTheme(range({ defaultValue: 30, min: 10, max: 90, step: 5, name: 'volume' }))
     expect(sliders()).toHaveLength(1)

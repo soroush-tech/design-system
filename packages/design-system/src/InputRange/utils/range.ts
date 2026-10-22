@@ -22,10 +22,13 @@ export function fractionToValue(fraction: number, min: number, max: number): num
 
 const ascending = (a: number, b: number) => a - b
 
-/** The thumbs' values, sorted and clamped to the range - one for a number, each for an array. */
+/**
+ * The thumbs' values, sorted and clamped to the range - one for a number, each for an array. An
+ * empty array has no thumb to draw or move, so it is one thumb at `min`, as no value is.
+ */
 export function normalizeValues(value: number | readonly number[], min: number, max: number) {
   const list = typeof value === 'number' ? [value] : [...value].sort(ascending)
-  return list.map((entry) => clamp(entry, min, max))
+  return (list.length === 0 ? [min] : list).map((entry) => clamp(entry, min, max))
 }
 
 /** The marks: one at every step for `true`, the ones given, or none. */

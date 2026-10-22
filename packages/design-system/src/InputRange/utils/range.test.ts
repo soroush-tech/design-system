@@ -35,6 +35,8 @@ describe('normalizeValues', () => {
 
   it('sorts and clamps a list, whatever order it was given in', () => {
     expect(normalizeValues([80, 20, 120], 0, 100)).toEqual([20, 80, 100])
+    // An empty array is no value: one thumb, at the least.
+    expect(normalizeValues([], 10, 100)).toEqual([10])
   })
 })
 
