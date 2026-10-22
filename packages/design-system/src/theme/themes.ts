@@ -460,6 +460,14 @@ export interface RatingOwnerState {
   color?: keyof ThemePalette
 }
 
+/** The defaults a theme may set for every `Chip` - its `deleteLabel` gives it a language. */
+export interface ChipOwnerState {
+  variant?: 'contained' | 'outlined'
+  color?: keyof ThemePalette
+  size?: keyof ThemeSizes
+  deleteLabel?: string
+}
+
 /** The defaults a theme may set for every `Accordion`. */
 export interface AccordionOwnerState {
   hasGutters?: boolean
@@ -686,6 +694,10 @@ export interface ThemeComponents {
   InputRange?: ComponentConfig<
     InputRangeOwnerState,
     'root' | 'rail' | 'track' | 'thumb' | 'mark' | 'markLabel' | 'valueLabel' | 'input'
+  >
+  Chip?: ComponentConfig<
+    ChipOwnerState,
+    'root' | 'body' | 'label' | 'icon' | 'avatar' | 'deleteIcon'
   >
   Accordion?: ComponentConfig<AccordionOwnerState, 'root' | 'region'>
   AccordionSummary?: ComponentConfig<

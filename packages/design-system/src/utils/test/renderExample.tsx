@@ -7,6 +7,7 @@ import {
   AccordionGroup,
   AccordionSummary,
 } from '../../Accordion'
+import { Chip } from '../../Chip'
 import { AppBar } from '../../AppBar'
 import { Avatar } from '../../Avatar'
 import { Backdrop } from '../../Backdrop'
@@ -82,6 +83,7 @@ const COMPONENTS: Record<string, ElementType> = {
   AccordionDetails,
   AccordionGroup,
   AccordionSummary,
+  Chip,
   AppBar,
   Avatar,
   Backdrop,

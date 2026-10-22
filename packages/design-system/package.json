@@ -38,6 +38,7 @@
     "./ButtonGroup": "./src/ButtonGroup/index.ts",
     "./Card": "./src/Card/index.ts",
     "./Checkbox": "./src/Checkbox/index.ts",
+    "./Chip": "./src/Chip/index.ts",
     "./CircularProgress": "./src/CircularProgress/index.ts",
     "./Collapse": "./src/Collapse/index.ts",
     "./Drawer": "./src/Drawer/index.ts",
@@ -194,6 +195,16 @@
         "require": {
           "types": "./dist/Checkbox.d.cts",
           "default": "./dist/Checkbox.cjs"
+        }
+      },
+      "./Chip": {
+        "import": {
+          "types": "./dist/Chip.d.mts",
+          "default": "./dist/Chip.mjs"
+        },
+        "require": {
+          "types": "./dist/Chip.d.cts",
+          "default": "./dist/Chip.cjs"
         }
       },
       "./CircularProgress": {

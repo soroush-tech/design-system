@@ -58,6 +58,7 @@ import { ToggleButton } from './ToggleButton/ToggleButton'
 import { ToggleButtonGroup } from './ToggleButton/ToggleButtonGroup'
 import { TransferList } from './TransferList'
 import { Collapse } from './Collapse'
+import { Chip } from './Chip'
 import {
   Accordion,
   AccordionActions,
@@ -151,6 +152,13 @@ const accordion = (
       <AccordionActions>Save</AccordionActions>
     </Accordion>
   </AccordionGroup>
+)
+// A chip with an icon, a delete control and a second with an avatar, so every part is drawn.
+const chip = (
+  <>
+    <Chip label="Tag" icon={<span />} onDelete={() => {}} deleteLabel="Remove" />
+    <Chip label="Tag" avatar={<span />} />
+  </>
 )
 // Open, so the root, the wrapper and the inner box are all drawn.
 const collapse = (
@@ -455,6 +463,12 @@ const cases: Case[] = [
   { name: 'AccordionDetails', slot: 'root', label: 'AccordionDetails', ui: accordion },
   { name: 'AccordionActions', slot: 'root', label: 'AccordionActions', ui: accordion },
   { name: 'AccordionGroup', slot: 'root', label: 'AccordionGroup', ui: accordion },
+  { name: 'Chip', slot: 'root', label: 'Chip', ui: chip },
+  { name: 'Chip', slot: 'body', label: 'ChipBody', ui: chip },
+  { name: 'Chip', slot: 'label', label: 'ChipLabel', ui: chip },
+  { name: 'Chip', slot: 'icon', label: 'ChipIcon', ui: chip },
+  { name: 'Chip', slot: 'avatar', label: 'ChipAvatar', ui: chip },
+  { name: 'Chip', slot: 'deleteIcon', label: 'ChipDeleteIcon', ui: chip },
   { name: 'Collapse', slot: 'root', label: 'Collapse', ui: collapse },
   { name: 'Collapse', slot: 'wrapper', label: 'CollapseWrapper', ui: collapse },
   { name: 'Collapse', slot: 'inner', label: 'CollapseInner', ui: collapse },

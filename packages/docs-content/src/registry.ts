@@ -97,6 +97,7 @@ export const componentCategories: ComponentCategory[] = [
   {
     label: 'Feedback',
     items: [
+      component('Chip'),
       component('CircularProgress'),
       component('LinearProgress'),
       component('Skeleton'),

@@ -3,6 +3,7 @@ import { accordionCatalog } from '../Accordion/Accordion/Accordion.catalog'
 import { accordionDetailsCatalog } from '../Accordion/AccordionDetails/AccordionDetails.catalog'
 import { accordionGroupCatalog } from '../Accordion/AccordionGroup/AccordionGroup.catalog'
 import { accordionSummaryCatalog } from '../Accordion/AccordionSummary/AccordionSummary.catalog'
+import { chipCatalog } from '../Chip/Chip.catalog'
 import { appBarCatalog } from '../AppBar/AppBar.catalog'
 import { avatarCatalog } from '../Avatar/Avatar.catalog'
 import { backdropCatalog } from '../Backdrop/Backdrop.catalog'
@@ -95,6 +96,7 @@ export const catalogSources: Record<string, CatalogSource> = {
   AccordionDetails: { entry: accordionDetailsCatalog, folder: 'Accordion', family: 'Accordion' },
   AccordionGroup: { entry: accordionGroupCatalog, folder: 'Accordion', family: 'Accordion' },
   AccordionSummary: { entry: accordionSummaryCatalog, folder: 'Accordion', family: 'Accordion' },
+  Chip: { entry: chipCatalog, folder: 'Chip' },
   AppBar: { entry: appBarCatalog, folder: 'AppBar' },
   Avatar: { entry: avatarCatalog, folder: 'Avatar' },
   Backdrop: { entry: backdropCatalog, folder: 'Backdrop' },

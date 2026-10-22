@@ -147,11 +147,12 @@ SSR critical-CSS extraction (e.g. with `@emotion/server`) is a separate, opt-in 
 
 ### Feedback
 
-| Component                            | Purpose                                        |
-| ------------------------------------ | ---------------------------------------------- |
-| `CircularProgress`, `LinearProgress` | Determinate/indeterminate progress indicators  |
-| `Skeleton`                           | Loading placeholder with pulse/wave animations |
-| `Backdrop`                           | Dimmed overlay behind modal surfaces           |
+| Component                            | Purpose                                                         |
+| ------------------------------------ | --------------------------------------------------------------- |
+| `Chip`                               | A compact tag: a label, an icon or avatar, a click and a delete |
+| `CircularProgress`, `LinearProgress` | Determinate/indeterminate progress indicators                   |
+| `Skeleton`                           | Loading placeholder with pulse/wave animations                  |
+| `Backdrop`                           | Dimmed overlay behind modal surfaces                            |
 
 ### Transitions
 
