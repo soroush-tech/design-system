@@ -1,4 +1,4 @@
-import { useContext, useRef, type MouseEvent, type PointerEvent } from 'react'
+import { useContext, useEffect, useRef, type MouseEvent, type PointerEvent } from 'react'
 import type { LayoutProps, SpaceProps } from '@soroush.tech/styled-system'
 import { createShouldForwardProp, get, props, space, styled, system, type Theme } from '../index'
 import { useDefaultProps, useTheme } from '../theme'
@@ -248,6 +248,11 @@ function SpinButton({
   onStep,
 }: Readonly<SpinButtonProps>) {
   const hold = useHoldRepeat(() => onStep(direction))
+  // A button that goes off under the press - the range's end - gets no release: the repeat ends here.
+  const { stop } = hold
+  useEffect(() => {
+    if (isDisabled) stop()
+  }, [isDisabled, stop])
   const Button = direction === 1 ? NumberFieldIncrement : NumberFieldDecrement
   return (
     <Button

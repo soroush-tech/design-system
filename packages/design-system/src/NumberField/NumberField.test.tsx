@@ -408,6 +408,22 @@ describe('NumberField', () => {
       }
     })
 
+    it('stop repeating when the button goes off under the press, at the end of the range', () => {
+      vi.useFakeTimers()
+      const onChangeCommitted = vi.fn()
+      renderWithTheme(labelled({ defaultValue: 8, max: 10, onChangeCommitted }))
+      const increase = screen.getByRole('button', { name: 'Increase' })
+      fireEvent.pointerDown(increase, { button: 0 })
+      act(() => vi.advanceTimersByTime(400))
+      for (let tick = 0; tick < 3; tick += 1) act(() => vi.advanceTimersByTime(60))
+      expect(field()).toHaveValue('10')
+      expect(increase).toBeDisabled()
+      // No release came, yet nothing steps - or commits - again.
+      const commits = onChangeCommitted.mock.calls.length
+      act(() => vi.advanceTimersByTime(1000))
+      expect(onChangeCommitted).toHaveBeenCalledTimes(commits)
+    })
+
     it('are off at the ends of the range, and when the field takes no change', () => {
       const { unmount } = renderWithTheme(labelled({ defaultValue: 10, min: 0, max: 10 }))
       expect(screen.getByRole('button', { name: 'Increase' })).toBeDisabled()

@@ -10,8 +10,8 @@ const control = (overrides: Partial<FormControlContextValue> = {}): FormControlC
   id: 'field-1',
   helperId: 'field-1-helper',
   labelId: 'field-1-label',
-  hasLabel: false,
-  setHasLabel: () => {},
+  registeredLabelId: null,
+  setLabelId: () => {},
   hasHelperText: false,
   setHasHelperText: () => {},
   ...overrides,
@@ -181,11 +181,12 @@ describe('useFormControl', () => {
   })
 
   describe('labelId', () => {
-    it('is the label id only while a label is rendered', () => {
-      const wrapper = (hasLabel: boolean) => withProviders(undefined, control({ hasLabel }))
-      const present = renderHook(() => useFormControl(), { wrapper: wrapper(true) })
-      expect(present.result.current.labelId).toBe('field-1-label')
-      const absent = renderHook(() => useFormControl(), { wrapper: wrapper(false) })
+    it('is the id of the label rendered, and none while there is no label', () => {
+      const wrapper = (registeredLabelId: string | null) =>
+        withProviders(undefined, control({ registeredLabelId }))
+      const present = renderHook(() => useFormControl(), { wrapper: wrapper('mine') })
+      expect(present.result.current.labelId).toBe('mine')
+      const absent = renderHook(() => useFormControl(), { wrapper: wrapper(null) })
       expect(absent.result.current.labelId).toBeUndefined()
     })
   })

@@ -37,19 +37,21 @@ export function FormLabel({
   const form = useContext(FormContext)
   const isRequired = required ?? control?.required ?? false
   const resolvedFor = htmlFor ?? control?.id
-  // Registers its presence, so a group control names itself by it only while it is rendered.
-  const setHasLabel = control?.setHasLabel
+  const renderedId = id ?? control?.labelId
+  // Registers the id it renders, so a group control names itself by it only while it is rendered.
+  const setLabelId = control?.setLabelId
   useEffect(() => {
-    setHasLabel?.(true)
-    return () => setHasLabel?.(false)
-  }, [setHasLabel])
+    if (!setLabelId || !renderedId) return undefined
+    setLabelId(renderedId)
+    return () => setLabelId(null)
+  }, [setLabelId, renderedId])
   // Explicit color wins, then per-field `textColor`, then form-wide `textColor`.
   const resolvedColor = color ?? control?.textColor ?? form.textColor
 
   return (
     <FormLabelRoot
       as="label"
-      id={id ?? control?.labelId}
+      id={renderedId}
       htmlFor={resolvedFor}
       variant="body2"
       {...rest}

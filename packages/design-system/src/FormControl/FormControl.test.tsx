@@ -112,4 +112,15 @@ describe('FormControl', () => {
     rerender(view(false))
     expect(screen.getByTestId('probe')).toHaveAttribute('data-labelid', '')
   })
+
+  it('exposes the id a label renders when it is given its own', () => {
+    renderWithTheme(
+      <FormControl id="email">
+        <Probe />
+        <FormLabel id="mine">Email</FormLabel>
+      </FormControl>
+    )
+    expect(screen.getByTestId('probe')).toHaveAttribute('data-labelid', 'mine')
+    expect(screen.getByText('Email')).toHaveAttribute('id', 'mine')
+  })
 })

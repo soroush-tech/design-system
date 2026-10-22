@@ -53,6 +53,6 @@ export function useFormControl(overrides: FormControlOverrides = {}): ResolvedFo
     color: overrides.color ?? control?.color ?? form.color,
     textColor: overrides.textColor ?? control?.textColor ?? form.textColor,
     'aria-describedby': control?.hasHelperText ? control.helperId : undefined,
-    labelId: control?.hasLabel ? control.labelId : undefined,
+    labelId: control?.registeredLabelId ?? undefined,
   }
 }

@@ -100,7 +100,7 @@ const TransferListHeader = styled('div', {
   display: 'flex',
   alignItems: 'center',
   gap: theme.space[1],
-  padding: `${theme.space[1]}px ${theme.space[2]}px`,
+  padding: `${theme.space[1]} ${theme.space[2]}`,
   borderBottom: `${theme.borderWidths.thin} solid ${get(theme, 'border.default')}`,
 }))
 
@@ -132,7 +132,7 @@ const TransferListRow = styled('div', {
   // The checkbox is the row: its label fills it, so the whole row toggles.
   '& > label': {
     flex: 1,
-    padding: `${theme.space[1]}px ${theme.space[2]}px`,
+    padding: `${theme.space[1]} ${theme.space[2]}`,
     boxSizing: 'border-box',
   },
 }))

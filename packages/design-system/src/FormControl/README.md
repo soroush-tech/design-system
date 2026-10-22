@@ -58,7 +58,7 @@ All `View` props pass through to the root (space, layout, etc.), except `color`,
 
 ## `useFormControl`
 
-Hook consumed by controls (`TextInput`, `Checkbox`, `Radio`) and by `Field`. Merges the control's explicit props with `FormControl` and `Form` context per the override chain and returns the resolved `{ id, error, disabled, required, size, fullWidth, color, 'aria-describedby', labelId }` - `labelId` only while a `FormLabel` is rendered. Uniform defaults (`size`, the booleans) are applied here; `color` is left for each control to default, since its domain differs (e.g. `Checkbox` adds `"default"`).
+Hook consumed by controls (`TextInput`, `Checkbox`, `Radio`) and by `Field`. Merges the control's explicit props with `FormControl` and `Form` context per the override chain and returns the resolved `{ id, error, disabled, required, size, fullWidth, color, 'aria-describedby', labelId }` - `labelId` only while a `FormLabel` is rendered, and the id it renders - its own `id`, if it is given one. Uniform defaults (`size`, the booleans) are applied here; `color` is left for each control to default, since its domain differs (e.g. `Checkbox` adds `"default"`).
 
 ---
 
