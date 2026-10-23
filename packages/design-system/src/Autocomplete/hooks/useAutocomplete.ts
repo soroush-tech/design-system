@@ -199,16 +199,18 @@ export function useAutocomplete<T, Multiple extends boolean | undefined = false>
     }
   }
 
-  const keyHandlers: Record<string, (event: KeyboardEvent<HTMLInputElement>) => void> = {
-    ArrowDown: handleArrow,
-    ArrowUp: handleArrow,
-    Home: handleEdge,
-    End: handleEdge,
-    Enter: handleEnter,
-    Escape: handleEscape,
-    Backspace: handleBackspace,
-  }
-  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => keyHandlers[event.key]?.(event)
+  // A Map, not an object: a key's name is never looked up on Object.prototype.
+  const keyHandlers = new Map<string, (event: KeyboardEvent<HTMLInputElement>) => void>([
+    ['ArrowDown', handleArrow],
+    ['ArrowUp', handleArrow],
+    ['Home', handleEdge],
+    ['End', handleEdge],
+    ['Enter', handleEnter],
+    ['Escape', handleEscape],
+    ['Backspace', handleBackspace],
+  ])
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) =>
+    keyHandlers.get(event.key)?.(event)
 
   const handleBlur = (event: SyntheticEvent) => {
     close()

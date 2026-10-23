@@ -223,6 +223,31 @@ describe('Pressable', () => {
     )
   })
 
+  describe('a new tab', () => {
+    it('adds rel="noopener noreferrer" to an anchor with target="_blank" and no rel', () => {
+      renderWithTheme(
+        <Pressable href="https://example.com" target="_blank">
+          Docs
+        </Pressable>
+      )
+      expect(screen.getByRole('link')).toHaveAttribute('rel', 'noopener noreferrer')
+    })
+
+    it('keeps the rel given', () => {
+      renderWithTheme(
+        <Pressable href="https://example.com" target="_blank" rel="noopener">
+          Docs
+        </Pressable>
+      )
+      expect(screen.getByRole('link')).toHaveAttribute('rel', 'noopener')
+    })
+
+    it('adds no rel to an anchor that opens in the same tab', () => {
+      renderWithTheme(<Pressable href="/docs">Docs</Pressable>)
+      expect(screen.getByRole('link')).not.toHaveAttribute('rel')
+    })
+  })
+
   describe('feedback', () => {
     it('emits no press rule by default', () => {
       renderWithTheme(<Pressable>Plain</Pressable>)

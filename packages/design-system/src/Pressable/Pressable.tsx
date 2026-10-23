@@ -22,6 +22,7 @@ import {
   typography,
 } from '../index'
 import { alpha } from '../utils'
+import { getAnchorRel } from '../utils/getAnchorRel'
 import { themeDefault } from '../theme/utils/themeDefault'
 import { useDefaultProps, useTheme } from '../theme'
 
@@ -172,6 +173,8 @@ export function Pressable({
   color,
   activeOpacity,
   href,
+  target,
+  rel,
   type = 'button',
   disabled = false,
   onClick,
@@ -242,6 +245,8 @@ export function Pressable({
     <PressableRoot
       as={element}
       href={href}
+      target={target}
+      rel={getAnchorRel(target, rel)}
       // Attributes only a native button understands - invalid anywhere else.
       type={isButton ? type : undefined}
       disabled={isButton ? disabled : undefined}

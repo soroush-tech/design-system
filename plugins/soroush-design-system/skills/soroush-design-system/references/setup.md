@@ -37,7 +37,9 @@ Copy `providers.tsx` to `app/providers.tsx`. Two things it does:
 - **Global reset** - `border-box` everywhere, zero body margin,
   `background.primary` / `text.initial` / `fonts.body` on `<body>`.
 
-Change the cache key (`createCache({ key: "dc" })`) to a short app-specific prefix.
+Change the cache key (`createCache({ key: "dc" })`) to a short app-specific prefix. Under a
+strict Content Security Policy, give the cache the response's nonce too
+(`createCache({ key: "dc", nonce })`) - every style tag Emotion inserts then carries it.
 
 Then in `app/layout.tsx`:
 

@@ -48,6 +48,31 @@ describe('Button', () => {
 
   // ─── base styles ─────────────────────────────────────────────────────────────
 
+  describe('a new tab', () => {
+    it('adds rel="noopener noreferrer" to an anchor with target="_blank" and no rel', () => {
+      renderWithTheme(
+        <Button href="https://example.com" target="_blank">
+          Docs
+        </Button>
+      )
+      expect(screen.getByRole('link')).toHaveAttribute('rel', 'noopener noreferrer')
+    })
+
+    it('keeps the rel given', () => {
+      renderWithTheme(
+        <Button href="https://example.com" target="_blank" rel="noopener">
+          Docs
+        </Button>
+      )
+      expect(screen.getByRole('link')).toHaveAttribute('rel', 'noopener')
+    })
+
+    it('adds no rel to an anchor that opens in the same tab', () => {
+      renderWithTheme(<Button href="/docs">Docs</Button>)
+      expect(screen.getByRole('link')).not.toHaveAttribute('rel')
+    })
+  })
+
   describe('base styles', () => {
     it('applies uppercase text transform', () => {
       renderWithTheme(<Button data-testid="btn">Click</Button>)
