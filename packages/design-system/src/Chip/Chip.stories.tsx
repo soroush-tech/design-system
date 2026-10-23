@@ -15,7 +15,19 @@ const meta: Meta<typeof Chip> = {
   tags: ['autodocs'],
   parameters: {
     layout: 'padded',
-    controls: { include: ['label', 'variant', 'color', 'size', 'disabled', 'deleteLabel', 'm'] },
+    controls: {
+      include: [
+        'label',
+        'variant',
+        'color',
+        'size',
+        'shape',
+        'borderRadius',
+        'disabled',
+        'deleteLabel',
+        'm',
+      ],
+    },
   },
   args: exampleArgs(chipCatalog.example),
   argTypes: {
