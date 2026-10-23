@@ -59,7 +59,7 @@ export const numberInputCatalog = defineCatalogEntry<NumberInputProps>()({
     required: { values: [true, false], default: false },
     fullWidth: { values: [true, false], default: false },
   },
-  content: {},
+  content: { startContent: 'child', endContent: 'child' },
   twoWay: { prop: 'value', event: 'onChange', read: 'argument' },
   domEvents: ['onChangeCommitted'],
 })

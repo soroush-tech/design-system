@@ -326,6 +326,106 @@ describe('NumberInput', () => {
     expect(screen.getByTestId('field')).toHaveStyle({ opacity: '0.5', pointerEvents: 'none' })
   })
 
+  describe('content in the frame', () => {
+    it('draws content before the number and after it, inside the field', () => {
+      renderWithTheme(
+        <NumberInput
+          aria-label="Opacity"
+          defaultValue={5}
+          startContent={<i data-testid="icon" />}
+          endContent={
+            <>
+              <span>%</span>
+              <button type="button">Key</button>
+            </>
+          }
+        />
+      )
+      const frame = field().parentElement as HTMLElement
+      const before = screen.getByTestId('icon').parentElement as HTMLElement
+      const after = screen.getByText('%').parentElement as HTMLElement
+      expect(frame).toContainElement(before)
+      expect(frame).toContainElement(after)
+      // In order: before the number, after it, and before the step buttons.
+      const order = [...frame.children]
+      expect(order.indexOf(before)).toBeLessThan(order.indexOf(field()))
+      expect(order.indexOf(field())).toBeLessThan(order.indexOf(after))
+      expect(screen.getByRole('button', { name: 'Key' })).toBeInTheDocument()
+    })
+
+    it('puts the end content before the stacked step buttons, and between the side buttons', () => {
+      const stacked = renderWithTheme(labelled({ defaultValue: 1, endContent: <span>px</span> }))
+      const frame = field().parentElement as HTMLElement
+      const end = screen.getByText('px').parentElement as HTMLElement
+      const increase = screen.getByRole('button', { name: 'Increase' })
+      expect([...frame.children].indexOf(end)).toBeLessThan(
+        [...frame.children].indexOf(increase.parentElement as HTMLElement)
+      )
+      stacked.unmount()
+      renderWithTheme(
+        labelled({
+          defaultValue: 1,
+          spinButtons: 'sides',
+          startContent: <span>from</span>,
+          endContent: <span>px</span>,
+        })
+      )
+      const sides = [...(field().parentElement as HTMLElement).children]
+      expect(sides.indexOf(screen.getByRole('button', { name: 'Decrease' }))).toBe(0)
+      expect(sides.indexOf(screen.getByRole('button', { name: 'Increase' }))).toBe(sides.length - 1)
+    })
+
+    it('has the room at the frame edge that the input has on its side', () => {
+      renderWithTheme(
+        <NumberInput
+          aria-label="Size"
+          size="sm"
+          startContent={<span>a</span>}
+          endContent={<span>b</span>}
+        />
+      )
+      expect(screen.getByText('a').parentElement).toHaveStyle({
+        paddingInlineStart: baseTheme.space[baseTheme.sizes.sm.paddingLeft],
+      })
+      expect(screen.getByText('b').parentElement).toHaveStyle({
+        paddingInlineEnd: baseTheme.space[baseTheme.sizes.sm.paddingRight],
+      })
+    })
+
+    it('draws none for no content', () => {
+      renderWithTheme(<NumberInput aria-label="Plain" />)
+      expect((field().parentElement as HTMLElement).children).toHaveLength(2)
+    })
+  })
+
+  describe('a number written with its unit', () => {
+    it.each([
+      ['12px', 12],
+      ['12 px', 12],
+      ['1.5rem', 1.5],
+      ['-8px', -8],
+      ['100%', 100],
+    ])('reads %s as %d', (text, expected) => {
+      const onChange = vi.fn()
+      renderWithTheme(<NumberInput aria-label="Length" onChange={onChange} />)
+      type(text)
+      fireEvent.blur(field())
+      expect(onChange).toHaveBeenLastCalledWith(expected)
+      expect(field()).toHaveValue(String(expected))
+    })
+
+    it('steps by 1 and by 10 with Shift', () => {
+      renderWithTheme(<NumberInput aria-label="Length" defaultValue={12} />)
+      press('ArrowUp')
+      expect(field()).toHaveValue('13')
+      press('ArrowUp', { shiftKey: true })
+      expect(field()).toHaveValue('23')
+      press('ArrowDown', { shiftKey: true })
+      press('ArrowDown')
+      expect(field()).toHaveValue('12')
+    })
+  })
+
   describe('spin buttons', () => {
     it('are stacked at the end by default - an increase over a decrease', () => {
       renderWithTheme(labelled({ defaultValue: 1 }))

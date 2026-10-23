@@ -92,6 +92,25 @@ describe('closable tabs', () => {
     expect(tab('Canvas')).not.toHaveAttribute('aria-keyshortcuts')
   })
 
+  it('names the close button for assistive technology with shouldAnnounceClose - beside the tab, out of the tab order', () => {
+    const onTabClose = vi.fn()
+    renderEditor({ shouldAnnounceClose: true, onTabClose })
+    const button = screen.getByRole('button', { name: 'Close Button' })
+    expect(button).toBe(close('Close Button'))
+    expect(button).not.toHaveAttribute('aria-hidden')
+    expect(button).toHaveAttribute('tabindex', '-1')
+    // Not inside the tab: nothing interactive is nested in it.
+    expect(tab('Button')).not.toContainElement(button)
+    expect(button.parentElement).toHaveAttribute('role', 'presentation')
+    // A tab with no closeLabel has none, and the others are named too.
+    expect(screen.getAllByRole('button')).toHaveLength(2)
+    expect(screen.getByRole('button', { name: 'Close Card' })).toBeInTheDocument()
+    fireEvent.click(button)
+    expect(onTabClose).toHaveBeenCalledWith('button')
+    // Delete still closes the focused tab.
+    expect(tab('Button')).toHaveAttribute('aria-keyshortcuts', 'Delete')
+  })
+
   it('shows the close button on the selected tab, keeping its room on the others', () => {
     renderEditor()
     expect(close('Close Button')).toHaveStyle({ visibility: 'visible' })

@@ -67,6 +67,14 @@ export interface TabsProps extends SpaceProps<Theme> {
   onChange?: (value: TabValue) => void
   /** Fired with a closable tab's value when its close button, a middle click or Delete closes it. Removing the tab, and picking the next selection, are the app's. */
   onTabClose?: (value: TabValue) => void
+  /**
+   * Names each closable tab's close button for assistive technology - and the one in the overflow
+   * menu - by its `closeLabel`, so it is a button a screen reader finds and presses by name, still
+   * out of the tab order. It is a sibling of the tab, not inside it, so a tablist of tabs and their
+   * close buttons is read as one. Without it, the button is the pointer's alone and Delete closes
+   * the focused tab. Default: `false`.
+   */
+  shouldAnnounceClose?: boolean
   /** `'nav'` makes it a navigation of links or buttons (`aria-current="page"`) rather than a `tablist`. Default: `'div'`. */
   as?: 'div' | 'nav'
   /** Default: `'horizontal'`. */
@@ -398,6 +406,7 @@ export function Tabs({
   defaultValue,
   onChange,
   onTabClose,
+  shouldAnnounceClose = false,
   as = 'div',
   orientation = 'horizontal',
   variant: variantProp,
@@ -486,6 +495,7 @@ export function Tabs({
       focusableValue,
       select,
       onTabClose,
+      shouldAnnounceClose,
       getTabId: (value) => getTabId(baseId, value),
       // Only a TabList's TabContext holds TabPanels: without one, there is no panel to point at.
       getPanelId: (value) => (tabList ? getPanelId(baseId, value) : undefined),
@@ -510,6 +520,7 @@ export function Tabs({
       focusableValue,
       select,
       onTabClose,
+      shouldAnnounceClose,
       baseId,
       tabList,
       isNavigation,
@@ -706,13 +717,15 @@ export function Tabs({
                   key={tab.value}
                   value={tab.value}
                   disabled={tab.disabled}
+                  shouldAnnounceSecondaryAction={shouldAnnounceClose}
                   secondaryAction={
                     tab.closeLabel === undefined ? undefined : (
                       // The pointer's, as a tab's is: a menu owns rows alone, and Delete closes it.
                       <OverflowClose
                         type="button"
                         color={selectedColor}
-                        aria-hidden
+                        aria-hidden={shouldAnnounceClose ? undefined : true}
+                        aria-label={shouldAnnounceClose ? tab.closeLabel : undefined}
                         title={tab.closeLabel}
                         tabIndex={-1}
                         onClick={() => onTabClose?.(tab.value)}

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest'
 import { act, fireEvent, render, screen } from '@testing-library/react'
-import type { ReactNode } from 'react'
+import { createRef, type ReactNode } from 'react'
 import { ThemeProvider } from '../theme'
 import { baseTheme, createTheme, type Theme } from '../theme/themes'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
@@ -214,6 +214,16 @@ describe('ScrollArea', () => {
     const [across, both] = [...document.querySelectorAll<HTMLElement>('[data-scroll-viewport]')]
     expect(across).toHaveStyle({ overscrollBehaviorX: 'none', overscrollBehaviorY: 'auto' })
     expect(both).toHaveStyle({ overscrollBehaviorX: 'none', overscrollBehaviorY: 'none' })
+  })
+
+  it('hands its scrolling element to a ref, a callback or an object', () => {
+    sized(100, 100)
+    const object = createRef<HTMLDivElement>()
+    const callback = vi.fn()
+    const { rerender } = renderWithTheme(view({ viewportRef: object }))
+    expect(object.current).toBe(viewport())
+    rerender(view({ viewportRef: callback }))
+    expect(callback).toHaveBeenCalledWith(viewport())
   })
 
   it('takes a size, a ceiling and its spacing as props', () => {

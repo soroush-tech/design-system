@@ -1,7 +1,8 @@
-import { useRef, type ReactNode, type RefObject } from 'react'
+import { useRef, type ReactNode, type Ref, type RefObject } from 'react'
 import type { LayoutProps, SpaceProps } from '@soroush.tech/styled-system'
 import { createShouldForwardProp, get, props, space, styled, system, type Theme } from '../index'
 import { useDefaultProps } from '../theme'
+import { useMergedRefs } from '../Modal/hooks/useMergedRefs'
 import { useScrollThumb, type ScrollAxis } from './hooks/useScrollThumb'
 
 /** Which ways it scrolls. */
@@ -18,6 +19,8 @@ export interface ScrollAreaProps
   children: ReactNode
   /** Which ways it scrolls. Default: `'y'`. */
   axes?: ScrollAxes
+  /** The scrolling element - for code that reads or sets its scroll. */
+  viewportRef?: Ref<HTMLDivElement>
   /**
    * `0` puts the scrolling box in the tab order, so the keys scroll it - for content with nothing
    * focusable in it. Default: none.
@@ -153,6 +156,7 @@ function ScrollBar({
 export function ScrollArea({
   children,
   axes: axesProp,
+  viewportRef,
   tabIndex,
   'aria-label': ariaLabel,
   'aria-labelledby': ariaLabelledby,
@@ -163,10 +167,11 @@ export function ScrollArea({
   const dp = useDefaultProps('ScrollArea')
   const axes = axesProp ?? dp.axes ?? 'y'
   const box = useRef<HTMLDivElement>(null)
+  const mergedRef = useMergedRefs(box, viewportRef)
   return (
     <ScrollAreaRoot className={className} data-testid={dataTestid} {...rest}>
       <ScrollAreaViewport
-        ref={box}
+        ref={mergedRef}
         axes={axes}
         data-scroll-viewport
         tabIndex={tabIndex}

@@ -105,6 +105,7 @@ const shouldForwardProp = createShouldForwardProp([
   'lineColor',
   'rowPaddingTop',
   'rowPaddingBottom',
+  'isAnnounced',
 ])
 
 // The enclosed look: the selected tab outlined, its corners away from the divider rounded - open
@@ -203,7 +204,7 @@ const TabRoot = styled('div', {
     transition: 'background-color 0.12s ease',
     ...(isDisabled ? {} : { '&:hover': { backgroundColor: isBoxed ? raised : `${main}14` } }),
     // The close button shows on the selected tab and under the pointer, keeping its room.
-    '&:hover [data-tab-close]': { visibility: 'visible' as const },
+    '&:hover [data-tab-close]': { visibility: 'visible' as const, opacity: 1 },
   }
 })
 
@@ -288,7 +289,12 @@ const TabClose = styled('button', {
   slot: 'close',
   label: 'TabClose',
   shouldForwardProp,
-})<Pick<TabStyleProps, 'color' | 'isSelected'>>(({ theme, color, isSelected }) => {
+})<Pick<TabStyleProps, 'color' | 'isSelected'> & { isAnnounced: boolean }>(({
+  theme,
+  color,
+  isSelected,
+  isAnnounced,
+}) => {
   const main = get(theme, `palette.${color}.main`)
   return {
     appearance: 'none' as const,
@@ -305,7 +311,10 @@ const TabClose = styled('button', {
     backgroundColor: 'transparent',
     color: 'inherit',
     cursor: 'pointer',
-    visibility: isSelected ? ('visible' as const) : ('hidden' as const),
+    // Announced, it stays in the tree - found by a screen reader by name - and is only unseen.
+    ...(isAnnounced
+      ? { opacity: isSelected ? 1 : 0, '&:focus-visible': { opacity: 1 } }
+      : { visibility: isSelected ? ('visible' as const) : ('hidden' as const) }),
     '&:hover': { backgroundColor: `${main}1F` },
   }
 })
@@ -456,11 +465,14 @@ export function Tab({
       </TabLabel>
       {secondaryAction != null && <SecondaryActionSlot>{secondaryAction}</SecondaryActionSlot>}
       {isClosable && (
-        // The pointer's: out of the tab order and hidden from assistive technology - a tablist
-        // owns tabs alone, and Delete closes the focused tab (`aria-keyshortcuts`).
+        // Out of the tab order. The pointer's alone - hidden from assistive technology, with Delete
+        // closing the focused tab (`aria-keyshortcuts`) - or, with `shouldAnnounceClose`, a button named
+        // by `closeLabel`: a sibling of the tab, so nothing interactive is inside it.
         <TabClose
           type="button"
-          aria-hidden
+          isAnnounced={tabs.shouldAnnounceClose}
+          aria-hidden={tabs.shouldAnnounceClose ? undefined : true}
+          aria-label={tabs.shouldAnnounceClose ? closeLabel : undefined}
           title={closeLabel}
           tabIndex={-1}
           data-tab-close

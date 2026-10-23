@@ -1,4 +1,11 @@
-import { useContext, useEffect, useRef, type MouseEvent, type PointerEvent } from 'react'
+import {
+  useContext,
+  useEffect,
+  useRef,
+  type MouseEvent,
+  type PointerEvent,
+  type ReactNode,
+} from 'react'
 import type { LayoutProps, SpaceProps } from '@soroush.tech/styled-system'
 import { createShouldForwardProp, get, props, space, styled, system, type Theme } from '../index'
 import { useDefaultProps, useTheme } from '../theme'
@@ -49,6 +56,10 @@ export interface NumberInputProps
   incrementLabel?: string
   /** Names the decrease button. */
   decrementLabel?: string
+  /** Content inside the frame before the number - an icon, a label. */
+  startContent?: ReactNode
+  /** Content inside the frame after the number, before the step buttons - a unit such as `px` or `%`, a button. */
+  endContent?: ReactNode
   /** The frame: a box, an outline, an underline or none. Default: `theme.defaults.inputVariant`. */
   variant?: NumberInputVariant
   /** Resolves against `theme.sizes`. Default: its `FormControl`'s, else `'md'`. */
@@ -165,6 +176,29 @@ const NumberInputInput = styled('input', {
     fontSize: theme.fontSizes[s.fontSize],
     '&::placeholder': { color: 'inherit', opacity: 0.5 },
     '&:disabled': { cursor: 'not-allowed' },
+  }
+})
+
+// ─── Content in the frame ─────────────────────────────────────────────────────
+
+// An icon before the number, a unit or a button after it: as high as the field, the room at the
+// frame's edge that the input has on its own side.
+const NumberInputContent = styled('span', {
+  name: 'NumberInput',
+  slot: 'content',
+  label: 'NumberInputContent',
+  shouldForwardProp: createShouldForwardProp(['edge', 'sizeToken']),
+})<{ edge: 'start' | 'end'; sizeToken: keyof Theme['sizes'] }>(({ theme, edge, sizeToken }) => {
+  const s = theme.sizes[sizeToken]
+  return {
+    display: 'inline-flex',
+    alignItems: 'center',
+    flexShrink: 0,
+    gap: theme.space[0.5],
+    color: 'inherit',
+    ...(edge === 'start'
+      ? { paddingInlineStart: theme.space[s.paddingLeft] }
+      : { paddingInlineEnd: theme.space[s.paddingRight] }),
   }
 })
 
@@ -323,6 +357,8 @@ export function NumberInput({
   id: idProp,
   placeholder,
   autoFocus,
+  startContent,
+  endContent,
   className,
   'aria-label': ariaLabel,
   'aria-labelledby': ariaLabelledby,
@@ -404,6 +440,11 @@ export function NumberInput({
       {...rest}
     >
       {isSide && decrement}
+      {startContent != null && (
+        <NumberInputContent edge="start" sizeToken={fc.size}>
+          {startContent}
+        </NumberInputContent>
+      )}
       <NumberInputInput
         ref={inputRef}
         type="text"
@@ -432,6 +473,11 @@ export function NumberInput({
       />
       {name !== undefined && (
         <input type="hidden" name={name} value={field.value ?? ''} disabled={fc.disabled} />
+      )}
+      {endContent != null && (
+        <NumberInputContent edge="end" sizeToken={fc.size}>
+          {endContent}
+        </NumberInputContent>
       )}
       {spinButtons === 'stacked' && (
         <NumberInputSpinButtons>

@@ -854,7 +854,7 @@ export interface ThemeComponents {
   >
   NumberInput?: ComponentConfig<
     NumberInputOwnerState,
-    'root' | 'input' | 'spinButtons' | 'increment' | 'decrement'
+    'root' | 'input' | 'content' | 'spinButtons' | 'increment' | 'decrement'
   >
   Rating?: ComponentConfig<
     RatingOwnerState,

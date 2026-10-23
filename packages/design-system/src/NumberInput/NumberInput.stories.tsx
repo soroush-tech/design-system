@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Flex } from '../Flex'
+import { Icon } from '../Icon'
 import { FormControl } from '../FormControl'
 import { FormHelperText } from '../FormHelperText'
 import { FormLabel } from '../FormLabel'
@@ -202,6 +203,19 @@ type Story = StoryObj<typeof NumberInput>
 // The default value is only the start: changing the control starts the field over.
 export const Default: Story = {
   render: (args) => <NumberInput key={String(args.defaultValue)} {...args} />,
+}
+
+// Content inside the frame: an icon before the number, a unit and a button after it.
+export const WithContent: Story = {
+  render: (args) => (
+    <NumberInput
+      {...args}
+      variant="outlined"
+      defaultValue={12}
+      startContent={<Icon name="add" size="sm" color="inherit" />}
+      endContent={<span>px</span>}
+    />
+  ),
 }
 
 export const SpinButtonsOnTheSides: Story = {

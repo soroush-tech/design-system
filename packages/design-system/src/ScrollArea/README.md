@@ -20,6 +20,7 @@ import { ScrollArea } from '@soroush.tech/design-system/ScrollArea'
 | ------------------------------------------------------------------- | ---------------------- | ------- | ---------------------------------------------------------------------------------------------------- |
 | `children`                                                          | `ReactNode`            | -       | What scrolls.                                                                                        |
 | `axes`                                                              | `'y' \| 'x' \| 'both'` | `'y'`   | Which ways it scrolls. An axis it does not scroll is `overflow: hidden`.                             |
+| `viewportRef`                                                       | `Ref<HTMLDivElement>`  | -       | The scrolling element - for code that reads or sets its scroll.                                      |
 | `maxHeight`, `height`, `minHeight`, `width`, `minWidth`, `maxWidth` | styled-system layout   | -       | A ceiling for an area that otherwise grows with its content - a menu. Instance props win over theme. |
 | `tabIndex`                                                          | `0`                    | -       | Puts the scrolling box in the tab order, so the keys scroll it - for content with nothing focusable. |
 | `aria-label`, `aria-labelledby`                                     | `string`               | -       | Name the scrolling box, which then is a `region`.                                                    |

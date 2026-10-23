@@ -20,6 +20,8 @@ export interface TabsContextValue {
   select: (value: TabValue) => void
   /** Asked to close a closable tab. */
   onTabClose?: (value: TabValue) => void
+  /** The close buttons are named buttons, out of the tab order, rather than the pointer's alone. */
+  shouldAnnounceClose: boolean
   getTabId: (value: TabValue) => string
   /** The id of the tab's panel - none when these tabs aren't linked to a `TabContext`. */
   getPanelId: (value: TabValue) => string | undefined

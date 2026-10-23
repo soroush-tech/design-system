@@ -364,6 +364,12 @@ const cases: Case[] = [
   { name: 'RangeInput', slot: 'input', label: 'RangeInputInput', ui: rangeInput },
   { name: 'NumberInput', slot: 'root', label: 'NumberInput', ui: numberInput },
   { name: 'NumberInput', slot: 'input', label: 'NumberInputInput', ui: numberInput },
+  {
+    name: 'NumberInput',
+    slot: 'content',
+    label: 'NumberInputContent',
+    ui: <NumberInput startContent="a" />,
+  },
   { name: 'NumberInput', slot: 'spinButtons', label: 'NumberInputSpinButtons', ui: numberInput },
   { name: 'NumberInput', slot: 'increment', label: 'NumberInputIncrement', ui: numberInput },
   { name: 'NumberInput', slot: 'decrement', label: 'NumberInputDecrement', ui: numberInput },

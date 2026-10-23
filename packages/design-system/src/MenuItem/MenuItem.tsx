@@ -67,6 +67,8 @@ export interface MenuItemProps {
   startIcon?: ReactNode
   /** Menu only: the row's keyboard shortcut, shown at its end. A string is also given to the row as `aria-keyshortcuts`. */
   shortcut?: ReactNode
+  /** Menu only: what a screen reader hears of the row's keys - the `aria-keyshortcuts` form, such as `Control+=` - where it differs from what `shortcut` shows (`Ctrl+=`). Without it, a string `shortcut` is announced as it is. */
+  'aria-keyshortcuts'?: string
   /** Menu only: why the row is off - its tooltip and accessible description. */
   note?: string
   /** Menu only: fired when the row is chosen, by a click, Enter or Space. */
@@ -77,6 +79,8 @@ export interface MenuItemProps {
   emptyLabel?: ReactNode
   /** Menu only: a control of the row's own beside it - a close button. It sits in the row's `role="none"` entry, out of the arrow keys and hidden from assistive technology (a menu owns rows alone), so it is the pointer's: give it `tabIndex={-1}`, and the row a key of its own through `MenuList`'s `onKeyDown`. */
   secondaryAction?: ReactNode
+  /** Menu only: leaves `secondaryAction` in the accessibility tree - a screen reader finds the control by its own name - rather than hidden from it. A menu owns rows alone, so a control beside a row is an exception a tool may report; name it, and keep it out of the tab order. Default: `false`. */
+  shouldAnnounceSecondaryAction?: boolean
   id?: string
   className?: string
   'data-testid'?: string
@@ -319,6 +323,7 @@ interface RowAriaState {
   isSubmenuOpen: boolean
   submenuId: string
   shortcut: ReactNode
+  keyShortcuts?: string
   note?: string
   noteId: string
 }
@@ -330,7 +335,8 @@ const getRowAria = (state: RowAriaState) => ({
   'aria-expanded': state.hasSubmenu ? state.isSubmenuOpen : undefined,
   'aria-controls': state.isSubmenuOpen ? state.submenuId : undefined,
   'aria-checked': state.role === 'menuitem' ? undefined : state.selected,
-  'aria-keyshortcuts': typeof state.shortcut === 'string' ? state.shortcut : undefined,
+  'aria-keyshortcuts':
+    state.keyShortcuts ?? (typeof state.shortcut === 'string' ? state.shortcut : undefined),
   'aria-describedby': state.note ? state.noteId : undefined,
 })
 
@@ -365,11 +371,13 @@ export function MenuItem({
   role = 'menuitem',
   startIcon,
   shortcut,
+  'aria-keyshortcuts': keyShortcuts,
   note,
   onClick,
   submenu,
   emptyLabel,
   secondaryAction,
+  shouldAnnounceSecondaryAction = false,
   id,
   className,
   'data-testid': dataTestid,
@@ -508,6 +516,7 @@ export function MenuItem({
         isSubmenuOpen,
         submenuId,
         shortcut,
+        keyShortcuts,
         note,
         noteId,
       })}
@@ -536,7 +545,9 @@ export function MenuItem({
     return (
       <EntrySlot role="none" hasSecondaryAction>
         {row}
-        <SecondaryActionSlot aria-hidden>{secondaryAction}</SecondaryActionSlot>
+        <SecondaryActionSlot aria-hidden={shouldAnnounceSecondaryAction ? undefined : true}>
+          {secondaryAction}
+        </SecondaryActionSlot>
       </EntrySlot>
     )
   }
@@ -552,7 +563,9 @@ export function MenuItem({
     >
       {row}
       {hasSecondaryAction && (
-        <SecondaryActionSlot aria-hidden>{secondaryAction}</SecondaryActionSlot>
+        <SecondaryActionSlot aria-hidden={shouldAnnounceSecondaryAction ? undefined : true}>
+          {secondaryAction}
+        </SecondaryActionSlot>
       )}
       {isSubmenuOpen && (
         <Submenu anchorRef={entryRef} listId={submenuId} labelledBy={rowId}>
