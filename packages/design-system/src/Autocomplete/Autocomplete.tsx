@@ -325,6 +325,18 @@ const AutocompleteStatus = styled('li', {
   color: get(theme, 'text.secondary'),
 }))
 
+// Neighbouring options with one label share a group; each keeps its place in the whole list.
+const groupOptions = <T,>(options: readonly T[], groupBy: (option: T) => string) => {
+  const groups: { label: string; rows: { option: T; index: number }[] }[] = []
+  options.forEach((option, index) => {
+    const label = groupBy(option)
+    const last = groups.at(-1)
+    if (last?.label === label) last.rows.push({ option, index })
+    else groups.push({ label, rows: [{ option, index }] })
+  })
+  return groups
+}
+
 // The words of the field - the instance's, else the theme's: no built-in English.
 const useLabels = (given: Pick<AutocompleteProps, LabelKey>) => {
   const dp = useDefaultProps('Autocomplete')
@@ -512,14 +524,7 @@ export function Autocomplete<T = string, Multiple extends boolean | undefined = 
   // Grouped: a heading, and the options of the group under it - each counted in the whole list.
   const renderRows = () => {
     if (!groupBy) return filtered.map((option, index) => renderRow(option, index))
-    const groups: { label: string; rows: { option: T; index: number }[] }[] = []
-    filtered.forEach((option, index) => {
-      const label = groupBy(option)
-      const last = groups.at(-1)
-      if (last?.label === label) last.rows.push({ option, index })
-      else groups.push({ label, rows: [{ option, index }] })
-    })
-    return groups.map((group, position) => {
+    return groupOptions(filtered, groupBy).map((group, position) => {
       const groupId = `${baseId}-group-${position}`
       return (
         <AutocompleteGroup key={groupId} role="presentation">

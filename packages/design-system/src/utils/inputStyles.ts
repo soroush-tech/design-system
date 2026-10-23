@@ -11,5 +11,6 @@ export const getInputMinWidth = (theme: Theme) => themeDefault(theme, 'inputMinW
  */
 export const getFocusRing = (theme: Theme, color: keyof Theme['palette'], isError = false) => {
   const ring = isError ? 'error' : color
-  return { outline: `2px solid ${get(theme, `palette.${ring}.main`)}`, outlineOffset: '2px' }
+  const ringColor = get(theme, `palette.${ring}.main`)
+  return { outline: `2px solid ${ringColor}`, outlineOffset: '2px' }
 }
