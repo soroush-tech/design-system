@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Flex } from '../Flex'
 import { Icon } from '../Icon'
+import { Menu } from '../Menu'
+import { MenuItem } from '../MenuItem'
 import { View } from '../View'
 import { exampleArgs } from '../utils/test/renderExample'
 import { buttonColorTokens, textInputSizeTokens } from '../utils/test/storiesOptions'
@@ -88,6 +90,61 @@ export const Colors: Story = {
           {add}
         </Fab>
       ))}
+    </Flex>
+  ),
+}
+
+// A fab is the trigger of a `Menu`: it names the menu, opens it on Enter, Space and a click, and the
+// list lines up with its end edge, flipping above it where the window has no room below.
+export const WithAMenu: Story = {
+  parameters: { controls: { include: [] } },
+  render: (args) => (
+    <Flex
+      flexDirection="row"
+      justifyContent="flex-end"
+      alignItems="flex-start"
+      width="20rem"
+      minHeight="16rem"
+    >
+      <Menu
+        align="end"
+        aria-label="Create"
+        trigger={
+          <Fab {...args} aria-label="Create">
+            {add}
+          </Fab>
+        }
+      >
+        <MenuItem value="document">New document</MenuItem>
+        <MenuItem value="folder">New folder</MenuItem>
+        <MenuItem value="upload">Upload a file</MenuItem>
+      </Menu>
+    </Flex>
+  ),
+}
+
+export const ExtendedWithAMenu: Story = {
+  parameters: { controls: { include: [] } },
+  render: (args) => (
+    <Flex
+      flexDirection="row"
+      justifyContent="flex-end"
+      alignItems="flex-start"
+      width="20rem"
+      minHeight="16rem"
+    >
+      <Menu
+        align="end"
+        trigger={
+          <Fab {...args} aria-label={undefined} variant="extended" startIcon={add}>
+            Create
+          </Fab>
+        }
+      >
+        <MenuItem value="document">New document</MenuItem>
+        <MenuItem value="folder">New folder</MenuItem>
+        <MenuItem value="upload">Upload a file</MenuItem>
+      </Menu>
     </Flex>
   ),
 }

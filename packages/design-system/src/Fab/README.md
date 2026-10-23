@@ -28,6 +28,16 @@ import { Fab } from '@soroush.tech/design-system/Fab'
 | `m`, `mx`, `p`, `px`, ... | `theme.space` keys         |              | Margin and padding as everywhere; they win over the fab's own.           |
 | `onClick`, ...            |                            |              | Any `Button` prop but its look (`variant`, `shape`, loading, links).     |
 
+## With a menu
+
+A fab can be the `trigger` of a `Menu`: it takes the menu's `aria-haspopup` and `aria-expanded`, opens it on a click, Enter and Space, and names it. Use `align="end"` so the list lines up with the fab's end edge; it flips above the fab where the window has no room below.
+
+```tsx
+;<Menu align="end" aria-label="Create" trigger={<Fab aria-label="Create">{add}</Fab>}>
+  <MenuItem value="document">New document</MenuItem>
+</Menu>
+```
+
 ## Touch target, motion and spacing
 
 - **Touch target.** However small the fab, a target at least `theme.space[6]` (48px) square is centred on it and presses it. The fab is not drawn larger.

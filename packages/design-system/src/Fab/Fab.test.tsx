@@ -4,6 +4,8 @@ import type { ReactNode } from 'react'
 import { ThemeProvider } from '../theme'
 import { baseTheme, createTheme, type Theme } from '../theme/themes'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
+import { Menu } from '../Menu'
+import { MenuItem } from '../MenuItem'
 import { Fab, type FabProps } from './Fab'
 
 const withTheme = (theme: Theme) =>
@@ -205,6 +207,30 @@ describe('Fab', () => {
       renderWithTheme(view())
       expect(fab().querySelector('[data-testid="icon"]')?.parentElement?.tagName).toBe('SPAN')
       expect(screen.getByTestId('icon').parentElement).not.toHaveStyle({ whiteSpace: 'nowrap' })
+    })
+  })
+
+  describe('as the trigger of a Menu', () => {
+    const menu = (fabProps: Partial<FabProps> = {}) => (
+      <Menu align="end" trigger={view(fabProps)}>
+        <MenuItem value="one">One</MenuItem>
+      </Menu>
+    )
+
+    it('opens the menu on a press, and is the button that names it', () => {
+      renderWithTheme(menu())
+      expect(fab()).toHaveAttribute('aria-haspopup', 'menu')
+      expect(fab()).toHaveAttribute('aria-expanded', 'false')
+      fireEvent.click(fab())
+      expect(fab()).toHaveAttribute('aria-expanded', 'true')
+      expect(screen.getByRole('menu', { name: 'Add' })).toBeInTheDocument()
+      expect(screen.getByRole('menuitem', { name: 'One' })).toBeInTheDocument()
+    })
+
+    it('does the same extended, named by its label', () => {
+      renderWithTheme(menu({ variant: 'extended', children: 'Create', 'aria-label': undefined }))
+      fireEvent.click(screen.getByRole('button', { name: 'Create' }))
+      expect(screen.getByRole('menu', { name: 'Create' })).toBeInTheDocument()
     })
   })
 
