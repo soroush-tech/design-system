@@ -589,7 +589,7 @@ export function Autocomplete<T = string, Multiple extends boolean | undefined = 
             aria-label={clearLabel}
             onClick={state.clear}
           >
-            <Icon name="close" size="1em" color="inherit" />
+            <Icon name="close" color="inherit" />
           </AutocompleteClear>
         ) : null}
         <AutocompletePopupIndicator
@@ -605,7 +605,7 @@ export function Autocomplete<T = string, Multiple extends boolean | undefined = 
             inputRef.current?.focus()
           }}
         >
-          <Icon name={isShown ? 'expand_less' : 'expand_more'} size="1em" color="inherit" />
+          <Icon name={isShown ? 'expand_less' : 'expand_more'} color="inherit" />
         </AutocompletePopupIndicator>
       </AutocompleteRoot>
       {isShown && (

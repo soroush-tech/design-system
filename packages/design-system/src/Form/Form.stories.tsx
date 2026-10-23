@@ -137,6 +137,7 @@ export const EveryInput: Story = {
           <Autocomplete
             variant="outlined"
             options={['Berlin', 'Lisbon', 'Oslo', 'Rome']}
+            placeholder="Search a city"
             noOptionsText="No city matches"
             clearLabel="Clear"
             openLabel="Open"
