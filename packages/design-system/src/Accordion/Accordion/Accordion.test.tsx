@@ -144,6 +144,51 @@ describe('Accordion', () => {
     })
   })
 
+  describe('surface', () => {
+    const root = () => screen.getByTestId('accordion')
+
+    it('is square, on the paper, in the theme text, by default', () => {
+      renderWithTheme(view())
+      expect(root()).toHaveStyle({
+        borderRadius: baseTheme.radii.sq,
+        backgroundColor: baseTheme.background.paper,
+        color: baseTheme.text.initial,
+      })
+    })
+
+    it('takes a radius, a background and a text color of its own', () => {
+      renderWithTheme(view({ borderRadius: 'lg', bg: 'modal', textColor: 'secondary' }))
+      expect(root()).toHaveStyle({
+        borderRadius: baseTheme.radii.lg,
+        backgroundColor: baseTheme.background.modal,
+        color: baseTheme.text.secondary,
+      })
+    })
+
+    it('takes them from the theme, an own prop winning', () => {
+      const theme = createTheme(baseTheme, {
+        components: {
+          Accordion: { defaultProps: { borderRadius: 'md', bg: 'modal', textColor: 'secondary' } },
+        },
+      })
+      const { unmount } = render(view(), { wrapper: withTheme(theme) })
+      expect(root()).toHaveStyle({
+        borderRadius: baseTheme.radii.md,
+        backgroundColor: baseTheme.background.modal,
+        color: baseTheme.text.secondary,
+      })
+      unmount()
+      render(view({ borderRadius: 'sm' }), { wrapper: withTheme(theme) })
+      expect(root()).toHaveStyle({ borderRadius: baseTheme.radii.sm })
+    })
+
+    it('is rounded as the theme rounds its surfaces', () => {
+      const theme = createTheme(baseTheme, { defaults: { surfaceRadius: 'md' } })
+      render(view(), { wrapper: withTheme(theme) })
+      expect(root()).toHaveStyle({ borderRadius: baseTheme.radii.md })
+    })
+  })
+
   describe('theme', () => {
     it('takes hasGutters from the theme, an own prop winning', () => {
       const theme = createTheme(baseTheme, {

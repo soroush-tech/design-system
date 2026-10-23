@@ -2,6 +2,7 @@ import type { MouseEvent, ReactNode } from 'react'
 import type { SpaceProps } from '@soroush.tech/styled-system'
 import { createShouldForwardProp, get, props, space, styled, type Theme } from '../../index'
 import { useDefaultProps } from '../../theme'
+import { getSurfaceRadius } from '../../utils/getSurfaceRadius'
 import { Icon, type IconName } from '../../Icon'
 import { alpha } from '../../utils'
 
@@ -25,6 +26,8 @@ export interface AlertProps extends SpaceProps<Theme> {
   closeLabel?: string
   /** `'alert'` is announced at once; `'status'`, politely. Default: `'alert'`. */
   role?: 'alert' | 'status'
+  /** Corner radius, resolves against `theme.radii`. Default: `theme.defaults.surfaceRadius`, else square. */
+  borderRadius?: keyof Theme['radii']
   className?: string
   'data-testid'?: string
 }
@@ -39,14 +42,15 @@ const SEVERITY_ICONS = {
 interface RootStyle extends SpaceProps<Theme> {
   severity: AlertSeverity
   variant: AlertVariant
+  borderRadius?: keyof Theme['radii']
 }
 
 const AlertRoot = styled('div', {
   name: 'Alert',
   label: 'Alert',
-  shouldForwardProp: createShouldForwardProp([...props, 'severity', 'variant']),
+  shouldForwardProp: createShouldForwardProp([...props, 'severity', 'variant', 'borderRadius']),
   systemProps: [space],
-})<RootStyle>(({ theme, severity, variant }) => {
+})<RootStyle>(({ theme, severity, variant, borderRadius }) => {
   const palette = get(theme, `palette.${severity}`)
   const text = get(theme, 'text.initial')
   return {
@@ -55,7 +59,7 @@ const AlertRoot = styled('div', {
     gap: theme.space[2],
     boxSizing: 'border-box',
     padding: `${theme.space[1]} ${theme.space[2]}`,
-    borderRadius: theme.radii.md,
+    borderRadius: getSurfaceRadius(theme, borderRadius),
     fontFamily: get(theme, 'fonts.body'),
     fontSize: theme.fontSizes[1],
     lineHeight: get(theme, 'lineHeights.base'),
@@ -145,6 +149,7 @@ export function Alert({
   onClose,
   closeLabel: closeLabelProp,
   role: roleProp,
+  borderRadius: borderRadiusProp,
   className,
   'data-testid': dataTestid,
   ...spaceProps
@@ -154,6 +159,7 @@ export function Alert({
   const variant = variantProp ?? dp.variant ?? 'standard'
   const closeLabel = closeLabelProp ?? dp.closeLabel
   const role = roleProp ?? dp.role ?? 'alert'
+  const borderRadius = borderRadiusProp ?? dp.borderRadius
   const iconName = SEVERITY_ICONS[severity]
   const hasAction = action !== undefined || onClose !== undefined
 
@@ -162,6 +168,7 @@ export function Alert({
       role={role}
       severity={severity}
       variant={variant}
+      borderRadius={borderRadius}
       className={className}
       data-testid={dataTestid}
       {...spaceProps}

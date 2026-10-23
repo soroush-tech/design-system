@@ -15,17 +15,18 @@ import { Alert, AlertTitle } from '@soroush.tech/design-system/Alert'
 
 ## Props
 
-| Prop                       | Type                                          | Default        | Description                                      |
-| -------------------------- | --------------------------------------------- | -------------- | ------------------------------------------------ |
-| `children`                 | `ReactNode`                                   | -              | The message. An `AlertTitle` may come first.     |
-| `severity`                 | `'success' \| 'info' \| 'warning' \| 'error'` | `'info'`       | Picks the icon and the palette color.            |
-| `variant`                  | `'standard' \| 'contained' \| 'outlined'`     | `'standard'`   | Tinted, filled, or only outlined.                |
-| `icon`                     | `ReactNode \| false`                          | the severity's | The icon before the message; `false` draws none. |
-| `action`                   | `ReactNode`                                   | -              | What sits at the end of the alert - a button.    |
-| `onClose`                  | `(event) => void`                             | -              | Shows a close control.                           |
-| `closeLabel`               | `string`                                      | -              | Names the close control.                         |
-| `role`                     | `'alert' \| 'status'`                         | `'alert'`      | Announced at once, or politely.                  |
-| `className`, `data-testid` |                                               |                | On the root.                                     |
+| Prop                       | Type                                          | Default                                     | Description                                      |
+| -------------------------- | --------------------------------------------- | ------------------------------------------- | ------------------------------------------------ |
+| `children`                 | `ReactNode`                                   | -                                           | The message. An `AlertTitle` may come first.     |
+| `severity`                 | `'success' \| 'info' \| 'warning' \| 'error'` | `'info'`                                    | Picks the icon and the palette color.            |
+| `variant`                  | `'standard' \| 'contained' \| 'outlined'`     | `'standard'`                                | Tinted, filled, or only outlined.                |
+| `icon`                     | `ReactNode \| false`                          | the severity's                              | The icon before the message; `false` draws none. |
+| `action`                   | `ReactNode`                                   | -                                           | What sits at the end of the alert - a button.    |
+| `onClose`                  | `(event) => void`                             | -                                           | Shows a close control.                           |
+| `closeLabel`               | `string`                                      | -                                           | Names the close control.                         |
+| `role`                     | `'alert' \| 'status'`                         | `'alert'`                                   | Announced at once, or politely.                  |
+| `borderRadius`             | `keyof Theme['radii']`                        | `theme.defaults.surfaceRadius`, else square | Corner radius.                                   |
+| `className`, `data-testid` |                                               |                                             | On the root.                                     |
 
 It takes the styled-system space props too.
 
@@ -43,7 +44,7 @@ The standard and outlined texts are checked against AA in the tests, for each se
 
 `theme.components.Alert` styles the `root`, the `icon`, the `message`, the `action` and the
 `closeButton`; `AlertTitle` its `root`. Its `defaultProps` set `severity`, `variant`, `closeLabel`
-and `role`.
+`role` and `borderRadius`.
 
 ## Accessibility
 

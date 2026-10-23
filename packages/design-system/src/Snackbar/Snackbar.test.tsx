@@ -279,6 +279,41 @@ describe('Snackbar', () => {
     })
   })
 
+  describe('surface', () => {
+    it('is square, on the modal background, in the theme text, by default', () => {
+      mount(view({ isOpen: true }))
+      expect(status()).toHaveStyle({
+        borderRadius: baseTheme.radii.sq,
+        backgroundColor: baseTheme.background.modal,
+        color: baseTheme.text.initial,
+      })
+    })
+
+    it('takes a radius, a background and a text color of its own', () => {
+      mount(view({ isOpen: true, borderRadius: 'lg', bg: 'paper', textColor: 'secondary' }))
+      expect(status()).toHaveStyle({
+        borderRadius: baseTheme.radii.lg,
+        backgroundColor: baseTheme.background.paper,
+        color: baseTheme.text.secondary,
+      })
+    })
+
+    it('takes them from the theme', () => {
+      const theme = createTheme(baseTheme, {
+        components: {
+          Snackbar: { defaultProps: { borderRadius: 'md', bg: 'paper', textColor: 'secondary' } },
+        },
+      })
+      render(view({ isOpen: true }), { wrapper: withTheme(theme) })
+      tick(0)
+      expect(status()).toHaveStyle({
+        borderRadius: baseTheme.radii.md,
+        backgroundColor: baseTheme.background.paper,
+        color: baseTheme.text.secondary,
+      })
+    })
+  })
+
   describe('theme', () => {
     it('takes its defaults from the theme, an own prop winning', () => {
       const theme = createTheme(baseTheme, {

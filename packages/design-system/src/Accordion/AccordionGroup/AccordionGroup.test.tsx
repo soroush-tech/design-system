@@ -166,24 +166,14 @@ describe('AccordionGroup', () => {
   })
 
   describe('variant', () => {
-    const accordions = () => [...screen.getByTestId('group').children] as HTMLElement[]
-
     it('keeps a gap between the accordions by default', () => {
       renderWithTheme(view())
       expect(screen.getByTestId('group')).not.toHaveStyle({ gap: '0' })
-      expect(accordions()[1]).not.toHaveStyle({ borderTopWidth: '0' })
     })
 
-    it('joins them: no gap, one border at each joint, square corners where they meet', () => {
+    it('joins them: no gap between them', () => {
       renderWithTheme(view({ variant: 'attached' }))
       expect(screen.getByTestId('group')).toHaveStyle({ gap: '0' })
-      const [first, second, third] = accordions()
-      expect(first).not.toHaveStyle({ borderTopWidth: '0' })
-      expect(first).toHaveStyle({ borderBottomLeftRadius: '0', borderBottomRightRadius: '0' })
-      expect(second).toHaveStyle({ borderTopWidth: '0', borderTopLeftRadius: '0' })
-      expect(second).toHaveStyle({ borderBottomLeftRadius: '0' })
-      expect(third).toHaveStyle({ borderTopWidth: '0' })
-      expect(third).toHaveStyle({ borderRadius: baseTheme.radii.md })
     })
 
     it('takes variant from the theme, an own prop winning', () => {

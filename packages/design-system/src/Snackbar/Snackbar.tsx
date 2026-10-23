@@ -8,6 +8,8 @@ import {
 } from 'react'
 import { createShouldForwardProp, get, styled, type Theme } from '../index'
 import { useDefaultProps } from '../theme'
+import { themeDefault } from '../theme/utils/themeDefault'
+import { getSurfaceRadius } from '../utils/getSurfaceRadius'
 import { Grow } from '../Grow'
 import { Portal, type PortalProps } from '../Portal'
 import { useControlled } from '../utils/useControlled'
@@ -24,6 +26,12 @@ export interface SnackbarAnchorOrigin {
 }
 
 export interface SnackbarProps {
+  /** Corner radius, resolves against `theme.radii`. Default: `theme.defaults.surfaceRadius`, else square. */
+  borderRadius?: keyof Theme['radii']
+  /** Background, resolves against `theme.background`. Default: `'modal'`. */
+  bg?: keyof Theme['background']
+  /** Text color, resolves against `theme.text`. Default: `theme.defaults.textColor`, else `'initial'`. */
+  textColor?: keyof Theme['text']
   /** Whether it is shown. Controlled with `onClose`. */
   isOpen?: boolean
   /** Whether it is shown at first, when uncontrolled. Default: `false`. */
@@ -84,7 +92,12 @@ const SnackbarContent = styled('div', {
   name: 'Snackbar',
   slot: 'content',
   label: 'SnackbarContent',
-})(({ theme }) => ({
+  shouldForwardProp: createShouldForwardProp(['borderRadius', 'bg', 'textColor']),
+})<{
+  borderRadius?: keyof Theme['radii']
+  bg?: keyof Theme['background']
+  textColor?: keyof Theme['text']
+}>(({ theme, borderRadius, bg, textColor }) => ({
   display: 'flex',
   alignItems: 'center',
   gap: theme.space[2],
@@ -93,10 +106,10 @@ const SnackbarContent = styled('div', {
   maxWidth: `calc(100vw - ${theme.space[3]} - ${theme.space[3]})`,
   padding: `${theme.space[1]} ${theme.space[2]}`,
   pointerEvents: 'auto',
-  borderRadius: theme.radii.md,
+  borderRadius: getSurfaceRadius(theme, borderRadius),
   boxShadow: theme.shadows[6],
-  backgroundColor: get(theme, 'background.modal'),
-  color: get(theme, 'text.initial'),
+  backgroundColor: get(theme, `background.${bg ?? 'modal'}`),
+  color: get(theme, `text.${textColor ?? themeDefault(theme, 'textColor', 'initial')}`),
   fontFamily: get(theme, 'fonts.body'),
   fontSize: theme.fontSizes[1],
   lineHeight: get(theme, 'lineHeights.base'),
@@ -138,6 +151,9 @@ export function Snackbar({
   anchorOrigin: anchorOriginProp,
   transition: Transition = Grow,
   layer: layerProp,
+  borderRadius: borderRadiusProp,
+  bg: bgProp,
+  textColor: textColorProp,
   container,
   className,
   'data-testid': dataTestid,
@@ -147,6 +163,9 @@ export function Snackbar({
   const resumeHideDuration = resumeHideDurationProp ?? dp.resumeHideDuration
   const anchorOrigin = anchorOriginProp ?? dp.anchorOrigin ?? DEFAULT_ANCHOR
   const layer = layerProp ?? dp.layer ?? 'snackbar'
+  const borderRadius = borderRadiusProp ?? dp.borderRadius
+  const bg = bgProp ?? dp.bg
+  const textColor = textColorProp ?? dp.textColor
   const [isOpen, setIsOpen] = useControlled({ controlled: isOpenProp, default: defaultOpen })
   // In the tree from the moment it opens until its transition has taken it out.
   const [isMounted, setIsMounted] = useState(isOpen)
@@ -200,6 +219,9 @@ export function Snackbar({
           <SnackbarContent
             ref={contentRef}
             role="status"
+            borderRadius={borderRadius}
+            bg={bg}
+            textColor={textColor}
             onMouseEnter={pause}
             onMouseLeave={resume}
             onFocus={pause}

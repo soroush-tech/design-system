@@ -37,6 +37,9 @@ export const autocompleteCatalog = defineCatalogEntry<
     required: { values: [true, false], default: false },
     fullWidth: { values: [true, false], default: false },
     layer: { scale: 'zOrder', default: 'modal' },
+    borderRadius: { scale: 'radii' },
+    bg: { scale: 'background', default: 'modal' },
+    textColor: { scale: 'text', default: 'primary' },
   },
   content: {},
 })

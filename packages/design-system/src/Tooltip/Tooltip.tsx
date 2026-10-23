@@ -12,6 +12,8 @@ import {
 } from 'react'
 import { createShouldForwardProp, get, styled, type Theme } from '../index'
 import { useDefaultProps } from '../theme'
+import { themeDefault } from '../theme/utils/themeDefault'
+import { getSurfaceRadius } from '../utils/getSurfaceRadius'
 import { Portal } from '../Portal'
 import { useMergedRefs } from '../Modal/hooks/useMergedRefs'
 import { useAnchoredPlacement, type AnchoredPlacement } from '../utils/useAnchoredPlacement'
@@ -53,6 +55,12 @@ export interface TooltipProps {
   shouldOpenOnFocus?: boolean
   /** Opens on a long touch. Default: `true`. */
   shouldOpenOnTouch?: boolean
+  /** Corner radius, resolves against `theme.radii`. Default: `theme.defaults.surfaceRadius`, else square. */
+  borderRadius?: keyof Theme['radii']
+  /** Background, resolves against `theme.background`. Default: `'modal'`. */
+  bg?: keyof Theme['background']
+  /** Text color, resolves against `theme.text`. Default: `theme.defaults.textColor`, else `'initial'`. */
+  textColor?: keyof Theme['text']
   /** Stacking layer from `theme.zOrder`. Default: `'tooltip'`. */
   layer?: keyof Theme['zOrder']
   className?: string
@@ -75,8 +83,13 @@ interface ArrowState {
 const TooltipSurface = styled('div', {
   name: 'Tooltip',
   label: 'Tooltip',
-  shouldForwardProp: createShouldForwardProp(['layer']),
-})<{ layer: keyof Theme['zOrder'] }>(({ theme, layer }) => ({
+  shouldForwardProp: createShouldForwardProp(['layer', 'borderRadius', 'bg', 'textColor']),
+})<{
+  layer: keyof Theme['zOrder']
+  borderRadius?: keyof Theme['radii']
+  bg?: keyof Theme['background']
+  textColor?: keyof Theme['text']
+}>(({ theme, layer, borderRadius, bg, textColor }) => ({
   position: 'fixed',
   top: 0,
   left: 0,
@@ -86,10 +99,10 @@ const TooltipSurface = styled('div', {
   boxSizing: 'border-box',
   maxWidth: '20rem',
   padding: `${theme.space[0.5]} ${theme.space[1]}`,
-  borderRadius: theme.radii.sm,
+  borderRadius: getSurfaceRadius(theme, borderRadius),
   boxShadow: theme.shadows[4],
-  backgroundColor: get(theme, 'background.modal'),
-  color: get(theme, 'text.initial'),
+  backgroundColor: get(theme, `background.${bg ?? 'modal'}`),
+  color: get(theme, `text.${textColor ?? themeDefault(theme, 'textColor', 'initial')}`),
   fontFamily: get(theme, 'fonts.body'),
   fontSize: theme.fontSizes[0],
   lineHeight: get(theme, 'lineHeights.base'),
@@ -100,14 +113,15 @@ const TooltipArrow = styled('span', {
   name: 'Tooltip',
   slot: 'arrow',
   label: 'TooltipArrow',
-})(({ theme }) => ({
+})({
   position: 'absolute',
   width: ARROW,
   height: ARROW,
-  backgroundColor: get(theme, 'background.modal'),
+  // The surface's own background, whatever it was given.
+  backgroundColor: 'inherit',
   transform: 'rotate(45deg)',
   pointerEvents: 'none',
-}))
+})
 
 // Where the tooltip landed, and so which side the arrow is on and where along it.
 const getArrow = ({ anchorRect, surfaceSize, top, left }: AnchoredPlacement): ArrowState => {
@@ -161,6 +175,9 @@ export function Tooltip({
   shouldOpenOnFocus: shouldOpenOnFocusProp,
   shouldOpenOnTouch: shouldOpenOnTouchProp,
   layer: layerProp,
+  borderRadius: borderRadiusProp,
+  bg: bgProp,
+  textColor: textColorProp,
   className,
   'data-testid': dataTestid,
 }: Readonly<TooltipProps>) {
@@ -169,6 +186,9 @@ export function Tooltip({
   const hasArrow = hasArrowProp ?? dp.hasArrow ?? false
   const shouldDescribeChild = shouldDescribeChildProp ?? dp.shouldDescribeChild ?? false
   const layer = layerProp ?? dp.layer ?? 'tooltip'
+  const borderRadius = borderRadiusProp ?? dp.borderRadius
+  const bg = bgProp ?? dp.bg
+  const textColor = textColorProp ?? dp.textColor
   const id = useId()
 
   const { isOpen, childHandlers, surfaceHandlers } = useTooltip({
@@ -250,6 +270,9 @@ export function Tooltip({
             id={id}
             role="tooltip"
             layer={layer}
+            borderRadius={borderRadius}
+            bg={bg}
+            textColor={textColor}
             className={className}
             data-testid={dataTestid}
             {...surfaceHandlers}

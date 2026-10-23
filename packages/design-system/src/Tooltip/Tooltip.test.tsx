@@ -481,6 +481,52 @@ describe('Tooltip', () => {
     })
   })
 
+  describe('surface', () => {
+    it('is square, on the modal background, in the theme text, by default', () => {
+      renderWithTheme(view({ defaultOpen: true }))
+      expect(tooltip()).toHaveStyle({
+        borderRadius: baseTheme.radii.sq,
+        backgroundColor: baseTheme.background.modal,
+        color: baseTheme.text.initial,
+      })
+    })
+
+    it('takes a radius, a background and a text color of its own, its arrow following', () => {
+      renderWithTheme(
+        view({
+          defaultOpen: true,
+          hasArrow: true,
+          borderRadius: 'lg',
+          bg: 'paper',
+          textColor: 'secondary',
+        })
+      )
+      expect(tooltip()).toHaveStyle({
+        borderRadius: baseTheme.radii.lg,
+        backgroundColor: baseTheme.background.paper,
+        color: baseTheme.text.secondary,
+      })
+      const arrow = tooltip().querySelector('[aria-hidden="true"]') as HTMLElement
+      expect(getComputedStyle(arrow).backgroundColor).toBe(
+        getComputedStyle(tooltip()).backgroundColor
+      )
+    })
+
+    it('takes them from the theme', () => {
+      const theme = createTheme(baseTheme, {
+        components: {
+          Tooltip: { defaultProps: { borderRadius: 'md', bg: 'paper', textColor: 'secondary' } },
+        },
+      })
+      render(view({ defaultOpen: true }), { wrapper: withTheme(theme) })
+      expect(tooltip()).toHaveStyle({
+        borderRadius: baseTheme.radii.md,
+        backgroundColor: baseTheme.background.paper,
+        color: baseTheme.text.secondary,
+      })
+    })
+  })
+
   describe('theme', () => {
     it('takes its defaults from the theme, an own prop winning', () => {
       const theme = createTheme(baseTheme, {

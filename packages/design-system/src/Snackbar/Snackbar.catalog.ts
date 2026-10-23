@@ -17,6 +17,9 @@ export const snackbarCatalog = defineCatalogEntry<SnackbarProps>()({
     isOpen: { values: [true, false], default: false },
     autoHideDuration: { values: [2000, 4000, 8000] },
     layer: { scale: 'zOrder', default: 'snackbar' },
+    borderRadius: { scale: 'radii' },
+    bg: { scale: 'background', default: 'modal' },
+    textColor: { scale: 'text', default: 'initial' },
   },
   content: { message: 'text', action: 'child', children: 'children' },
 })

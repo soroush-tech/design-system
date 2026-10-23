@@ -33,6 +33,9 @@ import { Snackbar } from '@soroush.tech/design-system/Snackbar'
 | `transition`               | `ComponentType<TransitionProps>`                                            | `Grow`                                        | The transition that shows and hides it. It must tell `onExited`.       |
 | `layer`                    | `keyof Theme['zOrder']`                                                     | `'snackbar'`                                  | Stacking layer.                                                        |
 | `container`                | `HTMLElement \| (() => HTMLElement \| null)`                                | `document.body`                               | Portal target.                                                         |
+| `borderRadius`             | `keyof Theme['radii']`                                                      | `theme.defaults.surfaceRadius`, else square   | Corner radius.                                                         |
+| `bg`                       | `keyof Theme['background']`                                                 | `'modal'`                                     | Background.                                                            |
+| `textColor`                | `keyof Theme['text']`                                                       | `theme.defaults.textColor`, else `'initial'`  | Text color.                                                            |
 | `className`, `data-testid` |                                                                             |                                               | On the root - the place it sits in.                                    |
 
 ## Closing
@@ -46,7 +49,7 @@ reason.
 
 `theme.components.Snackbar` styles the `root` (the fixed place), the `content` (the bar), the `message`
 and the `action`. Its `defaultProps` set `anchorOrigin`, `autoHideDuration`, `resumeHideDuration` and
-`layer`. The `snackbar` key of `theme.zOrder` is its layer.
+`layer`, `borderRadius`, `bg` and `textColor`. The `snackbar` key of `theme.zOrder` is its layer.
 
 ## Server rendering
 

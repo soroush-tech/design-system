@@ -24,15 +24,18 @@ import {
 
 ## Props
 
-| Prop                             | Type                                      | Default    | Description                                                    |
-| -------------------------------- | ----------------------------------------- | ---------- | -------------------------------------------------------------- |
-| `children`                       | `ReactNode`                               | -          | An `AccordionSummary`, then what it opens.                     |
-| `isExpanded` / `defaultExpanded` | `boolean`                                 | `false`    | Whether it is open - controlled with `onChange`, or at first.  |
-| `onChange`                       | `(event, isExpanded: boolean) => void`    | -          | Fired when the summary is pressed, with the state it asks for. |
-| `disabled`                       | `boolean`                                 | `false`    | Stays as it is, and its summary is off.                        |
-| `hasGutters`                     | `boolean`                                 | `true`     | Side padding on the summary, the details and the actions.      |
-| `transition`                     | `ComponentType<AccordionTransitionProps>` | `Collapse` | The transition that opens and closes the region.               |
-| `className`, `data-testid`       |                                           |            | On the root.                                                   |
+| Prop                             | Type                                      | Default                                      | Description                                                    |
+| -------------------------------- | ----------------------------------------- | -------------------------------------------- | -------------------------------------------------------------- |
+| `children`                       | `ReactNode`                               | -                                            | An `AccordionSummary`, then what it opens.                     |
+| `isExpanded` / `defaultExpanded` | `boolean`                                 | `false`                                      | Whether it is open - controlled with `onChange`, or at first.  |
+| `onChange`                       | `(event, isExpanded: boolean) => void`    | -                                            | Fired when the summary is pressed, with the state it asks for. |
+| `disabled`                       | `boolean`                                 | `false`                                      | Stays as it is, and its summary is off.                        |
+| `hasGutters`                     | `boolean`                                 | `true`                                       | Side padding on the summary, the details and the actions.      |
+| `transition`                     | `ComponentType<AccordionTransitionProps>` | `Collapse`                                   | The transition that opens and closes the region.               |
+| `borderRadius`                   | `keyof Theme['radii']`                    | `theme.defaults.surfaceRadius`, else square  | Corner radius.                                                 |
+| `bg`                             | `keyof Theme['background']`               | `'paper'`                                    | Background.                                                    |
+| `textColor`                      | `keyof Theme['text']`                     | `theme.defaults.textColor`, else `'initial'` | Text color.                                                    |
+| `className`, `data-testid`       |                                           |                                              | On the root.                                                   |
 
 It takes the styled-system space props too.
 
@@ -60,7 +63,7 @@ A summary is a button: Enter and Space open and close it. Inside an `AccordionGr
 
 `theme.components.Accordion` styles the `root` and the `region`; `AccordionSummary` its `root` (the
 heading), `button`, `content` and `icon`; `AccordionDetails`, `AccordionActions` and
-`AccordionGroup` their `root`. `defaultProps` set `hasGutters` (`Accordion`), `headingLevel`
+`AccordionGroup` their `root`. `defaultProps` set `hasGutters`, `borderRadius`, `bg` and `textColor` (`Accordion`), `headingLevel`
 (`AccordionSummary`) and `isExclusive` (`AccordionGroup`).
 
 ## Accessibility

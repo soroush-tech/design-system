@@ -25,6 +25,7 @@ export const alertCatalog = defineCatalogEntry<AlertProps>()({
     severity: { values: alertSeverityValues, default: 'info' },
     variant: { values: alertVariantValues, default: 'standard' },
     role: { values: ['alert', 'status'], default: 'alert' },
+    borderRadius: { scale: 'radii' },
   },
   content: { children: 'children', icon: 'child', action: 'child' },
 })

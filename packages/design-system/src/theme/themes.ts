@@ -464,6 +464,9 @@ export interface RatingOwnerState {
 
 /** The defaults a theme may set for every `Autocomplete` - its labels give it a language. */
 export interface AutocompleteOwnerState {
+  borderRadius?: keyof ThemeRadii
+  bg?: keyof ThemeBackground
+  textColor?: keyof ThemeText
   variant?: 'default' | 'outlined' | 'text' | 'underline'
   size?: keyof ThemeSizes
   color?: keyof ThemePalette
@@ -478,6 +481,9 @@ export interface AutocompleteOwnerState {
 
 /** The defaults a theme may set for every `Tooltip`. */
 export interface TooltipOwnerState {
+  borderRadius?: keyof ThemeRadii
+  bg?: keyof ThemeBackground
+  textColor?: keyof ThemeText
   placement?:
     | 'top'
     | 'top-start'
@@ -512,6 +518,9 @@ export interface SnackbarOwnerState {
   autoHideDuration?: number
   resumeHideDuration?: number
   layer?: keyof ThemeZOrder
+  borderRadius?: keyof ThemeRadii
+  bg?: keyof ThemeBackground
+  textColor?: keyof ThemeText
 }
 
 /** The defaults a theme may set for every `Fab`. */
@@ -527,6 +536,7 @@ export interface AlertOwnerState {
   variant?: 'standard' | 'contained' | 'outlined'
   closeLabel?: string
   role?: 'alert' | 'status'
+  borderRadius?: keyof ThemeRadii
 }
 
 /** The defaults a theme may set for every `Badge`. */
@@ -551,6 +561,9 @@ export interface ChipOwnerState {
 /** The defaults a theme may set for every `Accordion`. */
 export interface AccordionOwnerState {
   hasGutters?: boolean
+  borderRadius?: keyof ThemeRadii
+  bg?: keyof ThemeBackground
+  textColor?: keyof ThemeText
 }
 
 /** The defaults a theme may set for every `AccordionSummary`. */

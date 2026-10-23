@@ -16,20 +16,23 @@ import { Tooltip } from '@soroush.tech/design-system/Tooltip'
 
 ## Props
 
-| Prop                                                            | Type                                                                   | Default        | Description                                                                               |
-| --------------------------------------------------------------- | ---------------------------------------------------------------------- | -------------- | ----------------------------------------------------------------------------------------- |
-| `children`                                                      | `ReactElement`                                                         | -              | The one element it is about. It holds a `ref` and takes the handlers.                     |
-| `title`                                                         | `ReactNode`                                                            | -              | What it says. Nothing says no tooltip.                                                    |
-| `placement`                                                     | `'top' \| 'bottom' \| 'left' \| 'right'`, each with `-start` or `-end` | `'top'`        | The side of the child, and the end it lines up with. Flips for want of room.              |
-| `hasArrow`                                                      | `boolean`                                                              | `false`        | An arrow towards the middle of the child.                                                 |
-| `enterDelay` / `leaveDelay`                                     | `number`                                                               | `100` / `0`    | In milliseconds: before it opens, and after the pointer or focus has left.                |
-| `enterTouchDelay` / `leaveTouchDelay`                           | `number`                                                               | `700` / `1500` | How long a touch is held to open it, and how long after it ends it closes.                |
-| `shouldDescribeChild`                                           | `boolean`                                                              | `false`        | Describes the child (`aria-describedby`, while open) instead of naming it (`aria-label`). |
-| `isOpen` / `defaultOpen`                                        | `boolean`                                                              | `false`        | Controlled with `onOpen` and `onClose`, or at first.                                      |
-| `onOpen` / `onClose`                                            | `(event) => void`                                                      | -              | Fired when it asks to open or close - once each, however often it is asked.               |
-| `shouldOpenOnHover` / `shouldOpenOnFocus` / `shouldOpenOnTouch` | `boolean`                                                              | `true`         | What opens it. Focus is keyboard focus: a press with the pointer is not.                  |
-| `layer`                                                         | `keyof Theme['zOrder']`                                                | `'tooltip'`    | Stacking layer.                                                                           |
-| `className`, `data-testid`                                      |                                                                        |                | On the tooltip.                                                                           |
+| Prop                                                            | Type                                                                   | Default                                      | Description                                                                               |
+| --------------------------------------------------------------- | ---------------------------------------------------------------------- | -------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `children`                                                      | `ReactElement`                                                         | -                                            | The one element it is about. It holds a `ref` and takes the handlers.                     |
+| `title`                                                         | `ReactNode`                                                            | -                                            | What it says. Nothing says no tooltip.                                                    |
+| `placement`                                                     | `'top' \| 'bottom' \| 'left' \| 'right'`, each with `-start` or `-end` | `'top'`                                      | The side of the child, and the end it lines up with. Flips for want of room.              |
+| `hasArrow`                                                      | `boolean`                                                              | `false`                                      | An arrow towards the middle of the child.                                                 |
+| `enterDelay` / `leaveDelay`                                     | `number`                                                               | `100` / `0`                                  | In milliseconds: before it opens, and after the pointer or focus has left.                |
+| `enterTouchDelay` / `leaveTouchDelay`                           | `number`                                                               | `700` / `1500`                               | How long a touch is held to open it, and how long after it ends it closes.                |
+| `shouldDescribeChild`                                           | `boolean`                                                              | `false`                                      | Describes the child (`aria-describedby`, while open) instead of naming it (`aria-label`). |
+| `isOpen` / `defaultOpen`                                        | `boolean`                                                              | `false`                                      | Controlled with `onOpen` and `onClose`, or at first.                                      |
+| `onOpen` / `onClose`                                            | `(event) => void`                                                      | -                                            | Fired when it asks to open or close - once each, however often it is asked.               |
+| `shouldOpenOnHover` / `shouldOpenOnFocus` / `shouldOpenOnTouch` | `boolean`                                                              | `true`                                       | What opens it. Focus is keyboard focus: a press with the pointer is not.                  |
+| `layer`                                                         | `keyof Theme['zOrder']`                                                | `'tooltip'`                                  | Stacking layer.                                                                           |
+| `borderRadius`                                                  | `keyof Theme['radii']`                                                 | `theme.defaults.surfaceRadius`, else square  | Corner radius.                                                                            |
+| `bg`                                                            | `keyof Theme['background']`                                            | `'modal'`                                    | Background.                                                                               |
+| `textColor`                                                     | `keyof Theme['text']`                                                  | `theme.defaults.textColor`, else `'initial'` | Text color.                                                                               |
+| `className`, `data-testid`                                      |                                                                        |                                              | On the tooltip.                                                                           |
 
 ## Naming and describing
 
@@ -40,7 +43,7 @@ child already has a name. With `shouldDescribeChild` it describes it instead: th
 ## Customization
 
 `theme.components.Tooltip` styles the `root` (the surface) and the `arrow`. Its `defaultProps` set every
-prop above but `title` and `isOpen`. The `tooltip` key of `theme.zOrder` is its layer.
+prop above but `title` and `isOpen`. The arrow takes the surface's background. The `tooltip` key of `theme.zOrder` is its layer.
 
 ## Server rendering
 

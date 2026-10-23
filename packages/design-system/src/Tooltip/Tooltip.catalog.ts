@@ -23,6 +23,9 @@ export const tooltipCatalog = defineCatalogEntry<TooltipProps>()({
     shouldOpenOnFocus: { values: [true, false], default: true },
     shouldOpenOnTouch: { values: [true, false], default: true },
     layer: { scale: 'zOrder', default: 'tooltip' },
+    borderRadius: { scale: 'radii' },
+    bg: { scale: 'background', default: 'modal' },
+    textColor: { scale: 'text', default: 'initial' },
   },
   content: { title: 'text', children: 'child' },
 })

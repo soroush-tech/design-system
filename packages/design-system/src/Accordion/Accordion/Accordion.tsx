@@ -10,6 +10,8 @@ import {
 import type { SpaceProps } from '@soroush.tech/styled-system'
 import { createShouldForwardProp, get, props, space, styled, type Theme } from '../../index'
 import { useDefaultProps } from '../../theme'
+import { themeDefault } from '../../theme/utils/themeDefault'
+import { getSurfaceRadius } from '../../utils/getSurfaceRadius'
 import { Collapse, type CollapseProps } from '../../Collapse'
 import { useControlled } from '../../utils/useControlled'
 import {
@@ -44,23 +46,35 @@ export interface AccordionProps extends SpaceProps<Theme> {
   disabled?: boolean
   /** Side padding on the summary, the details and the actions. Default: `true`. */
   hasGutters?: boolean
+  /** Corner radius, resolves against `theme.radii`. Default: `theme.defaults.surfaceRadius`, else square. */
+  borderRadius?: keyof Theme['radii']
+  /** Background, resolves against `theme.background`. Default: `'paper'`. */
+  bg?: keyof Theme['background']
+  /** Text color, resolves against `theme.text`. Default: `theme.defaults.textColor`, else `'initial'`. */
+  textColor?: keyof Theme['text']
   /** The transition that opens and closes the region. Default: `Collapse`. */
   transition?: ComponentType<AccordionTransitionProps>
   className?: string
   'data-testid'?: string
 }
 
+interface SurfaceStyle {
+  borderRadius?: keyof Theme['radii']
+  bg?: keyof Theme['background']
+  textColor?: keyof Theme['text']
+}
+
 const AccordionRoot = styled('div', {
   name: 'Accordion',
   label: 'Accordion',
-  shouldForwardProp: createShouldForwardProp([...props]),
+  shouldForwardProp: createShouldForwardProp([...props, 'borderRadius', 'bg', 'textColor']),
   systemProps: [space],
-})(({ theme }) => ({
+})<SurfaceStyle>(({ theme, borderRadius, bg, textColor }) => ({
   overflow: 'hidden',
-  backgroundColor: get(theme, 'background.paper'),
-  color: get(theme, 'text.initial'),
+  backgroundColor: get(theme, `background.${bg ?? themeDefault(theme, 'surfaceBg', 'paper')}`),
+  color: get(theme, `text.${textColor ?? themeDefault(theme, 'textColor', 'initial')}`),
   border: `${theme.borderWidths.thin} solid ${get(theme, 'border.default')}`,
-  borderRadius: theme.radii.md,
+  borderRadius: getSurfaceRadius(theme, borderRadius),
 }))
 
 const AccordionRegion = styled('div', {
@@ -83,6 +97,9 @@ export function Accordion({
   onChange,
   disabled = false,
   hasGutters: hasGuttersProp,
+  borderRadius: borderRadiusProp,
+  bg: bgProp,
+  textColor: textColorProp,
   transition: Transition = Collapse,
   className,
   'data-testid': dataTestid,
@@ -90,6 +107,9 @@ export function Accordion({
 }: Readonly<AccordionProps>) {
   const dp = useDefaultProps('Accordion')
   const hasGutters = hasGuttersProp ?? dp.hasGutters ?? true
+  const borderRadius = borderRadiusProp ?? dp.borderRadius
+  const bg = bgProp ?? dp.bg
+  const textColor = textColorProp ?? dp.textColor
   const baseId = useId()
   const group = useContext(AccordionGroupContext)
   const [ownExpanded, setOwnExpanded] = useControlled({
@@ -119,7 +139,14 @@ export function Accordion({
   const [summary, ...region] = Children.toArray(children)
   return (
     <AccordionContext.Provider value={context}>
-      <AccordionRoot className={className} data-testid={dataTestid} {...spaceProps}>
+      <AccordionRoot
+        borderRadius={borderRadius}
+        bg={bg}
+        textColor={textColor}
+        className={className}
+        data-testid={dataTestid}
+        {...spaceProps}
+      >
         {summary}
         <Transition isShown={isExpanded} shouldAppear={false}>
           <AccordionRegion

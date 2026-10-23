@@ -2,6 +2,7 @@ import { Fragment, useCallback, useContext, useEffect, useId, useRef, type React
 import type { LayoutProps, SpaceProps } from '@soroush.tech/styled-system'
 import { createShouldForwardProp, get, props, space, styled, system, type Theme } from '../index'
 import { useDefaultProps, useTheme } from '../theme'
+import { getSurfaceRadius } from '../utils/getSurfaceRadius'
 import { useFormControl } from '../FormControl'
 import { FormControlContext } from '../FormControl/FormControlContext'
 import { Chip } from '../Chip'
@@ -82,6 +83,12 @@ export interface AutocompleteProps<T = string, Multiple extends boolean | undefi
   size?: keyof Theme['sizes']
   /** Focus color - resolves to `theme.palette`. Default: its `FormControl`'s, else `'primary'`. */
   color?: keyof Theme['palette']
+  /** Text color, resolves against `theme.text`. Default: the focus color. */
+  textColor?: keyof Theme['text']
+  /** Corner radius of the field - only the `default` and `outlined` frames - and of the list. Resolves against `theme.radii`. The field is square by default; the list takes `theme.defaults.surfaceRadius`. */
+  borderRadius?: keyof Theme['radii']
+  /** Background of the list, resolves against `theme.background`. Default: `'modal'`. */
+  bg?: keyof Theme['background']
   disabled?: boolean
   error?: boolean
   required?: boolean
@@ -102,6 +109,8 @@ export interface AutocompleteProps<T = string, Multiple extends boolean | undefi
 interface RootStyle
   extends SpaceProps<Theme>, Pick<LayoutProps<Theme>, 'width' | 'minWidth' | 'maxWidth'> {
   color: keyof Theme['palette']
+  textColor?: keyof Theme['text']
+  borderRadius?: keyof Theme['radii']
   variant: AutocompleteVariant
   isError: boolean
   isDisabled: boolean
@@ -114,11 +123,15 @@ const widthStyles = system({ width: true, minWidth: true, maxWidth: true })
 const frameStyle = ({
   theme,
   color,
+  textColor,
+  borderRadius,
+  variant,
   isError,
   isDisabled,
   isFullWidth,
   isInField,
 }: RootStyle & { theme: Theme }) => {
+  const hasCorners = variant === 'default' || variant === 'outlined'
   const main = get(theme, `palette.${color}.main`)
   const border = isError ? get(theme, 'palette.error.main') : get(theme, `palette.${color}.light`)
   return {
@@ -131,7 +144,8 @@ const frameStyle = ({
     boxSizing: 'border-box' as const,
     transition: 'border-color 0.15s ease',
     backgroundColor: get(theme, `background.${themeDefault(theme, 'inputBg', 'terminal')}`),
-    color: main,
+    color: textColor ? get(theme, `text.${textColor}`) : main,
+    ...(hasCorners && borderRadius && { borderRadius: get(theme, `radii.${borderRadius}`) }),
     fontFamily: get(theme, 'fonts.body'),
     lineHeight: get(theme, 'lineHeights.base'),
     borderColor: border,
@@ -147,6 +161,8 @@ const AutocompleteRoot = styled('div', {
   shouldForwardProp: createShouldForwardProp([
     ...props,
     'color',
+    'textColor',
+    'borderRadius',
     'variant',
     'isError',
     'isDisabled',
@@ -228,8 +244,12 @@ const AutocompletePopup = styled('div', {
   name: 'Autocomplete',
   slot: 'popup',
   label: 'AutocompletePopup',
-  shouldForwardProp: createShouldForwardProp(['layer']),
-})<{ layer: keyof Theme['zOrder'] }>(({ theme, layer }) => ({
+  shouldForwardProp: createShouldForwardProp(['layer', 'borderRadius', 'bg']),
+})<{
+  layer: keyof Theme['zOrder']
+  borderRadius?: keyof Theme['radii']
+  bg?: keyof Theme['background']
+}>(({ theme, layer, borderRadius, bg }) => ({
   position: 'fixed',
   top: 0,
   left: 0,
@@ -239,9 +259,9 @@ const AutocompletePopup = styled('div', {
   boxSizing: 'border-box',
   maxHeight: '16rem',
   overflowY: 'auto',
-  borderRadius: theme.radii.md,
+  borderRadius: getSurfaceRadius(theme, borderRadius),
   boxShadow: theme.shadows[8],
-  backgroundColor: get(theme, 'background.modal'),
+  backgroundColor: get(theme, `background.${bg ?? 'modal'}`),
   color: get(theme, 'text.initial'),
   fontFamily: get(theme, 'fonts.body'),
   fontSize: theme.fontSizes[1],
@@ -356,6 +376,9 @@ export function Autocomplete<T = string, Multiple extends boolean | undefined = 
   variant: variantProp,
   size: sizeProp,
   color: colorProp,
+  textColor: textColorProp,
+  borderRadius: borderRadiusProp,
+  bg: bgProp,
   disabled: disabledProp,
   error: errorProp,
   required: requiredProp,
@@ -381,11 +404,14 @@ export function Autocomplete<T = string, Multiple extends boolean | undefined = 
     size: sizeProp ?? dp.size,
     fullWidth: fullWidthProp,
     color: colorProp ?? dp.color,
+    textColor: textColorProp ?? dp.textColor,
   })
   const color = fc.color ?? themeDefault(theme, 'color', 'primary')
   const variant = variantProp ?? dp.variant ?? themeDefault(theme, 'inputVariant', 'default')
   const shouldAllowFreeText = shouldAllowFreeTextProp ?? dp.shouldAllowFreeText ?? false
   const layer = layerProp ?? dp.layer ?? 'modal'
+  const borderRadius = borderRadiusProp ?? dp.borderRadius
+  const bg = bgProp ?? dp.bg
   const clearLabel = clearLabelProp ?? dp.clearLabel
   const openLabel = openLabelProp ?? dp.openLabel
   const closeLabel = closeLabelProp ?? dp.closeLabel
@@ -493,6 +519,8 @@ export function Autocomplete<T = string, Multiple extends boolean | undefined = 
       <AutocompleteRoot
         ref={frameRef}
         color={color}
+        textColor={fc.textColor}
+        borderRadius={borderRadius}
         variant={variant}
         isError={fc.error}
         isDisabled={fc.disabled}
@@ -585,6 +613,8 @@ export function Autocomplete<T = string, Multiple extends boolean | undefined = 
           <AutocompletePopup
             ref={popupRef}
             layer={layer}
+            borderRadius={borderRadius}
+            bg={bg}
             // A press on the list must not take the focus from the field.
             onMouseDown={(event) => event.preventDefault()}
           >

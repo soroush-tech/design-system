@@ -156,6 +156,20 @@ describe('Alert', () => {
     })
   })
 
+  describe('corners', () => {
+    it("is square by default, and takes a radius of its own or the theme's", () => {
+      const { rerender } = renderWithTheme(view())
+      expect(root()).toHaveStyle({ borderRadius: baseTheme.radii.sq })
+      rerender(view({ borderRadius: 'lg' }))
+      expect(root()).toHaveStyle({ borderRadius: baseTheme.radii.lg })
+      const theme = createTheme(baseTheme, {
+        components: { Alert: { defaultProps: { borderRadius: 'md' } } },
+      })
+      render(view(), { wrapper: withTheme(theme) })
+      expect(screen.getAllByTestId('alert')[1]).toHaveStyle({ borderRadius: baseTheme.radii.md })
+    })
+  })
+
   describe('theme', () => {
     it('takes its defaults from the theme, an own prop winning', () => {
       const theme = createTheme(baseTheme, {

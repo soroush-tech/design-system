@@ -533,6 +533,53 @@ describe('Autocomplete', () => {
     })
   })
 
+  describe('looks', () => {
+    const frame = () => input().parentElement as HTMLElement
+    const popup = () => listbox().parentElement as HTMLElement
+
+    it('has a square frame and list, in the focus color, by default', () => {
+      renderWithTheme(view({ variant: 'outlined' }))
+      key('ArrowDown')
+      expect(frame()).toHaveStyle({
+        borderRadius: baseTheme.radii.sq,
+        color: baseTheme.palette.primary.main,
+      })
+      expect(popup()).toHaveStyle({
+        borderRadius: baseTheme.radii.sq,
+        backgroundColor: baseTheme.background.modal,
+      })
+    })
+
+    it('takes a radius, a text color and a list background of its own', () => {
+      renderWithTheme(
+        view({ variant: 'outlined', borderRadius: 'lg', textColor: 'secondary', bg: 'paper' })
+      )
+      key('ArrowDown')
+      expect(frame()).toHaveStyle({
+        borderRadius: baseTheme.radii.lg,
+        color: baseTheme.text.secondary,
+      })
+      expect(popup()).toHaveStyle({
+        borderRadius: baseTheme.radii.lg,
+        backgroundColor: baseTheme.background.paper,
+      })
+    })
+
+    it('rounds no frame that is only a line or text', () => {
+      renderWithTheme(view({ variant: 'underline', borderRadius: 'lg' }))
+      expect(frame()).not.toHaveStyle({ borderRadius: baseTheme.radii.lg })
+    })
+
+    it('takes its text color from its FormControl', () => {
+      renderWithTheme(
+        <FormControl textColor="secondary">
+          <Autocomplete options={CITIES} aria-label="City" />
+        </FormControl>
+      )
+      expect(frame()).toHaveStyle({ color: baseTheme.text.secondary })
+    })
+  })
+
   describe('theme', () => {
     it('takes its defaults and its labels from the theme', () => {
       const theme = createTheme(baseTheme, {
