@@ -1,5 +1,5 @@
 import {
-  allComponents,
+  allDocComponents,
   componentCategories,
   markdownComponents,
   styledSystemDocSlug,
@@ -266,10 +266,12 @@ export const searchEntriesFor = (section: SectionNav): SearchEntry[] => {
     group.items.map((item) => ({ label: item.label, group: group.label, href: item.href }))
   )
   if (section.pkg !== 'design-system') return listed
-  const specs = allComponents.map((item) => ({
-    label: `${item.name} specs`,
-    group: 'Specs',
-    href: sectionPath('design-system', `/api/${item.slug}/`),
-  }))
+  const specs = allDocComponents
+    .filter((item) => item.pkg === 'design-system')
+    .map((item) => ({
+      label: `${item.name} specs`,
+      group: 'Specs',
+      href: sectionPath('design-system', `/api/${item.slug}/`),
+    }))
   return [...listed, ...specs]
 }

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import {
-  allComponents,
+  allDocComponents,
   componentCategories,
   designSystemNav,
   railItemFor,
@@ -99,7 +99,9 @@ describe('searchEntriesFor', () => {
   it('adds the specs page of every design-system component', () => {
     const entries = searchEntriesFor(sectionFor('/design-system/'))
     const specs = entries.filter((entry) => entry.group === 'Specs')
-    expect(specs).toHaveLength(allComponents.length)
+    expect(specs).toHaveLength(
+      allDocComponents.filter((item) => item.pkg === 'design-system').length
+    )
     expect(specs.find((entry) => entry.label === 'Button specs')?.href).toBe(
       '/design-system/api/button/'
     )

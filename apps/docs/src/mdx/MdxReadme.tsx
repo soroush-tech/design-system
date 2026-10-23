@@ -1,6 +1,7 @@
 import { allDocComponents } from 'src/common/nav'
 import { Readme } from 'src/common/Readme/Readme'
 import { splitReadme } from '@soroush.tech/docs-content'
+import { splitAccessibility } from 'src/common/readmeText'
 import { readmeForSlug } from './readmeSources'
 
 export interface MdxReadmeProps {
@@ -17,6 +18,8 @@ export function MdxReadme({ of, part = 'full' }: Readonly<MdxReadmeProps>) {
   const source = readmeForSlug(item.slug)
   if (part === 'full') return <Readme source={source} />
   const sections = splitReadme(source)
+  // The accessibility notes of a component are on its own tab; a family member has no page of its own.
+  const text = item.family ? sections[part] : splitAccessibility(sections[part]).rest
   // The MDX page owns its own heading, so section renders drop the README chrome.
-  return <Readme source={sections[part]} stripChrome={part === 'intro'} />
+  return <Readme source={text} stripChrome={part === 'intro'} />
 }

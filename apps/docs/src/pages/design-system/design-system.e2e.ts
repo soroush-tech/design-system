@@ -52,14 +52,43 @@ test.describe('design-system section', () => {
     await expect(page.getByText('variant="contained"').first()).toBeVisible()
     await page.getByRole('button', { name: 'Expand code' }).first().click()
     await expect(page.getByText(/import \{ Button \}/).first()).toBeVisible()
-    await expect(page.getByRole('link', { name: 'Button API reference' })).toBeVisible()
+    const tabs = page.getByRole('navigation', { name: 'Button pages' })
+    await expect(tabs.getByRole('link', { name: 'Overview' })).toHaveAttribute(
+      'aria-current',
+      'page'
+    )
+    await expect(tabs.getByRole('link', { name: 'Specs' })).toBeVisible()
+  })
+
+  test('a component with accessibility notes has the tab, and the notes are only there', async ({
+    page,
+  }) => {
+    await page.goto('/design-system/components/fab/')
+    const tabs = page.getByRole('navigation', { name: 'Fab pages' })
+    // The notes are not under Overview...
+    await expect(page.getByRole('heading', { level: 2, name: 'Accessibility' })).toHaveCount(0)
+    await tabs.getByRole('link', { name: 'Accessibility' }).click()
+    await expect(page).toHaveURL(/\/design-system\/components\/fab\/accessibility\//)
+    // ...they are on their own tab.
+    await expect(page.getByRole('heading', { level: 2, name: 'Accessibility' })).toBeVisible()
+    await expect(tabs.getByRole('link', { name: 'Accessibility' })).toHaveAttribute(
+      'aria-current',
+      'page'
+    )
+  })
+
+  test('a component without accessibility notes has no such tab', async ({ page }) => {
+    await page.goto('/design-system/components/quote/')
+    const tabs = page.getByRole('navigation', { name: 'Quote pages' })
+    await expect(tabs.getByRole('link', { name: 'Specs' })).toBeVisible()
+    await expect(tabs.getByRole('link', { name: 'Accessibility' })).toHaveCount(0)
   })
 
   test('a component page renders its README intro and every story as a demo', async ({ page }) => {
     await page.goto('/design-system/components/button-group/')
     await expect(page.getByRole('heading', { level: 1, name: 'ButtonGroup' })).toBeVisible()
     // The intro comes from the component's README, the demos from its stories file.
-    await expect(page.getByText(/Groups related .*immediate children/)).toBeVisible()
+    await expect(page.getByText(/Groups related .*immediate children/).first()).toBeVisible()
     for (const story of ['Default', 'Variants', 'Sizes And Colors', 'Vertical']) {
       await expect(page.getByRole('heading', { name: story, exact: true })).toBeVisible()
     }
@@ -133,12 +162,16 @@ test.describe('design-system section', () => {
     await page.goto('/design-system/components/quote/')
     await expect(page.getByRole('heading', { level: 1, name: 'Quote' })).toBeVisible()
     await expect(page.getByText(/blockquote/i).first()).toBeVisible()
-    await expect(page.getByRole('link', { name: 'Quote API reference' })).toBeVisible()
   })
 
-  test('a component API page shows import, props reference, and source link', async ({ page }) => {
+  test('a component specs page shows import, props reference, and source link', async ({
+    page,
+  }) => {
     await page.goto('/design-system/api/button/')
-    await expect(page.getByRole('heading', { level: 1, name: 'Button API' })).toBeVisible()
+    await expect(page.getByRole('heading', { level: 1, name: 'Button' })).toBeVisible()
+    await expect(
+      page.getByRole('navigation', { name: 'Button pages' }).getByRole('link', { name: 'Specs' })
+    ).toHaveAttribute('aria-current', 'page')
     await expect(page.getByText(/import \{ Button \} from '@soroush\.tech/)).toBeVisible()
     await expect(page.getByRole('heading', { name: /Button-specific props/ })).toBeVisible()
     await expect(
@@ -160,6 +193,6 @@ test.describe('design-system section', () => {
     await expect(page.getByRole('heading', { level: 1, name: 'Component API' })).toBeVisible()
     await page.locator('main').getByRole('link', { name: 'ButtonGroup API', exact: true }).click()
     await expect(page).toHaveURL(/\/design-system\/api\/button-group\//)
-    await expect(page.getByRole('heading', { level: 1, name: 'ButtonGroup API' })).toBeVisible()
+    await expect(page.getByRole('heading', { level: 1, name: 'ButtonGroup' })).toBeVisible()
   })
 })
