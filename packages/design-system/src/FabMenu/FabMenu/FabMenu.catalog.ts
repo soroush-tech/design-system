@@ -1,7 +1,7 @@
 import { defineCatalogEntry, node } from '../../catalog/defineCatalogEntry'
 import type { FabMenuProps } from './FabMenu'
 
-export const fabMenuDirectionValues = ['up', 'down'] satisfies NonNullable<
+export const fabMenuDirectionValues = ['up', 'down', 'left', 'right'] satisfies NonNullable<
   FabMenuProps['direction']
 >[]
 export const fabMenuAlignValues = ['end', 'start'] satisfies NonNullable<FabMenuProps['align']>[]

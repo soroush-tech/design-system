@@ -55,6 +55,32 @@ describe('FabMenu in a browser', () => {
     })
   })
 
+  it.each(['left', 'right'] as const)(
+    'puts a row of actions on the %s of the trigger, a step clear and level with it',
+    async (direction) => {
+      renderWithTheme(view({ direction }))
+      await userEvent.click(trigger())
+      await vi.waitFor(() => expect(item('Document')).toBeVisible())
+      await vi.waitFor(() => {
+        const base = trigger().getBoundingClientRect()
+        const first = item('Document').getBoundingClientRect()
+        const second = item('Folder with a long name').getBoundingClientRect()
+        const step = px(baseTheme.space[1])
+        const middle = base.top + base.height / 2
+        if (direction === 'left') {
+          // Drawn first is the farthest: the second is next to the trigger.
+          expect(base.left - second.right).toBeCloseTo(step, 0)
+          expect(second.left - first.right).toBeCloseTo(step, 0)
+        } else {
+          expect(first.left - base.right).toBeCloseTo(step, 0)
+          expect(second.left - first.right).toBeCloseTo(step, 0)
+        }
+        expect(first.top + first.height / 2).toBeCloseTo(middle, 0)
+        expect(second.top + second.height / 2).toBeCloseTo(middle, 0)
+      })
+    }
+  )
+
   it('takes no room in the page: the page holds only the trigger', async () => {
     renderWithTheme(view())
     const closed = trigger().parentElement!.getBoundingClientRect()

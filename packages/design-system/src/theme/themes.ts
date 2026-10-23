@@ -547,7 +547,7 @@ export interface FabOwnerState {
 
 /** The defaults a theme may set for every `FabMenu`. */
 export interface FabMenuOwnerState {
-  direction?: 'up' | 'down'
+  direction?: 'up' | 'down' | 'left' | 'right'
   align?: 'start' | 'end'
   color?: keyof ThemePalette
   size?: keyof ThemeSizes

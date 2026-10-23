@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Flex } from '../../Flex'
 import { Icon } from '../../Icon'
+import { View } from '../../View'
 import { exampleArgs } from '../../utils/test/renderExample'
 import { buttonColorTokens, textInputSizeTokens } from '../../utils/test/storiesOptions'
 import { FabMenuItem } from '../FabMenuItem'
@@ -135,6 +136,79 @@ export const Colors: Story = {
         </FabMenuItem>
       </FabMenu>
     </Corner>
+  ),
+}
+
+// One menu in each corner of the screen, each opening toward the middle of it - the way a floating
+// action button sits on a page. Fixed to the window: open the story on its own to see it.
+const corners = [
+  { name: 'top left', place: { top: 2, left: 2 }, column: 'down', row: 'right', align: 'start' },
+  { name: 'top right', place: { top: 2, right: 2 }, column: 'down', row: 'left', align: 'end' },
+  {
+    name: 'bottom left',
+    place: { bottom: 2, left: 2 },
+    column: 'up',
+    row: 'right',
+    align: 'start',
+  },
+  { name: 'bottom right', place: { bottom: 2, right: 2 }, column: 'up', row: 'left', align: 'end' },
+] as const
+
+function CornersDemo({ axis, ...args }: Readonly<FabMenuProps & { axis: 'column' | 'row' }>) {
+  return (
+    <>
+      {corners.map((corner) => (
+        <View key={corner.name} position="fixed" {...corner.place}>
+          <FabMenu
+            {...args}
+            aria-label={`Create, ${corner.name}`}
+            direction={corner[axis]}
+            align={corner.align}
+          >
+            {actions}
+          </FabMenu>
+        </View>
+      ))}
+    </>
+  )
+}
+
+// Vertical: each corner opens a column, down from the top corners and up from the bottom ones.
+export const Corners: Story = {
+  parameters: {
+    layout: 'fullscreen',
+    controls: { include: ['color', 'size'] },
+    docs: { story: { inline: false, iframeHeight: 520 } },
+  },
+  render: (args) => <CornersDemo {...args} axis="column" />,
+}
+
+// Horizontal: each corner opens a row toward the middle of the screen.
+export const CornersSideways: Story = {
+  parameters: {
+    layout: 'fullscreen',
+    controls: { include: ['color', 'size'] },
+    docs: { story: { inline: false, iframeHeight: 520 } },
+  },
+  render: (args) => <CornersDemo {...args} axis="row" />,
+}
+
+// A row beside the trigger, to its start or its end.
+export const Sideways: Story = {
+  parameters: { controls: { include: [] } },
+  render: (args) => (
+    <Flex flexDirection="column" gap={6} alignItems="center" width="32rem">
+      <Flex flexDirection="row" justifyContent="flex-end" width="100%">
+        <FabMenu {...args} direction="left" defaultOpen>
+          {actions}
+        </FabMenu>
+      </Flex>
+      <Flex flexDirection="row" justifyContent="flex-start" width="100%">
+        <FabMenu {...args} direction="right" defaultOpen>
+          {actions}
+        </FabMenu>
+      </Flex>
+    </Flex>
   ),
 }
 

@@ -365,6 +365,86 @@ describe('FabMenu', () => {
     })
   })
 
+  describe('a row of actions', () => {
+    const list = () => document.getElementById(trigger().getAttribute('aria-controls') as string)
+
+    it('goes to the start side of the trigger for left, level with it', () => {
+      renderWithTheme(view({ defaultOpen: true, direction: 'left' }))
+      expect(list()).toHaveStyle({
+        position: 'absolute',
+        flexDirection: 'row',
+        top: '0',
+        bottom: '0',
+        insetInlineEnd: `calc(100% + ${baseTheme.space[1]})`,
+        alignItems: 'center',
+      })
+    })
+
+    it('goes to the end side of the trigger for right', () => {
+      renderWithTheme(view({ defaultOpen: true, direction: 'right' }))
+      expect(list()).toHaveStyle({
+        flexDirection: 'row',
+        insetInlineStart: `calc(100% + ${baseTheme.space[1]})`,
+      })
+    })
+
+    it('opens on ArrowLeft and ArrowRight, and not on the keys of a column', () => {
+      renderWithTheme(view({ direction: 'left' }))
+      key('ArrowUp', trigger())
+      key('ArrowDown', trigger())
+      expect(trigger()).toHaveAttribute('aria-expanded', 'false')
+      key('ArrowLeft', trigger())
+      expect(trigger()).toHaveAttribute('aria-expanded', 'true')
+    })
+
+    it('walks the actions with ArrowLeft and ArrowRight, as drawn, to the left of the trigger', () => {
+      renderWithTheme(view({ direction: 'left' }))
+      open()
+      trigger().focus()
+      key('ArrowLeft')
+      expect(item('Import')).toHaveFocus()
+      key('ArrowLeft')
+      expect(item('Folder')).toHaveFocus()
+      key('ArrowRight')
+      expect(item('Import')).toHaveFocus()
+      key('Home')
+      expect(item('Document')).toHaveFocus()
+      key('End')
+      expect(trigger()).toHaveFocus()
+      // The keys of a column are the page's here.
+      const event = new KeyboardEvent('keydown', {
+        key: 'ArrowUp',
+        bubbles: true,
+        cancelable: true,
+      })
+      trigger().dispatchEvent(event)
+      expect(event.defaultPrevented).toBe(false)
+    })
+
+    it('walks the other way round when the actions are to the right of the trigger', () => {
+      renderWithTheme(view({ direction: 'right' }))
+      open()
+      trigger().focus()
+      key('ArrowRight')
+      expect(item('Document')).toHaveFocus()
+      key('ArrowRight')
+      expect(item('Folder')).toHaveFocus()
+      key('ArrowLeft')
+      expect(item('Document')).toHaveFocus()
+    })
+
+    it('reads right to left the other way, and so do its arrow keys', () => {
+      renderWithTheme(<div dir="rtl">{view({ direction: 'left' })}</div>)
+      open()
+      trigger().focus()
+      // The row is drawn from the trigger toward the inline start, which is on the right.
+      key('ArrowRight')
+      expect(item('Import')).toHaveFocus()
+      key('ArrowLeft')
+      expect(trigger()).toHaveFocus()
+    })
+  })
+
   describe('look', () => {
     it('takes the color and the size of the trigger', () => {
       renderWithTheme(view({ color: 'error', size: 'lg' }))

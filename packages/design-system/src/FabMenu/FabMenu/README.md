@@ -26,17 +26,19 @@ import { FabMenu, FabMenuItem } from '@soroush.tech/design-system/FabMenu'
 | `aria-label`                               | `string`                 | -                          | Names a trigger with no label - the same open or closed.                                    |
 | `isOpen` / `defaultOpen`                   | `boolean`                | `false`                    | Controlled with `onOpen` and `onClose`, or at first.                                        |
 | `onOpen` / `onClose`                       | `(event) => void`        | -                          | Fired when it asks to open or close - on a press, Escape, a press away or an action chosen. |
-| `direction`                                | `'up' \| 'down'`         | `'up'`                     | Which way the actions go from the trigger.                                                  |
-| `align`                                    | `'start' \| 'end'`       | `'end'`                    | The edge of the trigger they line up with; mirrored right to left.                          |
+| `direction`                                | `'up'                    | 'down'                     | 'left'                                                                                      | 'right'`                                                                                                                       | `'up'` | A column above or below the trigger, or a row beside it. `left` and `right` are the page's start and end side, so they swap right to left. |
+| `align`                                    | `'start'                 | 'end'`                     | `'end'`                                                                                     | The edge of the trigger a column lines up with; mirrored right to left. A row is level with the trigger, so it does not apply. |
 | `color`                                    | `keyof Theme['palette']` | `'primary'`                | The trigger's color.                                                                        |
 | `size`                                     | `keyof Theme['sizes']`   | `'md'`                     | The trigger's size, and the items'.                                                         |
 | `m`, `p`, ... , `className`, `data-testid` |                          |                            | Spacing as `theme.space` keys; on the root.                                                 |
 
 ## Keyboard
 
-- Enter and Space press the trigger. ArrowUp and ArrowDown on a closed trigger open it.
-- Open, ArrowUp and ArrowDown move the focus along what is drawn - the actions and the trigger, top to
-  bottom - without wrapping, skipping an action that is off; Home and End go to the first and the last.
+- Enter and Space press the trigger. On a closed trigger the arrows of the axis the actions go along open it:
+  ArrowUp and ArrowDown for a column, ArrowLeft and ArrowRight for a row.
+- Open, those arrows move the focus along what is drawn - the actions and the trigger, top to bottom or
+  from side to side - without wrapping, skipping an action that is off; Home and End go to the first and the
+  last. A row reads the other way right to left, and so do its arrows. The other axis's arrows are the page's.
 - Escape closes it and returns the focus to the trigger; so does choosing an action. A press anywhere else
   closes it too, and leaves the focus where the press put it.
 
