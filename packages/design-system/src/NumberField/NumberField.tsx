@@ -271,7 +271,12 @@ function SpinButton({
       // A click with no press before it is a key's or assistive technology's.
       onClick={(event: MouseEvent) => event.detail === 0 && onStep(direction)}
     >
-      <Icon name={getSpinIcon(direction, isSide)} size="sm" color="inherit" />
+      {/* Stacked, two glyphs share the field's height: they must not be taller than half of it. */}
+      <Icon
+        name={getSpinIcon(direction, isSide)}
+        size={isSide ? 'sm' : '0.75rem'}
+        color="inherit"
+      />
     </Button>
   )
 }

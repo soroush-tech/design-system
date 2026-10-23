@@ -137,7 +137,7 @@ const frameStyle = ({
   return {
     display: isFullWidth || isInField ? 'flex' : 'inline-flex',
     ...(isFullWidth && { width: '100%' }),
-    ...(isInField && !isFullWidth && { width: 'fit-content', minWidth: '12rem' }),
+    ...(isInField && !isFullWidth && { width: 'fit-content' }),
     flexWrap: 'wrap' as const,
     alignItems: 'center',
     gap: theme.space[1],
@@ -190,7 +190,7 @@ const AutocompleteInput = styled('input', {
 })<{ sizeToken: keyof Theme['sizes'] }>(({ theme, sizeToken }) => {
   const s = theme.sizes[sizeToken]
   return {
-    flex: '1 1 6rem',
+    flex: '1 1 auto',
     minWidth: 0,
     border: 'none',
     outline: 'none',
