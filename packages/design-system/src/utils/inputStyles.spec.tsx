@@ -47,3 +47,34 @@ describe('input least width', () => {
     for (const id of ids) expect(screen.getByTestId(id)).toHaveStyle({ minWidth: '5rem' })
   })
 })
+
+describe('input affordance icons', () => {
+  it.each(['sm', 'md', 'lg'] as const)(
+    'are the icon size of the field size, in the color of the field: %s',
+    (size) => {
+      render(
+        <>
+          <NativeSelect options={[{ value: 'a', label: 'A' }]} size={size} color="error" />
+          <Select aria-label="s" size={size} color="error">
+            <MenuItem value="a">A</MenuItem>
+          </Select>
+          <Autocomplete
+            options={['a']}
+            aria-label="a"
+            size={size}
+            color="error"
+            clearLabel="Clear"
+            defaultValue="a"
+          />
+        </>,
+        { wrapper: withTheme(baseTheme) }
+      )
+      const glyphs = [...document.querySelectorAll('svg')]
+      expect(glyphs).toHaveLength(4)
+      for (const glyph of glyphs) {
+        expect(glyph).toHaveStyle({ width: baseTheme.icon[size], height: baseTheme.icon[size] })
+        expect(glyph).toHaveStyle({ color: baseTheme.palette.error.main })
+      }
+    }
+  )
+})

@@ -673,8 +673,8 @@ function NonNativeSelect({
         </ValueArea>
         <Icon
           name={iconName ?? (open ? 'expand_less' : 'expand_more')}
-          size="1.25rem"
-          color="secondary"
+          size={size}
+          color="inherit"
           {...iconProps}
         />
       </Trigger>

@@ -361,7 +361,7 @@ export function NativeSelect({
           </option>
         ))}
       </StyledNativeSelect>
-      <DropdownIcon name={iconName} size="1.25rem" color="secondary" {...iconProps} />
+      <DropdownIcon name={iconName} size={size} color="inherit" {...iconProps} />
     </NativeSelectRoot>
   )
 }

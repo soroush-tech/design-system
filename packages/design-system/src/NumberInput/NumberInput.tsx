@@ -192,7 +192,11 @@ const spinStyle = ({ theme, color, isSide }: SpinStyle & { theme: Theme }) => {
     appearance: 'none' as const,
     display: 'grid',
     placeItems: 'center',
-    flex: isSide ? '0 0 auto' : 1,
+    // A basis of 0px, not 0%: a percentage of the column's unset height is its content again.
+    flex: isSide ? '0 0 auto' : '1 1 0px',
+    // Stacked, the two share the field's height with none of their own: a glyph taller than its
+    // half overflows it, so the field is as high as its input.
+    ...(!isSide && { minHeight: 0 }),
     minWidth: isSide ? theme.space[5] : theme.icon.lg,
     padding: 0,
     border: 'none',
@@ -232,6 +236,7 @@ interface SpinButtonProps {
   isSide: boolean
   isDisabled: boolean
   color: keyof Theme['palette']
+  size: keyof Theme['sizes']
   onStep: (direction: 1 | -1) => void
 }
 
@@ -248,6 +253,7 @@ function SpinButton({
   isSide,
   isDisabled,
   color,
+  size,
   onStep,
 }: Readonly<SpinButtonProps>) {
   const hold = useHoldRepeat(() => onStep(direction))
@@ -274,12 +280,7 @@ function SpinButton({
       // A click with no press before it is a key's or assistive technology's.
       onClick={(event: MouseEvent) => event.detail === 0 && onStep(direction)}
     >
-      {/* Stacked, two glyphs share the field's height: they must not be taller than half of it. */}
-      <Icon
-        name={getSpinIcon(direction, isSide)}
-        size={isSide ? 'sm' : '0.75rem'}
-        color="inherit"
-      />
+      <Icon name={getSpinIcon(direction, isSide)} size={size} color="inherit" />
     </Button>
   )
 }
@@ -369,7 +370,7 @@ export function NumberInput({
   useWheelStep(inputRef, shouldScrubProp ?? dp.shouldScrubOnWheel ?? false, field.stepBy)
 
   const isSide = spinButtons === 'sides'
-  const buttonProps = { isSide, color, onStep: field.stepBy }
+  const buttonProps = { isSide, color, size: fc.size, onStep: field.stepBy }
   const decrement = (
     <SpinButton
       direction={-1}

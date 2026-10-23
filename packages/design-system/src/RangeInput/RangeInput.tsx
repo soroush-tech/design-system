@@ -112,6 +112,8 @@ const RangeInputRoot = styled('span', {
     position: 'relative',
     display: 'block',
     boxSizing: 'border-box',
+    // Along a column, such as a FormControl's, a horizontal slider takes the whole width.
+    ...(!isVertical && { alignSelf: 'stretch' }),
     // The thumbs hang half their width over the ends; this room keeps them inside the layout.
     ...(isVertical
       ? { width: thumb, height: '12rem', marginBlock: `calc(${thumb} / 2)` }

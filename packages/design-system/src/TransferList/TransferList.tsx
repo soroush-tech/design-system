@@ -72,6 +72,8 @@ const TransferListRoot = styled('div', {
 })<RootStyle>(({ theme, isDisabled }) => ({
   display: 'flex',
   alignItems: 'stretch',
+  // Along a column, such as a FormControl's, it takes the whole width.
+  alignSelf: 'stretch',
   gap: theme.space[2],
   ...(isDisabled && { opacity: 0.5 }),
 }))
