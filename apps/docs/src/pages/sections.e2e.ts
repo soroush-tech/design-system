@@ -31,12 +31,12 @@ test.describe('styled-system section', () => {
 })
 
 test.describe('cross-section chrome', () => {
-  test('the navbar links every section', async ({ page }) => {
-    await page.goto('/')
-    const header = page.locator('header')
-    await expect(header.getByRole('link', { name: 'Design System' })).toBeVisible()
-    await expect(header.getByRole('link', { name: 'Markdown' })).toBeVisible()
-    await expect(header.getByRole('link', { name: 'Styled System' })).toBeVisible()
+  test('the sidebar links every section', async ({ page }) => {
+    await page.goto('/design-system/')
+    const nav = page.getByRole('navigation', { name: 'Design system documentation' })
+    await expect(nav.getByRole('link', { name: 'Design System' })).toBeVisible()
+    await expect(nav.getByRole('link', { name: 'Markdown' })).toBeVisible()
+    await expect(nav.getByRole('link', { name: 'Styled System' })).toBeVisible()
   })
 
   test('the sitemap lists live pages only', async ({ page }) => {

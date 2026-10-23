@@ -7,15 +7,18 @@ import { Link } from '@soroush.tech/design-system/Link'
 import { Typography } from '@soroush.tech/design-system/Typography'
 import { View } from '@soroush.tech/design-system/View'
 import { Chip } from '@soroush.tech/lab/Chip'
+import { RailGlyph } from 'src/common/NavRail/RailGlyph'
 import designSystemPkg from 'packages/design-system/package.json'
 import { useThemeMode } from 'src/theme/useThemeMode'
 
 export interface NavbarProps {
+  /** Opens the search; no search button without it. */
+  onSearch?: () => void
   /** The id of the mobile navigation drawer the menu button opens; no menu button without it. */
   menuDrawer?: string
 }
 
-export function Navbar({ menuDrawer }: Readonly<NavbarProps> = {}) {
+export function Navbar({ menuDrawer, onSearch }: Readonly<NavbarProps> = {}) {
   const { isDark, toggleTheme } = useThemeMode()
   return (
     <AppBar color="appBar" size="sm" position="sticky" top={0} zIndex={10}>
@@ -60,6 +63,11 @@ export function Navbar({ menuDrawer }: Readonly<NavbarProps> = {}) {
               </Link>
             </Flex>
           </View>
+          {onSearch && (
+            <Button variant="text" size="sm" onClick={onSearch} aria-label="Search">
+              <RailGlyph name="search" size={20} />
+            </Button>
+          )}
           <Button variant="text" size="sm" onClick={toggleTheme} aria-label="Toggle color scheme">
             {isDark ? 'Light' : 'Dark'}
           </Button>

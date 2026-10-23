@@ -10,9 +10,10 @@ test.describe('design-system section', () => {
     ).toBeVisible()
   })
 
-  test('navbar shows the design-system version chip', async ({ page }) => {
+  test('the sidebar shows the design-system version chip', async ({ page }) => {
     await page.goto('/design-system/')
-    await expect(page.locator('header').getByText(/^v\d+\.\d+\.\d+$/)).toBeVisible()
+    const nav = page.getByRole('navigation', { name: 'Design system documentation' })
+    await expect(nav.getByText(/^v\d+\.\d+\.\d+$/)).toBeVisible()
   })
 
   test('sidebar navigates to installation', async ({ page }) => {

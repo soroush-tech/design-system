@@ -4,6 +4,7 @@ import type { ReactNode } from 'react'
 import type { PageContext as VikePageContext } from 'vike/types'
 import { ThemeProvider } from '@soroush.tech/design-system/theme'
 import { PageContext } from 'src/common/PageContext'
+import { componentCategories } from 'src/common/nav'
 import { dark } from 'src/theme/themes'
 import { DocsNav } from './DocsNav'
 
@@ -18,11 +19,42 @@ const renderNav = (urlPathname: string) => {
 }
 
 describe('DocsNav', () => {
-  it('renders every design-system nav group', () => {
-    renderNav('/design-system/')
-    for (const label of ['Getting started', 'Component API', 'Customization', 'Inputs & forms']) {
-      expect(screen.getByText(label)).toBeInTheDocument()
+  it('shows the sidebar of the rail item the page belongs to, not every group', () => {
+    renderNav('/design-system/components/button/')
+    expect(screen.getByRole('link', { name: 'All components' })).toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: 'Installation' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: 'Theming' })).not.toBeInTheDocument()
+  })
+
+  it('lists All components first, then every category as a folding group', () => {
+    const { container } = renderNav('/design-system/components/')
+    expect(screen.getByRole('link', { name: 'All components' })).toHaveAttribute(
+      'href',
+      '/design-system/components/'
+    )
+    for (const category of componentCategories) {
+      expect(screen.getByText(category.label)).toBeInTheDocument()
     }
+    expect(container.querySelectorAll('details')).toHaveLength(componentCategories.length)
+  })
+
+  it('opens the group that holds the current page, and no other', () => {
+    const { container } = renderNav('/design-system/components/button/')
+    const open = Array.from(container.querySelectorAll('details[open]'))
+    expect(open).toHaveLength(1)
+    expect(open[0]).toContainElement(screen.getByRole('link', { name: 'Button' }))
+  })
+
+  it('shows the get started pages on the overview', () => {
+    renderNav('/design-system/')
+    expect(screen.getByRole('link', { name: 'Installation' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Overview' })).toHaveAttribute('aria-current', 'page')
+  })
+
+  it('shows the style pages under Styles', () => {
+    renderNav('/design-system/customization/theming/')
+    expect(screen.getByRole('link', { name: 'Theming' })).toHaveAttribute('aria-current', 'page')
+    expect(screen.getByRole('link', { name: 'How to customize' })).toBeInTheDocument()
   })
 
   it('renders the markdown section nav on markdown paths', () => {
@@ -32,17 +64,29 @@ describe('DocsNav', () => {
   })
 
   it('renders the styled-system section nav on styled-system paths', () => {
-    renderNav('/styled-system/')
+    renderNav('/styled-system/docs/responsive-styles/')
     expect(
       screen.getByRole('navigation', { name: 'Styled-system documentation' })
     ).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Responsive styles' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Responsive styles' })).toHaveAttribute(
+      'aria-current',
+      'page'
+    )
   })
 
-  it('marks the current page with aria-current', () => {
-    renderNav('/design-system/components/button/')
-    expect(screen.getByRole('link', { name: 'Button' })).toHaveAttribute('aria-current', 'page')
-    expect(screen.getByRole('link', { name: 'Overview' })).not.toHaveAttribute('aria-current')
+  it('links the three packages, marking the current one', () => {
+    renderNav('/design-system/components/')
+    expect(screen.getByRole('link', { name: 'Design System' })).toHaveAttribute(
+      'aria-current',
+      'true'
+    )
+    expect(screen.getByRole('link', { name: 'Markdown' })).toHaveAttribute('href', '/markdown/')
+    expect(screen.getByRole('link', { name: 'Styled System' })).not.toHaveAttribute('aria-current')
+  })
+
+  it('marks a component page of a family as current under its category', () => {
+    renderNav('/design-system/components/menu/')
+    expect(screen.getByRole('link', { name: 'Menu' })).toHaveAttribute('aria-current', 'page')
   })
 
   it('normalizes a pathname without a trailing slash', () => {
@@ -52,6 +96,6 @@ describe('DocsNav', () => {
 
   it('falls back to the root path when urlPathname is empty', () => {
     renderNav('')
-    expect(screen.getByRole('link', { name: 'Overview' })).not.toHaveAttribute('aria-current')
+    expect(screen.getByRole('link', { name: 'Overview' })).toBeInTheDocument()
   })
 })

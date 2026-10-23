@@ -13,8 +13,10 @@ test.describe('landing page', () => {
   test('theme toggle switches the color scheme', async ({ page }) => {
     await page.goto('/')
     const toggle = page.getByRole('button', { name: 'Toggle color scheme' })
-    await expect(toggle).toHaveText('Light')
+    const ground = await page
+      .locator('body')
+      .evaluate((body) => getComputedStyle(body).backgroundColor)
     await toggle.click()
-    await expect(toggle).toHaveText('Dark')
+    await expect(page.locator('body')).not.toHaveCSS('background-color', ground)
   })
 })

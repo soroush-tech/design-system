@@ -1,14 +1,19 @@
 import { describe, it, expect } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import type { PageContext as VikePageContext } from 'vike/types'
+import { PageContext } from 'src/common/PageContext'
 import { ThemeModeProvider } from 'src/theme/ThemeModeProvider'
 import { Layout } from './Layout'
 
 const renderLayout = (sidebar?: React.ReactNode) =>
   render(
     <ThemeModeProvider>
-      <Layout sidebar={sidebar}>
-        <div data-testid="content">page content</div>
-      </Layout>
+      <PageContext.Provider value={{ urlPathname: '/design-system/' } as VikePageContext}>
+        <Layout sidebar={sidebar}>
+          <div data-testid="content">page content</div>
+        </Layout>
+      </PageContext.Provider>
     </ThemeModeProvider>
   )
 
@@ -23,6 +28,22 @@ describe('Layout', () => {
   it('keeps the content in a column no wider than 1200px', () => {
     renderLayout()
     expect(screen.getByTestId('content').parentElement).toHaveStyle({ maxWidth: '1200px' })
+  })
+
+  it('draws the navigation rail beside the page, for wide screens', () => {
+    renderLayout()
+    const rail = screen.getByRole('navigation', { name: 'Primary', hidden: true })
+    expect(within(rail).getByRole('link', { name: 'Components', hidden: true })).toHaveAttribute(
+      'href',
+      '/design-system/components/'
+    )
+  })
+
+  it('opens the search from the top bar', async () => {
+    const user = userEvent.setup()
+    renderLayout()
+    await user.click(screen.getByRole('button', { name: 'Search' }))
+    expect(screen.getByRole('dialog', { name: 'Search the documentation' })).toBeInTheDocument()
   })
 
   it('has no menu button or aside without a sidebar', () => {
