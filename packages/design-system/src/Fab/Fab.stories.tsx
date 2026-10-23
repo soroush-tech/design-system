@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Flex } from '../Flex'
 import { Icon } from '../Icon'
+import { View } from '../View'
 import { exampleArgs } from '../utils/test/renderExample'
 import { buttonColorTokens, textInputSizeTokens } from '../utils/test/storiesOptions'
 import { fabCatalog, fabVariantValues } from './Fab.catalog'
@@ -88,6 +89,28 @@ export const Colors: Story = {
         </Fab>
       ))}
     </Flex>
+  ),
+}
+
+// The label stays on one line and is cut where the container ends.
+export const ExtendedLongLabel: Story = {
+  parameters: { controls: { include: [] } },
+  render: (args) => (
+    <View width="12rem">
+      <Fab {...args} variant="extended" startIcon={<Icon name="add" color="inherit" />}>
+        A label that is far too long for its container
+      </Fab>
+    </View>
+  ),
+}
+
+// Margin and padding are theme space keys.
+export const Spacing: Story = {
+  parameters: { controls: { include: [] } },
+  render: (args) => (
+    <Fab {...args} variant="extended" m={3} px={5} startIcon={<Icon name="add" color="inherit" />}>
+      Create
+    </Fab>
   ),
 }
 

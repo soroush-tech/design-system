@@ -521,6 +521,12 @@ const cases: Case[] = [
   { name: 'Alert', slot: 'closeButton', label: 'AlertCloseButton', ui: alert },
   { name: 'AlertTitle', slot: 'root', label: 'AlertTitle', ui: alert },
   { name: 'Fab', slot: 'root', label: 'Fab', ui: fab },
+  {
+    name: 'Fab',
+    slot: 'label',
+    label: 'FabLabel',
+    ui: <Fab variant="extended">Create</Fab>,
+  },
   { name: 'Snackbar', slot: 'root', label: 'Snackbar', ui: snackbar },
   { name: 'Snackbar', slot: 'content', label: 'SnackbarContent', ui: snackbar },
   { name: 'Snackbar', slot: 'message', label: 'SnackbarMessage', ui: snackbar },
