@@ -13,6 +13,14 @@ describe('FormLabel', () => {
     expect(label.tagName.toLowerCase()).toBe('label')
   })
 
+  it('is a block with room under it, above its control', () => {
+    renderWithTheme(<FormLabel>Email</FormLabel>)
+    expect(screen.getByText('Email')).toHaveStyle({
+      display: 'block',
+      marginBottom: baseTheme.space[0.5],
+    })
+  })
+
   it('links htmlFor to the FormControl id', () => {
     renderWithTheme(
       <FormControl id="email">
