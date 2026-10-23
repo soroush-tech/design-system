@@ -5,6 +5,7 @@ import { FormControl } from '../FormControl'
 import { FormLabel } from '../FormLabel'
 import { FormHelperText } from '../FormHelperText'
 import { TextInput } from '../TextInput'
+import { Autocomplete } from '../Autocomplete'
 import { Button } from '../Button'
 import { Checkbox } from '../Checkbox'
 import { InputRange } from '../InputRange'
@@ -130,6 +131,18 @@ export const EveryInput: Story = {
           <FormLabel>Text</FormLabel>
           <TextInput variant="outlined" placeholder="John Smith" />
           <FormHelperText>A line of text.</FormHelperText>
+        </FormControl>
+        <FormControl>
+          <FormLabel>City</FormLabel>
+          <Autocomplete
+            variant="outlined"
+            options={['Berlin', 'Lisbon', 'Oslo', 'Rome']}
+            noOptionsText="No city matches"
+            clearLabel="Clear"
+            openLabel="Open"
+            closeLabel="Close"
+          />
+          <FormHelperText>Type to find a city.</FormHelperText>
         </FormControl>
         <FormControl>
           <FormLabel>Number</FormLabel>

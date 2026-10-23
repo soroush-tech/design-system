@@ -166,6 +166,21 @@ export const Group: Story = {
   ),
 }
 
+// No gap: one block, one border at each joint, the outer corners round.
+export const Attached: Story = {
+  parameters: { controls: { include: [] } },
+  render: () => (
+    <AccordionGroup isAttached isExclusive>
+      {titles.map((title) => (
+        <Accordion key={title}>
+          <AccordionSummary>{title}</AccordionSummary>
+          {details}
+        </Accordion>
+      ))}
+    </AccordionGroup>
+  ),
+}
+
 export const GroupOfSeveral: Story = {
   parameters: { controls: { include: [] } },
   render: () => (

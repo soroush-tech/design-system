@@ -165,6 +165,39 @@ describe('AccordionGroup', () => {
     })
   })
 
+  describe('isAttached', () => {
+    const accordions = () => [...screen.getByTestId('group').children] as HTMLElement[]
+
+    it('keeps a gap between the accordions by default', () => {
+      renderWithTheme(view())
+      expect(screen.getByTestId('group')).not.toHaveStyle({ gap: '0' })
+      expect(accordions()[1]).not.toHaveStyle({ borderTopWidth: '0' })
+    })
+
+    it('joins them: no gap, one border at each joint, square corners where they meet', () => {
+      renderWithTheme(view({ isAttached: true }))
+      expect(screen.getByTestId('group')).toHaveStyle({ gap: '0' })
+      const [first, second, third] = accordions()
+      expect(first).not.toHaveStyle({ borderTopWidth: '0' })
+      expect(first).toHaveStyle({ borderBottomLeftRadius: '0', borderBottomRightRadius: '0' })
+      expect(second).toHaveStyle({ borderTopWidth: '0', borderTopLeftRadius: '0' })
+      expect(second).toHaveStyle({ borderBottomLeftRadius: '0' })
+      expect(third).toHaveStyle({ borderTopWidth: '0' })
+      expect(third).toHaveStyle({ borderRadius: baseTheme.radii.md })
+    })
+
+    it('takes isAttached from the theme, an own prop winning', () => {
+      const theme = createTheme(baseTheme, {
+        components: { AccordionGroup: { defaultProps: { isAttached: true } } },
+      })
+      const { unmount } = render(view(), { wrapper: withTheme(theme) })
+      expect(screen.getByTestId('group')).toHaveStyle({ gap: '0' })
+      unmount()
+      render(view({ isAttached: false }), { wrapper: withTheme(theme) })
+      expect(screen.getByTestId('group')).not.toHaveStyle({ gap: '0' })
+    })
+  })
+
   describe('theme', () => {
     it('takes isExclusive from the theme, an own prop winning', () => {
       const theme = createTheme(baseTheme, {

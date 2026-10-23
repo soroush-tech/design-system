@@ -559,6 +559,7 @@ export interface AccordionSummaryOwnerState {
 /** The defaults a theme may set for every `AccordionGroup`. */
 export interface AccordionGroupOwnerState {
   isExclusive?: boolean
+  isAttached?: boolean
 }
 
 /** The defaults a theme may set for every `Collapse`. */
