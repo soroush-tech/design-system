@@ -43,6 +43,7 @@ export const componentCategories: ComponentCategory[] = [
   {
     label: 'Layout & surfaces',
     items: [
+      component('ScrollArea'),
       component('View'),
       component('Flex'),
       component('Grid'),
@@ -63,11 +64,14 @@ export const componentCategories: ComponentCategory[] = [
       component('Image'),
       component('Avatar'),
       component('Table', true),
+      component('Accordion', true),
     ],
   },
   {
     label: 'Inputs & forms',
     items: [
+      component('Autocomplete'),
+      component('Fab'),
       component('Button'),
       component('ButtonGroup'),
       component('ToggleButton', true),
@@ -75,8 +79,8 @@ export const componentCategories: ComponentCategory[] = [
       component('Checkbox'),
       component('Radio'),
       component('Rating'),
-      component('NumberField'),
-      component('InputRange'),
+      component('NumberInput'),
+      component('RangeInput'),
       component('TransferList'),
       component('Switch'),
       component('NativeSelect'),
@@ -96,6 +100,11 @@ export const componentCategories: ComponentCategory[] = [
   {
     label: 'Feedback',
     items: [
+      component('FabMenu', true),
+      component('Snackbar'),
+      component('Alert', true),
+      component('Badge'),
+      component('Chip'),
       component('CircularProgress'),
       component('LinearProgress'),
       component('Skeleton'),
@@ -103,8 +112,19 @@ export const componentCategories: ComponentCategory[] = [
     ],
   },
   {
+    label: 'Transitions',
+    items: [
+      component('Collapse'),
+      component('Fade'),
+      component('Grow'),
+      component('Slide'),
+      component('Zoom'),
+    ],
+  },
+  {
     label: 'Overlay & behavior',
     items: [
+      component('Tooltip'),
       component('Portal'),
       component('FocusTrap'),
       component('Modal'),
@@ -122,6 +142,9 @@ export const allComponents: ComponentNavItem[] = componentCategories.flatMap(
 // A member has no page of its own - an API page each, its demos on the family's page - and
 // stays out of the categories, so the sidebar's groups and the catalog list families.
 const FAMILY_MEMBERS: Record<string, string[]> = {
+  FabMenu: ['FabMenuItem'],
+  Alert: ['AlertTitle'],
+  Accordion: ['AccordionActions', 'AccordionDetails', 'AccordionGroup', 'AccordionSummary'],
   Menu: ['ContextMenu', 'MenuDivider', 'MenuItems', 'MenuList'],
   Pagination: ['PaginationItem'],
   Sidebar: ['SidebarItem'],

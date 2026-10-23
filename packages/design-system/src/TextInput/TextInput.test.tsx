@@ -373,6 +373,22 @@ describe('TextInput', () => {
       expect(container.querySelector('input')).toHaveAttribute('size', '20')
     })
 
+    it('is one character wide unless asked, so the field is as wide as its least width', () => {
+      const { container } = renderWithTheme(<TextInput />)
+      expect(container.querySelector('input')).toHaveAttribute('size', '1')
+    })
+
+    it('leaves a custom input component to size itself', () => {
+      const Custom = (props: InputHTMLAttributes<HTMLInputElement>) => <input {...props} />
+      const { container } = renderWithTheme(<TextInput inputComponent={Custom} />)
+      expect(container.querySelector('input')).not.toHaveAttribute('size')
+    })
+
+    it('is one column wide on a textarea', () => {
+      const { container } = renderWithTheme(<TextInput multiline />)
+      expect(container.querySelector('textarea')).toHaveAttribute('cols', '1')
+    })
+
     it('does not forward inputSize when multiline', () => {
       const { container } = renderWithTheme(<TextInput multiline inputSize={20} />)
       expect(container.querySelector('textarea')).not.toHaveAttribute('size')

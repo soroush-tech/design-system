@@ -2,11 +2,12 @@
 
 # Components
 
-The 75 components shipped by the design system, and when to reach for each.
+The 96 components shipped by the design system, and when to reach for each.
 Import every component from its own subpath.
 
 ## Layout & surfaces
 
+- **ScrollArea** - A scrolling area whose scrollbars are drawn **over** its content rather than beside it - so a rounded panel keeps its corner clean - and show only while the pointer is over the area or focus is inside it.
 - **View** - The base layout primitive.
 - **Flex** - Extends [`View`](https://docs.soroush.tech/design-system/components/view/).
 - **Grid** - Extends [`View`](https://docs.soroush.tech/design-system/components/view/).
@@ -36,9 +37,16 @@ Import every component from its own subpath.
 - **TablePaginationActions** - The first / previous / next / last icon-button cluster used inside `TablePagination`, exported separately for custom toolbars.
 - **TableRow** - A row in a table.
 - **TableSortLabel** - A button-based label for sortable column headers, placed inside a header `TableCell`.
+- **Accordion** - A heading that opens and closes a region of content.
+- **AccordionActions** - The foot of an `Accordion` region: its buttons, at the end of a row.
+- **AccordionDetails** - What an `Accordion` opens: the padded body of its region.
+- **AccordionGroup** - A column of accordions that move by the keys - ArrowDown and ArrowUp step between their summaries, round the ends, Home and End go to the first and the last, and one that is off is skipped - and, with `isExclusive`, keep one open at a time.
+- **AccordionSummary** - The header of an `Accordion`: a button in a heading that opens and closes it.
 
 ## Inputs & forms
 
+- **Autocomplete** - A field whose text finds an option in a list: a `role="combobox"` input with a `role="listbox"` below it (in a `Portal`, placed under the field and flipped for want of room), `aria-activedescendant` on the highlighted option.
+- **Fab** - A floating action button: the one main action of a page, circular - its icon - or extended, a pill with a label.
 - **Button** - Renders as `<button>`.
 - **ButtonGroup** - Groups related `Button` immediate children into a visually joined cluster - adjacent borders collapse and the group's `borderRadius` rounds only its outer corners (the first/last buttons keep their leading/trailing corners; every inner corner is squared).
 - **ToggleButton** - An individual toggle button (text or icon) - usable standalone or inside a `ToggleButtonGroup`.
@@ -47,8 +55,8 @@ Import every component from its own subpath.
 - **Checkbox** - A binary toggle control.
 - **Radio** - A single-selection control for use within a group.
 - **Rating** - A row of icons the user sets as a rating - or, read-only, a display of one.
-- **NumberField** - A field for a number.
-- **InputRange** - A slider: one value on a range, or two or more thumbs for a range of values.
+- **NumberInput** - A field for a number.
+- **RangeInput** - A slider: one value on a range, or two or more thumbs for a range of values.
 - **TransferList** - Two lists, and the buttons that move the checked items from one to the other.
 - **Switch** - A sliding toggle control.
 - **NativeSelect** - Not the recommended select: use [`Select`](https://docs.soroush.tech/design-system/components/select/) - and `<Select native>` when you want the platform's own picker, which renders this component for you with the same `MenuItem` children as every other select.
@@ -78,13 +86,29 @@ Import every component from its own subpath.
 
 ## Feedback
 
+- **FabMenu** - A `Fab` that opens a stack of actions - extended pills, each a `FabMenuItem` - from one corner of a page.
+- **FabMenuItem** - One action of a `FabMenu`: an extended `Fab` of the menu's size - a pill with an icon and a label.
+- **Snackbar** - A transient message in a corner of the window, through a `Portal`.
+- **Alert** - An inline message with a severity: an icon, the message, an optional `AlertTitle`, an action and a close control.
+- **AlertTitle** - The title of an `Alert`: its first line of the message, in a heavier weight.
+- **Badge** - A count or a dot anchored over another element.
+- **Chip** - A compact tag: a label, an optional icon or avatar, and - given `onClick` - a button, and - given `onDelete` - a delete control.
 - **CircularProgress** - Renders a circular loading indicator.
 - **LinearProgress** - Renders a horizontal loading bar - the linear counterpart of `CircularProgress`.
 - **Skeleton** - Displays a low-fidelity placeholder while content loads, reducing layout shift and signalling a loading state.
 - **Backdrop** - A dimmed, full-viewport scrim rendered behind a modal's content.
 
+## Transitions
+
+- **Collapse** - Opens and closes its content by its height - or, horizontal, its width.
+- **Fade** - Fades one child in and out by its opacity.
+- **Grow** - Grows one child in from a little smaller, fading as it does, and shrinks it out.
+- **Slide** - Slides one child in from an edge of the window and back out.
+- **Zoom** - Zooms one child in from nothing and out to nothing.
+
 ## Overlay & behavior
 
+- **Tooltip** - A short description of one child, shown on hover, keyboard focus and a long touch - a `role="tooltip"` in a `Portal`, placed beside its child and flipped for want of room.
 - **Portal** - Renders its children into a DOM node outside the parent component hierarchy - the document body by default.
 - **FocusTrap** - Keeps keyboard focus within its children while active.
 - **Modal** - A low-level, accessible overlay primitive.

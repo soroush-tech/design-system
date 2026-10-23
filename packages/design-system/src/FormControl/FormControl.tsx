@@ -1,12 +1,13 @@
 import { useId, useMemo, useState, type ReactNode } from 'react'
 import { type Theme } from '../theme/themes'
 import { styled } from '../index'
-import { View, type ViewProps } from '../View'
+import type { ViewProps } from '../View'
+import { Flex, type FlexProps } from '../Flex'
 import { FormControlContext } from './FormControlContext'
 
 // Named styled root - theme-customizable via
 // `theme.components.FormControl.styleOverrides.root`.
-const FormControlRoot = styled(View, { name: 'FormControl', label: 'FormControl' })<ViewProps>()
+const FormControlRoot = styled(Flex, { name: 'FormControl', label: 'FormControl' })<FlexProps>()
 
 export interface FormControlProps extends Omit<ViewProps, 'color'> {
   children: ReactNode
@@ -80,7 +81,14 @@ export function FormControl({
 
   return (
     <FormControlContext.Provider value={value}>
-      <FormControlRoot width={fullWidth ? '100%' : undefined} {...viewProps}>
+      <FormControlRoot
+        width={fullWidth ? '100%' : undefined}
+        // The label, the control and the helper text in a column: each control keeps its own width
+        // unless the field fills its row, so they all sit under their label alike.
+        flexDirection="column"
+        alignItems={fullWidth ? 'stretch' : 'flex-start'}
+        {...viewProps}
+      >
         {children}
       </FormControlRoot>
     </FormControlContext.Provider>

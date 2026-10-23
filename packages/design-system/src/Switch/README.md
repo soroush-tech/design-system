@@ -75,6 +75,12 @@ Default: `"outside"`.
 
 ---
 
+### `textColor`
+
+Text color of the label, from `theme.text`. Default: the `textColor` of its `FormControl` or `Form`, else the control's `color` - so a field's text color reaches the label while the switch's mark keeps its own color. Its own slot, `label`, in `theme.components.Switch`.
+
+---
+
 ### `size`
 
 Applies to both variants. Follows `keyof Theme['sizes']` - the same token vocabulary as `Button` and `TextInput`.

@@ -2,6 +2,7 @@ import { useEffect, useRef, type ChangeEvent, type ReactNode } from 'react'
 import { useFormControl } from '../FormControl'
 import type { SpaceProps } from '@soroush.tech/styled-system'
 import {
+  get,
   styled,
   type Theme,
   type PaletteColor,
@@ -23,6 +24,8 @@ export interface CheckboxProps extends SpaceProps<Theme> {
   disabled?: boolean
   /** Stroke/fill color. `'default'` resolves to `theme.text.secondary`. Default: `'default'`. */
   color?: CheckboxColor
+  /** Text color of the label, resolves against `theme.text`. Default: the control's `FormControl` or `Form` `textColor`, else the control's color. */
+  textColor?: keyof Theme['text']
   /** Icon size. Default: `'medium'`. */
   size?: CheckboxSize
   /** Stretches the root to `width: 100%`. Default: `false`. */
@@ -167,6 +170,16 @@ const colorStyle = ({
 const fullWidthStyle = ({ fullWidth }: CheckboxRootProps) =>
   fullWidth ? ({ display: 'flex', width: '100%' } as const) : {}
 
+// The label text: the control's color, unless the field has a text color of its own.
+const CheckboxLabel = styled('span', {
+  name: 'Checkbox',
+  slot: 'label',
+  label: 'CheckboxLabel',
+  shouldForwardProp: createShouldForwardProp(['textColor']),
+})<{ textColor?: keyof Theme['text'] }>(({ theme, textColor }) =>
+  textColor ? { color: get(theme, `text.${textColor}`) } : {}
+)
+
 const CheckboxRoot = styled('label', {
   name: 'Checkbox',
   label: 'Checkbox',
@@ -181,6 +194,7 @@ export function Checkbox({
   defaultChecked,
   disabled: disabledProp,
   color: colorProp,
+  textColor: textColorProp,
   size: sizeProp,
   fullWidth: fullWidthProp,
   indeterminate = false,
@@ -207,6 +221,7 @@ export function Checkbox({
     required: requiredProp,
     size: sizeProp,
     fullWidth: fullWidthProp,
+    textColor: textColorProp,
   })
   const { id, disabled, required, size, fullWidth } = fc
   // Left unresolved when unset - the styled layer falls back to themeDefault(theme, 'neutralColor', 'default').
@@ -252,7 +267,7 @@ export function Checkbox({
           <IndeterminateIcon />
         </span>
       </CheckboxIconWrapper>
-      {children != null && <span>{children}</span>}
+      {children != null && <CheckboxLabel textColor={fc.textColor}>{children}</CheckboxLabel>}
     </CheckboxRoot>
   )
 }

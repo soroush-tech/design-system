@@ -91,22 +91,27 @@ import { catalog } from '@soroush.tech/design-system/catalog'
 
 SSR critical-CSS extraction (e.g. with `@emotion/server`) is a separate, opt-in concern most apps never need - that's what `CacheProvider` and its paired `styleCache` instance are for.
 
+Under a strict Content Security Policy, bring your own cache with the response's nonce - `createCache({ key: 'app', nonce })` from `@emotion/cache`, given to `CacheProvider` above `ThemeProvider` - and every style tag the engine inserts carries it. The shipped `styleCache` has no nonce.
+
+The Emotion packages are regular dependencies of this package, not peers, on purpose: nothing of Emotion is on the public surface, so an app installs nothing extra and has no version to keep in step. An app that brings its own `@emotion/react` of another major gets two copies - the components keep working, as they style through their own copy and `ThemeProvider` - at the cost of the duplicate in the bundle and Emotion's one-time development warning.
+
 ---
 
 ## Component inventory
 
 ### Layout & surfaces
 
-| Component | Purpose                                           |
-| --------- | ------------------------------------------------- |
-| `View`    | Styled `div` primitive - the base building block  |
-| `Flex`    | `View` with flexbox defaults                      |
-| `Grid`    | CSS grid container                                |
-| `Paper`   | Elevated surface with background and shadow       |
-| `Card`    | Content container built on `Paper`                |
-| `Quote`   | Bordered quote / terminal-panel surface on `View` |
-| `AppBar`  | Top application bar                               |
-| `Drawer`  | Slide-in side panel                               |
+| Component    | Purpose                                                                 |
+| ------------ | ----------------------------------------------------------------------- |
+| `ScrollArea` | A scrolling area with scrollbars drawn over its content, shown on hover |
+| `View`       | Styled `div` primitive - the base building block                        |
+| `Flex`       | `View` with flexbox defaults                                            |
+| `Grid`       | CSS grid container                                                      |
+| `Paper`      | Elevated surface with background and shadow                             |
+| `Card`       | Content container built on `Paper`                                      |
+| `Quote`      | Bordered quote / terminal-panel surface on `View`                       |
+| `AppBar`     | Top application bar                                                     |
+| `Drawer`     | Slide-in side panel                                                     |
 
 ### Content & data display
 
@@ -118,17 +123,20 @@ SSR critical-CSS extraction (e.g. with `@emotion/server`) is a separate, opt-in 
 | `Image`      | Image with styled-system props                                                                                                                                                                                                               |
 | `Avatar`     | User/entity avatar                                                                                                                                                                                                                           |
 | `Table`      | Compound data table - exports `TableContainer`, `TableHead`, `TableBody`, `TableFooter`, `TableRow`, `TableCell`, `TablePagination`, `TablePaginationActions`, `TableSortLabel`, and `TableControl` from `@soroush.tech/design-system/Table` |
+| `Accordion`  | A heading that opens and closes a region - exports `AccordionSummary`, `AccordionDetails`, `AccordionActions` and `AccordionGroup` from `@soroush.tech/design-system/Accordion`                                                              |
 
 ### Inputs & forms
 
 | Component                                            | Purpose                                                                                   |
 | ---------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `Autocomplete`                                       | A field whose text finds an option in a list - one, several as chips, or free text        |
+| `Fab`                                                | A floating action button: the one main action of a page, circular or extended             |
 | `Button`, `ButtonGroup`, `ToggleButton`              | Actions and toggles                                                                       |
 | `TextInput`                                          | Text field                                                                                |
 | `Checkbox`, `Radio`, `Switch`                        | Selection controls                                                                        |
-| `InputRange`                                         | A slider - one value on a range, or two or more thumbs for a range of values              |
+| `RangeInput`                                         | A slider - one value on a range, or two or more thumbs for a range of values              |
 | `TransferList`                                       | Two lists and the buttons that move the checked items from one to the other               |
-| `NumberField`                                        | A field for a number - read in its locale, clamped to a range, stepped by keys or buttons |
+| `NumberInput`                                        | A field for a number - read in its locale, clamped to a range, stepped by keys or buttons |
 | `Rating`                                             | A row of icons the user sets as a rating, or a read-only display of one                   |
 | `NativeSelect`                                       | Low-level platform `<select>` - not recommended; use `Select native`                      |
 | `Select`                                             | The select to use - custom listbox, or `native` for the platform picker                   |
@@ -146,21 +154,34 @@ SSR critical-CSS extraction (e.g. with `@emotion/server`) is a separate, opt-in 
 
 ### Feedback
 
-| Component                            | Purpose                                        |
-| ------------------------------------ | ---------------------------------------------- |
-| `CircularProgress`, `LinearProgress` | Determinate/indeterminate progress indicators  |
-| `Skeleton`                           | Loading placeholder with pulse/wave animations |
-| `Backdrop`                           | Dimmed overlay behind modal surfaces           |
+| Component                            | Purpose                                                                                                                           |
+| ------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
+| `FabMenu`                            | A fab that opens a stack of actions from the corner of a page                                                                     |
+| `Snackbar`                           | A transient message in a corner of the window, with auto-hide and an action                                                       |
+| `Alert`                              | An inline message with a severity, an icon, a title and an action - exports `AlertTitle` from `@soroush.tech/design-system/Alert` |
+| `Badge`                              | A count or a dot anchored over another element                                                                                    |
+| `Chip`                               | A compact tag: a label, an icon or avatar, a click and a delete                                                                   |
+| `CircularProgress`, `LinearProgress` | Determinate/indeterminate progress indicators                                                                                     |
+| `Skeleton`                           | Loading placeholder with pulse/wave animations                                                                                    |
+| `Backdrop`                           | Dimmed overlay behind modal surfaces                                                                                              |
+
+### Transitions
+
+| Component                       | Purpose                                                            |
+| ------------------------------- | ------------------------------------------------------------------ |
+| `Collapse`                      | Opens and closes its content by its height, or its width           |
+| `Fade`, `Grow`, `Slide`, `Zoom` | Show and hide one child by opacity, scale, an edge or from nothing |
 
 ### Overlay & behavior primitives
 
-| Component       | Purpose                                                          |
-| --------------- | ---------------------------------------------------------------- |
-| `Portal`        | Renders children into a DOM node outside the parent hierarchy    |
-| `FocusTrap`     | Keeps focus inside a subtree                                     |
-| `Modal`         | Dialog primitive composing `Portal`, `Backdrop`, and `FocusTrap` |
-| `Popover`       | Anchored floating surface built on `Modal`                       |
-| `ThemeProvider` | Supplies the theme and global styles to the app                  |
+| Component       | Purpose                                                                             |
+| --------------- | ----------------------------------------------------------------------------------- |
+| `Tooltip`       | A short description of one element, shown on hover, keyboard focus and a long touch |
+| `Portal`        | Renders children into a DOM node outside the parent hierarchy                       |
+| `FocusTrap`     | Keeps focus inside a subtree                                                        |
+| `Modal`         | Dialog primitive composing `Portal`, `Backdrop`, and `FocusTrap`                    |
+| `Popover`       | Anchored floating surface built on `Modal`                                          |
+| `ThemeProvider` | Supplies the theme and global styles to the app                                     |
 
 ---
 
@@ -168,14 +189,14 @@ SSR critical-CSS extraction (e.g. with `@emotion/server`) is a separate, opt-in 
 
 Components never hardcode colors or sizes - props resolve against scales on the `Theme` object:
 
-| Group              | Scales                                                                                                 |
-| ------------------ | ------------------------------------------------------------------------------------------------------ |
-| Color              | `palette` (main/light/dark/contrastText per color) · `text` · `background` · `border` · `colorScheme`  |
-| Typography         | `typography` (variant map) · `fonts` · `fontSizes` · `fontWeights` · `lineHeights` · `letterSpacings`  |
-| Space & shape      | `space` · `sizes` · `radii` · `borderWidths` · `shadows`                                               |
-| Layout             | `breakpoints` (xs/sm/md/lg/xl window classes) · `layout` (columns, margins, panels, top bar per class) |
-| Component scales   | `avatar` (size steps) · `skeleton` (wave highlight)                                                    |
-| Layering & effects | `zOrder` (appBar/drawer/modal) · `blur` · `logoFilter` · `portraitBlend` · `portraitOpacity`           |
+| Group              | Scales                                                                                                        |
+| ------------------ | ------------------------------------------------------------------------------------------------------------- |
+| Color              | `palette` (main/light/dark/contrastText per color) · `text` · `background` · `border` · `colorScheme`         |
+| Typography         | `typography` (variant map) · `fonts` · `fontSizes` · `fontWeights` · `lineHeights` · `letterSpacings`         |
+| Space & shape      | `space` · `sizes` · `radii` · `borderWidths` · `shadows`                                                      |
+| Layout             | `breakpoints` (xs/sm/md/lg/xl window classes) · `layout` (columns, margins, panels, top bar per class)        |
+| Component scales   | `avatar` (size steps) · `skeleton` (wave highlight)                                                           |
+| Layering & effects | `zOrder` (appBar/drawer/modal/snackbar/tooltip) · `blur` · `logoFilter` · `portraitBlend` · `portraitOpacity` |
 
 Prop types are derived from the interface (`keyof Theme['text']`), so adding a token to `themes.ts` propagates everywhere automatically. See [`design-system.md`](./design-system.md) for the full scale table and the palette rules.
 
@@ -233,6 +254,7 @@ Components carry visible literal fallbacks (`size = 'md'`, `variant = 'outside'`
 | `borderRadius` / `surfaceRadius`             | `'md'` / `'sq'`                    | grouped controls / surfaces            |
 | `avatarSize` / `borderColor` / `borderWidth` | `'md'` / `'primary'` / `'thin'`    | avatars and rings                      |
 | `iconSize`                                   | `'lg'`                             | Icon default glyph size (`theme.icon`) |
+| `inputMinWidth`                              | `'12rem'`                          | least width of an input not full width |
 | `buttonVariant` / `switchVariant`            | `'contained'` / `'outside'`        | Button / Switch visual variants        |
 | `inputVariant`                               | `'default'`                        | TextInput, Select, NativeSelect frames |
 | `avatarVariant` / `cardVariant`              | `'circular'` / `'paper'`           | Avatar shape / Card treatment          |

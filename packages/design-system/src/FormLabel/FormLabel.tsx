@@ -10,7 +10,14 @@ const LabelTypography = Typography as ComponentType<TypographyProps & { htmlFor?
 
 // Named styled root - theme-customizable via
 // `theme.components.FormLabel.styleOverrides.root`.
-const FormLabelRoot = styled(LabelTypography, { name: 'FormLabel', label: 'FormLabel' })()
+// On its own line, above its control - whether the control fills the width or not.
+const FormLabelRoot = styled(LabelTypography, {
+  name: 'FormLabel',
+  label: 'FormLabel',
+})(({ theme }) => ({
+  display: 'block',
+  marginBottom: theme.space[0.5],
+}))
 
 export interface FormLabelProps extends TypographyProps {
   children: ReactNode

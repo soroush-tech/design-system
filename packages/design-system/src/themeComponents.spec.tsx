@@ -29,8 +29,8 @@ import { MenuList } from './Menu/MenuList'
 import { Modal } from './Modal'
 import { NativeSelect } from './NativeSelect'
 import { Pagination } from './Pagination'
-import { InputRange } from './InputRange'
-import { NumberField } from './NumberField'
+import { RangeInput } from './RangeInput'
+import { NumberInput } from './NumberInput'
 import { Rating } from './Rating'
 import { Breadcrumbs } from './Breadcrumbs'
 import { Paper } from './Paper'
@@ -57,6 +57,23 @@ import { TextInput } from './TextInput'
 import { ToggleButton } from './ToggleButton/ToggleButton'
 import { ToggleButtonGroup } from './ToggleButton/ToggleButtonGroup'
 import { TransferList } from './TransferList'
+import { Collapse } from './Collapse'
+import { FabMenu, FabMenuItem } from './FabMenu'
+import { ScrollArea } from './ScrollArea'
+import { Autocomplete } from './Autocomplete'
+import { Tooltip } from './Tooltip'
+import { Snackbar } from './Snackbar'
+import { Fab } from './Fab'
+import { Alert, AlertTitle } from './Alert'
+import { Badge } from './Badge'
+import { Chip } from './Chip'
+import {
+  Accordion,
+  AccordionActions,
+  AccordionDetails,
+  AccordionGroup,
+  AccordionSummary,
+} from './Accordion'
 import { Typography } from './Typography'
 
 afterEach(() => {
@@ -122,8 +139,8 @@ const table = (
 
 // Marked, labelled and with two thumbs, so every slot - the marks and their labels, each thumb's
 // value label and input - is drawn.
-const inputRange = (
-  <InputRange
+const rangeInput = (
+  <RangeInput
     defaultValue={[10, 60]}
     marks={[{ value: 0, label: 'min' }, { value: 100 }]}
     valueLabel="on"
@@ -131,9 +148,73 @@ const inputRange = (
 )
 
 // Both buttons drawn, so every slot - the stacked pair and each of them - is.
-const numberField = <NumberField defaultValue={1} />
+const numberInput = <NumberInput defaultValue={1} />
 
 // Fractional and named, so every slot - the steps of an icon, the "no rating" radio - is drawn.
+// Open, with every part, so each styled element is drawn.
+const accordion = (
+  <AccordionGroup>
+    <Accordion defaultExpanded>
+      <AccordionSummary>Title</AccordionSummary>
+      <AccordionDetails>Body</AccordionDetails>
+      <AccordionActions>Save</AccordionActions>
+    </Accordion>
+  </AccordionGroup>
+)
+// A chip with an icon, a delete control and a second with an avatar, so every part is drawn.
+const chip = (
+  <>
+    <Chip label="Tag" icon={<span />} onDelete={() => {}} deleteLabel="Remove" />
+    <Chip label="Tag" avatar={<span />} />
+  </>
+)
+// A badge with content and a label, so every part is drawn.
+const badge = (
+  <Badge badgeContent={4} badgeLabel="4 unread">
+    <span>Inbox</span>
+  </Badge>
+)
+// An alert with a title, an action and a close control, so every part is drawn.
+const alert = (
+  <Alert onClose={() => {}} closeLabel="Close" action={<span />}>
+    <AlertTitle>Title</AlertTitle>
+    Message
+  </Alert>
+)
+// A fab with its root drawn.
+const fab = <Fab aria-label="Add">+</Fab>
+// An open snackbar with an action, so every part is drawn.
+const snackbar = <Snackbar defaultOpen message="Saved" action={<span />} />
+// An open tooltip with an arrow, so every part is drawn.
+const tooltip = (
+  <Tooltip title="Tip" defaultOpen hasArrow>
+    <button type="button">Target</button>
+  </Tooltip>
+)
+// Every part drawn, so each styled element is.
+const autocomplete = (
+  <Autocomplete
+    multiple
+    options={['a', 'b']}
+    defaultValue={['a']}
+    clearLabel="Clear"
+    aria-label="Letters"
+  />
+)
+// Every part drawn, so each styled element is.
+const scrollArea = <ScrollArea>Content</ScrollArea>
+// Every part drawn, so each styled element is.
+const fabMenu = (
+  <FabMenu aria-label="Create" defaultOpen>
+    <FabMenuItem>One</FabMenuItem>
+  </FabMenu>
+)
+// Open, so the root, the wrapper and the inner box are all drawn.
+const collapse = (
+  <Collapse isShown shouldAppear={false}>
+    Content
+  </Collapse>
+)
 // Both lists with a header, a checked row and a title, so every slot - the count and the icons too - is drawn.
 const transferList = (
   <TransferList
@@ -273,19 +354,25 @@ const cases: Case[] = [
     ui: <NativeSelect options={[{ label: 'Ten', value: 10 }]} defaultValue={10} />,
   },
   { name: 'Pagination', slot: 'root', label: 'PaginationNav', ui: <Pagination count={3} /> },
-  { name: 'InputRange', slot: 'root', label: 'InputRange', ui: inputRange },
-  { name: 'InputRange', slot: 'rail', label: 'InputRangeRail', ui: inputRange },
-  { name: 'InputRange', slot: 'track', label: 'InputRangeTrack', ui: inputRange },
-  { name: 'InputRange', slot: 'thumb', label: 'InputRangeThumb', ui: inputRange },
-  { name: 'InputRange', slot: 'mark', label: 'InputRangeMark', ui: inputRange },
-  { name: 'InputRange', slot: 'markLabel', label: 'InputRangeMarkLabel', ui: inputRange },
-  { name: 'InputRange', slot: 'valueLabel', label: 'InputRangeValueLabel', ui: inputRange },
-  { name: 'InputRange', slot: 'input', label: 'InputRangeInput', ui: inputRange },
-  { name: 'NumberField', slot: 'root', label: 'NumberField', ui: numberField },
-  { name: 'NumberField', slot: 'input', label: 'NumberFieldInput', ui: numberField },
-  { name: 'NumberField', slot: 'spinButtons', label: 'NumberFieldSpinButtons', ui: numberField },
-  { name: 'NumberField', slot: 'increment', label: 'NumberFieldIncrement', ui: numberField },
-  { name: 'NumberField', slot: 'decrement', label: 'NumberFieldDecrement', ui: numberField },
+  { name: 'RangeInput', slot: 'root', label: 'RangeInput', ui: rangeInput },
+  { name: 'RangeInput', slot: 'rail', label: 'RangeInputRail', ui: rangeInput },
+  { name: 'RangeInput', slot: 'track', label: 'RangeInputTrack', ui: rangeInput },
+  { name: 'RangeInput', slot: 'thumb', label: 'RangeInputThumb', ui: rangeInput },
+  { name: 'RangeInput', slot: 'mark', label: 'RangeInputMark', ui: rangeInput },
+  { name: 'RangeInput', slot: 'markLabel', label: 'RangeInputMarkLabel', ui: rangeInput },
+  { name: 'RangeInput', slot: 'valueLabel', label: 'RangeInputValueLabel', ui: rangeInput },
+  { name: 'RangeInput', slot: 'input', label: 'RangeInputInput', ui: rangeInput },
+  { name: 'NumberInput', slot: 'root', label: 'NumberInput', ui: numberInput },
+  { name: 'NumberInput', slot: 'input', label: 'NumberInputInput', ui: numberInput },
+  {
+    name: 'NumberInput',
+    slot: 'content',
+    label: 'NumberInputContent',
+    ui: <NumberInput startContent="a" />,
+  },
+  { name: 'NumberInput', slot: 'spinButtons', label: 'NumberInputSpinButtons', ui: numberInput },
+  { name: 'NumberInput', slot: 'increment', label: 'NumberInputIncrement', ui: numberInput },
+  { name: 'NumberInput', slot: 'decrement', label: 'NumberInputDecrement', ui: numberInput },
   { name: 'Rating', slot: 'root', label: 'Rating', ui: rating },
   { name: 'Rating', slot: 'item', label: 'RatingItem', ui: rating },
   { name: 'Rating', slot: 'icon', label: 'RatingIcon', ui: rating },
@@ -422,6 +509,65 @@ const cases: Case[] = [
   { name: 'TransferList', slot: 'item', label: 'TransferListItem', ui: transferList },
   { name: 'TransferList', slot: 'controls', label: 'TransferListControls', ui: transferList },
   { name: 'TransferList', slot: 'icon', label: 'TransferListIcon', ui: transferList },
+  { name: 'Accordion', slot: 'root', label: 'Accordion', ui: accordion },
+  { name: 'Accordion', slot: 'region', label: 'AccordionRegion', ui: accordion },
+  { name: 'AccordionSummary', slot: 'root', label: 'AccordionSummary', ui: accordion },
+  { name: 'AccordionSummary', slot: 'button', label: 'AccordionSummaryButton', ui: accordion },
+  { name: 'AccordionSummary', slot: 'content', label: 'AccordionSummaryContent', ui: accordion },
+  { name: 'AccordionSummary', slot: 'icon', label: 'AccordionSummaryIcon', ui: accordion },
+  { name: 'AccordionDetails', slot: 'root', label: 'AccordionDetails', ui: accordion },
+  { name: 'AccordionActions', slot: 'root', label: 'AccordionActions', ui: accordion },
+  { name: 'AccordionGroup', slot: 'root', label: 'AccordionGroup', ui: accordion },
+  { name: 'Chip', slot: 'root', label: 'Chip', ui: chip },
+  { name: 'Chip', slot: 'body', label: 'ChipBody', ui: chip },
+  { name: 'Chip', slot: 'label', label: 'ChipLabel', ui: chip },
+  { name: 'Chip', slot: 'icon', label: 'ChipIcon', ui: chip },
+  { name: 'Chip', slot: 'avatar', label: 'ChipAvatar', ui: chip },
+  { name: 'Chip', slot: 'deleteIcon', label: 'ChipDeleteIcon', ui: chip },
+  { name: 'Badge', slot: 'root', label: 'Badge', ui: badge },
+  { name: 'Badge', slot: 'badge', label: 'BadgeMark', ui: badge },
+  { name: 'Badge', slot: 'label', label: 'BadgeLabel', ui: badge },
+  { name: 'Alert', slot: 'root', label: 'Alert', ui: alert },
+  { name: 'Alert', slot: 'icon', label: 'AlertIcon', ui: alert },
+  { name: 'Alert', slot: 'message', label: 'AlertMessage', ui: alert },
+  { name: 'Alert', slot: 'action', label: 'AlertAction', ui: alert },
+  { name: 'Alert', slot: 'closeButton', label: 'AlertCloseButton', ui: alert },
+  { name: 'AlertTitle', slot: 'root', label: 'AlertTitle', ui: alert },
+  { name: 'Fab', slot: 'root', label: 'Fab', ui: fab },
+  {
+    name: 'Fab',
+    slot: 'label',
+    label: 'FabLabel',
+    ui: <Fab variant="extended">Create</Fab>,
+  },
+  { name: 'Snackbar', slot: 'root', label: 'Snackbar', ui: snackbar },
+  { name: 'Snackbar', slot: 'content', label: 'SnackbarContent', ui: snackbar },
+  { name: 'Snackbar', slot: 'message', label: 'SnackbarMessage', ui: snackbar },
+  { name: 'Snackbar', slot: 'action', label: 'SnackbarAction', ui: snackbar },
+  { name: 'Tooltip', slot: 'root', label: 'Tooltip', ui: tooltip },
+  { name: 'Tooltip', slot: 'arrow', label: 'TooltipArrow', ui: tooltip },
+  { name: 'Autocomplete', slot: 'root', label: 'Autocomplete', ui: autocomplete },
+  { name: 'Autocomplete', slot: 'tags', label: 'AutocompleteTags', ui: autocomplete },
+  { name: 'Autocomplete', slot: 'input', label: 'AutocompleteInput', ui: autocomplete },
+  {
+    name: 'Autocomplete',
+    slot: 'clearIndicator',
+    label: 'AutocompleteClearIndicator',
+    ui: autocomplete,
+  },
+  {
+    name: 'Autocomplete',
+    slot: 'popupIndicator',
+    label: 'AutocompletePopupIndicator',
+    ui: autocomplete,
+  },
+  { name: 'ScrollArea', slot: 'root', label: 'ScrollArea', ui: scrollArea },
+  { name: 'ScrollArea', slot: 'viewport', label: 'ScrollAreaViewport', ui: scrollArea },
+  { name: 'FabMenu', slot: 'root', label: 'FabMenu', ui: fabMenu },
+  { name: 'FabMenu', slot: 'list', label: 'FabMenuList', ui: fabMenu },
+  { name: 'Collapse', slot: 'root', label: 'Collapse', ui: collapse },
+  { name: 'Collapse', slot: 'wrapper', label: 'CollapseWrapper', ui: collapse },
+  { name: 'Collapse', slot: 'inner', label: 'CollapseInner', ui: collapse },
   { name: 'Typography', slot: 'root', label: 'Typography', ui: <Typography>t</Typography> },
   { name: 'View', slot: 'root', label: 'View', ui: <View>v</View> },
   { name: 'Flex', slot: 'root', label: 'flex', ui: <Flex>f</Flex> },
@@ -439,6 +585,7 @@ const cases: Case[] = [
   },
   { name: 'Checkbox', slot: 'input', label: 'CheckboxInput', ui: <Checkbox /> },
   { name: 'Checkbox', slot: 'icon', label: 'CheckboxIcon', ui: <Checkbox /> },
+  { name: 'Checkbox', slot: 'label', label: 'CheckboxLabel', ui: <Checkbox>Label</Checkbox> },
   {
     name: 'CircularProgress',
     slot: 'track',
@@ -594,6 +741,7 @@ const cases: Case[] = [
   },
   { name: 'Radio', slot: 'input', label: 'RadioInput', ui: <Radio /> },
   { name: 'Radio', slot: 'icon', label: 'RadioIcon', ui: <Radio /> },
+  { name: 'Radio', slot: 'label', label: 'RadioLabel', ui: <Radio>Label</Radio> },
   {
     name: 'Select',
     slot: 'value',
@@ -639,6 +787,7 @@ const cases: Case[] = [
   { name: 'Switch', slot: 'input', label: 'SwitchInput', ui: <Switch /> },
   { name: 'Switch', slot: 'track', label: 'SwitchTrack', ui: <Switch /> },
   { name: 'Switch', slot: 'thumb', label: 'SwitchThumb', ui: <Switch /> },
+  { name: 'Switch', slot: 'label', label: 'SwitchLabel', ui: <Switch>Label</Switch> },
   {
     name: 'TableSortLabel',
     slot: 'icon',

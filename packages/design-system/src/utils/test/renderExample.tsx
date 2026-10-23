@@ -1,5 +1,21 @@
 import { createElement, type ElementType, type ReactNode } from 'react'
 import type { ExampleNode } from '../../catalog/types'
+import {
+  Accordion,
+  AccordionActions,
+  AccordionDetails,
+  AccordionGroup,
+  AccordionSummary,
+} from '../../Accordion'
+import { Chip } from '../../Chip'
+import { Badge } from '../../Badge'
+import { Alert, AlertTitle } from '../../Alert'
+import { Fab } from '../../Fab'
+import { Snackbar } from '../../Snackbar'
+import { Tooltip } from '../../Tooltip'
+import { Autocomplete } from '../../Autocomplete'
+import { ScrollArea } from '../../ScrollArea'
+import { FabMenu, FabMenuItem } from '../../FabMenu'
 import { AppBar } from '../../AppBar'
 import { Avatar } from '../../Avatar'
 import { Backdrop } from '../../Backdrop'
@@ -8,6 +24,11 @@ import { Button } from '../../Button'
 import { ButtonGroup } from '../../ButtonGroup'
 import { Card } from '../../Card'
 import { Checkbox } from '../../Checkbox'
+import { Collapse } from '../../Collapse'
+import { Fade } from '../../Fade'
+import { Grow } from '../../Grow'
+import { Slide } from '../../Slide'
+import { Zoom } from '../../Zoom'
 import { CircularProgress } from '../../CircularProgress'
 import { ContextMenu } from '../../Menu/ContextMenu'
 import { Drawer, DrawerToggle } from '../../Drawer'
@@ -20,7 +41,7 @@ import { FormLabel } from '../../FormLabel'
 import { Grid } from '../../Grid'
 import { Icon } from '../../Icon'
 import { Image } from '../../Image'
-import { InputRange } from '../../InputRange'
+import { RangeInput } from '../../RangeInput'
 import { LinearProgress } from '../../LinearProgress'
 import { Link } from '../../Link'
 import { Menu } from '../../Menu/Menu'
@@ -29,7 +50,7 @@ import { MenuItem } from '../../MenuItem'
 import { MenuList } from '../../Menu/MenuList'
 import { Modal } from '../../Modal'
 import { NativeSelect } from '../../NativeSelect'
-import { NumberField } from '../../NumberField'
+import { NumberInput } from '../../NumberInput'
 import { Pagination, PaginationItem } from '../../Pagination'
 import { Paper } from '../../Paper'
 import { Popover } from '../../Popover'
@@ -65,6 +86,22 @@ import { View } from '../../View'
 
 // Every component a catalog example may name.
 const COMPONENTS: Record<string, ElementType> = {
+  Accordion,
+  AccordionActions,
+  AccordionDetails,
+  AccordionGroup,
+  AccordionSummary,
+  Chip,
+  Badge,
+  Alert,
+  AlertTitle,
+  Fab,
+  Snackbar,
+  Tooltip,
+  Autocomplete,
+  ScrollArea,
+  FabMenu,
+  FabMenuItem,
   AppBar,
   Avatar,
   Backdrop,
@@ -73,6 +110,11 @@ const COMPONENTS: Record<string, ElementType> = {
   ButtonGroup,
   Card,
   Checkbox,
+  Collapse,
+  Fade,
+  Grow,
+  Slide,
+  Zoom,
   CircularProgress,
   ContextMenu,
   Drawer,
@@ -86,7 +128,7 @@ const COMPONENTS: Record<string, ElementType> = {
   Grid,
   Icon,
   Image,
-  InputRange,
+  RangeInput,
   LinearProgress,
   Link,
   Menu,
@@ -95,7 +137,7 @@ const COMPONENTS: Record<string, ElementType> = {
   MenuList,
   Modal,
   NativeSelect,
-  NumberField,
+  NumberInput,
   Pagination,
   PaginationItem,
   Paper,

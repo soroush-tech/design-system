@@ -23,7 +23,7 @@ Stacking, scroll-lock (with scrollbar-width compensation), and background `aria-
 | `shouldEnforceFocus` | `boolean`                                                 | `true`  | Pull focus back into the modal whenever it escapes. |
 | `shouldRestoreFocus` | `boolean`                                                 | `true`  | Restore focus to the trigger on close.              |
 | `scroll`             | `'paper' \| 'body'`                                       | `paper` | Where long content scrolls. See below.              |
-| `layer`              | `'appBar' \| 'drawer' \| 'modal'`                         | `modal` | Stacking layer, resolved from `theme.zOrder`.       |
+| `layer`              | `keyof Theme['zOrder']`                                   | `modal` | Stacking layer, resolved from `theme.zOrder`.       |
 
 The content element should carry its own dialog semantics (`role="dialog"`, `aria-modal`, a label). Modal's root is `role="presentation"`.
 
@@ -37,6 +37,10 @@ When content is too tall for the viewport, `scroll` controls where it scrolls:
 - **`scroll="body"`** - the root itself is the scroll container. The surface keeps its natural height and the whole root (surface plus backdrop) scrolls. Short content is centred; tall content scrolls instead of clipping. Don't cap the surface height - use a margin for breathing room.
 
 ---
+
+## Server rendering
+
+The modal and its backdrop are drawn in a `Portal`, which renders nothing on the server: it is absent from server-rendered and prerendered HTML, and mounts on the client when it opens (on a click, hover, focus or key, or when the app sets it open). One that starts open, by its open prop, is still closed in the static HTML and opens on hydration. Its trigger renders on the server as usual.
 
 ## Example
 

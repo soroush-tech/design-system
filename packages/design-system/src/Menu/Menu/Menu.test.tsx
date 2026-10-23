@@ -205,6 +205,26 @@ describe('Menu', () => {
     expect(onStep).toHaveBeenCalledWith(-1)
   })
 
+  it('steps from inside a submenu: Right at a row with no submenu of its own, Left only after the submenu has closed', () => {
+    const onStep = vi.fn()
+    renderWithTheme(
+      <Menu trigger={<Button>main</Button>} isOpen onStep={onStep}>
+        <MenuItem submenu={[<MenuItem key="leaf">Leaf</MenuItem>]}>Parent</MenuItem>
+      </Menu>
+    )
+    fireEvent.keyDown(row('Parent'), { key: 'ArrowRight' })
+    // Right on a row that opens a submenu goes into it: the menu bar does not step.
+    expect(onStep).not.toHaveBeenCalled()
+    fireEvent.keyDown(row('Leaf'), { key: 'ArrowRight' })
+    expect(onStep).toHaveBeenCalledWith(1)
+    onStep.mockClear()
+    fireEvent.keyDown(row('Leaf'), { key: 'ArrowLeft' })
+    // Left closes the submenu and returns to its parent row - it is not a step.
+    expect(onStep).not.toHaveBeenCalled()
+    fireEvent.keyDown(row('Parent'), { key: 'ArrowLeft' })
+    expect(onStep).toHaveBeenCalledWith(-1)
+  })
+
   it('leaves Left and Right alone without onStep', () => {
     renderMenu({ isOpen: true })
     expect(fireEvent.keyDown(row('New branch...'), { key: 'ArrowRight' })).toBe(true)
@@ -259,6 +279,40 @@ describe('Menu', () => {
       boxShadow: baseTheme.shadows[2],
     })
     expect(screen.getByTestId('m')).toHaveClass('c')
+  })
+
+  describe('corners', () => {
+    const surface = () => screen.getByRole('menu').parentElement
+
+    it('is square by default, and takes a radius of its own', () => {
+      const { unmount } = renderMenu({ defaultOpen: true })
+      expect(surface()).toHaveStyle({ borderRadius: baseTheme.radii.sq })
+      unmount()
+      renderMenu({ defaultOpen: true, borderRadius: 'lg' })
+      expect(surface()).toHaveStyle({ borderRadius: baseTheme.radii.lg })
+    })
+
+    it('is rounded as the theme rounds its surfaces, or by the radius the theme gives menus', () => {
+      const rounded = createTheme(baseTheme, { defaults: { surfaceRadius: 'md' } })
+      const { unmount } = renderWithTheme(
+        <Menu trigger={<Button>main</Button>} defaultOpen>
+          <MenuItem value="a">One</MenuItem>
+        </Menu>,
+        { wrapper: withTheme(rounded) }
+      )
+      expect(surface()).toHaveStyle({ borderRadius: baseTheme.radii.md })
+      unmount()
+      const own = createTheme(baseTheme, {
+        components: { Menu: { defaultProps: { borderRadius: 'sm' } } },
+      })
+      renderWithTheme(
+        <Menu trigger={<Button>main</Button>} defaultOpen>
+          <MenuItem value="a">One</MenuItem>
+        </Menu>,
+        { wrapper: withTheme(own) }
+      )
+      expect(surface()).toHaveStyle({ borderRadius: baseTheme.radii.sm })
+    })
   })
 
   describe('placement', () => {

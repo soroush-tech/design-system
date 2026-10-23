@@ -1,6 +1,6 @@
 import { type ChangeEvent, type KeyboardEvent, type ReactNode } from 'react'
 import type { SpaceProps } from '@soroush.tech/styled-system'
-import { styled, type Theme, createShouldForwardProp, props, space } from '../index'
+import { get, styled, type Theme, createShouldForwardProp, props, space } from '../index'
 import { useTheme } from '../theme'
 import { useFormControl } from '../FormControl'
 import { alpha } from '../utils'
@@ -20,6 +20,8 @@ export interface SwitchProps extends SpaceProps<Theme> {
   /** Accepted for API parity - the design system does not implement ripple. */
   disableRipple?: boolean
   color?: SwitchColor
+  /** Text color of the label, resolves against `theme.text`. Default: the control's `FormControl` or `Form` `textColor`, else the control's color. */
+  textColor?: keyof Theme['text']
   size?: SwitchSize
   variant?: SwitchVariant
   bg?: keyof Theme['background']
@@ -302,6 +304,16 @@ const edgeStyle = ({ edge }: SwitchRootProps) => {
   }
 }
 
+// The label text: the control's color, unless the field has a text color of its own.
+const SwitchLabel = styled('span', {
+  name: 'Switch',
+  slot: 'label',
+  label: 'SwitchLabel',
+  shouldForwardProp: createShouldForwardProp(['textColor']),
+})<{ textColor?: keyof Theme['text'] }>(({ theme, textColor }) =>
+  textColor ? { color: get(theme, `text.${textColor}`) } : {}
+)
+
 const SwitchRoot = styled('label', {
   name: 'Switch',
   label: 'Switch',
@@ -318,6 +330,7 @@ export function Switch({
   disableRipple: _disableRipple,
   // undefined color/size resolve to theme.defaults in the styled layer.
   color: colorProp,
+  textColor: textColorProp,
   size: sizeProp,
   variant: variantProp,
   marked = false,
@@ -344,6 +357,7 @@ export function Switch({
     disabled: disabledProp,
     required: requiredProp,
     size: sizeProp,
+    textColor: textColorProp,
   })
   const { id, disabled, required, size } = fc
   const color = colorProp ?? fc.color
@@ -404,7 +418,7 @@ export function Switch({
           )}
         </SwitchThumb>
       </SwitchTrack>
-      {children != null && <span>{children}</span>}
+      {children != null && <SwitchLabel textColor={fc.textColor}>{children}</SwitchLabel>}
     </SwitchRoot>
   )
 }

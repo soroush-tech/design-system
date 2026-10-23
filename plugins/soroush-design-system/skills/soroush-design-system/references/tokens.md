@@ -209,6 +209,17 @@ Reference tokens through the theme; a literal value in a component is a bug.
 - `theme.zOrder.appBar` - 1100
 - `theme.zOrder.drawer` - 1200
 - `theme.zOrder.modal` - 1300
+- `theme.zOrder.snackbar` - 1400
+- `theme.zOrder.tooltip` - 1500
+
+## transitions
+
+- `theme.transitions.duration.short` - 150
+- `theme.transitions.duration.standard` - 250
+- `theme.transitions.duration.long` - 375
+- `theme.transitions.easing.standard` - cubic-bezier(0.4, 0, 0.2, 1)
+- `theme.transitions.easing.enter` - cubic-bezier(0, 0, 0.2, 1)
+- `theme.transitions.easing.exit` - cubic-bezier(0.4, 0, 1, 1)
 
 ## blur
 
@@ -258,6 +269,8 @@ Reference tokens through the theme; a literal value in a component is a bug.
 - `theme.background.terminal` - #000000
 - `theme.background.grid` - #00FC400F
 - `theme.background.transparent` - #00000000
+- `theme.background.scrollbar` - #B3B3B380
+- `theme.background.scrollbarTrack` - #38383880
 
 ## text
 

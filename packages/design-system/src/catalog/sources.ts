@@ -1,3 +1,19 @@
+import { accordionActionsCatalog } from '../Accordion/AccordionActions/AccordionActions.catalog'
+import { accordionCatalog } from '../Accordion/Accordion/Accordion.catalog'
+import { accordionDetailsCatalog } from '../Accordion/AccordionDetails/AccordionDetails.catalog'
+import { accordionGroupCatalog } from '../Accordion/AccordionGroup/AccordionGroup.catalog'
+import { accordionSummaryCatalog } from '../Accordion/AccordionSummary/AccordionSummary.catalog'
+import { chipCatalog } from '../Chip/Chip.catalog'
+import { badgeCatalog } from '../Badge/Badge.catalog'
+import { alertCatalog } from '../Alert/Alert/Alert.catalog'
+import { alertTitleCatalog } from '../Alert/AlertTitle/AlertTitle.catalog'
+import { fabCatalog } from '../Fab/Fab.catalog'
+import { snackbarCatalog } from '../Snackbar/Snackbar.catalog'
+import { tooltipCatalog } from '../Tooltip/Tooltip.catalog'
+import { autocompleteCatalog } from '../Autocomplete/Autocomplete.catalog'
+import { scrollAreaCatalog } from '../ScrollArea/ScrollArea.catalog'
+import { fabMenuCatalog } from '../FabMenu/FabMenu/FabMenu.catalog'
+import { fabMenuItemCatalog } from '../FabMenu/FabMenuItem/FabMenuItem.catalog'
 import { appBarCatalog } from '../AppBar/AppBar.catalog'
 import { avatarCatalog } from '../Avatar/Avatar.catalog'
 import { backdropCatalog } from '../Backdrop/Backdrop.catalog'
@@ -6,6 +22,11 @@ import { buttonCatalog } from '../Button/Button.catalog'
 import { buttonGroupCatalog } from '../ButtonGroup/ButtonGroup.catalog'
 import { cardCatalog } from '../Card/Card.catalog'
 import { checkboxCatalog } from '../Checkbox/Checkbox.catalog'
+import { collapseCatalog } from '../Collapse/Collapse.catalog'
+import { fadeCatalog } from '../Fade/Fade.catalog'
+import { growCatalog } from '../Grow/Grow.catalog'
+import { slideCatalog } from '../Slide/Slide.catalog'
+import { zoomCatalog } from '../Zoom/Zoom.catalog'
 import { contextMenuCatalog } from '../Menu/ContextMenu/ContextMenu.catalog'
 import { circularProgressCatalog } from '../CircularProgress/CircularProgress.catalog'
 import { drawerCatalog } from '../Drawer/Drawer.catalog'
@@ -19,7 +40,7 @@ import { formLabelCatalog } from '../FormLabel/FormLabel.catalog'
 import { gridCatalog } from '../Grid/Grid.catalog'
 import { iconCatalog } from '../Icon/Icon.catalog'
 import { imageCatalog } from '../Image/Image.catalog'
-import { inputRangeCatalog } from '../InputRange/InputRange.catalog'
+import { rangeInputCatalog } from '../RangeInput/RangeInput.catalog'
 import { linearProgressCatalog } from '../LinearProgress/LinearProgress.catalog'
 import { linkCatalog } from '../Link/Link.catalog'
 import { menuCatalog } from '../Menu/Menu/Menu.catalog'
@@ -29,7 +50,7 @@ import { menuItemsCatalog } from '../Menu/MenuItems/MenuItems.catalog'
 import { menuListCatalog } from '../Menu/MenuList/MenuList.catalog'
 import { modalCatalog } from '../Modal/Modal.catalog'
 import { nativeSelectCatalog } from '../NativeSelect/NativeSelect.catalog'
-import { numberFieldCatalog } from '../NumberField/NumberField.catalog'
+import { numberInputCatalog } from '../NumberInput/NumberInput.catalog'
 import { paginationCatalog } from '../Pagination/Pagination.catalog'
 import { paginationItemCatalog } from '../Pagination/PaginationItem/PaginationItem.catalog'
 import { paperCatalog } from '../Paper/Paper.catalog'
@@ -80,6 +101,22 @@ export interface CatalogSource {
 
 /** Every component, keyed by its export name. */
 export const catalogSources: Record<string, CatalogSource> = {
+  Accordion: { entry: accordionCatalog, folder: 'Accordion' },
+  AccordionActions: { entry: accordionActionsCatalog, folder: 'Accordion', family: 'Accordion' },
+  AccordionDetails: { entry: accordionDetailsCatalog, folder: 'Accordion', family: 'Accordion' },
+  AccordionGroup: { entry: accordionGroupCatalog, folder: 'Accordion', family: 'Accordion' },
+  AccordionSummary: { entry: accordionSummaryCatalog, folder: 'Accordion', family: 'Accordion' },
+  Chip: { entry: chipCatalog, folder: 'Chip' },
+  Badge: { entry: badgeCatalog, folder: 'Badge' },
+  Alert: { entry: alertCatalog, folder: 'Alert' },
+  AlertTitle: { entry: alertTitleCatalog, folder: 'Alert', family: 'Alert' },
+  Fab: { entry: fabCatalog, folder: 'Fab' },
+  Snackbar: { entry: snackbarCatalog, folder: 'Snackbar' },
+  Tooltip: { entry: tooltipCatalog, folder: 'Tooltip' },
+  Autocomplete: { entry: autocompleteCatalog, folder: 'Autocomplete' },
+  ScrollArea: { entry: scrollAreaCatalog, folder: 'ScrollArea' },
+  FabMenu: { entry: fabMenuCatalog, folder: 'FabMenu' },
+  FabMenuItem: { entry: fabMenuItemCatalog, folder: 'FabMenu', family: 'FabMenu' },
   AppBar: { entry: appBarCatalog, folder: 'AppBar' },
   Avatar: { entry: avatarCatalog, folder: 'Avatar' },
   Backdrop: { entry: backdropCatalog, folder: 'Backdrop' },
@@ -88,6 +125,11 @@ export const catalogSources: Record<string, CatalogSource> = {
   ButtonGroup: { entry: buttonGroupCatalog, folder: 'ButtonGroup' },
   Card: { entry: cardCatalog, folder: 'Card' },
   Checkbox: { entry: checkboxCatalog, folder: 'Checkbox' },
+  Collapse: { entry: collapseCatalog, folder: 'Collapse' },
+  Fade: { entry: fadeCatalog, folder: 'Fade' },
+  Grow: { entry: growCatalog, folder: 'Grow' },
+  Slide: { entry: slideCatalog, folder: 'Slide' },
+  Zoom: { entry: zoomCatalog, folder: 'Zoom' },
   ContextMenu: { entry: contextMenuCatalog, folder: 'Menu', family: 'Menu' },
   CircularProgress: { entry: circularProgressCatalog, folder: 'CircularProgress' },
   Drawer: { entry: drawerCatalog, folder: 'Drawer' },
@@ -101,7 +143,7 @@ export const catalogSources: Record<string, CatalogSource> = {
   Grid: { entry: gridCatalog, folder: 'Grid' },
   Icon: { entry: iconCatalog, folder: 'Icon' },
   Image: { entry: imageCatalog, folder: 'Image' },
-  InputRange: { entry: inputRangeCatalog, folder: 'InputRange' },
+  RangeInput: { entry: rangeInputCatalog, folder: 'RangeInput' },
   LinearProgress: { entry: linearProgressCatalog, folder: 'LinearProgress' },
   Link: { entry: linkCatalog, folder: 'Link' },
   Menu: { entry: menuCatalog, folder: 'Menu' },
@@ -111,7 +153,7 @@ export const catalogSources: Record<string, CatalogSource> = {
   MenuList: { entry: menuListCatalog, folder: 'Menu', family: 'Menu' },
   Modal: { entry: modalCatalog, folder: 'Modal' },
   NativeSelect: { entry: nativeSelectCatalog, folder: 'NativeSelect' },
-  NumberField: { entry: numberFieldCatalog, folder: 'NumberField' },
+  NumberInput: { entry: numberInputCatalog, folder: 'NumberInput' },
   Pagination: { entry: paginationCatalog, folder: 'Pagination' },
   PaginationItem: { entry: paginationItemCatalog, folder: 'Pagination', family: 'Pagination' },
   Paper: { entry: paperCatalog, folder: 'Paper' },

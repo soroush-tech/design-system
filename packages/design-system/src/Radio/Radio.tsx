@@ -2,6 +2,7 @@ import { type ChangeEvent, type InputHTMLAttributes, type ReactNode } from 'reac
 import { useFormControl } from '../FormControl'
 import type { SpaceProps } from '@soroush.tech/styled-system'
 import {
+  get,
   styled,
   type Theme,
   type PaletteColor,
@@ -21,6 +22,8 @@ export interface RadioProps extends SpaceProps<Theme> {
   disabled?: boolean
   /** Stroke/fill color. `'default'` resolves to `theme.text.secondary`. Default: `'default'`. */
   color?: RadioColor
+  /** Text color of the label, resolves against `theme.text`. Default: the control's `FormControl` or `Form` `textColor`, else the control's color. */
+  textColor?: keyof Theme['text']
   /** Icon size. Default: `'medium'`. */
   size?: RadioSize
   /** Custom icon for the unchecked state. */
@@ -129,6 +132,16 @@ const colorStyle = ({
   }
 }
 
+// The label text: the control's color, unless the field has a text color of its own.
+const RadioLabel = styled('span', {
+  name: 'Radio',
+  slot: 'label',
+  label: 'RadioLabel',
+  shouldForwardProp: createShouldForwardProp(['textColor']),
+})<{ textColor?: keyof Theme['text'] }>(({ theme, textColor }) =>
+  textColor ? { color: get(theme, `text.${textColor}`) } : {}
+)
+
 const RadioRoot = styled('label', {
   name: 'Radio',
   label: 'Radio',
@@ -142,6 +155,7 @@ export function Radio({
   checked,
   disabled: disabledProp,
   color: colorProp,
+  textColor: textColorProp,
   size: sizeProp,
   icon,
   checkedIcon,
@@ -163,6 +177,7 @@ export function Radio({
     disabled: disabledProp,
     required: requiredProp,
     size: sizeProp,
+    textColor: textColorProp,
   })
   const { id, disabled, required, size } = fc
   // Left unresolved when unset - the styled layer falls back to themeDefault(theme, 'neutralColor', 'default').
@@ -194,7 +209,7 @@ export function Radio({
         <span className="rb-unchecked">{icon ?? <UncheckedIcon />}</span>
         <span className="rb-checked">{checkedIcon ?? <CheckedIcon />}</span>
       </RadioIconWrapper>
-      {children != null && <span>{children}</span>}
+      {children != null && <RadioLabel textColor={fc.textColor}>{children}</RadioLabel>}
     </RadioRoot>
   )
 }

@@ -69,6 +69,8 @@ export interface MenuProps {
   marginThreshold?: keyof Theme['space']
   /** Shadow depth of the surface. Default: `8`. */
   elevation?: PaperElevation
+  /** Corner radius of the list, resolves against `theme.radii`. Default: `theme.defaults.surfaceRadius`, else square. */
+  borderRadius?: keyof Theme['radii']
   /** Stacking layer from `theme.zOrder`. Default: `'modal'`. */
   layer?: keyof Theme['zOrder']
   /** Shown as one disabled row when the menu has no rows. Without it, the list stays empty. */
@@ -144,6 +146,7 @@ export function Menu({
   marginThreshold: marginThresholdProp,
   elevation: elevationProp,
   layer: layerProp,
+  borderRadius: borderRadiusProp,
   emptyLabel,
   color: colorProp,
   textColor: textColorProp,
@@ -159,6 +162,7 @@ export function Menu({
   const marginThreshold = marginThresholdProp ?? dp.marginThreshold ?? 2
   const elevation = elevationProp ?? dp.elevation ?? 8
   const layer = layerProp ?? dp.layer ?? 'modal'
+  const borderRadius = borderRadiusProp ?? dp.borderRadius
   const color = colorProp ?? dp.color
   const textColor = textColorProp ?? dp.textColor
   const size = sizeProp ?? dp.size
@@ -269,6 +273,7 @@ export function Menu({
           elevation={elevation}
           layer={layer}
           margin={margin}
+          borderRadius={borderRadius}
           onKeyDown={handleSurfaceKeyDown}
         >
           <MenuContext.Provider value={menuContext}>

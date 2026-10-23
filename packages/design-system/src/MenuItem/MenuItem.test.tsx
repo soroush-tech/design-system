@@ -202,6 +202,57 @@ describe('MenuItem in a MenuList', () => {
       </MenuList>
     )
 
+  it('announces the keys it is given, not the ones it shows', () => {
+    inMenu(
+      <>
+        <MenuItem shortcut="Ctrl+=" aria-keyshortcuts="Control+=">
+          Zoom in
+        </MenuItem>
+        <MenuItem shortcut={<kbd>Ctrl+-</kbd>} aria-keyshortcuts="Control+-">
+          Zoom out
+        </MenuItem>
+      </>
+    )
+    expect(screen.getByRole('menuitem', { name: 'Zoom in' })).toHaveAttribute(
+      'aria-keyshortcuts',
+      'Control+='
+    )
+    // The keys shown stay out of the name, whatever they are.
+    expect(screen.getByText('Ctrl+=')).toHaveAttribute('aria-hidden', 'true')
+    expect(screen.getByRole('menuitem', { name: 'Zoom out' })).toHaveAttribute(
+      'aria-keyshortcuts',
+      'Control+-'
+    )
+  })
+
+  it('leaves a secondaryAction in the accessibility tree when it is asked to', () => {
+    inMenu(
+      <>
+        <MenuItem value="a" secondaryAction={<button type="button">Close Alpha</button>}>
+          Alpha
+        </MenuItem>
+        <MenuItem
+          value="b"
+          shouldAnnounceSecondaryAction
+          secondaryAction={<button type="button">Close Beta</button>}
+        >
+          Beta
+        </MenuItem>
+        <MenuItem
+          value="c"
+          submenu={null}
+          shouldAnnounceSecondaryAction
+          secondaryAction={<button type="button">Close Gamma</button>}
+        >
+          Gamma
+        </MenuItem>
+      </>
+    )
+    expect(screen.queryByRole('button', { name: 'Close Alpha' })).toBeNull()
+    expect(screen.getByRole('button', { name: 'Close Beta' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Close Gamma' })).toBeInTheDocument()
+  })
+
   it('puts a secondaryAction beside the row in its entry, out of the arrow keys', () => {
     inMenu(
       <>

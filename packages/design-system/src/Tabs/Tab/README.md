@@ -62,7 +62,10 @@ Delete on the focused tab close it too. A tab without a `closeLabel` never close
 
 The ✕ is the pointer's: a `tablist` owns tabs alone, so it is hidden from assistive technology,
 with `closeLabel` as its tooltip. The keys' way is Delete, which the tab announces
-(`aria-keyshortcuts="Delete"`).
+(`aria-keyshortcuts="Delete"`). With `shouldAnnounceClose` on `Tabs` it is a button named by `closeLabel` for
+assistive technology instead - a sibling of the tab inside the tab's `role="presentation"` wrapper, so nothing
+interactive is nested in the tab - still out of the tab order, and unseen (not `visibility: hidden`) on a tab
+that is not selected or hovered, so a screen reader still finds it.
 
 ## A menu of the tab's own
 

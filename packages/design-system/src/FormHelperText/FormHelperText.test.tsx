@@ -13,6 +13,11 @@ describe('FormHelperText', () => {
     expect(node.tagName.toLowerCase()).toBe('p')
   })
 
+  it('has room above it, so it does not touch its control', () => {
+    renderWithTheme(<FormHelperText>Helper</FormHelperText>)
+    expect(screen.getByText('Helper')).toHaveStyle({ marginTop: baseTheme.space[0.5] })
+  })
+
   it('uses the FormControl helper id', () => {
     renderWithTheme(
       <FormControl id="email">

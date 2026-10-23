@@ -19,6 +19,7 @@ import {
   typography,
 } from '../index'
 import { alpha } from '../utils'
+import { getAnchorRel } from '../utils/getAnchorRel'
 import { themeDefault } from '../theme/utils/themeDefault'
 import { useDefaultProps, useTheme } from '../theme'
 import type { ButtonVariants } from '../theme/themes'
@@ -247,6 +248,8 @@ export function Button({
   children,
   disabled,
   href,
+  target,
+  rel,
   ...rest
 }: Readonly<ButtonProps>) {
   // Resolution: explicit prop → enclosing ButtonGroup → theme.components.Button.defaultProps
@@ -271,6 +274,8 @@ export function Button({
     <ButtonRoot
       as={href == null ? undefined : 'a'}
       href={href}
+      target={target}
+      rel={getAnchorRel(target, rel)}
       variant={resolvedVariant}
       color={resolvedColor}
       size={resolvedSize}

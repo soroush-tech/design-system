@@ -6,6 +6,7 @@ import { styled, type Theme, createShouldForwardProp, props, space, get, system 
 import { useTheme } from '../theme'
 import { inputVariantStyles } from '../utils/inputVariantStyles'
 import { themeDefault } from '../theme/utils/themeDefault'
+import { getFocusRing, getInputMinWidth } from '../utils/inputStyles'
 
 export type NativeSelectColor = keyof Theme['palette']
 export type NativeSelectTextColor = keyof Theme['text']
@@ -140,15 +141,9 @@ const focusVisibleRing = ({
   theme,
   color = themeDefault(theme, 'color', 'primary'),
   error,
-}: NativeSelectRootProps & { theme: Theme }) => {
-  const ringColor = error ? get(theme, 'palette.error.main') : get(theme, `palette.${color}.main`)
-  return {
-    '&:has(:focus-visible)': {
-      outline: `2px solid ${ringColor}`,
-      outlineOffset: '2px',
-    },
-  }
-}
+}: NativeSelectRootProps & { theme: Theme }) => ({
+  '&:has(:focus-visible)': getFocusRing(theme, color, error),
+})
 
 const borderRadiusStyle = ({
   variant: v = 'default',
@@ -159,7 +154,12 @@ const borderRadiusStyle = ({
   return { borderRadius: get(theme, `radii.${borderRadius}`) }
 }
 
-const layoutStyles = ({ fullWidth, disabled }: NativeSelectRootProps) => ({
+const layoutStyles = ({
+  theme,
+  fullWidth,
+  disabled,
+}: NativeSelectRootProps & { theme: Theme }) => ({
+  minWidth: getInputMinWidth(theme),
   ...(fullWidth ? ({ display: 'flex', width: '100%' } as const) : {}),
   ...(disabled ? ({ opacity: 0.5, cursor: 'not-allowed', pointerEvents: 'none' } as const) : {}),
 })
@@ -361,7 +361,7 @@ export function NativeSelect({
           </option>
         ))}
       </StyledNativeSelect>
-      <DropdownIcon name={iconName} size="1.25rem" color="secondary" {...iconProps} />
+      <DropdownIcon name={iconName} size={size} color="inherit" {...iconProps} />
     </NativeSelectRoot>
   )
 }

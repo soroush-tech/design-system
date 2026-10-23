@@ -3,6 +3,7 @@ import { styled, type CSSObject, type Theme } from '../index'
 import { useTheme } from '../theme'
 import { Typography, type TypographyProps } from '../Typography'
 import { themeDefault } from '../theme/utils/themeDefault'
+import { getAnchorRel } from '../utils/getAnchorRel'
 
 export type LinkUnderline = 'always' | 'hover' | 'none'
 
@@ -64,7 +65,6 @@ export function Link({
 }: Readonly<LinkProps>) {
   const theme = useTheme()
   const underline = underlineProp ?? themeDefault(theme, 'linkUnderline', 'always')
-  const resolvedRel = target === '_blank' && rel === undefined ? 'noopener noreferrer' : rel
   return (
     <LinkBase
       as="a"
@@ -72,7 +72,7 @@ export function Link({
       color={color ?? themeDefault(theme, 'accentTextColor', 'primary')}
       variant={variant}
       target={target}
-      rel={resolvedRel}
+      rel={getAnchorRel(target, rel)}
       {...rest}
     />
   )

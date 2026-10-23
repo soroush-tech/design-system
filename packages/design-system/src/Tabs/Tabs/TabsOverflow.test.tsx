@@ -86,6 +86,20 @@ describe('Tabs with overflowBehavior="menu"', () => {
     expect(onTabClose).toHaveBeenCalledWith('b')
   })
 
+  it("names a closable tab's close button in the menu with shouldAnnounceClose", () => {
+    const onTabClose = vi.fn()
+    const { remeasure } = renderRow({ onTabClose, shouldAnnounceClose: true })
+    measure(150)
+    remeasure()
+    openMenu()
+    const close = screen.getByRole('button', { name: 'Close Beta' })
+    expect(close).not.toHaveAttribute('aria-hidden')
+    expect(close).toHaveAttribute('tabindex', '-1')
+    expect(screen.getByRole('menuitem', { name: 'Beta' })).not.toContainElement(close)
+    fireEvent.click(close)
+    expect(onTabClose).toHaveBeenCalledWith('b')
+  })
+
   it("closes a closable tab's row with Delete, and leaves the others", () => {
     const onTabClose = vi.fn()
     const { remeasure } = renderRow({ onTabClose })

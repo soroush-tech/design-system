@@ -40,6 +40,12 @@ Default: `"default"`.
 
 ---
 
+### `textColor`
+
+Text color of the label, from `theme.text`. Default: the `textColor` of its `FormControl` or `Form`, else the control's `color` - so a field's text color reaches the label while the radio's mark keeps its own color. Its own slot, `label`, in `theme.components.Radio`.
+
+---
+
 ### `size`
 
 | Value      | Icon size |

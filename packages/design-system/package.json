@@ -29,16 +29,25 @@
   ],
   "exports": {
     ".": "./src/index.ts",
+    "./Accordion": "./src/Accordion/index.ts",
+    "./Alert": "./src/Alert/index.ts",
     "./AppBar": "./src/AppBar/index.ts",
+    "./Autocomplete": "./src/Autocomplete/index.ts",
     "./Avatar": "./src/Avatar/index.ts",
     "./Backdrop": "./src/Backdrop/index.ts",
+    "./Badge": "./src/Badge/index.ts",
     "./Breadcrumbs": "./src/Breadcrumbs/index.ts",
     "./Button": "./src/Button/index.ts",
     "./ButtonGroup": "./src/ButtonGroup/index.ts",
     "./Card": "./src/Card/index.ts",
     "./Checkbox": "./src/Checkbox/index.ts",
+    "./Chip": "./src/Chip/index.ts",
     "./CircularProgress": "./src/CircularProgress/index.ts",
+    "./Collapse": "./src/Collapse/index.ts",
     "./Drawer": "./src/Drawer/index.ts",
+    "./Fab": "./src/Fab/index.ts",
+    "./FabMenu": "./src/FabMenu/index.ts",
+    "./Fade": "./src/Fade/index.ts",
     "./Flex": "./src/Flex/index.ts",
     "./FocusTrap": "./src/FocusTrap/index.ts",
     "./Form": "./src/Form/index.ts",
@@ -46,16 +55,17 @@
     "./FormHelperText": "./src/FormHelperText/index.ts",
     "./FormLabel": "./src/FormLabel/index.ts",
     "./Grid": "./src/Grid/index.ts",
+    "./Grow": "./src/Grow/index.ts",
     "./Icon": "./src/Icon/index.ts",
     "./Image": "./src/Image/index.ts",
-    "./InputRange": "./src/InputRange/index.ts",
+    "./RangeInput": "./src/RangeInput/index.ts",
     "./LinearProgress": "./src/LinearProgress/index.ts",
     "./Link": "./src/Link/index.ts",
     "./Menu": "./src/Menu/index.ts",
     "./MenuItem": "./src/MenuItem/index.ts",
     "./Modal": "./src/Modal/index.ts",
     "./NativeSelect": "./src/NativeSelect/index.ts",
-    "./NumberField": "./src/NumberField/index.ts",
+    "./NumberInput": "./src/NumberInput/index.ts",
     "./Pagination": "./src/Pagination/index.ts",
     "./Paper": "./src/Paper/index.ts",
     "./Popover": "./src/Popover/index.ts",
@@ -64,17 +74,22 @@
     "./Quote": "./src/Quote/index.ts",
     "./Radio": "./src/Radio/index.ts",
     "./Rating": "./src/Rating/index.ts",
+    "./ScrollArea": "./src/ScrollArea/index.ts",
     "./Select": "./src/Select/index.ts",
     "./Sidebar": "./src/Sidebar/index.ts",
     "./Skeleton": "./src/Skeleton/index.ts",
+    "./Slide": "./src/Slide/index.ts",
+    "./Snackbar": "./src/Snackbar/index.ts",
     "./Switch": "./src/Switch/index.ts",
     "./Table": "./src/Table/index.ts",
     "./Tabs": "./src/Tabs/index.ts",
     "./TextInput": "./src/TextInput/index.ts",
     "./ToggleButton": "./src/ToggleButton/index.ts",
+    "./Tooltip": "./src/Tooltip/index.ts",
     "./TransferList": "./src/TransferList/index.ts",
     "./Typography": "./src/Typography/index.ts",
     "./View": "./src/View/index.ts",
+    "./Zoom": "./src/Zoom/index.ts",
     "./catalog": "./src/catalog/index.ts",
     "./theme": "./src/theme/index.ts",
     "./style": "./src/style/index.ts",
@@ -100,6 +115,26 @@
           "default": "./dist/index.cjs"
         }
       },
+      "./Accordion": {
+        "import": {
+          "types": "./dist/Accordion.d.mts",
+          "default": "./dist/Accordion.mjs"
+        },
+        "require": {
+          "types": "./dist/Accordion.d.cts",
+          "default": "./dist/Accordion.cjs"
+        }
+      },
+      "./Alert": {
+        "import": {
+          "types": "./dist/Alert.d.mts",
+          "default": "./dist/Alert.mjs"
+        },
+        "require": {
+          "types": "./dist/Alert.d.cts",
+          "default": "./dist/Alert.cjs"
+        }
+      },
       "./AppBar": {
         "import": {
           "types": "./dist/AppBar.d.mts",
@@ -108,6 +143,16 @@
         "require": {
           "types": "./dist/AppBar.d.cts",
           "default": "./dist/AppBar.cjs"
+        }
+      },
+      "./Autocomplete": {
+        "import": {
+          "types": "./dist/Autocomplete.d.mts",
+          "default": "./dist/Autocomplete.mjs"
+        },
+        "require": {
+          "types": "./dist/Autocomplete.d.cts",
+          "default": "./dist/Autocomplete.cjs"
         }
       },
       "./Avatar": {
@@ -128,6 +173,16 @@
         "require": {
           "types": "./dist/Backdrop.d.cts",
           "default": "./dist/Backdrop.cjs"
+        }
+      },
+      "./Badge": {
+        "import": {
+          "types": "./dist/Badge.d.mts",
+          "default": "./dist/Badge.mjs"
+        },
+        "require": {
+          "types": "./dist/Badge.d.cts",
+          "default": "./dist/Badge.cjs"
         }
       },
       "./Breadcrumbs": {
@@ -180,6 +235,16 @@
           "default": "./dist/Checkbox.cjs"
         }
       },
+      "./Chip": {
+        "import": {
+          "types": "./dist/Chip.d.mts",
+          "default": "./dist/Chip.mjs"
+        },
+        "require": {
+          "types": "./dist/Chip.d.cts",
+          "default": "./dist/Chip.cjs"
+        }
+      },
       "./CircularProgress": {
         "import": {
           "types": "./dist/CircularProgress.d.mts",
@@ -190,6 +255,16 @@
           "default": "./dist/CircularProgress.cjs"
         }
       },
+      "./Collapse": {
+        "import": {
+          "types": "./dist/Collapse.d.mts",
+          "default": "./dist/Collapse.mjs"
+        },
+        "require": {
+          "types": "./dist/Collapse.d.cts",
+          "default": "./dist/Collapse.cjs"
+        }
+      },
       "./Drawer": {
         "import": {
           "types": "./dist/Drawer.d.mts",
@@ -198,6 +273,36 @@
         "require": {
           "types": "./dist/Drawer.d.cts",
           "default": "./dist/Drawer.cjs"
+        }
+      },
+      "./Fab": {
+        "import": {
+          "types": "./dist/Fab.d.mts",
+          "default": "./dist/Fab.mjs"
+        },
+        "require": {
+          "types": "./dist/Fab.d.cts",
+          "default": "./dist/Fab.cjs"
+        }
+      },
+      "./FabMenu": {
+        "import": {
+          "types": "./dist/FabMenu.d.mts",
+          "default": "./dist/FabMenu.mjs"
+        },
+        "require": {
+          "types": "./dist/FabMenu.d.cts",
+          "default": "./dist/FabMenu.cjs"
+        }
+      },
+      "./Fade": {
+        "import": {
+          "types": "./dist/Fade.d.mts",
+          "default": "./dist/Fade.mjs"
+        },
+        "require": {
+          "types": "./dist/Fade.d.cts",
+          "default": "./dist/Fade.cjs"
         }
       },
       "./Flex": {
@@ -270,6 +375,16 @@
           "default": "./dist/Grid.cjs"
         }
       },
+      "./Grow": {
+        "import": {
+          "types": "./dist/Grow.d.mts",
+          "default": "./dist/Grow.mjs"
+        },
+        "require": {
+          "types": "./dist/Grow.d.cts",
+          "default": "./dist/Grow.cjs"
+        }
+      },
       "./Icon": {
         "import": {
           "types": "./dist/Icon.d.mts",
@@ -290,14 +405,14 @@
           "default": "./dist/Image.cjs"
         }
       },
-      "./InputRange": {
+      "./RangeInput": {
         "import": {
-          "types": "./dist/InputRange.d.mts",
-          "default": "./dist/InputRange.mjs"
+          "types": "./dist/RangeInput.d.mts",
+          "default": "./dist/RangeInput.mjs"
         },
         "require": {
-          "types": "./dist/InputRange.d.cts",
-          "default": "./dist/InputRange.cjs"
+          "types": "./dist/RangeInput.d.cts",
+          "default": "./dist/RangeInput.cjs"
         }
       },
       "./LinearProgress": {
@@ -360,14 +475,14 @@
           "default": "./dist/NativeSelect.cjs"
         }
       },
-      "./NumberField": {
+      "./NumberInput": {
         "import": {
-          "types": "./dist/NumberField.d.mts",
-          "default": "./dist/NumberField.mjs"
+          "types": "./dist/NumberInput.d.mts",
+          "default": "./dist/NumberInput.mjs"
         },
         "require": {
-          "types": "./dist/NumberField.d.cts",
-          "default": "./dist/NumberField.cjs"
+          "types": "./dist/NumberInput.d.cts",
+          "default": "./dist/NumberInput.cjs"
         }
       },
       "./Pagination": {
@@ -450,6 +565,16 @@
           "default": "./dist/Rating.cjs"
         }
       },
+      "./ScrollArea": {
+        "import": {
+          "types": "./dist/ScrollArea.d.mts",
+          "default": "./dist/ScrollArea.mjs"
+        },
+        "require": {
+          "types": "./dist/ScrollArea.d.cts",
+          "default": "./dist/ScrollArea.cjs"
+        }
+      },
       "./Select": {
         "import": {
           "types": "./dist/Select.d.mts",
@@ -478,6 +603,26 @@
         "require": {
           "types": "./dist/Skeleton.d.cts",
           "default": "./dist/Skeleton.cjs"
+        }
+      },
+      "./Slide": {
+        "import": {
+          "types": "./dist/Slide.d.mts",
+          "default": "./dist/Slide.mjs"
+        },
+        "require": {
+          "types": "./dist/Slide.d.cts",
+          "default": "./dist/Slide.cjs"
+        }
+      },
+      "./Snackbar": {
+        "import": {
+          "types": "./dist/Snackbar.d.mts",
+          "default": "./dist/Snackbar.mjs"
+        },
+        "require": {
+          "types": "./dist/Snackbar.d.cts",
+          "default": "./dist/Snackbar.cjs"
         }
       },
       "./Switch": {
@@ -518,6 +663,26 @@
         "require": {
           "types": "./dist/TextInput.d.cts",
           "default": "./dist/TextInput.cjs"
+        }
+      },
+      "./Tooltip": {
+        "import": {
+          "types": "./dist/Tooltip.d.mts",
+          "default": "./dist/Tooltip.mjs"
+        },
+        "require": {
+          "types": "./dist/Tooltip.d.cts",
+          "default": "./dist/Tooltip.cjs"
+        }
+      },
+      "./Zoom": {
+        "import": {
+          "types": "./dist/Zoom.d.mts",
+          "default": "./dist/Zoom.mjs"
+        },
+        "require": {
+          "types": "./dist/Zoom.d.cts",
+          "default": "./dist/Zoom.cjs"
         }
       },
       "./catalog": {
@@ -653,8 +818,8 @@
     "@soroush.tech/styled-system": "workspace:^"
   },
   "peerDependencies": {
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@emotion/css": "^11.13.5",

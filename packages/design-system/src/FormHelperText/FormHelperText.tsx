@@ -6,10 +6,11 @@ import { FormContext } from '../Form/FormContext'
 
 // Named styled root - theme-customizable via
 // `theme.components.FormHelperText.styleOverrides.root`.
+// Room above it, as a `FormLabel` has under it, so the text does not touch its control.
 const FormHelperTextRoot = styled(Typography, {
   name: 'FormHelperText',
   label: 'FormHelperText',
-})()
+})(({ theme }) => ({ marginTop: theme.space[0.5] }))
 
 export interface FormHelperTextProps extends TypographyProps {
   children: ReactNode
