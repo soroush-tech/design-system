@@ -1,4 +1,6 @@
+import { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import { Button } from '../Button'
 import { Flex } from '../Flex'
 import { Icon } from '../Icon'
 import { Menu } from '../Menu'
@@ -7,7 +9,7 @@ import { View } from '../View'
 import { exampleArgs } from '../utils/test/renderExample'
 import { buttonColorTokens, textInputSizeTokens } from '../utils/test/storiesOptions'
 import { fabCatalog, fabVariantValues } from './Fab.catalog'
-import { Fab } from './Fab'
+import { Fab, type FabProps } from './Fab'
 
 const meta: Meta<typeof Fab> = {
   title: 'Theme/Fab',
@@ -15,7 +17,7 @@ const meta: Meta<typeof Fab> = {
   tags: ['autodocs'],
   parameters: {
     layout: 'padded',
-    controls: { include: ['variant', 'color', 'size', 'disabled', 'aria-label'] },
+    controls: { include: ['variant', 'color', 'size', 'isCollapsed', 'disabled', 'aria-label'] },
   },
   args: exampleArgs(fabCatalog.example),
   argTypes: {
@@ -36,6 +38,11 @@ const meta: Meta<typeof Fab> = {
       options: textInputSizeTokens,
       description: "Its height - and a circle's width - are those of an avatar of it.",
       table: { category: 'Layout', defaultValue: { summary: 'md' } },
+    },
+    isCollapsed: {
+      control: 'boolean',
+      description: 'Draws an extended fab as its icon alone - a circle - and back.',
+      table: { category: 'State', defaultValue: { summary: 'false' } },
     },
     disabled: {
       control: 'boolean',
@@ -66,6 +73,26 @@ export const Extended: Story = {
       Create
     </Fab>
   ),
+}
+
+function CollapsingDemo(args: Readonly<FabProps>) {
+  const [isCollapsed, setIsCollapsed] = useState(false)
+  return (
+    <Flex flexDirection="column" gap={2} alignItems="flex-start">
+      <Fab {...args} isCollapsed={isCollapsed} startIcon={add}>
+        Create
+      </Fab>
+      <Button variant="outlined" onClick={() => setIsCollapsed((current) => !current)}>
+        {isCollapsed ? 'Extend' : 'Collapse'}
+      </Button>
+    </Flex>
+  )
+}
+
+// Collapsed while a page is scrolled, extended again at the top: the app decides when.
+export const Collapsing: Story = {
+  args: { variant: 'extended', 'aria-label': undefined },
+  render: (args) => <CollapsingDemo {...args} />,
 }
 
 export const Sizes: Story = {

@@ -28,6 +28,7 @@ export const fabCatalog = defineCatalogEntry<FabProps>()({
     variant: { values: fabVariantValues, default: 'circular' },
     color: { scale: 'palette', default: 'primary' },
     size: { scale: 'sizes', default: 'md' },
+    isCollapsed: { values: [true, false], default: false },
     disabled: { values: [true, false], default: false },
   },
   content: { children: 'children', startIcon: 'child' },

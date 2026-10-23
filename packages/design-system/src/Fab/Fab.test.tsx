@@ -180,8 +180,56 @@ describe('Fab', () => {
       expect(fab()).toHaveStyle({
         paddingLeft: baseTheme.space[2],
         paddingRight: baseTheme.space[3],
-        gap: baseTheme.space[1.5],
       })
+      // The room between them is the label's own, a space step in, so it goes as the label collapses.
+      expect(screen.getByText('Create')).toHaveStyle({ textIndent: baseTheme.space[1.5] })
+    })
+  })
+
+  describe('collapsed', () => {
+    const extended = (isCollapsed: boolean) =>
+      view({ variant: 'extended', children: 'Create', startIcon: icon, isCollapsed })
+    const label = () => screen.getByText('Create').parentElement as HTMLElement
+
+    it('is extended by default, with its label a column of its own width', () => {
+      renderWithTheme(extended(false))
+      expect(label()).toHaveStyle({ display: 'grid', gridTemplateColumns: '1fr' })
+    })
+
+    it('draws only its icon, the label going to no width, in a circle of its height', () => {
+      renderWithTheme(extended(true))
+      expect(label()).toHaveStyle({ gridTemplateColumns: '0fr' })
+      expect(fab()).toHaveStyle({
+        paddingLeft: '0',
+        paddingRight: '0',
+        minWidth: baseTheme.avatar.md,
+      })
+    })
+
+    it('keeps its name collapsed: the label is still in the tree', () => {
+      renderWithTheme(
+        view({
+          variant: 'extended',
+          children: 'Create',
+          isCollapsed: true,
+          'aria-label': undefined,
+        })
+      )
+      expect(screen.getByRole('button', { name: 'Create' })).toBeInTheDocument()
+    })
+
+    it('moves its label and its padding over the theme duration, and not under reduced motion', () => {
+      renderWithTheme(extended(false))
+      const { duration, easing } = baseTheme.transitions
+      expect(getComputedStyle(label()).transition).toContain(
+        `grid-template-columns ${duration.standard}ms ${easing.standard}`
+      )
+      expect(getComputedStyle(fab()).transition).toContain(`padding-left ${duration.standard}ms`)
+    })
+
+    it('is ignored by a circular fab', () => {
+      renderWithTheme(view({ isCollapsed: true }))
+      expect(fab()).toHaveStyle({ paddingLeft: '0', borderRadius: '50%' })
     })
   })
 
@@ -195,12 +243,14 @@ describe('Fab', () => {
       })
     })
 
-    it('has a slot of its own in the theme', () => {
+    it('has slots of its own in the theme', () => {
+      const style = { outlineColor: 'rgb(1, 2, 3)' }
       const theme = createTheme(baseTheme, {
-        components: { Fab: { styleOverrides: { label: { outlineColor: 'rgb(1, 2, 3)' } } } },
+        components: { Fab: { styleOverrides: { label: style, labelText: style } } },
       })
       render(view({ variant: 'extended', children: 'Create' }), { wrapper: withTheme(theme) })
-      expect(screen.getByText('Create')).toHaveStyle({ outlineColor: 'rgb(1, 2, 3)' })
+      expect(screen.getByText('Create')).toHaveStyle(style)
+      expect(screen.getByText('Create').parentElement).toHaveStyle(style)
     })
 
     it('is not wrapped on a circular fab, whose content is its own', () => {

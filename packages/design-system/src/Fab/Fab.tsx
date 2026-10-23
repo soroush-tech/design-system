@@ -25,21 +25,28 @@ export type FabProps = FabButtonProps & {
   variant?: FabVariant
   /** An extended fab's icon, before the label. A circular one is its content. */
   startIcon?: ReactNode
+  /**
+   * Draws an extended fab as its icon alone - a circle - and back again, the label moving in and out
+   * over `theme.transitions`. The label stays in the tree, so the fab keeps its name. A circular
+   * fab ignores it. Default: `false`.
+   */
+  isCollapsed?: boolean
 }
 
 interface RootStyle {
   fabVariant: FabVariant
+  isCollapsed: boolean
 }
 
 const FabRoot = styled(Button, {
   name: 'Fab',
   label: 'Fab',
   // A Button is the target: everything but the fab's own look goes on to it.
-  shouldForwardProp: (prop) => prop !== 'fabVariant',
+  shouldForwardProp: (prop) => prop !== 'fabVariant' && prop !== 'isCollapsed',
   // After its own styles, so a margin or padding of the instance - a `theme.space` key - wins over
   // the fab's.
   systemProps: [space],
-})<RootStyle>(({ theme, size, fabVariant }) => {
+})<RootStyle>(({ theme, size, fabVariant, isCollapsed }) => {
   // A fab is as tall as an avatar of its size: the same scale of round things.
   const side = get(theme, `avatar.${size}`)
   const { duration, easing } = theme.transitions
@@ -50,7 +57,15 @@ const FabRoot = styled(Button, {
     boxShadow: theme.shadows[6],
     '&:hover:not(:disabled)': { boxShadow: theme.shadows[8] },
     '&:active:not(:disabled)': { boxShadow: theme.shadows[6] },
-    transition: ['background-color', 'color', 'border-color', 'opacity', 'box-shadow']
+    transition: [
+      'background-color',
+      'color',
+      'border-color',
+      'opacity',
+      'box-shadow',
+      'padding-left',
+      'padding-right',
+    ]
       .map(move)
       .join(', '),
     '@media (prefers-reduced-motion: reduce)': { transition: 'none' },
@@ -71,27 +86,47 @@ const FabRoot = styled(Button, {
     ...(fabVariant === 'circular'
       ? { width: side, minWidth: side, padding: 0, borderRadius: '50%' }
       : {
-          // More room after the label than before the icon, as the text ends the fab.
-          paddingLeft: theme.space[2],
-          paddingRight: theme.space[3],
+          // More room after the label than before the icon, as the text ends the fab. Collapsed, there
+          // is none, and the fab is as wide as it is tall: a circle with its icon centred, whatever the
+          // icon's size.
+          minWidth: side,
+          paddingLeft: isCollapsed ? 0 : theme.space[2],
+          paddingRight: isCollapsed ? 0 : theme.space[3],
           borderRadius: '9999px',
           maxWidth: '100%',
         }),
   }
 })
 
-// One line, cut with an ellipsis: an extended fab is as wide as its label up to its container.
+// A column that is as wide as the label - or nothing, collapsed: the width moves between the two
+// (`1fr` and `0fr`), so the label is cut by its container as well as it moves.
 const FabLabel = styled('span', {
   name: 'Fab',
   slot: 'label',
   label: 'FabLabel',
-})({
+  shouldForwardProp: (prop) => prop !== 'isCollapsed',
+})<{ isCollapsed: boolean }>(({ theme, isCollapsed }) => ({
+  display: 'grid',
+  gridTemplateColumns: isCollapsed ? '0fr' : '1fr',
+  minWidth: 0,
+  transition: `grid-template-columns ${theme.transitions.duration.standard}ms ${theme.transitions.easing.standard}`,
+  '@media (prefers-reduced-motion: reduce)': { transition: 'none' },
+}))
+
+// One line, cut with an ellipsis where its container ends. Its first line starts a `theme.space[1.5]`
+// in, which is the room between the icon and the label - and goes with the label as it collapses.
+const FabLabelText = styled('span', {
+  name: 'Fab',
+  slot: 'labelText',
+  label: 'FabLabelText',
+})(({ theme }) => ({
   display: 'block',
   minWidth: 0,
   overflow: 'hidden',
   textOverflow: 'ellipsis',
+  textIndent: theme.space[1.5],
   whiteSpace: 'nowrap',
-})
+}))
 
 /**
  * @description A floating action button: the one main action of a page, circular - its icon - or
@@ -99,7 +134,7 @@ const FabLabel = styled('span', {
  * behavior, raised on a shadow that lifts on hover and moves with `theme.transitions` (and not at
  * all under `prefers-reduced-motion`). Its touch target is at least `theme.space[6]` square however
  * small the fab. An extended fab keeps its label on one line, with the icon a `theme.space[1.5]`
- * before it. Margin and padding are `theme.space` keys, as everywhere. Where it floats is the
+ * before it, and `isCollapsed` draws it as a circle - the label moving out over `theme.transitions`. Margin and padding are `theme.space` keys, as everywhere. Where it floats is the
  * page's: no position is built in. A fab with no text - a circular one - must be named:
  * `aria-label` or `aria-labelledby`.
  */
@@ -108,6 +143,7 @@ export function Fab({
   color,
   size,
   startIcon,
+  isCollapsed = false,
   children,
   ...rest
 }: Readonly<FabProps>) {
@@ -117,15 +153,22 @@ export function Fab({
   return (
     <FabRoot
       fabVariant={variant}
+      isCollapsed={isExtended && isCollapsed}
       variant="contained"
       color={color ?? dp.color ?? 'primary'}
       size={size ?? dp.size ?? 'md'}
       startIcon={isExtended ? startIcon : undefined}
-      // The icon of an extended fab sits `theme.space[1.5]` from its label.
-      gap={isExtended ? 1.5 : undefined}
+      // The room between the icon and the label is the label's own, so it collapses with it.
+      gap={isExtended ? 0 : undefined}
       {...rest}
     >
-      {isExtended ? <FabLabel>{children}</FabLabel> : children}
+      {isExtended ? (
+        <FabLabel isCollapsed={isCollapsed}>
+          <FabLabelText>{children}</FabLabelText>
+        </FabLabel>
+      ) : (
+        children
+      )}
     </FabRoot>
   )
 }

@@ -76,4 +76,34 @@ describe('Fab in a browser', () => {
     expect(style.paddingRight).toBe(baseTheme.space[5])
     expect(style.margin).toBe(baseTheme.space[2])
   })
+
+  it('collapses to a circle of its height with the icon centred, and extends again', async () => {
+    const extended = (isCollapsed: boolean) =>
+      view({
+        variant: 'extended',
+        startIcon: glyph,
+        children: 'Create',
+        isCollapsed,
+        'aria-label': undefined,
+      })
+    const { rerender } = renderWithTheme(extended(false))
+    expect(fab().getBoundingClientRect().width).toBeGreaterThan(px(baseTheme.avatar.md))
+    rerender(extended(true))
+    await vi.waitFor(() =>
+      expect(fab().getBoundingClientRect().width).toBeCloseTo(px(baseTheme.avatar.md), 0)
+    )
+    expect(fab().getBoundingClientRect().height).toBe(px(baseTheme.avatar.md))
+    // Once the label is gone the icon is in the middle of the circle.
+    await vi.waitFor(() => {
+      const box = fab().getBoundingClientRect()
+      const mark = (fab().querySelector('i') as HTMLElement).getBoundingClientRect()
+      expect(mark.left + mark.width / 2).toBeCloseTo(box.left + box.width / 2, 0)
+    })
+    // The label is out of sight but in the tree: the fab keeps its name.
+    expect(screen.getByRole('button', { name: 'Create' })).toBe(fab())
+    rerender(extended(false))
+    await vi.waitFor(() =>
+      expect(fab().getBoundingClientRect().width).toBeGreaterThan(px(baseTheme.avatar.md) * 2)
+    )
+  })
 })

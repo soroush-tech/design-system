@@ -807,7 +807,7 @@ export interface ThemeComponents {
   >
   Tooltip?: ComponentConfig<TooltipOwnerState, 'root' | 'arrow'>
   Snackbar?: ComponentConfig<SnackbarOwnerState, 'root' | 'content' | 'message' | 'action'>
-  Fab?: ComponentConfig<FabOwnerState, 'root' | 'label'>
+  Fab?: ComponentConfig<FabOwnerState, 'root' | 'label' | 'labelText'>
   Alert?: ComponentConfig<AlertOwnerState, 'root' | 'icon' | 'message' | 'action' | 'closeButton'>
   AlertTitle?: ComponentConfig
   Badge?: ComponentConfig<BadgeOwnerState, 'root' | 'badge' | 'label'>
