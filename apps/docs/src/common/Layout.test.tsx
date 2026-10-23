@@ -20,6 +20,11 @@ describe('Layout', () => {
     expect(screen.getByText('@soroush.tech design system')).toBeInTheDocument()
   })
 
+  it('keeps the content in a column no wider than 1200px', () => {
+    renderLayout()
+    expect(screen.getByTestId('content').parentElement).toHaveStyle({ maxWidth: '1200px' })
+  })
+
   it('has no menu button or aside without a sidebar', () => {
     renderLayout()
     expect(screen.queryByRole('button', { name: 'Open navigation' })).not.toBeInTheDocument()

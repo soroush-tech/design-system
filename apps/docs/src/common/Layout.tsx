@@ -43,7 +43,10 @@ export function Layout({ children, sidebar }: Readonly<LayoutProps>) {
           </View>
         )}
         <Flex as="main" flexDirection="column" flex="1 1 auto" minWidth={0} px={4} py={5}>
-          {children}
+          {/* The content reads in a column no wider than 1200px, centred in the room the sidebar leaves. */}
+          <View width="100%" maxWidth="1200px" mx="auto">
+            {children}
+          </View>
         </Flex>
       </Flex>
       <Flex as="footer" justifyContent="center" px={4} py={3}>
