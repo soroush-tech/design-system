@@ -39,7 +39,7 @@ const meta: Meta<typeof Chip> = {
     variant: {
       control: { type: 'inline-radio' },
       options: chipVariantValues,
-      description: "Filled, or only outlined - as a Button's.",
+      description: "Filled, outlined, or only its text - as a Button's.",
       table: { category: 'Visual', defaultValue: { summary: 'contained' } },
     },
     color: {
@@ -63,7 +63,7 @@ const meta: Meta<typeof Chip> = {
     borderRadius: {
       control: { type: 'select' },
       options: ['sq', 'sm', 'md', 'lg'],
-      description: 'Corner radius from `theme.radii` - wins over `shape`.',
+      description: "The radius of a 'rounded' chip, from `theme.radii`.",
       table: { category: 'Visual' },
     },
     disabled: {

@@ -33,9 +33,36 @@ const renderMenu = (props: Partial<ContextMenuProps> = {}) =>
 const canvas = () => screen.getByTestId('canvas')
 const row = (name: string) => screen.getByRole('menuitem', { name })
 const surface = () => screen.getByRole('menu').parentElement!
+const openAt = () => fireEvent.contextMenu(canvas(), { clientX: 120, clientY: 80 })
 
 afterEach(() => {
   vi.restoreAllMocks()
+})
+
+describe('ContextMenu corners', () => {
+  it('is square by default, and takes a radius of its own', () => {
+    const { unmount } = renderMenu()
+    openAt()
+    expect(surface()).toHaveStyle({ borderRadius: baseTheme.radii.sq })
+    unmount()
+    renderMenu({ borderRadius: 'lg' })
+    openAt()
+    expect(surface()).toHaveStyle({ borderRadius: baseTheme.radii.lg })
+  })
+
+  it('takes its radius from the theme', () => {
+    const theme = createTheme(baseTheme, {
+      components: { ContextMenu: { defaultProps: { borderRadius: 'md' } } },
+    })
+    renderWithTheme(
+      <ContextMenu target={<div data-testid="canvas">Canvas</div>} aria-label="Canvas">
+        <MenuItem value="paste">Paste</MenuItem>
+      </ContextMenu>,
+      { wrapper: ({ children }) => <ThemeProvider theme={theme}>{children}</ThemeProvider> }
+    )
+    openAt()
+    expect(surface()).toHaveStyle({ borderRadius: baseTheme.radii.md })
+  })
 })
 
 describe('ContextMenu', () => {

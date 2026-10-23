@@ -19,7 +19,16 @@ const meta: Meta<typeof Snackbar> = {
   tags: ['autodocs'],
   parameters: {
     layout: 'padded',
-    controls: { include: ['message', 'autoHideDuration', 'resumeHideDuration', 'layer'] },
+    controls: {
+      include: [
+        'message',
+        'autoHideDuration',
+        'resumeHideDuration',
+        'shape',
+        'borderRadius',
+        'layer',
+      ],
+    },
   },
   args: exampleArgs(snackbarCatalog.example),
   argTypes: {
@@ -37,6 +46,18 @@ const meta: Meta<typeof Snackbar> = {
       control: 'number',
       description: 'How long it stays once the pointer or focus has left it.',
       table: { category: 'Behavior', defaultValue: { summary: 'half of autoHideDuration' } },
+    },
+    shape: {
+      control: { type: 'inline-radio' },
+      options: ['square', 'rounded', 'pill'],
+      description: 'The corners: none, the radius of `borderRadius`, or a full round.',
+      table: { category: 'Visual', defaultValue: { summary: 'rounded' } },
+    },
+    borderRadius: {
+      control: { type: 'select' },
+      options: ['sq', 'sm', 'md', 'lg'],
+      description: "The radius of a 'rounded' snackbar, from `theme.radii`.",
+      table: { category: 'Visual' },
     },
     layer: {
       control: { type: 'select' },

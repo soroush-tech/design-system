@@ -153,6 +153,19 @@ describe('Chip', () => {
       })
     })
 
+    it('is only its text for a text chip: no fill, and a line it does not draw', () => {
+      const { rerender } = renderWithTheme(view({ variant: 'outlined', color: 'info' }))
+      expect(getComputedStyle(root()).border).not.toContain('transparent')
+      rerender(view({ variant: 'text', color: 'info' }))
+      expect(root()).not.toHaveStyle({ backgroundColor: baseTheme.palette.info.main })
+      expect(root()).toHaveStyle({ color: baseTheme.palette.info.main })
+      // The same one-pixel line as an outlined chip, so the two are one size.
+      expect(getComputedStyle(root()).border).toContain(baseTheme.borderWidths.thin)
+      expect(getComputedStyle(root()).border).toContain('rgba(0, 0, 0, 0)')
+      rerender(view({ variant: 'text' }))
+      expect(root()).toHaveStyle({ color: baseTheme.text.initial })
+    })
+
     it('takes its padding and font from its size', () => {
       const { unmount } = renderWithTheme(view({ size: 'sm' }))
       const small = baseTheme.sizes.sm
@@ -167,15 +180,19 @@ describe('Chip', () => {
   })
 
   describe('corners', () => {
-    it('is a pill by default, square or rounded by shape, and a radius of its own wins', () => {
+    it('is a pill by default, square or rounded by shape, and only a rounded one takes a radius', () => {
       const { rerender } = renderWithTheme(view())
       expect(root()).toHaveStyle({ borderRadius: '9999px' })
       rerender(view({ shape: 'square' }))
       expect(root()).toHaveStyle({ borderRadius: '0' })
       rerender(view({ shape: 'rounded' }))
       expect(root()).toHaveStyle({ borderRadius: baseTheme.radii.md })
-      rerender(view({ shape: 'pill', borderRadius: 'lg' }))
+      rerender(view({ shape: 'rounded', borderRadius: 'lg' }))
       expect(root()).toHaveStyle({ borderRadius: baseTheme.radii.lg })
+      rerender(view({ shape: 'pill', borderRadius: 'lg' }))
+      expect(root()).toHaveStyle({ borderRadius: '9999px' })
+      rerender(view({ shape: 'square', borderRadius: 'lg' }))
+      expect(root()).toHaveStyle({ borderRadius: '0' })
     })
 
     it('takes its shape and radius from the theme, an own prop winning', () => {
@@ -186,7 +203,7 @@ describe('Chip', () => {
       expect(root()).toHaveStyle({ borderRadius: '0' })
       unmount()
       const radius = createTheme(baseTheme, {
-        components: { Chip: { defaultProps: { borderRadius: 'sm' } } },
+        components: { Chip: { defaultProps: { shape: 'rounded', borderRadius: 'sm' } } },
       })
       render(view(), { wrapper: withTheme(radius) })
       expect(root()).toHaveStyle({ borderRadius: baseTheme.radii.sm })

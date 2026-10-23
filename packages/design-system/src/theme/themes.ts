@@ -529,6 +529,7 @@ export interface SnackbarOwnerState {
   autoHideDuration?: number
   resumeHideDuration?: number
   layer?: keyof ThemeZOrder
+  shape?: 'square' | 'rounded' | 'pill'
   borderRadius?: keyof ThemeRadii
   bg?: keyof ThemeBackground
   textColor?: keyof ThemeText
@@ -561,7 +562,7 @@ export interface BadgeOwnerState {
 
 /** The defaults a theme may set for every `Chip` - its `deleteLabel` gives it a language. */
 export interface ChipOwnerState {
-  variant?: 'contained' | 'outlined'
+  variant?: 'contained' | 'outlined' | 'text'
   color?: keyof ThemePalette
   size?: keyof ThemeSizes
   shape?: 'square' | 'rounded' | 'pill'
@@ -650,6 +651,7 @@ export interface TabsOwnerState {
 /** The defaults a theme may set for every `Menu`. */
 export interface MenuOwnerState {
   align?: 'start' | 'end'
+  borderRadius?: keyof ThemeRadii
   marginThreshold?: keyof ThemeSpace
   elevation?: PaperElevation
   layer?: keyof ThemeZOrder

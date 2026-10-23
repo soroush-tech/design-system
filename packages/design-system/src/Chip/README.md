@@ -17,21 +17,21 @@ import { Chip } from '@soroush.tech/design-system/Chip'
 
 ## Props
 
-| Prop                       | Type                              | Default       | Description                                                  |
-| -------------------------- | --------------------------------- | ------------- | ------------------------------------------------------------ |
-| `label`                    | `ReactNode`                       | -             | What the chip says. A long one truncates with an ellipsis.   |
-| `variant`                  | `'contained' \| 'outlined'`       | `'contained'` | Filled, or only outlined - as `Button`'s.                    |
-| `color`                    | `keyof Theme['palette']`          | `'default'`   | Resolves to `theme.palette`.                                 |
-| `size`                     | `keyof Theme['sizes']`            | `'md'`        | Resolves against `theme.sizes`.                              |
-| `shape`                    | `'square' \| 'rounded' \| 'pill'` | `'pill'`      | The corners: 0, `theme.radii.md`, or fully round.            |
-| `borderRadius`             | `keyof Theme['radii']`            | -             | Resolves against `theme.radii`; wins over `shape`.           |
-| `icon`                     | `ReactNode`                       | -             | An icon before the label. An `avatar` takes its place.       |
-| `avatar`                   | `ReactNode`                       | -             | An avatar before the label.                                  |
-| `onClick`                  | `(event) => void`                 | -             | Makes the chip a button.                                     |
-| `onDelete`                 | `(event) => void`                 | -             | Shows a delete control, and deletes on Backspace and Delete. |
-| `deleteLabel`              | `string`                          | -             | Names the delete control.                                    |
-| `disabled`                 | `boolean`                         | `false`       | Stays as it is, off.                                         |
-| `className`, `data-testid` |                                   |               | On the root.                                                 |
+| Prop                       | Type                                  | Default       | Description                                                  |
+| -------------------------- | ------------------------------------- | ------------- | ------------------------------------------------------------ |
+| `label`                    | `ReactNode`                           | -             | What the chip says. A long one truncates with an ellipsis.   |
+| `variant`                  | `'contained' \| 'outlined' \| 'text'` | `'contained'` | Filled, outlined, or only its text - as `Button`'s.          |
+| `color`                    | `keyof Theme['palette']`              | `'default'`   | Resolves to `theme.palette`.                                 |
+| `size`                     | `keyof Theme['sizes']`                | `'md'`        | Resolves against `theme.sizes`.                              |
+| `shape`                    | `'square' \| 'rounded' \| 'pill'`     | `'pill'`      | The corners: 0, `theme.radii.md`, or fully round.            |
+| `borderRadius`             | `keyof Theme['radii']`                | `'md'`        | The radius of a `'rounded'` chip; other shapes ignore it.    |
+| `icon`                     | `ReactNode`                           | -             | An icon before the label. An `avatar` takes its place.       |
+| `avatar`                   | `ReactNode`                           | -             | An avatar before the label.                                  |
+| `onClick`                  | `(event) => void`                     | -             | Makes the chip a button.                                     |
+| `onDelete`                 | `(event) => void`                     | -             | Shows a delete control, and deletes on Backspace and Delete. |
+| `deleteLabel`              | `string`                              | -             | Names the delete control.                                    |
+| `disabled`                 | `boolean`                             | `false`       | Stays as it is, off.                                         |
+| `className`, `data-testid` |                                       |               | On the root.                                                 |
 
 It takes the styled-system space props too.
 

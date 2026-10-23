@@ -10,6 +10,7 @@ import { createShouldForwardProp, get, styled, type Theme } from '../index'
 import { useDefaultProps } from '../theme'
 import { themeDefault } from '../theme/utils/themeDefault'
 import { getSurfaceRadius } from '../utils/getSurfaceRadius'
+import { getShapeRadius, type Shape } from '../utils/getShapeRadius'
 import { Grow } from '../Grow'
 import { Portal, type PortalProps } from '../Portal'
 import { useControlled } from '../utils/useControlled'
@@ -25,8 +26,15 @@ export interface SnackbarAnchorOrigin {
   horizontal: 'start' | 'center' | 'end'
 }
 
+export type SnackbarShape = Shape
+
 export interface SnackbarProps {
-  /** Corner radius, resolves against `theme.radii`. Default: `theme.defaults.surfaceRadius`, else square. */
+  /**
+   * Corner shape: `'square'` is 0, `'pill'` a full round, `'rounded'` the radius of `borderRadius`.
+   * Default: `'rounded'`.
+   */
+  shape?: SnackbarShape
+  /** The radius of a `'rounded'` snackbar, resolves against `theme.radii`. Default: `theme.defaults.surfaceRadius`, else square. Other shapes ignore it. */
   borderRadius?: keyof Theme['radii']
   /** Background, resolves against `theme.background`. Default: `'modal'`. */
   bg?: keyof Theme['background']
@@ -92,12 +100,13 @@ const SnackbarContent = styled('div', {
   name: 'Snackbar',
   slot: 'content',
   label: 'SnackbarContent',
-  shouldForwardProp: createShouldForwardProp(['borderRadius', 'bg', 'textColor']),
+  shouldForwardProp: createShouldForwardProp(['shape', 'borderRadius', 'bg', 'textColor']),
 })<{
+  shape: SnackbarShape
   borderRadius?: keyof Theme['radii']
   bg?: keyof Theme['background']
   textColor?: keyof Theme['text']
-}>(({ theme, borderRadius, bg, textColor }) => ({
+}>(({ theme, shape, borderRadius, bg, textColor }) => ({
   display: 'flex',
   alignItems: 'center',
   gap: theme.space[2],
@@ -106,7 +115,7 @@ const SnackbarContent = styled('div', {
   maxWidth: `calc(100vw - ${theme.space[3]} - ${theme.space[3]})`,
   padding: `${theme.space[1]} ${theme.space[2]}`,
   pointerEvents: 'auto',
-  borderRadius: getSurfaceRadius(theme, borderRadius),
+  borderRadius: getShapeRadius(shape, getSurfaceRadius(theme, borderRadius)),
   boxShadow: theme.shadows[6],
   backgroundColor: get(theme, `background.${bg ?? 'modal'}`),
   color: get(theme, `text.${textColor ?? themeDefault(theme, 'textColor', 'initial')}`),
@@ -151,6 +160,7 @@ export function Snackbar({
   anchorOrigin: anchorOriginProp,
   transition: Transition = Grow,
   layer: layerProp,
+  shape: shapeProp,
   borderRadius: borderRadiusProp,
   bg: bgProp,
   textColor: textColorProp,
@@ -163,6 +173,7 @@ export function Snackbar({
   const resumeHideDuration = resumeHideDurationProp ?? dp.resumeHideDuration
   const anchorOrigin = anchorOriginProp ?? dp.anchorOrigin ?? DEFAULT_ANCHOR
   const layer = layerProp ?? dp.layer ?? 'snackbar'
+  const shape = shapeProp ?? dp.shape ?? 'rounded'
   const borderRadius = borderRadiusProp ?? dp.borderRadius
   const bg = bgProp ?? dp.bg
   const textColor = textColorProp ?? dp.textColor
@@ -219,6 +230,7 @@ export function Snackbar({
           <SnackbarContent
             ref={contentRef}
             role="status"
+            shape={shape}
             borderRadius={borderRadius}
             bg={bg}
             textColor={textColor}

@@ -289,6 +289,17 @@ describe('Snackbar', () => {
       })
     })
 
+    it('is square or a pill by shape, whatever its radius, and rounded by its radius by default', () => {
+      const { rerender } = mount(view({ isOpen: true, borderRadius: 'lg' }))
+      expect(status()).toHaveStyle({ borderRadius: baseTheme.radii.lg })
+      rerender(view({ isOpen: true, shape: 'rounded', borderRadius: 'md' }))
+      expect(status()).toHaveStyle({ borderRadius: baseTheme.radii.md })
+      rerender(view({ isOpen: true, shape: 'square', borderRadius: 'lg' }))
+      expect(status()).toHaveStyle({ borderRadius: '0' })
+      rerender(view({ isOpen: true, shape: 'pill', borderRadius: 'lg' }))
+      expect(status()).toHaveStyle({ borderRadius: '9999px' })
+    })
+
     it('takes a radius, a background and a text color of its own', () => {
       mount(view({ isOpen: true, borderRadius: 'lg', bg: 'paper', textColor: 'secondary' }))
       expect(status()).toHaveStyle({
@@ -301,7 +312,14 @@ describe('Snackbar', () => {
     it('takes them from the theme', () => {
       const theme = createTheme(baseTheme, {
         components: {
-          Snackbar: { defaultProps: { borderRadius: 'md', bg: 'paper', textColor: 'secondary' } },
+          Snackbar: {
+            defaultProps: {
+              shape: 'rounded',
+              borderRadius: 'md',
+              bg: 'paper',
+              textColor: 'secondary',
+            },
+          },
         },
       })
       render(view({ isOpen: true }), { wrapper: withTheme(theme) })

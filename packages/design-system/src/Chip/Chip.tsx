@@ -4,29 +4,30 @@ import { createShouldForwardProp, get, props, space, styled, type Theme } from '
 import { useDefaultProps } from '../theme'
 import { Icon } from '../Icon'
 import { themeDefault } from '../theme/utils/themeDefault'
+import { getShapeRadius, type Shape } from '../utils/getShapeRadius'
 import { alpha } from '../utils'
 
-export type ChipVariant = 'contained' | 'outlined'
+export type ChipVariant = 'contained' | 'outlined' | 'text'
 export type ChipColor = keyof Theme['palette']
 export type ChipSize = keyof Theme['sizes']
 
-export type ChipShape = 'square' | 'rounded' | 'pill'
+export type ChipShape = Shape
 
 export interface ChipProps extends SpaceProps<Theme> {
   /** What the chip says. */
   label?: ReactNode
-  /** Filled, or only outlined - as `Button`'s. Default: `'contained'`. */
+  /** Filled, outlined, or only its text - as `Button`'s. Default: `'contained'`. */
   variant?: ChipVariant
   /** Resolves to `theme.palette`. Default: `'default'`. */
   color?: ChipColor
   /** Resolves against `theme.sizes`. Default: `'md'`. */
   size?: ChipSize
   /**
-   * Corner shape - sets the default `borderRadius`. `'square'` is 0, `'rounded'` is
-   * `theme.radii.md` (or `theme.defaults.borderRadius`), `'pill'` is a full round. Default: `'pill'`.
+   * Corner shape: `'square'` is 0, `'pill'` a full round, `'rounded'` the radius of `borderRadius`.
+   * Default: `'pill'`.
    */
   shape?: ChipShape
-  /** Corner radius, resolves against `theme.radii` - wins over `shape`. */
+  /** The radius of a `'rounded'` chip, resolves against `theme.radii`. Default: `theme.defaults.borderRadius`, else `'md'`. Other shapes ignore it. */
   borderRadius?: keyof Theme['radii']
   /** An icon before the label. An `avatar` takes its place. */
   icon?: ReactNode
@@ -53,16 +54,18 @@ interface RootStyle extends SpaceProps<Theme> {
   isDisabled: boolean
 }
 
+// The line of an outlined chip. A text chip keeps the box with a line it does not draw, so the two are one size.
+const getLine = (theme: Theme, variant: ChipVariant, color: ChipColor) => {
+  if (variant === 'text') return 'transparent'
+  return color === 'default' ? get(theme, 'border.default') : get(theme, `palette.${color}.main`)
+}
+
 const accent = (theme: Theme, color: ChipColor) =>
   color === 'default' ? get(theme, 'text.initial') : get(theme, `palette.${color}.main`)
 
 // A pill takes the height as its ends' radius, whatever the label.
-const getRadius = (theme: Theme, shape: ChipShape, borderRadius?: keyof Theme['radii']) => {
-  if (borderRadius) return theme.radii[borderRadius]
-  if (shape === 'square') return 0
-  if (shape === 'rounded') return theme.radii[themeDefault(theme, 'borderRadius', 'md')]
-  return '9999px'
-}
+const getRadius = (theme: Theme, shape: ChipShape, borderRadius?: keyof Theme['radii']) =>
+  getShapeRadius(shape, theme.radii[borderRadius ?? themeDefault(theme, 'borderRadius', 'md')])
 
 const ChipRoot = styled('div', {
   name: 'Chip',
@@ -100,9 +103,7 @@ const ChipRoot = styled('div', {
       : {
           backgroundColor: 'transparent',
           color: accent(theme, color),
-          border: `${theme.borderWidths.thin} solid ${
-            color === 'default' ? get(theme, 'border.default') : palette.main
-          }`,
+          border: `${theme.borderWidths.thin} solid ${getLine(theme, variant, color)}`,
         }),
     ...(isDisabled && { opacity: 0.5, pointerEvents: 'none' as const }),
   }

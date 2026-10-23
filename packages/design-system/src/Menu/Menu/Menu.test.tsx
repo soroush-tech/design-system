@@ -261,6 +261,40 @@ describe('Menu', () => {
     expect(screen.getByTestId('m')).toHaveClass('c')
   })
 
+  describe('corners', () => {
+    const surface = () => screen.getByRole('menu').parentElement
+
+    it('is square by default, and takes a radius of its own', () => {
+      const { unmount } = renderMenu({ defaultOpen: true })
+      expect(surface()).toHaveStyle({ borderRadius: baseTheme.radii.sq })
+      unmount()
+      renderMenu({ defaultOpen: true, borderRadius: 'lg' })
+      expect(surface()).toHaveStyle({ borderRadius: baseTheme.radii.lg })
+    })
+
+    it('is rounded as the theme rounds its surfaces, or by the radius the theme gives menus', () => {
+      const rounded = createTheme(baseTheme, { defaults: { surfaceRadius: 'md' } })
+      const { unmount } = renderWithTheme(
+        <Menu trigger={<Button>main</Button>} defaultOpen>
+          <MenuItem value="a">One</MenuItem>
+        </Menu>,
+        { wrapper: withTheme(rounded) }
+      )
+      expect(surface()).toHaveStyle({ borderRadius: baseTheme.radii.md })
+      unmount()
+      const own = createTheme(baseTheme, {
+        components: { Menu: { defaultProps: { borderRadius: 'sm' } } },
+      })
+      renderWithTheme(
+        <Menu trigger={<Button>main</Button>} defaultOpen>
+          <MenuItem value="a">One</MenuItem>
+        </Menu>,
+        { wrapper: withTheme(own) }
+      )
+      expect(surface()).toHaveStyle({ borderRadius: baseTheme.radii.sm })
+    })
+  })
+
   describe('placement', () => {
     const rect = (top: number, left: number, width: number, height: number) =>
       ({ top, left, width, height, bottom: top + height, right: left + width }) as DOMRect

@@ -33,23 +33,24 @@ Rows can come as data instead, with `items` - the same entries
 
 ## Props
 
-| Prop              | Type                                       | Default   | Description                                                                                                  |
-| ----------------- | ------------------------------------------ | --------- | ------------------------------------------------------------------------------------------------------------ |
-| `target`          | `ReactElement`                             | -         | The element whose right-click opens the menu. Its own `onContextMenu` / `onKeyDown` still run. **Required.** |
-| `children`        | `ReactNode`                                | -         | `MenuItem` rows and `MenuDivider`s.                                                                          |
-| `items`           | `MenuItemData[]`                           | -         | The rows as data, in place of `children`.                                                                    |
-| `onClose`         | `(event, reason: MenuCloseReason) => void` | -         | Fired when the menu closes: `'escapeKey'`, `'select'` or `'blur'`.                                           |
-| `onSelect`        | `(value: string \| number) => void`        | -         | Fired with a row's `value` when a row that has one is chosen.                                                |
-| `marginThreshold` | `keyof Theme['space']`                     | `2`       | The least room between the list and the window's edge.                                                       |
-| `elevation`       | `PaperElevation` (0-24)                    | `8`       | Shadow depth of the surface.                                                                                 |
-| `layer`           | `keyof Theme['zOrder']`                    | `'modal'` | Stacking layer.                                                                                              |
-| `emptyLabel`      | `ReactNode`                                | -         | Shown as one disabled row when the menu has no rows; without it, the list stays empty.                       |
-| `color`           | `keyof Theme['palette']`                   | -         | Accent color for every row.                                                                                  |
-| `textColor`       | `keyof Theme['text']`                      | -         | Base text color for every row.                                                                               |
-| `size`            | `keyof Theme['sizes']`                     | -         | Density token for every row.                                                                                 |
-| `dense`           | `boolean`                                  | -         | Compact vertical padding for every row.                                                                      |
-| `aria-label`      | `string`                                   | -         | Names the list.                                                                                              |
-| `className`       | `string`                                   | -         | Class on the menu's root.                                                                                    |
+| Prop              | Type                                       | Default                                     | Description                                                                                                  |
+| ----------------- | ------------------------------------------ | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `target`          | `ReactElement`                             | -                                           | The element whose right-click opens the menu. Its own `onContextMenu` / `onKeyDown` still run. **Required.** |
+| `children`        | `ReactNode`                                | -                                           | `MenuItem` rows and `MenuDivider`s.                                                                          |
+| `items`           | `MenuItemData[]`                           | -                                           | The rows as data, in place of `children`.                                                                    |
+| `onClose`         | `(event, reason: MenuCloseReason) => void` | -                                           | Fired when the menu closes: `'escapeKey'`, `'select'` or `'blur'`.                                           |
+| `onSelect`        | `(value: string \| number) => void`        | -                                           | Fired with a row's `value` when a row that has one is chosen.                                                |
+| `marginThreshold` | `keyof Theme['space']`                     | `2`                                         | The least room between the list and the window's edge.                                                       |
+| `elevation`       | `PaperElevation` (0-24)                    | `8`                                         | Shadow depth of the surface.                                                                                 |
+| `borderRadius`    | `keyof Theme['radii']`                     | `theme.defaults.surfaceRadius`, else square | Corner radius of the list.                                                                                   |
+| `layer`           | `keyof Theme['zOrder']`                    | `'modal'`                                   | Stacking layer.                                                                                              |
+| `emptyLabel`      | `ReactNode`                                | -                                           | Shown as one disabled row when the menu has no rows; without it, the list stays empty.                       |
+| `color`           | `keyof Theme['palette']`                   | -                                           | Accent color for every row.                                                                                  |
+| `textColor`       | `keyof Theme['text']`                      | -                                           | Base text color for every row.                                                                               |
+| `size`            | `keyof Theme['sizes']`                     | -                                           | Density token for every row.                                                                                 |
+| `dense`           | `boolean`                                  | -                                           | Compact vertical padding for every row.                                                                      |
+| `aria-label`      | `string`                                   | -                                           | Names the list.                                                                                              |
+| `className`       | `string`                                   | -                                           | Class on the menu's root.                                                                                    |
 
 ## Notes
 

@@ -29,6 +29,7 @@ export const menuCatalog = defineCatalogEntry<MenuProps>()({
     size: { scale: 'sizes', default: 'md' },
     dense: { values: [true, false], default: false },
     elevation: { values: [0, 1, 2, 4, 8, 16, 24], default: 8 },
+    borderRadius: { scale: 'radii' },
     layer: { scale: 'zOrder' },
     marginThreshold: { scale: 'space' },
     defaultOpen: { values: [true, false], default: false },

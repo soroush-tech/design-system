@@ -31,6 +31,7 @@ const meta: Meta<typeof Menu> = {
         'defaultOpen',
         'marginThreshold',
         'elevation',
+        'borderRadius',
         'layer',
         'emptyLabel',
         'color',
@@ -73,6 +74,12 @@ const meta: Meta<typeof Menu> = {
       control: { type: 'range', min: 0, max: 24, step: 1 },
       description: 'Shadow depth of the surface - resolves against `theme.shadows`.',
       table: { category: 'Visual', defaultValue: { summary: '8' } },
+    },
+    borderRadius: {
+      control: { type: 'select' },
+      options: ['sq', 'sm', 'md', 'lg'],
+      description: 'Corner radius of the list - resolves against `theme.radii`.',
+      table: { category: 'Visual' },
     },
     layer: {
       control: { type: 'select' },

@@ -33,7 +33,8 @@ import { Snackbar } from '@soroush.tech/design-system/Snackbar'
 | `transition`               | `ComponentType<TransitionProps>`                                            | `Grow`                                        | The transition that shows and hides it. It must tell `onExited`.       |
 | `layer`                    | `keyof Theme['zOrder']`                                                     | `'snackbar'`                                  | Stacking layer.                                                        |
 | `container`                | `HTMLElement \| (() => HTMLElement \| null)`                                | `document.body`                               | Portal target.                                                         |
-| `borderRadius`             | `keyof Theme['radii']`                                                      | `theme.defaults.surfaceRadius`, else square   | Corner radius.                                                         |
+| `shape`                    | `'square' \| 'rounded' \| 'pill'`                                           | `'rounded'`                                   | The corners: none, the radius of `borderRadius`, or a full round.      |
+| `borderRadius`             | `keyof Theme['radii']`                                                      | `theme.defaults.surfaceRadius`, else square   | The radius of a `'rounded'` snackbar; other shapes ignore it.          |
 | `bg`                       | `keyof Theme['background']`                                                 | `'modal'`                                     | Background.                                                            |
 | `textColor`                | `keyof Theme['text']`                                                       | `theme.defaults.textColor`, else `'initial'`  | Text color.                                                            |
 | `className`, `data-testid` |                                                                             |                                               | On the root - the place it sits in.                                    |
@@ -49,7 +50,7 @@ reason.
 
 `theme.components.Snackbar` styles the `root` (the fixed place), the `content` (the bar), the `message`
 and the `action`. Its `defaultProps` set `anchorOrigin`, `autoHideDuration`, `resumeHideDuration` and
-`layer`, `borderRadius`, `bg` and `textColor`. The `snackbar` key of `theme.zOrder` is its layer.
+`layer`, `shape`, `borderRadius`, `bg` and `textColor`. The `snackbar` key of `theme.zOrder` is its layer.
 
 ## Server rendering
 

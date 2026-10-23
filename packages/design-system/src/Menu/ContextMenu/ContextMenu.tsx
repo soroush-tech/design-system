@@ -46,6 +46,8 @@ export interface ContextMenuProps {
   /** The least room between the list and the window's edge - a `theme.space` key. Default: `2`. */
   marginThreshold?: keyof Theme['space']
   /** Shadow depth of the surface. Default: `8`. */
+  /** Corner radius of the list, resolves against `theme.radii`. Default: `theme.defaults.surfaceRadius`, else square. */
+  borderRadius?: keyof Theme['radii']
   elevation?: PaperElevation
   /** Stacking layer from `theme.zOrder`. Default: `'modal'`. */
   layer?: keyof Theme['zOrder']
@@ -107,6 +109,7 @@ export function ContextMenu({
   marginThreshold: marginThresholdProp,
   elevation: elevationProp,
   layer: layerProp,
+  borderRadius: borderRadiusProp,
   emptyLabel,
   color: colorProp,
   textColor: textColorProp,
@@ -121,6 +124,7 @@ export function ContextMenu({
   const marginThreshold = marginThresholdProp ?? dp.marginThreshold ?? 2
   const elevation = elevationProp ?? dp.elevation ?? 8
   const layer = layerProp ?? dp.layer ?? 'modal'
+  const borderRadius = borderRadiusProp ?? dp.borderRadius
   const color = colorProp ?? dp.color
   const textColor = textColorProp ?? dp.textColor
   const size = sizeProp ?? dp.size
@@ -216,6 +220,7 @@ export function ContextMenu({
           elevation={elevation}
           layer={layer}
           margin={margin}
+          borderRadius={borderRadius}
           onKeyDown={handleSurfaceKeyDown}
         >
           <MenuContext.Provider value={menuContext}>
