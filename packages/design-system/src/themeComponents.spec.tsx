@@ -564,6 +564,7 @@ const cases: Case[] = [
   },
   { name: 'Checkbox', slot: 'input', label: 'CheckboxInput', ui: <Checkbox /> },
   { name: 'Checkbox', slot: 'icon', label: 'CheckboxIcon', ui: <Checkbox /> },
+  { name: 'Checkbox', slot: 'label', label: 'CheckboxLabel', ui: <Checkbox>Label</Checkbox> },
   {
     name: 'CircularProgress',
     slot: 'track',
@@ -719,6 +720,7 @@ const cases: Case[] = [
   },
   { name: 'Radio', slot: 'input', label: 'RadioInput', ui: <Radio /> },
   { name: 'Radio', slot: 'icon', label: 'RadioIcon', ui: <Radio /> },
+  { name: 'Radio', slot: 'label', label: 'RadioLabel', ui: <Radio>Label</Radio> },
   {
     name: 'Select',
     slot: 'value',
@@ -764,6 +766,7 @@ const cases: Case[] = [
   { name: 'Switch', slot: 'input', label: 'SwitchInput', ui: <Switch /> },
   { name: 'Switch', slot: 'track', label: 'SwitchTrack', ui: <Switch /> },
   { name: 'Switch', slot: 'thumb', label: 'SwitchThumb', ui: <Switch /> },
+  { name: 'Switch', slot: 'label', label: 'SwitchLabel', ui: <Switch>Label</Switch> },
   {
     name: 'TableSortLabel',
     slot: 'icon',

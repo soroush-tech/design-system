@@ -48,6 +48,8 @@ export interface TransferListProps extends SpaceProps<Theme> {
   size?: keyof Theme['sizes']
   /** The checkboxes' and buttons' color - resolves to `theme.palette`. Default: its `FormControl`'s. */
   color?: keyof Theme['palette']
+  /** The text color of the titles - resolves to `theme.text`. Default: its `FormControl`'s or `Form`'s. */
+  textColor?: keyof Theme['text']
   disabled?: boolean
   /** The lists take the error color. */
   error?: boolean
@@ -174,6 +176,7 @@ interface ListProps {
   getCountLabel: (checked: number, total: number) => string
   size: keyof Theme['sizes']
   color?: keyof Theme['palette']
+  textColor?: keyof Theme['text']
   disabled: boolean
   isError: boolean
 }
@@ -187,6 +190,7 @@ function List({
   getCountLabel,
   size,
   color,
+  textColor,
   disabled,
   isError,
 }: Readonly<ListProps>) {
@@ -212,13 +216,15 @@ function List({
           />
         )}
         <TransferListTitle id={titleId}>
-          <Typography variant="subtitle2" as="span">
+          <Typography variant="subtitle2" as="span" color={textColor}>
             {title}
           </Typography>
         </TransferListTitle>
         {hasSelectAll && (
           <TransferListCount>
-            <Typography variant="caption">{getCountLabel(checkedCount, items.length)}</Typography>
+            <Typography variant="caption" color={textColor}>
+              {getCountLabel(checkedCount, items.length)}
+            </Typography>
           </TransferListCount>
         )}
       </TransferListHeader>
@@ -238,7 +244,7 @@ function List({
                 checked={state.isChecked(item)}
                 onChange={() => state.toggle(item)}
               >
-                <Typography variant="body2" as="span" id={labelId}>
+                <Typography variant="body2" as="span" id={labelId} color={textColor}>
                   {item.label}
                 </Typography>
               </Checkbox>
@@ -274,6 +280,7 @@ export function TransferList({
   getCountLabel = (checked, total) => `${checked}/${total}`,
   size: sizeProp,
   color: colorProp,
+  textColor: textColorProp,
   disabled: disabledProp,
   error: errorProp,
   id: idProp,
@@ -291,6 +298,7 @@ export function TransferList({
     disabled: disabledProp,
     size: sizeProp ?? dp.size,
     color: colorProp ?? dp.color,
+    textColor: textColorProp,
   })
   const baseId = useId()
   const moveAllRightLabel = moveAllRightLabelProp ?? dp.moveAllRightLabel
@@ -327,6 +335,7 @@ export function TransferList({
         getCountLabel={getCountLabel}
         size={fc.size}
         color={fc.color}
+        textColor={fc.textColor}
         disabled={fc.disabled}
         isError={fc.error}
       />
@@ -387,6 +396,7 @@ export function TransferList({
         getCountLabel={getCountLabel}
         size={fc.size}
         color={fc.color}
+        textColor={fc.textColor}
         disabled={fc.disabled}
         isError={fc.error}
       />

@@ -760,7 +760,7 @@ export interface ThemeComponents {
   Button?: ComponentConfig<ButtonOwnerState, 'root' | 'label' | 'icon' | 'loader'>
   ButtonGroup?: ComponentConfig
   Card?: ComponentConfig<CardOwnerState, 'root' | 'title' | 'caption' | 'icon'>
-  Checkbox?: ComponentConfig<Record<string, unknown>, 'root' | 'input' | 'icon'>
+  Checkbox?: ComponentConfig<Record<string, unknown>, 'root' | 'input' | 'icon' | 'label'>
   CircularProgress?: ComponentConfig<Record<string, unknown>, 'root' | 'track' | 'circle'>
   ContextMenu?: ComponentConfig<ContextMenuOwnerState, 'root' | 'paper'>
   Drawer?: ComponentConfig
@@ -800,7 +800,7 @@ export interface ThemeComponents {
   Popover?: ComponentConfig<Record<string, unknown>, 'root' | 'positioner'>
   Pressable?: ComponentConfig<PressableOwnerState>
   Quote?: ComponentConfig
-  Radio?: ComponentConfig<Record<string, unknown>, 'root' | 'input' | 'icon'>
+  Radio?: ComponentConfig<Record<string, unknown>, 'root' | 'input' | 'icon' | 'label'>
   RangeInput?: ComponentConfig<
     RangeInputOwnerState,
     'root' | 'rail' | 'track' | 'thumb' | 'mark' | 'markLabel' | 'valueLabel' | 'input'
@@ -859,7 +859,7 @@ export interface ThemeComponents {
   Sidebar?: ComponentConfig<Record<string, unknown>, 'root' | 'rail' | 'panel'>
   SidebarItem?: ComponentConfig
   Skeleton?: ComponentConfig<Record<string, unknown>, 'root' | 'content'>
-  Switch?: ComponentConfig<Record<string, unknown>, 'root' | 'input' | 'track' | 'thumb'>
+  Switch?: ComponentConfig<Record<string, unknown>, 'root' | 'input' | 'track' | 'thumb' | 'label'>
   Tab?: ComponentConfig<TabOwnerState, 'root' | 'label' | 'icon' | 'secondaryAction' | 'close'>
   Table?: ComponentConfig
   TableBody?: ComponentConfig

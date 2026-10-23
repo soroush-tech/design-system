@@ -365,13 +365,24 @@ export function TextInput({
   }
 
   let inputElement = (
-    <StyledInput inputComponent={resolvedInputComponent} inputSize={inputSize} {...inputElProps} />
+    <StyledInput
+      inputComponent={resolvedInputComponent}
+      // One character wide unless asked for more: the field is as wide as `theme.defaults.inputMinWidth`,
+      // as every input is, not as wide as twenty characters of its font.
+      inputSize={inputSize ?? (resolvedInputComponent ? undefined : 1)}
+      {...inputElProps}
+    />
   )
   if (isTextarea) {
     inputElement = isAutoResize ? (
-      <StyledAutoResizeTextarea {...inputElProps} minRows={minRows ?? rows} maxRows={maxRows} />
+      <StyledAutoResizeTextarea
+        {...inputElProps}
+        cols={1}
+        minRows={minRows ?? rows}
+        maxRows={maxRows}
+      />
     ) : (
-      <StyledTextarea {...inputElProps} />
+      <StyledTextarea {...inputElProps} cols={1} />
     )
   }
 
