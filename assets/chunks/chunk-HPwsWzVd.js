@@ -1,1 +1,0 @@
-import{n as e,p as t}from"./chunk-Cr0TXWWC.js";import{$ as n,i as r}from"./chunk-DxmIq5g-.js";import{t as i}from"./chunk-CgQ_KKMA.js";var a=n();function o({source:n,title:o}){return(0,a.jsxs)(e,{sidebar:(0,a.jsx)(i,{}),children:[o&&(0,a.jsx)(r,{variant:`h1`,gutterBottom:!0,children:o}),(0,a.jsx)(t,{source:n,stripChrome:!!o})]})}export{o as t};

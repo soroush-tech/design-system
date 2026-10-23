@@ -16,6 +16,7 @@ https://mcp.soroush.tech/mcp (or `npx -y @soroush.tech/mcp`).
 
 ## Components
 
+- [ScrollArea](https://docs.soroush.tech/design-system/components/scroll-area/): A scrolling area whose scrollbars are drawn **over** its content rather than beside it - so a rounded
 - [View](https://docs.soroush.tech/design-system/components/view/): The base layout primitive. Renders as `<div>`. All styled-system prop groups are supported: space, layout, color, typography, flexbox, border, and position.
 - [Flex](https://docs.soroush.tech/design-system/components/flex/): Extends [`View`](https://docs.soroush.tech/design-system/components/view/). Renders as a `<div>` with `display: flex` and `flex-direction: column` by default.
 - [Grid](https://docs.soroush.tech/design-system/components/grid/): Extends [`View`](https://docs.soroush.tech/design-system/components/view/). Renders as a `<div>` with `display: grid`.
@@ -42,6 +43,13 @@ https://mcp.soroush.tech/mcp (or `npx -y @soroush.tech/mcp`).
 - [TablePaginationActions](https://docs.soroush.tech/design-system/api/table-pagination-actions/): The first / previous / next / last icon-button cluster used inside `TablePagination`, exported
 - [TableRow](https://docs.soroush.tech/design-system/api/table-row/): A row in a table. Renders `<tr>` with optional hover and selected shading.
 - [TableSortLabel](https://docs.soroush.tech/design-system/api/table-sort-label/): A button-based label for sortable column headers, placed inside a header `TableCell`. Renders the
+- [Accordion](https://docs.soroush.tech/design-system/components/accordion/): A heading that opens and closes a region of content. The first child is the `AccordionSummary` - a
+- [AccordionActions](https://docs.soroush.tech/design-system/api/accordion-actions/): The foot of an `Accordion` region: its buttons, at the end of a row. It must sit in an `Accordion`, and takes the side padding of its `hasGutters`.
+- [AccordionDetails](https://docs.soroush.tech/design-system/api/accordion-details/): What an `Accordion` opens: the padded body of its region. It must sit in an `Accordion`, and takes the side padding of its `hasGutters`.
+- [AccordionGroup](https://docs.soroush.tech/design-system/api/accordion-group/): A column of accordions that move by the keys - ArrowDown and ArrowUp step between their summaries, round the ends, Home and End go to the first and the last, and one that is off is skipped - and, with `isExclusive`, keep one open at a time.
+- [AccordionSummary](https://docs.soroush.tech/design-system/api/accordion-summary/): The header of an `Accordion`: a button in a heading that opens and closes it. It carries `aria-expanded` and `aria-controls` for the region, and an icon that turns as it opens. It must sit in an `Accordion`.
+- [Autocomplete](https://docs.soroush.tech/design-system/components/autocomplete/): A field whose text finds an option in a list: a `role="combobox"` input with a `role="listbox"` below it
+- [Fab](https://docs.soroush.tech/design-system/components/fab/): A floating action button: the one main action of a page, circular - its icon - or extended, a pill
 - [Button](https://docs.soroush.tech/design-system/components/button/): Renders as `<button>`. Sharp corners, uppercase, bold, tight letter-spacing - matching the Kinetic Architecture aesthetic. Supports three visual variants, six semantic color palettes, three sizes, start/end icon slots, full-width mode, and a loading state with configurable indicator position.
 - [ButtonGroup](https://docs.soroush.tech/design-system/components/button-group/): Groups related `Button` immediate children into a visually joined cluster - adjacent borders
 - [ToggleButton](https://docs.soroush.tech/design-system/components/toggle-button/): An individual toggle button (text or icon) - usable standalone or inside a `ToggleButtonGroup`.
@@ -50,8 +58,8 @@ https://mcp.soroush.tech/mcp (or `npx -y @soroush.tech/mcp`).
 - [Checkbox](https://docs.soroush.tech/design-system/components/checkbox/): A binary toggle control. Supports controlled and uncontrolled usage, six semantic color palettes, two sizes, indeterminate state, and custom icons.
 - [Radio](https://docs.soroush.tech/design-system/components/radio/): A single-selection control for use within a group. Supports controlled checked state, six semantic color palettes, two sizes, and custom icons.
 - [Rating](https://docs.soroush.tech/design-system/components/rating/): A row of icons the user sets as a rating - or, read-only, a display of one. A group of visually
-- [NumberField](https://docs.soroush.tech/design-system/components/number-field/): A field for a number. A text input - so what is typed is the user's until it is settled - that
-- [InputRange](https://docs.soroush.tech/design-system/components/input-range/): A slider: one value on a range, or two or more thumbs for a range of values. Each thumb is a
+- [NumberInput](https://docs.soroush.tech/design-system/components/number-input/): A field for a number. A text input - so what is typed is the user's until it is settled - that
+- [RangeInput](https://docs.soroush.tech/design-system/components/range-input/): A slider: one value on a range, or two or more thumbs for a range of values. Each thumb is a
 - [TransferList](https://docs.soroush.tech/design-system/components/transfer-list/): Two lists, and the buttons that move the checked items from one to the other. Each list is a list of
 - [Switch](https://docs.soroush.tech/design-system/components/switch/): A sliding toggle control. Supports controlled and uncontrolled usage, six semantic color palettes, two sizes, four visual variants, and custom thumb icons.
 - [NativeSelect](https://docs.soroush.tech/design-system/components/native-select/): Not the recommended select: use [`Select`](https://docs.soroush.tech/design-system/components/select/) - and `<Select native>` when you
@@ -75,10 +83,23 @@ https://mcp.soroush.tech/mcp (or `npx -y @soroush.tech/mcp`).
 - [TabList](https://docs.soroush.tech/design-system/api/tab-list/): The `Tabs` of a `TabContext`: it shows the context's value and chooses through it, and links each
 - [TabPanel](https://docs.soroush.tech/design-system/api/tab-panel/): The content a tab shows: a `role="tabpanel"` named by its tab, which in turn `aria-controls` it.
 - [TabScrollButton](https://docs.soroush.tech/design-system/api/tab-scroll-button/): The button that scrolls a row of tabs. A `Tabs` with `overflowBehavior="scroll"` shows one at each
+- [FabMenu](https://docs.soroush.tech/design-system/components/fab-menu/): A `Fab` that opens a stack of actions - extended pills, each a `FabMenuItem` - from one corner of a page.
+- [FabMenuItem](https://docs.soroush.tech/design-system/api/fab-menu-item/): One action of a `FabMenu`: an extended `Fab` of the menu's size - a pill with an icon and a label. Pressing
+- [Snackbar](https://docs.soroush.tech/design-system/components/snackbar/): A transient message in a corner of the window, through a `Portal`. It hides itself after
+- [Alert](https://docs.soroush.tech/design-system/components/alert/): An inline message with a severity: an icon, the message, an optional `AlertTitle`, an action and a
+- [AlertTitle](https://docs.soroush.tech/design-system/api/alert-title/): The title of an `Alert`: its first line of the message, in a heavier weight.
+- [Badge](https://docs.soroush.tech/design-system/components/badge/): A count or a dot anchored over another element. The badge is decoration: it is hidden from assistive
+- [Chip](https://docs.soroush.tech/design-system/components/chip/): A compact tag: a label, an optional icon or avatar, and - given `onClick` - a button, and - given
 - [CircularProgress](https://docs.soroush.tech/design-system/components/circular-progress/): Renders a circular loading indicator. Supports `indeterminate` (looping) and `determinate` (value-driven) variants. The stroke color is set via CSS `currentColor`; the `color` prop resolves to `theme.palette[color].main`.
 - [LinearProgress](https://docs.soroush.tech/design-system/components/linear-progress/): Renders a horizontal loading bar - the linear counterpart of `CircularProgress`. Supports `indeterminate` (looping), `determinate` (value-driven), and `query` (reversed loop) variants, plus a `buffer` mode on top of `determinate`. All fills use CSS `currentColor`; the `color` prop resolves to `theme.palette[color].main`.
 - [Skeleton](https://docs.soroush.tech/design-system/components/skeleton/): Displays a low-fidelity placeholder while content loads, reducing layout shift and signalling a loading state. Supports three shapes, two animations (or none), explicit or child-inferred dimensions, and derives all colors from theme tokens.
 - [Backdrop](https://docs.soroush.tech/design-system/components/backdrop/): A dimmed, full-viewport scrim rendered behind a modal's content. Built on `View`, so it accepts every `View` prop (background, spacing, layout, event handlers, etc.).
+- [Collapse](https://docs.soroush.tech/design-system/components/collapse/): Opens and closes its content by its height - or, horizontal, its width. The size it moves to is
+- [Fade](https://docs.soroush.tech/design-system/components/fade/): Fades one child in and out by its opacity. The child holds a `ref` and takes a `style` - a `ref`-holding component, or a DOM element - and the transition draws its opacity on it. Out, the child is hidden, so it takes no click or focus. A user who asked for less motion (`prefers-reduced-motion: reduce`) sees it change at once, and the callbacks still fire.
+- [Grow](https://docs.soroush.tech/design-system/components/grow/): Grows one child in from a little smaller, fading as it does, and shrinks it out. The child holds a `ref` and takes a `style` - a `ref`-holding component, or a DOM element - and the transition draws its opacity and its scale on it. Out, the child is hidden, so it takes no click or focus. A user who asked for less motion (`prefers-reduced-motion: reduce`) sees it change at once, and the callbacks still fire.
+- [Slide](https://docs.soroush.tech/design-system/components/slide/): Slides one child in from an edge of the window and back out. The child holds a `ref` and takes a `style` - a `ref`-holding component, or a DOM element - and the transition draws its position on it. Out, the child is hidden, so it takes no click or focus. A user who asked for less motion (`prefers-reduced-motion: reduce`) sees it change at once, and the callbacks still fire.
+- [Zoom](https://docs.soroush.tech/design-system/components/zoom/): Zooms one child in from nothing and out to nothing. The child holds a `ref` and takes a `style` - a `ref`-holding component, or a DOM element - and the transition draws its scale on it. Out, the child is hidden, so it takes no click or focus. A user who asked for less motion (`prefers-reduced-motion: reduce`) sees it change at once, and the callbacks still fire.
+- [Tooltip](https://docs.soroush.tech/design-system/components/tooltip/): A short description of one child, shown on hover, keyboard focus and a long touch - a
 - [Portal](https://docs.soroush.tech/design-system/components/portal/): Renders its children into a DOM node outside the parent component hierarchy - the document body by default. Used by overlay components (Modal, Drawer) so their content escapes ancestor `overflow`/`transform`/stacking contexts.
 - [FocusTrap](https://docs.soroush.tech/design-system/components/focus-trap/): Keeps keyboard focus within its children while active. On activation it moves focus inside, cycles `Tab` / `Shift+Tab` at the boundaries, pulls focus back when it escapes, and restores focus to the previously focused element on deactivation. Used by Modal to make overlays keyboard-accessible.
 - [Modal](https://docs.soroush.tech/design-system/components/modal/): A low-level, accessible overlay primitive. Portals its content, dims the page with a `Backdrop`, traps focus, locks body scroll, and closes on Escape (top modal only) or backdrop click. Higher-level overlays - such as `Drawer` - are built on top of it.
@@ -129,6 +150,61 @@ https://mcp.soroush.tech/mcp (or `npx -y @soroush.tech/mcp`).
 ---
 
 # Component reference
+
+## ScrollArea
+Import: `import { ScrollArea } from '@soroush.tech/design-system/ScrollArea'`
+A scrolling area whose scrollbars are drawn **over** its content rather than beside it - so a rounded
+panel keeps its corner clean - and show only while the pointer is over the area or focus is inside it.
+Scrolling itself stays native: the wheel, the keyboard and touch work as they do anywhere. Each axis that
+overflows gets a track, down the right edge or along the bottom, whose thumb drags and whose track pages
+one view toward the pointer, as a native one does.
+
+```tsx
+import { ScrollArea } from '@soroush.tech/design-system/ScrollArea'
+
+;<ScrollArea maxHeight={240} aria-label="Notes" tabIndex={0}>
+  {notes}
+</ScrollArea>
+```
+## Props
+
+| Prop                                                                | Type                   | Default | Description                                                                                          |
+| ------------------------------------------------------------------- | ---------------------- | ------- | ---------------------------------------------------------------------------------------------------- |
+| `children`                                                          | `ReactNode`            | -       | What scrolls.                                                                                        |
+| `axes`                                                              | `'y' \| 'x' \| 'both'` | `'y'`   | Which ways it scrolls. An axis it does not scroll is `overflow: hidden`.                             |
+| `viewportRef`                                                       | `Ref<HTMLDivElement>`  | -       | The scrolling element - for code that reads or sets its scroll.                                      |
+| `maxHeight`, `height`, `minHeight`, `width`, `minWidth`, `maxWidth` | styled-system layout   | -       | A ceiling for an area that otherwise grows with its content - a menu. Instance props win over theme. |
+| `tabIndex`                                                          | `0`                    | -       | Puts the scrolling box in the tab order, so the keys scroll it - for content with nothing focusable. |
+| `aria-label`, `aria-labelledby`                                     | `string`               | -       | Name the scrolling box, which then is a `region`.                                                    |
+| space props, `className`, `data-testid`                             |                        |         | On the root.                                                                                         |
+
+Without `maxHeight` it is `flex: 1 1 auto` with `minHeight: 0`: as tall as its content and no taller than
+its container allows, which is what lets a dialog grow to the window and then scroll.
+
+## Scrolling
+
+An axis it scrolls keeps the wheel at its ends (`overscroll-behavior: none`), so a list does not scroll the
+panel behind it. An axis it does not scroll passes the wheel on, so a sideways area inside a vertical one
+never swallows the vertical wheel over it.
+
+## Customization
+
+`theme.components.ScrollArea` styles the `root`, the `viewport` (the box that scrolls), the `track` and the
+`thumb`. Its `defaultProps` set `axes`. The look is tokens:
+
+- `theme.background.scrollbar` - the thumb; `theme.background.scrollbarTrack` - the track while it is hovered
+  or dragged. Both are translucent, so the content shows through.
+- `theme.border.default` - the line on the inner side of the track while it is hovered or dragged.
+- The track is `theme.space[1.25]` wide, the thumb `theme.space[0.75]`, fading in over
+  `theme.transitions.duration.short` (and not at all under `prefers-reduced-motion`).
+
+## Accessibility
+
+- The native scrollbar is hidden; the drawn one is `aria-hidden` and a pointer aid only. The box underneath
+  is native, so the wheel, touch and (with `tabIndex={0}`) the keyboard scroll it.
+- A scrolling box with nothing focusable in it should be in the tab order (`tabIndex={0}`) and named
+  (`aria-label`), or a keyboard user cannot scroll it.
+- Server rendering: it renders the box and no bar; the bars are measured after mount.
 
 ## View
 Import: `import { View } from '@soroush.tech/design-system/View'`
@@ -2340,6 +2416,302 @@ Native button attributes (`onClick`, `aria-label`, `disabled`, ...) and `space` 
   active column's icon is always fully opaque. Set `shouldHideSortIcon={false}` - per label or
   once on the `Table` - to keep inactive icons permanently visible (dimmed).
 
+## Accordion
+Import: `import { Accordion } from '@soroush.tech/design-system/Accordion'`
+A heading that opens and closes a region of content. The first child is the `AccordionSummary` - a
+button in a heading - and the rest is the region it opens: a `role="region"` named by the summary,
+which in turn carries `aria-expanded` and `aria-controls`. The region opens and closes with
+`Collapse`, or the transition given. Open or closed it owns, until `isExpanded` takes it over.
+
+```tsx
+import {
+  Accordion,
+  AccordionActions,
+  AccordionDetails,
+  AccordionSummary,
+} from '@soroush.tech/design-system/Accordion'
+
+;<Accordion>
+  <AccordionSummary>Shipping</AccordionSummary>
+  <AccordionDetails>It leaves on Monday.</AccordionDetails>
+  <AccordionActions>
+    <Button variant="text">Track</Button>
+  </AccordionActions>
+</Accordion>
+```
+## Props
+
+| Prop                             | Type                                      | Default                                      | Description                                                    |
+| -------------------------------- | ----------------------------------------- | -------------------------------------------- | -------------------------------------------------------------- |
+| `children`                       | `ReactNode`                               | -                                            | An `AccordionSummary`, then what it opens.                     |
+| `isExpanded` / `defaultExpanded` | `boolean`                                 | `false`                                      | Whether it is open - controlled with `onChange`, or at first.  |
+| `onChange`                       | `(event, isExpanded: boolean) => void`    | -                                            | Fired when the summary is pressed, with the state it asks for. |
+| `disabled`                       | `boolean`                                 | `false`                                      | Stays as it is, and its summary is off.                        |
+| `hasGutters`                     | `boolean`                                 | `true`                                       | Side padding on the summary, the details and the actions.      |
+| `transition`                     | `ComponentType<AccordionTransitionProps>` | `Collapse`                                   | The transition that opens and closes the region.               |
+| `borderRadius`                   | `keyof Theme['radii']`                    | `theme.defaults.surfaceRadius`, else square  | Corner radius.                                                 |
+| `bg`                             | `keyof Theme['background']`               | `'paper'`                                    | Background.                                                    |
+| `textColor`                      | `keyof Theme['text']`                     | `theme.defaults.textColor`, else `'initial'` | Text color.                                                    |
+| `className`, `data-testid`       |                                           |                                              | On the root.                                                   |
+
+It takes the styled-system space props too.
+
+## The parts
+
+| Part               | What it is                                                                                        |
+| ------------------ | ------------------------------------------------------------------------------------------------- |
+| `AccordionSummary` | The button in a heading. `expandIcon` is the icon that turns; `headingLevel` its level.           |
+| `AccordionDetails` | The padded body of the region.                                                                    |
+| `AccordionActions` | The foot of the region: buttons at the end of a row.                                              |
+| `AccordionGroup`   | A column of accordions: the arrows, Home and End move between them; `isExclusive` keeps one open. |
+
+Each part reads the `Accordion` it sits in, and says so if it sits in none.
+
+## Keys
+
+A summary is a button: Enter and Space open and close it. Inside an `AccordionGroup`:
+
+| Key                | Does                                                                   |
+| ------------------ | ---------------------------------------------------------------------- |
+| ArrowDown, ArrowUp | Next and previous summary, round the ends; one that is off is skipped. |
+| Home, End          | The first and the last summary.                                        |
+
+## Customization
+
+`theme.components.Accordion` styles the `root` and the `region`; `AccordionSummary` its `root` (the
+heading), `button`, `content` and `icon`; `AccordionDetails`, `AccordionActions` and
+`AccordionGroup` their `root`. `defaultProps` set `hasGutters`, `borderRadius`, `bg` and `textColor` (`Accordion`), `headingLevel`
+(`AccordionSummary`) and `isExclusive` (`AccordionGroup`).
+
+## Accessibility
+
+- The summary is a `button` in a heading - the level is yours: `headingLevel`.
+- Closed, the region is `visibility: hidden`, so its content is out of the tab order and has no
+  name; open, it is a named `region`.
+- The icon is decoration, hidden from assistive technology; it does not turn under reduced motion.
+
+## AccordionActions
+Import: `import { AccordionActions } from '@soroush.tech/design-system/Accordion'`
+The foot of an `Accordion` region: its buttons, at the end of a row. It must sit in an `Accordion`, and takes the side padding of its `hasGutters`.
+
+```tsx
+<AccordionActions>
+  <Button variant="text">Track</Button>
+</AccordionActions>
+```
+## Props
+
+| Prop                       | Type        | Default | Description  |
+| -------------------------- | ----------- | ------- | ------------ |
+| `children`                 | `ReactNode` | -       | The buttons. |
+| `className`, `data-testid` |             |         | On the root. |
+
+## Customization
+
+`theme.components.AccordionActions` styles the `root`.
+
+## AccordionDetails
+Import: `import { AccordionDetails } from '@soroush.tech/design-system/Accordion'`
+What an `Accordion` opens: the padded body of its region. It must sit in an `Accordion`, and takes the side padding of its `hasGutters`.
+
+```tsx
+<AccordionDetails>It leaves on Monday.</AccordionDetails>
+```
+## Props
+
+| Prop                       | Type        | Default | Description               |
+| -------------------------- | ----------- | ------- | ------------------------- |
+| `children`                 | `ReactNode` | -       | What the accordion opens. |
+| `className`, `data-testid` |             |         | On the root.              |
+
+## Customization
+
+`theme.components.AccordionDetails` styles the `root`.
+
+## AccordionGroup
+Import: `import { AccordionGroup } from '@soroush.tech/design-system/Accordion'`
+A column of accordions that move by the keys - ArrowDown and ArrowUp step between their summaries, round the ends, Home and End go to the first and the last, and one that is off is skipped - and, with `isExclusive`, keep one open at a time.
+
+```tsx
+<AccordionGroup isExclusive>
+  <Accordion>...</Accordion>
+  <Accordion>...</Accordion>
+</AccordionGroup>
+```
+## Props
+
+| Prop                       | Type                        | Default       | Description                                                                                             |
+| -------------------------- | --------------------------- | ------------- | ------------------------------------------------------------------------------------------------------- |
+| `children`                 | `ReactNode`                 | -             | The accordions.                                                                                         |
+| `isExclusive`              | `boolean`                   | `false`       | Opening one closes the others. An accordion that was open at first stays until another is opened.       |
+| `variant`                  | `'separated' \| 'attached'` | `'separated'` | `'attached'` joins them into one block: no gap, one border at each joint, only the outer corners round. |
+| `className`, `data-testid` |                             |               | On the root.                                                                                            |
+
+An accordion given `isExpanded` is its owner's, and the group leaves it alone. A key on any control in a region but a summary is that control's own. It takes the styled-system space props too.
+
+## Customization
+
+`theme.components.AccordionGroup` styles the `root`. Its `defaultProps` set `isExclusive` and `variant`.
+
+## AccordionSummary
+Import: `import { AccordionSummary } from '@soroush.tech/design-system/Accordion'`
+The header of an `Accordion`: a button in a heading that opens and closes it. It carries `aria-expanded` and `aria-controls` for the region, and an icon that turns as it opens. It must sit in an `Accordion`.
+
+```tsx
+<AccordionSummary headingLevel={2}>Shipping</AccordionSummary>
+```
+## Props
+
+| Prop                       | Type        | Default                | Description                      |
+| -------------------------- | ----------- | ---------------------- | -------------------------------- |
+| `children`                 | `ReactNode` | -                      | What the header says.            |
+| `expandIcon`               | `ReactNode` | the `expand_more` icon | The icon that turns as it opens. |
+| `headingLevel`             | `1          | 2                      | 3                                | 4   | 5   | 6`  | `3` | The level of the heading the button sits in. |
+| `className`, `data-testid` |             |                        | On the heading.                  |
+
+## Customization
+
+`theme.components.AccordionSummary` styles the `root` (the heading), the `button`, its `content` and the `icon`. Its `defaultProps` set `headingLevel`.
+
+## Autocomplete
+Import: `import { Autocomplete } from '@soroush.tech/design-system/Autocomplete'`
+A field whose text finds an option in a list: a `role="combobox"` input with a `role="listbox"` below it
+(in a `Portal`, placed under the field and flipped for want of room), `aria-activedescendant` on the
+highlighted option. It chooses one option, or several with `multiple` - each shown as a `Chip` - or, with
+`shouldAllowFreeText`, takes what is typed as a value. In a `FormControl` its `FormLabel` names it, and its
+size, color, error and disabled state apply. The words - clear, open, close, loading, nothing found - are
+yours: no built-in English.
+
+```tsx
+import { Autocomplete } from '@soroush.tech/design-system/Autocomplete'
+
+;<Autocomplete
+  options={['Berlin', 'Lisbon', 'Oslo']}
+  aria-label="City"
+  noOptionsText="No city matches"
+  onChange={(event, city) => setCity(city)}
+/>
+```
+## Props
+
+| Prop                                                              | Type                                                   | Default                                           | Description                                                                            |
+| ----------------------------------------------------------------- | ------------------------------------------------------ | ------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `options`                                                         | `readonly T[]`                                         | -                                                 | What can be chosen - strings, or anything `getOptionLabel` can say.                    |
+| `value` / `defaultValue`                                          | `T \| null`, or `T[]` with `multiple`                  | `null` / `[]`                                     | The choice. Controlled with `onChange`, or at first.                                   |
+| `onChange`                                                        | `(event, value, reason) => void`                       | -                                                 | `reason`: `'selectOption'`, `'removeOption'`, `'createOption'` or `'clear'`.           |
+| `inputValue` / `onInputChange`                                    | `string` / `(event, value, reason) => void`            | -                                                 | The text, controlled. `reason`: `'input'`, `'reset'` or `'clear'`.                     |
+| `multiple`                                                        | `boolean`                                              | `false`                                           | Chooses several: each shows as a `Chip`, and Backspace in the empty field removes one. |
+| `shouldAllowFreeText`                                             | `boolean`                                              | `false`                                           | Takes a typed text that is no option as the value - a string - on Enter or on leaving. |
+| `getOptionLabel`                                                  | `(option) => string`                                   | the string, else `label`                          | What an option says, and what is typed to find it.                                     |
+| `isOptionEqualToValue`                                            | `(option, value) => boolean`                           | `===`                                             | Whether an option is the value.                                                        |
+| `filterOptions`                                                   | `(options, { inputValue }) => T[]`                     | label holds the text                              | The options that match what is typed.                                                  |
+| `groupBy`                                                         | `(option) => string`                                   | -                                                 | The group of an option - options of one group are put next to one another.             |
+| `renderOption`                                                    | `(option, { isSelected, isHighlighted }) => ReactNode` | the label                                         | What an option shows in its row.                                                       |
+| `isLoading` / `loadingText`                                       | `boolean` / `string`                                   | `false` / -                                       | While there is nothing to list, the list says `loadingText`.                           |
+| `noOptionsText`                                                   | `string`                                               | -                                                 | What the list says when nothing matches. Without it, the list stays closed.            |
+| `clearLabel`                                                      | `string`                                               | -                                                 | Names the clear control. Without it, there is none.                                    |
+| `openLabel` / `closeLabel`                                        | `string`                                               | -                                                 | Name the control that opens and closes the list.                                       |
+| `getRemoveLabel`                                                  | `(label) => string`                                    | -                                                 | Names the control that removes a chip, by its label. Without it, a chip has none.      |
+| `variant` / `size` / `color`                                      |                                                        | its `FormControl`'s                               | The frame, as `TextInput`'s; `theme.sizes`; `theme.palette`.                           |
+| `disabled` / `error` / `required` / `fullWidth`                   | `boolean`                                              | its `FormControl`'s                               | Native state.                                                                          |
+| `textColor`                                                       | `keyof Theme['text']`                                  | the focus color                                   | Text color.                                                                            |
+| `borderRadius`                                                    | `keyof Theme['radii']`                                 | field square; list `theme.defaults.surfaceRadius` | Corner radius of the field (`default` and `outlined` frames) and of the list.          |
+| `bg`                                                              | `keyof Theme['background']`                            | `'modal'`                                         | Background of the list.                                                                |
+| `layer`                                                           | `keyof Theme['zOrder']`                                | `'modal'`                                         | Stacking layer of the list.                                                            |
+| `placeholder`, `name`, `id`, `className`, `aria-*`, `data-testid` |                                                        |                                                   | On the field.                                                                          |
+
+## Keyboard
+
+- ArrowDown and ArrowUp open the list, then step through the options, round the ends.
+- Home and End go to the first and the last option while the list is being walked - otherwise they move the caret.
+- Enter chooses the highlighted option, or takes the text with `shouldAllowFreeText`.
+- Escape closes the list. Leaving the field puts back the chosen option's label.
+
+## Customization
+
+`theme.components.Autocomplete` styles the `root`, `tags`, `input`, `clearIndicator`, `popupIndicator`,
+`popup`, `listbox`, `group`, `groupLabel`, `groupItems`, `option` and `status`. Its `defaultProps` set
+`variant`, `size`, `color`, `textColor`, `borderRadius`, `bg`, `shouldAllowFreeText`, `layer` and the labels - so a theme gives every
+`Autocomplete` its language.
+
+## Server rendering
+
+The list of options is drawn in a `Portal`, which renders nothing on the server: it is absent from server-rendered and prerendered HTML, and mounts on the client when it opens (on a click, hover, focus or key, or when the app sets it open). One that starts open, by its open prop, is still closed in the static HTML and opens on hydration. Its trigger renders on the server as usual.
+
+## Accessibility
+
+- The input is the WAI-ARIA combobox with a list: `aria-expanded`, `aria-controls`, `aria-autocomplete="list"`,
+  and `aria-activedescendant` - the focus stays in the field.
+- Options are `role="option"` with `aria-selected`; groups are `role="group"` named by their heading.
+- The indicators are out of the tab order: the keys do what they do.
+
+## Fab
+Import: `import { Fab } from '@soroush.tech/design-system/Fab'`
+A floating action button: the one main action of a page, circular - its icon - or extended, a pill
+with a label. It is a `Button`, with its focus ring, press state and disabled behavior, raised on a
+theme shadow. Where it floats is the page's: no position is built in.
+
+```tsx
+import { Fab } from '@soroush.tech/design-system/Fab'
+
+;<Fab aria-label="Add" onClick={add}>
+  <Icon name="add" color="inherit" />
+</Fab>
+;<Fab variant="extended" startIcon={<Icon name="add" color="inherit" />}>
+  Create
+</Fab>
+```
+## Props
+
+| Prop                      | Type                       | Default      | Description                                                                                                            |
+| ------------------------- | -------------------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------- |
+| `variant`                 | `'circular' \| 'extended'` | `'circular'` | A circle, or a pill with a label.                                                                                      |
+| `color`                   | `keyof Theme['palette']`   | `'primary'`  | Resolves to `theme.palette`.                                                                                           |
+| `size`                    | `keyof Theme['sizes']`     | `'md'`       | Its height - and a circle's width - are those of an avatar of it.                                                      |
+| `startIcon`               | `ReactNode`                | -            | An extended fab's icon, before the label. A circular one is its content.                                               |
+| `isCollapsed`             | `boolean`                  | `false`      | Draws an extended fab as a circle - its icon alone - and back, the label moving in and out. A circular fab ignores it. |
+| `disabled`                | `boolean`                  | `false`      | Off.                                                                                                                   |
+| `aria-label`              | `string`                   | -            | Names a fab with no text - a circular one.                                                                             |
+| `m`, `mx`, `p`, `px`, ... | `theme.space` keys         |              | Margin and padding as everywhere; they win over the fab's own.                                                         |
+| `onClick`, ...            |                            |              | Any `Button` prop but its look (`variant`, `shape`, loading, links).                                                   |
+
+## With a menu
+
+A fab can be the `trigger` of a `Menu`: it takes the menu's `aria-haspopup` and `aria-expanded`, opens it on a click, Enter and Space, and names it. Use `align="end"` so the list lines up with the fab's end edge; it flips above the fab where the window has no room below.
+
+```tsx
+;<Menu align="end" aria-label="Create" trigger={<Fab aria-label="Create">{add}</Fab>}>
+  <MenuItem value="document">New document</MenuItem>
+</Menu>
+```
+
+## Collapsing
+
+An extended fab collapses to a circle - the pattern for a page that scrolls: extended at the top, collapsed while it is scrolled - when `isCollapsed` is set. Its label moves out over `theme.transitions.duration.standard` (instantly under `prefers-reduced-motion`), the padding goes and the fab is as wide as it is tall, so the icon is centred in a circle, and the label stays in the tree, so a collapsed fab keeps its name. The app decides when, from its scroll or anything else.
+
+```tsx
+;<Fab variant="extended" isCollapsed={isScrolled} startIcon={<Icon name="add" color="inherit" />}>
+  Create
+</Fab>
+```
+
+## Touch target, motion and spacing
+
+- **Touch target.** However small the fab, a target at least `theme.space[6]` (48px) square is centred on it and presses it. The fab is not drawn larger.
+- **Motion.** Its shadow and colors move over `theme.transitions.duration.standard` with `easing.standard`, and not at all under `prefers-reduced-motion`. It rises on hover (`shadows[8]`) and is no higher pressed than at rest (`shadows[6]`).
+- **Spacing.** Margin and padding are `theme.space` keys, and an instance's win over the fab's own.
+- **Extended.** `paddingLeft` is `space[2]`, `paddingRight` `space[3]`, and the icon is `space[1.5]` from the label. The label is one line, cut with an ellipsis where its container ends.
+
+## Customization
+
+`theme.components.Fab` styles the `root`, the extended fab's `label` (the column that collapses) and its `labelText`; the icon inside is `Button`'s own slot. Its
+`defaultProps` set `variant`, `color` and `size`.
+
+## Accessibility
+
+- A circular fab has no text: name it with `aria-label` or `aria-labelledby`.
+- It is a native `button`: Enter and Space press it, and it takes `Button`'s focus ring.
+
 ## Button
 Import: `import { Button } from '@soroush.tech/design-system/Button'`
 Renders as `<button>`. Sharp corners, uppercase, bold, tight letter-spacing - matching the Kinetic Architecture aesthetic. Supports three visual variants, six semantic color palettes, three sizes, start/end icon slots, full-width mode, and a loading state with configurable indicator position.
@@ -2874,6 +3246,12 @@ Default: `"default"`.
 
 ---
 
+### `textColor`
+
+Text color of the label, from `theme.text`. Default: the `textColor` of its `FormControl` or `Form`, else the control's `color` - so a field's text color reaches the label while the checkbox's mark keeps its own color. Its own slot, `label`, in `theme.components.Checkbox`.
+
+---
+
 ### `size`
 
 | Value      | Icon size |
@@ -3021,6 +3399,12 @@ Stroke/fill color of the radio icon.
 | `"warning"`   | `solarAmber[400]`                              | `solarAmber[500]`                            |
 
 Default: `"default"`.
+
+---
+
+### `textColor`
+
+Text color of the label, from `theme.text`. Default: the `textColor` of its `FormControl` or `Form`, else the control's `color` - so a field's text color reaches the label while the radio's mark keeps its own color. Its own slot, `label`, in `theme.components.Radio`.
 
 ---
 
@@ -3220,8 +3604,8 @@ press on an item), its `FormHelperText` describes it, and the field's `size`, `c
   the only difference in your icons, show the value as text too (WCAG 1.4.1).
 - A read-only rating is one image, `role="img"`, named by its rating.
 
-## NumberField
-Import: `import { NumberField } from '@soroush.tech/design-system/NumberField'`
+## NumberInput
+Import: `import { NumberInput } from '@soroush.tech/design-system/NumberInput'`
 A field for a number. A text input - so what is typed is the user's until it is settled - that
 reads and writes the number in its locale, clamps it to a range, and steps by the arrow keys,
 Home/End, the mouse wheel and buttons that repeat while held. It is a `role="spinbutton"`, so the
@@ -3231,9 +3615,9 @@ Every label is yours - the buttons' (`incrementLabel`, `decrementLabel`) - so th
 language of its own.
 
 ```tsx
-import { NumberField } from '@soroush.tech/design-system/NumberField'
+import { NumberInput } from '@soroush.tech/design-system/NumberInput'
 
-;<NumberField
+;<NumberInput
   aria-label="Quantity"
   value={quantity}
   onChange={setQuantity}
@@ -3245,30 +3629,31 @@ import { NumberField } from '@soroush.tech/design-system/NumberField'
 ```
 ## Props
 
-| Prop                                        | Type                                               | Default                             | Description                                                                             |
-| ------------------------------------------- | -------------------------------------------------- | ----------------------------------- | --------------------------------------------------------------------------------------- |
-| `value`                                     | `number \| null`                                   | -                                   | The number - `null` for none. Controlled with `onChange`.                               |
-| `defaultValue`                              | `number \| null`                                   | `null`                              | The number at first, when uncontrolled.                                                 |
-| `onChange`                                  | `(value: number \| null) => void`                  | -                                   | Fired as the number changes - as it is typed, stepped or cleared.                       |
-| `onChangeCommitted`                         | `(value: number \| null) => void`                  | -                                   | Fired when the number is settled: on blur, Enter, a step or Home/End.                   |
-| `min` / `max`                               | `number`                                           | -                                   | The range. What is typed or stepped is clamped to it when settled.                      |
-| `step` / `smallStep` / `largeStep`          | `number`                                           | `1` / `0.1` / `10`                  | What the arrow keys and buttons step by; with Alt held; with Shift held.                |
-| `format`                                    | `Intl.NumberFormatOptions`                         | every digit, ungrouped              | How the number is shown - `{ style: 'percent' }`, `{ minimumFractionDigits: 2 }`...     |
-| `locale`                                    | `string`                                           | the document's                      | How the number is written and read.                                                     |
-| `shouldSnapOnStep`                          | `boolean`                                          | `false`                             | A step lands on the grid of `step`, counted from `min` (or 0).                          |
-| `shouldScrubOnWheel`                        | `boolean`                                          | `false`                             | The wheel steps the number while the field is focused.                                  |
-| `spinButtons`                               | `'stacked' \| 'sides' \| 'none'`                   | `'stacked'`                         | The step buttons: an up and a down at the end, a minus and a plus either side, or none. |
-| `incrementLabel` / `decrementLabel`         | `string`                                           | -                                   | Name the buttons - no built-in text.                                                    |
-| `variant`                                   | `'default' \| 'outlined' \| 'underline' \| 'text'` | `theme.defaults.inputVariant`       | The frame, as on `TextInput`.                                                           |
-| `size`                                      | `keyof Theme['sizes']`                             | its `FormControl`'s, `'md'`         | Padding and font size.                                                                  |
-| `color`                                     | `keyof Theme['palette']`                           | its `FormControl`'s, `'primary'`    | The focus border and button hover.                                                      |
-| `textColor`                                 | `keyof Theme['text']`                              | its `FormControl`'s, `color`'s main | The number's color.                                                                     |
-| `error` / `disabled` / `required`           | `boolean`                                          | its `FormControl`'s                 | The error border and `aria-invalid`; off; marked required.                              |
-| `readOnly`                                  | `boolean`                                          | `false`                             | Takes no change: the keys, the wheel and the buttons do nothing.                        |
-| `fullWidth`                                 | `boolean`                                          | its `FormControl`'s                 | Fills its container.                                                                    |
-| `name`                                      | `string`                                           | -                                   | What a form submits the raw number as.                                                  |
-| `id`                                        | `string`                                           | its `FormControl`'s                 | On the field, which a `FormLabel` targets.                                              |
-| `placeholder`, `autoFocus`, `aria-label`... |                                                    |                                     | On the field.                                                                           |
+| Prop                                        | Type                                               | Default                             | Description                                                                                                                                                                                    |
+| ------------------------------------------- | -------------------------------------------------- | ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `value`                                     | `number \| null`                                   | -                                   | The number - `null` for none. Controlled with `onChange`.                                                                                                                                      |
+| `defaultValue`                              | `number \| null`                                   | `null`                              | The number at first, when uncontrolled.                                                                                                                                                        |
+| `onChange`                                  | `(value: number \| null) => void`                  | -                                   | Fired as the number changes - as it is typed, stepped or cleared.                                                                                                                              |
+| `onChangeCommitted`                         | `(value: number \| null) => void`                  | -                                   | Fired when the number is settled: on blur, Enter, a step or Home/End.                                                                                                                          |
+| `min` / `max`                               | `number`                                           | -                                   | The range. What is typed or stepped is clamped to it when settled.                                                                                                                             |
+| `step` / `smallStep` / `largeStep`          | `number`                                           | `1` / `0.1` / `10`                  | What the arrow keys and buttons step by; with Alt held; with Shift held.                                                                                                                       |
+| `format`                                    | `Intl.NumberFormatOptions`                         | every digit, ungrouped              | How the number is shown - `{ style: 'percent' }`, `{ minimumFractionDigits: 2 }`...                                                                                                            |
+| `locale`                                    | `string`                                           | the document's                      | How the number is written and read.                                                                                                                                                            |
+| `shouldSnapOnStep`                          | `boolean`                                          | `false`                             | A step lands on the grid of `step`, counted from `min` (or 0).                                                                                                                                 |
+| `shouldScrubOnWheel`                        | `boolean`                                          | `false`                             | The wheel steps the number while the field is focused.                                                                                                                                         |
+| `spinButtons`                               | `'stacked' \| 'sides' \| 'none'`                   | `'stacked'`                         | The step buttons: an up and a down at the end, a minus and a plus either side, or none.                                                                                                        |
+| `incrementLabel` / `decrementLabel`         | `string`                                           | -                                   | Name the buttons - no built-in text.                                                                                                                                                           |
+| `startContent` / `endContent`               | `ReactNode`                                        | -                                   | Content inside the frame - an icon before the number; a unit such as `px`, `%` or a button after it, before the step buttons. Each has the room at the frame's edge the input has on its side. |
+| `variant`                                   | `'default' \| 'outlined' \| 'underline' \| 'text'` | `theme.defaults.inputVariant`       | The frame, as on `TextInput`.                                                                                                                                                                  |
+| `size`                                      | `keyof Theme['sizes']`                             | its `FormControl`'s, `'md'`         | Padding and font size.                                                                                                                                                                         |
+| `color`                                     | `keyof Theme['palette']`                           | its `FormControl`'s, `'primary'`    | The focus border and button hover.                                                                                                                                                             |
+| `textColor`                                 | `keyof Theme['text']`                              | its `FormControl`'s, `color`'s main | The number's color.                                                                                                                                                                            |
+| `error` / `disabled` / `required`           | `boolean`                                          | its `FormControl`'s                 | The error border and `aria-invalid`; off; marked required.                                                                                                                                     |
+| `readOnly`                                  | `boolean`                                          | `false`                             | Takes no change: the keys, the wheel and the buttons do nothing.                                                                                                                               |
+| `fullWidth`                                 | `boolean`                                          | its `FormControl`'s                 | Fills its container.                                                                                                                                                                           |
+| `name`                                      | `string`                                           | -                                   | What a form submits the raw number as.                                                                                                                                                         |
+| `id`                                        | `string`                                           | its `FormControl`'s                 | On the field, which a `FormLabel` targets.                                                                                                                                                     |
+| `placeholder`, `autoFocus`, `aria-label`... |                                                    |                                     | On the field.                                                                                                                                                                                  |
 
 It takes the styled-system space props, `width`, `minWidth`, `maxWidth`, `className` and
 `data-testid` too.
@@ -3303,14 +3688,19 @@ Its `FormLabel` targets the field, its `FormHelperText` describes it, and the fi
 ```tsx
 <FormControl>
   <FormLabel>Quantity</FormLabel>
-  <NumberField min={1} max={99} incrementLabel="Increase" decrementLabel="Decrease" />
+  <NumberInput min={1} max={99} incrementLabel="Increase" decrementLabel="Decrease" />
   <FormHelperText>Between 1 and 99.</FormHelperText>
 </FormControl>
 ```
 
+## A number written with its unit
+
+What is typed is read for its digits, in the field's locale, so `12px`, `12 px` and `1.5rem` are 12, 12 and 1.5 -
+a pasted CSS length is a number. Put the unit where it is shown in `endContent`.
+
 ## Customization
 
-`theme.components.NumberField` styles the `root`, the `input`, the `spinButtons` pair and each
+`theme.components.NumberInput` styles the `root`, the `input`, the `content` before and after it, the `spinButtons` pair and each
 `increment` / `decrement` button. Its `defaultProps` set `variant`, `size`, `color`, `spinButtons`,
 the three steps, `shouldSnapOnStep`, `shouldScrubOnWheel` - and the two button labels, which give
 every field the app's language.
@@ -3323,8 +3713,8 @@ every field the app's language.
   order; the keys do the same.
 - `error` sets `aria-invalid`; helper text is read as the field's description.
 
-## InputRange
-Import: `import { InputRange } from '@soroush.tech/design-system/InputRange'`
+## RangeInput
+Import: `import { RangeInput } from '@soroush.tech/design-system/RangeInput'`
 A slider: one value on a range, or two or more thumbs for a range of values. Each thumb is a
 visually hidden native `<input type="range">`, so the keys (the arrows, Page, Home and End),
 assistive technology and forms work as the platform's; the pointer drags a thumb, touch included.
@@ -3333,17 +3723,17 @@ Every name is yours - each thumb's (`getAriaLabel`, or a `FormLabel`), and the t
 (`getAriaValueText`) - so the slider carries no language of its own.
 
 ```tsx
-import { InputRange } from '@soroush.tech/design-system/InputRange'
+import { RangeInput } from '@soroush.tech/design-system/RangeInput'
 
 // One thumb
-;<InputRange
+;<RangeInput
   aria-label="Volume"
   value={volume}
   onChange={(_event, value) => setVolume(value as number)}
 />
 
 // A range - one thumb for each value
-;<InputRange
+;<RangeInput
   value={[20, 70]}
   onChange={(_event, value) => setRange(value as number[])}
   getAriaLabel={(index) => (index === 0 ? 'Least price' : 'Greatest price')}
@@ -3367,7 +3757,7 @@ import { InputRange } from '@soroush.tech/design-system/InputRange'
 | `scale`                              | `(value: number) => number`                   | itself                           | The value as it is shown and announced - not what is stored.                                                       |
 | `valueLabel`                         | `'off' \| 'auto' \| 'on'`                     | `'off'`                          | When a thumb shows its value: never, while hovered or focused, or always.                                          |
 | `formatValueLabel`                   | `(value: number, index: number) => ReactNode` | the scaled value                 | What the label says.                                                                                               |
-| `getAriaLabel`                       | `(index: number) => string`                   | -                                | Names each thumb. A range needs one; a single thumb may take `aria-label`.                                         |
+| `getAriaLabel`                       | `(index: number) => string`                   | -                                | Names each thumb. A range needs it unless a `FormLabel` names them; a single thumb may take `aria-label`.          |
 | `getAriaValueText`                   | `(value: number, index: number) => string`    | -                                | The value's text for each thumb, where the number alone isn't clear.                                               |
 | `shouldSwapThumbs`                   | `boolean`                                     | `true`                           | A thumb passes its neighbour, taking its place. Without it, it stops at its neighbour.                             |
 | `size`                               | `keyof Theme['sizes']`                        | its `FormControl`'s, `'md'`      | The thumb's size (`theme.icon`) and the rail's thickness.                                                          |
@@ -3412,7 +3802,7 @@ own prop winning.
 ```tsx
 <FormControl>
   <FormLabel>Volume</FormLabel>
-  <InputRange defaultValue={30} />
+  <RangeInput defaultValue={30} />
   <FormHelperText>Loud or quiet.</FormHelperText>
 </FormControl>
 ```
@@ -3421,7 +3811,7 @@ A slider always has a value, so it takes no `required`.
 
 ## Customization
 
-`theme.components.InputRange` styles the `root`, the `rail`, the `track`, each `thumb`, the `mark`s
+`theme.components.RangeInput` styles the `root`, the `rail`, the `track`, each `thumb`, the `mark`s
 and their `markLabel`s, the `valueLabel` and each `input`. Its `defaultProps` set `size`, `color`,
 `orientation`, `track`, `step`, `shiftStep`, `valueLabel` and `shouldSwapThumbs`.
 
@@ -3461,23 +3851,24 @@ import { TransferList } from '@soroush.tech/design-system/TransferList'
 ```
 ## Props
 
-| Prop                                                                       | Type                                              | Default                     | Description                                                                             |
-| -------------------------------------------------------------------------- | ------------------------------------------------- | --------------------------- | --------------------------------------------------------------------------------------- |
-| `items`                                                                    | `{ value: string \| number, label, disabled? }[]` | -                           | Every item, on either side. Each `value` is unique.                                     |
-| `value`                                                                    | `(string \| number)[]`                            | -                           | The values on the right. Controlled with `onChange`.                                    |
-| `defaultValue`                                                             | `(string \| number)[]`                            | `[]`                        | The values on the right at first, when uncontrolled.                                    |
-| `onChange`                                                                 | `(value: (string \| number)[]) => void`           | -                           | Fired as items move, with the values now on the right.                                  |
-| `leftLabel` / `rightLabel`                                                 | `string`                                          | -                           | The lists' titles, which name them.                                                     |
-| `moveAllRightLabel`, `moveRightLabel`, `moveLeftLabel`, `moveAllLeftLabel` | `string`                                          | -                           | Name the four buttons.                                                                  |
-| `shouldShowMoveAll`                                                        | `boolean`                                         | `false`                     | Adds the buttons that move every enabled item at once.                                  |
-| `hasSelectAll`                                                             | `boolean`                                         | `false`                     | A checkbox in each list's header - all, some or none checked - and the count beside it. |
-| `getCountLabel`                                                            | `(checked: number, total: number) => string`      | `` `${checked}/${total}` `` | What the count says.                                                                    |
-| `size`                                                                     | `keyof Theme['sizes']`                            | its `FormControl`'s, `'md'` | The checkboxes' and buttons' size.                                                      |
-| `color`                                                                    | `keyof Theme['palette']`                          | its `FormControl`'s         | The checkboxes' and buttons' color.                                                     |
-| `disabled`                                                                 | `boolean`                                         | its `FormControl`'s         | Dimmed; every checkbox and button is off.                                               |
-| `error`                                                                    | `boolean`                                         | its `FormControl`'s         | The lists take the error color.                                                         |
-| `id`                                                                       | `string`                                          | its `FormControl`'s         | On the group.                                                                           |
-| `aria-label`, `aria-labelledby`, `aria-describedby`                        |                                                   |                             | On the group. An own one wins over its `FormControl`'s.                                 |
+| Prop                                                                       | Type                                              | Default                         | Description                                                                             |
+| -------------------------------------------------------------------------- | ------------------------------------------------- | ------------------------------- | --------------------------------------------------------------------------------------- |
+| `items`                                                                    | `{ value: string \| number, label, disabled? }[]` | -                               | Every item, on either side. Each `value` is unique.                                     |
+| `value`                                                                    | `(string \| number)[]`                            | -                               | The values on the right. Controlled with `onChange`.                                    |
+| `defaultValue`                                                             | `(string \| number)[]`                            | `[]`                            | The values on the right at first, when uncontrolled.                                    |
+| `onChange`                                                                 | `(value: (string \| number)[]) => void`           | -                               | Fired as items move, with the values now on the right.                                  |
+| `leftLabel` / `rightLabel`                                                 | `string`                                          | -                               | The lists' titles, which name them.                                                     |
+| `moveAllRightLabel`, `moveRightLabel`, `moveLeftLabel`, `moveAllLeftLabel` | `string`                                          | -                               | Name the four buttons.                                                                  |
+| `shouldShowMoveAll`                                                        | `boolean`                                         | `false`                         | Adds the buttons that move every enabled item at once.                                  |
+| `hasSelectAll`                                                             | `boolean`                                         | `false`                         | A checkbox in each list's header - all, some or none checked - and the count beside it. |
+| `getCountLabel`                                                            | `(checked: number, total: number) => string`      | `` `${checked}/${total}` ``     | What the count says.                                                                    |
+| `size`                                                                     | `keyof Theme['sizes']`                            | its `FormControl`'s, `'md'`     | The checkboxes' and buttons' size.                                                      |
+| `color`                                                                    | `keyof Theme['palette']`                          | its `FormControl`'s             | The checkboxes' and buttons' color.                                                     |
+| `textColor`                                                                | `keyof Theme['text']`                             | its `FormControl`'s or `Form`'s | The text color of the titles, the count and the items.                                  |
+| `disabled`                                                                 | `boolean`                                         | its `FormControl`'s             | Dimmed; every checkbox and button is off.                                               |
+| `error`                                                                    | `boolean`                                         | its `FormControl`'s             | The lists take the error color.                                                         |
+| `id`                                                                       | `string`                                          | its `FormControl`'s             | On the group.                                                                           |
+| `aria-label`, `aria-labelledby`, `aria-describedby`                        |                                                   |                                 | On the group. An own one wins over its `FormControl`'s.                                 |
 
 It takes the styled-system space props, `className` and `data-testid` too.
 
@@ -3597,6 +3988,12 @@ Placement model for the thumb.
 The `size` prop works for both variants. Use `marked` to add ✓/✕ indicators.
 
 Default: `"outside"`.
+
+---
+
+### `textColor`
+
+Text color of the label, from `theme.text`. Default: the `textColor` of its `FormControl` or `Form`, else the control's `color` - so a field's text color reaches the label while the switch's mark keeps its own color. Its own slot, `label`, in `theme.components.Switch`.
 
 ---
 
@@ -3984,16 +4381,18 @@ import { MenuItem } from '@soroush.tech/design-system/MenuItem'
 Used inside a `MenuList`; ignored by `Select`. `color`, `textColor`, `size` and `dense` default to
 the `MenuList`'s own.
 
-| Prop              | Type                                                  | Default      | Description                                                                                                                                                                                                                                                                          |
-| ----------------- | ----------------------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `role`            | `'menuitem' \| 'menuitemradio' \| 'menuitemcheckbox'` | `'menuitem'` | A command, the current choice of a group, or an on/off setting.                                                                                                                                                                                                                      |
-| `startIcon`       | `ReactNode`                                           | -            | An icon in the leading column. Every row keeps the column, so labels line up; a checked row shows a tick there.                                                                                                                                                                      |
-| `shortcut`        | `ReactNode`                                           | -            | The row's keyboard shortcut, shown quieter at its end and kept out of its name. A string is also given to the row as `aria-keyshortcuts`.                                                                                                                                            |
-| `note`            | `string`                                              | -            | Why the row is off - its tooltip and accessible description.                                                                                                                                                                                                                         |
-| `onClick`         | `(event) => void`                                     | -            | Fired when the row is chosen, by a click, Enter or Space.                                                                                                                                                                                                                            |
-| `submenu`         | `ReactNode`                                           | -            | The rows of a submenu this row opens, beside it. `null` or `[]` is a submenu with nothing in it yet. A row with a submenu opens it rather than being chosen.                                                                                                                         |
-| `emptyLabel`      | `ReactNode`                                           | -            | Shown as one disabled row in an empty submenu ("Coming soon"); without it, the submenu stays empty.                                                                                                                                                                                  |
-| `secondaryAction` | `ReactNode`                                           | -            | A control of the row's own beside it - a close button. It sits with the row in its `role="none"` entry, out of the arrow keys and hidden from assistive technology (a menu owns rows alone): give it `tabIndex={-1}`, and the row a key of its own through `MenuList`'s `onKeyDown`. |
+| Prop                            | Type                                                  | Default      | Description                                                                                                                                                                                                                                                                          |
+| ------------------------------- | ----------------------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `role`                          | `'menuitem' \| 'menuitemradio' \| 'menuitemcheckbox'` | `'menuitem'` | A command, the current choice of a group, or an on/off setting.                                                                                                                                                                                                                      |
+| `startIcon`                     | `ReactNode`                                           | -            | An icon in the leading column. Every row keeps the column, so labels line up; a checked row shows a tick there.                                                                                                                                                                      |
+| `shortcut`                      | `ReactNode`                                           | -            | The row's keyboard shortcut, shown quieter at its end and kept out of its name. A string is also given to the row as `aria-keyshortcuts`.                                                                                                                                            |
+| `aria-keyshortcuts`             | `string`                                              | -            | What a screen reader hears of the row's keys - the `aria-keyshortcuts` form, such as `Control+=` - where it differs from what `shortcut` shows (`Ctrl+=`). It wins over a string `shortcut`.                                                                                         |
+| `note`                          | `string`                                              | -            | Why the row is off - its tooltip and accessible description.                                                                                                                                                                                                                         |
+| `onClick`                       | `(event) => void`                                     | -            | Fired when the row is chosen, by a click, Enter or Space.                                                                                                                                                                                                                            |
+| `submenu`                       | `ReactNode`                                           | -            | The rows of a submenu this row opens, beside it. `null` or `[]` is a submenu with nothing in it yet. A row with a submenu opens it rather than being chosen.                                                                                                                         |
+| `emptyLabel`                    | `ReactNode`                                           | -            | Shown as one disabled row in an empty submenu ("Coming soon"); without it, the submenu stays empty.                                                                                                                                                                                  |
+| `secondaryAction`               | `ReactNode`                                           | -            | A control of the row's own beside it - a close button. It sits with the row in its `role="none"` entry, out of the arrow keys and hidden from assistive technology (a menu owns rows alone): give it `tabIndex={-1}`, and the row a key of its own through `MenuList`'s `onKeyDown`. |
+| `shouldAnnounceSecondaryAction` | `boolean`                                             | `false`      | Leaves `secondaryAction` in the accessibility tree - a screen reader finds the control by its own name. A menu owns rows alone, so a control beside a row is an exception a tool may report; name it and keep it out of the tab order.                                               |
 
 ### Submenus
 
@@ -4450,27 +4849,28 @@ import { Button } from '@soroush.tech/design-system/Button'
 ```
 ## Props
 
-| Prop              | Type                                       | Default        | Description                                                                                                                                                                             |
-| ----------------- | ------------------------------------------ | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `trigger`         | `ReactElement`                             | -              | The element that opens the menu - a `Button`, a `Pressable`. It is given `aria-haspopup`, `aria-expanded` and `aria-controls`; its own `onClick` / `onKeyDown` still run. **Required.** |
-| `children`        | `ReactNode`                                | -              | `MenuItem` rows and `MenuDivider`s.                                                                                                                                                     |
-| `isOpen`          | `boolean`                                  | -              | Controlled open state. When set, the menu only asks to open or close, through `onOpen` / `onClose`.                                                                                     |
-| `defaultOpen`     | `boolean`                                  | `false`        | Uncontrolled initial open state.                                                                                                                                                        |
-| `onOpen`          | `() => void`                               | -              | Fired when the menu asks to open.                                                                                                                                                       |
-| `onClose`         | `(event, reason: MenuCloseReason) => void` | -              | Fired when the menu asks to close: `'escapeKey'`, `'select'` (a row chosen), `'triggerClick'` or `'blur'`.                                                                              |
-| `onStep`          | `(step: -1 \| 1) => void`                  | -              | Fired when Left or Right has nowhere further to go inside the menu, so a menu bar can step to the next menu. Swapped right to left.                                                     |
-| `onSelect`        | `(value: string \| number) => void`        | -              | Fired with a row's `value` when a row that has one is chosen.                                                                                                                           |
-| `align`           | `'start' \| 'end'`                         | `'start'`      | Which edge of the trigger the list lines up with. Mirrored right to left.                                                                                                               |
-| `marginThreshold` | `keyof Theme['space']`                     | `2`            | The least room between the list and the window's edge.                                                                                                                                  |
-| `elevation`       | `PaperElevation` (0-24)                    | `8`            | Shadow depth of the surface.                                                                                                                                                            |
-| `layer`           | `keyof Theme['zOrder']`                    | `'modal'`      | Stacking layer - `modal` keeps a menu opened in a dialog above it.                                                                                                                      |
-| `emptyLabel`      | `ReactNode`                                | -              | Shown as one disabled row when the menu has no rows ("Coming soon"); without it, the list stays empty.                                                                                  |
-| `color`           | `keyof Theme['palette']`                   | -              | Accent color for every row.                                                                                                                                                             |
-| `textColor`       | `keyof Theme['text']`                      | -              | Base text color for every row.                                                                                                                                                          |
-| `size`            | `keyof Theme['sizes']`                     | -              | Density token for every row.                                                                                                                                                            |
-| `dense`           | `boolean`                                  | -              | Compact vertical padding for every row.                                                                                                                                                 |
-| `aria-label`      | `string`                                   | trigger's name | Names the list. Without it the trigger names it (`aria-labelledby`).                                                                                                                    |
-| `className`       | `string`                                   | -              | Class on the menu's root.                                                                                                                                                               |
+| Prop              | Type                                       | Default                                     | Description                                                                                                                                                                             |
+| ----------------- | ------------------------------------------ | ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `trigger`         | `ReactElement`                             | -                                           | The element that opens the menu - a `Button`, a `Pressable`. It is given `aria-haspopup`, `aria-expanded` and `aria-controls`; its own `onClick` / `onKeyDown` still run. **Required.** |
+| `children`        | `ReactNode`                                | -                                           | `MenuItem` rows and `MenuDivider`s.                                                                                                                                                     |
+| `isOpen`          | `boolean`                                  | -                                           | Controlled open state. When set, the menu only asks to open or close, through `onOpen` / `onClose`.                                                                                     |
+| `defaultOpen`     | `boolean`                                  | `false`                                     | Uncontrolled initial open state.                                                                                                                                                        |
+| `onOpen`          | `() => void`                               | -                                           | Fired when the menu asks to open.                                                                                                                                                       |
+| `onClose`         | `(event, reason: MenuCloseReason) => void` | -                                           | Fired when the menu asks to close: `'escapeKey'`, `'select'` (a row chosen), `'triggerClick'` or `'blur'`.                                                                              |
+| `onStep`          | `(step: -1 \| 1) => void`                  | -                                           | Fired when Left or Right has nowhere further to go inside the menu, so a menu bar can step to the next menu. Swapped right to left.                                                     |
+| `onSelect`        | `(value: string \| number) => void`        | -                                           | Fired with a row's `value` when a row that has one is chosen.                                                                                                                           |
+| `align`           | `'start' \| 'end'`                         | `'start'`                                   | Which edge of the trigger the list lines up with. Mirrored right to left.                                                                                                               |
+| `marginThreshold` | `keyof Theme['space']`                     | `2`                                         | The least room between the list and the window's edge.                                                                                                                                  |
+| `elevation`       | `PaperElevation` (0-24)                    | `8`                                         | Shadow depth of the surface.                                                                                                                                                            |
+| `borderRadius`    | `keyof Theme['radii']`                     | `theme.defaults.surfaceRadius`, else square | Corner radius of the list.                                                                                                                                                              |
+| `layer`           | `keyof Theme['zOrder']`                    | `'modal'`                                   | Stacking layer - `modal` keeps a menu opened in a dialog above it.                                                                                                                      |
+| `emptyLabel`      | `ReactNode`                                | -                                           | Shown as one disabled row when the menu has no rows ("Coming soon"); without it, the list stays empty.                                                                                  |
+| `color`           | `keyof Theme['palette']`                   | -                                           | Accent color for every row.                                                                                                                                                             |
+| `textColor`       | `keyof Theme['text']`                      | -                                           | Base text color for every row.                                                                                                                                                          |
+| `size`            | `keyof Theme['sizes']`                     | -                                           | Density token for every row.                                                                                                                                                            |
+| `dense`           | `boolean`                                  | -                                           | Compact vertical padding for every row.                                                                                                                                                 |
+| `aria-label`      | `string`                                   | trigger's name                              | Names the list. Without it the trigger names it (`aria-labelledby`).                                                                                                                    |
+| `className`       | `string`                                   | -                                           | Class on the menu's root.                                                                                                                                                               |
 
 ## Keyboard
 
@@ -4538,23 +4938,24 @@ Rows can come as data instead, with `items` - the same entries
 ```
 ## Props
 
-| Prop              | Type                                       | Default   | Description                                                                                                  |
-| ----------------- | ------------------------------------------ | --------- | ------------------------------------------------------------------------------------------------------------ |
-| `target`          | `ReactElement`                             | -         | The element whose right-click opens the menu. Its own `onContextMenu` / `onKeyDown` still run. **Required.** |
-| `children`        | `ReactNode`                                | -         | `MenuItem` rows and `MenuDivider`s.                                                                          |
-| `items`           | `MenuItemData[]`                           | -         | The rows as data, in place of `children`.                                                                    |
-| `onClose`         | `(event, reason: MenuCloseReason) => void` | -         | Fired when the menu closes: `'escapeKey'`, `'select'` or `'blur'`.                                           |
-| `onSelect`        | `(value: string \| number) => void`        | -         | Fired with a row's `value` when a row that has one is chosen.                                                |
-| `marginThreshold` | `keyof Theme['space']`                     | `2`       | The least room between the list and the window's edge.                                                       |
-| `elevation`       | `PaperElevation` (0-24)                    | `8`       | Shadow depth of the surface.                                                                                 |
-| `layer`           | `keyof Theme['zOrder']`                    | `'modal'` | Stacking layer.                                                                                              |
-| `emptyLabel`      | `ReactNode`                                | -         | Shown as one disabled row when the menu has no rows; without it, the list stays empty.                       |
-| `color`           | `keyof Theme['palette']`                   | -         | Accent color for every row.                                                                                  |
-| `textColor`       | `keyof Theme['text']`                      | -         | Base text color for every row.                                                                               |
-| `size`            | `keyof Theme['sizes']`                     | -         | Density token for every row.                                                                                 |
-| `dense`           | `boolean`                                  | -         | Compact vertical padding for every row.                                                                      |
-| `aria-label`      | `string`                                   | -         | Names the list.                                                                                              |
-| `className`       | `string`                                   | -         | Class on the menu's root.                                                                                    |
+| Prop              | Type                                       | Default                                     | Description                                                                                                  |
+| ----------------- | ------------------------------------------ | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `target`          | `ReactElement`                             | -                                           | The element whose right-click opens the menu. Its own `onContextMenu` / `onKeyDown` still run. **Required.** |
+| `children`        | `ReactNode`                                | -                                           | `MenuItem` rows and `MenuDivider`s.                                                                          |
+| `items`           | `MenuItemData[]`                           | -                                           | The rows as data, in place of `children`.                                                                    |
+| `onClose`         | `(event, reason: MenuCloseReason) => void` | -                                           | Fired when the menu closes: `'escapeKey'`, `'select'` or `'blur'`.                                           |
+| `onSelect`        | `(value: string \| number) => void`        | -                                           | Fired with a row's `value` when a row that has one is chosen.                                                |
+| `marginThreshold` | `keyof Theme['space']`                     | `2`                                         | The least room between the list and the window's edge.                                                       |
+| `elevation`       | `PaperElevation` (0-24)                    | `8`                                         | Shadow depth of the surface.                                                                                 |
+| `borderRadius`    | `keyof Theme['radii']`                     | `theme.defaults.surfaceRadius`, else square | Corner radius of the list.                                                                                   |
+| `layer`           | `keyof Theme['zOrder']`                    | `'modal'`                                   | Stacking layer.                                                                                              |
+| `emptyLabel`      | `ReactNode`                                | -                                           | Shown as one disabled row when the menu has no rows; without it, the list stays empty.                       |
+| `color`           | `keyof Theme['palette']`                   | -                                           | Accent color for every row.                                                                                  |
+| `textColor`       | `keyof Theme['text']`                      | -                                           | Base text color for every row.                                                                               |
+| `size`            | `keyof Theme['sizes']`                     | -                                           | Density token for every row.                                                                                 |
+| `dense`           | `boolean`                                  | -                                           | Compact vertical padding for every row.                                                                      |
+| `aria-label`      | `string`                                   | -                                           | Names the list.                                                                                              |
+| `className`       | `string`                                   | -                                           | Class on the menu's root.                                                                                    |
 
 ## Notes
 
@@ -4740,31 +5141,32 @@ import { Tab, TabContext, TabList, TabPanel } from '@soroush.tech/design-system/
 The family: `Tabs`, `Tab`, `TabContext`, `TabList`, `TabPanel` and `TabScrollButton`.
 ## Tabs props
 
-| Prop                  | Type                                                     | Default                                       | Description                                                                                                                                                                                                                    |
-| --------------------- | -------------------------------------------------------- | --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `children`            | `ReactNode`                                              | -                                             | `Tab`s.                                                                                                                                                                                                                        |
-| `value`               | `string \| number \| null`                               | -                                             | The selected tab's value - `null` for none. Controlled with `onChange`.                                                                                                                                                        |
-| `defaultValue`        | `string \| number \| null`                               | -                                             | The selected tab's value at first, when uncontrolled.                                                                                                                                                                          |
-| `onChange`            | `(value: string \| number) => void`                      | -                                             | Fired with a tab's value when it is chosen.                                                                                                                                                                                    |
-| `onTabClose`          | `(value: string \| number) => void`                      | -                                             | Fired with a closable tab's value when its close button, a middle click or Delete closes it. Removing it and picking the next selection are the app's.                                                                         |
-| `as`                  | `'div' \| 'nav'`                                         | `'div'`                                       | `'nav'` makes it a navigation (`aria-current="page"`) rather than a `tablist`.                                                                                                                                                 |
-| `orientation`         | `'horizontal' \| 'vertical'`                             | `'horizontal'`                                | Vertical tabs stack, with Up and Down for the keys.                                                                                                                                                                            |
-| `variant`             | `keyof TabsVariants`                                     | `'underline'`                                 | `'underline'` - an indicator slides under the selected tab; `'boxed'` - the selected tab is outlined on a raised ground; `'enclosed'` - the selected tab is outlined on its top and sides, open onto the divider. Augmentable. |
-| `color`               | `keyof Theme['palette']`                                 | `'primary'`                                   | The indicator's or outline's color.                                                                                                                                                                                            |
-| `textColor`           | `keyof Theme['text']`                                    | `'primary'`                                   | The labels' color.                                                                                                                                                                                                             |
-| `size`                | `keyof Theme['sizes']`                                   | `'md'`                                        | Density token.                                                                                                                                                                                                                 |
-| `fullWidth`           | `boolean`                                                | `false`                                       | The tabs share the row's width equally.                                                                                                                                                                                        |
-| `isCentered`          | `boolean`                                                | `false`                                       | The tabs sit in the middle of the row.                                                                                                                                                                                         |
-| `shouldSelectOnFocus` | `boolean`                                                | `false`                                       | Moving focus with the arrow keys selects as it goes.                                                                                                                                                                           |
-| `hasDivider`          | `boolean`                                                | `true`, `false` when boxed                    | A line along the row's foot (a column's end side), under its own content too. In the enclosed look it runs round the selected tab; without it there is no border - the selected tab stands out by `selectedBg`.                |
-| `bg`                  | `keyof Theme['background']`                              | -                                             | The tab strip's ground.                                                                                                                                                                                                        |
-| `selectedBg`          | `keyof Theme['background']`                              | `'paper'` boxed or enclosed without a divider | The selected tab's ground. Give its `TabPanel` the same `bg` and the two read as one.                                                                                                                                          |
-| `slots`               | `{ scrollButton?: ComponentType<TabScrollButtonProps> }` | -                                             | A scroll button of your own, in place of `TabScrollButton` - given the same props.                                                                                                                                             |
-| `startContent`        | `ReactNode`                                              | -                                             | Before the tabs, a space from them. Keeps its own tab stops; the arrow keys don't reach it.                                                                                                                                    |
-| `endContent`          | `ReactNode`                                              | -                                             | After the tabs, a space from them. Keeps its own tab stops; the arrow keys don't reach it.                                                                                                                                     |
-| `action`              | `Ref<TabsActions>`                                       | -                                             | `updateIndicator()` - re-measures the selected tab after a font loads or a label changes.                                                                                                                                      |
-| `aria-label`          | `string`                                                 | -                                             | Names the tablist (or the navigation).                                                                                                                                                                                         |
-| `aria-labelledby`     | `string`                                                 | -                                             | Names it after another element.                                                                                                                                                                                                |
+| Prop                  | Type                                                     | Default                                       | Description                                                                                                                                                                                                                                                                                                    |
+| --------------------- | -------------------------------------------------------- | --------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `children`            | `ReactNode`                                              | -                                             | `Tab`s.                                                                                                                                                                                                                                                                                                        |
+| `value`               | `string \| number \| null`                               | -                                             | The selected tab's value - `null` for none. Controlled with `onChange`.                                                                                                                                                                                                                                        |
+| `defaultValue`        | `string \| number \| null`                               | -                                             | The selected tab's value at first, when uncontrolled.                                                                                                                                                                                                                                                          |
+| `onChange`            | `(value: string \| number) => void`                      | -                                             | Fired with a tab's value when it is chosen.                                                                                                                                                                                                                                                                    |
+| `onTabClose`          | `(value: string \| number) => void`                      | -                                             | Fired with a closable tab's value when its close button, a middle click or Delete closes it. Removing it and picking the next selection are the app's.                                                                                                                                                         |
+| `shouldAnnounceClose` | `boolean`                                                | `false`                                       | Names each closable tab's close button, and the one in the overflow menu, by its `closeLabel` for assistive technology - a button found and pressed by name, still out of the tab order. It is beside the tab, not inside it. Without it, the button is the pointer's alone and Delete closes the focused tab. |
+| `as`                  | `'div' \| 'nav'`                                         | `'div'`                                       | `'nav'` makes it a navigation (`aria-current="page"`) rather than a `tablist`.                                                                                                                                                                                                                                 |
+| `orientation`         | `'horizontal' \| 'vertical'`                             | `'horizontal'`                                | Vertical tabs stack, with Up and Down for the keys.                                                                                                                                                                                                                                                            |
+| `variant`             | `keyof TabsVariants`                                     | `'underline'`                                 | `'underline'` - an indicator slides under the selected tab; `'boxed'` - the selected tab is outlined on a raised ground; `'enclosed'` - the selected tab is outlined on its top and sides, open onto the divider. Augmentable.                                                                                 |
+| `color`               | `keyof Theme['palette']`                                 | `'primary'`                                   | The indicator's or outline's color.                                                                                                                                                                                                                                                                            |
+| `textColor`           | `keyof Theme['text']`                                    | `'primary'`                                   | The labels' color.                                                                                                                                                                                                                                                                                             |
+| `size`                | `keyof Theme['sizes']`                                   | `'md'`                                        | Density token.                                                                                                                                                                                                                                                                                                 |
+| `fullWidth`           | `boolean`                                                | `false`                                       | The tabs share the row's width equally.                                                                                                                                                                                                                                                                        |
+| `isCentered`          | `boolean`                                                | `false`                                       | The tabs sit in the middle of the row.                                                                                                                                                                                                                                                                         |
+| `shouldSelectOnFocus` | `boolean`                                                | `false`                                       | Moving focus with the arrow keys selects as it goes.                                                                                                                                                                                                                                                           |
+| `hasDivider`          | `boolean`                                                | `true`, `false` when boxed                    | A line along the row's foot (a column's end side), under its own content too. In the enclosed look it runs round the selected tab; without it there is no border - the selected tab stands out by `selectedBg`.                                                                                                |
+| `bg`                  | `keyof Theme['background']`                              | -                                             | The tab strip's ground.                                                                                                                                                                                                                                                                                        |
+| `selectedBg`          | `keyof Theme['background']`                              | `'paper'` boxed or enclosed without a divider | The selected tab's ground. Give its `TabPanel` the same `bg` and the two read as one.                                                                                                                                                                                                                          |
+| `slots`               | `{ scrollButton?: ComponentType<TabScrollButtonProps> }` | -                                             | A scroll button of your own, in place of `TabScrollButton` - given the same props.                                                                                                                                                                                                                             |
+| `startContent`        | `ReactNode`                                              | -                                             | Before the tabs, a space from them. Keeps its own tab stops; the arrow keys don't reach it.                                                                                                                                                                                                                    |
+| `endContent`          | `ReactNode`                                              | -                                             | After the tabs, a space from them. Keeps its own tab stops; the arrow keys don't reach it.                                                                                                                                                                                                                     |
+| `action`              | `Ref<TabsActions>`                                       | -                                             | `updateIndicator()` - re-measures the selected tab after a font loads or a label changes.                                                                                                                                                                                                                      |
+| `aria-label`          | `string`                                                 | -                                             | Names the tablist (or the navigation).                                                                                                                                                                                                                                                                         |
+| `aria-labelledby`     | `string`                                                 | -                                             | Names it after another element.                                                                                                                                                                                                                                                                                |
 
 Plus the styled-system **space** props (`m`, `p`, ...) on the row.
 
@@ -4921,7 +5323,10 @@ Delete on the focused tab close it too. A tab without a `closeLabel` never close
 
 The ✕ is the pointer's: a `tablist` owns tabs alone, so it is hidden from assistive technology,
 with `closeLabel` as its tooltip. The keys' way is Delete, which the tab announces
-(`aria-keyshortcuts="Delete"`).
+(`aria-keyshortcuts="Delete"`). With `shouldAnnounceClose` on `Tabs` it is a button named by `closeLabel` for
+assistive technology instead - a sibling of the tab inside the tab's `role="presentation"` wrapper, so nothing
+interactive is nested in the tab - still out of the tab order, and unseen (not `visibility: hidden`) on a tab
+that is not selected or hovered, so a screen reader still finds it.
 
 ## A menu of the tab's own
 
@@ -5087,6 +5492,337 @@ row's look - its stretch of the divider in the enclosed look - and hides on narr
 the `Tabs` has `shouldShowScrollButtonsOnMobile`. As a tab's, its own value wins: its `color`,
 then `theme.components.TabScrollButton.defaultProps`, then the row's line - the selected tab's
 color; its `textColor`, then the row's, then the theme's `defaultProps`, then the row's default.
+
+## FabMenu
+Import: `import { FabMenu } from '@soroush.tech/design-system/FabMenu'`
+A `Fab` that opens a stack of actions - extended pills, each a `FabMenuItem` - from one corner of a page.
+The trigger is a disclosure button (`aria-expanded`, `aria-controls`) whose icon turns to a close one while
+the menu is open. The actions zoom in over `theme.transitions`, the one next to the trigger first, and are
+out of the tree while it is closed. Where it floats is the page's: no position is built in.
+
+```tsx
+import { FabMenu, FabMenuItem } from '@soroush.tech/design-system/FabMenu'
+
+;<FabMenu aria-label="Create">
+  <FabMenuItem icon={<Icon name="add" color="inherit" />} onClick={newDocument}>
+    New document
+  </FabMenuItem>
+  <FabMenuItem onClick={newFolder}>New folder</FabMenuItem>
+</FabMenu>
+```
+## Props
+
+| Prop                                       | Type                     | Default                    | Description                                                                                 |
+| ------------------------------------------ | ------------------------ | -------------------------- | ------------------------------------------------------------------------------------------- |
+| `children`                                 | `FabMenuItem`s           | -                          | The actions, in the order they are drawn: top to bottom.                                    |
+| `icon` / `closeIcon`                       | `ReactNode`              | an add icon / a close icon | The trigger's icon while closed and while open.                                             |
+| `label`                                    | `ReactNode`              | -                          | A label makes the trigger an extended fab; without it, it is a circle.                      |
+| `aria-label`                               | `string`                 | -                          | Names a trigger with no label - the same open or closed.                                    |
+| `isOpen` / `defaultOpen`                   | `boolean`                | `false`                    | Controlled with `onOpen` and `onClose`, or at first.                                        |
+| `onOpen` / `onClose`                       | `(event) => void`        | -                          | Fired when it asks to open or close - on a press, Escape, a press away or an action chosen. |
+| `direction`                                | `'up'                    | 'down'                     | 'left'                                                                                      | 'right'`                                                                                                                       | `'up'` | A column above or below the trigger, or a row beside it. `left` and `right` are the page's start and end side, so they swap right to left. |
+| `align`                                    | `'start'                 | 'end'`                     | `'end'`                                                                                     | The edge of the trigger a column lines up with; mirrored right to left. A row is level with the trigger, so it does not apply. |
+| `color`                                    | `keyof Theme['palette']` | `'primary'`                | The trigger's color.                                                                        |
+| `size`                                     | `keyof Theme['sizes']`   | `'md'`                     | The trigger's size, and the items'.                                                         |
+| `m`, `p`, ... , `className`, `data-testid` |                          |                            | Spacing as `theme.space` keys; on the root.                                                 |
+
+## Against the window
+
+The actions are measured against the window as the menu opens, and again as the window is resized or the page
+scrolls - so a menu near the edge of a small screen never opens off it. The room kept from the edge is
+`theme.space[2]`; the step between the actions `theme.space[1]`.
+
+- **A row that does not fit becomes a column.** If a row is wider than the room beside the trigger, it opens as a
+  column instead - above the trigger where there is more room above it, else below - and goes back to the
+  row once the window has room for it. Each action counts as wide as its whole label.
+- **A column is no wider than the room it has,** along the edge it lines up with, so a long label is cut with an
+  ellipsis and the action stays on the screen.
+- **A column is no taller than the room it has,** and scrolls when it would be: the focus keys still reach every
+  action, scrolling it into view.
+
+## Keyboard
+
+- Enter and Space press the trigger. On a closed trigger the arrows of the axis the actions go along open it:
+  ArrowUp and ArrowDown for a column, ArrowLeft and ArrowRight for a row.
+- Open, those arrows move the focus along what is drawn - the actions and the trigger, top to bottom or
+  from side to side - without wrapping, skipping an action that is off; Home and End go to the first and the
+  last. A row reads the other way right to left, and so do its arrows. The other axis's arrows are the page's.
+- Escape closes it and returns the focus to the trigger; so does choosing an action. A press anywhere else
+  closes it too, and leaves the focus where the press put it.
+
+## Customization
+
+`theme.components.FabMenu` styles the `root` (the trigger's box) and the `list` (the stack of actions). Its
+`defaultProps` set `direction`, `align`, `color` and `size`. The trigger and the items are `Fab`s: their
+look is `theme.components.Fab`'s.
+
+## Accessibility
+
+- The trigger has `aria-expanded` and, while open, `aria-controls` the stack. A circular trigger needs an
+  `aria-label`; an extended one is named by its label.
+- Closed, the actions are `visibility: hidden`: out of the tab order and the accessibility tree.
+- The stack is a disclosure of buttons, not a `menu`: use `Menu` for a list of commands that takes arrow
+  keys as its only way in.
+
+## FabMenuItem
+Import: `import { FabMenuItem } from '@soroush.tech/design-system/FabMenu'`
+One action of a `FabMenu`: an extended `Fab` of the menu's size - a pill with an icon and a label. Pressing
+it runs `onClick` and closes the menu, and the focus goes back to the trigger.
+
+```tsx
+<FabMenuItem icon={<Icon name="add" color="inherit" />} onClick={newDocument}>
+  New document
+</FabMenuItem>
+```
+## Props
+
+| Prop       | Type                     | Default       | Description                                                      |
+| ---------- | ------------------------ | ------------- | ---------------------------------------------------------------- |
+| `children` | `ReactNode`              | -             | What the action says, and its name.                              |
+| `icon`     | `ReactNode`              | -             | An icon before the label.                                        |
+| `onClick`  | `(event) => void`        | -             | Fired when it is pressed - the menu closes after it.             |
+| `color`    | `keyof Theme['palette']` | `'secondary'` | Resolves to `theme.palette`.                                     |
+| `disabled` | `boolean`                | `false`       | Off: skipped by the arrow keys.                                  |
+| ...        |                          |               | Any `Fab` prop but its shape (`variant`, `size`, `isCollapsed`). |
+
+It must be in a `FabMenu`, and takes its size from it.
+
+## Snackbar
+Import: `import { Snackbar } from '@soroush.tech/design-system/Snackbar'`
+A transient message in a corner of the window, through a `Portal`. It hides itself after
+`autoHideDuration` - the clock stops while the pointer or the focus is on it, and starts again for
+`resumeHideDuration` once they leave - and asks to close on Escape and on a click away, `onClose`
+told why. It is a `role="status"`, announced politely, and never takes the focus. Several at once do
+not stack: the app queues them.
+
+```tsx
+import { Snackbar } from '@soroush.tech/design-system/Snackbar'
+
+;<Snackbar
+  isOpen={isOpen}
+  onClose={(_event, reason) => reason !== 'clickaway' && setIsOpen(false)}
+  autoHideDuration={4000}
+  message="Saved"
+  action={<Button variant="text">Undo</Button>}
+/>
+```
+## Props
+
+| Prop                       | Type                                                                        | Default                                       | Description                                                            |
+| -------------------------- | --------------------------------------------------------------------------- | --------------------------------------------- | ---------------------------------------------------------------------- |
+| `isOpen`                   | `boolean`                                                                   | -                                             | Whether it is shown. Controlled with `onClose`.                        |
+| `defaultOpen`              | `boolean`                                                                   | `false`                                       | Whether it is shown at first, when uncontrolled.                       |
+| `onClose`                  | `(event, reason: 'timeout' \| 'clickaway' \| 'escapeKeyDown') => void`      | -                                             | Fired when it asks to close, with why.                                 |
+| `autoHideDuration`         | `number`                                                                    | -                                             | How long it stays, in milliseconds. Without it, it stays until closed. |
+| `resumeHideDuration`       | `number`                                                                    | half of `autoHideDuration`                    | How long it stays once the pointer or focus has left it.               |
+| `message`, `action`        | `ReactNode`                                                                 | -                                             | The message, and what sits after it - a button.                        |
+| `children`                 | `ReactNode`                                                                 | -                                             | What it holds in place of the message and the action - an `Alert`.     |
+| `anchorOrigin`             | `{ vertical: 'top' \| 'bottom', horizontal: 'start' \| 'center' \| 'end' }` | `{ vertical: 'bottom', horizontal: 'start' }` | The corner of the window; `start` and `end` swap right to left.        |
+| `transition`               | `ComponentType<TransitionProps>`                                            | `Grow`                                        | The transition that shows and hides it. It must tell `onExited`.       |
+| `layer`                    | `keyof Theme['zOrder']`                                                     | `'snackbar'`                                  | Stacking layer.                                                        |
+| `container`                | `HTMLElement \| (() => HTMLElement \| null)`                                | `document.body`                               | Portal target.                                                         |
+| `shape`                    | `'square' \| 'rounded' \| 'pill'`                                           | `'rounded'`                                   | The corners: none, the radius of `borderRadius`, or a full round.      |
+| `borderRadius`             | `keyof Theme['radii']`                                                      | `theme.defaults.surfaceRadius`, else square   | The radius of a `'rounded'` snackbar; other shapes ignore it.          |
+| `bg`                       | `keyof Theme['background']`                                                 | `'modal'`                                     | Background.                                                            |
+| `textColor`                | `keyof Theme['text']`                                                       | `theme.defaults.textColor`, else `'initial'`  | Text color.                                                            |
+| `className`, `data-testid` |                                                                             |                                               | On the root - the place it sits in.                                    |
+
+## Closing
+
+Controlled, it never closes on its own: it asks - `onClose` is told `'timeout'`, `'escapeKeyDown'` or
+`'clickaway'` - and the owner sets `isOpen`. Uncontrolled, it closes itself on a time out and on
+Escape, but not on a click away. An owner that does not want a click away to close it ignores that
+reason.
+
+## Customization
+
+`theme.components.Snackbar` styles the `root` (the fixed place), the `content` (the bar), the `message`
+and the `action`. Its `defaultProps` set `anchorOrigin`, `autoHideDuration`, `resumeHideDuration` and
+`layer`, `shape`, `borderRadius`, `bg` and `textColor`. The `snackbar` key of `theme.zOrder` is its layer.
+
+## Server rendering
+
+The snackbar is drawn in a `Portal`, which renders nothing on the server: it is absent from server-rendered and prerendered HTML, and mounts on the client when it opens (on a click, hover, focus or key, or when the app sets it open). One that starts open, by its open prop, is still closed in the static HTML and opens on hydration. Its trigger renders on the server as usual.
+
+## Accessibility
+
+- `role="status"` is a polite live region: it is read when the user is idle.
+- It never takes the focus, so it never interrupts typing.
+- A message that hides itself cannot be the only way to learn something: for an error that must be
+  read, keep it open or put it in an `Alert`.
+
+## Alert
+Import: `import { Alert } from '@soroush.tech/design-system/Alert'`
+An inline message with a severity: an icon, the message, an optional `AlertTitle`, an action and a
+close control. `role="alert"` is announced at once; `"status"`, politely. Every text is yours - the
+message, and the close control's name (`closeLabel`) - no built-in English.
+
+```tsx
+import { Alert, AlertTitle } from '@soroush.tech/design-system/Alert'
+
+;<Alert severity="success" onClose={dismiss} closeLabel="Dismiss">
+  <AlertTitle>Saved</AlertTitle>
+  Your changes are live.
+</Alert>
+```
+## Props
+
+| Prop                       | Type                                          | Default                                     | Description                                      |
+| -------------------------- | --------------------------------------------- | ------------------------------------------- | ------------------------------------------------ |
+| `children`                 | `ReactNode`                                   | -                                           | The message. An `AlertTitle` may come first.     |
+| `severity`                 | `'success' \| 'info' \| 'warning' \| 'error'` | `'info'`                                    | Picks the icon and the palette color.            |
+| `variant`                  | `'standard' \| 'contained' \| 'outlined'`     | `'standard'`                                | Tinted, filled, or only outlined.                |
+| `icon`                     | `ReactNode \| false`                          | the severity's                              | The icon before the message; `false` draws none. |
+| `action`                   | `ReactNode`                                   | -                                           | What sits at the end of the alert - a button.    |
+| `onClose`                  | `(event) => void`                             | -                                           | Shows a close control.                           |
+| `closeLabel`               | `string`                                      | -                                           | Names the close control.                         |
+| `role`                     | `'alert' \| 'status'`                         | `'alert'`                                   | Announced at once, or politely.                  |
+| `borderRadius`             | `keyof Theme['radii']`                        | `theme.defaults.surfaceRadius`, else square | Corner radius.                                   |
+| `className`, `data-testid` |                                               |                                             | On the root.                                     |
+
+It takes the styled-system space props too.
+
+## Colors and contrast
+
+- **Standard**: a tint of the severity's `main` (15%) behind the theme's `text.initial`; the icon is
+  the severity's color.
+- **Outlined**: a border in the severity's `main`, `text.initial` for the text.
+- **Contained**: the severity's `main` with the theme's `contrastText` on it - so its contrast is the
+  theme's, and a theme whose `contrastText` is too light on a `main` makes it so here too.
+
+The standard and outlined texts are checked against AA in the tests, for each severity.
+
+## Customization
+
+`theme.components.Alert` styles the `root`, the `icon`, the `message`, the `action` and the
+`closeButton`; `AlertTitle` its `root`. Its `defaultProps` set `severity`, `variant`, `closeLabel`
+`role` and `borderRadius`.
+
+## Accessibility
+
+- A `role="alert"` is announced as it appears; use `"status"` for what need not interrupt.
+- The icon is decoration, hidden from assistive technology: the message says the rest.
+- Name the close control with `closeLabel`: an icon alone says nothing.
+
+## AlertTitle
+Import: `import { AlertTitle } from '@soroush.tech/design-system/Alert'`
+The title of an `Alert`: its first line of the message, in a heavier weight.
+
+```tsx
+<Alert severity="success">
+  <AlertTitle>Saved</AlertTitle>
+  Your changes are live.
+</Alert>
+```
+## Props
+
+| Prop                       | Type        | Default | Description  |
+| -------------------------- | ----------- | ------- | ------------ |
+| `children`                 | `ReactNode` | -       | The title.   |
+| `className`, `data-testid` |             |         | On the root. |
+
+## Customization
+
+`theme.components.AlertTitle` styles the `root`.
+
+## Badge
+Import: `import { Badge } from '@soroush.tech/design-system/Badge'`
+A count or a dot anchored over another element. The badge is decoration: it is hidden from assistive
+technology, and `badgeLabel` is what is heard instead - read with its child and, over one element,
+as that element's description. A count past `max` shows as `max+`, and a count of zero - or nothing -
+shows no badge, unless `shouldShowZero`.
+
+```tsx
+import { Badge } from '@soroush.tech/design-system/Badge'
+
+;<Badge badgeContent={4} badgeLabel="4 unread">
+  <Button>Inbox</Button>
+</Badge>
+```
+## Props
+
+| Prop                       | Type                                                            | Default                                  | Description                                                             |
+| -------------------------- | --------------------------------------------------------------- | ---------------------------------------- | ----------------------------------------------------------------------- |
+| `children`                 | `ReactNode`                                                     | -                                        | What the badge sits over.                                               |
+| `badgeContent`             | `ReactNode`                                                     | -                                        | The count or the text.                                                  |
+| `max`                      | `number`                                                        | `99`                                     | Above it, a number shows as `max+`.                                     |
+| `variant`                  | `'standard' \| 'dot'`                                           | `'standard'`                             | A count, or only a dot. A dot has no content, and is not hidden for it. |
+| `color`                    | `keyof Theme['palette']`                                        | `'error'`                                | Resolves to `theme.palette`; the text is the theme's `contrastText`.    |
+| `isHidden`                 | `boolean`                                                       | `false`                                  | Draws no badge.                                                         |
+| `shouldShowZero`           | `boolean`                                                       | `false`                                  | Draws a badge for a count of zero.                                      |
+| `anchorOrigin`             | `{ vertical: 'top' \| 'bottom', horizontal: 'start' \| 'end' }` | `{ vertical: 'top', horizontal: 'end' }` | The corner it sits on. `'end'` is the left in a right-to-left page.     |
+| `overlap`                  | `'rectangular' \| 'circular'`                                   | `'rectangular'`                          | Sits on the box's corner, or on the curve of a circle.                  |
+| `badgeLabel`               | `string`                                                        | -                                        | What a screen reader hears - no built-in English.                       |
+| `className`, `data-testid` |                                                                 |                                          | On the root.                                                            |
+
+It takes the styled-system space props too.
+
+## Customization
+
+`theme.components.Badge` styles the `root`, the `badge` and the visually hidden `label`. Its
+`defaultProps` set `max`, `variant`, `color`, `anchorOrigin` and `overlap`.
+
+## Accessibility
+
+- The visible badge is `aria-hidden`: a count heard as a bare number says little.
+- `badgeLabel` is a visually hidden text after the child. Over one element it also becomes that
+  element's `aria-describedby` (added to what it has), so a button reads "Inbox, 4 unread".
+- No label is rendered for a badge that is not drawn.
+
+## Chip
+Import: `import { Chip } from '@soroush.tech/design-system/Chip'`
+A compact tag: a label, an optional icon or avatar, and - given `onClick` - a button, and - given
+`onDelete` - a delete control. A clickable chip is one tab stop. A deletable one deletes through its
+control and through Backspace and Delete on the chip, so the control itself is out of the tab order;
+it is a button of its own, not a child of the chip's, so pressing it never clicks the chip.
+
+Every text is yours: the label, and the delete control's name (`deleteLabel`) - no built-in English.
+
+```tsx
+import { Chip } from '@soroush.tech/design-system/Chip'
+
+;<Chip label="Design" color="primary" />
+;<Chip label="Design" onClick={open} />
+;<Chip label="Design" onDelete={remove} deleteLabel="Remove Design" />
+```
+## Props
+
+| Prop                       | Type                                  | Default       | Description                                                  |
+| -------------------------- | ------------------------------------- | ------------- | ------------------------------------------------------------ |
+| `label`                    | `ReactNode`                           | -             | What the chip says. A long one truncates with an ellipsis.   |
+| `variant`                  | `'contained' \| 'outlined' \| 'text'` | `'contained'` | Filled, outlined, or only its text - as `Button`'s.          |
+| `color`                    | `keyof Theme['palette']`              | `'default'`   | Resolves to `theme.palette`.                                 |
+| `size`                     | `keyof Theme['sizes']`                | `'md'`        | Resolves against `theme.sizes`.                              |
+| `shape`                    | `'square' \| 'rounded' \| 'pill'`     | `'pill'`      | The corners: 0, `theme.radii.md`, or fully round.            |
+| `borderRadius`             | `keyof Theme['radii']`                | `'md'`        | The radius of a `'rounded'` chip; other shapes ignore it.    |
+| `icon`                     | `ReactNode`                           | -             | An icon before the label. An `avatar` takes its place.       |
+| `avatar`                   | `ReactNode`                           | -             | An avatar before the label.                                  |
+| `onClick`                  | `(event) => void`                     | -             | Makes the chip a button.                                     |
+| `onDelete`                 | `(event) => void`                     | -             | Shows a delete control, and deletes on Backspace and Delete. |
+| `deleteLabel`              | `string`                              | -             | Names the delete control.                                    |
+| `disabled`                 | `boolean`                             | `false`       | Stays as it is, off.                                         |
+| `className`, `data-testid` |                                       |               | On the root.                                                 |
+
+It takes the styled-system space props too.
+
+## Colors
+
+A filled chip is the `main` of its color with the theme's `contrastText` on it, so its contrast is the
+theme's. Outlined, it is the color as its border and text; with no color (`'default'`), the theme's
+`border.default` and `text.initial`.
+
+## Customization
+
+`theme.components.Chip` styles the `root`, the `body` (what is pressed: a button when clickable), the
+`label`, the `icon`, the `avatar` and the `deleteIcon` (the delete control). Its `defaultProps` set
+`variant`, `color`, `size`, `shape`, `borderRadius` and `deleteLabel`.
+
+## Accessibility
+
+- A plain chip is text, not focusable. A clickable one is a `button`.
+- A chip that only deletes takes the focus, for Backspace and Delete.
+- Name the delete control with `deleteLabel`: an icon alone says nothing.
+- `Autocomplete` shows its multiple values as chips.
 
 ## CircularProgress
 Import: `import { CircularProgress } from '@soroush.tech/design-system/CircularProgress'`
@@ -5611,11 +6347,267 @@ Override the colour with the `bg` prop (any `theme.background` token). All other
 <Backdrop bg="modal" />
 ```
 
+## Collapse
+Import: `import { Collapse } from '@soroush.tech/design-system/Collapse'`
+Opens and closes its content by its height - or, horizontal, its width. The size it moves to is
+measured from the content as it starts, and left to the content once it is open, so content that
+grows keeps showing. Closed, it keeps `collapsedSize`, and is hidden when that is nothing. A user
+who asked for less motion (`prefers-reduced-motion: reduce`) sees it change at once, and the
+callbacks still fire.
+
+```tsx
+import { Collapse } from '@soroush.tech/design-system/Collapse'
+
+;<Collapse isShown={isOpen}>
+  <p>Content that opens and closes.</p>
+</Collapse>
+```
+## Props
+
+| Prop                                 | Type                                   | Default                               | Description                                                       |
+| ------------------------------------ | -------------------------------------- | ------------------------------------- | ----------------------------------------------------------------- |
+| `children`                           | `ReactNode`                            | -                                     | What opens and closes.                                            |
+| `isShown`                            | `boolean`                              | `false`                               | Whether it is open.                                               |
+| `shouldAppear`                       | `boolean`                              | `true`                                | Moves on the first render too, when open.                         |
+| `shouldMountOnEnter`                 | `boolean`                              | `false`                               | Keeps the content out of the tree until it is first opened.       |
+| `shouldUnmountOnExit`                | `boolean`                              | `false`                               | Takes the content out of the tree once it is closed.              |
+| `timeout`                            | `number \| { enter, exit }`            | `theme.transitions.duration.standard` | How long it takes, in milliseconds.                               |
+| `easing`                             | `keyof Theme['transitions']['easing']` | `'standard'`                          | Which easing of the theme it moves by.                            |
+| `collapsedSize`                      | `string \| number`                     | `0`                                   | The height - or width - it keeps when closed. A number is pixels. |
+| `orientation`                        | `'vertical' \| 'horizontal'`           | `'vertical'`                          | Which way it opens.                                               |
+| `onEnter`, `onEntering`, `onEntered` | `(node: HTMLElement) => void`          | -                                     | Fired before it opens, as it starts to, and when it is open.      |
+| `onExit`, `onExiting`, `onExited`    | `(node: HTMLElement) => void`          | -                                     | Fired before it closes, as it starts to, and when it is closed.   |
+| `className`, `data-testid`           |                                        |                                       | On the root.                                                      |
+
+## Time and easing
+
+The time and the easing come from `theme.transitions` - `duration` (`short`, `standard`, `long`)
+and `easing` (`standard`, `enter`, `exit`) - so a theme changes how everything moves in one place.
+
+## Customization
+
+`theme.components.Collapse` styles the `root` (the box whose size moves), the `wrapper` that holds
+the content and is measured, and the `inner` box. Its `defaultProps` set `orientation`,
+`collapsedSize`, `timeout`, `easing` and `shouldAppear`.
+
+## Accessibility
+
+- Closed with no `collapsedSize`, the root is `visibility: hidden`, so its content is out of the
+  tab order and the accessibility tree. With a `collapsedSize` it stays visible.
+- Nothing moves for a user who asked for less motion.
+- Use `shouldUnmountOnExit` for content that should not exist while it is closed.
+- `Accordion` builds its panel on `Collapse`.
+
+## Fade
+Import: `import { Fade } from '@soroush.tech/design-system/Fade'`
+Fades one child in and out by its opacity. The child holds a `ref` and takes a `style` - a `ref`-holding component, or a DOM element - and the transition draws its opacity on it. Out, the child is hidden, so it takes no click or focus. A user who asked for less motion (`prefers-reduced-motion: reduce`) sees it change at once, and the callbacks still fire.
+
+```tsx
+import { Fade } from '@soroush.tech/design-system/Fade'
+
+;<Fade isShown={isOpen}>
+  <Paper p={3}>Content</Paper>
+</Fade>
+```
+## Props
+
+| Prop                                 | Type                                   | Default                          | Description                                                     |
+| ------------------------------------ | -------------------------------------- | -------------------------------- | --------------------------------------------------------------- |
+| `children`                           | `ReactElement`                         | -                                | The one element that moves.                                     |
+| `isShown`                            | `boolean`                              | `false`                          | Whether the child is shown.                                     |
+| `shouldAppear`                       | `boolean`                              | `true`                           | Moves on the first render too, when shown.                      |
+| `shouldMountOnEnter`                 | `boolean`                              | `false`                          | Keeps the child out of the tree until it is first shown.        |
+| `shouldUnmountOnExit`                | `boolean`                              | `false`                          | Takes the child out of the tree once it is out.                 |
+| `timeout`                            | `number                                | { enter: number; exit: number }` | `theme.transitions.duration.standard`                           | How long it takes, in milliseconds. |
+| `easing`                             | `keyof Theme['transitions']['easing']` | `'standard'`                     | Which easing of the theme it moves by.                          |
+| `onEnter`, `onEntering`, `onEntered` | `(node: HTMLElement) => void`          | -                                | Fired before it moves in, as it starts to, and when it is in.   |
+| `onExit`, `onExiting`, `onExited`    | `(node: HTMLElement) => void`          | -                                | Fired before it moves out, as it starts to, and when it is out. |
+
+## Time and easing
+
+The time and the easing come from `theme.transitions` - `duration` (`short`, `standard`, `long`) and `easing` (`standard`, `enter`, `exit`) - so a theme changes how everything moves in one place.
+
+## Accessibility
+
+- Out, the child is `visibility: hidden`, so it is out of the tab order and the accessibility tree.
+- Nothing moves for a user who asked for less motion.
+- Use `shouldUnmountOnExit` for content that should not exist while it is out.
+
+## Grow
+Import: `import { Grow } from '@soroush.tech/design-system/Grow'`
+Grows one child in from a little smaller, fading as it does, and shrinks it out. The child holds a `ref` and takes a `style` - a `ref`-holding component, or a DOM element - and the transition draws its opacity and its scale on it. Out, the child is hidden, so it takes no click or focus. A user who asked for less motion (`prefers-reduced-motion: reduce`) sees it change at once, and the callbacks still fire.
+
+```tsx
+import { Grow } from '@soroush.tech/design-system/Grow'
+
+;<Grow isShown={isOpen}>
+  <Paper p={3}>Content</Paper>
+</Grow>
+```
+## Props
+
+| Prop                                 | Type                                   | Default                          | Description                                                     |
+| ------------------------------------ | -------------------------------------- | -------------------------------- | --------------------------------------------------------------- |
+| `children`                           | `ReactElement`                         | -                                | The one element that moves.                                     |
+| `isShown`                            | `boolean`                              | `false`                          | Whether the child is shown.                                     |
+| `shouldAppear`                       | `boolean`                              | `true`                           | Moves on the first render too, when shown.                      |
+| `shouldMountOnEnter`                 | `boolean`                              | `false`                          | Keeps the child out of the tree until it is first shown.        |
+| `shouldUnmountOnExit`                | `boolean`                              | `false`                          | Takes the child out of the tree once it is out.                 |
+| `timeout`                            | `number                                | { enter: number; exit: number }` | `theme.transitions.duration.standard`                           | How long it takes, in milliseconds. |
+| `easing`                             | `keyof Theme['transitions']['easing']` | `'standard'`                     | Which easing of the theme it moves by.                          |
+| `onEnter`, `onEntering`, `onEntered` | `(node: HTMLElement) => void`          | -                                | Fired before it moves in, as it starts to, and when it is in.   |
+| `onExit`, `onExiting`, `onExited`    | `(node: HTMLElement) => void`          | -                                | Fired before it moves out, as it starts to, and when it is out. |
+
+## Time and easing
+
+The time and the easing come from `theme.transitions` - `duration` (`short`, `standard`, `long`) and `easing` (`standard`, `enter`, `exit`) - so a theme changes how everything moves in one place.
+
+## Accessibility
+
+- Out, the child is `visibility: hidden`, so it is out of the tab order and the accessibility tree.
+- Nothing moves for a user who asked for less motion.
+- Use `shouldUnmountOnExit` for content that should not exist while it is out.
+
+## Slide
+Import: `import { Slide } from '@soroush.tech/design-system/Slide'`
+Slides one child in from an edge of the window and back out. The child holds a `ref` and takes a `style` - a `ref`-holding component, or a DOM element - and the transition draws its position on it. Out, the child is hidden, so it takes no click or focus. A user who asked for less motion (`prefers-reduced-motion: reduce`) sees it change at once, and the callbacks still fire.
+
+```tsx
+import { Slide } from '@soroush.tech/design-system/Slide'
+
+;<Slide isShown={isOpen}>
+  <Paper p={3}>Content</Paper>
+</Slide>
+```
+## Props
+
+| Prop                                 | Type                                   | Default                          | Description                                                     |
+| ------------------------------------ | -------------------------------------- | -------------------------------- | --------------------------------------------------------------- |
+| `children`                           | `ReactElement`                         | -                                | The one element that moves.                                     |
+| `isShown`                            | `boolean`                              | `false`                          | Whether the child is shown.                                     |
+| `shouldAppear`                       | `boolean`                              | `true`                           | Moves on the first render too, when shown.                      |
+| `shouldMountOnEnter`                 | `boolean`                              | `false`                          | Keeps the child out of the tree until it is first shown.        |
+| `shouldUnmountOnExit`                | `boolean`                              | `false`                          | Takes the child out of the tree once it is out.                 |
+| `timeout`                            | `number                                | { enter: number; exit: number }` | `theme.transitions.duration.standard`                           | How long it takes, in milliseconds. |
+| `easing`                             | `keyof Theme['transitions']['easing']` | `'standard'`                     | Which easing of the theme it moves by.                          |
+| `direction`                          | `'up'                                  | 'down'                           | 'left'                                                          | 'right'`                            | `'down'` | The edge it slides in from, and out to. Mirrored in right-to-left pages. |
+| `onEnter`, `onEntering`, `onEntered` | `(node: HTMLElement) => void`          | -                                | Fired before it moves in, as it starts to, and when it is in.   |
+| `onExit`, `onExiting`, `onExited`    | `(node: HTMLElement) => void`          | -                                | Fired before it moves out, as it starts to, and when it is out. |
+
+## Time and easing
+
+The time and the easing come from `theme.transitions` - `duration` (`short`, `standard`, `long`) and `easing` (`standard`, `enter`, `exit`) - so a theme changes how everything moves in one place.
+
+## Where it comes from
+
+The distance it moves is measured as it starts - from where the child sits to the outside of the window - so it leaves the window from wherever it is. A child that moves is measured in its place, not where a move left it.
+
+## Accessibility
+
+- Out, the child is `visibility: hidden`, so it is out of the tab order and the accessibility tree.
+- Nothing moves for a user who asked for less motion.
+- Use `shouldUnmountOnExit` for content that should not exist while it is out.
+
+## Zoom
+Import: `import { Zoom } from '@soroush.tech/design-system/Zoom'`
+Zooms one child in from nothing and out to nothing. The child holds a `ref` and takes a `style` - a `ref`-holding component, or a DOM element - and the transition draws its scale on it. Out, the child is hidden, so it takes no click or focus. A user who asked for less motion (`prefers-reduced-motion: reduce`) sees it change at once, and the callbacks still fire.
+
+```tsx
+import { Zoom } from '@soroush.tech/design-system/Zoom'
+
+;<Zoom isShown={isOpen}>
+  <Paper p={3}>Content</Paper>
+</Zoom>
+```
+## Props
+
+| Prop                                 | Type                                   | Default                          | Description                                                     |
+| ------------------------------------ | -------------------------------------- | -------------------------------- | --------------------------------------------------------------- |
+| `children`                           | `ReactElement`                         | -                                | The one element that moves.                                     |
+| `isShown`                            | `boolean`                              | `false`                          | Whether the child is shown.                                     |
+| `shouldAppear`                       | `boolean`                              | `true`                           | Moves on the first render too, when shown.                      |
+| `shouldMountOnEnter`                 | `boolean`                              | `false`                          | Keeps the child out of the tree until it is first shown.        |
+| `shouldUnmountOnExit`                | `boolean`                              | `false`                          | Takes the child out of the tree once it is out.                 |
+| `timeout`                            | `number                                | { enter: number; exit: number }` | `theme.transitions.duration.standard`                           | How long it takes, in milliseconds. |
+| `easing`                             | `keyof Theme['transitions']['easing']` | `'standard'`                     | Which easing of the theme it moves by.                          |
+| `onEnter`, `onEntering`, `onEntered` | `(node: HTMLElement) => void`          | -                                | Fired before it moves in, as it starts to, and when it is in.   |
+| `onExit`, `onExiting`, `onExited`    | `(node: HTMLElement) => void`          | -                                | Fired before it moves out, as it starts to, and when it is out. |
+
+## Time and easing
+
+The time and the easing come from `theme.transitions` - `duration` (`short`, `standard`, `long`) and `easing` (`standard`, `enter`, `exit`) - so a theme changes how everything moves in one place.
+
+## Accessibility
+
+- Out, the child is `visibility: hidden`, so it is out of the tab order and the accessibility tree.
+- Nothing moves for a user who asked for less motion.
+- Use `shouldUnmountOnExit` for content that should not exist while it is out.
+
+## Tooltip
+Import: `import { Tooltip } from '@soroush.tech/design-system/Tooltip'`
+A short description of one child, shown on hover, keyboard focus and a long touch - a
+`role="tooltip"` in a `Portal`, placed beside its child and flipped for want of room. It opens and
+closes after their delays, stays open while the pointer is on the tooltip itself (so its text can be
+read and selected), closes on Escape, and never takes or traps the focus. The text is yours: no
+built-in English.
+
+```tsx
+import { Tooltip } from '@soroush.tech/design-system/Tooltip'
+
+;<Tooltip title="Save the page" placement="bottom" hasArrow>
+  <IconButton aria-label="Save">...</IconButton>
+</Tooltip>
+```
+## Props
+
+| Prop                                                            | Type                                                                             | Default                                      | Description                                                                                                            |
+| --------------------------------------------------------------- | -------------------------------------------------------------------------------- | -------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `children`                                                      | `ReactElement`                                                                   | -                                            | The one element it is about. It holds a `ref` and takes the handlers.                                                  |
+| `title`                                                         | `ReactNode`                                                                      | -                                            | What it says. Nothing says no tooltip.                                                                                 |
+| `placement`                                                     | `'top' \| 'bottom' \| 'left' \| 'right' \| 'auto'`, each with `-start` or `-end` | `'top'`                                      | The side of the child, and the end it lines up with; `auto` takes the side with the most room. Flips for want of room. |
+| `slots`                                                         | `{ root?, arrow? }`                                                              | -                                            | The element a part is drawn as - the surface or the arrow. It keeps its styles.                                        |
+| `slotProps`                                                     | `{ root?, arrow? }`                                                              | -                                            | Props for a part, put first: the tooltip's own `ref`, `id`, `role`, pointer handlers and the arrow's position win.     |
+| `hasArrow`                                                      | `boolean`                                                                        | `false`                                      | An arrow towards the middle of the child.                                                                              |
+| `enterDelay` / `leaveDelay`                                     | `number`                                                                         | `100` / `0`                                  | In milliseconds: before it opens, and after the pointer or focus has left.                                             |
+| `enterTouchDelay` / `leaveTouchDelay`                           | `number`                                                                         | `700` / `1500`                               | How long a touch is held to open it, and how long after it ends it closes.                                             |
+| `shouldDescribeChild`                                           | `boolean`                                                                        | `false`                                      | Describes the child (`aria-describedby`, while open) instead of naming it (`aria-label`).                              |
+| `isOpen` / `defaultOpen`                                        | `boolean`                                                                        | `false`                                      | Controlled with `onOpen` and `onClose`, or at first.                                                                   |
+| `onOpen` / `onClose`                                            | `(event) => void`                                                                | -                                            | Fired when it asks to open or close - once each, however often it is asked.                                            |
+| `shouldOpenOnHover` / `shouldOpenOnFocus` / `shouldOpenOnTouch` | `boolean`                                                                        | `true`                                       | What opens it. Focus is keyboard focus: a press with the pointer is not.                                               |
+| `layer`                                                         | `keyof Theme['zOrder']`                                                          | `'tooltip'`                                  | Stacking layer.                                                                                                        |
+| `borderRadius`                                                  | `keyof Theme['radii']`                                                           | `theme.defaults.surfaceRadius`, else square  | Corner radius.                                                                                                         |
+| `bg`                                                            | `keyof Theme['background']`                                                      | `'modal'`                                    | Background.                                                                                                            |
+| `textColor`                                                     | `keyof Theme['text']`                                                            | `theme.defaults.textColor`, else `'initial'` | Text color.                                                                                                            |
+| `className`, `data-testid`                                      |                                                                                  |                                              | On the tooltip.                                                                                                        |
+
+## Naming and describing
+
+By default a text `title` names its child (`aria-label`) - for an icon with no text of its own - unless the
+child already has a name. With `shouldDescribeChild` it describes it instead: the child gets
+`aria-describedby` for as long as the tooltip is open, added to a description it already has.
+
+## Customization
+
+`theme.components.Tooltip` styles the `root` (the surface) and the `arrow`. Its `defaultProps` set every
+prop above but `title` and `isOpen`. The arrow takes the surface's background. The `tooltip` key of `theme.zOrder` is its layer.
+
+## Server rendering
+
+The tooltip is drawn in a `Portal`, which renders nothing on the server: it is absent from server-rendered and prerendered HTML, and mounts on the client when it opens (on a click, hover, focus or key, or when the app sets it open). One that starts open, by its open prop, is still closed in the static HTML and opens on hydration. Its trigger renders on the server as usual.
+
+## Accessibility
+
+- `role="tooltip"`, with the child named or described by it.
+- Opens on keyboard focus and closes on Escape; stays open while hovered (WCAG 1.4.13: dismissible,
+  hoverable, persistent).
+- Never takes the focus, and holds nothing that needs it: a tooltip is for text, not controls.
+- Placed by `useAnchoredPlacement`, shared with `Menu`: it follows its child as the page scrolls.
+
 ## Portal
 Import: `import { Portal } from '@soroush.tech/design-system/Portal'`
 Renders its children into a DOM node outside the parent component hierarchy - the document body by default. Used by overlay components (Modal, Drawer) so their content escapes ancestor `overflow`/`transform`/stacking contexts.
 
-Resolution is synchronous during render, so the portaled content mounts in the same commit as the `<Portal>` - consumers can rely on their root ref being attached before their effects run. On the server (no `document`) it renders nothing.
+Resolution is synchronous during render, so the portaled content mounts in the same commit as the `<Portal>` - consumers can rely on their root ref being attached before their effects run. On the server (no `document`) it renders nothing, so what an overlay draws in a portal - a modal, a drawer, a popover, a menu, a tooltip, a snackbar, a list of suggestions - is absent from server-rendered and prerendered HTML and mounts on the client when it opens. An overlay that starts open is closed in the static HTML and opens on hydration; its trigger renders as usual.
 ## Props
 
 | Prop        | Type                                                 | Default         | Description                                                              |
@@ -5689,7 +6681,7 @@ Stacking, scroll-lock (with scrollbar-width compensation), and background `aria-
 | `shouldEnforceFocus` | `boolean`                                                 | `true`  | Pull focus back into the modal whenever it escapes. |
 | `shouldRestoreFocus` | `boolean`                                                 | `true`  | Restore focus to the trigger on close.              |
 | `scroll`             | `'paper' \| 'body'`                                       | `paper` | Where long content scrolls. See below.              |
-| `layer`              | `'appBar' \| 'drawer' \| 'modal'`                         | `modal` | Stacking layer, resolved from `theme.zOrder`.       |
+| `layer`              | `keyof Theme['zOrder']`                                   | `modal` | Stacking layer, resolved from `theme.zOrder`.       |
 
 The content element should carry its own dialog semantics (`role="dialog"`, `aria-modal`, a label). Modal's root is `role="presentation"`.
 
@@ -5703,6 +6695,10 @@ When content is too tall for the viewport, `scroll` controls where it scrolls:
 - **`scroll="body"`** - the root itself is the scroll container. The surface keeps its natural height and the whole root (surface plus backdrop) scrolls. Short content is centred; tall content scrolls instead of clipping. Don't cap the surface height - use a margin for breathing room.
 
 ---
+
+## Server rendering
+
+The modal and its backdrop are drawn in a `Portal`, which renders nothing on the server: it is absent from server-rendered and prerendered HTML, and mounts on the client when it opens (on a click, hover, focus or key, or when the app sets it open). One that starts open, by its open prop, is still closed in the static HTML and opens on hydration. Its trigger renders on the server as usual.
 
 ## Example
 
@@ -5769,6 +6765,10 @@ function Example() {
 | `shouldAutoFocus` / `shouldTrapFocus` / `shouldEnforceFocus` / `shouldRestoreFocus` | `boolean`                                            | `true`                                    | Focus-management flags forwarded to `Modal`. Set `false` for `aria-activedescendant` patterns. |
 | `shouldKeepMounted`                                                                 | `boolean`                                            | `false`                                   | Keep the content mounted while closed.                                                         |
 | `layer`                                                                             | `keyof Theme['zOrder']`                              | `'modal'`                                 | Stacking layer.                                                                                |
+
+## Server rendering
+
+The popover is drawn in a `Portal`, which renders nothing on the server: it is absent from server-rendered and prerendered HTML, and mounts on the client when it opens (on a click, hover, focus or key, or when the app sets it open). One that starts open, by its open prop, is still closed in the static HTML and opens on hydration. Its trigger renders on the server as usual.
 
 ## Notes
 
@@ -6543,7 +7543,7 @@ const brand = createTheme(baseTheme, {
 
 The `Theme/Customization` Storybook story renders all three mechanisms under a customized theme and is locked by Chromatic - it is the living contract.
 
-Every styled element is registered - the `ThemeComponents` interface in `src/theme/themes.ts` is the authoritative key/slot list, so `styleOverrides` reaches every root and every sub-element slot (Switch's `track`/`thumb`/`input`, Select's `listbox`, LinearProgress's bars, ...), including the layout primitives `View`/`Flex`/`Grid`. Two cautions: an override on `View`/`Flex`/`Grid` cascades into the internals of every composed component (use those keys for app-wide policy only), and hidden/structural slots (`input`, `valueGhost`, `positioner`) carry accessibility or layout behavior - restyle their looks, not their geometry/visibility. Note that `defaultProps` is honored only by components that resolve props through `useDefaultProps` (currently `Breadcrumbs`, `Button`, `Card`, `Pressable`, `Rating`, `NumberField`, `InputRange`, `TransferList`, `Tabs`, `Tab`, `TabScrollButton`, `TabPanel`, `Menu`, `ContextMenu`, `MenuList` and `MenuItem`); everywhere else, use `styleOverrides`/`variants`.
+Every styled element is registered - the `ThemeComponents` interface in `src/theme/themes.ts` is the authoritative key/slot list, so `styleOverrides` reaches every root and every sub-element slot (Switch's `track`/`thumb`/`input`, Select's `listbox`, LinearProgress's bars, ...), including the layout primitives `View`/`Flex`/`Grid`. Two cautions: an override on `View`/`Flex`/`Grid` cascades into the internals of every composed component (use those keys for app-wide policy only), and hidden/structural slots (`input`, `valueGhost`, `positioner`) carry accessibility or layout behavior - restyle their looks, not their geometry/visibility. Note that `defaultProps` is honored only by components that resolve props through `useDefaultProps` (currently `Breadcrumbs`, `Button`, `Card`, `Pressable`, `Rating`, `NumberInput`, `RangeInput`, `TransferList`, `Collapse`, `FabMenu`, `ScrollArea`, `Autocomplete`, `Tooltip`, `Snackbar`, `Fab`, `Alert`, `Badge`, `Chip`, `Accordion`, `AccordionSummary`, `AccordionGroup`, `Tabs`, `Tab`, `TabScrollButton`, `TabPanel`, `Menu`, `ContextMenu`, `MenuList` and `MenuItem`); everywhere else, use `styleOverrides`/`variants`.
 
 ---
 
@@ -6679,7 +7679,9 @@ Copy `providers.tsx` to `app/providers.tsx`. Two things it does:
 - **Global reset** - `border-box` everywhere, zero body margin,
   `background.primary` / `text.initial` / `fonts.body` on `<body>`.
 
-Change the cache key (`createCache({ key: "dc" })`) to a short app-specific prefix.
+Change the cache key (`createCache({ key: "dc" })`) to a short app-specific prefix. Under a
+strict Content Security Policy, give the cache the response's nonce too
+(`createCache({ key: "dc", nonce })`) - every style tag Emotion inserts then carries it.
 
 Then in `app/layout.tsx`:
 
