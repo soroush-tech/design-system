@@ -1,5 +1,6 @@
 export { babyBlue } from './babyBlue'
 export { deepCrimson } from './deepCrimson'
+export { docsBlue } from './docsBlue'
 export { forestGreen } from './forestGreen'
 export { lightSurface } from './lightSurface'
 export { blackAlpha } from './blackAlpha'

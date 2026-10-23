@@ -33,7 +33,7 @@ export default function Page() {
   const demosName = item?.family ?? name
   const sourceDir = item ? item.readmePath.replace(/\/README\.md$/, '') : ''
   return (
-    <Layout sidebar={<DocsNav />}>
+    <Layout sidebar={<DocsNav />} hasToc>
       {item && (
         <ComponentHero
           item={item}

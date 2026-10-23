@@ -57,7 +57,12 @@ export function VersionMenu({ pkg, pathname }: Readonly<VersionMenuProps>) {
         window.location.assign(value === 'latest' ? `/${pkg}/` : `/${pkg}/${value}/`)
       }}
       trigger={
-        <Button variant="outlined" size="sm" aria-label={`Documentation version, v${shown}`}>
+        <Button
+          variant="outlined"
+          size="sm"
+          aria-label={`Documentation version, v${shown}`}
+          style={{ textTransform: 'none' }}
+        >
           v{shown}
         </Button>
       }

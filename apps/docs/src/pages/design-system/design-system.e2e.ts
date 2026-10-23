@@ -88,6 +88,15 @@ test.describe('design-system section', () => {
     await expect(tabs.getByRole('link', { name: 'Specs' })).toBeVisible()
   })
 
+  test('a wide window lists the sections of the page in a contents column', async ({ page }) => {
+    await page.setViewportSize({ width: 1600, height: 900 })
+    await page.goto('/design-system/api/button/')
+    const toc = page.getByRole('navigation', { name: 'On this page' })
+    await expect(toc.getByRole('link', { name: 'Button-specific props' })).toBeVisible()
+    await toc.getByRole('link', { name: 'Styled-system props' }).click()
+    await expect(page).toHaveURL(/#styled-system-props$/)
+  })
+
   test('a component with accessibility notes has the tab, and the notes are only there', async ({
     page,
   }) => {

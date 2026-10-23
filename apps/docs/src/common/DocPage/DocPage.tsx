@@ -13,7 +13,7 @@ export interface DocPageProps {
 /** A docs page: the section sidebar plus a rendered in-repo markdown file. */
 export function DocPage({ source, title }: Readonly<DocPageProps>) {
   return (
-    <Layout sidebar={<DocsNav />}>
+    <Layout sidebar={<DocsNav />} hasToc>
       {title && (
         <Typography variant="h1" gutterBottom>
           {title}

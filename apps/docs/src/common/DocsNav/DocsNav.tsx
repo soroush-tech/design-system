@@ -39,7 +39,7 @@ const GroupSummary = styled('summary')(({ theme }) => ({
   color: get(theme, 'text.initial'),
   '&::-webkit-details-marker': { display: 'none' },
   '&:hover': { backgroundColor: tone(theme, 0.1) },
-  'details[open] > &::after': { transform: 'rotate(180deg)' },
+  'details[open] > &::after': { transform: 'rotate(-135deg) translate(-2px, -2px)' },
   '&::after': {
     content: '""',
     width: '0.5rem',

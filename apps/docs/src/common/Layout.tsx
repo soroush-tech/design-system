@@ -4,6 +4,7 @@ import { Flex } from '@soroush.tech/design-system/Flex'
 import { Typography } from '@soroush.tech/design-system/Typography'
 import { View } from '@soroush.tech/design-system/View'
 import { NavRail } from 'src/common/NavRail/NavRail'
+import { OnThisPage } from 'src/common/OnThisPage/OnThisPage'
 import { VersionMenu } from 'src/common/VersionMenu/VersionMenu'
 import { sectionFor } from 'src/common/nav'
 import { usePageContext } from 'src/hooks/usePageContext'
@@ -15,13 +16,15 @@ export interface LayoutProps {
   children: ReactNode
   /** Section navigation. Renders as a column beside the rail on wide screens and in a drawer on mobile. */
   sidebar?: ReactNode
+  /** Lists the page's sections in a column beside it, on wide screens. */
+  hasToc?: boolean
 }
 
 // The mobile navigation drawer's id - the navbar's menu button opens it through popovertarget,
 // so it works on the prerendered pages with JavaScript off.
 const NAV_DRAWER = 'docs-nav'
 
-function LayoutFrame({ children, sidebar }: Readonly<LayoutProps>) {
+function LayoutFrame({ children, sidebar, hasToc }: Readonly<LayoutProps>) {
   const { open } = useSearch()
   const { urlPathname } = usePageContext()
   const current = urlPathname || '/'
@@ -71,6 +74,24 @@ function LayoutFrame({ children, sidebar }: Readonly<LayoutProps>) {
               {children}
             </View>
           </Flex>
+          {hasToc && (
+            <View
+              as="aside"
+              aria-label="Contents"
+              display={{ xs: 'none', xl: 'block' }}
+              width="14rem"
+              minWidth="14rem"
+              px={2}
+              py={5}
+              position="sticky"
+              top={0}
+              maxHeight="100dvh"
+              overflowY="auto"
+              style={{ alignSelf: 'flex-start' }}
+            >
+              <OnThisPage />
+            </View>
+          )}
         </Flex>
         <Flex as="footer" justifyContent="center" px={4} py={3}>
           <Typography variant="body2" color="secondary">

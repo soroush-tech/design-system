@@ -6,11 +6,11 @@ import { PageContext } from 'src/common/PageContext'
 import { ThemeModeProvider } from 'src/theme/ThemeModeProvider'
 import { Layout } from './Layout'
 
-const renderLayout = (sidebar?: React.ReactNode, urlPathname = '/design-system/') =>
+const renderLayout = (sidebar?: React.ReactNode, urlPathname = '/design-system/', hasToc = false) =>
   render(
     <ThemeModeProvider>
       <PageContext.Provider value={{ urlPathname } as VikePageContext}>
-        <Layout sidebar={sidebar}>
+        <Layout sidebar={sidebar} hasToc={hasToc}>
           <div data-testid="content">page content</div>
         </Layout>
       </PageContext.Provider>
@@ -31,6 +31,14 @@ describe('Layout', () => {
     expect(
       within(bar).getByRole('button', { name: /Documentation version, v\d+\.\d+\.\d+/ })
     ).toBeInTheDocument()
+  })
+
+  it('has a contents column beside the page only when it is asked for', () => {
+    const { unmount } = renderLayout()
+    expect(screen.queryByLabelText('Contents')).toBeNull()
+    unmount()
+    renderLayout(undefined, '/design-system/', true)
+    expect(screen.getByLabelText('Contents').tagName).toBe('ASIDE')
   })
 
   it('keeps the content in a column no wider than 1200px', () => {

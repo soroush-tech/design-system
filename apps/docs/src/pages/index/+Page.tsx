@@ -111,7 +111,7 @@ export default function Page() {
         </Typography>
         <Grid gridTemplateColumns={{ xs: '1fr', md: '1fr 1fr' }} gridGap={3}>
           {FEATURES.map((feature) => (
-            <Card key={feature.title} p={3}>
+            <Card key={feature.title} p={3} borderRadius="lg">
               <Typography variant="h6" as="h3" gutterBottom>
                 {feature.title}
               </Typography>
@@ -135,7 +135,7 @@ export default function Page() {
               style={{ textDecoration: 'none' }}
               aria-label={`${name} documentation`}
             >
-              <Card p={3} style={{ height: '100%' }}>
+              <Card p={3} borderRadius="lg" style={{ height: '100%' }}>
                 <Typography variant="h6" as="h3" gutterBottom>
                   {name}
                 </Typography>

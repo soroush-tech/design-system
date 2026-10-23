@@ -14,7 +14,7 @@ export function ComponentCard({ item }: Readonly<{ item: ComponentNavItem }>) {
       href={sectionPath('design-system', `/components/${item.slug}/`)}
       style={{ textDecoration: 'none' }}
     >
-      <Card p={0} style={{ overflow: 'hidden' }}>
+      <Card p={0} borderRadius="lg" style={{ overflow: 'hidden' }}>
         <Flex bg="secondary" alignItems="center" justifyContent="center" height="184px" p={1}>
           <ComponentIllustration name={item.name} />
         </Flex>
