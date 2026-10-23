@@ -4,6 +4,9 @@ import { Flex } from '@soroush.tech/design-system/Flex'
 import { Typography } from '@soroush.tech/design-system/Typography'
 import { View } from '@soroush.tech/design-system/View'
 import { NavRail } from 'src/common/NavRail/NavRail'
+import { VersionMenu } from 'src/common/VersionMenu/VersionMenu'
+import { sectionFor } from 'src/common/nav'
+import { usePageContext } from 'src/hooks/usePageContext'
 import { Navbar } from 'src/common/Navbar/Navbar'
 import { useSearch } from 'src/common/Search/SearchContext'
 import { SearchProvider } from 'src/common/Search/SearchProvider'
@@ -20,6 +23,8 @@ const NAV_DRAWER = 'docs-nav'
 
 function LayoutFrame({ children, sidebar }: Readonly<LayoutProps>) {
   const { open } = useSearch()
+  const { urlPathname } = usePageContext()
+  const current = urlPathname || '/'
   return (
     <Flex flexDirection="row" minHeight="100dvh" width="100%">
       {/* The rail is for wide screens; narrow ones get the top bar and its drawer. */}
@@ -28,7 +33,11 @@ function LayoutFrame({ children, sidebar }: Readonly<LayoutProps>) {
       </View>
       <Flex flexDirection="column" flex="1 1 auto" minWidth={0}>
         <View display={{ xs: 'block', lg: 'none' }}>
-          <Navbar menuDrawer={sidebar ? NAV_DRAWER : undefined} onSearch={open} />
+          <Navbar
+            menuDrawer={sidebar ? NAV_DRAWER : undefined}
+            onSearch={open}
+            versionMenu={<VersionMenu pkg={sectionFor(current).pkg} pathname={current} />}
+          />
         </View>
         {sidebar && (
           <Drawer id={NAV_DRAWER} anchor="left">

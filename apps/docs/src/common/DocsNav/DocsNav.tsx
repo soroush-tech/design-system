@@ -2,13 +2,8 @@ import { styled, createShouldForwardProp, get, type Theme } from '@soroush.tech/
 import { alpha } from '@soroush.tech/design-system/utils'
 import { Flex } from '@soroush.tech/design-system/Flex'
 import { Typography } from '@soroush.tech/design-system/Typography'
-import { Chip } from '@soroush.tech/lab/Chip'
-import designSystemPkg from 'packages/design-system/package.json'
-import markdownPkg from 'packages/markdown/package.json'
-import styledSystemPkg from 'packages/styled-system/package.json'
 import { View } from '@soroush.tech/design-system/View'
 import { railItemFor, sectionFor, type NavGroup } from 'src/common/nav'
-import { VersionSwitcher } from 'src/common/VersionSwitcher/VersionSwitcher'
 import { usePageContext } from 'src/hooks/usePageContext'
 
 const normalize = (path: string): string => (path.endsWith('/') ? path : `${path}/`)
@@ -63,13 +58,6 @@ const PACKAGES = [
   { pkg: 'markdown', label: 'Markdown', href: '/markdown/' },
   { pkg: 'styled-system', label: 'Styled System', href: '/styled-system/' },
 ] as const
-
-// The version of each package, as published - the section's is shown above its pages.
-const VERSIONS = {
-  'design-system': designSystemPkg.version,
-  markdown: markdownPkg.version,
-  'styled-system': styledSystemPkg.version,
-}
 
 function GroupList({ group, current }: Readonly<{ group: NavGroup; current: string }>) {
   const list = (
@@ -133,10 +121,6 @@ export function DocsNav() {
             {label}
           </TreeLink>
         ))}
-      </Flex>
-      <Flex flexDirection="row" alignItems="center" gap={1} mb={2} px={1}>
-        <Chip>v{VERSIONS[section.pkg]}</Chip>
-        <VersionSwitcher pkg={section.pkg} pathname={current} />
       </Flex>
       {active.groups.map((group) => (
         <GroupList key={group.label} group={group} current={current} />

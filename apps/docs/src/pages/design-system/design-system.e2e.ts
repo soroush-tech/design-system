@@ -10,10 +10,38 @@ test.describe('design-system section', () => {
     ).toBeVisible()
   })
 
-  test('the sidebar shows the design-system version chip', async ({ page }) => {
+  test('the rail shows the version of the docs under the search', async ({ page }) => {
     await page.goto('/design-system/')
-    const nav = page.getByRole('navigation', { name: 'Design system documentation' })
-    await expect(nav.getByText(/^v\d+\.\d+\.\d+$/)).toBeVisible()
+    const rail = page.getByRole('navigation', { name: 'Primary' })
+    await expect(rail.getByRole('button', { name: 'Search' })).toBeVisible()
+    await expect(
+      rail.getByRole('button', { name: /Documentation version, v\d+\.\d+\.\d+/ })
+    ).toBeVisible()
+  })
+
+  test('the version menu lists the released versions and opens the one that is chosen', async ({
+    page,
+  }) => {
+    // The deploy writes /versions.json at the domain root; a local build has none, so it is given.
+    await page.route('**/versions.json', (route) =>
+      route.fulfill({ json: { 'design-system': ['1.3.3'] } })
+    )
+    // A snapshot is a build of its own, so its page is given too.
+    await page.route('**/design-system/1.3.3/', (route) =>
+      route.fulfill({ contentType: 'text/html', body: '<title>1.3.3 snapshot</title>' })
+    )
+    await page.goto('/design-system/')
+    await page
+      .getByRole('navigation', { name: 'Primary' })
+      .getByRole('button', { name: /Documentation version/ })
+      .click()
+    const menu = page.getByRole('menu', { name: 'Documentation version' })
+    await expect(menu.getByRole('menuitemradio', { name: /^Latest/ })).toHaveAttribute(
+      'aria-checked',
+      'true'
+    )
+    await menu.getByRole('menuitemradio', { name: 'v1.3.3' }).click()
+    await expect(page).toHaveURL(/\/design-system\/1\.3\.3\/$/)
   })
 
   test('sidebar navigates to installation', async ({ page }) => {

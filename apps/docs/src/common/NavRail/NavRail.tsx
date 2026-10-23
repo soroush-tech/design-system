@@ -3,6 +3,7 @@ import { alpha } from '@soroush.tech/design-system/utils'
 import { Flex } from '@soroush.tech/design-system/Flex'
 import { sectionFor, railItemFor, type RailItem } from 'src/common/nav'
 import { useSearch } from 'src/common/Search/SearchContext'
+import { VersionMenu } from 'src/common/VersionMenu/VersionMenu'
 import { usePageContext } from 'src/hooks/usePageContext'
 import { useThemeMode } from 'src/theme/useThemeMode'
 import { RailGlyph, type GlyphName } from './RailGlyph'
@@ -15,6 +16,8 @@ const tone = (theme: Theme, strength: number) => alpha(get(theme, 'palette.prima
 
 const RailRoot = styled('nav')(({ theme }) => ({
   position: 'sticky',
+  // Above the sidebar beside it: the version menu opens from the rail over the sidebar's column.
+  zIndex: 2,
   top: 0,
   alignSelf: 'flex-start',
   display: 'flex',
@@ -105,7 +108,8 @@ export function RailLinks({ item }: Readonly<{ item: RailItem }>) {
 /** The navigation rail: search, the parts of the docs as icons with names, the color mode. */
 export function NavRail() {
   const { urlPathname } = usePageContext()
-  const section = sectionFor(normalize(urlPathname || '/'))
+  const current = normalize(urlPathname || '/')
+  const section = sectionFor(current)
   const { open } = useSearch()
   const { isDark, toggleTheme } = useThemeMode()
   return (
@@ -113,6 +117,7 @@ export function NavRail() {
       <RailButton type="button" onClick={open} aria-label="Search">
         <RailGlyph name="search" />
       </RailButton>
+      <VersionMenu pkg={section.pkg} pathname={current} />
       <Flex flexDirection="column" alignItems="center" width="100%" mt={2} gap={0.5}>
         {section.rail.map((item) => (
           <RailLinks key={item.id} item={item} />

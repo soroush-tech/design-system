@@ -91,6 +91,13 @@ describe('NavRail', () => {
     expect(names).toEqual(['Home', 'Get started', 'Docs', 'Guides'])
   })
 
+  it('puts the version of the docs under the search, to choose another', () => {
+    renderRail('/design-system/')
+    const buttons = within(rail()).getAllByRole('button')
+    expect(buttons[0]).toHaveAccessibleName('Search')
+    expect(buttons[1]).toHaveAccessibleName(/Documentation version, v\d+\.\d+\.\d+/)
+  })
+
   it('opens the search from its button', async () => {
     const user = userEvent.setup()
     renderRail('/design-system/')

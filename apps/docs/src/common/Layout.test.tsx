@@ -6,10 +6,10 @@ import { PageContext } from 'src/common/PageContext'
 import { ThemeModeProvider } from 'src/theme/ThemeModeProvider'
 import { Layout } from './Layout'
 
-const renderLayout = (sidebar?: React.ReactNode) =>
+const renderLayout = (sidebar?: React.ReactNode, urlPathname = '/design-system/') =>
   render(
     <ThemeModeProvider>
-      <PageContext.Provider value={{ urlPathname: '/design-system/' } as VikePageContext}>
+      <PageContext.Provider value={{ urlPathname } as VikePageContext}>
         <Layout sidebar={sidebar}>
           <div data-testid="content">page content</div>
         </Layout>
@@ -23,6 +23,14 @@ describe('Layout', () => {
     expect(screen.getByRole('link', { name: 'SOROUSH.DESIGN' })).toHaveAttribute('href', '/')
     expect(screen.getByTestId('content')).toHaveTextContent('page content')
     expect(screen.getByText('@soroush.tech design system')).toBeInTheDocument()
+  })
+
+  it('puts the version menu in the top bar, and reads an empty path as the root', () => {
+    renderLayout(undefined, '')
+    const bar = screen.getByRole('banner')
+    expect(
+      within(bar).getByRole('button', { name: /Documentation version, v\d+\.\d+\.\d+/ })
+    ).toBeInTheDocument()
   })
 
   it('keeps the content in a column no wider than 1200px', () => {
