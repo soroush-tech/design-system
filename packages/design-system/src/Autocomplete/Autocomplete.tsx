@@ -1,4 +1,14 @@
-import { Fragment, useCallback, useContext, useEffect, useId, useRef, type ReactNode } from 'react'
+import {
+  Fragment,
+  useCallback,
+  useContext,
+  useEffect,
+  useId,
+  useRef,
+  type MouseEvent,
+  type ReactNode,
+  type RefObject,
+} from 'react'
 import type { LayoutProps, SpaceProps } from '@soroush.tech/styled-system'
 import { createShouldForwardProp, get, props, space, styled, system, type Theme } from '../index'
 import { useDefaultProps, useTheme } from '../theme'
@@ -351,6 +361,83 @@ const useLabels = (given: Pick<AutocompleteProps, LabelKey>) => {
   }
 }
 
+// The list shows what there is to choose, a word that there is nothing, or that it is coming.
+const getHasStatus = (count: number, isLoading: boolean, noOptionsText: ReactNode) =>
+  count === 0 && (isLoading || noOptionsText !== undefined)
+
+// The highlighted option is kept in view as the keys walk the list.
+const useScrollHighlightIntoView = (
+  isShown: boolean,
+  highlight: number,
+  optionId: (index: number) => string
+) => {
+  useEffect(() => {
+    if (!isShown || highlight === -1) return
+    document.getElementById(optionId(highlight))?.scrollIntoView?.({ block: 'nearest' })
+    // The id of an option is its place under one base: it changes only with the highlight.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isShown, highlight])
+}
+
+// The chosen options of a multiple field, each a chip - deletable when the field names its delete.
+const SelectedTags = <T,>({
+  selected,
+  getOptionLabel,
+  getRemoveLabel,
+  onRemove,
+  disabled,
+}: Readonly<{
+  selected: readonly T[]
+  getOptionLabel: (option: T) => string
+  getRemoveLabel?: (label: string) => string
+  onRemove: (event: React.SyntheticEvent, option: T) => void
+  disabled?: boolean
+}>) => (
+  <AutocompleteTags>
+    {selected.map((option, index) => {
+      const label = getOptionLabel(option)
+      return (
+        <Fragment key={`${label}-${index}`}>
+          <Chip
+            label={label}
+            size="sm"
+            disabled={disabled}
+            onDelete={getRemoveLabel ? (event) => onRemove(event, option) : undefined}
+            deleteLabel={getRemoveLabel?.(label)}
+          />
+        </Fragment>
+      )
+    })}
+  </AutocompleteTags>
+)
+
+// A press on the frame - not on the input or a control - puts the cursor in the field.
+const focusOnFramePress = (
+  event: MouseEvent<HTMLElement>,
+  inputRef: RefObject<HTMLInputElement | null>
+) => {
+  if (event.target !== event.currentTarget) return
+  event.preventDefault()
+  inputRef.current?.focus()
+}
+
+// What the input says of the list it controls, while it is shown.
+const getListAria = (
+  isShown: boolean,
+  highlight: number,
+  listboxId: string,
+  optionId: (index: number) => string
+) => ({
+  'aria-controls': isShown ? listboxId : undefined,
+  'aria-activedescendant': isShown && highlight !== -1 ? optionId(highlight) : undefined,
+})
+
+// The arrow is named for what it does next, and hidden from assistive technology when it has no name.
+const getIndicatorLabel = (isShown: boolean, closeLabel?: string, openLabel?: string) => {
+  const label = isShown ? closeLabel : openLabel
+  return { 'aria-label': label, 'aria-hidden': label === undefined }
+}
+
 // How the field looks and behaves - the instance's, else the theme's.
 const useSettings = (given: Pick<AutocompleteProps, SettingKey>) => {
   const theme = useTheme()
@@ -486,8 +573,7 @@ export function Autocomplete<T = string, Multiple extends boolean | undefined = 
   })
   const { filtered, highlight } = state
 
-  // The list shows what there is to choose, a word that there is nothing, or that it is coming.
-  const hasStatus = filtered.length === 0 && (isLoading || noOptionsText !== undefined)
+  const hasStatus = getHasStatus(filtered.length, isLoading, noOptionsText)
   const isShown = state.isOpen && !fc.disabled && (filtered.length > 0 || hasStatus)
 
   // Required of the field until something is chosen.
@@ -509,13 +595,7 @@ export function Autocomplete<T = string, Multiple extends boolean | undefined = 
     onPlaced,
   })
 
-  // The highlighted option is kept in view as the keys walk the list.
-  useEffect(() => {
-    if (!isShown || highlight === -1) return
-    document.getElementById(optionId(highlight))?.scrollIntoView?.({ block: 'nearest' })
-    // The id of an option is its place under this one base.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isShown, highlight, baseId])
+  useScrollHighlightIntoView(isShown, highlight, optionId)
 
   const renderRow = (option: T, index: number) => {
     const isSelected = state.isSelected(option)
@@ -570,34 +650,17 @@ export function Autocomplete<T = string, Multiple extends boolean | undefined = 
         isInField={isInField}
         className={className}
         data-testid={dataTestid}
-        onMouseDown={(event) => {
-          // A press on the frame - not on the input or a control - puts the cursor in the field.
-          if (event.target === event.currentTarget) {
-            event.preventDefault()
-            inputRef.current?.focus()
-          }
-        }}
+        onMouseDown={(event) => focusOnFramePress(event, inputRef)}
         {...spaceProps}
       >
         {multiple === true && state.selected.length > 0 ? (
-          <AutocompleteTags>
-            {state.selected.map((option, index) => {
-              const label = getOptionLabel(option)
-              return (
-                <Fragment key={`${label}-${index}`}>
-                  <Chip
-                    label={label}
-                    size="sm"
-                    disabled={fc.disabled}
-                    onDelete={
-                      getRemoveLabel ? (event) => state.removeOption(event, option) : undefined
-                    }
-                    deleteLabel={getRemoveLabel?.(label)}
-                  />
-                </Fragment>
-              )
-            })}
-          </AutocompleteTags>
+          <SelectedTags
+            selected={state.selected}
+            getOptionLabel={getOptionLabel}
+            getRemoveLabel={getRemoveLabel}
+            onRemove={state.removeOption}
+            disabled={fc.disabled}
+          />
         ) : null}
         <AutocompleteInput
           ref={inputRef}
@@ -607,8 +670,7 @@ export function Autocomplete<T = string, Multiple extends boolean | undefined = 
           role="combobox"
           aria-autocomplete="list"
           aria-expanded={isShown}
-          aria-controls={isShown ? listboxId : undefined}
-          aria-activedescendant={isShown && highlight !== -1 ? optionId(highlight) : undefined}
+          {...getListAria(isShown, highlight, listboxId, optionId)}
           aria-label={ariaLabel}
           aria-labelledby={ariaLabelledby}
           aria-describedby={ariaDescribedby ?? fc['aria-describedby']}
@@ -637,8 +699,7 @@ export function Autocomplete<T = string, Multiple extends boolean | undefined = 
         <AutocompletePopupIndicator
           type="button"
           tabIndex={-1}
-          aria-label={isShown ? closeLabel : openLabel}
-          aria-hidden={isShown ? closeLabel === undefined : openLabel === undefined}
+          {...getIndicatorLabel(isShown, closeLabel, openLabel)}
           disabled={fc.disabled}
           // A press must not take the focus from the field - or it would close as it leaves.
           onMouseDown={(event) => event.preventDefault()}
