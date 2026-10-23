@@ -385,7 +385,7 @@ export interface ThemeDefaults {
   /** Switch thumb/track layout. Fallback: `'outside'`. */
   switchVariant?: 'outside' | 'inside'
   /** Input frame style (TextInput, Select, NativeSelect). Fallback: `'default'`. */
-  inputVariant?: 'default' | 'outlined' | 'text' | 'underline'
+  inputVariant?: InputVariantKey
   /** Avatar shape. Fallback: `'circular'`. */
   avatarVariant?: 'circular' | 'rounded' | 'square'
   /** Link underline behavior. Fallback: `'always'`. */
@@ -446,7 +446,7 @@ export interface RangeInputOwnerState {
 
 /** The defaults a theme may set for every `NumberInput` - its button labels give it a language. */
 export interface NumberInputOwnerState {
-  variant?: 'default' | 'outlined' | 'text' | 'underline'
+  variant?: InputVariantKey
   size?: keyof ThemeSizes
   color?: keyof ThemePalette
   spinButtons?: 'stacked' | 'sides' | 'none'
@@ -473,7 +473,7 @@ export interface AutocompleteOwnerState {
   borderRadius?: keyof ThemeRadii
   bg?: keyof ThemeBackground
   textColor?: keyof ThemeText
-  variant?: 'default' | 'outlined' | 'text' | 'underline'
+  variant?: InputVariantKey
   size?: keyof ThemeSizes
   color?: keyof ThemePalette
   shouldAllowFreeText?: boolean
@@ -489,6 +489,12 @@ export interface AutocompleteOwnerState {
 export interface ScrollAreaOwnerState {
   axes?: 'x' | 'y' | 'both'
 }
+
+/** The frames a form input is drawn in. */
+type InputVariantKey = 'default' | 'outlined' | 'text' | 'underline'
+
+/** The corner shapes of a control or a surface. */
+type ShapeKey = 'square' | 'rounded' | 'pill'
 
 /** The defaults a theme may set for every `Tooltip`. */
 export interface TooltipOwnerState {
@@ -532,7 +538,7 @@ export interface SnackbarOwnerState {
   autoHideDuration?: number
   resumeHideDuration?: number
   layer?: keyof ThemeZOrder
-  shape?: 'square' | 'rounded' | 'pill'
+  shape?: ShapeKey
   borderRadius?: keyof ThemeRadii
   bg?: keyof ThemeBackground
   textColor?: keyof ThemeText
@@ -576,7 +582,7 @@ export interface ChipOwnerState {
   variant?: 'contained' | 'outlined' | 'text'
   color?: keyof ThemePalette
   size?: keyof ThemeSizes
-  shape?: 'square' | 'rounded' | 'pill'
+  shape?: ShapeKey
   borderRadius?: keyof ThemeRadii
   deleteLabel?: string
 }
@@ -636,7 +642,7 @@ export interface ButtonOwnerState {
   variant?: keyof ButtonVariants
   color?: keyof ThemePalette
   size?: keyof ThemeSizes
-  shape?: 'square' | 'rounded' | 'pill'
+  shape?: ShapeKey
   fullWidth?: boolean
   disabled?: boolean
 }

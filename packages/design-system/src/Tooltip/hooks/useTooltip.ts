@@ -67,8 +67,11 @@ export function useTooltip({
       timer.current = window.setTimeout(() => {
         const current = latest.current
         if (current.isOpen === next) return
-        if (current.isOpenProp === undefined) setIsOpen(next)
-        ;(next ? current.onOpen : current.onClose)?.(event)
+        if (current.isOpenProp === undefined) {
+          setIsOpen(next)
+        }
+        const notify = next ? current.onOpen : current.onClose
+        notify?.(event)
       }, delay)
     },
     [clear, setIsOpen]

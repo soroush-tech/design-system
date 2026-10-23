@@ -7,7 +7,7 @@ import { m } from '../utils/test/storiesArgs'
 import { exampleArgs } from '../utils/test/renderExample'
 import { buttonColorTokens, textInputSizeTokens } from '../utils/test/storiesOptions'
 import { chipCatalog, chipVariantValues } from './Chip.catalog'
-import { Chip } from './Chip'
+import { Chip, type ChipProps } from './Chip'
 
 const meta: Meta<typeof Chip> = {
   title: 'Theme/Chip',
@@ -155,27 +155,28 @@ export const Clickable: Story = {
 }
 
 // Deleting: through the control, or Backspace and Delete on the focused chip.
+// Chips that delete themselves: the state is the list of tags.
+function Tags(args: Readonly<ChipProps>) {
+  const [tags, setTags] = useState(['Design', 'Code', 'Ship'])
+  const remove = (tag: string) => setTags((current) => current.filter((entry) => entry !== tag))
+  return (
+    <Flex flexDirection="row" gap={1}>
+      {tags.map((tag) => (
+        <Chip
+          key={tag}
+          {...args}
+          label={tag}
+          deleteLabel={`Remove ${tag}`}
+          onDelete={() => remove(tag)}
+        />
+      ))}
+    </Flex>
+  )
+}
+
 export const Deletable: Story = {
   parameters: { controls: { include: [] } },
-  render: (args) => {
-    function Tags() {
-      const [tags, setTags] = useState(['Design', 'Code', 'Ship'])
-      return (
-        <Flex flexDirection="row" gap={1}>
-          {tags.map((tag) => (
-            <Chip
-              key={tag}
-              {...args}
-              label={tag}
-              deleteLabel={`Remove ${tag}`}
-              onDelete={() => setTags((current) => current.filter((entry) => entry !== tag))}
-            />
-          ))}
-        </Flex>
-      )
-    }
-    return <Tags />
-  },
+  render: (args) => <Tags {...args} />,
 }
 
 export const Disabled: Story = {

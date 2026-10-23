@@ -139,7 +139,7 @@ export function Collapse({
     nodeRef: rootRef,
     onEnter: (node) => {
       // The closed size is drawn before it opens, so the browser has a size to move from.
-      void node.offsetHeight
+      node.getBoundingClientRect()
       onEnter?.(node)
     },
     onEntering: (node) => {
@@ -152,7 +152,7 @@ export function Collapse({
     },
     onExit: (node) => {
       node.style[size] = measure()
-      void node.offsetHeight
+      node.getBoundingClientRect()
       onExit?.(node)
     },
     onExiting: (node) => {

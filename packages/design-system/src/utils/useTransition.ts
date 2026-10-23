@@ -78,7 +78,7 @@ const getDuration = (timeout: TransitionTimeout, isEntering: boolean) => {
  */
 export function useTransition(params: UseTransitionParams) {
   const { isShown, shouldUnmountOnExit, nodeRef } = params
-  const [state, setStatus] = useState(() => getInitialStatus(params))
+  const [state, setState] = useState(() => getInitialStatus(params))
   // A node asked in is in the tree, out, before it moves: derived, so no effect has to mount it.
   const status = isShown && state === 'unmounted' ? 'exited' : state
   const isReduced = useSyncExternalStore(
@@ -106,20 +106,20 @@ export function useTransition(params: UseTransitionParams) {
       if (isMovingIn) {
         const ms = prefersReducedMotion() ? 0 : getDuration(timeout, true)
         if (node) onEnter?.(node)
-        setStatus('entering')
+        setState('entering')
         if (node) onEntering?.(node)
         timer.current = window.setTimeout(() => {
-          setStatus('entered')
+          setState('entered')
           // Read as the time is up, so a callback that changed meanwhile is the one that is called.
           if (node) latest.current.onEntered?.(node)
         }, ms)
       } else {
         const ms = prefersReducedMotion() ? 0 : getDuration(timeout, false)
         if (node) onExit?.(node)
-        setStatus('exiting')
+        setState('exiting')
         if (node) onExiting?.(node)
         timer.current = window.setTimeout(() => {
-          setStatus(shouldUnmountOnExit ? 'unmounted' : 'exited')
+          setState(shouldUnmountOnExit ? 'unmounted' : 'exited')
           if (node) latest.current.onExited?.(node)
         }, ms)
       }

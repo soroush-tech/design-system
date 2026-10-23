@@ -63,7 +63,7 @@ export interface SnackbarProps {
   /** Stacking layer from `theme.zOrder`. Default: `'snackbar'`. */
   layer?: keyof Theme['zOrder']
   /** Portal target. Default: `document.body`. */
-  container?: PortalProps['container']
+  container?: Exclude<PortalProps['container'], undefined>
   className?: string
   'data-testid'?: string
 }

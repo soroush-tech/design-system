@@ -25,6 +25,8 @@ export type {
   AutocompleteValue,
 } from './hooks/useAutocomplete'
 
+type LabelKey = 'clearLabel' | 'openLabel' | 'closeLabel' | 'loadingText' | 'noOptionsText'
+
 export type AutocompleteVariant = 'default' | 'outlined' | 'text' | 'underline'
 
 export interface AutocompleteProps<T = string, Multiple extends boolean | undefined = false>
@@ -323,6 +325,18 @@ const AutocompleteStatus = styled('li', {
   color: get(theme, 'text.secondary'),
 }))
 
+// The words of the field - the instance's, else the theme's: no built-in English.
+const useLabels = (given: Pick<AutocompleteProps, LabelKey>) => {
+  const dp = useDefaultProps('Autocomplete')
+  return {
+    clearLabel: given.clearLabel ?? dp.clearLabel,
+    openLabel: given.openLabel ?? dp.openLabel,
+    closeLabel: given.closeLabel ?? dp.closeLabel,
+    loadingText: given.loadingText ?? dp.loadingText,
+    noOptionsText: given.noOptionsText ?? dp.noOptionsText,
+  }
+}
+
 // The options whose label holds what is typed, in any case.
 const defaultFilter = <T,>(
   options: readonly T[],
@@ -416,11 +430,13 @@ export function Autocomplete<T = string, Multiple extends boolean | undefined = 
   const layer = layerProp ?? dp.layer ?? 'modal'
   const borderRadius = borderRadiusProp ?? dp.borderRadius
   const bg = bgProp ?? dp.bg
-  const clearLabel = clearLabelProp ?? dp.clearLabel
-  const openLabel = openLabelProp ?? dp.openLabel
-  const closeLabel = closeLabelProp ?? dp.closeLabel
-  const loadingText = loadingTextProp ?? dp.loadingText
-  const noOptionsText = noOptionsTextProp ?? dp.noOptionsText
+  const { clearLabel, openLabel, closeLabel, loadingText, noOptionsText } = useLabels({
+    clearLabel: clearLabelProp,
+    openLabel: openLabelProp,
+    closeLabel: closeLabelProp,
+    loadingText: loadingTextProp,
+    noOptionsText: noOptionsTextProp,
+  })
   const baseId = useId()
   const listboxId = `${baseId}-listbox`
   const optionId = (index: number) => `${baseId}-option-${index}`
@@ -495,12 +511,12 @@ export function Autocomplete<T = string, Multiple extends boolean | undefined = 
 
   // Grouped: a heading, and the options of the group under it - each counted in the whole list.
   const renderRows = () => {
-    if (!groupBy) return filtered.map(renderRow)
+    if (!groupBy) return filtered.map((option, index) => renderRow(option, index))
     const groups: { label: string; rows: { option: T; index: number }[] }[] = []
     filtered.forEach((option, index) => {
       const label = groupBy(option)
-      const last = groups[groups.length - 1]
-      if (last && last.label === label) last.rows.push({ option, index })
+      const last = groups.at(-1)
+      if (last?.label === label) last.rows.push({ option, index })
       else groups.push({ label, rows: [{ option, index }] })
     })
     return groups.map((group, position) => {
@@ -625,7 +641,7 @@ export function Autocomplete<T = string, Multiple extends boolean | undefined = 
             <AutocompleteListbox
               id={listboxId}
               role="listbox"
-              aria-multiselectable={multiple || undefined}
+              aria-multiselectable={multiple === true ? true : undefined}
               aria-label={ariaLabel}
               aria-labelledby={ariaLabelledby}
             >

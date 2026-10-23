@@ -44,7 +44,7 @@ const KEYS = new Set(['ArrowDown', 'ArrowUp', 'Home', 'End'])
 // The summary a key goes to from the one focused: round the ends for the arrows.
 const getTarget = (summaries: HTMLElement[], from: number, key: string) => {
   if (key === 'Home') return summaries[0]
-  if (key === 'End') return summaries[summaries.length - 1]
+  if (key === 'End') return summaries.at(-1)!
   const step = key === 'ArrowDown' ? 1 : -1
   return summaries[(from + step + summaries.length) % summaries.length]
 }

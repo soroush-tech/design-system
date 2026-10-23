@@ -9,7 +9,7 @@ export const getInputMinWidth = (theme: Theme) => themeDefault(theme, 'inputMinW
  * The keyboard focus ring of every input - the one the border takes on focus: the error color
  * while it is in error, else the field's own color.
  */
-export const getFocusRing = (theme: Theme, color: keyof Theme['palette'], isError = false) => ({
-  outline: `2px solid ${get(theme, isError ? 'palette.error.main' : `palette.${color}.main`)}`,
-  outlineOffset: '2px',
-})
+export const getFocusRing = (theme: Theme, color: keyof Theme['palette'], isError = false) => {
+  const ring = isError ? 'error' : color
+  return { outline: `2px solid ${get(theme, `palette.${ring}.main`)}`, outlineOffset: '2px' }
+}

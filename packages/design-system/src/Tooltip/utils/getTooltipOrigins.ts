@@ -58,7 +58,8 @@ export function getTooltipOrigins(
   const isVertical = side === 'top' || side === 'bottom'
   if (isVertical) {
     // Along the side: the child's start or end edge, or the middle.
-    const edge = end === undefined ? 'center' : (end === 'start') !== isRtl ? 'left' : 'right'
+    let edge: 'left' | 'right' | 'center' = 'center'
+    if (end !== undefined) edge = (end === 'start') !== isRtl ? 'left' : 'right'
     return {
       anchorOrigin: { vertical: side, horizontal: edge },
       transformOrigin: { vertical: opposite[side], horizontal: edge },
@@ -67,7 +68,8 @@ export function getTooltipOrigins(
   // The sides that are the page's left and right swap right to left; the vertical ones do not.
   const toward = (isRtl ? opposite[side] : side) as 'left' | 'right'
   // Along the side: the child's top or bottom edge, or the middle.
-  const edge = end === undefined ? 'center' : end === 'start' ? 'top' : 'bottom'
+  let edge: 'top' | 'bottom' | 'center' = 'center'
+  if (end !== undefined) edge = end === 'start' ? 'top' : 'bottom'
   return {
     anchorOrigin: { vertical: edge, horizontal: toward },
     transformOrigin: { vertical: edge, horizontal: opposite[toward] },
@@ -95,7 +97,8 @@ export function resolveTooltipPlacement(
   }
   const side = AUTO_SIDES.reduce((best, next) => (room[next] > room[best] ? next : best), 'top')
   // The sides here are the window's; the placements' left and right are the page's start and end.
-  const logical = side === 'left' || side === 'right' ? (isRtl ? opposite[side] : side) : side
+  const isBeside = side === 'left' || side === 'right'
+  const logical = isBeside && isRtl ? opposite[side] : side
   const end = placement.split('-')[1]
   return (end ? `${logical}-${end}` : logical) as FixedTooltipPlacement
 }

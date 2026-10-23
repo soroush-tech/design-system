@@ -58,7 +58,7 @@ export function Slide({ direction = 'down', ...props }: Readonly<SlideProps>) {
         const { transition } = node.style
         node.style.transition = 'none'
         node.style.transform = offset.current
-        void node.offsetHeight
+        node.getBoundingClientRect()
         node.style.transition = transition
       },
       onExit: measure,

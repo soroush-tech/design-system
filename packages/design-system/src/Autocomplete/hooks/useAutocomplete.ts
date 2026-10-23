@@ -32,6 +32,12 @@ export interface UseAutocompleteParams<T, Multiple extends boolean | undefined> 
   disabled: boolean
 }
 
+// Round the ends: past the last option is the first, and the other way.
+const getStepped = (highlight: number, step: 1 | -1, length: number) => {
+  if (highlight !== -1) return (highlight + step + length) % length
+  return step === 1 ? 0 : length - 1
+}
+
 const toList = <T>(value: T | T[] | null, isMultiple: boolean): T[] => {
   if (isMultiple) return value as T[]
   return value === null ? [] : [value as T]
@@ -155,58 +161,54 @@ export function useAutocomplete<T, Multiple extends boolean | undefined = false>
 
   const moveHighlight = (next: number) => setHighlight(next)
 
-  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    const last = filtered.length - 1
-    switch (event.key) {
-      case 'ArrowDown':
-      case 'ArrowUp': {
-        event.preventDefault()
-        if (!isOpen) {
-          open()
-          return
-        }
-        const step = event.key === 'ArrowDown' ? 1 : -1
-        // Round the ends: past the last option is the first, and the other way.
-        moveHighlight(
-          highlight === -1
-            ? step === 1
-              ? 0
-              : last
-            : (highlight + step + filtered.length) % filtered.length
-        )
-        return
-      }
-      case 'Home':
-      case 'End':
-        // Only while the keys are walking the list: otherwise they are the caret's.
-        if (isOpen && highlight !== -1) {
-          event.preventDefault()
-          moveHighlight(event.key === 'Home' ? 0 : last)
-        }
-        return
-      case 'Enter':
-        if (isOpen && highlight !== -1) {
-          event.preventDefault()
-          selectOption(event, filtered[highlight])
-        } else if (shouldAllowFreeText && typed) {
-          event.preventDefault()
-          createOption(event, typed)
-        }
-        return
-      case 'Escape':
-        if (isOpen) {
-          event.preventDefault()
-          close()
-        }
-        return
-      case 'Backspace':
-        if (isMultiple && inputValue === '' && selected.length > 0) {
-          removeOption(event, selected[selected.length - 1])
-        }
-        return
-      default:
+  const handleArrow = (event: KeyboardEvent<HTMLInputElement>) => {
+    event.preventDefault()
+    if (!isOpen) {
+      open()
+      return
+    }
+    moveHighlight(getStepped(highlight, event.key === 'ArrowDown' ? 1 : -1, filtered.length))
+  }
+
+  // Only while the keys are walking the list: otherwise they are the caret's.
+  const handleEdge = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (!isOpen || highlight === -1) return
+    event.preventDefault()
+    moveHighlight(event.key === 'Home' ? 0 : filtered.length - 1)
+  }
+
+  const handleEnter = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (isOpen && highlight !== -1) {
+      event.preventDefault()
+      selectOption(event, filtered[highlight])
+    } else if (shouldAllowFreeText && typed) {
+      event.preventDefault()
+      createOption(event, typed)
     }
   }
+
+  const handleEscape = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (!isOpen) return
+    event.preventDefault()
+    close()
+  }
+
+  const handleBackspace = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (isMultiple && inputValue === '' && selected.length > 0) {
+      removeOption(event, selected.at(-1) as T)
+    }
+  }
+
+  const keyHandlers: Record<string, (event: KeyboardEvent<HTMLInputElement>) => void> = {
+    ArrowDown: handleArrow,
+    ArrowUp: handleArrow,
+    Home: handleEdge,
+    End: handleEdge,
+    Enter: handleEnter,
+    Escape: handleEscape,
+    Backspace: handleBackspace,
+  }
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => keyHandlers[event.key]?.(event)
 
   const handleBlur = (event: SyntheticEvent) => {
     close()

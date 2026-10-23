@@ -234,14 +234,14 @@ describe('useAnchoredPlacement', () => {
       const { rerender } = place({ onPlaced })
       const placed = onPlaced.mock.calls.length
       window.dispatchEvent(new Event('resize'))
-      expect(onPlaced.mock.calls.length).toBe(placed + 1)
+      expect(onPlaced.mock.calls).toHaveLength(placed + 1)
       window.dispatchEvent(new Event('scroll'))
-      expect(onPlaced.mock.calls.length).toBe(placed + 2)
+      expect(onPlaced.mock.calls).toHaveLength(placed + 2)
       rerender({ onPlaced, isOpen: false })
       const closed = onPlaced.mock.calls.length
       window.dispatchEvent(new Event('resize'))
       window.dispatchEvent(new Event('scroll'))
-      expect(onPlaced.mock.calls.length).toBe(closed)
+      expect(onPlaced.mock.calls).toHaveLength(closed)
     })
 
     it('places again on every render while open', () => {

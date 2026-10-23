@@ -155,7 +155,7 @@ export const WithAnAlert: Story = {
 }
 
 // A transition is a component: it is made once, not on every render.
-function SlideUp(props: TransitionProps) {
+function SlideUp(props: Readonly<TransitionProps>) {
   return <Slide {...props} direction="up" />
 }
 
