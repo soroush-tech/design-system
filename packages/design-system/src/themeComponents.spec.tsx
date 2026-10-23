@@ -58,6 +58,7 @@ import { ToggleButton } from './ToggleButton/ToggleButton'
 import { ToggleButtonGroup } from './ToggleButton/ToggleButtonGroup'
 import { TransferList } from './TransferList'
 import { Collapse } from './Collapse'
+import { FabMenu, FabMenuItem } from './FabMenu'
 import { ScrollArea } from './ScrollArea'
 import { Autocomplete } from './Autocomplete'
 import { Tooltip } from './Tooltip'
@@ -202,6 +203,12 @@ const autocomplete = (
 )
 // Every part drawn, so each styled element is.
 const scrollArea = <ScrollArea>Content</ScrollArea>
+// Every part drawn, so each styled element is.
+const fabMenu = (
+  <FabMenu aria-label="Create" defaultOpen>
+    <FabMenuItem>One</FabMenuItem>
+  </FabMenu>
+)
 // Open, so the root, the wrapper and the inner box are all drawn.
 const collapse = (
   <Collapse isShown shouldAppear={false}>
@@ -550,6 +557,8 @@ const cases: Case[] = [
   },
   { name: 'ScrollArea', slot: 'root', label: 'ScrollArea', ui: scrollArea },
   { name: 'ScrollArea', slot: 'viewport', label: 'ScrollAreaViewport', ui: scrollArea },
+  { name: 'FabMenu', slot: 'root', label: 'FabMenu', ui: fabMenu },
+  { name: 'FabMenu', slot: 'list', label: 'FabMenuList', ui: fabMenu },
   { name: 'Collapse', slot: 'root', label: 'Collapse', ui: collapse },
   { name: 'Collapse', slot: 'wrapper', label: 'CollapseWrapper', ui: collapse },
   { name: 'Collapse', slot: 'inner', label: 'CollapseInner', ui: collapse },

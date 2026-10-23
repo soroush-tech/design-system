@@ -46,6 +46,7 @@
     "./Collapse": "./src/Collapse/index.ts",
     "./Drawer": "./src/Drawer/index.ts",
     "./Fab": "./src/Fab/index.ts",
+    "./FabMenu": "./src/FabMenu/index.ts",
     "./Fade": "./src/Fade/index.ts",
     "./Flex": "./src/Flex/index.ts",
     "./FocusTrap": "./src/FocusTrap/index.ts",
@@ -282,6 +283,16 @@
         "require": {
           "types": "./dist/Fab.d.cts",
           "default": "./dist/Fab.cjs"
+        }
+      },
+      "./FabMenu": {
+        "import": {
+          "types": "./dist/FabMenu.d.mts",
+          "default": "./dist/FabMenu.mjs"
+        },
+        "require": {
+          "types": "./dist/FabMenu.d.cts",
+          "default": "./dist/FabMenu.cjs"
         }
       },
       "./Fade": {

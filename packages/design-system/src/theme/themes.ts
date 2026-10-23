@@ -545,6 +545,14 @@ export interface FabOwnerState {
   size?: keyof ThemeSizes
 }
 
+/** The defaults a theme may set for every `FabMenu`. */
+export interface FabMenuOwnerState {
+  direction?: 'up' | 'down'
+  align?: 'start' | 'end'
+  color?: keyof ThemePalette
+  size?: keyof ThemeSizes
+}
+
 /** The defaults a theme may set for every `Alert` - its `closeLabel` gives it a language. */
 export interface AlertOwnerState {
   severity?: 'success' | 'info' | 'warning' | 'error'
@@ -808,6 +816,7 @@ export interface ThemeComponents {
   Tooltip?: ComponentConfig<TooltipOwnerState, 'root' | 'arrow'>
   Snackbar?: ComponentConfig<SnackbarOwnerState, 'root' | 'content' | 'message' | 'action'>
   Fab?: ComponentConfig<FabOwnerState, 'root' | 'label' | 'labelText'>
+  FabMenu?: ComponentConfig<FabMenuOwnerState, 'root' | 'list'>
   Alert?: ComponentConfig<AlertOwnerState, 'root' | 'icon' | 'message' | 'action' | 'closeButton'>
   AlertTitle?: ComponentConfig
   Badge?: ComponentConfig<BadgeOwnerState, 'root' | 'badge' | 'label'>

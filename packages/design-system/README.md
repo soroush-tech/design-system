@@ -152,6 +152,7 @@ SSR critical-CSS extraction (e.g. with `@emotion/server`) is a separate, opt-in 
 
 | Component                            | Purpose                                                                                                                           |
 | ------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
+| `FabMenu`                            | A fab that opens a stack of actions from the corner of a page                                                                     |
 | `Snackbar`                           | A transient message in a corner of the window, with auto-hide and an action                                                       |
 | `Alert`                              | An inline message with a severity, an icon, a title and an action - exports `AlertTitle` from `@soroush.tech/design-system/Alert` |
 | `Badge`                              | A count or a dot anchored over another element                                                                                    |

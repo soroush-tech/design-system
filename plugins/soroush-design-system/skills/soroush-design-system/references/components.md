@@ -2,7 +2,7 @@
 
 # Components
 
-The 94 components shipped by the design system, and when to reach for each.
+The 96 components shipped by the design system, and when to reach for each.
 Import every component from its own subpath.
 
 ## Layout & surfaces
@@ -86,6 +86,8 @@ Import every component from its own subpath.
 
 ## Feedback
 
+- **FabMenu** - A `Fab` that opens a stack of actions - extended pills, each a `FabMenuItem` - from one corner of a page.
+- **FabMenuItem** - One action of a `FabMenu`: an extended `Fab` of the menu's size - a pill with an icon and a label.
 - **Snackbar** - A transient message in a corner of the window, through a `Portal`.
 - **Alert** - An inline message with a severity: an icon, the message, an optional `AlertTitle`, an action and a close control.
 - **AlertTitle** - The title of an `Alert`: its first line of the message, in a heavier weight.

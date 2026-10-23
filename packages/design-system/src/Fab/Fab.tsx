@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import type { ReactNode, Ref } from 'react'
 import { get, space, styled } from '../index'
 import { useDefaultProps } from '../theme'
 import { Button, type ButtonProps } from '../Button'
@@ -25,6 +25,8 @@ export type FabProps = FabButtonProps & {
   variant?: FabVariant
   /** An extended fab's icon, before the label. A circular one is its content. */
   startIcon?: ReactNode
+  /** The button element, for a trigger that places something against it or moves its focus. */
+  ref?: Ref<HTMLButtonElement>
   /**
    * Draws an extended fab as its icon alone - a circle - and back again, the label moving in and out
    * over `theme.transitions`. The label stays in the tree, so the fab keeps its name. A circular
