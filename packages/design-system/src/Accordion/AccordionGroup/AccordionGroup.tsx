@@ -29,12 +29,12 @@ const GroupRoot = styled('div', {
   ...(variant === 'attached' && {
     // The joint is one border: each accordion after the first gives up its top one, and the corners
     // that meet are square.
-    '& > *:not(:first-child)': {
+    '& > *:not(:first-of-type)': {
       borderTopWidth: 0,
       borderTopLeftRadius: 0,
       borderTopRightRadius: 0,
     },
-    '& > *:not(:last-child)': { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 },
+    '& > *:not(:last-of-type)': { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 },
   }),
 }))
 
