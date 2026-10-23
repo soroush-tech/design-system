@@ -529,8 +529,9 @@ describe('Tooltip', () => {
     it('points at the middle of the child, kept inside the tooltip', () => {
       lay()
       renderWithTheme(view({ defaultOpen: true, hasArrow: true, placement: 'top-start' }))
-      // The child's middle is 125; the tooltip starts at 100, is 40 wide: the middle is out of it.
-      expect((arrow() as HTMLElement).style.left).toBe('28px')
+      // The child's middle is 125 and the tooltip, lined up with the child's own edge, starts at 100:
+      // the middle is 25 along it, less half the arrow.
+      expect((arrow() as HTMLElement).style.left).toBe('21px')
     })
   })
 

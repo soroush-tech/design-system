@@ -74,10 +74,35 @@ describe('useAnchoredPlacement', () => {
     expect(surface.style.visibility).toBe('visible')
   })
 
-  it('keeps clear of the anchor by the gap', () => {
+  it('keeps clear of the anchor by the gap on the side it sits on, and lines up with its edge along it', () => {
     const { surface } = place({ gap: 8 })
-    // The anchor grown by 8 on every side: the surface is 8 further, and 8 further out.
+    // Below the anchor: 8 further down; on the anchor's own left edge, not 8 beyond it.
     expect(surface.style.top).toBe('78px')
+    expect(surface.style.left).toBe('100px')
+  })
+
+  it('keeps the gap beside the anchor too, lined up with its top edge', () => {
+    const { surface } = place({
+      gap: 8,
+      getOrigins: () => ({
+        anchorOrigin: { vertical: 'top', horizontal: 'right' },
+        transformOrigin: { vertical: 'top', horizontal: 'left' },
+      }),
+    })
+    // The anchor spans 100-180 across and 50-70 down: the surface starts 8 past its right edge.
+    expect(surface.style.left).toBe('188px')
+    expect(surface.style.top).toBe('50px')
+  })
+
+  it('keeps the gap on both axes where the surface sits on neither side of the anchor', () => {
+    const { surface } = place({
+      gap: 8,
+      getOrigins: () => ({
+        anchorOrigin: { vertical: 'top', horizontal: 'left' },
+        transformOrigin: { vertical: 'top', horizontal: 'left' },
+      }),
+    })
+    expect(surface.style.top).toBe('42px')
     expect(surface.style.left).toBe('92px')
   })
 

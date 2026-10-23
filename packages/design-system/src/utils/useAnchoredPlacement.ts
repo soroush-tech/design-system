@@ -6,6 +6,13 @@ import {
 } from '../Popover/utils/computePopoverPosition'
 import { isRtl } from './isRtl'
 
+const OPPOSITE: Record<string, string> = {
+  top: 'bottom',
+  bottom: 'top',
+  left: 'right',
+  right: 'left',
+}
+
 /** What the origins of a placement are chosen from: the anchor, the surface and the window. */
 export interface PlacementContext {
   anchorRect: DOMRect
@@ -73,19 +80,28 @@ export function useAnchoredPlacement({
     const surfaceSize = { width: surface.offsetWidth, height: surface.offsetHeight }
     const viewport = { width: window.innerWidth, height: window.innerHeight }
     const context = { anchorRect: rect, surfaceSize, viewport, isRtl: isRtl(anchor) }
-    // The anchor grown by the gap on every side: the surface keeps clear of the real one.
+    const origins = getOrigins(context)
+    // The anchor grown by the gap along the axis the surface sits beside it on: the surface keeps
+    // clear of the real one there, and lines up with its real edge along the other axis.
+    const isBesideVertically =
+      OPPOSITE[origins.anchorOrigin.vertical] === origins.transformOrigin.vertical
+    const isBesideHorizontally =
+      OPPOSITE[origins.anchorOrigin.horizontal] === origins.transformOrigin.horizontal
+    const isBeside = isBesideVertically || isBesideHorizontally
+    const gapY = isBesideVertically || !isBeside ? gap : 0
+    const gapX = isBesideHorizontally || !isBeside ? gap : 0
     const anchorRect = {
-      top: rect.top - gap,
-      left: rect.left - gap,
-      width: rect.width + 2 * gap,
-      height: rect.height + 2 * gap,
+      top: rect.top - gapY,
+      left: rect.left - gapX,
+      width: rect.width + 2 * gapX,
+      height: rect.height + 2 * gapY,
     }
     const { top, left } = computePopoverPosition({
       anchorReference: isPoint ? 'anchorPosition' : 'anchorEl',
       anchorPosition: isPoint ? { top: pointTop, left: pointLeft } : undefined,
       anchorRect,
       paperRect: surfaceSize,
-      ...getOrigins(context),
+      ...origins,
       viewport,
       marginThreshold: margin,
     })

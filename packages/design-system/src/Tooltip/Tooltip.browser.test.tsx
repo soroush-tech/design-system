@@ -51,6 +51,24 @@ describe('Tooltip in a browser', () => {
     expect(surface.right).toBeLessThanOrEqual(window.innerWidth)
   })
 
+  it.each([
+    ['top-start', 'left', 'left'],
+    ['bottom-end', 'right', 'right'],
+    ['right-start', 'top', 'top'],
+    ['left-end', 'bottom', 'bottom'],
+  ] as const)(
+    'lines up with the child edge, not the gap beyond it: %s',
+    async (placement, own, child) => {
+      renderWithTheme(view({ placement }))
+      await userEvent.hover(trigger())
+      await vi.waitFor(() => expect(tooltip()).toBeVisible())
+      expect(tooltip().getBoundingClientRect()[own]).toBeCloseTo(
+        trigger().getBoundingClientRect()[child],
+        0
+      )
+    }
+  )
+
   it('opens on keyboard focus, never takes the focus, and closes on Escape', async () => {
     renderWithTheme(view())
     await userEvent.tab()
