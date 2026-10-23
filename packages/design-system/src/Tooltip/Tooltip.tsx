@@ -5,6 +5,8 @@ import {
   useRef,
   useState,
   type CSSProperties,
+  type ElementType,
+  type HTMLAttributes,
   type ReactElement,
   type ReactNode,
   type Ref,
@@ -16,19 +18,43 @@ import { themeDefault } from '../theme/utils/themeDefault'
 import { getSurfaceRadius } from '../utils/getSurfaceRadius'
 import { Portal } from '../Portal'
 import { useMergedRefs } from '../Modal/hooks/useMergedRefs'
-import { useAnchoredPlacement, type AnchoredPlacement } from '../utils/useAnchoredPlacement'
+import {
+  useAnchoredPlacement,
+  type AnchoredPlacement,
+  type PlacementContext,
+} from '../utils/useAnchoredPlacement'
 import { useTooltip } from './hooks/useTooltip'
-import { getTooltipOrigins, type TooltipPlacement } from './utils/getTooltipOrigins'
+import {
+  getTooltipOrigins,
+  resolveTooltipPlacement,
+  type TooltipPlacement,
+} from './utils/getTooltipOrigins'
 
 export type { TooltipPlacement } from './utils/getTooltipOrigins'
+
+export interface TooltipSlots {
+  root?: ElementType
+  arrow?: ElementType
+}
+
+type SlotProps = HTMLAttributes<HTMLElement> & { 'data-testid'?: string }
+
+export interface TooltipSlotProps {
+  root?: SlotProps
+  arrow?: SlotProps
+}
 
 export interface TooltipProps {
   /** The one element the tooltip is about - it holds a `ref` and takes the handlers. */
   children: ReactElement
   /** What the tooltip says. Nothing says no tooltip. */
   title?: ReactNode
-  /** The side of the child it sits on, and the end it lines up with. Flips for want of room. Default: `'top'`. */
+  /** The side of the child it sits on, and the end it lines up with; `auto` takes the side with the most room. Flips for want of room. Default: `'top'`. */
   placement?: TooltipPlacement
+  /** Swaps the element a part is drawn as - it keeps its styles. `root` is the surface. */
+  slots?: TooltipSlots
+  /** Props for a part: they are put first, so the tooltip's own `ref`, `id`, `role`, pointer handlers and the arrow's position win. */
+  slotProps?: TooltipSlotProps
   /** Draws an arrow towards the child. Default: `false`. */
   hasArrow?: boolean
   /** How long the pointer or focus rests on the child before it opens, in milliseconds. Default: `100`. */
@@ -174,6 +200,8 @@ export function Tooltip({
   shouldOpenOnHover: shouldOpenOnHoverProp,
   shouldOpenOnFocus: shouldOpenOnFocusProp,
   shouldOpenOnTouch: shouldOpenOnTouchProp,
+  slots,
+  slotProps,
   layer: layerProp,
   borderRadius: borderRadiusProp,
   bg: bgProp,
@@ -214,7 +242,8 @@ export function Tooltip({
 
   const [arrow, setArrow] = useState<ArrowState | null>(null)
   const getOrigins = useCallback(
-    ({ isRtl }: { isRtl: boolean }) => getTooltipOrigins(placement, isRtl),
+    (context: PlacementContext) =>
+      getTooltipOrigins(resolveTooltipPlacement(placement, context), context.isRtl),
     [placement]
   )
   const onPlaced = useCallback(
@@ -266,6 +295,8 @@ export function Tooltip({
       {isShown && (
         <Portal>
           <TooltipSurface
+            {...slotProps?.root}
+            as={slots?.root}
             ref={surfaceRef}
             id={id}
             role="tooltip"
@@ -273,13 +304,20 @@ export function Tooltip({
             borderRadius={borderRadius}
             bg={bg}
             textColor={textColor}
-            className={className}
-            data-testid={dataTestid}
+            className={
+              [slotProps?.root?.className, className].filter(Boolean).join(' ') || undefined
+            }
+            data-testid={dataTestid ?? slotProps?.root?.['data-testid']}
             {...surfaceHandlers}
           >
             {title}
             {hasArrow && arrow ? (
-              <TooltipArrow style={getArrowStyle(arrow)} aria-hidden="true" />
+              <TooltipArrow
+                {...slotProps?.arrow}
+                as={slots?.arrow}
+                style={{ ...slotProps?.arrow?.style, ...getArrowStyle(arrow) }}
+                aria-hidden="true"
+              />
             ) : null}
           </TooltipSurface>
         </Portal>

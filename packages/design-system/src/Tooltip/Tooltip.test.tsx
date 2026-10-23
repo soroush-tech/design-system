@@ -422,9 +422,62 @@ describe('Tooltip', () => {
       expect(tooltip().style[property]).toBe(expected)
     })
 
+    it('takes the side with the most room for auto, and lines up for auto-start', () => {
+      lay()
+      const { unmount } = renderWithTheme(view({ defaultOpen: true, placement: 'auto' }))
+      // Most room is to the right of a child at the top left of the window.
+      expect(tooltip().style.left).toBe('158px')
+      unmount()
+      const { unmount: second } = renderWithTheme(
+        view({ defaultOpen: true, placement: 'right-start' })
+      )
+      const fixed = { left: tooltip().style.left, top: tooltip().style.top }
+      second()
+      renderWithTheme(view({ defaultOpen: true, placement: 'auto-start' }))
+      expect({ left: tooltip().style.left, top: tooltip().style.top }).toEqual(fixed)
+    })
+
     it('takes a class name and a test id on its surface', () => {
       renderWithTheme(view({ defaultOpen: true, className: 'extra', 'data-testid': 'surface' }))
       expect(screen.getByTestId('surface')).toHaveClass('extra')
+    })
+  })
+
+  describe('slots', () => {
+    it('puts the props of a slot on its surface and its arrow, the tooltip own props winning', () => {
+      renderWithTheme(
+        view({
+          defaultOpen: true,
+          hasArrow: true,
+          slotProps: {
+            root: { className: 'mine', title: 'Surface', id: 'ignored', 'data-testid': 'slot' },
+            arrow: { className: 'point', style: { opacity: 0.5, left: '999px' } },
+          },
+          className: 'extra',
+        })
+      )
+      expect(tooltip()).toHaveClass('mine', 'extra')
+      expect(tooltip()).toHaveAttribute('title', 'Surface')
+      expect(tooltip()).toHaveAttribute('data-testid', 'slot')
+      expect(tooltip().id).not.toBe('ignored')
+      expect(tooltip()).toHaveAttribute('role', 'tooltip')
+      const arrow = tooltip().querySelector('[aria-hidden="true"]') as HTMLElement
+      expect(arrow).toHaveClass('point')
+      expect(arrow).toHaveStyle({ opacity: '0.5' })
+      expect(arrow.style.left).not.toBe('999px')
+    })
+
+    it('draws its surface and its arrow as the elements given, keeping the styles', () => {
+      renderWithTheme(
+        view({
+          defaultOpen: true,
+          hasArrow: true,
+          slots: { root: 'section', arrow: 'i' },
+        })
+      )
+      expect(tooltip().tagName).toBe('SECTION')
+      expect(tooltip()).toHaveStyle({ position: 'fixed' })
+      expect((tooltip().querySelector('[aria-hidden="true"]') as HTMLElement).tagName).toBe('I')
     })
   })
 

@@ -508,6 +508,9 @@ export interface TooltipOwnerState {
     | 'right'
     | 'right-start'
     | 'right-end'
+    | 'auto'
+    | 'auto-start'
+    | 'auto-end'
   hasArrow?: boolean
   enterDelay?: number
   leaveDelay?: number
