@@ -25,6 +25,8 @@ export type {
   AutocompleteValue,
 } from './hooks/useAutocomplete'
 
+type SettingKey = 'variant' | 'shouldAllowFreeText' | 'layer' | 'borderRadius' | 'bg'
+
 type LabelKey = 'clearLabel' | 'openLabel' | 'closeLabel' | 'loadingText' | 'noOptionsText'
 
 export type AutocompleteVariant = 'default' | 'outlined' | 'text' | 'underline'
@@ -349,6 +351,19 @@ const useLabels = (given: Pick<AutocompleteProps, LabelKey>) => {
   }
 }
 
+// How the field looks and behaves - the instance's, else the theme's.
+const useSettings = (given: Pick<AutocompleteProps, SettingKey>) => {
+  const theme = useTheme()
+  const dp = useDefaultProps('Autocomplete')
+  return {
+    variant: given.variant ?? dp.variant ?? themeDefault(theme, 'inputVariant', 'default'),
+    shouldAllowFreeText: given.shouldAllowFreeText ?? dp.shouldAllowFreeText ?? false,
+    layer: given.layer ?? dp.layer ?? 'modal',
+    borderRadius: given.borderRadius ?? dp.borderRadius,
+    bg: given.bg ?? dp.bg,
+  }
+}
+
 // The options whose label holds what is typed, in any case.
 const defaultFilter = <T,>(
   options: readonly T[],
@@ -437,11 +452,13 @@ export function Autocomplete<T = string, Multiple extends boolean | undefined = 
     textColor: textColorProp ?? dp.textColor,
   })
   const color = fc.color ?? themeDefault(theme, 'color', 'primary')
-  const variant = variantProp ?? dp.variant ?? themeDefault(theme, 'inputVariant', 'default')
-  const shouldAllowFreeText = shouldAllowFreeTextProp ?? dp.shouldAllowFreeText ?? false
-  const layer = layerProp ?? dp.layer ?? 'modal'
-  const borderRadius = borderRadiusProp ?? dp.borderRadius
-  const bg = bgProp ?? dp.bg
+  const { variant, shouldAllowFreeText, layer, borderRadius, bg } = useSettings({
+    variant: variantProp,
+    shouldAllowFreeText: shouldAllowFreeTextProp,
+    layer: layerProp,
+    borderRadius: borderRadiusProp,
+    bg: bgProp,
+  })
   const { clearLabel, openLabel, closeLabel, loadingText, noOptionsText } = useLabels({
     clearLabel: clearLabelProp,
     openLabel: openLabelProp,
