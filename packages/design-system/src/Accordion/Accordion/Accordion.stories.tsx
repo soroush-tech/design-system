@@ -170,7 +170,7 @@ export const Group: Story = {
 export const Attached: Story = {
   parameters: { controls: { include: [] } },
   render: () => (
-    <AccordionGroup isAttached isExclusive>
+    <AccordionGroup variant="attached" isExclusive>
       {titles.map((title) => (
         <Accordion key={title}>
           <AccordionSummary>{title}</AccordionSummary>

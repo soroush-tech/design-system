@@ -166,6 +166,33 @@ describe('Chip', () => {
     })
   })
 
+  describe('corners', () => {
+    it('is a pill by default, square or rounded by shape, and a radius of its own wins', () => {
+      const { rerender } = renderWithTheme(view())
+      expect(root()).toHaveStyle({ borderRadius: '9999px' })
+      rerender(view({ shape: 'square' }))
+      expect(root()).toHaveStyle({ borderRadius: '0' })
+      rerender(view({ shape: 'rounded' }))
+      expect(root()).toHaveStyle({ borderRadius: baseTheme.radii.md })
+      rerender(view({ shape: 'pill', borderRadius: 'lg' }))
+      expect(root()).toHaveStyle({ borderRadius: baseTheme.radii.lg })
+    })
+
+    it('takes its shape and radius from the theme, an own prop winning', () => {
+      const theme = createTheme(baseTheme, {
+        components: { Chip: { defaultProps: { shape: 'square' } } },
+      })
+      const { unmount } = render(view(), { wrapper: withTheme(theme) })
+      expect(root()).toHaveStyle({ borderRadius: '0' })
+      unmount()
+      const radius = createTheme(baseTheme, {
+        components: { Chip: { defaultProps: { borderRadius: 'sm' } } },
+      })
+      render(view(), { wrapper: withTheme(radius) })
+      expect(root()).toHaveStyle({ borderRadius: baseTheme.radii.sm })
+    })
+  })
+
   describe('theme', () => {
     it('takes its defaults from the theme, an own prop winning', () => {
       const theme = createTheme(baseTheme, {

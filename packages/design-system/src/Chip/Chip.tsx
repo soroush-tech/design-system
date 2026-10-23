@@ -3,11 +3,14 @@ import type { SpaceProps } from '@soroush.tech/styled-system'
 import { createShouldForwardProp, get, props, space, styled, type Theme } from '../index'
 import { useDefaultProps } from '../theme'
 import { Icon } from '../Icon'
+import { themeDefault } from '../theme/utils/themeDefault'
 import { alpha } from '../utils'
 
 export type ChipVariant = 'contained' | 'outlined'
 export type ChipColor = keyof Theme['palette']
 export type ChipSize = keyof Theme['sizes']
+
+export type ChipShape = 'square' | 'rounded' | 'pill'
 
 export interface ChipProps extends SpaceProps<Theme> {
   /** What the chip says. */
@@ -18,6 +21,13 @@ export interface ChipProps extends SpaceProps<Theme> {
   color?: ChipColor
   /** Resolves against `theme.sizes`. Default: `'md'`. */
   size?: ChipSize
+  /**
+   * Corner shape - sets the default `borderRadius`. `'square'` is 0, `'rounded'` is
+   * `theme.radii.md` (or `theme.defaults.borderRadius`), `'pill'` is a full round. Default: `'pill'`.
+   */
+  shape?: ChipShape
+  /** Corner radius, resolves against `theme.radii` - wins over `shape`. */
+  borderRadius?: keyof Theme['radii']
   /** An icon before the label. An `avatar` takes its place. */
   icon?: ReactNode
   /** An avatar before the label. */
@@ -38,18 +48,36 @@ interface RootStyle extends SpaceProps<Theme> {
   variant: ChipVariant
   color: ChipColor
   size: ChipSize
+  shape: ChipShape
+  borderRadius?: keyof Theme['radii']
   isDisabled: boolean
 }
 
 const accent = (theme: Theme, color: ChipColor) =>
   color === 'default' ? get(theme, 'text.initial') : get(theme, `palette.${color}.main`)
 
+// A pill takes the height as its ends' radius, whatever the label.
+const getRadius = (theme: Theme, shape: ChipShape, borderRadius?: keyof Theme['radii']) => {
+  if (borderRadius) return theme.radii[borderRadius]
+  if (shape === 'square') return 0
+  if (shape === 'rounded') return theme.radii[themeDefault(theme, 'borderRadius', 'md')]
+  return '9999px'
+}
+
 const ChipRoot = styled('div', {
   name: 'Chip',
   label: 'Chip',
-  shouldForwardProp: createShouldForwardProp([...props, 'variant', 'color', 'size', 'isDisabled']),
+  shouldForwardProp: createShouldForwardProp([
+    ...props,
+    'variant',
+    'color',
+    'size',
+    'shape',
+    'borderRadius',
+    'isDisabled',
+  ]),
   systemProps: [space],
-})<RootStyle>(({ theme, variant, color, size, isDisabled }) => {
+})<RootStyle>(({ theme, variant, color, size, shape, borderRadius, isDisabled }) => {
   const { paddingTop, paddingBottom, paddingLeft, paddingRight, fontSize } = theme.sizes[size]
   const isContained = variant === 'contained'
   const palette = get(theme, `palette.${color}`)
@@ -58,8 +86,7 @@ const ChipRoot = styled('div', {
     alignItems: 'center',
     boxSizing: 'border-box',
     maxWidth: '100%',
-    // A pill: its ends take the height, whatever the label.
-    borderRadius: '9999px',
+    borderRadius: getRadius(theme, shape, borderRadius),
     fontSize: theme.fontSizes[fontSize],
     lineHeight: get(theme, 'lineHeights.base'),
     fontFamily: get(theme, 'fonts.body'),
@@ -157,6 +184,8 @@ export function Chip({
   variant: variantProp,
   color: colorProp,
   size: sizeProp,
+  shape: shapeProp,
+  borderRadius: borderRadiusProp,
   icon,
   avatar,
   onClick,
@@ -171,6 +200,8 @@ export function Chip({
   const variant = variantProp ?? dp.variant ?? 'contained'
   const color = colorProp ?? dp.color ?? 'default'
   const size = sizeProp ?? dp.size ?? 'md'
+  const shape = shapeProp ?? dp.shape ?? 'pill'
+  const borderRadius = borderRadiusProp ?? dp.borderRadius
   const deleteLabel = deleteLabelProp ?? dp.deleteLabel
   const isClickable = onClick !== undefined
   const isDeletable = onDelete !== undefined
@@ -186,6 +217,8 @@ export function Chip({
       variant={variant}
       color={color}
       size={size}
+      shape={shape}
+      borderRadius={borderRadius}
       isDisabled={disabled}
       className={className}
       data-testid={dataTestid}

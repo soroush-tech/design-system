@@ -16,6 +16,8 @@ export const chipCatalog = defineCatalogEntry<ChipProps>()({
     variant: { values: chipVariantValues, default: 'contained' },
     color: { scale: 'palette', default: 'default' },
     size: { scale: 'sizes', default: 'md' },
+    shape: { values: ['square', 'rounded', 'pill'], default: 'pill' },
+    borderRadius: { scale: 'radii' },
     disabled: { values: [true, false], default: false },
   },
   content: { label: 'text', icon: 'child', avatar: 'child' },

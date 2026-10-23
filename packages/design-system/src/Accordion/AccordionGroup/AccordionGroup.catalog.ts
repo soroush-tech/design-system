@@ -21,7 +21,7 @@ export const accordionGroupCatalog = defineCatalogEntry<AccordionGroupProps>()({
   variants: [],
   options: {
     isExclusive: { values: [true, false], default: false },
-    isAttached: { values: [true, false], default: false },
+    variant: { values: ['separated', 'attached'], default: 'separated' },
   },
   content: { children: 'children' },
 })

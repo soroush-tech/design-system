@@ -543,6 +543,8 @@ export interface ChipOwnerState {
   variant?: 'contained' | 'outlined'
   color?: keyof ThemePalette
   size?: keyof ThemeSizes
+  shape?: 'square' | 'rounded' | 'pill'
+  borderRadius?: keyof ThemeRadii
   deleteLabel?: string
 }
 
@@ -559,7 +561,7 @@ export interface AccordionSummaryOwnerState {
 /** The defaults a theme may set for every `AccordionGroup`. */
 export interface AccordionGroupOwnerState {
   isExclusive?: boolean
-  isAttached?: boolean
+  variant?: 'separated' | 'attached'
 }
 
 /** The defaults a theme may set for every `Collapse`. */

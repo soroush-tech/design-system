@@ -4,13 +4,15 @@ import { createShouldForwardProp, props, space, styled, type Theme } from '../..
 import { useDefaultProps } from '../../theme'
 import { AccordionGroupContext } from '../AccordionContext'
 
+export type AccordionGroupVariant = 'separated' | 'attached'
+
 export interface AccordionGroupProps extends SpaceProps<Theme> {
   /** The accordions. */
   children?: ReactNode
   /** Opening one closes the others. Default: `false`. */
   isExclusive?: boolean
-  /** Joins the accordions into one block: no gap, one shared border, only the outer corners round. Default: `false`. */
-  isAttached?: boolean
+  /** `'separated'` keeps a gap between them; `'attached'` joins them into one block: no gap, one border at each joint, only the outer corners round. Default: `'separated'`. */
+  variant?: AccordionGroupVariant
   className?: string
   'data-testid'?: string
 }
@@ -18,13 +20,13 @@ export interface AccordionGroupProps extends SpaceProps<Theme> {
 const GroupRoot = styled('div', {
   name: 'AccordionGroup',
   label: 'AccordionGroup',
-  shouldForwardProp: createShouldForwardProp([...props, 'isAttached']),
+  shouldForwardProp: createShouldForwardProp([...props, 'variant']),
   systemProps: [space],
-})<{ isAttached: boolean }>(({ theme, isAttached }) => ({
+})<{ variant: AccordionGroupVariant }>(({ theme, variant }) => ({
   display: 'flex',
   flexDirection: 'column',
-  gap: isAttached ? 0 : theme.space[1],
-  ...(isAttached && {
+  gap: variant === 'attached' ? 0 : theme.space[1],
+  ...(variant === 'attached' && {
     // The joint is one border: each accordion after the first gives up its top one, and the corners
     // that meet are square.
     '& > *:not(:first-child)': {
@@ -56,14 +58,14 @@ const getTarget = (summaries: HTMLElement[], from: number, key: string) => {
 export function AccordionGroup({
   children,
   isExclusive: isExclusiveProp,
-  isAttached: isAttachedProp,
+  variant: variantProp,
   className,
   'data-testid': dataTestid,
   ...spaceProps
 }: Readonly<AccordionGroupProps>) {
   const dp = useDefaultProps('AccordionGroup')
   const isExclusive = isExclusiveProp ?? dp.isExclusive ?? false
-  const isAttached = isAttachedProp ?? dp.isAttached ?? false
+  const variant = variantProp ?? dp.variant ?? 'separated'
   const [openId, setOpenId] = useState<string | null | undefined>(undefined)
   const context = useMemo(() => ({ isExclusive, openId, setOpenId }), [isExclusive, openId])
 
@@ -80,7 +82,7 @@ export function AccordionGroup({
   return (
     <AccordionGroupContext.Provider value={context}>
       <GroupRoot
-        isAttached={isAttached}
+        variant={variant}
         className={className}
         data-testid={dataTestid}
         onKeyDown={handleKeyDown}

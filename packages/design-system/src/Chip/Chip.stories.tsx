@@ -42,6 +42,18 @@ const meta: Meta<typeof Chip> = {
       description: 'Resolves against `theme.sizes`.',
       table: { category: 'Layout', defaultValue: { summary: 'md' } },
     },
+    shape: {
+      control: { type: 'inline-radio' },
+      options: ['square', 'rounded', 'pill'],
+      description: 'The corners: square, `theme.radii.md`, or fully round.',
+      table: { category: 'Visual', defaultValue: { summary: 'pill' } },
+    },
+    borderRadius: {
+      control: { type: 'select' },
+      options: ['sq', 'sm', 'md', 'lg'],
+      description: 'Corner radius from `theme.radii` - wins over `shape`.',
+      table: { category: 'Visual' },
+    },
     disabled: {
       control: 'boolean',
       description: 'Stays as it is, off.',
@@ -93,6 +105,17 @@ export const Sizes: Story = {
     <Flex flexDirection="row" gap={2} alignItems="center">
       {textInputSizeTokens.map((size) => (
         <Chip key={size} {...args} size={size} label={size} />
+      ))}
+    </Flex>
+  ),
+}
+
+export const Shapes: Story = {
+  parameters: { controls: { include: [] } },
+  render: (args) => (
+    <Flex flexDirection="row" gap={2} alignItems="center">
+      {(['square', 'rounded', 'pill'] as const).map((shape) => (
+        <Chip key={shape} {...args} shape={shape} label={shape} />
       ))}
     </Flex>
   ),
