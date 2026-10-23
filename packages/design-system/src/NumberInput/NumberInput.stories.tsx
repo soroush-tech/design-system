@@ -11,18 +11,18 @@ import { baseTheme, createTheme } from '../theme/themes'
 import { m, maxWidth, minWidth, p, width } from '../utils/test/storiesArgs'
 import {
   buttonColorTokens,
-  numberFieldSpinButtonsTokens,
-  numberFieldVariantTokens,
+  numberInputSpinButtonsTokens,
+  numberInputVariantTokens,
   textColorTokens,
   textInputSizeTokens,
 } from '../utils/test/storiesOptions'
 import { exampleArgs } from '../utils/test/renderExample'
-import { numberFieldCatalog } from './NumberField.catalog'
-import { NumberField, type NumberFieldProps } from './NumberField'
+import { numberInputCatalog } from './NumberInput.catalog'
+import { NumberInput, type NumberInputProps } from './NumberInput'
 
-const meta: Meta<typeof NumberField> = {
-  title: 'Theme/NumberField',
-  component: NumberField,
+const meta: Meta<typeof NumberInput> = {
+  title: 'Theme/NumberInput',
+  component: NumberInput,
   tags: ['autodocs'],
   parameters: {
     layout: 'padded',
@@ -60,7 +60,7 @@ const meta: Meta<typeof NumberField> = {
       ],
     },
   },
-  args: exampleArgs(numberFieldCatalog.example),
+  args: exampleArgs(numberInputCatalog.example),
   argTypes: {
     defaultValue: {
       control: 'number',
@@ -110,7 +110,7 @@ const meta: Meta<typeof NumberField> = {
     },
     spinButtons: {
       control: { type: 'select' },
-      options: numberFieldSpinButtonsTokens,
+      options: numberInputSpinButtonsTokens,
       description: 'The step buttons: stacked at the end, either side of the field, or none.',
       table: { category: 'Layout', defaultValue: { summary: 'stacked' } },
     },
@@ -126,7 +126,7 @@ const meta: Meta<typeof NumberField> = {
     },
     variant: {
       control: { type: 'select' },
-      options: numberFieldVariantTokens,
+      options: numberInputVariantTokens,
       description: 'The frame - as on TextInput.',
       table: { category: 'Visual', defaultValue: { summary: 'default' } },
     },
@@ -197,28 +197,28 @@ const meta: Meta<typeof NumberField> = {
 }
 
 export default meta
-type Story = StoryObj<typeof NumberField>
+type Story = StoryObj<typeof NumberInput>
 
 // The default value is only the start: changing the control starts the field over.
 export const Default: Story = {
-  render: (args) => <NumberField key={String(args.defaultValue)} {...args} />,
+  render: (args) => <NumberInput key={String(args.defaultValue)} {...args} />,
 }
 
 export const SpinButtonsOnTheSides: Story = {
   args: { spinButtons: 'sides' },
-  render: (args) => <NumberField key={String(args.defaultValue)} {...args} />,
+  render: (args) => <NumberInput key={String(args.defaultValue)} {...args} />,
 }
 
 export const NoSpinButtons: Story = {
   args: { spinButtons: 'none' },
-  render: (args) => <NumberField key={String(args.defaultValue)} {...args} />,
+  render: (args) => <NumberInput key={String(args.defaultValue)} {...args} />,
 }
 
-function Controlled(args: Readonly<NumberFieldProps>) {
+function Controlled(args: Readonly<NumberInputProps>) {
   const [value, setValue] = useState<number | null>(5)
   return (
     <Flex gap={2} alignItems="center">
-      <NumberField {...args} value={value} onChange={setValue} />
+      <NumberInput {...args} value={value} onChange={setValue} />
       <Typography variant="caption">Value: {value ?? 'none'}</Typography>
     </Flex>
   )
@@ -230,7 +230,7 @@ export const ControlledValue: Story = {
 }
 
 // Typed, stepped and settled: onChange as it moves, onChangeCommitted when it is settled.
-function Events(args: Readonly<NumberFieldProps>) {
+function Events(args: Readonly<NumberInputProps>) {
   const [log, setLog] = useState<{ id: number; text: string }[]>([])
   const add = (event: string, value: number | null) =>
     setLog((previous) =>
@@ -241,7 +241,7 @@ function Events(args: Readonly<NumberFieldProps>) {
     )
   return (
     <Flex gap={1}>
-      <NumberField
+      <NumberInput
         {...args}
         onChange={(value) => add('change', value)}
         onChangeCommitted={(value) => add('committed', value)}
@@ -264,14 +264,14 @@ export const Formats: Story = {
   parameters: { controls: { include: [] } },
   render: (args) => (
     <Flex gap={2}>
-      <NumberField
+      <NumberInput
         {...args}
         defaultValue={1234.5}
         min={undefined}
         max={undefined}
         aria-label="Plain"
       />
-      <NumberField
+      <NumberInput
         {...args}
         defaultValue={1234.5}
         min={undefined}
@@ -280,7 +280,7 @@ export const Formats: Story = {
         format={{ useGrouping: true }}
         aria-label="German"
       />
-      <NumberField
+      <NumberInput
         {...args}
         defaultValue={0.25}
         min={0}
@@ -289,7 +289,7 @@ export const Formats: Story = {
         format={{ style: 'percent' }}
         aria-label="Percent"
       />
-      <NumberField
+      <NumberInput
         {...args}
         defaultValue={19.9}
         min={0}
@@ -298,7 +298,7 @@ export const Formats: Story = {
         format={{ style: 'currency', currency: 'USD' }}
         aria-label="Price"
       />
-      <NumberField
+      <NumberInput
         {...args}
         defaultValue={12.5}
         min={undefined}
@@ -312,20 +312,20 @@ export const Formats: Story = {
 
 export const SnapToStep: Story = {
   args: { step: 5, min: 0, max: 100, shouldSnapOnStep: true, defaultValue: 7 },
-  render: (args) => <NumberField key={String(args.defaultValue)} {...args} />,
+  render: (args) => <NumberInput key={String(args.defaultValue)} {...args} />,
 }
 
 export const ScrubWithTheWheel: Story = {
   args: { shouldScrubOnWheel: true },
-  render: (args) => <NumberField key={String(args.defaultValue)} {...args} />,
+  render: (args) => <NumberInput key={String(args.defaultValue)} {...args} />,
 }
 
 export const Variants: Story = {
   parameters: { controls: { include: [] } },
   render: (args) => (
     <Flex gap={2}>
-      {numberFieldVariantTokens.map((variant) => (
-        <NumberField
+      {numberInputVariantTokens.map((variant) => (
+        <NumberInput
           key={variant}
           {...args}
           variant={variant}
@@ -341,7 +341,7 @@ export const Sizes: Story = {
   render: (args) => (
     <Flex gap={2}>
       {(['sm', 'md', 'lg'] as const).map((size) => (
-        <NumberField key={size} {...args} size={size} aria-label={`Quantity, ${size}`} />
+        <NumberInput key={size} {...args} size={size} aria-label={`Quantity, ${size}`} />
       ))}
     </Flex>
   ),
@@ -351,9 +351,9 @@ export const States: Story = {
   parameters: { controls: { include: [] } },
   render: (args) => (
     <Flex gap={2}>
-      <NumberField {...args} error aria-label="Quantity, in error" />
-      <NumberField {...args} disabled aria-label="Quantity, disabled" />
-      <NumberField {...args} readOnly aria-label="Quantity, read-only" />
+      <NumberInput {...args} error aria-label="Quantity, in error" />
+      <NumberInput {...args} disabled aria-label="Quantity, disabled" />
+      <NumberInput {...args} readOnly aria-label="Quantity, read-only" />
     </Flex>
   ),
 }
@@ -373,7 +373,7 @@ export const InFormControl: Story = {
       fullWidth={fullWidth}
     >
       <FormLabel>Quantity</FormLabel>
-      <NumberField
+      <NumberInput
         variant="outlined"
         min={1}
         max={99}
@@ -391,14 +391,14 @@ export const RightToLeft: Story = {
   args: { spinButtons: 'sides' },
   render: (args) => (
     <View dir="rtl">
-      <NumberField {...args} locale="ar-EG" />
+      <NumberInput {...args} locale="ar-EG" />
     </View>
   ),
 }
 
 const customized = createTheme(baseTheme, {
   components: {
-    NumberField: {
+    NumberInput: {
       defaultProps: {
         variant: 'outlined',
         spinButtons: 'sides',
@@ -415,7 +415,7 @@ export const Customized: Story = {
   parameters: { controls: { include: [] } },
   render: () => (
     <ThemeProvider theme={customized}>
-      <NumberField aria-label="Quantité" defaultValue={10} min={0} max={100} />
+      <NumberInput aria-label="Quantité" defaultValue={10} min={0} max={100} />
     </ThemeProvider>
   ),
 }

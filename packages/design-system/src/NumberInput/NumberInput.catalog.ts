@@ -1,17 +1,17 @@
 import { defineCatalogEntry } from '../catalog/defineCatalogEntry'
-import type { NumberFieldProps, NumberFieldSpinButtons, NumberFieldVariant } from './NumberField'
+import type { NumberInputProps, NumberInputSpinButtons, NumberInputVariant } from './NumberInput'
 
-export const numberFieldSpinButtonsValues = [
+export const numberInputSpinButtonsValues = [
   'stacked',
   'sides',
   'none',
-] satisfies NumberFieldSpinButtons[]
-export const numberFieldVariantValues = [
+] satisfies NumberInputSpinButtons[]
+export const numberInputVariantValues = [
   'default',
   'outlined',
   'underline',
   'text',
-] satisfies NumberFieldVariant[]
+] satisfies NumberInputVariant[]
 
 const spinLabels = { stacked: 'Stacked', sides: 'Either side', none: 'No buttons' } as const
 
@@ -24,20 +24,20 @@ const example = {
   'aria-label': 'Quantity',
 } as const
 
-export const numberFieldCatalog = defineCatalogEntry<NumberFieldProps>()({
+export const numberInputCatalog = defineCatalogEntry<NumberInputProps>()({
   summary:
     'A field for a number, read in its locale and clamped to a range, stepped by keys or buttons.',
   isPlaceable: true,
   example: {
-    component: 'NumberField',
+    component: 'NumberInput',
     props: { ...example, variant: 'outlined' },
     children: [],
   },
-  variants: numberFieldSpinButtonsValues.map((spinButtons) => ({
+  variants: numberInputSpinButtonsValues.map((spinButtons) => ({
     name: spinButtons,
     label: spinLabels[spinButtons],
     example: {
-      component: 'NumberField',
+      component: 'NumberInput',
       props: { ...example, variant: 'outlined', spinButtons },
       children: [],
     },
@@ -46,8 +46,8 @@ export const numberFieldCatalog = defineCatalogEntry<NumberFieldProps>()({
     min: { values: [0, 1, -10] },
     max: { values: [10, 100] },
     step: { values: [1, 0.5, 5], default: 1 },
-    spinButtons: { values: numberFieldSpinButtonsValues, default: 'stacked' },
-    variant: { values: numberFieldVariantValues, default: 'default' },
+    spinButtons: { values: numberInputSpinButtonsValues, default: 'stacked' },
+    variant: { values: numberInputVariantValues, default: 'default' },
     size: { scale: 'sizes', default: 'md' },
     color: { scale: 'palette', default: 'primary' },
     textColor: { scale: 'text', default: 'primary' },

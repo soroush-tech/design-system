@@ -4,7 +4,7 @@ import { useControlled } from '../../utils/useControlled'
 import { addExact, snapToStep } from '../../utils/precision'
 import { formatNumber, getNumberSyntax, parseNumber } from '../utils/number'
 
-export interface UseNumberFieldParams {
+export interface UseNumberInputParams {
   /** The number - `null` for none, `undefined` leaves it uncontrolled. */
   value?: number | null
   defaultValue?: number | null
@@ -30,7 +30,7 @@ const clampTo = (value: number, min?: number, max?: number) =>
  * is theirs until it is committed on blur or Enter - and the steps by key and by button. A
  * number typed is told at once; one outside the range is clamped when it is committed.
  */
-export function useNumberField({
+export function useNumberInput({
   value: valueProp,
   defaultValue,
   onChange,
@@ -44,7 +44,7 @@ export function useNumberField({
   locale,
   shouldSnapOnStep,
   isFrozen,
-}: UseNumberFieldParams) {
+}: UseNumberInputParams) {
   const [value, setValue] = useControlled<number | null>({
     controlled: valueProp,
     default: defaultValue ?? null,

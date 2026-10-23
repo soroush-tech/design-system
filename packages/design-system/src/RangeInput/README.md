@@ -1,4 +1,4 @@
-# InputRange
+# RangeInput
 
 A slider: one value on a range, or two or more thumbs for a range of values. Each thumb is a
 visually hidden native `<input type="range">`, so the keys (the arrows, Page, Home and End),
@@ -8,17 +8,17 @@ Every name is yours - each thumb's (`getAriaLabel`, or a `FormLabel`), and the t
 (`getAriaValueText`) - so the slider carries no language of its own.
 
 ```tsx
-import { InputRange } from '@soroush.tech/design-system/InputRange'
+import { RangeInput } from '@soroush.tech/design-system/RangeInput'
 
 // One thumb
-;<InputRange
+;<RangeInput
   aria-label="Volume"
   value={volume}
   onChange={(_event, value) => setVolume(value as number)}
 />
 
 // A range - one thumb for each value
-;<InputRange
+;<RangeInput
   value={[20, 70]}
   onChange={(_event, value) => setRange(value as number[])}
   getAriaLabel={(index) => (index === 0 ? 'Least price' : 'Greatest price')}
@@ -88,7 +88,7 @@ own prop winning.
 ```tsx
 <FormControl>
   <FormLabel>Volume</FormLabel>
-  <InputRange defaultValue={30} />
+  <RangeInput defaultValue={30} />
   <FormHelperText>Loud or quiet.</FormHelperText>
 </FormControl>
 ```
@@ -97,7 +97,7 @@ A slider always has a value, so it takes no `required`.
 
 ## Customization
 
-`theme.components.InputRange` styles the `root`, the `rail`, the `track`, each `thumb`, the `mark`s
+`theme.components.RangeInput` styles the `root`, the `rail`, the `track`, each `thumb`, the `mark`s
 and their `markLabel`s, the `valueLabel` and each `input`. Its `defaultProps` set `size`, `color`,
 `orientation`, `track`, `step`, `shiftStep`, `valueLabel` and `shouldSwapThumbs`.
 

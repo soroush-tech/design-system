@@ -3,14 +3,14 @@ import type { LayoutProps, SpaceProps } from '@soroush.tech/styled-system'
 import { createShouldForwardProp, get, props, space, styled, system, type Theme } from '../index'
 import { useDefaultProps } from '../theme'
 import { useFormControl } from '../FormControl'
-import { useInputRange, type InputRangeValue } from './hooks/useInputRange'
+import { useRangeInput, type RangeInputValue } from './hooks/useRangeInput'
 import { getMarks, valueToPercent, type Mark, type Orientation } from './utils/range'
 
-export type { Mark as InputRangeMark } from './utils/range'
-export type InputRangeTrack = 'normal' | false | 'inverted'
-export type InputRangeValueLabel = 'auto' | 'on' | 'off'
+export type { Mark as RangeInputMark } from './utils/range'
+export type RangeInputTrack = 'normal' | false | 'inverted'
+export type RangeInputValueLabel = 'auto' | 'on' | 'off'
 
-export interface InputRangeProps
+export interface RangeInputProps
   extends
     SpaceProps<Theme>,
     Pick<
@@ -22,9 +22,9 @@ export interface InputRangeProps
   /** The value at first, when uncontrolled. Default: `min`. */
   defaultValue?: number | readonly number[]
   /** Fired as the value changes. `event.target` is `{ value, name }`, as a form library reads it. */
-  onChange?: (event: Event, value: InputRangeValue, activeThumb: number) => void
+  onChange?: (event: Event, value: RangeInputValue, activeThumb: number) => void
   /** Fired when a change is done: on release, and after every key. */
-  onChangeCommitted?: (event: Event | React.SyntheticEvent, value: InputRangeValue) => void
+  onChangeCommitted?: (event: Event | React.SyntheticEvent, value: RangeInputValue) => void
   /** Default: `0`. */
   min?: number
   /** Default: `100`. */
@@ -37,11 +37,11 @@ export interface InputRangeProps
   marks?: boolean | readonly Mark[]
   orientation?: Orientation
   /** The line between the thumbs - `'inverted'` fills the rest, `false` draws none. Default: `'normal'`. */
-  track?: InputRangeTrack
+  track?: RangeInputTrack
   /** The value as it is shown and announced - not what is stored. Default: itself. */
   scale?: (value: number) => number
   /** When a thumb shows its value: always, while hovered or focused, or never. Default: `'off'`. */
-  valueLabel?: InputRangeValueLabel
+  valueLabel?: RangeInputValueLabel
   /** What the label says. Default: the scaled value. */
   formatValueLabel?: (value: number, index: number) => ReactNode
   /** Names each thumb - no built-in text. A range needs one; a single thumb may take `aria-label`. */
@@ -100,9 +100,9 @@ const layoutStyles = system({
   maxHeight: true,
 })
 
-const InputRangeRoot = styled('span', {
-  name: 'InputRange',
-  label: 'InputRange',
+const RangeInputRoot = styled('span', {
+  name: 'RangeInput',
+  label: 'RangeInput',
   shouldForwardProp: createShouldForwardProp([...props, 'size', 'orientation', 'isDisabled']),
   systemProps: [space, layoutStyles],
 })<RootStyle>(({ theme, size, orientation, isDisabled }) => {
@@ -129,10 +129,10 @@ interface RailStyle extends AxisStyle {
   isInverted: boolean
 }
 
-const InputRangeRail = styled('span', {
-  name: 'InputRange',
+const RangeInputRail = styled('span', {
+  name: 'RangeInput',
   slot: 'rail',
-  label: 'InputRangeRail',
+  label: 'RangeInputRail',
   shouldForwardProp: createShouldForwardProp(['size', 'orientation', 'color', 'isInverted']),
 })<RailStyle>(({ theme, size, orientation, color, isInverted }) => {
   const thickness = railThickness(theme, size)
@@ -166,10 +166,10 @@ interface TrackStyle extends AxisStyle {
   isDragging: boolean
 }
 
-const InputRangeTrack = styled('span', {
-  name: 'InputRange',
+const RangeInputTrack = styled('span', {
+  name: 'RangeInput',
   slot: 'track',
-  label: 'InputRangeTrack',
+  label: 'RangeInputTrack',
   shouldForwardProp: createShouldForwardProp([
     'size',
     'orientation',
@@ -200,10 +200,10 @@ interface MarkStyle extends AxisStyle {
   isActive: boolean
 }
 
-const InputRangeMark = styled('span', {
-  name: 'InputRange',
+const RangeInputMark = styled('span', {
+  name: 'RangeInput',
   slot: 'mark',
-  label: 'InputRangeMark',
+  label: 'RangeInputMark',
   shouldForwardProp: createShouldForwardProp(['size', 'orientation', 'color', 'isActive']),
 })<MarkStyle>(({ theme, size, orientation, color, isActive }) => {
   const thickness = railThickness(theme, size)
@@ -232,10 +232,10 @@ const InputRangeMark = styled('span', {
   }
 })
 
-const InputRangeMarkLabel = styled('span', {
-  name: 'InputRange',
+const RangeInputMarkLabel = styled('span', {
+  name: 'RangeInput',
   slot: 'markLabel',
-  label: 'InputRangeMarkLabel',
+  label: 'RangeInputMarkLabel',
   shouldForwardProp: createShouldForwardProp(['size', 'orientation']),
 })<AxisStyle>(({ theme, size, orientation }) => {
   const thumb = theme.icon[size]
@@ -264,10 +264,10 @@ interface ThumbStyle extends AxisStyle {
   isPassive: boolean
 }
 
-const InputRangeThumb = styled('span', {
-  name: 'InputRange',
+const RangeInputThumb = styled('span', {
+  name: 'RangeInput',
   slot: 'thumb',
-  label: 'InputRangeThumb',
+  label: 'RangeInputThumb',
   shouldForwardProp: createShouldForwardProp([
     'size',
     'orientation',
@@ -305,10 +305,10 @@ const InputRangeThumb = styled('span', {
   }
 })
 
-const InputRangeInput = styled('input', {
-  name: 'InputRange',
+const RangeInputInput = styled('input', {
+  name: 'RangeInput',
   slot: 'input',
-  label: 'InputRangeInput',
+  label: 'RangeInputInput',
   shouldForwardProp: createShouldForwardProp(['orientation']),
 })<{ orientation: Orientation }>(({ orientation }) => ({
   // Over the thumb, so a screen reader's focus box is the thumb's - drawn by it, not by the input.
@@ -323,10 +323,10 @@ const InputRangeInput = styled('input', {
   ...(orientation === 'vertical' && { writingMode: 'vertical-lr' as const }),
 }))
 
-const InputRangeValueLabel = styled('span', {
-  name: 'InputRange',
+const RangeInputValueLabel = styled('span', {
+  name: 'RangeInput',
   slot: 'valueLabel',
-  label: 'InputRangeValueLabel',
+  label: 'RangeInputValueLabel',
   shouldForwardProp: createShouldForwardProp(['color', 'orientation', 'isOpen']),
 })<{ color: keyof Theme['palette']; orientation: Orientation; isOpen: boolean }>(
   ({ theme, color, orientation, isOpen }) => ({
@@ -369,7 +369,7 @@ const place = (orientation: Orientation, percent: number): CSSProperties =>
  * In a `FormControl` it takes the field's size, color, error, and disabled state, and its
  * `FormLabel` targets the first thumb.
  */
-export function InputRange({
+export function RangeInput({
   value,
   defaultValue,
   onChange,
@@ -399,8 +399,8 @@ export function InputRange({
   'aria-describedby': ariaDescribedby,
   'data-testid': dataTestid,
   ...rest
-}: Readonly<InputRangeProps>) {
-  const dp = useDefaultProps('InputRange')
+}: Readonly<RangeInputProps>) {
+  const dp = useDefaultProps('RangeInput')
   const fc = useFormControl({
     id: idProp,
     error: errorProp,
@@ -417,7 +417,7 @@ export function InputRange({
 
   const rootRef = useRef<HTMLSpanElement>(null)
   const baseId = useId()
-  const range = useInputRange({
+  const range = useRangeInput({
     value,
     defaultValue,
     min,
@@ -456,7 +456,7 @@ export function InputRange({
       : { insetInlineStart: `${trackStart}%`, width: `${trackEnd - trackStart}%` }
 
   return (
-    <InputRangeRoot
+    <RangeInputRoot
       ref={rootRef}
       isDisabled={fc.disabled}
       className={className}
@@ -465,9 +465,9 @@ export function InputRange({
       {...range.rootProps}
       {...rest}
     >
-      <InputRangeRail color={color} isInverted={isInverted} {...axis} />
+      <RangeInputRail color={color} isInverted={isInverted} {...axis} />
       {track !== false && (
-        <InputRangeTrack
+        <RangeInputTrack
           color={color}
           isInverted={isInverted}
           isDragging={isDragging}
@@ -479,7 +479,7 @@ export function InputRange({
         .filter((mark) => mark.value >= min && mark.value <= max)
         .map((mark) => (
           <Fragment key={mark.value}>
-            <InputRangeMark
+            <RangeInputMark
               data-mark={mark.value}
               color={color}
               isActive={isMarkActive(mark.value)}
@@ -487,13 +487,13 @@ export function InputRange({
               {...axis}
             />
             {mark.label != null && (
-              <InputRangeMarkLabel
+              <RangeInputMarkLabel
                 aria-hidden
                 style={place(orientation, valueToPercent(mark.value, min, max))}
                 {...axis}
               >
                 {mark.label}
-              </InputRangeMarkLabel>
+              </RangeInputMarkLabel>
             )}
           </Fragment>
         ))}
@@ -504,7 +504,7 @@ export function InputRange({
         const zIndex = range.lastUsed === index ? 1 : undefined
         const input = range.getInputProps(index)
         return (
-          <InputRangeThumb
+          <RangeInputThumb
             key={thumbKeys[index]}
             data-index={index}
             color={color}
@@ -515,16 +515,16 @@ export function InputRange({
             {...range.getThumbProps(index)}
           >
             {valueLabel !== 'off' && (
-              <InputRangeValueLabel
+              <RangeInputValueLabel
                 aria-hidden
                 color={color}
                 orientation={orientation}
                 isOpen={isShown}
               >
                 {formatValueLabel ? formatValueLabel(scale(thumbValue), index) : scale(thumbValue)}
-              </InputRangeValueLabel>
+              </RangeInputValueLabel>
             )}
-            <InputRangeInput
+            <RangeInputInput
               type="range"
               orientation={orientation}
               data-index={index}
@@ -546,9 +546,9 @@ export function InputRange({
               aria-valuetext={getAriaValueText?.(scale(thumbValue), index)}
               {...input}
             />
-          </InputRangeThumb>
+          </RangeInputThumb>
         )
       })}
-    </InputRangeRoot>
+    </RangeInputRoot>
   )
 }

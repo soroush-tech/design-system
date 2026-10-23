@@ -78,14 +78,14 @@ export { drawerAnchorValues as anchorTokens } from '../../Drawer/Drawer.catalog'
 export { modalScrollValues as modalScrollTokens } from '../../Modal/Modal.catalog'
 export { breadcrumbsSeparatorValues as breadcrumbsSeparatorTokens } from '../../Breadcrumbs/Breadcrumbs.catalog'
 export {
-  numberFieldSpinButtonsValues as numberFieldSpinButtonsTokens,
-  numberFieldVariantValues as numberFieldVariantTokens,
-} from '../../NumberField/NumberField.catalog'
+  numberInputSpinButtonsValues as numberInputSpinButtonsTokens,
+  numberInputVariantValues as numberInputVariantTokens,
+} from '../../NumberInput/NumberInput.catalog'
 export {
-  inputRangeOrientationValues as inputRangeOrientationTokens,
-  inputRangeTrackValues as inputRangeTrackTokens,
-  inputRangeValueLabelValues as inputRangeValueLabelTokens,
-} from '../../InputRange/InputRange.catalog'
+  rangeInputOrientationValues as rangeInputOrientationTokens,
+  rangeInputTrackValues as rangeInputTrackTokens,
+  rangeInputValueLabelValues as rangeInputValueLabelTokens,
+} from '../../RangeInput/RangeInput.catalog'
 export { ratingPrecisionValues as ratingPrecisionTokens } from '../../Rating/Rating.catalog'
 export { transitionEasingValues as transitionEasingTokens } from '../transitionCatalog'
 export { collapseOrientationValues as collapseOrientationTokens } from '../../Collapse/Collapse.catalog'

@@ -3,7 +3,7 @@ import { userEvent } from 'vitest/browser'
 import { screen } from '@testing-library/react'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { View } from '../View'
-import { InputRange } from './InputRange'
+import { RangeInput } from './RangeInput'
 
 // Real layout and a real pointer: a press is captured by the slider, a drag follows it past the
 // slider's own box, and a release lets it go - none of which jsdom can do.
@@ -14,12 +14,12 @@ const root = () => screen.getByTestId('range')
 // A thumb's room on each side: the slider is drawn this far in.
 const edge = () => root().getBoundingClientRect()
 
-describe('InputRange in a browser', () => {
+describe('RangeInput in a browser', () => {
   it('follows a mouse drag across the slider and commits where it ended', async () => {
     const onChangeCommitted = vi.fn()
     renderWithTheme(
       <View width="400px">
-        <InputRange
+        <RangeInput
           data-testid="range"
           aria-label="Volume"
           defaultValue={0}
@@ -42,7 +42,7 @@ describe('InputRange in a browser', () => {
   it('moves the nearer thumb of a range, and counts up from the bottom when vertical', async () => {
     renderWithTheme(
       <View height="300px">
-        <InputRange
+        <RangeInput
           data-testid="range"
           aria-label="Level"
           orientation="vertical"

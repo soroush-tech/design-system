@@ -428,8 +428,8 @@ export interface ButtonVariants {
   text: true
 }
 
-/** The defaults a theme may set for every `InputRange`. */
-export interface InputRangeOwnerState {
+/** The defaults a theme may set for every `RangeInput`. */
+export interface RangeInputOwnerState {
   size?: keyof ThemeSizes
   color?: keyof ThemePalette
   orientation?: 'horizontal' | 'vertical'
@@ -440,8 +440,8 @@ export interface InputRangeOwnerState {
   shouldSwapThumbs?: boolean
 }
 
-/** The defaults a theme may set for every `NumberField` - its button labels give it a language. */
-export interface NumberFieldOwnerState {
+/** The defaults a theme may set for every `NumberInput` - its button labels give it a language. */
+export interface NumberInputOwnerState {
   variant?: 'default' | 'outlined' | 'text' | 'underline'
   size?: keyof ThemeSizes
   color?: keyof ThemePalette
@@ -787,8 +787,8 @@ export interface ThemeComponents {
   Pressable?: ComponentConfig<PressableOwnerState>
   Quote?: ComponentConfig
   Radio?: ComponentConfig<Record<string, unknown>, 'root' | 'input' | 'icon'>
-  InputRange?: ComponentConfig<
-    InputRangeOwnerState,
+  RangeInput?: ComponentConfig<
+    RangeInputOwnerState,
     'root' | 'rail' | 'track' | 'thumb' | 'mark' | 'markLabel' | 'valueLabel' | 'input'
   >
   Tooltip?: ComponentConfig<TooltipOwnerState, 'root' | 'arrow'>
@@ -829,8 +829,8 @@ export interface ThemeComponents {
     | 'option'
     | 'status'
   >
-  NumberField?: ComponentConfig<
-    NumberFieldOwnerState,
+  NumberInput?: ComponentConfig<
+    NumberInputOwnerState,
     'root' | 'input' | 'spinButtons' | 'increment' | 'decrement'
   >
   Rating?: ComponentConfig<

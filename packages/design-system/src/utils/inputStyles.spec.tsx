@@ -5,7 +5,7 @@ import { ThemeProvider } from '../theme'
 import { baseTheme, createTheme, type Theme } from '../theme/themes'
 import { Autocomplete } from '../Autocomplete'
 import { NativeSelect } from '../NativeSelect'
-import { NumberField } from '../NumberField'
+import { NumberInput } from '../NumberInput'
 import { Select } from '../Select'
 import { TextInput } from '../TextInput'
 import { MenuItem } from '../MenuItem'
@@ -24,7 +24,7 @@ const inputs = (props: { minWidth?: string } = {}) => (
     <Select data-testid="select" aria-label="s" {...props}>
       <MenuItem value="a">A</MenuItem>
     </Select>
-    <NumberField data-testid="number" aria-label="n" {...props} />
+    <NumberInput data-testid="number" aria-label="n" {...props} />
     <Autocomplete data-testid="auto" options={['a']} aria-label="a" {...props} />
   </>
 )

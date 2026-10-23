@@ -39,7 +39,7 @@ import { FormLabel } from '../../FormLabel'
 import { Grid } from '../../Grid'
 import { Icon } from '../../Icon'
 import { Image } from '../../Image'
-import { InputRange } from '../../InputRange'
+import { RangeInput } from '../../RangeInput'
 import { LinearProgress } from '../../LinearProgress'
 import { Link } from '../../Link'
 import { Menu } from '../../Menu/Menu'
@@ -48,7 +48,7 @@ import { MenuItem } from '../../MenuItem'
 import { MenuList } from '../../Menu/MenuList'
 import { Modal } from '../../Modal'
 import { NativeSelect } from '../../NativeSelect'
-import { NumberField } from '../../NumberField'
+import { NumberInput } from '../../NumberInput'
 import { Pagination, PaginationItem } from '../../Pagination'
 import { Paper } from '../../Paper'
 import { Popover } from '../../Popover'
@@ -123,7 +123,7 @@ const COMPONENTS: Record<string, ElementType> = {
   Grid,
   Icon,
   Image,
-  InputRange,
+  RangeInput,
   LinearProgress,
   Link,
   Menu,
@@ -132,7 +132,7 @@ const COMPONENTS: Record<string, ElementType> = {
   MenuList,
   Modal,
   NativeSelect,
-  NumberField,
+  NumberInput,
   Pagination,
   PaginationItem,
   Paper,

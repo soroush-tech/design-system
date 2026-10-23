@@ -1,17 +1,17 @@
 import { describe, it, expect, vi } from 'vitest'
 import { screen } from '@testing-library/react'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
-import { NumberField } from './NumberField'
+import { NumberInput } from './NumberInput'
 
 // Real events and timers: a held button repeats on its own clock, and the wheel's default - the
 // page scrolling - is something only a browser has to be kept from.
 
 const field = () => screen.getByRole('spinbutton') as HTMLInputElement
 
-describe('NumberField in a browser', () => {
+describe('NumberInput in a browser', () => {
   it('repeats a held button, and stops when it is released', async () => {
     renderWithTheme(
-      <NumberField defaultValue={0} incrementLabel="Increase" decrementLabel="Decrease" />
+      <NumberInput defaultValue={0} incrementLabel="Increase" decrementLabel="Decrease" />
     )
     const increase = screen.getByRole('button', { name: 'Increase' })
     increase.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, button: 0 }))
@@ -25,7 +25,7 @@ describe('NumberField in a browser', () => {
   })
 
   it('steps a focused field by the wheel and keeps the page from scrolling', async () => {
-    renderWithTheme(<NumberField defaultValue={5} shouldScrubOnWheel />)
+    renderWithTheme(<NumberInput defaultValue={5} shouldScrubOnWheel />)
     field().focus()
     const wheel = new WheelEvent('wheel', { deltaY: -100, bubbles: true, cancelable: true })
     field().dispatchEvent(wheel)
@@ -34,7 +34,7 @@ describe('NumberField in a browser', () => {
   })
 
   it("leaves the wheel to the page when the field isn't focused", () => {
-    renderWithTheme(<NumberField defaultValue={5} shouldScrubOnWheel />)
+    renderWithTheme(<NumberInput defaultValue={5} shouldScrubOnWheel />)
     const wheel = new WheelEvent('wheel', { deltaY: -100, bubbles: true, cancelable: true })
     field().dispatchEvent(wheel)
     expect(wheel.defaultPrevented).toBe(false)

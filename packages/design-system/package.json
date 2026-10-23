@@ -57,14 +57,14 @@
     "./Grow": "./src/Grow/index.ts",
     "./Icon": "./src/Icon/index.ts",
     "./Image": "./src/Image/index.ts",
-    "./InputRange": "./src/InputRange/index.ts",
+    "./RangeInput": "./src/RangeInput/index.ts",
     "./LinearProgress": "./src/LinearProgress/index.ts",
     "./Link": "./src/Link/index.ts",
     "./Menu": "./src/Menu/index.ts",
     "./MenuItem": "./src/MenuItem/index.ts",
     "./Modal": "./src/Modal/index.ts",
     "./NativeSelect": "./src/NativeSelect/index.ts",
-    "./NumberField": "./src/NumberField/index.ts",
+    "./NumberInput": "./src/NumberInput/index.ts",
     "./Pagination": "./src/Pagination/index.ts",
     "./Paper": "./src/Paper/index.ts",
     "./Popover": "./src/Popover/index.ts",
@@ -393,14 +393,14 @@
           "default": "./dist/Image.cjs"
         }
       },
-      "./InputRange": {
+      "./RangeInput": {
         "import": {
-          "types": "./dist/InputRange.d.mts",
-          "default": "./dist/InputRange.mjs"
+          "types": "./dist/RangeInput.d.mts",
+          "default": "./dist/RangeInput.mjs"
         },
         "require": {
-          "types": "./dist/InputRange.d.cts",
-          "default": "./dist/InputRange.cjs"
+          "types": "./dist/RangeInput.d.cts",
+          "default": "./dist/RangeInput.cjs"
         }
       },
       "./LinearProgress": {
@@ -463,14 +463,14 @@
           "default": "./dist/NativeSelect.cjs"
         }
       },
-      "./NumberField": {
+      "./NumberInput": {
         "import": {
-          "types": "./dist/NumberField.d.mts",
-          "default": "./dist/NumberField.mjs"
+          "types": "./dist/NumberInput.d.mts",
+          "default": "./dist/NumberInput.mjs"
         },
         "require": {
-          "types": "./dist/NumberField.d.cts",
-          "default": "./dist/NumberField.cjs"
+          "types": "./dist/NumberInput.d.cts",
+          "default": "./dist/NumberInput.cjs"
         }
       },
       "./Pagination": {

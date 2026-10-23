@@ -9,13 +9,13 @@ import { themeDefault } from '../theme/utils/themeDefault'
 import { getFocusRing, getInputMinWidth } from '../utils/inputStyles'
 import { inputVariantStyles } from '../utils/inputVariantStyles'
 import { useHoldRepeat } from './hooks/useHoldRepeat'
-import { useNumberField } from './hooks/useNumberField'
+import { useNumberInput } from './hooks/useNumberInput'
 import { useWheelStep } from './hooks/useWheelStep'
 
-export type NumberFieldVariant = 'default' | 'outlined' | 'text' | 'underline'
-export type NumberFieldSpinButtons = 'stacked' | 'sides' | 'none'
+export type NumberInputVariant = 'default' | 'outlined' | 'text' | 'underline'
+export type NumberInputSpinButtons = 'stacked' | 'sides' | 'none'
 
-export interface NumberFieldProps
+export interface NumberInputProps
   extends SpaceProps<Theme>, Pick<LayoutProps<Theme>, 'width' | 'minWidth' | 'maxWidth'> {
   /** The number - `null` for none. Controlled with `onChange`. */
   value?: number | null
@@ -44,13 +44,13 @@ export interface NumberFieldProps
   /** The mouse wheel steps the number while the field is focused. Default: `false`. */
   shouldScrubOnWheel?: boolean
   /** Where the step buttons are: stacked at the end, either side of the field, or none. Default: `'stacked'`. */
-  spinButtons?: NumberFieldSpinButtons
+  spinButtons?: NumberInputSpinButtons
   /** Names the increase button - no built-in text; a theme gives it through `defaultProps`. */
   incrementLabel?: string
   /** Names the decrease button. */
   decrementLabel?: string
   /** The frame: a box, an outline, an underline or none. Default: `theme.defaults.inputVariant`. */
-  variant?: NumberFieldVariant
+  variant?: NumberInputVariant
   /** Resolves against `theme.sizes`. Default: its `FormControl`'s, else `'md'`. */
   size?: keyof Theme['sizes']
   /** The focus border color - resolves to `theme.palette`. Default: `'primary'`. */
@@ -81,7 +81,7 @@ interface RootStyle
   extends SpaceProps<Theme>, Pick<LayoutProps<Theme>, 'width' | 'minWidth' | 'maxWidth'> {
   color: keyof Theme['palette']
   textColor?: keyof Theme['text']
-  variant: NumberFieldVariant
+  variant: NumberInputVariant
   isError: boolean
   isDisabled: boolean
   isFullWidth: boolean
@@ -123,9 +123,9 @@ const frameStyle = ({
   }
 }
 
-const NumberFieldRoot = styled('div', {
-  name: 'NumberField',
-  label: 'NumberField',
+const NumberInputRoot = styled('div', {
+  name: 'NumberInput',
+  label: 'NumberInput',
   shouldForwardProp: createShouldForwardProp([
     ...props,
     'color',
@@ -139,10 +139,10 @@ const NumberFieldRoot = styled('div', {
   systemProps: [space, widthStyles],
 })<RootStyle>(inputVariantStyles, frameStyle)
 
-const NumberFieldInput = styled('input', {
-  name: 'NumberField',
+const NumberInputInput = styled('input', {
+  name: 'NumberInput',
   slot: 'input',
-  label: 'NumberFieldInput',
+  label: 'NumberInputInput',
   shouldForwardProp: createShouldForwardProp(['sizeToken', 'isCentered']),
 })<{ sizeToken: keyof Theme['sizes']; isCentered: boolean }>(({ theme, sizeToken, isCentered }) => {
   const s = theme.sizes[sizeToken]
@@ -170,10 +170,10 @@ const NumberFieldInput = styled('input', {
 
 // ─── Step buttons ─────────────────────────────────────────────────────────────
 
-const NumberFieldSpinButtons = styled('span', {
-  name: 'NumberField',
+const NumberInputSpinButtons = styled('span', {
+  name: 'NumberInput',
   slot: 'spinButtons',
-  label: 'NumberFieldSpinButtons',
+  label: 'NumberInputSpinButtons',
 })(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -212,17 +212,17 @@ const sideDivider = (edge: 'borderInlineStart' | 'borderInlineEnd') => {
     isSide ? { [edge]: `${theme.borderWidths.thin} solid`, borderColor: 'inherit' } : {}
 }
 
-const NumberFieldIncrement = styled('button', {
-  name: 'NumberField',
+const NumberInputIncrement = styled('button', {
+  name: 'NumberInput',
   slot: 'increment',
-  label: 'NumberFieldIncrement',
+  label: 'NumberInputIncrement',
   shouldForwardProp: spinProps,
 })<SpinStyle>(spinStyle, sideDivider('borderInlineStart'))
 
-const NumberFieldDecrement = styled('button', {
-  name: 'NumberField',
+const NumberInputDecrement = styled('button', {
+  name: 'NumberInput',
   slot: 'decrement',
-  label: 'NumberFieldDecrement',
+  label: 'NumberInputDecrement',
   shouldForwardProp: spinProps,
 })<SpinStyle>(spinStyle, sideDivider('borderInlineEnd'))
 
@@ -256,7 +256,7 @@ function SpinButton({
   useEffect(() => {
     if (isDisabled) stop()
   }, [isDisabled, stop])
-  const Button = direction === 1 ? NumberFieldIncrement : NumberFieldDecrement
+  const Button = direction === 1 ? NumberInputIncrement : NumberInputDecrement
   return (
     <Button
       type="button"
@@ -292,7 +292,7 @@ function SpinButton({
  * number to a form. In a `FormControl` it takes the field's size, color, error, disabled and
  * required state, and its `FormLabel` targets the field.
  */
-export function NumberField({
+export function NumberInput({
   value,
   defaultValue,
   onChange,
@@ -328,9 +328,9 @@ export function NumberField({
   'aria-describedby': ariaDescribedby,
   'data-testid': dataTestid,
   ...rest
-}: Readonly<NumberFieldProps>) {
+}: Readonly<NumberInputProps>) {
   const theme = useTheme()
-  const dp = useDefaultProps('NumberField')
+  const dp = useDefaultProps('NumberInput')
   const isInField = useContext(FormControlContext) !== null
   const fc = useFormControl({
     id: idProp,
@@ -350,7 +350,7 @@ export function NumberField({
   const step = stepProp ?? dp.step ?? 1
   const isFrozen = fc.disabled || readOnly
 
-  const field = useNumberField({
+  const field = useNumberInput({
     value,
     defaultValue,
     onChange,
@@ -390,7 +390,7 @@ export function NumberField({
   const inputMode = (min ?? -1) >= 0 && Number.isInteger(step) ? 'numeric' : 'decimal'
 
   return (
-    <NumberFieldRoot
+    <NumberInputRoot
       color={color}
       textColor={textColor}
       variant={variant}
@@ -403,7 +403,7 @@ export function NumberField({
       {...rest}
     >
       {isSide && decrement}
-      <NumberFieldInput
+      <NumberInputInput
         ref={inputRef}
         type="text"
         role="spinbutton"
@@ -433,12 +433,12 @@ export function NumberField({
         <input type="hidden" name={name} value={field.value ?? ''} disabled={fc.disabled} />
       )}
       {spinButtons === 'stacked' && (
-        <NumberFieldSpinButtons>
+        <NumberInputSpinButtons>
           {increment}
           {decrement}
-        </NumberFieldSpinButtons>
+        </NumberInputSpinButtons>
       )}
       {isSide && increment}
-    </NumberFieldRoot>
+    </NumberInputRoot>
   )
 }

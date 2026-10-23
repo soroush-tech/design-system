@@ -29,8 +29,8 @@ import { MenuList } from './Menu/MenuList'
 import { Modal } from './Modal'
 import { NativeSelect } from './NativeSelect'
 import { Pagination } from './Pagination'
-import { InputRange } from './InputRange'
-import { NumberField } from './NumberField'
+import { RangeInput } from './RangeInput'
+import { NumberInput } from './NumberInput'
 import { Rating } from './Rating'
 import { Breadcrumbs } from './Breadcrumbs'
 import { Paper } from './Paper'
@@ -137,8 +137,8 @@ const table = (
 
 // Marked, labelled and with two thumbs, so every slot - the marks and their labels, each thumb's
 // value label and input - is drawn.
-const inputRange = (
-  <InputRange
+const rangeInput = (
+  <RangeInput
     defaultValue={[10, 60]}
     marks={[{ value: 0, label: 'min' }, { value: 100 }]}
     valueLabel="on"
@@ -146,7 +146,7 @@ const inputRange = (
 )
 
 // Both buttons drawn, so every slot - the stacked pair and each of them - is.
-const numberField = <NumberField defaultValue={1} />
+const numberInput = <NumberInput defaultValue={1} />
 
 // Fractional and named, so every slot - the steps of an icon, the "no rating" radio - is drawn.
 // Open, with every part, so each styled element is drawn.
@@ -344,19 +344,19 @@ const cases: Case[] = [
     ui: <NativeSelect options={[{ label: 'Ten', value: 10 }]} defaultValue={10} />,
   },
   { name: 'Pagination', slot: 'root', label: 'PaginationNav', ui: <Pagination count={3} /> },
-  { name: 'InputRange', slot: 'root', label: 'InputRange', ui: inputRange },
-  { name: 'InputRange', slot: 'rail', label: 'InputRangeRail', ui: inputRange },
-  { name: 'InputRange', slot: 'track', label: 'InputRangeTrack', ui: inputRange },
-  { name: 'InputRange', slot: 'thumb', label: 'InputRangeThumb', ui: inputRange },
-  { name: 'InputRange', slot: 'mark', label: 'InputRangeMark', ui: inputRange },
-  { name: 'InputRange', slot: 'markLabel', label: 'InputRangeMarkLabel', ui: inputRange },
-  { name: 'InputRange', slot: 'valueLabel', label: 'InputRangeValueLabel', ui: inputRange },
-  { name: 'InputRange', slot: 'input', label: 'InputRangeInput', ui: inputRange },
-  { name: 'NumberField', slot: 'root', label: 'NumberField', ui: numberField },
-  { name: 'NumberField', slot: 'input', label: 'NumberFieldInput', ui: numberField },
-  { name: 'NumberField', slot: 'spinButtons', label: 'NumberFieldSpinButtons', ui: numberField },
-  { name: 'NumberField', slot: 'increment', label: 'NumberFieldIncrement', ui: numberField },
-  { name: 'NumberField', slot: 'decrement', label: 'NumberFieldDecrement', ui: numberField },
+  { name: 'RangeInput', slot: 'root', label: 'RangeInput', ui: rangeInput },
+  { name: 'RangeInput', slot: 'rail', label: 'RangeInputRail', ui: rangeInput },
+  { name: 'RangeInput', slot: 'track', label: 'RangeInputTrack', ui: rangeInput },
+  { name: 'RangeInput', slot: 'thumb', label: 'RangeInputThumb', ui: rangeInput },
+  { name: 'RangeInput', slot: 'mark', label: 'RangeInputMark', ui: rangeInput },
+  { name: 'RangeInput', slot: 'markLabel', label: 'RangeInputMarkLabel', ui: rangeInput },
+  { name: 'RangeInput', slot: 'valueLabel', label: 'RangeInputValueLabel', ui: rangeInput },
+  { name: 'RangeInput', slot: 'input', label: 'RangeInputInput', ui: rangeInput },
+  { name: 'NumberInput', slot: 'root', label: 'NumberInput', ui: numberInput },
+  { name: 'NumberInput', slot: 'input', label: 'NumberInputInput', ui: numberInput },
+  { name: 'NumberInput', slot: 'spinButtons', label: 'NumberInputSpinButtons', ui: numberInput },
+  { name: 'NumberInput', slot: 'increment', label: 'NumberInputIncrement', ui: numberInput },
+  { name: 'NumberInput', slot: 'decrement', label: 'NumberInputDecrement', ui: numberInput },
   { name: 'Rating', slot: 'root', label: 'Rating', ui: rating },
   { name: 'Rating', slot: 'item', label: 'RatingItem', ui: rating },
   { name: 'Rating', slot: 'icon', label: 'RatingIcon', ui: rating },

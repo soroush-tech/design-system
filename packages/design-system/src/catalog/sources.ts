@@ -37,7 +37,7 @@ import { formLabelCatalog } from '../FormLabel/FormLabel.catalog'
 import { gridCatalog } from '../Grid/Grid.catalog'
 import { iconCatalog } from '../Icon/Icon.catalog'
 import { imageCatalog } from '../Image/Image.catalog'
-import { inputRangeCatalog } from '../InputRange/InputRange.catalog'
+import { rangeInputCatalog } from '../RangeInput/RangeInput.catalog'
 import { linearProgressCatalog } from '../LinearProgress/LinearProgress.catalog'
 import { linkCatalog } from '../Link/Link.catalog'
 import { menuCatalog } from '../Menu/Menu/Menu.catalog'
@@ -47,7 +47,7 @@ import { menuItemsCatalog } from '../Menu/MenuItems/MenuItems.catalog'
 import { menuListCatalog } from '../Menu/MenuList/MenuList.catalog'
 import { modalCatalog } from '../Modal/Modal.catalog'
 import { nativeSelectCatalog } from '../NativeSelect/NativeSelect.catalog'
-import { numberFieldCatalog } from '../NumberField/NumberField.catalog'
+import { numberInputCatalog } from '../NumberInput/NumberInput.catalog'
 import { paginationCatalog } from '../Pagination/Pagination.catalog'
 import { paginationItemCatalog } from '../Pagination/PaginationItem/PaginationItem.catalog'
 import { paperCatalog } from '../Paper/Paper.catalog'
@@ -137,7 +137,7 @@ export const catalogSources: Record<string, CatalogSource> = {
   Grid: { entry: gridCatalog, folder: 'Grid' },
   Icon: { entry: iconCatalog, folder: 'Icon' },
   Image: { entry: imageCatalog, folder: 'Image' },
-  InputRange: { entry: inputRangeCatalog, folder: 'InputRange' },
+  RangeInput: { entry: rangeInputCatalog, folder: 'RangeInput' },
   LinearProgress: { entry: linearProgressCatalog, folder: 'LinearProgress' },
   Link: { entry: linkCatalog, folder: 'Link' },
   Menu: { entry: menuCatalog, folder: 'Menu' },
@@ -147,7 +147,7 @@ export const catalogSources: Record<string, CatalogSource> = {
   MenuList: { entry: menuListCatalog, folder: 'Menu', family: 'Menu' },
   Modal: { entry: modalCatalog, folder: 'Modal' },
   NativeSelect: { entry: nativeSelectCatalog, folder: 'NativeSelect' },
-  NumberField: { entry: numberFieldCatalog, folder: 'NumberField' },
+  NumberInput: { entry: numberInputCatalog, folder: 'NumberInput' },
   Pagination: { entry: paginationCatalog, folder: 'Pagination' },
   PaginationItem: { entry: paginationItemCatalog, folder: 'Pagination', family: 'Pagination' },
   Paper: { entry: paperCatalog, folder: 'Paper' },

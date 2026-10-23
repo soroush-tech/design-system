@@ -8,10 +8,10 @@ import { TextInput } from '../TextInput'
 import { Autocomplete } from '../Autocomplete'
 import { Button } from '../Button'
 import { Checkbox } from '../Checkbox'
-import { InputRange } from '../InputRange'
+import { RangeInput } from '../RangeInput'
 import { MenuItem } from '../MenuItem'
 import { NativeSelect } from '../NativeSelect'
-import { NumberField } from '../NumberField'
+import { NumberInput } from '../NumberInput'
 import { Radio } from '../Radio'
 import { Rating } from '../Rating'
 import { Select } from '../Select'
@@ -147,7 +147,7 @@ export const EveryInput: Story = {
         </FormControl>
         <FormControl>
           <FormLabel>Number</FormLabel>
-          <NumberField
+          <NumberInput
             variant="outlined"
             defaultValue={3}
             min={0}
@@ -173,7 +173,7 @@ export const EveryInput: Story = {
         </FormControl>
         <FormControl>
           <FormLabel>Range</FormLabel>
-          <InputRange defaultValue={30} valueLabel="auto" />
+          <RangeInput defaultValue={30} valueLabel="auto" />
         </FormControl>
         <FormControl>
           <FormLabel>Rating</FormLabel>

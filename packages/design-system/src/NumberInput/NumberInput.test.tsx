@@ -8,7 +8,7 @@ import { FormControl } from '../FormControl'
 import { FormLabel } from '../FormLabel'
 import { FormHelperText } from '../FormHelperText'
 import { useHoldRepeat } from './hooks/useHoldRepeat'
-import { NumberField, type NumberFieldProps } from './NumberField'
+import { NumberInput, type NumberInputProps } from './NumberInput'
 
 afterEach(() => {
   vi.useRealTimers()
@@ -25,13 +25,13 @@ const type = (text: string) => fireEvent.change(field(), { target: { value: text
 const press = (key: string, modifiers: Partial<KeyboardEventInit> = {}) =>
   fireEvent.keyDown(field(), { key, ...modifiers })
 
-const labelled = (props: Partial<NumberFieldProps> = {}) => (
-  <NumberField incrementLabel="Increase" decrementLabel="Decrease" {...props} />
+const labelled = (props: Partial<NumberInputProps> = {}) => (
+  <NumberInput incrementLabel="Increase" decrementLabel="Decrease" {...props} />
 )
 
-describe('NumberField', () => {
+describe('NumberInput', () => {
   it('is a spinbutton with its number and range, in a text input', () => {
-    renderWithTheme(<NumberField defaultValue={5} min={0} max={10} aria-label="Quantity" />)
+    renderWithTheme(<NumberInput defaultValue={5} min={0} max={10} aria-label="Quantity" />)
     expect(field().type).toBe('text')
     expect(field()).toHaveValue('5')
     expect(field()).toHaveAttribute('aria-valuenow', '5')
@@ -42,21 +42,21 @@ describe('NumberField', () => {
   })
 
   it('is empty with no number, and offers a decimal or a numeric keyboard as the range allows', () => {
-    const { unmount } = renderWithTheme(<NumberField />)
+    const { unmount } = renderWithTheme(<NumberInput />)
     expect(field()).toHaveValue('')
     expect(field()).not.toHaveAttribute('aria-valuenow')
     expect(field()).toHaveAttribute('inputmode', 'decimal')
     unmount()
-    const next = renderWithTheme(<NumberField min={0} />)
+    const next = renderWithTheme(<NumberInput min={0} />)
     expect(field()).toHaveAttribute('inputmode', 'numeric')
     next.unmount()
-    renderWithTheme(<NumberField min={0} step={0.5} />)
+    renderWithTheme(<NumberInput min={0} step={0.5} />)
     expect(field()).toHaveAttribute('inputmode', 'decimal')
   })
 
   it('tells the number as it is typed, keeping what is typed until it is settled', () => {
     const onChange = vi.fn()
-    renderWithTheme(<NumberField onChange={onChange} />)
+    renderWithTheme(<NumberInput onChange={onChange} />)
     type('1')
     type('12.')
     expect(onChange).toHaveBeenNthCalledWith(1, 1)
@@ -69,7 +69,7 @@ describe('NumberField', () => {
 
   it('leaves text that is not yet a number to be finished, and none is empty', () => {
     const onChange = vi.fn()
-    renderWithTheme(<NumberField defaultValue={3} onChange={onChange} />)
+    renderWithTheme(<NumberInput defaultValue={3} onChange={onChange} />)
     type('-')
     expect(onChange).not.toHaveBeenCalled()
     expect(field()).toHaveValue('-')
@@ -81,7 +81,7 @@ describe('NumberField', () => {
     const onChange = vi.fn()
     const onChangeCommitted = vi.fn()
     renderWithTheme(
-      <NumberField
+      <NumberInput
         defaultValue={1}
         min={0}
         max={10}
@@ -103,7 +103,7 @@ describe('NumberField', () => {
 
   it('settles empty text as none, and unreadable text as the number it had', () => {
     const onChangeCommitted = vi.fn()
-    renderWithTheme(<NumberField defaultValue={4} onChangeCommitted={onChangeCommitted} />)
+    renderWithTheme(<NumberInput defaultValue={4} onChangeCommitted={onChangeCommitted} />)
     type('abc')
     fireEvent.blur(field())
     expect(field()).toHaveValue('4')
@@ -116,26 +116,26 @@ describe('NumberField', () => {
 
   it('has nothing to settle when nothing was typed', () => {
     const onChangeCommitted = vi.fn()
-    renderWithTheme(<NumberField defaultValue={4} onChangeCommitted={onChangeCommitted} />)
+    renderWithTheme(<NumberInput defaultValue={4} onChangeCommitted={onChangeCommitted} />)
     fireEvent.blur(field())
     expect(onChangeCommitted).not.toHaveBeenCalled()
   })
 
   it('follows a controlled number, and null is none', () => {
     const onChange = vi.fn()
-    const { rerender } = renderWithTheme(<NumberField value={2} onChange={onChange} />)
+    const { rerender } = renderWithTheme(<NumberInput value={2} onChange={onChange} />)
     press('ArrowUp')
     expect(onChange).toHaveBeenCalledWith(3)
     expect(field()).toHaveValue('2')
-    rerender(<NumberField value={7} onChange={onChange} />)
+    rerender(<NumberInput value={7} onChange={onChange} />)
     expect(field()).toHaveValue('7')
-    rerender(<NumberField value={null} onChange={onChange} />)
+    rerender(<NumberInput value={null} onChange={onChange} />)
     expect(field()).toHaveValue('')
   })
 
   it('steps by the arrow keys - by the small step with Alt, the large with Shift', () => {
     const onChangeCommitted = vi.fn()
-    renderWithTheme(<NumberField defaultValue={10} onChangeCommitted={onChangeCommitted} />)
+    renderWithTheme(<NumberInput defaultValue={10} onChangeCommitted={onChangeCommitted} />)
     press('ArrowUp')
     expect(field()).toHaveValue('11')
     press('ArrowDown')
@@ -149,65 +149,65 @@ describe('NumberField', () => {
   })
 
   it('steps without float noise, from the number being typed, and from none as from 0', () => {
-    const { unmount } = renderWithTheme(<NumberField defaultValue={0.1} step={0.2} />)
+    const { unmount } = renderWithTheme(<NumberInput defaultValue={0.1} step={0.2} />)
     press('ArrowUp')
     expect(field()).toHaveValue('0.3')
     type('8')
     press('ArrowUp')
     expect(field()).toHaveValue('8.2')
     unmount()
-    renderWithTheme(<NumberField />)
+    renderWithTheme(<NumberInput />)
     press('ArrowUp')
     expect(field()).toHaveValue('1')
   })
 
   it('steps from the last number when what is typed is not one', () => {
-    renderWithTheme(<NumberField defaultValue={4} />)
+    renderWithTheme(<NumberInput defaultValue={4} />)
     type('abc')
     press('ArrowUp')
     expect(field()).toHaveValue('5')
   })
 
   it('clamps a step to the range, and snaps it to the grid of the step when told', () => {
-    const { unmount } = renderWithTheme(<NumberField defaultValue={9.5} max={10} />)
+    const { unmount } = renderWithTheme(<NumberInput defaultValue={9.5} max={10} />)
     press('ArrowUp')
     expect(field()).toHaveValue('10')
     unmount()
     renderWithTheme(
-      <NumberField defaultValue={7} step={5} min={2} shouldSnapOnStep onChangeCommitted={vi.fn()} />
+      <NumberInput defaultValue={7} step={5} min={2} shouldSnapOnStep onChangeCommitted={vi.fn()} />
     )
     press('ArrowUp')
     expect(field()).toHaveValue('12')
   })
 
   it('goes to the ends of its range with Home and End, and has none to go to without one', () => {
-    const { unmount } = renderWithTheme(<NumberField defaultValue={5} min={1} max={9} />)
+    const { unmount } = renderWithTheme(<NumberInput defaultValue={5} min={1} max={9} />)
     press('End')
     expect(field()).toHaveValue('9')
     press('Home')
     expect(field()).toHaveValue('1')
     unmount()
-    renderWithTheme(<NumberField defaultValue={5} />)
+    renderWithTheme(<NumberInput defaultValue={5} />)
     press('End')
     press('Home')
     expect(field()).toHaveValue('5')
   })
 
   it("ignores the keys it doesn't take", () => {
-    renderWithTheme(<NumberField defaultValue={5} />)
+    renderWithTheme(<NumberInput defaultValue={5} />)
     press('a')
     expect(field()).toHaveValue('5')
   })
 
   it('takes no change when it is read-only or disabled', () => {
-    const { unmount } = renderWithTheme(<NumberField defaultValue={5} readOnly />)
+    const { unmount } = renderWithTheme(<NumberInput defaultValue={5} readOnly />)
     press('ArrowUp')
     press('End')
     press('Enter')
     expect(field()).toHaveValue('5')
     expect(field()).toHaveAttribute('readonly')
     unmount()
-    renderWithTheme(<NumberField defaultValue={5} disabled />)
+    renderWithTheme(<NumberInput defaultValue={5} disabled />)
     press('ArrowUp')
     expect(field()).toHaveValue('5')
     expect(field()).toBeDisabled()
@@ -216,7 +216,7 @@ describe('NumberField', () => {
   it('writes and reads the number in its locale, in the format it is given', () => {
     const onChange = vi.fn()
     renderWithTheme(
-      <NumberField
+      <NumberInput
         defaultValue={1234.5}
         locale="de-DE"
         format={{ useGrouping: true }}
@@ -231,7 +231,7 @@ describe('NumberField', () => {
   it('reads a percent as its fraction', () => {
     const onChange = vi.fn()
     renderWithTheme(
-      <NumberField
+      <NumberInput
         defaultValue={0.5}
         locale="en-US"
         format={{ style: 'percent' }}
@@ -244,10 +244,10 @@ describe('NumberField', () => {
   })
 
   it('submits the raw number through a hidden input, off when disabled', () => {
-    const submitted = (props: Partial<NumberFieldProps>) => {
+    const submitted = (props: Partial<NumberInputProps>) => {
       const { container, unmount } = renderWithTheme(
         <form>
-          <NumberField name="quantity" {...props} />
+          <NumberInput name="quantity" {...props} />
         </form>
       )
       const data = [...new FormData(container.querySelector('form')!).entries()]
@@ -262,13 +262,13 @@ describe('NumberField', () => {
   })
 
   it('has no hidden input without a name', () => {
-    const { container } = renderWithTheme(<NumberField defaultValue={3} />)
+    const { container } = renderWithTheme(<NumberInput defaultValue={3} />)
     expect(container.querySelector('input[type="hidden"]')).toBeNull()
   })
 
   it('forwards its text, aria props, class, test id and space and width props', () => {
     renderWithTheme(
-      <NumberField
+      <NumberInput
         placeholder="Qty"
         aria-labelledby="heading"
         aria-describedby="hint"
@@ -294,8 +294,8 @@ describe('NumberField', () => {
   it('sets its value in its color, a textColor winning over it', () => {
     renderWithTheme(
       <>
-        <NumberField color="error" data-testid="follows" />
-        <NumberField color="error" textColor="info" data-testid="wins" />
+        <NumberInput color="error" data-testid="follows" />
+        <NumberInput color="error" textColor="info" data-testid="wins" />
       </>
     )
     expect(screen.getByTestId('follows')).toHaveStyle({ color: baseTheme.palette.error.main })
@@ -304,7 +304,7 @@ describe('NumberField', () => {
 
   it('takes a frame, a size, colors and the full width of its room', () => {
     renderWithTheme(
-      <NumberField
+      <NumberInput
         variant="outlined"
         size="lg"
         color="success"
@@ -322,7 +322,7 @@ describe('NumberField', () => {
   })
 
   it('is off when disabled: dimmed and taking no pointer', () => {
-    renderWithTheme(<NumberField disabled data-testid="field" />)
+    renderWithTheme(<NumberInput disabled data-testid="field" />)
     expect(screen.getByTestId('field')).toHaveStyle({ opacity: '0.5', pointerEvents: 'none' })
   })
 
@@ -351,7 +351,7 @@ describe('NumberField', () => {
     })
 
     it('are none when told so', () => {
-      renderWithTheme(<NumberField spinButtons="none" />)
+      renderWithTheme(<NumberInput spinButtons="none" />)
       expect(screen.queryAllByRole('button')).toHaveLength(0)
     })
 
@@ -461,7 +461,7 @@ describe('NumberField', () => {
 
   describe('the wheel', () => {
     it('steps a focused field, up for a wheel up, with the page held still', () => {
-      renderWithTheme(<NumberField defaultValue={5} shouldScrubOnWheel />)
+      renderWithTheme(<NumberInput defaultValue={5} shouldScrubOnWheel />)
       field().focus()
       expect(fireEvent.wheel(field(), { deltaY: -10 })).toBe(false)
       expect(field()).toHaveValue('6')
@@ -471,18 +471,18 @@ describe('NumberField', () => {
     })
 
     it('turns no number on a field that takes no change', () => {
-      renderWithTheme(<NumberField defaultValue={5} shouldScrubOnWheel readOnly />)
+      renderWithTheme(<NumberInput defaultValue={5} shouldScrubOnWheel readOnly />)
       field().focus()
       fireEvent.wheel(field(), { deltaY: -10 })
       expect(field()).toHaveValue('5')
     })
 
     it("does nothing to a field that isn't focused, or when it isn't asked to", () => {
-      const { unmount } = renderWithTheme(<NumberField defaultValue={5} shouldScrubOnWheel />)
+      const { unmount } = renderWithTheme(<NumberInput defaultValue={5} shouldScrubOnWheel />)
       fireEvent.wheel(field(), { deltaY: -10 })
       expect(field()).toHaveValue('5')
       unmount()
-      renderWithTheme(<NumberField defaultValue={5} />)
+      renderWithTheme(<NumberInput defaultValue={5} />)
       field().focus()
       fireEvent.wheel(field(), { deltaY: -10 })
       expect(field()).toHaveValue('5')
@@ -494,7 +494,7 @@ describe('NumberField', () => {
       renderWithTheme(
         <FormControl id="quantity">
           <FormLabel>Quantity</FormLabel>
-          <NumberField />
+          <NumberInput />
           <FormHelperText>How many?</FormHelperText>
         </FormControl>
       )
@@ -506,7 +506,7 @@ describe('NumberField', () => {
     it("takes the field's size, error, disabled and required state - its own props winning", () => {
       const { unmount } = renderWithTheme(
         <FormControl size="sm" error required disabled>
-          <NumberField />
+          <NumberInput />
         </FormControl>
       )
       expect(field()).toHaveStyle({ paddingTop: baseTheme.space[baseTheme.sizes.sm.paddingTop] })
@@ -516,7 +516,7 @@ describe('NumberField', () => {
       unmount()
       renderWithTheme(
         <FormControl size="sm" disabled>
-          <NumberField size="lg" disabled={false} />
+          <NumberInput size="lg" disabled={false} />
         </FormControl>
       )
       expect(field()).toBeEnabled()
@@ -526,19 +526,19 @@ describe('NumberField', () => {
     it('is a block under its label in a field, and in a line out of one', () => {
       const { unmount } = renderWithTheme(
         <FormControl>
-          <NumberField data-testid="field" />
+          <NumberInput data-testid="field" />
         </FormControl>
       )
       expect(screen.getByTestId('field')).toHaveStyle({ display: 'flex', width: 'fit-content' })
       unmount()
-      renderWithTheme(<NumberField data-testid="field" />)
+      renderWithTheme(<NumberInput data-testid="field" />)
       expect(screen.getByTestId('field')).toHaveStyle({ display: 'inline-flex' })
     })
 
     it("takes the field's colors and full width", () => {
       renderWithTheme(
         <FormControl color="success" textColor="secondary" fullWidth>
-          <NumberField data-testid="field" />
+          <NumberInput data-testid="field" />
         </FormControl>
       )
       expect(screen.getByTestId('field')).toHaveStyle({
@@ -551,7 +551,7 @@ describe('NumberField', () => {
   it("takes the theme's defaults for every field, its own props winning", () => {
     const theme = createTheme(baseTheme, {
       components: {
-        NumberField: {
+        NumberInput: {
           defaultProps: {
             variant: 'outlined',
             size: 'sm',
@@ -568,7 +568,7 @@ describe('NumberField', () => {
         },
       },
     })
-    const { unmount } = render(<NumberField defaultValue={0} data-testid="field" />, {
+    const { unmount } = render(<NumberInput defaultValue={0} data-testid="field" />, {
       wrapper: withTheme(theme),
     })
     expect(screen.getByRole('button', { name: 'Augmenter' })).toBeInTheDocument()
@@ -582,7 +582,7 @@ describe('NumberField', () => {
     expect(screen.getByTestId('field')).toHaveStyle({ borderStyle: 'solid' })
     unmount()
     render(
-      <NumberField defaultValue={0} spinButtons="none" step={2} variant="underline" size="lg" />,
+      <NumberInput defaultValue={0} spinButtons="none" step={2} variant="underline" size="lg" />,
       { wrapper: withTheme(theme) }
     )
     expect(screen.queryAllByRole('button')).toHaveLength(0)

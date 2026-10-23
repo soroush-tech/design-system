@@ -23,9 +23,9 @@ import {
   type Orientation,
 } from '../utils/range'
 
-export type InputRangeValue = number | number[]
+export type RangeInputValue = number | number[]
 
-export interface UseInputRangeParams {
+export interface UseRangeInputParams {
   /** The value - a number for one thumb, an array for more. `undefined` leaves it uncontrolled. */
   value?: number | readonly number[]
   defaultValue?: number | readonly number[]
@@ -41,8 +41,8 @@ export interface UseInputRangeParams {
   name?: string
   rootRef: RefObject<HTMLElement | null>
   /** `event.target` is `{ value, name }`, so form libraries can read them. */
-  onChange?: (event: Event, value: InputRangeValue, activeThumb: number) => void
-  onChangeCommitted?: (event: Event | SyntheticEvent, value: InputRangeValue) => void
+  onChange?: (event: Event, value: RangeInputValue, activeThumb: number) => void
+  onChangeCommitted?: (event: Event | SyntheticEvent, value: RangeInputValue) => void
 }
 
 // No thumb pressed, hovered or focused; no pointer down.
@@ -50,7 +50,7 @@ const NONE = -1
 
 // An event of the same kind whose `target` is the slider's value and name: what a form library
 // reads - without touching the original event's own target.
-function withTarget(event: SyntheticEvent, target: { value: InputRangeValue; name?: string }) {
+function withTarget(event: SyntheticEvent, target: { value: RangeInputValue; name?: string }) {
   const native = event.nativeEvent
   const clone = new (native.constructor as typeof Event)(native.type, native)
   Object.defineProperty(clone, 'target', { writable: true, value: target })
@@ -62,7 +62,7 @@ function withTarget(event: SyntheticEvent, target: { value: InputRangeValue; nam
  * pressed, hovered or focused, and the handlers - the pointer's on the root, which keeps the
  * pointer while it drags, and the keys' and the native input's on each thumb's own input.
  */
-export function useInputRange({
+export function useRangeInput({
   value: valueProp,
   defaultValue,
   min,
@@ -77,7 +77,7 @@ export function useInputRange({
   rootRef,
   onChange,
   onChangeCommitted,
-}: UseInputRangeParams) {
+}: UseRangeInputParams) {
   const [value, setValue] = useControlled<number | readonly number[]>({
     controlled: valueProp,
     default: defaultValue ?? min,
@@ -92,9 +92,9 @@ export function useInputRange({
   const dragIndex = useRef(NONE)
   const pointerId = useRef(NONE)
   // What was last told, so a release with no move commits the value it began with.
-  const lastChanged = useRef<InputRangeValue>(0)
+  const lastChanged = useRef<RangeInputValue>(0)
 
-  const toOutput = (list: readonly number[]): InputRangeValue => (isRange ? [...list] : list[0])
+  const toOutput = (list: readonly number[]): RangeInputValue => (isRange ? [...list] : list[0])
 
   const emit = (event: SyntheticEvent, list: number[], index: number) => {
     const next = toOutput(list)

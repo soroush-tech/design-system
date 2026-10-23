@@ -1,4 +1,4 @@
-# NumberField
+# NumberInput
 
 A field for a number. A text input - so what is typed is the user's until it is settled - that
 reads and writes the number in its locale, clamps it to a range, and steps by the arrow keys,
@@ -9,9 +9,9 @@ Every label is yours - the buttons' (`incrementLabel`, `decrementLabel`) - so th
 language of its own.
 
 ```tsx
-import { NumberField } from '@soroush.tech/design-system/NumberField'
+import { NumberInput } from '@soroush.tech/design-system/NumberInput'
 
-;<NumberField
+;<NumberInput
   aria-label="Quantity"
   value={quantity}
   onChange={setQuantity}
@@ -82,14 +82,14 @@ Its `FormLabel` targets the field, its `FormHelperText` describes it, and the fi
 ```tsx
 <FormControl>
   <FormLabel>Quantity</FormLabel>
-  <NumberField min={1} max={99} incrementLabel="Increase" decrementLabel="Decrease" />
+  <NumberInput min={1} max={99} incrementLabel="Increase" decrementLabel="Decrease" />
   <FormHelperText>Between 1 and 99.</FormHelperText>
 </FormControl>
 ```
 
 ## Customization
 
-`theme.components.NumberField` styles the `root`, the `input`, the `spinButtons` pair and each
+`theme.components.NumberInput` styles the `root`, the `input`, the `spinButtons` pair and each
 `increment` / `decrement` button. Its `defaultProps` set `variant`, `size`, `color`, `spinButtons`,
 the three steps, `shouldSnapOnStep`, `shouldScrubOnWheel` - and the two button labels, which give
 every field the app's language.

@@ -4,7 +4,7 @@ import { Flex } from '../Flex'
 import { FormControl } from '../FormControl'
 import { FormHelperText } from '../FormHelperText'
 import { FormLabel } from '../FormLabel'
-import { NumberField } from '../NumberField'
+import { NumberInput } from '../NumberInput'
 import { Typography } from '../Typography'
 import { View } from '../View'
 import { ThemeProvider } from '../theme'
@@ -12,18 +12,18 @@ import { baseTheme, createTheme } from '../theme/themes'
 import { height, m, maxWidth, minWidth, p, width } from '../utils/test/storiesArgs'
 import {
   buttonColorTokens,
-  inputRangeOrientationTokens,
-  inputRangeTrackTokens,
-  inputRangeValueLabelTokens,
+  rangeInputOrientationTokens,
+  rangeInputTrackTokens,
+  rangeInputValueLabelTokens,
   textInputSizeTokens,
 } from '../utils/test/storiesOptions'
 import { exampleArgs } from '../utils/test/renderExample'
-import { inputRangeCatalog } from './InputRange.catalog'
-import { InputRange, type InputRangeProps } from './InputRange'
+import { rangeInputCatalog } from './RangeInput.catalog'
+import { RangeInput, type RangeInputProps } from './RangeInput'
 
-const meta: Meta<typeof InputRange> = {
-  title: 'Theme/InputRange',
-  component: InputRange,
+const meta: Meta<typeof RangeInput> = {
+  title: 'Theme/RangeInput',
+  component: RangeInput,
   tags: ['autodocs'],
   parameters: {
     layout: 'padded',
@@ -54,7 +54,7 @@ const meta: Meta<typeof InputRange> = {
       ],
     },
   },
-  args: exampleArgs(inputRangeCatalog.example),
+  args: exampleArgs(rangeInputCatalog.example),
   decorators: [
     (Story) => (
       <View width="24rem" maxWidth="100%">
@@ -96,19 +96,19 @@ const meta: Meta<typeof InputRange> = {
     },
     orientation: {
       control: { type: 'inline-radio' },
-      options: inputRangeOrientationTokens,
+      options: rangeInputOrientationTokens,
       description: 'Horizontal, or standing up.',
       table: { category: 'Layout', defaultValue: { summary: 'horizontal' } },
     },
     track: {
       control: { type: 'select' },
-      options: [...inputRangeTrackTokens, false],
+      options: [...rangeInputTrackTokens, false],
       description: "The line between the thumbs - 'inverted' fills the rest, false draws none.",
       table: { category: 'Visual', defaultValue: { summary: 'normal' } },
     },
     valueLabel: {
       control: { type: 'inline-radio' },
-      options: inputRangeValueLabelTokens,
+      options: rangeInputValueLabelTokens,
       description: 'When a thumb shows its value: never, while hovered or focused, or always.',
       table: { category: 'Visual', defaultValue: { summary: 'off' } },
     },
@@ -159,11 +159,11 @@ const meta: Meta<typeof InputRange> = {
 }
 
 export default meta
-type Story = StoryObj<typeof InputRange>
+type Story = StoryObj<typeof RangeInput>
 
 // The default value is only the start: changing the control starts the slider over.
 export const Default: Story = {
-  render: (args) => <InputRange key={JSON.stringify(args.defaultValue)} {...args} />,
+  render: (args) => <RangeInput key={JSON.stringify(args.defaultValue)} {...args} />,
 }
 
 const priceLabel = (index: number) => (index === 0 ? 'Least price' : 'Greatest price')
@@ -171,15 +171,15 @@ const priceLabel = (index: number) => (index === 0 ? 'Least price' : 'Greatest p
 export const Range: Story = {
   args: { defaultValue: [20, 70], 'aria-label': undefined, valueLabel: 'auto' },
   render: (args) => (
-    <InputRange key={JSON.stringify(args.defaultValue)} getAriaLabel={priceLabel} {...args} />
+    <RangeInput key={JSON.stringify(args.defaultValue)} getAriaLabel={priceLabel} {...args} />
   ),
 }
 
-function Controlled(args: Readonly<InputRangeProps>) {
+function Controlled(args: Readonly<RangeInputProps>) {
   const [value, setValue] = useState<number | number[]>(30)
   return (
     <Flex gap={1}>
-      <InputRange {...args} value={value} onChange={(_event, next) => setValue(next)} />
+      <RangeInput {...args} value={value} onChange={(_event, next) => setValue(next)} />
       <Typography variant="caption">Value: {String(value)}</Typography>
     </Flex>
   )
@@ -192,7 +192,7 @@ export const ControlledValue: Story = {
 
 export const Marks: Story = {
   args: { defaultValue: 30, step: 10, marks: true, min: 10, max: 110 },
-  render: (args) => <InputRange key={JSON.stringify(args.defaultValue)} {...args} />,
+  render: (args) => <RangeInput key={JSON.stringify(args.defaultValue)} {...args} />,
 }
 
 const labelled = [
@@ -204,20 +204,20 @@ const labelled = [
 
 export const CustomMarks: Story = {
   parameters: { controls: { include: [] } },
-  render: (args) => <InputRange {...args} defaultValue={20} step={10} marks={labelled} />,
+  render: (args) => <RangeInput {...args} defaultValue={20} step={10} marks={labelled} />,
 }
 
 // With no step the value is one of the marks: the keys go from mark to mark.
 export const RestrictedToMarks: Story = {
   parameters: { controls: { include: [] } },
-  render: (args) => <InputRange {...args} defaultValue={20} step={null} marks={labelled} />,
+  render: (args) => <RangeInput {...args} defaultValue={20} step={null} marks={labelled} />,
 }
 
 export const ValueLabelAlwaysShown: Story = {
   args: { valueLabel: 'on', defaultValue: 40 },
   render: (args) => (
     <View paddingTop={4}>
-      <InputRange key={JSON.stringify(args.defaultValue)} {...args} />
+      <RangeInput key={JSON.stringify(args.defaultValue)} {...args} />
     </View>
   ),
 }
@@ -225,24 +225,24 @@ export const ValueLabelAlwaysShown: Story = {
 export const Vertical: Story = {
   args: { orientation: 'vertical', defaultValue: 40, marks: true, step: 20 },
   decorators: [(Story) => <Story />],
-  render: (args) => <InputRange key={JSON.stringify(args.defaultValue)} {...args} />,
+  render: (args) => <RangeInput key={JSON.stringify(args.defaultValue)} {...args} />,
 }
 
 export const WithoutTrack: Story = {
   args: { track: false, defaultValue: [20, 37, 50] },
-  render: (args) => <InputRange {...args} getAriaLabel={(index) => `Thumb ${index + 1}`} />,
+  render: (args) => <RangeInput {...args} getAriaLabel={(index) => `Thumb ${index + 1}`} />,
 }
 
 export const InvertedTrack: Story = {
   args: { track: 'inverted', defaultValue: [30, 60], 'aria-label': undefined },
-  render: (args) => <InputRange {...args} getAriaLabel={priceLabel} />,
+  render: (args) => <RangeInput {...args} getAriaLabel={priceLabel} />,
 }
 
 // Thumbs that stop at each other keep a distance of their own - here, never closer than 10.
-function MinimumDistance(args: Readonly<InputRangeProps>) {
+function MinimumDistance(args: Readonly<RangeInputProps>) {
   const [value, setValue] = useState<number[]>([20, 50])
   return (
-    <InputRange
+    <RangeInput
       {...args}
       value={value}
       shouldSwapThumbs={false}
@@ -269,7 +269,7 @@ export const NonLinearScale: Story = {
   args: { valueLabel: 'auto', min: 0, max: 10, defaultValue: 4, step: 1 },
   render: (args) => (
     <View paddingTop={4}>
-      <InputRange
+      <RangeInput
         key={JSON.stringify(args.defaultValue)}
         {...args}
         scale={(value) => 2 ** value}
@@ -295,7 +295,7 @@ export const WithAriaValueText: Story = {
   },
   render: (args) => (
     <View paddingTop={4}>
-      <InputRange
+      <RangeInput
         key={JSON.stringify(args.defaultValue)}
         {...args}
         getAriaValueText={minutes}
@@ -310,7 +310,7 @@ export const RangeWithAriaValueText: Story = {
   args: { min: 0, max: 24, defaultValue: [9, 17], valueLabel: 'auto', 'aria-label': undefined },
   render: (args) => (
     <View paddingTop={4}>
-      <InputRange
+      <RangeInput
         {...args}
         getAriaLabel={(index) => (index === 0 ? 'Opens at' : 'Closes at')}
         getAriaValueText={(value) => `${value}:00`}
@@ -321,18 +321,18 @@ export const RangeWithAriaValueText: Story = {
 }
 
 // A slider and a number field on one value: the field is typed, the slider is dragged.
-function WithNumberField(args: Readonly<InputRangeProps>) {
+function WithNumberInput(args: Readonly<RangeInputProps>) {
   const [value, setValue] = useState<number | null>(30)
   return (
     <Flex gap={2} alignItems="center">
       <View width="14rem">
-        <InputRange
+        <RangeInput
           {...args}
           value={value ?? 0}
           onChange={(_event, next) => setValue(next as number)}
         />
       </View>
-      <NumberField
+      <NumberInput
         aria-label="Volume value"
         variant="outlined"
         min={0}
@@ -348,7 +348,7 @@ function WithNumberField(args: Readonly<InputRangeProps>) {
 
 export const WithAnInputField: Story = {
   parameters: { controls: { include: [] } },
-  render: (args) => <WithNumberField {...args} />,
+  render: (args) => <WithNumberInput {...args} />,
 }
 
 export const Sizes: Story = {
@@ -356,7 +356,7 @@ export const Sizes: Story = {
   render: (args) => (
     <Flex gap={2}>
       {(['sm', 'md', 'lg'] as const).map((size) => (
-        <InputRange key={size} {...args} size={size} aria-label={`Value, ${size}`} />
+        <RangeInput key={size} {...args} size={size} aria-label={`Value, ${size}`} />
       ))}
     </Flex>
   ),
@@ -367,7 +367,7 @@ export const Colors: Story = {
   render: (args) => (
     <Flex gap={2}>
       {(['primary', 'secondary', 'success', 'error'] as const).map((color) => (
-        <InputRange key={color} {...args} color={color} aria-label={`Value, ${color}`} />
+        <RangeInput key={color} {...args} color={color} aria-label={`Value, ${color}`} />
       ))}
     </Flex>
   ),
@@ -377,8 +377,8 @@ export const States: Story = {
   parameters: { controls: { include: [] } },
   render: (args) => (
     <Flex gap={2}>
-      <InputRange {...args} error aria-label="Value, in error" />
-      <InputRange {...args} disabled aria-label="Value, disabled" />
+      <RangeInput {...args} error aria-label="Value, in error" />
+      <RangeInput {...args} disabled aria-label="Value, disabled" />
     </Flex>
   ),
 }
@@ -389,7 +389,7 @@ export const InFormControl: Story = {
   render: ({ error, disabled, size, color }) => (
     <FormControl error={error} disabled={disabled} size={size} color={color}>
       <FormLabel>Volume</FormLabel>
-      <InputRange defaultValue={30} valueLabel="auto" />
+      <RangeInput defaultValue={30} valueLabel="auto" />
       <FormHelperText>{error ? 'Too loud.' : 'Loud or quiet.'}</FormHelperText>
     </FormControl>
   ),
@@ -400,14 +400,14 @@ export const RightToLeft: Story = {
   args: { defaultValue: 30, valueLabel: 'auto' },
   render: (args) => (
     <View dir="rtl" paddingTop={4}>
-      <InputRange {...args} />
+      <RangeInput {...args} />
     </View>
   ),
 }
 
 const customized = createTheme(baseTheme, {
   components: {
-    InputRange: {
+    RangeInput: {
       defaultProps: { color: 'success', size: 'lg', valueLabel: 'auto', step: 5 },
       styleOverrides: { rail: { opacity: 0.6 } },
     },
@@ -420,7 +420,7 @@ export const Customized: Story = {
   render: () => (
     <ThemeProvider theme={customized}>
       <View paddingTop={4}>
-        <InputRange aria-label="Value" defaultValue={40} />
+        <RangeInput aria-label="Value" defaultValue={40} />
       </View>
     </ThemeProvider>
   ),

@@ -7,7 +7,7 @@ import { ThemeProvider } from '../theme'
 import { FormControl } from '../FormControl'
 import { FormLabel } from '../FormLabel'
 import { FormHelperText } from '../FormHelperText'
-import { InputRange, type InputRangeProps } from './InputRange'
+import { RangeInput, type RangeInputProps } from './RangeInput'
 
 afterEach(() => vi.restoreAllMocks())
 
@@ -22,8 +22,8 @@ const root = () => screen.getByTestId('range')
 const press = (key: string, index = 0, init: Partial<KeyboardEventInit> = {}) =>
   fireEvent.keyDown(sliders()[index], { key, ...init })
 
-const range = (props: Partial<InputRangeProps> = {}) => (
-  <InputRange data-testid="range" aria-label="Volume" {...props} />
+const range = (props: Partial<RangeInputProps> = {}) => (
+  <RangeInput data-testid="range" aria-label="Volume" {...props} />
 )
 
 // jsdom lays nothing out: the pointer needs a box - 200 wide and tall, its start at 100 - to be along.
@@ -54,7 +54,7 @@ const pointer = (
   fire(root(), { clientX: x, clientY: 100, pointerId: 1, button: 0, buttons: 1, ...init })
 }
 
-describe('InputRange', () => {
+describe('RangeInput', () => {
   it('draws one thumb, at the least, for an empty range value - given or controlled', () => {
     const { rerender } = renderWithTheme(range({ defaultValue: [], min: 5 }))
     expect(sliders()).toHaveLength(1)
@@ -572,7 +572,7 @@ describe('InputRange', () => {
   })
 
   it('submits each thumb under its name in a form, none when disabled', () => {
-    const submitted = (props: Partial<InputRangeProps>) => {
+    const submitted = (props: Partial<RangeInputProps>) => {
       const { container, unmount } = renderWithTheme(
         <form>{range({ name: 'range', ...props })}</form>
       )
@@ -624,7 +624,7 @@ describe('InputRange', () => {
       renderWithTheme(
         <FormControl id="volume">
           <FormLabel>Volume</FormLabel>
-          <InputRange data-testid="range" defaultValue={[10, 20]} />
+          <RangeInput data-testid="range" defaultValue={[10, 20]} />
           <FormHelperText>Loud or quiet.</FormHelperText>
         </FormControl>
       )
@@ -642,7 +642,7 @@ describe('InputRange', () => {
     it('has no label to point at without a FormLabel', () => {
       renderWithTheme(
         <FormControl id="volume">
-          <InputRange data-testid="range" aria-label="Volume" />
+          <RangeInput data-testid="range" aria-label="Volume" />
         </FormControl>
       )
       expect(slider()).not.toHaveAttribute('aria-labelledby')
@@ -652,7 +652,7 @@ describe('InputRange', () => {
     it("takes the field's size, error and disabled state - its own props winning", () => {
       const { unmount } = renderWithTheme(
         <FormControl size="lg" error disabled>
-          <InputRange data-testid="range" aria-label="Volume" />
+          <RangeInput data-testid="range" aria-label="Volume" />
         </FormControl>
       )
       expect(root()).toHaveStyle({ height: baseTheme.icon.lg })
@@ -661,7 +661,7 @@ describe('InputRange', () => {
       unmount()
       renderWithTheme(
         <FormControl size="lg" disabled>
-          <InputRange data-testid="range" aria-label="Volume" size="sm" disabled={false} />
+          <RangeInput data-testid="range" aria-label="Volume" size="sm" disabled={false} />
         </FormControl>
       )
       expect(slider()).toBeEnabled()
@@ -672,7 +672,7 @@ describe('InputRange', () => {
       const color = (error: boolean) => {
         const { unmount } = renderWithTheme(
           <FormControl color="success" error={error}>
-            <InputRange data-testid="range" aria-label="Volume" valueLabel="on" />
+            <RangeInput data-testid="range" aria-label="Volume" valueLabel="on" />
           </FormControl>
         )
         const background = getComputedStyle(screen.getByText('0')).backgroundColor
@@ -686,7 +686,7 @@ describe('InputRange', () => {
   it("takes the theme's defaults for every slider, its own props winning", () => {
     const theme = createTheme(baseTheme, {
       components: {
-        InputRange: {
+        RangeInput: {
           defaultProps: {
             size: 'lg',
             color: 'success',
