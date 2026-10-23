@@ -3,6 +3,7 @@ import type { LayoutProps, SpaceProps } from '@soroush.tech/styled-system'
 import { createShouldForwardProp, get, props, space, styled, system, type Theme } from '../index'
 import { useDefaultProps, useTheme } from '../theme'
 import { getSurfaceRadius } from '../utils/getSurfaceRadius'
+import { getFocusRing, getInputMinWidth } from '../utils/inputStyles'
 import { useFormControl } from '../FormControl'
 import { FormControlContext } from '../FormControl/FormControlContext'
 import { Chip } from '../Chip'
@@ -138,6 +139,7 @@ const frameStyle = ({
     display: isFullWidth || isInField ? 'flex' : 'inline-flex',
     ...(isFullWidth && { width: '100%' }),
     ...(isInField && !isFullWidth && { width: 'fit-content' }),
+    minWidth: getInputMinWidth(theme),
     flexWrap: 'wrap' as const,
     alignItems: 'center',
     gap: theme.space[1],
@@ -150,7 +152,7 @@ const frameStyle = ({
     lineHeight: get(theme, 'lineHeights.base'),
     borderColor: border,
     '&:focus-within': { borderColor: isError ? get(theme, 'palette.error.main') : main },
-    '&:has(input:focus-visible)': { outline: `2px solid ${main}`, outlineOffset: '2px' },
+    '&:has(:focus-visible)': getFocusRing(theme, color, isError),
     ...(isDisabled && { opacity: 0.5, cursor: 'not-allowed', pointerEvents: 'none' as const }),
   }
 }
@@ -190,8 +192,10 @@ const AutocompleteInput = styled('input', {
 })<{ sizeToken: keyof Theme['sizes'] }>(({ theme, sizeToken }) => {
   const s = theme.sizes[sizeToken]
   return {
-    flex: '1 1 auto',
+    flex: '1 1 6rem',
     minWidth: 0,
+    // No width of its own, or its size would widen the field past its least width.
+    width: 0,
     border: 'none',
     outline: 'none',
     background: 'transparent',

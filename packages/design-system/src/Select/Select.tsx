@@ -24,6 +24,7 @@ import { isOptionSelected, type SelectValue } from './utils/isOptionSelected'
 import { computeNextValue } from './utils/computeNextValue'
 import { resolveDisplayLabel } from './utils/resolveDisplayLabel'
 import { themeDefault } from '../theme/utils/themeDefault'
+import { getFocusRing, getInputMinWidth } from '../utils/inputStyles'
 
 export type { SelectValue }
 export type SelectColor = keyof Theme['palette']
@@ -145,14 +146,10 @@ const colorBorder = ({ color, error, theme }: TriggerProps & { theme: Theme }) =
 // The trigger is itself focusable, so drive the active border from its own focus/open state.
 const activeBorder = ({ color, error, open, theme }: TriggerProps & { theme: Theme }) => {
   const activeColor = error ? get(theme, 'palette.error.main') : get(theme, `palette.${color}.main`)
-  const focusColor = get(theme, `palette.${themeDefault(theme, 'color', 'primary')}.main`)
   return {
     ...(open ? { borderColor: activeColor } : {}),
     '&:focus': { borderColor: activeColor },
-    '&:focus-visible': {
-      outline: `2px solid ${focusColor}`,
-      outlineOffset: '2px',
-    },
+    '&:focus-visible': getFocusRing(theme, color, error),
   }
 }
 
@@ -183,7 +180,8 @@ const sizeVariants = ({ theme, sizeToken }: TriggerProps & { theme: Theme }) => 
   }
 }
 
-const layoutStyles = ({ fullWidth, disabled }: TriggerProps) => ({
+const layoutStyles = ({ theme, fullWidth, disabled }: TriggerProps & { theme: Theme }) => ({
+  minWidth: getInputMinWidth(theme),
   // Without `fullWidth`, align to the start so a flex/grid parent (e.g. a `Flex` column,
   // which stretches by default) doesn't stretch the trigger to full width.
   ...(fullWidth

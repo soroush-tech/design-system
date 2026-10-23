@@ -12,6 +12,7 @@ import { styled, type Theme, createShouldForwardProp, props, space, system, get 
 import { useTheme } from '../theme'
 import { inputVariantStyles } from '../utils/inputVariantStyles'
 import { themeDefault } from '../theme/utils/themeDefault'
+import { getFocusRing, getInputMinWidth } from '../utils/inputStyles'
 
 export type TextInputColor = keyof Theme['palette']
 export type TextInputTextColor = keyof Theme['text']
@@ -152,15 +153,13 @@ const colorBorder = ({
 // Keyboard-only focus ring on the wrapper (the inner input keeps `outline: none`).
 // Covers every variant, including the borderless `default` / `text` that the
 // `:focus-within` border-color change alone can't show.
-const focusVisibleRing = ({ theme }: TextInputRootProps & { theme: Theme }) => {
-  const focusColor = get(theme, `palette.${themeDefault(theme, 'color', 'primary')}.main`)
-  return {
-    '&:has(:focus-visible)': {
-      outline: `2px solid ${focusColor}`,
-      outlineOffset: '2px',
-    },
-  }
-}
+const focusVisibleRing = ({
+  theme,
+  color = themeDefault(theme, 'color', 'primary'),
+  error,
+}: TextInputRootProps & { theme: Theme }) => ({
+  '&:has(:focus-visible)': getFocusRing(theme, color, error),
+})
 
 const focusWithinColor = ({
   theme,
@@ -181,7 +180,8 @@ const borderRadiusStyle = ({
   return { borderRadius: get(theme, `radii.${borderRadius}`) }
 }
 
-const layoutStyles = ({ fullWidth, disabled }: TextInputRootProps) => ({
+const layoutStyles = ({ theme, fullWidth, disabled }: TextInputRootProps & { theme: Theme }) => ({
+  minWidth: getInputMinWidth(theme),
   ...(fullWidth ? ({ display: 'flex', width: '100%' } as const) : {}),
   ...(disabled ? ({ opacity: 0.5, cursor: 'not-allowed', pointerEvents: 'none' } as const) : {}),
 })

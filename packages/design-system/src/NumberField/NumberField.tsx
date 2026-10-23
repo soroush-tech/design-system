@@ -6,6 +6,7 @@ import { useFormControl } from '../FormControl'
 import { FormControlContext } from '../FormControl/FormControlContext'
 import { Icon, type IconName } from '../Icon'
 import { themeDefault } from '../theme/utils/themeDefault'
+import { getFocusRing, getInputMinWidth } from '../utils/inputStyles'
 import { inputVariantStyles } from '../utils/inputVariantStyles'
 import { useHoldRepeat } from './hooks/useHoldRepeat'
 import { useNumberField } from './hooks/useNumberField'
@@ -107,6 +108,7 @@ const frameStyle = ({
     display: isFullWidth || isInField ? 'flex' : 'inline-flex',
     ...(isFullWidth && { width: '100%' }),
     ...(isInField && !isFullWidth && { width: 'fit-content' }),
+    minWidth: getInputMinWidth(theme),
     alignItems: 'stretch',
     transition: 'border-color 0.15s ease',
     backgroundColor: get(theme, `background.${themeDefault(theme, 'inputBg', 'terminal')}`),
@@ -116,7 +118,7 @@ const frameStyle = ({
     borderColor: border,
     '&:focus-within': { borderColor: focusBorder },
     // Keyboard-only ring on the frame - the input keeps `outline: none`.
-    '&:has(input:focus-visible)': { outline: `2px solid ${main}`, outlineOffset: '2px' },
+    '&:has(:focus-visible)': getFocusRing(theme, color, isError),
     ...(isDisabled && { opacity: 0.5, cursor: 'not-allowed', pointerEvents: 'none' as const }),
   }
 }
@@ -145,9 +147,10 @@ const NumberFieldInput = styled('input', {
 })<{ sizeToken: keyof Theme['sizes']; isCentered: boolean }>(({ theme, sizeToken, isCentered }) => {
   const s = theme.sizes[sizeToken]
   return {
-    flex: 1,
+    // No width of its own: the field is as wide as its least width, and the input fills it.
+    flex: '1 1 0',
     minWidth: 0,
-    width: '100%',
+    width: 0,
     border: 'none',
     outline: 'none',
     background: 'transparent',

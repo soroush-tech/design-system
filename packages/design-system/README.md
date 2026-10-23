@@ -248,6 +248,7 @@ Components carry visible literal fallbacks (`size = 'md'`, `variant = 'outside'`
 | `borderRadius` / `surfaceRadius`             | `'md'` / `'sq'`                    | grouped controls / surfaces            |
 | `avatarSize` / `borderColor` / `borderWidth` | `'md'` / `'primary'` / `'thin'`    | avatars and rings                      |
 | `iconSize`                                   | `'lg'`                             | Icon default glyph size (`theme.icon`) |
+| `inputMinWidth`                              | `'12rem'`                          | least width of an input not full width |
 | `buttonVariant` / `switchVariant`            | `'contained'` / `'outside'`        | Button / Switch visual variants        |
 | `inputVariant`                               | `'default'`                        | TextInput, Select, NativeSelect frames |
 | `avatarVariant` / `cardVariant`              | `'circular'` / `'paper'`           | Avatar shape / Card treatment          |

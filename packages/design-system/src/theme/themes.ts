@@ -370,6 +370,8 @@ export interface ThemeDefaults {
   avatarSize?: keyof ThemeAvatarSizes
   /** Icon glyph size step. Fallback: `'lg'`. */
   iconSize?: keyof ThemeIconSizes
+  /** Least width of an input that does not fill its row (text, number, select, autocomplete) - a CSS length. Fallback: `'12rem'`. */
+  inputMinWidth?: string
   /** Border/ring color. Fallback: `'primary'`. */
   borderColor?: keyof ThemeBorder
   /** Border/ring width. Fallback: `'thin'`. */

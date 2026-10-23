@@ -102,6 +102,7 @@ export function TablePagination({
           <NativeSelect
             variant="text"
             size="sm"
+            minWidth={0}
             options={selectOptions}
             value={rowsPerPage}
             disabled={disabled}
