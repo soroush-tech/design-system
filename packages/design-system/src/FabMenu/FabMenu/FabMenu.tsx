@@ -22,6 +22,7 @@ import { Zoom } from '../../Zoom'
 import { isRtl } from '../../utils/isRtl'
 import { useControlled } from '../../utils/useControlled'
 import { FabMenuContext } from '../FabMenuContext'
+import { useFabMenuLayout } from '../hooks/useFabMenuLayout'
 
 export type FabMenuDirection = 'up' | 'down' | 'left' | 'right'
 export type FabMenuAlign = 'start' | 'end'
@@ -66,6 +67,9 @@ export interface FabMenuProps extends SpaceProps<Theme> {
 interface RootStyle {
   direction: FabMenuDirection
   align: FabMenuAlign
+  /** Set once measured: the room a column has, in pixels. */
+  maxWidth?: number
+  maxHeight?: number
 }
 
 // The trigger's own box: the actions are placed against it, out of the flow, so the page holds
@@ -81,8 +85,8 @@ const FabMenuList = styled('div', {
   name: 'FabMenu',
   slot: 'list',
   label: 'FabMenuList',
-  shouldForwardProp: createShouldForwardProp(['direction', 'align']),
-})<RootStyle>(({ theme, direction, align }) => {
+  shouldForwardProp: createShouldForwardProp(['direction', 'align', 'maxWidth', 'maxHeight']),
+})<RootStyle>(({ theme, direction, align, maxWidth, maxHeight }) => {
   // The room between the actions and the trigger is the same step as between the actions.
   const clear = `calc(100% + ${theme.space[1]})`
   // As wide as its widest action - or all of them in a row - not as the trigger it is placed beside.
@@ -107,6 +111,16 @@ const FabMenuList = styled('div', {
   return {
     ...base,
     flexDirection: 'column',
+    // No wider than the room it has, so a long label is cut; no taller, so a long column scrolls -
+    // with a little room round it for the focus ring the scrolling would clip.
+    ...(maxWidth !== undefined && { maxWidth }),
+    ...(maxHeight !== undefined && {
+      maxHeight,
+      overflowY: 'auto',
+      overscrollBehavior: 'contain',
+      scrollbarWidth: 'thin',
+      padding: theme.space[0.5],
+    }),
     [direction === 'up' ? 'bottom' : 'top']: clear,
     [align === 'end' ? 'insetInlineEnd' : 'insetInlineStart']: 0,
     alignItems: align === 'end' ? 'flex-end' : 'flex-start',
@@ -153,12 +167,13 @@ export function FabMenu({
   ...spaceProps
 }: Readonly<FabMenuProps>) {
   const dp = useDefaultProps('FabMenu')
-  const direction = directionProp ?? dp.direction ?? 'up'
+  const asked = directionProp ?? dp.direction ?? 'up'
   const align = alignProp ?? dp.align ?? 'end'
   const size = sizeProp ?? dp.size ?? 'md'
   const [isOpen, setIsOpen] = useControlled({ controlled: isOpenProp, default: defaultOpen })
   const listId = useId()
   const rootRef = useRef<HTMLDivElement>(null)
+  const listRef = useRef<HTMLDivElement>(null)
   const triggerRef = useRef<HTMLButtonElement>(null)
 
   // Both are asked only from what is shown for it: a closed trigger opens, an open menu closes.
@@ -185,6 +200,18 @@ export function FabMenu({
     document.addEventListener('pointerdown', handlePointerDown)
     return () => document.removeEventListener('pointerdown', handlePointerDown)
   }, [isOpen, close])
+
+  const items = getItems(children)
+  // Where they go once measured: a row that is wider than the room beside the trigger is a column.
+  const layout = useFabMenuLayout({
+    isOpen,
+    direction: asked,
+    align,
+    listRef,
+    triggerRef,
+    itemCount: items.length,
+  })
+  const direction = layout.direction
 
   // Actions drawn before the trigger go above it or on its start side; after it, below or at its end.
   const isRow = direction === 'left' || direction === 'right'
@@ -228,7 +255,6 @@ export function FabMenu({
   const isExtended = label !== undefined
 
   const context = useMemo(() => ({ close, size }), [close, size])
-  const items = getItems(children)
   // The action next to the trigger comes quickest, the farthest last: a stack that unfolds.
   const unfolding = isBefore ? [...items].reverse() : items
 
@@ -241,7 +267,14 @@ export function FabMenu({
         onKeyDown={handleKeyDown}
         {...spaceProps}
       >
-        <FabMenuList id={listId} direction={direction} align={align}>
+        <FabMenuList
+          ref={listRef}
+          id={listId}
+          direction={direction}
+          align={align}
+          maxWidth={layout.maxWidth}
+          maxHeight={layout.maxHeight}
+        >
           {items.map((item) => (
             <Zoom
               key={item.key}

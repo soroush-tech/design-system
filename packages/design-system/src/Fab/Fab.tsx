@@ -166,7 +166,7 @@ export function Fab({
     >
       {isExtended ? (
         <FabLabel isCollapsed={isCollapsed}>
-          <FabLabelText>{children}</FabLabelText>
+          <FabLabelText data-fab-label="">{children}</FabLabelText>
         </FabLabel>
       ) : (
         children

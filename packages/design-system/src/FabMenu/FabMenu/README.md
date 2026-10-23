@@ -32,6 +32,20 @@ import { FabMenu, FabMenuItem } from '@soroush.tech/design-system/FabMenu'
 | `size`                                     | `keyof Theme['sizes']`   | `'md'`                     | The trigger's size, and the items'.                                                         |
 | `m`, `p`, ... , `className`, `data-testid` |                          |                            | Spacing as `theme.space` keys; on the root.                                                 |
 
+## Against the window
+
+The actions are measured against the window as the menu opens, and again as the window is resized or the page
+scrolls - so a menu near the edge of a small screen never opens off it. The room kept from the edge is
+`theme.space[2]`; the step between the actions `theme.space[1]`.
+
+- **A row that does not fit becomes a column.** If a row is wider than the room beside the trigger, it opens as a
+  column instead - above the trigger where there is more room above it, else below - and goes back to the
+  row once the window has room for it. Each action counts as wide as its whole label.
+- **A column is no wider than the room it has,** along the edge it lines up with, so a long label is cut with an
+  ellipsis and the action stays on the screen.
+- **A column is no taller than the room it has,** and scrolls when it would be: the focus keys still reach every
+  action, scrolling it into view.
+
 ## Keyboard
 
 - Enter and Space press the trigger. On a closed trigger the arrows of the axis the actions go along open it:

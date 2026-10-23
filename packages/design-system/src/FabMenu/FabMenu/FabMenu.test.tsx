@@ -29,8 +29,27 @@ const view = (props: Partial<FabMenuProps> = {}) => (
   </FabMenu>
 )
 
-beforeEach(() => vi.useFakeTimers())
-afterEach(() => vi.useRealTimers())
+// jsdom lays nothing out: the trigger is put in the middle of a 1600 by 900 window - room on every
+// side for four actions of 120 wide in a row - and each action is 120 wide.
+const lay = (
+  rect: Partial<DOMRect> = { left: 800, top: 450, right: 840, bottom: 490, width: 40, height: 40 },
+  window_: { width: number; height: number } = { width: 1600, height: 900 }
+) => {
+  vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue(rect as DOMRect)
+  vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockReturnValue(120)
+  vi.stubGlobal('innerWidth', window_.width)
+  vi.stubGlobal('innerHeight', window_.height)
+}
+
+beforeEach(() => {
+  vi.useFakeTimers()
+  lay()
+})
+afterEach(() => {
+  vi.useRealTimers()
+  vi.restoreAllMocks()
+  vi.unstubAllGlobals()
+})
 
 const open = () => {
   fireEvent.click(trigger())
@@ -442,6 +461,158 @@ describe('FabMenu', () => {
       expect(item('Import')).toHaveFocus()
       key('ArrowLeft')
       expect(trigger()).toHaveFocus()
+    })
+  })
+
+  describe('against the window', () => {
+    const list = () => document.getElementById(trigger().getAttribute('aria-controls') as string)
+    const resize = () => act(() => void window.dispatchEvent(new Event('resize')))
+
+    it('keeps a row where it fits beside the trigger', () => {
+      renderWithTheme(view({ direction: 'left', defaultOpen: true }))
+      expect(list()).toHaveStyle({ flexDirection: 'row' })
+      expect(list()).not.toHaveStyle({ maxWidth: '1px' })
+    })
+
+    it('makes a row that is wider than the room beside the trigger a column, above it where there is more room', () => {
+      // 4 actions of 120 and their steps are wider than 200px.
+      lay({ left: 200, top: 500, right: 240, bottom: 540, width: 40, height: 40 })
+      renderWithTheme(view({ direction: 'left', defaultOpen: true }))
+      expect(list()).toHaveStyle({
+        flexDirection: 'column',
+        bottom: `calc(100% + ${baseTheme.space[1]})`,
+      })
+    })
+
+    it('makes it a column below the trigger where there is more room below', () => {
+      // Room on neither side beside it - a window's right edge - and more below than above.
+      lay({ left: 1300, top: 40, right: 1340, bottom: 80, width: 40, height: 40 })
+      renderWithTheme(view({ direction: 'right', defaultOpen: true }))
+      expect(list()).toHaveStyle({
+        flexDirection: 'column',
+        top: `calc(100% + ${baseTheme.space[1]})`,
+      })
+    })
+
+    it('measures the side the actions go to right to left, where left is the end of the page', () => {
+      // Room on the window's left only: a row to the page's start - the right in RTL - does not fit.
+      lay({ left: 60, top: 400, right: 100, bottom: 440, width: 40, height: 40 })
+      renderWithTheme(<div dir="rtl">{view({ direction: 'left', defaultOpen: true })}</div>)
+      expect(list()).toHaveStyle({ flexDirection: 'row' })
+      lay({ left: 1300, top: 400, right: 1340, bottom: 440, width: 40, height: 40 })
+      resize()
+      expect(list()).toHaveStyle({ flexDirection: 'column' })
+    })
+
+    it('goes back to the row when the window has room for it again', () => {
+      lay({ left: 200, top: 500, right: 240, bottom: 540, width: 40, height: 40 })
+      renderWithTheme(view({ direction: 'left', defaultOpen: true }))
+      expect(list()).toHaveStyle({ flexDirection: 'column' })
+      lay({ left: 700, top: 500, right: 740, bottom: 540, width: 40, height: 40 })
+      resize()
+      expect(list()).toHaveStyle({ flexDirection: 'row' })
+    })
+
+    it('counts an action as wide as its label, though it is cut now', () => {
+      lay({ left: 200, top: 500, right: 240, bottom: 540, width: 40, height: 40 })
+      renderWithTheme(view({ direction: 'left', defaultOpen: true }))
+      // The label of one is 60 wider than it is drawn: the row needs more room than it was shown.
+      for (const text of document.querySelectorAll('[data-fab-label]')) {
+        Object.defineProperty(text, 'scrollWidth', { value: 160, configurable: true })
+        Object.defineProperty(text, 'clientWidth', { value: 100, configurable: true })
+      }
+      lay({ left: 560, top: 500, right: 600, bottom: 540, width: 40, height: 40 })
+      resize()
+      // 4 x (120 + 60) and the steps do not fit in 544.
+      expect(list()).toHaveStyle({ flexDirection: 'column' })
+    })
+
+    it('limits a column to the room it has, along the edge it lines up with', () => {
+      lay({ left: 300, top: 400, right: 340, bottom: 440, width: 40, height: 40 })
+      renderWithTheme(view({ defaultOpen: true }))
+      // Along the end edge, toward the page's start: from the trigger's right edge to the window's left.
+      expect(list()).toHaveStyle({ maxWidth: '324px' })
+    })
+
+    it('limits a column that lines up with the start edge by the room toward the end', () => {
+      lay({ left: 300, top: 400, right: 340, bottom: 440, width: 40, height: 40 })
+      renderWithTheme(view({ defaultOpen: true, align: 'start' }))
+      // From the trigger's left edge to the window's right: 1600 - 300 - 16.
+      expect(list()).toHaveStyle({ maxWidth: '1284px' })
+    })
+
+    it('mirrors those limits right to left', () => {
+      lay({ left: 300, top: 400, right: 340, bottom: 440, width: 40, height: 40 })
+      renderWithTheme(<div dir="rtl">{view({ defaultOpen: true })}</div>)
+      // The end edge is the left: toward the page's start, the window's right.
+      expect(list()).toHaveStyle({ maxWidth: '1284px' })
+    })
+
+    it('scrolls a column that is taller than the room it has, with room for the focus ring', () => {
+      lay({ left: 500, top: 100, right: 540, bottom: 140, width: 40, height: 40 })
+      vi.spyOn(HTMLElement.prototype, 'scrollHeight', 'get').mockReturnValue(400)
+      renderWithTheme(view({ defaultOpen: true }))
+      // 100 above the trigger, less the margin and the step: 76.
+      expect(list()).toHaveStyle({
+        maxHeight: '76px',
+        overflowY: 'auto',
+        padding: baseTheme.space[0.5],
+      })
+    })
+
+    it('leaves a column alone that fits', () => {
+      vi.spyOn(HTMLElement.prototype, 'scrollHeight', 'get').mockReturnValue(100)
+      renderWithTheme(view({ defaultOpen: true }))
+      expect(list()).not.toHaveStyle({ overflowY: 'auto' })
+    })
+
+    it('takes no negative room', () => {
+      lay({ left: -30, top: -30, right: 10, bottom: 10, width: 40, height: 40 })
+      vi.spyOn(HTMLElement.prototype, 'scrollHeight', 'get').mockReturnValue(100)
+      renderWithTheme(view({ defaultOpen: true }))
+      expect(list()).toHaveStyle({ maxHeight: '0px', maxWidth: '0px' })
+    })
+
+    it('measures again when the actions change in number', () => {
+      lay({ left: 500, top: 100, right: 540, bottom: 140, width: 40, height: 40 })
+      vi.spyOn(HTMLElement.prototype, 'scrollHeight', 'get').mockReturnValue(400)
+      const { rerender } = renderWithTheme(view({ defaultOpen: true }))
+      expect(list()).toHaveStyle({ maxHeight: '76px' })
+      vi.spyOn(HTMLElement.prototype, 'scrollHeight', 'get').mockReturnValue(50)
+      rerender(
+        <FabMenu aria-label="Create" defaultOpen>
+          <FabMenuItem>Only</FabMenuItem>
+        </FabMenu>
+      )
+      expect(list()).not.toHaveStyle({ overflowY: 'auto' })
+    })
+
+    it('is as it is asked to be again once it is closed, and measures anew when it opens', () => {
+      lay({ left: 200, top: 500, right: 240, bottom: 540, width: 40, height: 40 })
+      renderWithTheme(view({ direction: 'left' }))
+      open()
+      expect(list()).toHaveStyle({ flexDirection: 'column' })
+      fireEvent.click(trigger())
+      settle()
+      lay({ left: 700, top: 500, right: 740, bottom: 540, width: 40, height: 40 })
+      open()
+      expect(list()).toHaveStyle({ flexDirection: 'row' })
+    })
+
+    it('stops listening for the window once it is closed', () => {
+      const remove = vi.spyOn(window, 'removeEventListener')
+      renderWithTheme(view({ defaultOpen: true }))
+      fireEvent.click(trigger())
+      expect(remove).toHaveBeenCalledWith('resize', expect.any(Function))
+      expect(remove).toHaveBeenCalledWith('scroll', expect.any(Function))
+    })
+
+    it('measures on a scroll of the page too', () => {
+      renderWithTheme(view({ direction: 'left', defaultOpen: true }))
+      expect(list()).toHaveStyle({ flexDirection: 'row' })
+      lay({ left: 200, top: 500, right: 240, bottom: 540, width: 40, height: 40 })
+      act(() => void window.dispatchEvent(new Event('scroll')))
+      expect(list()).toHaveStyle({ flexDirection: 'column' })
     })
   })
 
