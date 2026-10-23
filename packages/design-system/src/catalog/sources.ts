@@ -11,6 +11,7 @@ import { fabCatalog } from '../Fab/Fab.catalog'
 import { snackbarCatalog } from '../Snackbar/Snackbar.catalog'
 import { tooltipCatalog } from '../Tooltip/Tooltip.catalog'
 import { autocompleteCatalog } from '../Autocomplete/Autocomplete.catalog'
+import { scrollAreaCatalog } from '../ScrollArea/ScrollArea.catalog'
 import { appBarCatalog } from '../AppBar/AppBar.catalog'
 import { avatarCatalog } from '../Avatar/Avatar.catalog'
 import { backdropCatalog } from '../Backdrop/Backdrop.catalog'
@@ -111,6 +112,7 @@ export const catalogSources: Record<string, CatalogSource> = {
   Snackbar: { entry: snackbarCatalog, folder: 'Snackbar' },
   Tooltip: { entry: tooltipCatalog, folder: 'Tooltip' },
   Autocomplete: { entry: autocompleteCatalog, folder: 'Autocomplete' },
+  ScrollArea: { entry: scrollAreaCatalog, folder: 'ScrollArea' },
   AppBar: { entry: appBarCatalog, folder: 'AppBar' },
   Avatar: { entry: avatarCatalog, folder: 'Avatar' },
   Backdrop: { entry: backdropCatalog, folder: 'Backdrop' },

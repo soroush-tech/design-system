@@ -72,6 +72,10 @@ export interface ThemeBackground {
   terminal: string
   grid: string
   transparent: string
+  /** The thumb of a drawn scrollbar (`ScrollArea`). */
+  scrollbar: string
+  /** The track of a drawn scrollbar, while it is hovered or dragged. */
+  scrollbarTrack: string
 }
 export interface ThemeBorder {
   default?: string
@@ -481,6 +485,11 @@ export interface AutocompleteOwnerState {
   noOptionsText?: string
 }
 
+/** The defaults a theme may set for every `ScrollArea`. */
+export interface ScrollAreaOwnerState {
+  axes?: 'x' | 'y' | 'both'
+}
+
 /** The defaults a theme may set for every `Tooltip`. */
 export interface TooltipOwnerState {
   borderRadius?: keyof ThemeRadii
@@ -837,6 +846,7 @@ export interface ThemeComponents {
     RatingOwnerState,
     'root' | 'item' | 'icon' | 'decimal' | 'input' | 'text' | 'emptyLabel'
   >
+  ScrollArea?: ComponentConfig<ScrollAreaOwnerState, 'root' | 'viewport' | 'track' | 'thumb'>
   Select?: ComponentConfig<
     Record<string, unknown>,
     'root' | 'value' | 'valueArea' | 'valueGhost' | 'listbox'
@@ -1193,6 +1203,8 @@ export const baseTheme: Theme = {
     terminal: '#000000',
     grid: alpha('#00FC40', 0.06),
     transparent: '#00000000',
+    scrollbar: '#B3B3B380',
+    scrollbarTrack: '#38383880',
   },
   text: {
     inherit: 'inherit',

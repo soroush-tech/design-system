@@ -2,11 +2,12 @@
 
 # Components
 
-The 93 components shipped by the design system, and when to reach for each.
+The 94 components shipped by the design system, and when to reach for each.
 Import every component from its own subpath.
 
 ## Layout & surfaces
 
+- **ScrollArea** - A scrolling area whose scrollbars are drawn **over** its content rather than beside it - so a rounded panel keeps its corner clean - and show only while the pointer is over the area or focus is inside it.
 - **View** - The base layout primitive.
 - **Flex** - Extends [`View`](https://docs.soroush.tech/design-system/components/view/).
 - **Grid** - Extends [`View`](https://docs.soroush.tech/design-system/components/view/).

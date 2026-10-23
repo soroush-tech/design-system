@@ -14,6 +14,7 @@ import { Fab } from '../../Fab'
 import { Snackbar } from '../../Snackbar'
 import { Tooltip } from '../../Tooltip'
 import { Autocomplete } from '../../Autocomplete'
+import { ScrollArea } from '../../ScrollArea'
 import { AppBar } from '../../AppBar'
 import { Avatar } from '../../Avatar'
 import { Backdrop } from '../../Backdrop'
@@ -97,6 +98,7 @@ const COMPONENTS: Record<string, ElementType> = {
   Snackbar,
   Tooltip,
   Autocomplete,
+  ScrollArea,
   AppBar,
   Avatar,
   Backdrop,

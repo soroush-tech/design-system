@@ -97,16 +97,17 @@ SSR critical-CSS extraction (e.g. with `@emotion/server`) is a separate, opt-in 
 
 ### Layout & surfaces
 
-| Component | Purpose                                           |
-| --------- | ------------------------------------------------- |
-| `View`    | Styled `div` primitive - the base building block  |
-| `Flex`    | `View` with flexbox defaults                      |
-| `Grid`    | CSS grid container                                |
-| `Paper`   | Elevated surface with background and shadow       |
-| `Card`    | Content container built on `Paper`                |
-| `Quote`   | Bordered quote / terminal-panel surface on `View` |
-| `AppBar`  | Top application bar                               |
-| `Drawer`  | Slide-in side panel                               |
+| Component    | Purpose                                                                 |
+| ------------ | ----------------------------------------------------------------------- |
+| `ScrollArea` | A scrolling area with scrollbars drawn over its content, shown on hover |
+| `View`       | Styled `div` primitive - the base building block                        |
+| `Flex`       | `View` with flexbox defaults                                            |
+| `Grid`       | CSS grid container                                                      |
+| `Paper`      | Elevated surface with background and shadow                             |
+| `Card`       | Content container built on `Paper`                                      |
+| `Quote`      | Bordered quote / terminal-panel surface on `View`                       |
+| `AppBar`     | Top application bar                                                     |
+| `Drawer`     | Slide-in side panel                                                     |
 
 ### Content & data display
 

@@ -58,6 +58,7 @@ import { ToggleButton } from './ToggleButton/ToggleButton'
 import { ToggleButtonGroup } from './ToggleButton/ToggleButtonGroup'
 import { TransferList } from './TransferList'
 import { Collapse } from './Collapse'
+import { ScrollArea } from './ScrollArea'
 import { Autocomplete } from './Autocomplete'
 import { Tooltip } from './Tooltip'
 import { Snackbar } from './Snackbar'
@@ -199,6 +200,8 @@ const autocomplete = (
     aria-label="Letters"
   />
 )
+// Every part drawn, so each styled element is.
+const scrollArea = <ScrollArea>Content</ScrollArea>
 // Open, so the root, the wrapper and the inner box are all drawn.
 const collapse = (
   <Collapse isShown shouldAppear={false}>
@@ -539,6 +542,8 @@ const cases: Case[] = [
     label: 'AutocompletePopupIndicator',
     ui: autocomplete,
   },
+  { name: 'ScrollArea', slot: 'root', label: 'ScrollArea', ui: scrollArea },
+  { name: 'ScrollArea', slot: 'viewport', label: 'ScrollAreaViewport', ui: scrollArea },
   { name: 'Collapse', slot: 'root', label: 'Collapse', ui: collapse },
   { name: 'Collapse', slot: 'wrapper', label: 'CollapseWrapper', ui: collapse },
   { name: 'Collapse', slot: 'inner', label: 'CollapseInner', ui: collapse },

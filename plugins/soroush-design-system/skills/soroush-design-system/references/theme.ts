@@ -186,6 +186,8 @@ export const light: Theme = createTheme(baseTheme, {
     terminal: lightSurface[400],
     grid: alpha(softGreen[600], 0.2),
     transparent: blackAlpha[0],
+    scrollbar: blackAlpha[300],
+    scrollbarTrack: alpha(lightSurface[300], 0.5),
   },
   text: {
     inherit: 'inherit',
@@ -275,6 +277,8 @@ export const dark: Theme = createTheme(baseTheme, {
     terminal: carbonBlack[900],
     grid: alpha(kineticGreen[500], 0.06),
     transparent: blackAlpha[0],
+    scrollbar: alpha(lightSurface[100], 0.4),
+    scrollbarTrack: alpha(kineticSurface[600], 0.5),
   },
   text: {
     inherit: 'inherit',

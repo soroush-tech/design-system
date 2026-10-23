@@ -43,6 +43,7 @@ export const componentCategories: ComponentCategory[] = [
   {
     label: 'Layout & surfaces',
     items: [
+      component('ScrollArea'),
       component('View'),
       component('Flex'),
       component('Grid'),

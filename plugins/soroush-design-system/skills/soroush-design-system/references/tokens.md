@@ -269,6 +269,8 @@ Reference tokens through the theme; a literal value in a component is a bug.
 - `theme.background.terminal` - #000000
 - `theme.background.grid` - #00FC400F
 - `theme.background.transparent` - #00000000
+- `theme.background.scrollbar` - #B3B3B380
+- `theme.background.scrollbarTrack` - #38383880
 
 ## text
 
