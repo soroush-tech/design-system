@@ -19,7 +19,7 @@ export function ComponentCard({ item }: Readonly<{ item: ComponentNavItem }>) {
           <ComponentIllustration name={item.name} />
         </Flex>
         <View p={2}>
-          <Typography variant="subtitle1" color="primary">
+          <Typography variant="subtitle1" color="initial">
             {item.name}
           </Typography>
         </View>

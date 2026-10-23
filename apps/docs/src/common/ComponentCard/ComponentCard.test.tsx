@@ -3,7 +3,7 @@ import { screen } from '@testing-library/react'
 import { renderWithTheme } from 'src/test/utils/wrapper'
 import { allComponents, componentCategories } from 'src/common/nav'
 import { ThemeProvider } from '@soroush.tech/design-system/theme'
-import { light } from 'src/theme/themes'
+import { dark, light } from 'src/theme/themes'
 import { illustrationInk } from 'src/theme/illustrationInk'
 import { illustrations } from './illustrations'
 import { ComponentCard } from './ComponentCard'
@@ -19,6 +19,11 @@ describe('ComponentCard', () => {
       'href',
       '/design-system/components/button/'
     )
+  })
+
+  it('writes the name in the theme initial text color, white in the dark mode', () => {
+    renderWithTheme(<ComponentCard item={button} />)
+    expect(screen.getByText('Button')).toHaveStyle({ color: dark.text.initial })
   })
 
   it('draws the component, hidden from assistive technology', () => {
