@@ -8,6 +8,7 @@ import {
   type ComponentNavItem,
   type DocsPackage,
 } from '@soroush.tech/docs-content'
+import { PACKAGES } from 'src/common/packages'
 import { sectionPath } from 'src/common/sectionPath'
 
 // The component taxonomy and the styled-system doc lists live in
@@ -20,6 +21,10 @@ export * from '@soroush.tech/docs-content'
 export interface NavItem {
   label: string
   href: string
+  /** A short note beside the label - a version. */
+  note?: string
+  /** The page is not part of the docs: it opens in a tab of its own. */
+  isExternal?: boolean
 }
 
 export interface NavGroup {
@@ -30,7 +35,7 @@ export interface NavGroup {
 }
 
 /** The glyphs of the navigation rail - drawn in `NavRail`. */
-export type RailIcon = 'home' | 'dots' | 'add_circle' | 'palette' | 'article' | 'book'
+export type RailIcon = 'home' | 'dots' | 'add_circle' | 'package' | 'palette' | 'article' | 'book'
 
 /** One item of the navigation rail: a part of the docs, with the sidebar it opens. */
 export interface RailItem {
@@ -65,6 +70,40 @@ const HOME: RailItem = {
   href: '/',
   matches: [],
   groups: [],
+}
+
+/**
+ * The packages, listed in the sidebar: the ones with docs open their section, the others their
+ * source. The same part is in the rail of every section.
+ */
+const PACKAGES_ITEM: RailItem = {
+  id: 'packages',
+  label: 'Packages',
+  icon: 'package',
+  href: '/packages/',
+  matches: [],
+  groups: [
+    {
+      label: 'Packages',
+      items: [
+        { label: 'All packages', href: '/packages/' },
+        ...PACKAGES.filter((entry) => entry.docs).map((entry) => ({
+          label: entry.name,
+          href: sectionPath(entry.docs!, '/'),
+          note: `v${entry.version}`,
+        })),
+      ],
+    },
+    {
+      label: 'More packages',
+      items: PACKAGES.filter((entry) => !entry.docs).map((entry) => ({
+        label: entry.name,
+        href: entry.github,
+        note: `v${entry.version}`,
+        isExternal: true,
+      })),
+    },
+  ],
 }
 
 /** The design-system section's rail: what each part of the docs opens in the sidebar. */
@@ -109,6 +148,7 @@ const designSystemRail: RailItem[] = [
       })),
     ],
   },
+  PACKAGES_ITEM,
   {
     id: 'styles',
     label: 'Styles',
@@ -155,6 +195,7 @@ const markdownRail: RailItem[] = [
       },
     ],
   },
+  PACKAGES_ITEM,
 ]
 
 const styledSystemDocHref = (file: string): string =>
@@ -207,6 +248,7 @@ const styledSystemRail: RailItem[] = [
       },
     ],
   },
+  PACKAGES_ITEM,
 ]
 
 const SECTIONS: SectionNav[] = (

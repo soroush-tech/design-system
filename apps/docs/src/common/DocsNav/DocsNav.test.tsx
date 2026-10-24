@@ -74,6 +74,28 @@ describe('DocsNav', () => {
     )
   })
 
+  it('lists the packages on the packages page, with their versions and the others outside the docs', () => {
+    renderNav('/packages/')
+    expect(screen.getByRole('link', { name: 'All packages' })).toHaveAttribute(
+      'aria-current',
+      'page'
+    )
+    // The package chips above the tree name it too; the row of the list has its version.
+    const markdown = screen
+      .getAllByRole('link', { name: /^Markdown/ })
+      .find((link) => /v\d/.test(link.textContent ?? ''))!
+    expect(markdown).toHaveAttribute('href', '/markdown/')
+    expect(markdown).toHaveTextContent(/v\d+\.\d+\.\d+/)
+    expect(markdown).not.toHaveAttribute('target')
+    const mcp = screen.getByRole('link', { name: /MCP server/ })
+    expect(mcp).toHaveAttribute('target', '_blank')
+    expect(mcp).toHaveAttribute('rel', 'noopener noreferrer')
+    expect(mcp).toHaveAttribute(
+      'href',
+      expect.stringContaining('github.com/soroush-tech/design-system')
+    )
+  })
+
   it('links the three packages, marking the current one', () => {
     renderNav('/design-system/components/')
     expect(screen.getByRole('link', { name: 'Design System' })).toHaveAttribute(

@@ -3,6 +3,7 @@ import { alpha } from '@soroush.tech/design-system/utils'
 import { Flex } from '@soroush.tech/design-system/Flex'
 import { Typography } from '@soroush.tech/design-system/Typography'
 import { View } from '@soroush.tech/design-system/View'
+import { RailGlyph } from 'src/common/NavRail/RailGlyph'
 import { railItemFor, sectionFor, type NavGroup } from 'src/common/nav'
 import { usePageContext } from 'src/hooks/usePageContext'
 
@@ -70,8 +71,17 @@ function GroupList({ group, current }: Readonly<{ group: NavGroup; current: stri
               href={item.href}
               isCurrent={isCurrent}
               aria-current={isCurrent ? 'page' : undefined}
+              {...(item.isExternal && { target: '_blank', rel: 'noopener noreferrer' })}
             >
-              {item.label}
+              <Flex flexDirection="row" alignItems="center" gap={1}>
+                <span style={{ flex: '1 1 auto' }}>{item.label}</span>
+                {item.note && (
+                  <Typography variant="caption" color="secondary" as="span">
+                    {item.note}
+                  </Typography>
+                )}
+                {item.isExternal && <RailGlyph name="open_in_new" size={14} />}
+              </Flex>
             </TreeLink>
           </View>
         )

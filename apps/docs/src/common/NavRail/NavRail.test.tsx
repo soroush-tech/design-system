@@ -27,7 +27,7 @@ describe('NavRail', () => {
     const names = within(rail())
       .getAllByRole('link')
       .map((link) => link.textContent)
-    expect(names).toEqual(['Home', 'Get started', 'Components', 'Styles'])
+    expect(names).toEqual(['Home', 'Get started', 'Components', 'Packages', 'Styles'])
   })
 
   it('has no API item', () => {
@@ -88,7 +88,7 @@ describe('NavRail', () => {
     const names = within(rail())
       .getAllByRole('link')
       .map((link) => link.textContent)
-    expect(names).toEqual(['Home', 'Get started', 'Docs', 'Guides'])
+    expect(names).toEqual(['Home', 'Get started', 'Docs', 'Guides', 'Packages'])
   })
 
   it('puts the version of the docs under the search, to choose another', () => {
@@ -126,6 +126,9 @@ describe('RailGlyph', () => {
     'search',
     'close',
     'history',
+    'package',
+    'code',
+    'open_in_new',
     'light_mode',
     'dark_mode',
   ]

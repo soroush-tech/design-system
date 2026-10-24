@@ -6,6 +6,8 @@ import { Typography } from '@soroush.tech/design-system/Typography'
 import { View } from '@soroush.tech/design-system/View'
 import { ComponentIllustration } from 'src/common/ComponentCard/ComponentIllustration'
 import { CONTENT_MAX_WIDTH } from 'src/common/contentWidth'
+import { RailGlyph } from 'src/common/NavRail/RailGlyph'
+import { sourceUrlOf } from 'src/common/packages'
 import type { ComponentNavItem } from 'src/common/nav'
 import { sectionPath } from 'src/common/sectionPath'
 
@@ -22,6 +24,23 @@ const Hero = styled('div')(({ theme }) => ({
   padding: theme.space[4],
   borderRadius: '1.75rem',
   backgroundColor: tone(theme, 0.1),
+}))
+
+// A link out of the docs, as a pill - the source of the component, as M3's Resources.
+const ResourceLink = styled('a')(({ theme }) => ({
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: theme.space[1],
+  padding: `${theme.space[1]} ${theme.space[2]}`,
+  borderRadius: '1rem',
+  color: get(theme, 'text.initial'),
+  textDecoration: 'none',
+  backgroundColor: tone(theme, 0.2),
+  '&:hover': { backgroundColor: tone(theme, 0.32) },
+  '&:focus-visible': {
+    outline: `2px solid ${get(theme, 'palette.primary.main')}`,
+    outlineOffset: 2,
+  },
 }))
 
 const Tile = styled('div')(({ theme }) => ({
@@ -169,6 +188,12 @@ export function ComponentHero({
                 {lead}
               </Typography>
             )}
+            <Flex flexDirection="row" flexWrap="wrap" gap={1} mt={1}>
+              <ResourceLink href={sourceUrlOf(item)} target="_blank" rel="noopener noreferrer">
+                <RailGlyph name="code" size={18} />
+                Source
+              </ResourceLink>
+            </Flex>
           </Flex>
           <Tile>
             <ComponentIllustration name={item.name} />

@@ -53,11 +53,53 @@ describe('section navigation', () => {
   it('nav hrefs are unique within a part and end with a trailing slash', () => {
     for (const section of ['design-system', 'markdown', 'styled-system']) {
       for (const item of sectionFor(`/${section}/`).rail) {
-        const hrefs = item.groups.flatMap((group) => group.items.map((entry) => entry.href))
+        // A page outside the docs - a package's source - is the site's to name.
+        const hrefs = item.groups.flatMap((group) =>
+          group.items.filter((entry) => !entry.isExternal).map((entry) => entry.href)
+        )
         expect(new Set(hrefs).size).toBe(hrefs.length)
         for (const href of hrefs) expect(href.endsWith('/')).toBe(true)
       }
     }
+  })
+})
+
+describe('the packages in the rail', () => {
+  it('is a part of every section, with its own sidebar', () => {
+    for (const pkg of ['design-system', 'markdown', 'styled-system']) {
+      const item = sectionFor(`/${pkg}/`).rail.find((entry) => entry.id === 'packages')
+      expect(item?.href).toBe('/packages/')
+      expect(item?.groups.map((group) => group.label)).toEqual(['Packages', 'More packages'])
+    }
+  })
+
+  it('lists all packages first, then each package with docs, with its version', () => {
+    const item = sectionFor('/design-system/').rail.find((entry) => entry.id === 'packages')!
+    const [all, ...docs] = item.groups[0].items
+    expect(all).toEqual({ label: 'All packages', href: '/packages/' })
+    expect(docs.map((entry) => [entry.label, entry.href])).toEqual([
+      ['Design System', '/design-system/'],
+      ['Markdown', '/markdown/'],
+      ['Styled System', '/styled-system/'],
+    ])
+    for (const entry of docs) expect(entry.note).toMatch(/^v\d+\.\d+\.\d+$/)
+  })
+
+  it('lists the packages without docs by their source, outside the docs', () => {
+    const item = sectionFor('/design-system/').rail.find((entry) => entry.id === 'packages')!
+    const more = item.groups[1].items
+    expect(more.map((entry) => entry.label)).toEqual(['MCP server', 'UI spec'])
+    for (const entry of more) {
+      expect(entry.isExternal).toBe(true)
+      expect(entry.href).toMatch(
+        /^https:\/\/github\.com\/soroush-tech\/design-system\/tree\/main\/packages\//
+      )
+    }
+  })
+
+  it('is the part the packages page belongs to', () => {
+    const section = sectionFor('/packages/')
+    expect(railItemFor(section, '/packages/').id).toBe('packages')
   })
 })
 

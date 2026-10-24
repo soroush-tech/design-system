@@ -37,6 +37,17 @@ describe('ComponentHero', () => {
     expect(screen.queryByText('A button.')).not.toBeInTheDocument()
   })
 
+  it('links the source of the component on GitHub, in a tab of its own', () => {
+    renderHero()
+    const source = screen.getByRole('link', { name: 'Source' })
+    expect(source).toHaveAttribute(
+      'href',
+      'https://github.com/soroush-tech/design-system/tree/main/packages/design-system/src/Button'
+    )
+    expect(source).toHaveAttribute('target', '_blank')
+    expect(source).toHaveAttribute('rel', 'noopener noreferrer')
+  })
+
   it('has an Overview tab and a Specs tab, linked to the component pages', () => {
     renderHero()
     expect(tabs().getByRole('link', { name: 'Overview' })).toHaveAttribute(
