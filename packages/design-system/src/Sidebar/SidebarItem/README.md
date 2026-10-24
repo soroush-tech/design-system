@@ -48,6 +48,31 @@ the panel during server rendering.
 </Sidebar>
 ```
 
+## As a link
+
+A `SidebarItem` given `href` is an anchor - `Pressable` renders one, and Enter follows it. It still sets
+`aria-pressed` from `isSelected`, which a link does not carry; a link marks the current page with
+`aria-current`. Its own attributes win over the item's, so pass them:
+
+```tsx
+<SidebarItem
+  icon="home"
+  label="Home"
+  href="/"
+  isSelected
+  aria-current="page"
+  aria-pressed={undefined}
+/>
+```
+
+`onSelect` still fires when the link is followed.
+
+## In a stacked rail
+
+Under a `Sidebar` with `layout="stacked"`, an item is its icon on a pill with the label under it.
+The selected fill and the hover tint are on the pill, the label takes the selected color and weight,
+and `variant="plain"` drops the fill. The label is a caption - `size` has no say in it.
+
 ## Props
 
 Also accepts every `Pressable` prop except `feedback` and `activeOpacity`, which the variant
@@ -66,8 +91,9 @@ decides (`plain` gets none, everything else gets the press highlight).
 
 ## Theming
 
-| Slot   | Element            |
-| ------ | ------------------ |
-| `root` | The item's button. |
+| Slot   | Element                                                  |
+| ------ | -------------------------------------------------------- |
+| `root` | The item's button, or anchor.                            |
+| `pill` | The pill behind the icon of an item in a `stacked` rail. |
 
 Customize via `theme.components.SidebarItem.styleOverrides`.

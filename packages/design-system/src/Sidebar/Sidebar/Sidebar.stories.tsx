@@ -19,8 +19,10 @@ const meta: Meta<typeof Sidebar> = {
         'isOpen',
         'anchor',
         'variant',
+        'layout',
         'expandedWidth',
         'collapsedWidth',
+        'stackedWidth',
         'hasPanel',
         'panelWidth',
         'bg',
@@ -47,6 +49,24 @@ const meta: Meta<typeof Sidebar> = {
       options: ['text', 'outlined', 'plain'],
       description: "Default variant for every item - an item's own `variant` wins.",
       table: { category: 'Visual', defaultValue: { summary: 'text' } },
+    },
+    layout: {
+      control: 'radio',
+      options: ['inline', 'stacked'],
+      description:
+        'How the items are laid out: `inline` is the collapsible icon rail, a label beside its icon while open; `stacked` is a navigation rail - each label under its icon, always shown.',
+      table: { category: 'Layout', defaultValue: { summary: 'inline' } },
+    },
+    stackedWidth: {
+      control: 'text',
+      description: 'Rail width of a `stacked` layout.',
+      table: { category: 'Layout', defaultValue: { summary: '5.5rem' } },
+    },
+    panel: {
+      control: false,
+      description:
+        "The panel column's content, rendered in place - in the server-rendered markup. Takes the place of `hasPanel`.",
+      table: { category: 'Content' },
     },
     expandedWidth: {
       control: 'text',
@@ -191,4 +211,74 @@ export const PanelStyled: Story = {
     bg: 'grid',
     panelProps: { as: 'aside', bg: 'paper', width: '22rem', borderLeft: 'thin' },
   },
+}
+
+/**
+ * A navigation rail: `layout="stacked"` puts each label under its icon, in a rail of one width,
+ * always shown. Its items are links - `href` makes an anchor, and the current page is marked
+ * `aria-current` in place of `aria-pressed`.
+ */
+export const NavigationRail: Story = {
+  args: { layout: 'stacked', bg: 'paper' },
+  render: (args) => (
+    <Sidebar {...args} aria-label="Primary">
+      <SidebarItem
+        icon="home"
+        label="Home"
+        href="#home"
+        isSelected
+        aria-current="page"
+        aria-pressed={undefined}
+      />
+      <SidebarItem icon="grid_view" label="Get started" href="#start" aria-pressed={undefined} />
+      <SidebarItem
+        icon="add_circle"
+        label="Components"
+        href="#components"
+        aria-pressed={undefined}
+      />
+      <SidebarItem icon="inventory_2" label="Packages" href="#packages" aria-pressed={undefined} />
+      <SidebarItem icon="palette" label="Styles" href="#styles" aria-pressed={undefined} />
+    </Sidebar>
+  ),
+}
+
+/**
+ * `panel` is the second column's content, rendered in place - so it is in the server-rendered
+ * markup, which a panel ported in through `hasPanel` is not. For a panel the page already knows:
+ * a navigation tree beside a navigation rail.
+ */
+export const NavigationRailWithPanel: Story = {
+  args: { layout: 'stacked', bg: 'paper' },
+  render: (args) => (
+    <Sidebar
+      {...args}
+      aria-label="Primary"
+      panelProps={{ 'aria-label': 'Components', bg: 'secondary', p: 2 }}
+      panel={
+        <Flex flexDirection="column" gap={1}>
+          <Typography variant="subtitle2" m={0}>
+            Components
+          </Typography>
+          <Typography variant="body2" m={0}>
+            Button
+          </Typography>
+          <Typography variant="body2" m={0}>
+            Tabs
+          </Typography>
+        </Flex>
+      }
+    >
+      <SidebarItem icon="home" label="Home" href="#home" aria-pressed={undefined} />
+      <SidebarItem
+        icon="add_circle"
+        label="Components"
+        href="#components"
+        isSelected
+        aria-current="page"
+        aria-pressed={undefined}
+      />
+      <SidebarItem icon="palette" label="Styles" href="#styles" aria-pressed={undefined} />
+    </Sidebar>
+  ),
 }

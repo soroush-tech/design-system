@@ -1,8 +1,9 @@
 import { defineCatalogEntry, node } from '../../catalog/defineCatalogEntry'
-import type { SidebarAnchor, SidebarItemVariant } from '../SidebarContext'
+import type { SidebarAnchor, SidebarItemVariant, SidebarLayout } from '../SidebarContext'
 import type { SidebarProps } from './Sidebar'
 
 export const sidebarAnchorValues = ['left', 'right'] satisfies SidebarAnchor[]
+export const sidebarLayoutValues = ['inline', 'stacked'] satisfies SidebarLayout[]
 export const sidebarVariantValues = ['text', 'outlined', 'plain'] satisfies SidebarItemVariant[]
 
 const variantLabels: Record<SidebarItemVariant, string> = {
@@ -34,8 +35,10 @@ export const sidebarCatalog = defineCatalogEntry<SidebarProps>()({
     isOpen: { values: [true, false] },
     anchor: { values: sidebarAnchorValues, default: 'left' },
     variant: { values: sidebarVariantValues, default: 'text' },
+    layout: { values: sidebarLayoutValues, default: 'inline' },
     expandedWidth: { default: '14rem' },
     collapsedWidth: { default: '3.5rem' },
+    stackedWidth: { default: '5.5rem' },
     hasPanel: { values: [true, false], default: false },
     panelWidth: { default: '18rem' },
     bg: { scale: 'background' },

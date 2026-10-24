@@ -872,7 +872,7 @@ export interface ThemeComponents {
     'root' | 'value' | 'valueArea' | 'valueGhost' | 'listbox'
   >
   Sidebar?: ComponentConfig<Record<string, unknown>, 'root' | 'rail' | 'panel'>
-  SidebarItem?: ComponentConfig
+  SidebarItem?: ComponentConfig<Record<string, unknown>, 'root' | 'pill'>
   Skeleton?: ComponentConfig<Record<string, unknown>, 'root' | 'content'>
   Switch?: ComponentConfig<Record<string, unknown>, 'root' | 'input' | 'track' | 'thumb' | 'label'>
   Tab?: ComponentConfig<TabOwnerState, 'root' | 'label' | 'icon' | 'secondaryAction' | 'close'>

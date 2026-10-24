@@ -451,6 +451,16 @@ const cases: Case[] = [
       </Sidebar>
     ),
   },
+  {
+    name: 'SidebarItem',
+    slot: 'pill',
+    label: 'SidebarItemPill',
+    ui: (
+      <Sidebar aria-label="Panels" layout="stacked">
+        <SidebarItem icon="folder" label="Directory" />
+      </Sidebar>
+    ),
+  },
   { name: 'Skeleton', slot: 'root', label: 'skeleton', ui: <Skeleton /> },
   { name: 'Switch', slot: 'root', label: 'Switch', ui: <Switch /> },
   { name: 'Table', slot: 'root', label: 'Table', ui: table },

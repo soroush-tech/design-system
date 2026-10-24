@@ -29,6 +29,21 @@ const [isOpen, setIsOpen] = useState(false)
 </Sidebar>
 ```
 
+## Navigation rail
+
+`layout="stacked"` makes the rail a navigation rail, as in Material 3: each item's label is under its
+icon, always shown, in a rail of one width (`stackedWidth`, `5.5rem`) that does not animate. `isOpen`
+has nothing to do and is ignored. The selected item's fill is on a pill behind its icon, and a
+hovered item tints its pill. The default, `layout="inline"`, is the collapsible rail described
+above and does not change.
+
+```tsx
+<Sidebar aria-label="Primary" layout="stacked">
+  <SidebarItem icon="home" label="Home" href="/" aria-current="page" aria-pressed={undefined} />
+  <SidebarItem icon="search" label="Search" href="/search" aria-pressed={undefined} />
+</Sidebar>
+```
+
 ## Panel column
 
 With `hasPanel`, the rail gains a second column and the **selected** item's `children` render
@@ -67,6 +82,25 @@ rail and its items server-render as normal.
 - The panel is a `<section>` named by the item's `label`, and that item becomes a disclosure -
   `aria-expanded`, plus `aria-controls` pointing at the panel while it is shown.
 
+### A panel rendered in place
+
+`hasPanel` fills the panel on the client: the selected item's children are ported in through
+`Portal`, so the markup the server renders has an empty panel. For a panel the page already knows -
+a navigation tree beside a navigation rail - pass it as `panel`. It is rendered in place, so it is in
+the server-rendered markup and works with JavaScript off. `panel` takes the place of `hasPanel`:
+with both, the items keep their `children` in their rows.
+
+```tsx
+<Sidebar
+  aria-label="Primary"
+  layout="stacked"
+  panel={<NavTree>...</NavTree>}
+  panelProps={{ 'aria-label': 'Components', bg: 'secondary' }}
+>
+  <SidebarItem icon="add_circle" label="Components" href="/components/" aria-pressed={undefined} />
+</Sidebar>
+```
+
 Style or re-tag the column with `panelProps` - any `Flex` prop, plus `as`. It overrides
 `panelWidth` and the derived `aria-label`; the `id` and ref stay with the rail, which needs them
 as the port target and the `aria-controls` anchor.
@@ -81,18 +115,21 @@ as the port target and the `aria-controls` anchor.
 
 Also accepts every `Flex` prop (`bg`, spacing, layout, ...).
 
-| Prop             | Type                                                       | Default    | Description                                                    |
-| ---------------- | ---------------------------------------------------------- | ---------- | -------------------------------------------------------------- |
-| `children`       | `ReactNode`                                                | -          | Rail contents - items and any other nodes.                     |
-| `isOpen`         | `boolean`                                                  | -          | Whether item labels are shown. Controlled.                     |
-| `anchor`         | `'left' \| 'right'`                                        | `'left'`   | Screen edge the rail hugs - labels render away from it.        |
-| `variant`        | `'text' \| 'outlined' \| 'plain'`                          | `'text'`   | Default variant for every item - an item's own `variant` wins. |
-| `expandedWidth`  | `string`                                                   | `'14rem'`  | Rail width while open.                                         |
-| `collapsedWidth` | `string`                                                   | `'3.5rem'` | Rail width while collapsed (icons only).                       |
-| `hasPanel`       | `boolean`                                                  | `false`    | Render the selected item's `children` in a second column.      |
-| `panelWidth`     | `string`                                                   | `'18rem'`  | Width of the panel column. Only meaningful with `hasPanel`.    |
-| `panelProps`     | `Omit<FlexProps, 'children'\|'id'> & { as?: ElementType }` | -          | Props for the panel column - any `Flex` prop, plus `as`.       |
-| `aria-label`     | `string`                                                   | -          | Required accessible name of the `<nav>` landmark.              |
+| Prop             | Type                                                       | Default    | Description                                                                                     |
+| ---------------- | ---------------------------------------------------------- | ---------- | ----------------------------------------------------------------------------------------------- |
+| `children`       | `ReactNode`                                                | -          | Rail contents - items and any other nodes.                                                      |
+| `isOpen`         | `boolean`                                                  | `false`    | Whether item labels are shown. Controlled. A `stacked` rail always shows them.                  |
+| `layout`         | `'inline' \| 'stacked'`                                    | `'inline'` | `inline` is the collapsible icon rail; `stacked` puts each label under its icon, always shown.  |
+| `stackedWidth`   | `string`                                                   | `'5.5rem'` | Rail width of a `stacked` layout.                                                               |
+| `panel`          | `ReactNode`                                                | -          | The panel column's content, rendered in place (server-rendered). Takes the place of `hasPanel`. |
+| `anchor`         | `'left' \| 'right'`                                        | `'left'`   | Screen edge the rail hugs - labels render away from it.                                         |
+| `variant`        | `'text' \| 'outlined' \| 'plain'`                          | `'text'`   | Default variant for every item - an item's own `variant` wins.                                  |
+| `expandedWidth`  | `string`                                                   | `'14rem'`  | Rail width while open.                                                                          |
+| `collapsedWidth` | `string`                                                   | `'3.5rem'` | Rail width while collapsed (icons only).                                                        |
+| `hasPanel`       | `boolean`                                                  | `false`    | Render the selected item's `children` in a second column.                                       |
+| `panelWidth`     | `string`                                                   | `'18rem'`  | Width of the panel column. Only meaningful with `hasPanel` or `panel`.                          |
+| `panelProps`     | `Omit<FlexProps, 'children'\|'id'> & { as?: ElementType }` | -          | Props for the panel column - any `Flex` prop, plus `as`.                                        |
+| `aria-label`     | `string`                                                   | -          | Required accessible name of the `<nav>` landmark.                                               |
 
 ## Theming
 

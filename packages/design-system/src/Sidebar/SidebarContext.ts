@@ -4,6 +4,13 @@ import { createContext } from 'react'
 export type SidebarAnchor = 'left' | 'right'
 
 /**
+ * How a `Sidebar` lays its items out: `inline` (default) is the collapsible icon rail, a label
+ * beside its icon while open; `stacked` is a navigation rail - each label under its icon, always
+ * shown, in a rail of a fixed width.
+ */
+export type SidebarLayout = 'inline' | 'stacked'
+
+/**
  * Visual style of a `SidebarItem`: borderless (`text`, default), `outlined`, or
  * `plain` - no fill and no hover or press feedback, so selection reads through
  * the text color alone.
@@ -13,13 +20,16 @@ export type SidebarItemVariant = 'outlined' | 'text' | 'plain'
 /**
  * State provided by `Sidebar` and consumed by `SidebarItem`: whether labels
  * are shown, which side the rail hugs (decides the label side), the rail-wide
- * default item variant (an item's own `variant` wins), and whether the rail
- * renders a panel column - which decides where an item's `children` go.
+ * default item variant (an item's own `variant` wins), how the items are laid
+ * out, and whether the rail renders a panel column - which decides where an
+ * item's `children` go.
  */
 export interface SidebarContextValue {
   isOpen: boolean
   anchor: SidebarAnchor
   variant: SidebarItemVariant
+  /** How the items are laid out - an inline row, or an icon with its label under it. */
+  layout: SidebarLayout
   /** Whether the rail renders a panel column; items port their children into it. */
   hasPanel: boolean
   /** `id` of the panel element, so the selected item can point `aria-controls` at it. */
@@ -40,5 +50,6 @@ export const SidebarContext = createContext<SidebarContextValue>({
   isOpen: false,
   anchor: 'left',
   variant: 'text',
+  layout: 'inline',
   hasPanel: false,
 })

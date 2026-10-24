@@ -6,7 +6,12 @@ import { Portal } from '@soroush.tech/design-system/Portal'
 import { Pressable, type PressableProps } from '@soroush.tech/design-system/Pressable'
 import { Typography } from '@soroush.tech/design-system/Typography'
 import { alpha } from '@soroush.tech/design-system/utils'
-import { SidebarContext, type SidebarAnchor, type SidebarItemVariant } from '../SidebarContext'
+import {
+  SidebarContext,
+  type SidebarAnchor,
+  type SidebarItemVariant,
+  type SidebarLayout,
+} from '../SidebarContext'
 
 /** Density token - controls padding and font size. Resolves against `theme.sizes`. */
 export type SidebarItemSize = keyof Theme['sizes']
@@ -23,7 +28,11 @@ export interface SidebarItemProps extends Omit<
   variant?: SidebarItemVariant
   /** Padding and font size - resolves against `theme.sizes`. Default: `'sm'`. */
   size?: SidebarItemSize
-  /** Active state - drives `aria-pressed` and the selected fill. */
+  /**
+   * Active state - drives `aria-pressed` and the selected fill. A link (an item given `href`)
+   * is marked the current page with `aria-current` by the caller instead: pass
+   * `aria-current="page"` and `aria-pressed={undefined}`, which win over the item's own.
+   */
   isSelected?: boolean
   /**
    * Custom open-state content rendered instead of the label text (badges,
@@ -37,6 +46,7 @@ export interface SidebarItemProps extends Omit<
 
 interface SidebarItemRootProps {
   anchor: SidebarAnchor
+  layout: SidebarLayout
   isSelected?: boolean
   // Named apart from Pressable's own props so both reach the styled root:
   // Pressable draws the press feedback, this picks the resting look.
@@ -49,8 +59,20 @@ interface SidebarItemRootProps {
 // The same density scale the rest of the library uses, so a rail lines up with
 // the app's other controls - but without a button's uppercase / bold / tracking,
 // which a navigation label has no business carrying.
-const densityStyles = ({ theme, size }: SidebarItemRootProps & { theme: Theme }) => {
+const densityStyles = ({ theme, size, layout }: SidebarItemRootProps & { theme: Theme }) => {
   const s = theme.sizes[size]
+  // Stacked, the label is a caption under its icon and the item only needs room to breathe.
+  if (layout === 'stacked') {
+    return {
+      paddingTop: theme.space[0.5],
+      paddingBottom: theme.space[0.5],
+      paddingLeft: 0,
+      paddingRight: 0,
+      fontSize: theme.fontSizes[0],
+      lineHeight: 1.2,
+      whiteSpace: 'nowrap' as const,
+    }
+  }
   return {
     paddingTop: theme.space[s.paddingTop],
     paddingBottom: theme.space[s.paddingBottom],
@@ -71,10 +93,10 @@ const densityStyles = ({ theme, size }: SidebarItemRootProps & { theme: Theme })
 
 // Content pins to the anchored edge so the icon holds its position while the
 // rail opens and closes.
-const layoutStyles = ({ anchor }: SidebarItemRootProps) => ({
+const layoutStyles = ({ anchor, layout }: SidebarItemRootProps) => ({
   width: '100%',
   alignItems: 'center',
-  justifyContent: anchor === 'right' ? 'flex-end' : 'flex-start',
+  justifyContent: layout === 'stacked' ? 'center' : anchor === 'right' ? 'flex-end' : 'flex-start',
 })
 
 // The resting look. Press feedback is Pressable's job - these add only the hover
@@ -85,9 +107,28 @@ const stateStyles = ({
   color,
   isSelected,
   itemVariant,
+  layout,
   disabled,
 }: SidebarItemRootProps & { theme: Theme }) => {
   const { main } = theme.palette[color]
+  // Stacked, the fill is the icon's pill, not the row: the row carries the label's color.
+  if (layout === 'stacked') {
+    return {
+      border: `${theme.borderWidths.thin} solid transparent`,
+      borderRadius: theme.radii.sq,
+      color: isSelected ? main : get(theme, 'text.primary'),
+      fontWeight: isSelected ? 600 : 400,
+      '&:disabled, &[aria-disabled="true"]': { opacity: 0.5 },
+      // The tint of a hovered row is on its pill.
+      ...(disabled || itemVariant === 'plain'
+        ? {}
+        : {
+            '&:hover [data-sidebar-pill]': {
+              backgroundColor: alpha(main, isSelected ? 0.32 : 0.08),
+            },
+          }),
+    }
+  }
   const outlined = itemVariant === 'outlined'
   const base = {
     border: `${theme.borderWidths.thin} solid ${
@@ -130,8 +171,40 @@ const SidebarItemRoot = styled(Pressable, {
   name: 'SidebarItem',
   label: 'SidebarItem',
   shouldForwardProp: (prop) =>
-    prop !== 'anchor' && prop !== 'isSelected' && prop !== 'itemVariant' && prop !== 'size',
+    prop !== 'anchor' &&
+    prop !== 'layout' &&
+    prop !== 'isSelected' &&
+    prop !== 'itemVariant' &&
+    prop !== 'size',
 })<SidebarItemRootProps>(densityStyles, layoutStyles, stateStyles)
+
+interface SidebarItemPillProps {
+  isSelected?: boolean
+  itemVariant: SidebarItemVariant
+  color: NonNullable<PressableProps['color']>
+}
+
+// A stacked item's icon sits on a pill: the selected fill is there, and so is the hover tint.
+const SidebarItemPill = styled('span', {
+  name: 'SidebarItem',
+  slot: 'pill',
+  label: 'SidebarItemPill',
+  shouldForwardProp: (prop) => prop !== 'isSelected' && prop !== 'itemVariant' && prop !== 'color',
+})<SidebarItemPillProps>(({ theme, color, isSelected, itemVariant }) => {
+  const { main } = theme.palette[color]
+  // plain carries selection in the text color alone - no pill fill.
+  const isPlain = itemVariant === 'plain'
+  return {
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '3.5rem',
+    height: '2rem',
+    borderRadius: '1rem',
+    transition: 'background-color 150ms',
+    backgroundColor: isSelected && !isPlain ? alpha(main, 0.24) : 'transparent',
+  }
+})
 
 /**
  * One entry of a `Sidebar`: an icon pinned to the anchored edge, plus content
@@ -156,12 +229,14 @@ export function SidebarItem({
     isOpen,
     anchor,
     variant: railVariant,
+    layout,
     hasPanel,
     panelId,
     panelNode,
     setPanelLabel,
   } = useContext(SidebarContext)
   const resolvedVariant = variant ?? railVariant
+  const isStacked = layout === 'stacked'
   // With a panel, children belong to it, so the row falls back to the label.
   const ownsPanel = hasPanel && children != null
   const isPorting = ownsPanel && (isSelected ?? false)
@@ -187,13 +262,15 @@ export function SidebarItem({
   return (
     <>
       <SidebarItemRoot
-        // plain refuses press feedback too, matching its lack of a hover fill.
-        feedback={resolvedVariant === 'plain' ? 'none' : 'highlight'}
+        // plain refuses press feedback too, matching its lack of a hover fill; a stacked item's
+        // feedback is on its pill.
+        feedback={resolvedVariant === 'plain' || isStacked ? 'none' : 'highlight'}
         color={color}
         size={size}
         itemVariant={resolvedVariant}
         isSelected={isSelected}
         anchor={anchor}
+        layout={layout}
         aria-label={label}
         aria-pressed={isSelected ?? false}
         // An item driving a panel is a disclosure too. aria-controls points at the
@@ -206,25 +283,43 @@ export function SidebarItem({
         onClick={handleClick}
         {...rest}
       >
-        <Flex
-          as="span"
-          flexDirection={anchor === 'right' ? 'row-reverse' : 'row'}
-          alignItems="center"
-          gap={2}
-          // Nothing wraps now, so mid-transition the content is wider than the rail.
-          // Left shrinkable, the flex line would compress and squeeze `Icon` - which
-          // sets width/height but no flex-shrink - off its position. Pinned, the
-          // content keeps its natural width and Sidebar's overflowX clips it instead.
-          flexShrink={0}
-        >
-          <Icon name={icon} size="1.25rem" color="inherit" />
-          {isOpen &&
-            ((ownsPanel ? null : children) ?? (
+        {isStacked ? (
+          <Flex as="span" flexDirection="column" alignItems="center" gap={0.5} flexShrink={0}>
+            <SidebarItemPill
+              data-sidebar-pill
+              color={color}
+              isSelected={isSelected}
+              itemVariant={resolvedVariant}
+            >
+              <Icon name={icon} size="1.5rem" color="inherit" />
+            </SidebarItemPill>
+            {(ownsPanel ? null : children) ?? (
               <Typography as="span" variant="inherit" m={0}>
                 {label}
               </Typography>
-            ))}
-        </Flex>
+            )}
+          </Flex>
+        ) : (
+          <Flex
+            as="span"
+            flexDirection={anchor === 'right' ? 'row-reverse' : 'row'}
+            alignItems="center"
+            gap={2}
+            // Nothing wraps now, so mid-transition the content is wider than the rail.
+            // Left shrinkable, the flex line would compress and squeeze `Icon` - which
+            // sets width/height but no flex-shrink - off its position. Pinned, the
+            // content keeps its natural width and Sidebar's overflowX clips it instead.
+            flexShrink={0}
+          >
+            <Icon name={icon} size="1.25rem" color="inherit" />
+            {isOpen &&
+              ((ownsPanel ? null : children) ?? (
+                <Typography as="span" variant="inherit" m={0}>
+                  {label}
+                </Typography>
+              ))}
+          </Flex>
+        )}
       </SidebarItemRoot>
       {/* Ported rather than lifted, so the panel's content stays declared -
           and mounted - here: the context, state, and handlers it closes over are
