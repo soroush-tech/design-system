@@ -16,7 +16,6 @@ const CONNECTIVITY = [
   { href: 'https://github.com/soroush-tech', label: 'GitHub' },
   { href: 'https://www.npmjs.com/org/soroush.tech', label: 'npm' },
   { href: SOROUSH, label: 'soroush.tech' },
-  { href: 'https://www.linkedin.com/in/masoud-soroush-4139b152', label: 'LinkedIn' },
 ]
 
 // The logo is drawn dark: the theme says how to show it on its ground.
@@ -31,7 +30,7 @@ const Heading = styled('h2')(({ theme }) => ({
   margin: 0,
   marginBottom: theme.space[3],
   color: get(theme, 'palette.primary.main'),
-  fontFamily: theme.fonts.mono,
+  fontFamily: 'inherit',
   fontSize: `${theme.fontSizes[0]}px`,
   fontWeight: 400,
   letterSpacing: '0.2em',
@@ -88,7 +87,7 @@ export function Footer() {
         px={4}
         py={6}
       >
-        <Grid gridTemplateColumns={{ xs: '1fr', md: '2fr 1fr 1fr' }} gridGap={6}>
+        <Grid gridTemplateColumns={{ xs: '1fr', md: 'repeat(3, minmax(0, 1fr))' }} gridGap={6}>
           <View>
             <Flex flexDirection="row" alignItems="center" gap={2} mb={3}>
               <Logo src={logoUrl} alt="" width={48} height={48} />
@@ -96,7 +95,7 @@ export function Footer() {
                 SOROUSH.TECH
               </Typography>
             </Flex>
-            <Typography variant="caption" color="secondary" lineHeight="relaxed">
+            <Typography variant="caption" color="secondary" lineHeight="relaxed" maxWidth="22rem">
               A proprietary system designed for the orchestration of high-performance digital
               environments. Built for speed, scaled for eternity.
             </Typography>
@@ -105,7 +104,7 @@ export function Footer() {
           <FooterLinks label="Connectivity" links={CONNECTIVITY} />
         </Grid>
         <Flex flexDirection="row" flexWrap="wrap" gap={2} mt={5}>
-          <Typography variant="caption" color="secondary" fontFamily="mono">
+          <Typography variant="caption" color="secondary">
             &copy; 2026 SOROUSH.TECH. ALL RIGHTS RESERVED.
           </Typography>
         </Flex>

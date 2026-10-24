@@ -45,7 +45,6 @@ describe('Footer', () => {
       'GitHub',
       'npm',
       'soroush.tech',
-      'LinkedIn',
     ])
     expect(places.getByRole('link', { name: 'soroush.tech' })).toHaveAttribute(
       'href',
