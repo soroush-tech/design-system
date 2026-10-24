@@ -100,7 +100,7 @@ describe('DocsNav', () => {
     renderNav('/design-system/components/')
     expect(screen.getByRole('link', { name: 'Design System' })).toHaveAttribute(
       'aria-current',
-      'true'
+      'page'
     )
     expect(screen.getByRole('link', { name: 'Markdown' })).toHaveAttribute('href', '/markdown/')
     expect(screen.getByRole('link', { name: 'Styled System' })).not.toHaveAttribute('aria-current')

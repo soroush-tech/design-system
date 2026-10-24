@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type MouseEvent } from 'react'
 import { styled, createShouldForwardProp, get, type Theme } from '@soroush.tech/design-system'
 import { alpha } from '@soroush.tech/design-system/utils'
 import { Flex } from '@soroush.tech/design-system/Flex'
+import { Tab, Tabs } from '@soroush.tech/design-system/Tabs'
 import { Typography } from '@soroush.tech/design-system/Typography'
 import { View } from '@soroush.tech/design-system/View'
 import { ComponentIllustration } from 'src/common/ComponentCard/ComponentIllustration'
@@ -54,55 +55,22 @@ const Tile = styled('div')(({ theme }) => ({
   backgroundColor: get(theme, 'background.secondary'),
 }))
 
-// The radius of the tab bar and of each tab in it: half a tab's height, so the ends are round.
-const TAB_RADIUS = '1.625rem'
-
-// The tabs are one gray container, as M3's: no padding, the tabs filling it end to end, an
-// inactive tab just the gray of the bar and the chosen one in the tone. The bar stays at the top
-// of the window as the page scrolls under it; below the wide layout the top bar is there, so it
-// sits under that. In its place on the page it spans the head, which is wider than the content; stuck, it shrinks to the size
-// of the content grid - the width animates between the two.
-const TabBar = styled('nav', {
+// The tabs stay at the top of the window as the page scrolls under them; below the wide layout the
+// top bar is there, so they sit under that. In its place on the page the bar spans the head, which
+// is wider than the content; stuck, it shrinks to the size of the content grid - the width
+// animates between the two.
+const TabBar = styled('div', {
   shouldForwardProp: createShouldForwardProp(['isStuck']),
 })<{ isStuck: boolean }>(({ theme, isStuck }) => ({
   position: 'sticky',
   top: '3.5rem',
   zIndex: 3,
-  display: 'flex',
-  flexWrap: 'wrap',
   width: isStuck ? `min(100%, ${CONTENT_MAX_WIDTH})` : '100%',
   marginInline: 'auto',
   marginBottom: theme.space[3],
-  borderRadius: TAB_RADIUS,
-  backgroundColor: get(theme, 'background.secondary'),
   transition: 'width 280ms cubic-bezier(0.2, 0, 0, 1)',
   '@media (prefers-reduced-motion: reduce)': { transition: 'none' },
   [theme.breakpoints.up('lg')]: { top: 0 },
-}))
-
-// The router reads `keep-scroll-position` off a link; the prop filter would drop it as unknown.
-const forwardTabProp = createShouldForwardProp(['isActive'])
-
-const TabLink = styled('a', {
-  shouldForwardProp: (prop: string) => prop === 'keep-scroll-position' || forwardTabProp(prop),
-})<{ isActive: boolean }>(({ theme, isActive }) => ({
-  flex: '1 1 8rem',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  minHeight: '3.25rem',
-  padding: `0 ${theme.space[3]}`,
-  borderRadius: TAB_RADIUS,
-  color: get(theme, 'text.initial'),
-  fontWeight: isActive ? 600 : 400,
-  textDecoration: 'none',
-  // An inactive tab shows the bar's own gray; hovered, a wash of the tone over it.
-  backgroundColor: isActive ? tone(theme, 0.4) : 'transparent',
-  '&:hover': { backgroundColor: isActive ? tone(theme, 0.4) : tone(theme, 0.16) },
-  '&:focus-visible': {
-    outline: `2px solid ${get(theme, 'palette.primary.main')}`,
-    outlineOffset: -2,
-  },
 }))
 
 // A tab was just chosen: the page that replaces this one scrolls to the tabs, so what the tab
@@ -133,7 +101,7 @@ export function ComponentHero({
   hasAccessibility,
 }: Readonly<ComponentHeroProps>) {
   const header = useRef<HTMLDivElement>(null)
-  const bar = useRef<HTMLElement>(null)
+  const bar = useRef<HTMLDivElement>(null)
   const [isStuck, setIsStuck] = useState(false)
 
   // The bar is stuck once it has reached the place it sticks at - read as the page scrolls.
@@ -150,6 +118,14 @@ export function ComponentHero({
       cancelAnimationFrame(frame)
       window.removeEventListener('scroll', update)
     }
+  }, [active])
+
+  // The router reads `keep-scroll-position` off a link: the page a tab opens is scrolled by this
+  // component, not sent to the top first.
+  useEffect(() => {
+    bar.current?.querySelectorAll('a').forEach((link) => {
+      link.setAttribute('keep-scroll-position', 'true')
+    })
   }, [active])
 
   useEffect(() => {
@@ -201,27 +177,27 @@ export function ComponentHero({
         </Hero>
       </View>
       {active && (
-        <TabBar
-          ref={bar}
-          isStuck={isStuck}
-          data-stuck={isStuck ? '' : undefined}
-          aria-label={`${item.name} pages`}
-        >
-          {tabs.map((tab) => (
-            <TabLink
-              key={tab.id}
-              href={sectionPath('design-system', tab.path)}
-              isActive={tab.id === active}
-              aria-current={tab.id === active ? 'page' : undefined}
-              // The page the tab opens is scrolled by this component, not sent to the top first.
-              keep-scroll-position="true"
-              onClick={(event) => {
-                if (isPlainClick(event)) isSwitchingTab = true
-              }}
-            >
-              {tab.label}
-            </TabLink>
-          ))}
+        <TabBar ref={bar} isStuck={isStuck} data-stuck={isStuck ? '' : undefined}>
+          <Tabs
+            as="nav"
+            variant="tonal"
+            size="lg"
+            fullWidth
+            value={active}
+            aria-label={`${item.name} pages`}
+          >
+            {tabs.map((tab) => (
+              <Tab
+                key={tab.id}
+                value={tab.id}
+                label={tab.label}
+                href={sectionPath('design-system', tab.path)}
+                onClick={(event) => {
+                  if (isPlainClick(event)) isSwitchingTab = true
+                }}
+              />
+            ))}
+          </Tabs>
         </TabBar>
       )}
     </>

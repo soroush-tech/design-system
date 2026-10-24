@@ -99,11 +99,11 @@ describe('ComponentHero tabs at the top of the window', () => {
     const scrollTo = vi.fn()
     vi.stubGlobal('scrollTo', scrollTo)
     vi.stubGlobal('scrollY', scrolledBy)
-    // A browser answers the computed top of a sticky element in pixels; jsdom does not.
+    // A browser answers the computed top of a sticky element in pixels; jsdom does not. The bar is the element around the tabs' nav.
     const computed = window.getComputedStyle.bind(window)
     vi.spyOn(window, 'getComputedStyle').mockImplementation((element, pseudo) => {
       const style = computed(element, pseudo)
-      if (element.tagName !== 'NAV') return style
+      if (!element.querySelector(':scope > nav')) return style
       return new Proxy(style, {
         get: (target, property) => {
           if (property === 'top') return `${stuckAt}px`
@@ -131,7 +131,7 @@ describe('ComponentHero tabs at the top of the window', () => {
 
   it('sticks the tab bar to the top of the window', () => {
     renderHero()
-    expect(screen.getByRole('navigation', { name: 'Button pages' })).toHaveStyle({
+    expect(screen.getByRole('navigation', { name: 'Button pages' }).parentElement).toHaveStyle({
       position: 'sticky',
     })
   })
@@ -195,7 +195,7 @@ describe('ComponentHero tab bar width', () => {
     vi.restoreAllMocks()
   })
 
-  const bar = () => screen.getByRole('navigation', { name: 'Button pages' })
+  const bar = () => screen.getByRole('navigation', { name: 'Button pages' }).parentElement!
 
   const stubBarAt = (top: number) => {
     vi.stubGlobal('scrollTo', vi.fn())
