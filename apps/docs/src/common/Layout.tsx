@@ -3,7 +3,7 @@ import { Drawer } from '@soroush.tech/design-system/Drawer'
 import { Flex } from '@soroush.tech/design-system/Flex'
 import { Typography } from '@soroush.tech/design-system/Typography'
 import { View } from '@soroush.tech/design-system/View'
-import { CONTENT_MAX_WIDTH } from 'src/common/contentWidth'
+import { CONTENT_MAX_WIDTH, PANEL_RADIUS } from 'src/common/layoutSizes'
 import { NavRail } from 'src/common/NavRail/NavRail'
 import { OnThisPage } from 'src/common/OnThisPage/OnThisPage'
 import { VersionMenu } from 'src/common/VersionMenu/VersionMenu'
@@ -54,21 +54,31 @@ function LayoutFrame({ children, sidebar, hasToc, head }: Readonly<LayoutProps>)
         )}
         <Flex flexDirection="row" flex="1 1 auto" width="100%">
           {sidebar && (
-            // A View, not a Flex: Flex's own `display: flex` would override the hidden base.
+            // A View, not a Flex: Flex's own `display: flex` would override the hidden base. The
+            // aside is the column that sticks; the panel in it is the sidebar - a ground of its own,
+            // with round corners, as M3's, and room around it.
             <View
               as="aside"
               display={{ xs: 'none', lg: 'block' }}
-              width="18.5rem"
-              minWidth="18.5rem"
-              px={2}
-              py={3}
+              width="19rem"
+              minWidth="19rem"
+              py={1.5}
+              pr={1}
               position="sticky"
               top={0}
-              maxHeight="100dvh"
-              overflowY="auto"
+              height="100dvh"
               style={{ alignSelf: 'flex-start' }}
             >
-              {sidebar}
+              <View
+                height="100%"
+                overflowY="auto"
+                bg="secondary"
+                px={2}
+                py={3}
+                style={{ borderRadius: PANEL_RADIUS }}
+              >
+                {sidebar}
+              </View>
             </View>
           )}
           <Flex as="main" flexDirection="column" flex="1 1 auto" minWidth={0} px={4} py={5}>

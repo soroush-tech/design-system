@@ -100,4 +100,16 @@ describe('Layout', () => {
     )
     expect(document.getElementById('docs-nav')).toHaveAttribute('popover', 'auto')
   })
+
+  it('puts the sidebar on a panel of its own, with round corners', () => {
+    renderLayout(<div data-testid="nav">nav content</div>)
+    const aside = screen.getByRole('complementary', { hidden: true })
+    const panel = aside.firstElementChild as HTMLElement
+    expect(within(panel).getByTestId('nav')).toBeInTheDocument()
+    expect(panel).toHaveStyle({ borderRadius: '1.75rem' })
+    // Its ground is not the page's: the page behind it shows around, not through.
+    expect(getComputedStyle(panel).backgroundColor).not.toBe(
+      getComputedStyle(document.body).backgroundColor
+    )
+  })
 })

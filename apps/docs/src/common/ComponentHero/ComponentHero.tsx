@@ -5,7 +5,7 @@ import { Flex } from '@soroush.tech/design-system/Flex'
 import { Typography } from '@soroush.tech/design-system/Typography'
 import { View } from '@soroush.tech/design-system/View'
 import { ComponentIllustration } from 'src/common/ComponentCard/ComponentIllustration'
-import { CONTENT_MAX_WIDTH } from 'src/common/contentWidth'
+import { CONTENT_MAX_WIDTH, PANEL_RADIUS } from 'src/common/layoutSizes'
 import { RailGlyph } from 'src/common/NavRail/RailGlyph'
 import { sourceUrlOf } from 'src/common/packages'
 import type { ComponentNavItem } from 'src/common/nav'
@@ -22,7 +22,7 @@ const Hero = styled('div')(({ theme }) => ({
   alignItems: 'center',
   gap: theme.space[3],
   padding: theme.space[4],
-  borderRadius: '1.75rem',
+  borderRadius: PANEL_RADIUS,
   backgroundColor: tone(theme, 0.1),
 }))
 
