@@ -77,6 +77,9 @@ https://mcp.soroush.tech/mcp (or `npx -y @soroush.tech/mcp`).
 - [MenuDivider](https://docs.soroush.tech/design-system/api/menu-divider/): A line between groups of rows in a [`MenuList`](https://docs.soroush.tech/design-system/api/menu-list/), rendered as
 - [MenuItems](https://docs.soroush.tech/design-system/api/menu-items/): Menu rows from data - for menus that come from a list of commands. Each entry is a row (a
 - [MenuList](https://docs.soroush.tech/design-system/api/menu-list/): A list of commands, rendered as a semantic `<ul role="menu">`. It owns the keyboard: the arrow
+- [NavTree](https://docs.soroush.tech/design-system/components/nav-tree/): A tree of links to the pages of a site: its [`NavGroup`](https://docs.soroush.tech/design-system/api/nav-group/)s, each with its
+- [NavGroup](https://docs.soroush.tech/design-system/api/nav-group/): A group of a [`NavTree`](https://docs.soroush.tech/design-system/components/nav-tree/): a name over a list of [`NavLink`](https://docs.soroush.tech/design-system/api/nav-link/)s.
+- [NavLink](https://docs.soroush.tech/design-system/api/nav-link/): A link to a page of the site, a row of a [`NavTree`](https://docs.soroush.tech/design-system/components/nav-tree/): its name, an optional
 - [Tabs](https://docs.soroush.tech/design-system/components/tabs/): A row of tabs. By default it is a `tablist`: one tab in the page's tab order, the arrow keys of
 - [Tab](https://docs.soroush.tech/design-system/api/tab/): One tab of a `Tabs` row: a label, an icon on any side of it, and - with a `closeLabel` - a close
 - [TabContext](https://docs.soroush.tech/design-system/api/tab-context/): Holds the selected value for a `TabList` and the `TabPanel`s beside it, wherever they sit - the

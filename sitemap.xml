@@ -48,6 +48,9 @@
   <url><loc>https://docs.soroush.tech/design-system/api/menu/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/api/modal/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/api/native-select/</loc></url>
+  <url><loc>https://docs.soroush.tech/design-system/api/nav-group/</loc></url>
+  <url><loc>https://docs.soroush.tech/design-system/api/nav-link/</loc></url>
+  <url><loc>https://docs.soroush.tech/design-system/api/nav-tree/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/api/number-input/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/api/pagination-item/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/api/pagination/</loc></url>
@@ -94,24 +97,36 @@
   <url><loc>https://docs.soroush.tech/design-system/api/zoom/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/accordion/</loc></url>
+  <url><loc>https://docs.soroush.tech/design-system/components/accordion/accessibility/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/alert/</loc></url>
+  <url><loc>https://docs.soroush.tech/design-system/components/alert/accessibility/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/app-bar/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/autocomplete/</loc></url>
+  <url><loc>https://docs.soroush.tech/design-system/components/autocomplete/accessibility/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/avatar/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/backdrop/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/badge/</loc></url>
+  <url><loc>https://docs.soroush.tech/design-system/components/badge/accessibility/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/breadcrumbs/</loc></url>
+  <url><loc>https://docs.soroush.tech/design-system/components/breadcrumbs/accessibility/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/button-group/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/button/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/card/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/checkbox/</loc></url>
+  <url><loc>https://docs.soroush.tech/design-system/components/checkbox/accessibility/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/chip/</loc></url>
+  <url><loc>https://docs.soroush.tech/design-system/components/chip/accessibility/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/circular-progress/</loc></url>
+  <url><loc>https://docs.soroush.tech/design-system/components/circular-progress/accessibility/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/collapse/</loc></url>
+  <url><loc>https://docs.soroush.tech/design-system/components/collapse/accessibility/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/drawer/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/fab-menu/</loc></url>
+  <url><loc>https://docs.soroush.tech/design-system/components/fab-menu/accessibility/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/fab/</loc></url>
+  <url><loc>https://docs.soroush.tech/design-system/components/fab/accessibility/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/fade/</loc></url>
+  <url><loc>https://docs.soroush.tech/design-system/components/fade/accessibility/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/flex/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/focus-trap/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/form-control/</loc></url>
@@ -120,44 +135,66 @@
   <url><loc>https://docs.soroush.tech/design-system/components/form/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/grid/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/grow/</loc></url>
+  <url><loc>https://docs.soroush.tech/design-system/components/grow/accessibility/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/icon/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/image/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/linear-progress/</loc></url>
+  <url><loc>https://docs.soroush.tech/design-system/components/linear-progress/accessibility/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/link/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/menu-item/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/menu/</loc></url>
+  <url><loc>https://docs.soroush.tech/design-system/components/menu/accessibility/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/modal/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/native-select/</loc></url>
+  <url><loc>https://docs.soroush.tech/design-system/components/nav-tree/</loc></url>
+  <url><loc>https://docs.soroush.tech/design-system/components/nav-tree/accessibility/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/number-input/</loc></url>
+  <url><loc>https://docs.soroush.tech/design-system/components/number-input/accessibility/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/pagination/</loc></url>
+  <url><loc>https://docs.soroush.tech/design-system/components/pagination/accessibility/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/paper/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/popover/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/portal/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/pressable/</loc></url>
+  <url><loc>https://docs.soroush.tech/design-system/components/pressable/accessibility/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/quote/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/radio/</loc></url>
+  <url><loc>https://docs.soroush.tech/design-system/components/radio/accessibility/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/range-input/</loc></url>
+  <url><loc>https://docs.soroush.tech/design-system/components/range-input/accessibility/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/rating/</loc></url>
+  <url><loc>https://docs.soroush.tech/design-system/components/rating/accessibility/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/scroll-area/</loc></url>
+  <url><loc>https://docs.soroush.tech/design-system/components/scroll-area/accessibility/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/select/</loc></url>
+  <url><loc>https://docs.soroush.tech/design-system/components/select/accessibility/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/sidebar/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/skeleton/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/slide/</loc></url>
+  <url><loc>https://docs.soroush.tech/design-system/components/slide/accessibility/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/snackbar/</loc></url>
+  <url><loc>https://docs.soroush.tech/design-system/components/snackbar/accessibility/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/switch/</loc></url>
+  <url><loc>https://docs.soroush.tech/design-system/components/switch/accessibility/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/table/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/tabs/</loc></url>
+  <url><loc>https://docs.soroush.tech/design-system/components/tabs/accessibility/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/text-input/</loc></url>
+  <url><loc>https://docs.soroush.tech/design-system/components/text-input/accessibility/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/toggle-button/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/tooltip/</loc></url>
+  <url><loc>https://docs.soroush.tech/design-system/components/tooltip/accessibility/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/transfer-list/</loc></url>
+  <url><loc>https://docs.soroush.tech/design-system/components/transfer-list/accessibility/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/typography/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/view/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/components/zoom/</loc></url>
+  <url><loc>https://docs.soroush.tech/design-system/components/zoom/accessibility/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/customization/how-to/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/customization/theming/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/getting-started/installation/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/getting-started/usage/</loc></url>
+  <url><loc>https://docs.soroush.tech/design-system/releases/</loc></url>
   <url><loc>https://docs.soroush.tech/markdown/</loc></url>
   <url><loc>https://docs.soroush.tech/markdown/components/code-block/</loc></url>
   <url><loc>https://docs.soroush.tech/markdown/components/control/</loc></url>
@@ -166,6 +203,10 @@
   <url><loc>https://docs.soroush.tech/markdown/components/mermaid/</loc></url>
   <url><loc>https://docs.soroush.tech/markdown/components/preview/</loc></url>
   <url><loc>https://docs.soroush.tech/markdown/components/toolbar/</loc></url>
+  <url><loc>https://docs.soroush.tech/markdown/releases/</loc></url>
+  <url><loc>https://docs.soroush.tech/mcp/</loc></url>
+  <url><loc>https://docs.soroush.tech/mcp/releases/</loc></url>
+  <url><loc>https://docs.soroush.tech/packages/</loc></url>
   <url><loc>https://docs.soroush.tech/styled-system/</loc></url>
   <url><loc>https://docs.soroush.tech/styled-system/docs/api/</loc></url>
   <url><loc>https://docs.soroush.tech/styled-system/docs/breakpoints/</loc></url>
@@ -194,4 +235,7 @@
   <url><loc>https://docs.soroush.tech/styled-system/docs/theming/</loc></url>
   <url><loc>https://docs.soroush.tech/styled-system/docs/typescript/</loc></url>
   <url><loc>https://docs.soroush.tech/styled-system/docs/variants/</loc></url>
+  <url><loc>https://docs.soroush.tech/styled-system/releases/</loc></url>
+  <url><loc>https://docs.soroush.tech/ui-spec/</loc></url>
+  <url><loc>https://docs.soroush.tech/ui-spec/releases/</loc></url>
 </urlset>
