@@ -124,6 +124,8 @@ describe('RailGlyph', () => {
     'article',
     'book',
     'search',
+    'close',
+    'history',
     'light_mode',
     'dark_mode',
   ]

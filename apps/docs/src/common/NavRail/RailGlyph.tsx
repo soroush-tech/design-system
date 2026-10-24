@@ -1,6 +1,6 @@
 import type { RailIcon } from 'src/common/nav'
 
-export type GlyphName = RailIcon | 'search' | 'light_mode' | 'dark_mode'
+export type GlyphName = RailIcon | 'search' | 'close' | 'history' | 'light_mode' | 'dark_mode'
 
 // Each glyph is drawn on a 24 x 24 grid in the current text color - a stroke, so it follows the
 // rail's text and a color mode without another file to load.
@@ -12,6 +12,8 @@ const GLYPHS: Record<Exclude<GlyphName, 'dots'>, string> = {
   article: 'M5 4 H19 V20 H5 Z M8 9 H16 M8 13 H16 M8 17 H13',
   book: 'M6 3 H18 V21 L12 17 L6 21 Z M12 8 l.9 1.8 2 .3 -1.4 1.4 .3 2 -1.8 -.9 -1.8 .9 .3 -2 -1.4 -1.4 2 -.3 Z',
   search: 'M10.5 4 a6.5 6.5 0 1 0 0.01 0 Z M15.5 15.5 L20.5 20.5',
+  close: 'M6 6 L18 18 M18 6 L6 18',
+  history: 'M12 3 a9 9 0 1 1 -8.5 6 M3 4 V9 H8 M12 7.5 V12 L15 14',
   light_mode:
     'M12 8 a4 4 0 1 0 0.01 0 Z M12 2 V4 M12 20 V22 M2 12 H4 M20 12 H22 M4.9 4.9 L6.3 6.3 M17.7 17.7 L19.1 19.1 M4.9 19.1 L6.3 17.7 M17.7 6.3 L19.1 4.9',
   dark_mode: 'M20 14.5 A8.5 8.5 0 1 1 9.5 4 a7 7 0 0 0 10.5 10.5 Z',

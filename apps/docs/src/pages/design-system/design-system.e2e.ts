@@ -10,6 +10,35 @@ test.describe('design-system section', () => {
     ).toBeVisible()
   })
 
+  test('the search is a page of its own: important links first, matches once a word is typed', async ({
+    page,
+  }) => {
+    await page.goto('/design-system/')
+    await page
+      .getByRole('navigation', { name: 'Primary' })
+      .getByRole('button', { name: 'Search' })
+      .click()
+    const search = page.getByRole('dialog', { name: 'Search the documentation' })
+    await expect(search.getByRole('heading', { name: 'Most important links' })).toBeVisible()
+    await expect(search.getByRole('link', { name: /Installation/ })).toBeVisible()
+    await search.getByRole('searchbox').fill('autocomplete')
+    await search
+      .getByRole('link', { name: /^Autocomplete/ })
+      .first()
+      .click()
+    await expect(page).toHaveURL(/\/design-system\/components\/autocomplete\//)
+    // The search it led from is kept for next time.
+    await page
+      .getByRole('navigation', { name: 'Primary' })
+      .getByRole('button', { name: 'Search' })
+      .click()
+    await expect(
+      page.getByRole('dialog', { name: 'Search the documentation' }).getByRole('button', {
+        name: 'autocomplete',
+      })
+    ).toBeVisible()
+  })
+
   test('the rail shows the version of the docs under the search', async ({ page }) => {
     await page.goto('/design-system/')
     const rail = page.getByRole('navigation', { name: 'Primary' })

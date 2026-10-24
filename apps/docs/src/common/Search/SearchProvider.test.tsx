@@ -80,12 +80,64 @@ describe('SearchProvider', () => {
     expect(screen.getByText('Nothing matches "zzzzqq".')).toBeInTheDocument()
   })
 
-  it('says nothing before a word is typed', async () => {
+  it('offers the most important links before a word is typed', async () => {
     const user = userEvent.setup()
     renderSearch()
     await user.click(screen.getByRole('button', { name: 'open search' }))
     expect(screen.queryByText(/Nothing matches/)).not.toBeInTheDocument()
-    expect(screen.queryAllByRole('link')).toHaveLength(0)
+    expect(screen.getByRole('heading', { name: 'Most important links' })).toBeInTheDocument()
+    const links = screen.getAllByRole('link')
+    expect(links[0]).toHaveAttribute('href', '/design-system/getting-started/installation/')
+    expect(links.map((link) => link.getAttribute('href'))).toContain('/design-system/components/')
+  })
+
+  it('has no recent searches until one has been made', async () => {
+    const user = userEvent.setup()
+    renderSearch()
+    await user.click(screen.getByRole('button', { name: 'open search' }))
+    expect(screen.queryByRole('heading', { name: 'Recent searches' })).not.toBeInTheDocument()
+  })
+
+  it('remembers a search that led to a page, and offers it the next time', async () => {
+    const user = userEvent.setup()
+    renderSearch()
+    await user.click(screen.getByRole('button', { name: 'open search' }))
+    await user.type(input(), 'tabs')
+    const link = screen
+      .getAllByRole('link')
+      .find((item) => item.getAttribute('href') === '/design-system/components/tabs/')!
+    // The navigation itself is the browser's; the click is what is kept.
+    link.addEventListener('click', (event) => event.preventDefault())
+    await user.click(link)
+    expect(dialog()).not.toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'open search' }))
+    expect(input()).toHaveValue('')
+    expect(screen.getByRole('heading', { name: 'Recent searches' })).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'tabs' }))
+    expect(input()).toHaveValue('tabs')
+    expect(screen.queryByRole('heading', { name: 'Recent searches' })).not.toBeInTheDocument()
+  })
+
+  it('closes from its button, and opens on a blank field', async () => {
+    const user = userEvent.setup()
+    renderSearch()
+    await user.click(screen.getByRole('button', { name: 'open search' }))
+    await user.type(input(), 'button')
+    await user.click(screen.getByRole('button', { name: 'Close search' }))
+    expect(dialog()).not.toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'open search' }))
+    expect(input()).toHaveValue('')
+  })
+
+  it('closes on following an important link', async () => {
+    const user = userEvent.setup()
+    renderSearch()
+    await user.click(screen.getByRole('button', { name: 'open search' }))
+    const [first] = screen.getAllByRole('link')
+    first.addEventListener('click', (event) => event.preventDefault())
+    await user.click(first)
+    expect(dialog()).not.toBeInTheDocument()
   })
 
   it('walks the input and the results with the arrow keys', async () => {
