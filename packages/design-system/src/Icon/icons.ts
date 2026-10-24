@@ -1,11 +1,13 @@
 import AccountTreeIcon from './icons/AccountTree'
 import AddIcon from './icons/Add'
+import AddCircleIcon from './icons/AddCircle'
 import AdsClickIcon from './icons/AdsClick'
 import AnalyticsIcon from './icons/Analytics'
 import ArchitectureIcon from './icons/Architecture'
 import ArrowBackIcon from './icons/ArrowBack'
 import ArrowForwardIcon from './icons/ArrowForward'
 import ArrowUpwardIcon from './icons/ArrowUpward'
+import ArticleIcon from './icons/Article'
 import CheckIcon from './icons/Check'
 import CheckCircleIcon from './icons/CheckCircle'
 import ChevronLeftIcon from './icons/ChevronLeft'
@@ -16,6 +18,7 @@ import CloseIcon from './icons/Close'
 import CodeIcon from './icons/Code'
 import ContentCopyIcon from './icons/ContentCopy'
 import CookieIcon from './icons/Cookie'
+import DarkModeIcon from './icons/DarkMode'
 import DatabaseIcon from './icons/Database'
 import DesktopWindowsIcon from './icons/DesktopWindows'
 import DnsIcon from './icons/Dns'
@@ -33,21 +36,27 @@ import FullscreenIcon from './icons/Fullscreen'
 import GridViewIcon from './icons/GridView'
 import GroupsIcon from './icons/Groups'
 import HistoryIcon from './icons/History'
+import HomeIcon from './icons/Home'
 import HubIcon from './icons/Hub'
 import ImageIcon from './icons/Image'
 import InfoIcon from './icons/Info'
+import Inventory2Icon from './icons/Inventory2'
 import LanguageIcon from './icons/Language'
 import LastPageIcon from './icons/LastPage'
+import LightModeIcon from './icons/LightMode'
 import LinkIcon from './icons/Link'
 import LockIcon from './icons/Lock'
 import MenuIcon from './icons/Menu'
+import MenuBookIcon from './icons/MenuBook'
 import MoreHorizIcon from './icons/MoreHoriz'
 import NeurologyIcon from './icons/Neurology'
+import PaletteIcon from './icons/Palette'
 import PsychologyIcon from './icons/Psychology'
 import RebaseEditIcon from './icons/RebaseEdit'
 import RefreshIcon from './icons/Refresh'
 import RemoveIcon from './icons/Remove'
 import SchemaIcon from './icons/Schema'
+import SearchIcon from './icons/Search'
 import SecurityIcon from './icons/Security'
 import SettingsInputComponentIcon from './icons/SettingsInputComponent'
 import SmartToyIcon from './icons/SmartToy'
@@ -67,6 +76,7 @@ import ZoomOutIcon from './icons/ZoomOut'
 /** Registry of available icons, keyed by their asset file name. */
 export const icons = {
   account_tree: AccountTreeIcon,
+  add_circle: AddCircleIcon,
   add: AddIcon,
   ads_click: AdsClickIcon,
   analytics: AnalyticsIcon,
@@ -74,6 +84,7 @@ export const icons = {
   arrow_back: ArrowBackIcon,
   arrow_forward: ArrowForwardIcon,
   arrow_upward: ArrowUpwardIcon,
+  article: ArticleIcon,
   check: CheckIcon,
   check_circle: CheckCircleIcon,
   chevron_left: ChevronLeftIcon,
@@ -84,6 +95,7 @@ export const icons = {
   code: CodeIcon,
   content_copy: ContentCopyIcon,
   cookie: CookieIcon,
+  dark_mode: DarkModeIcon,
   database: DatabaseIcon,
   desktop_windows: DesktopWindowsIcon,
   dns: DnsIcon,
@@ -101,21 +113,27 @@ export const icons = {
   grid_view: GridViewIcon,
   groups: GroupsIcon,
   history: HistoryIcon,
+  home: HomeIcon,
   hub: HubIcon,
   image: ImageIcon,
   info: InfoIcon,
+  inventory_2: Inventory2Icon,
   language: LanguageIcon,
   last_page: LastPageIcon,
+  light_mode: LightModeIcon,
   link: LinkIcon,
   lock: LockIcon,
+  menu_book: MenuBookIcon,
   menu: MenuIcon,
   more_horiz: MoreHorizIcon,
   neurology: NeurologyIcon,
+  palette: PaletteIcon,
   psychology: PsychologyIcon,
   rebase_edit: RebaseEditIcon,
   refresh: RefreshIcon,
   remove: RemoveIcon,
   schema: SchemaIcon,
+  search: SearchIcon,
   security: SecurityIcon,
   settings_input_component: SettingsInputComponentIcon,
   smart_toy: SmartToyIcon,
