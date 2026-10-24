@@ -1,3 +1,4 @@
+import { styled, get } from '@soroush.tech/design-system'
 import { Flex } from '@soroush.tech/design-system/Flex'
 import type { IconName } from '@soroush.tech/design-system/Icon'
 import { Sidebar, SidebarItem } from '@soroush.tech/design-system/Sidebar'
@@ -20,6 +21,12 @@ const ICONS: Record<RailIcon, IconName> = {
   book: 'menu_book',
 }
 
+// The icons and names of the rail are the page's text color, as before; the pill alone is the
+// primary's - the rail's items would otherwise take its text.primary, and the current one its main.
+const Rail = styled(Sidebar)(({ theme }) => ({
+  "&& a, && [role='button']:not([aria-haspopup])": { color: get(theme, 'text.initial') },
+}))
+
 /** The navigation rail: search, the parts of the docs as icons with names, the color mode. */
 export function NavRail() {
   const { urlPathname } = usePageContext()
@@ -29,7 +36,7 @@ export function NavRail() {
   const { open } = useSearch()
   const { isDark, toggleTheme } = useThemeMode()
   return (
-    <Sidebar
+    <Rail
       aria-label="Primary"
       layout="stacked"
       position="sticky"
@@ -68,6 +75,6 @@ export function NavRail() {
         aria-pressed={undefined}
         onSelect={toggleTheme}
       />
-    </Sidebar>
+    </Rail>
   )
 }
