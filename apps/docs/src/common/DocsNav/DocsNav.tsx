@@ -1,8 +1,18 @@
-import { Flex } from '@soroush.tech/design-system/Flex'
+import { styled } from '@soroush.tech/design-system'
+import { Button } from '@soroush.tech/design-system/Button'
+import { Icon } from '@soroush.tech/design-system/Icon'
+import { Menu } from '@soroush.tech/design-system/Menu'
+import { MenuItem } from '@soroush.tech/design-system/MenuItem'
 import { NavGroup, NavLink, NavTree } from '@soroush.tech/design-system/NavTree'
 import { View } from '@soroush.tech/design-system/View'
 import { railItemFor, sectionFor, type NavGroup as DocsNavGroup } from 'src/common/nav'
 import { usePageContext } from 'src/hooks/usePageContext'
+
+// The menu puts its trigger in an inline box; the picker fills the panel.
+const Picker = styled('div')(({ theme }) => ({
+  marginBottom: theme.space[2],
+  '& > div': { display: 'flex', width: '100%' },
+}))
 
 const normalize = (path: string): string => (path.endsWith('/') ? path : `${path}/`)
 
@@ -42,13 +52,29 @@ export function DocsNav() {
   const active = railItemFor(section, current)
   return (
     <View as="nav" aria-label={section.label}>
-      <Flex flexDirection="row" flexWrap="wrap" gap={1} mb={2}>
-        {PACKAGES.map(({ pkg, label, href }) => (
-          <NavLink key={pkg} href={href} isCurrent={pkg === section.pkg}>
-            {label}
-          </NavLink>
-        ))}
-      </Flex>
+      <Picker>
+        <Menu
+          aria-label="Package"
+          onSelect={(href) => window.location.assign(String(href))}
+          trigger={
+            <Button
+              variant="outlined"
+              shape="pill"
+              fullWidth
+              endIcon={<Icon name="expand_more" />}
+              style={{ textTransform: 'none', justifyContent: 'space-between' }}
+            >
+              {PACKAGES.find(({ pkg }) => pkg === section.pkg)?.label}
+            </Button>
+          }
+        >
+          {PACKAGES.map(({ pkg, label, href }) => (
+            <MenuItem key={pkg} value={href} role="menuitemradio" selected={pkg === section.pkg}>
+              {label}
+            </MenuItem>
+          ))}
+        </Menu>
+      </Picker>
       <NavTree>
         {active.groups.map((group) => (
           <DocsGroup key={group.label} group={group} current={current} />

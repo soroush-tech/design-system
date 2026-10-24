@@ -40,12 +40,14 @@ test.describe('styled-system section', () => {
 })
 
 test.describe('cross-section chrome', () => {
-  test('the sidebar links every section', async ({ page }) => {
+  test('the sidebar picks the package, and opens the one that is chosen', async ({ page }) => {
     await page.goto('/design-system/')
     const nav = page.getByRole('navigation', { name: 'Design system documentation' })
-    await expect(nav.getByRole('link', { name: 'Design System' })).toBeVisible()
-    await expect(nav.getByRole('link', { name: 'Markdown' })).toBeVisible()
-    await expect(nav.getByRole('link', { name: 'Styled System' })).toBeVisible()
+    await nav.getByRole('button', { name: 'Design System' }).click()
+    await expect(page.getByRole('menuitemradio', { name: 'Design System' })).toBeVisible()
+    await expect(page.getByRole('menuitemradio', { name: 'Styled System' })).toBeVisible()
+    await page.getByRole('menuitemradio', { name: 'Markdown' }).click()
+    await expect(page).toHaveURL(/\/markdown\/$/)
   })
 
   test('the sitemap lists live pages only', async ({ page }) => {

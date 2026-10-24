@@ -1,5 +1,6 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import type { ReactNode } from 'react'
 import type { PageContext as VikePageContext } from 'vike/types'
 import { ThemeProvider } from '@soroush.tech/design-system/theme'
@@ -96,14 +97,29 @@ describe('DocsNav', () => {
     )
   })
 
-  it('links the three packages, marking the current one', () => {
+  it('picks the package from a menu that names the current one', async () => {
+    const user = userEvent.setup()
     renderNav('/design-system/components/')
-    expect(screen.getByRole('link', { name: 'Design System' })).toHaveAttribute(
-      'aria-current',
-      'page'
-    )
-    expect(screen.getByRole('link', { name: 'Markdown' })).toHaveAttribute('href', '/markdown/')
-    expect(screen.getByRole('link', { name: 'Styled System' })).not.toHaveAttribute('aria-current')
+    await user.click(screen.getByRole('button', { name: 'Design System' }))
+    const items = screen.getAllByRole('menuitemradio')
+    expect(items.map((item) => item.textContent)).toEqual([
+      'Design System',
+      'Markdown',
+      'Styled System',
+    ])
+    expect(items[0]).toHaveAttribute('aria-checked', 'true')
+    expect(items[1]).toHaveAttribute('aria-checked', 'false')
+  })
+
+  it('opens the package that is chosen', async () => {
+    const user = userEvent.setup()
+    const assign = vi.fn()
+    vi.stubGlobal('location', { ...window.location, assign })
+    renderNav('/markdown/components/preview/')
+    await user.click(screen.getByRole('button', { name: 'Markdown' }))
+    await user.click(screen.getByRole('menuitemradio', { name: 'Styled System' }))
+    expect(assign).toHaveBeenCalledWith('/styled-system/')
+    vi.unstubAllGlobals()
   })
 
   it('marks a component page of a family as current under its category', () => {

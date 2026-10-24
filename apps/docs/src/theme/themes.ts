@@ -34,8 +34,12 @@ const darkShadows = Array.from({ length: 25 }, (_, elevation) =>
   generateBoxShadow(elevation, blackAlpha[400])
 )
 
+// The docs' buttons are pills, as the rest of the rounded look.
+const components = { Button: { defaultProps: { shape: 'pill' as const } } }
+
 export const light: Theme = createTheme(baseTheme, {
   name: 'light',
+  components,
   colorScheme: 'light',
   logoFilter: 'brightness(0)',
   portraitBlend: 'multiply',
@@ -138,6 +142,7 @@ export const light: Theme = createTheme(baseTheme, {
 
 export const dark: Theme = createTheme(baseTheme, {
   name: 'dark',
+  components,
   colorScheme: 'dark',
   logoFilter: 'brightness(0) invert(1)',
   portraitBlend: 'screen',
