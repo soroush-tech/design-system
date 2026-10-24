@@ -177,7 +177,7 @@ jobs:
       # After the install, which touches nothing on this path.
       - name: Restore cache - Playwright binaries
         if: matrix.browsers
-        uses: actions/cache/restore@v5
+        uses: actions/cache/restore@v6
         id: playwright-cache
         with:
           path: ${{ github.workspace }}/ms-playwright
@@ -195,7 +195,7 @@ jobs:
 
       - name: Save cache - Playwright binaries
         if: always() && matrix.browsers && steps.playwright-cache.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v5
+        uses: actions/cache/save@v6
         with:
           path: ${{ github.workspace }}/ms-playwright
           key: ${{ runner.os }}-playwright-${{ needs.prepare.outputs.playwright_version }}
@@ -255,7 +255,7 @@ jobs:
       # Same pinned browser location and key as the packages matrix, so the docs e2e
       # run shares the Playwright cache with the browser-tier package rows.
       - name: Restore cache - Playwright binaries
-        uses: actions/cache/restore@v5
+        uses: actions/cache/restore@v6
         id: playwright-cache
         with:
           path: ${{ github.workspace }}/ms-playwright
@@ -271,7 +271,7 @@ jobs:
 
       - name: Save cache - Playwright binaries
         if: always() && steps.playwright-cache.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v5
+        uses: actions/cache/save@v6
         with:
           path: ${{ github.workspace }}/ms-playwright
           key: ${{ runner.os }}-playwright-${{ needs.prepare.outputs.playwright_version }}
@@ -335,7 +335,7 @@ jobs:
       - name: Mint bot token
         id: bot-token
         if: vars.BENCH_BOT_APP_ID != ''
-        uses: actions/create-github-app-token@v2
+        uses: actions/create-github-app-token@v3
         with:
           app-id: ${{ vars.BENCH_BOT_APP_ID }}
           private-key: ${{ secrets.BENCH_BOT_PRIVATE_KEY }}
