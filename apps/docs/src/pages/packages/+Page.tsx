@@ -33,11 +33,9 @@ export default function Page() {
               {entry.description}
             </Typography>
             <Flex flexDirection="row" flexWrap="wrap" gap={2}>
-              {entry.docs && (
-                <Link href={sectionPath(entry.docs, '/')} color="primary">
-                  Docs
-                </Link>
-              )}
+              <Link href={sectionPath(entry.docs, '/')} color="primary">
+                Docs
+              </Link>
               <Link href={entry.npm} color="primary" target="_blank" rel="noopener noreferrer">
                 npm
               </Link>

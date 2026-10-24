@@ -3,7 +3,7 @@ import { allComponents } from 'src/common/nav'
 import { PACKAGES, sourceUrlOf } from './packages'
 
 describe('PACKAGES', () => {
-  it('lists the three documented packages first, then the two that are not', () => {
+  it('lists every package, each with a docs section of its own', () => {
     expect(PACKAGES.map((entry) => entry.id)).toEqual([
       'design-system',
       'markdown',
@@ -11,11 +11,7 @@ describe('PACKAGES', () => {
       'mcp',
       'ui-spec',
     ])
-    expect(PACKAGES.filter((entry) => entry.docs).map((entry) => entry.docs)).toEqual([
-      'design-system',
-      'markdown',
-      'styled-system',
-    ])
+    expect(PACKAGES.map((entry) => entry.docs)).toEqual(PACKAGES.map((entry) => entry.id))
   })
 
   it('gives each package its version, npm page and source folder', () => {

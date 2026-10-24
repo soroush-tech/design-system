@@ -1,4 +1,4 @@
-import type { DocsPackage } from 'src/common/nav'
+import type { DocsSection } from 'src/common/nav'
 
 // These helpers run at Vike config time (in +route.ts / +config.ts), which executes in
 // plain Node - process.env, not import.meta.env. Production builds evaluate them once
@@ -18,7 +18,7 @@ export const docsSection = (): string | undefined => readNodeEnv('DOCS_SECTION')
  * prefix (`/design-system/components/@name`); in that section's versioned snapshot
  * build the prefix drops - the vite base (`/<pkg>/<version>/`) carries it instead.
  */
-export const sectionRoute = (pkg: DocsPackage, route: string): string => {
+export const sectionRoute = (pkg: DocsSection, route: string): string => {
   if (docsSection() === pkg) return route
   // The section overview is `/<pkg>`, not `/<pkg>/` - Vike matches routes exactly.
   const suffix = route === '/' ? '' : route
@@ -29,7 +29,7 @@ export const sectionRoute = (pkg: DocsPackage, route: string): string => {
  * Whether a section's pages prerender in the current build: always on the live site,
  * and only the snapshot's own section when DOCS_SECTION is set.
  */
-export const sectionPrerender = (pkg: DocsPackage): boolean => {
+export const sectionPrerender = (pkg: DocsSection): boolean => {
   const section = docsSection()
   return !section || section === pkg
 }

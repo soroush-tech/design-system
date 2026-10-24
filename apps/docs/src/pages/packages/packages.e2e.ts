@@ -20,9 +20,7 @@ test.describe('packages', () => {
     )
   })
 
-  test('the sidebar lists the packages, the documented ones in the docs and the others outside', async ({
-    page,
-  }) => {
+  test('the sidebar lists the packages, each opening its docs', async ({ page }) => {
     await page.goto('/packages/')
     const nav = page.getByRole('navigation', { name: 'Design system documentation' })
     await expect(nav.getByRole('link', { name: 'All packages' })).toHaveAttribute(
@@ -33,9 +31,8 @@ test.describe('packages', () => {
       'href',
       '/markdown/'
     )
-    const mcp = nav.getByRole('link', { name: /MCP server/ })
-    await expect(mcp).toHaveAttribute('target', '_blank')
-    await expect(mcp).toHaveAttribute('href', /github\.com\/soroush-tech\/design-system/)
+    await expect(nav.getByRole('link', { name: /MCP server/ })).toHaveAttribute('href', '/mcp/')
+    await expect(nav.getByRole('link', { name: /UI spec/ })).toHaveAttribute('href', '/ui-spec/')
   })
 
   test("a component's head links its source on GitHub", async ({ page }) => {

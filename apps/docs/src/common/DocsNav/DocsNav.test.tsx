@@ -75,26 +75,22 @@ describe('DocsNav', () => {
     )
   })
 
-  it('lists the packages on the packages page, with their versions and the others outside the docs', () => {
+  it('lists the packages on the packages page, each with its version', () => {
     renderNav('/packages/')
     expect(screen.getByRole('link', { name: 'All packages' })).toHaveAttribute(
       'aria-current',
       'page'
     )
-    // The package chips above the tree name it too; the row of the list has its version.
-    const markdown = screen
-      .getAllByRole('link', { name: /^Markdown/ })
-      .find((link) => /v\d/.test(link.textContent ?? ''))!
-    expect(markdown).toHaveAttribute('href', '/markdown/')
-    expect(markdown).toHaveTextContent(/v\d+\.\d+\.\d+/)
-    expect(markdown).not.toHaveAttribute('target')
-    const mcp = screen.getByRole('link', { name: /MCP server/ })
-    expect(mcp).toHaveAttribute('target', '_blank')
-    expect(mcp).toHaveAttribute('rel', 'noopener noreferrer')
-    expect(mcp).toHaveAttribute(
-      'href',
-      expect.stringContaining('github.com/soroush-tech/design-system')
-    )
+    for (const [name, href] of [
+      ['Markdown', '/markdown/'],
+      ['MCP server', '/mcp/'],
+      ['UI spec', '/ui-spec/'],
+    ]) {
+      const link = screen.getByRole('link', { name: new RegExp(`^${name}\\s*v\\d`) })
+      expect(link).toHaveAttribute('href', href)
+      expect(link).toHaveTextContent(/v\d+\.\d+\.\d+/)
+      expect(link).not.toHaveAttribute('target')
+    }
   })
 
   it('picks the package from a select that shows the current one', async () => {
@@ -108,6 +104,8 @@ describe('DocsNav', () => {
       'Design System',
       'Markdown',
       'Styled System',
+      'MCP server',
+      'UI spec',
     ])
     expect(options[0]).toHaveAttribute('aria-selected', 'true')
     expect(options[1]).toHaveAttribute('aria-selected', 'false')

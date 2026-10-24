@@ -3,15 +3,17 @@ import { NavGroup, NavLink, NavTree } from '@soroush.tech/design-system/NavTree'
 import { Select } from '@soroush.tech/design-system/Select'
 import { View } from '@soroush.tech/design-system/View'
 import { railItemFor, sectionFor, type NavGroup as DocsNavGroup } from 'src/common/nav'
+import { PACKAGES as PACKAGE_LIST } from 'src/common/packages'
 import { usePageContext } from 'src/hooks/usePageContext'
 
 const normalize = (path: string): string => (path.endsWith('/') ? path : `${path}/`)
 
-const PACKAGES = [
-  { pkg: 'design-system', label: 'Design System', href: '/design-system/' },
-  { pkg: 'markdown', label: 'Markdown', href: '/markdown/' },
-  { pkg: 'styled-system', label: 'Styled System', href: '/styled-system/' },
-] as const
+// The packages, in the order they are listed - each opens its docs.
+const PACKAGES = PACKAGE_LIST.map((entry) => ({
+  pkg: entry.docs,
+  label: entry.name,
+  href: `/${entry.docs}/`,
+}))
 
 function DocsGroup({ group, current }: Readonly<{ group: DocsNavGroup; current: string }>) {
   return (

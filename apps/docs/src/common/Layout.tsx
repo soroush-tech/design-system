@@ -7,7 +7,7 @@ import { NavRail } from 'src/common/NavRail/NavRail'
 import { Footer } from 'src/common/Footer/Footer'
 import { OnThisPage } from 'src/common/OnThisPage/OnThisPage'
 import { VersionMenu } from 'src/common/VersionMenu/VersionMenu'
-import { sectionFor } from 'src/common/nav'
+import { isVersioned, sectionFor } from 'src/common/nav'
 import { usePageContext } from 'src/hooks/usePageContext'
 import { Navbar } from 'src/common/Navbar/Navbar'
 import { useSearch } from 'src/common/Search/SearchContext'
@@ -31,6 +31,7 @@ function LayoutFrame({ children, sidebar, hasToc, head }: Readonly<LayoutProps>)
   const { open } = useSearch()
   const { urlPathname } = usePageContext()
   const current = urlPathname || '/'
+  const { pkg } = sectionFor(current)
   return (
     <Flex flexDirection="row" minHeight="100dvh" width="100%">
       {/* The rail is for wide screens; narrow ones get the top bar and its drawer. */}
@@ -42,7 +43,9 @@ function LayoutFrame({ children, sidebar, hasToc, head }: Readonly<LayoutProps>)
           <Navbar
             menuDrawer={sidebar ? NAV_DRAWER : undefined}
             onSearch={open}
-            versionMenu={<VersionMenu pkg={sectionFor(current).pkg} pathname={current} />}
+            versionMenu={
+              isVersioned(pkg) ? <VersionMenu pkg={pkg} pathname={current} /> : undefined
+            }
           />
         </View>
         {sidebar && (

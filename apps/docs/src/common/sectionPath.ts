@@ -1,4 +1,4 @@
-import type { DocsPackage } from 'src/common/nav'
+import type { DocsSection } from 'src/common/nav'
 
 /**
  * Builds a link into a docs section. On the live site that is `/<pkg><path>`. Inside a
@@ -7,7 +7,7 @@ import type { DocsPackage } from 'src/common/nav'
  * *other* sections stay root-relative and so escape the snapshot to the live site,
  * which is the promise a frozen snapshot makes.
  */
-export const sectionPath = (pkg: DocsPackage, path: string): string =>
+export const sectionPath = (pkg: DocsSection, path: string): string =>
   import.meta.env.PUBLIC_ENV__DOCS_SECTION === pkg
     ? `${import.meta.env.BASE_URL}${path.replace(/^\//, '')}`
     : `/${pkg}${path}`

@@ -44,6 +44,23 @@ test.describe('styled-system section', () => {
   })
 })
 
+test.describe('mcp and ui-spec sections', () => {
+  for (const [path, name] of [
+    ['mcp', 'MCP server'],
+    ['ui-spec', 'UI spec'],
+  ]) {
+    test(`${name} has an overview and its releases`, async ({ page }) => {
+      await page.goto(`/${path}/`)
+      await expect(page.getByRole('heading', { level: 1, name })).toBeVisible()
+      const nav = page.getByRole('navigation', { name: `${name} documentation` })
+      await nav.getByRole('link', { name: 'Releases' }).click()
+      await expect(page).toHaveURL(new RegExp(`/${path}/releases/$`))
+      await expect(page.getByRole('heading', { level: 1, name: 'Releases' })).toBeVisible()
+      await expect(page.getByRole('heading', { name: /^v\d+\.\d+\.\d+$/ }).first()).toBeVisible()
+    })
+  }
+})
+
 test.describe('cross-section chrome', () => {
   test('the sidebar picks the package, and opens the one that is chosen', async ({ page }) => {
     await page.goto('/design-system/')

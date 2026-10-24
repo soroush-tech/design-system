@@ -21,20 +21,14 @@ describe('Footer', () => {
     expect(footer.querySelector('img')).toHaveAttribute('alt', '')
   })
 
-  it('links the docs of every package that has them, and the source of the others', () => {
+  it('links the docs of every package', () => {
     renderFooter()
     const docs = within(screen.getByRole('navigation', { name: 'Documentation' }))
     expect(docs.getByRole('link', { name: 'All packages' })).toHaveAttribute('href', '/packages/')
     for (const entry of PACKAGES) {
       const link = docs.getByRole('link', { name: entry.name })
-      if (entry.docs) {
-        expect(link).toHaveAttribute('href', `/${entry.docs}/`)
-        expect(link).not.toHaveAttribute('target')
-      } else {
-        expect(link).toHaveAttribute('href', entry.github)
-        expect(link).toHaveAttribute('target', '_blank')
-        expect(link).toHaveAttribute('rel', 'noopener noreferrer')
-      }
+      expect(link).toHaveAttribute('href', `/${entry.docs}/`)
+      expect(link).not.toHaveAttribute('target')
     }
   })
 

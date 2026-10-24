@@ -16,6 +16,8 @@ const IMPORTANT: Record<SectionNav['pkg'], string[]> = {
     'Menu',
   ],
   markdown: ['Overview', 'Preview', 'Editor', 'LiveEdit', 'CodeBlock'],
+  mcp: ['Overview', 'Releases'],
+  'ui-spec': ['Overview', 'Releases'],
   'styled-system': [
     'Overview',
     'Getting started',

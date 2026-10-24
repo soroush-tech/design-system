@@ -1,6 +1,7 @@
 import mcpPkg from 'packages/mcp/package.json'
 import uiSpecPkg from 'packages/ui-spec/package.json'
-import type { ComponentNavItem, DocsPackage } from '@soroush.tech/docs-content'
+import type { ComponentNavItem } from '@soroush.tech/docs-content'
+import type { DocsSection } from 'src/common/nav'
 import { PACKAGE_VERSIONS } from 'src/common/packageVersions'
 
 /** Where the packages live: the repository's main branch. */
@@ -14,8 +15,8 @@ export interface PackageInfo {
   version: string
   npm: string
   github: string
-  /** The docs section of the package, when it has one. */
-  docs?: DocsPackage
+  /** The docs section of the package. */
+  docs: DocsSection
 }
 
 const npmOf = (id: string) => `https://www.npmjs.com/package/@soroush.tech/${id}`
@@ -61,6 +62,7 @@ export const PACKAGES: PackageInfo[] = [
     version: mcpPkg.version,
     npm: npmOf('mcp'),
     github: githubOf('mcp'),
+    docs: 'mcp',
   },
   {
     id: 'ui-spec',
@@ -70,6 +72,7 @@ export const PACKAGES: PackageInfo[] = [
     version: uiSpecPkg.version,
     npm: npmOf('ui-spec'),
     github: githubOf('ui-spec'),
+    docs: 'ui-spec',
   },
 ]
 

@@ -18,6 +18,16 @@ import { sectionPath } from 'src/common/sectionPath'
 // app-specific: turning the registry into the rail, the sidebar groups and the hrefs.
 export * from '@soroush.tech/docs-content'
 
+/**
+ * A part of the site that documents a package: the three with versioned snapshots, and the two
+ * that live on the live site only.
+ */
+export type DocsSection = DocsPackage | 'mcp' | 'ui-spec'
+
+/** Whether a section has released snapshots to choose from. */
+export const isVersioned = (pkg: DocsSection): pkg is DocsPackage =>
+  pkg !== 'mcp' && pkg !== 'ui-spec'
+
 export interface NavItem {
   label: string
   href: string
@@ -51,7 +61,7 @@ export interface RailItem {
 
 export interface SectionNav {
   /** The package this section documents. */
-  pkg: DocsPackage
+  pkg: DocsSection
   /** Accessible label of the section's nav landmark. */
   label: string
   /** The rail: home first, then the parts of the section. */
@@ -73,8 +83,8 @@ const HOME: RailItem = {
 }
 
 /**
- * The packages, listed in the sidebar: the ones with docs open their section, the others their
- * source. The same part is in the rail of every section.
+ * The packages, listed in the sidebar: each opens its docs. The same part is in the rail of every
+ * section.
  */
 const PACKAGES_ITEM: RailItem = {
   id: 'packages',
@@ -87,21 +97,12 @@ const PACKAGES_ITEM: RailItem = {
       label: 'Packages',
       items: [
         { label: 'All packages', href: '/packages/' },
-        ...PACKAGES.filter((entry) => entry.docs).map((entry) => ({
+        ...PACKAGES.map((entry) => ({
           label: entry.name,
-          href: sectionPath(entry.docs!, '/'),
+          href: sectionPath(entry.docs, '/'),
           note: `v${entry.version}`,
         })),
       ],
-    },
-    {
-      label: 'More packages',
-      items: PACKAGES.filter((entry) => !entry.docs).map((entry) => ({
-        label: entry.name,
-        href: entry.github,
-        note: `v${entry.version}`,
-        isExternal: true,
-      })),
     },
   ],
 }
@@ -265,11 +266,35 @@ const styledSystemRail: RailItem[] = [
   PACKAGES_ITEM,
 ]
 
+// A package with an overview and its releases, and nothing else yet.
+const overviewRail = (pkg: 'mcp' | 'ui-spec'): RailItem[] => [
+  HOME,
+  {
+    id: 'get-started',
+    label: 'Get started',
+    icon: 'dots',
+    href: sectionPath(pkg, '/'),
+    matches: [sectionPath(pkg, '/releases/')],
+    groups: [
+      {
+        label: 'Get started',
+        items: [
+          { label: 'Overview', href: sectionPath(pkg, '/') },
+          { label: 'Releases', href: sectionPath(pkg, '/releases/') },
+        ],
+      },
+    ],
+  },
+  PACKAGES_ITEM,
+]
+
 const SECTIONS: SectionNav[] = (
   [
     { pkg: 'design-system', label: 'Design system documentation', rail: designSystemRail },
     { pkg: 'markdown', label: 'Markdown documentation', rail: markdownRail },
     { pkg: 'styled-system', label: 'Styled-system documentation', rail: styledSystemRail },
+    { pkg: 'mcp', label: 'MCP server documentation', rail: overviewRail('mcp') },
+    { pkg: 'ui-spec', label: 'UI spec documentation', rail: overviewRail('ui-spec') },
   ] satisfies Omit<SectionNav, 'groups'>[]
 ).map((section) => ({
   ...section,

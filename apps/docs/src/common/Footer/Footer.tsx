@@ -70,11 +70,10 @@ function FooterLinks({
 
 /** Where the docs of every package are, the places the work lives, and who is behind it - as M3's, under the content. */
 export function Footer() {
-  // A package with docs of its own opens them; the others open their source.
   const docs = [
     { href: '/packages/', label: 'All packages' },
     ...PACKAGES.map((entry) => ({
-      href: entry.docs ? sectionPath(entry.docs, '/') : entry.github,
+      href: sectionPath(entry.docs, '/'),
       label: entry.name,
     })),
   ]

@@ -3,6 +3,7 @@ import {
   allDocComponents,
   componentCategories,
   designSystemNav,
+  isVersioned,
   railItemFor,
   searchEntriesFor,
   sectionFor,
@@ -37,7 +38,7 @@ describe('section navigation', () => {
   })
 
   it('opens each section with home, then the get started item', () => {
-    for (const pkg of ['design-system', 'markdown', 'styled-system']) {
+    for (const pkg of ['design-system', 'markdown', 'styled-system', 'mcp', 'ui-spec']) {
       const rail = sectionFor(`/${pkg}/`).rail
       expect(rail[0].id).toBe('home')
       expect(rail[0].groups).toEqual([])
@@ -69,7 +70,7 @@ describe('the packages in the rail', () => {
     for (const pkg of ['design-system', 'markdown', 'styled-system']) {
       const item = sectionFor(`/${pkg}/`).rail.find((entry) => entry.id === 'packages')
       expect(item?.href).toBe('/packages/')
-      expect(item?.groups.map((group) => group.label)).toEqual(['Packages', 'More packages'])
+      expect(item?.groups.map((group) => group.label)).toEqual(['Packages'])
     }
   })
 
@@ -81,20 +82,29 @@ describe('the packages in the rail', () => {
       ['Design System', '/design-system/'],
       ['Markdown', '/markdown/'],
       ['Styled System', '/styled-system/'],
+      ['MCP server', '/mcp/'],
+      ['UI spec', '/ui-spec/'],
     ])
     for (const entry of docs) expect(entry.note).toMatch(/^v\d+\.\d+\.\d+$/)
   })
 
-  it('lists the packages without docs by their source, outside the docs', () => {
-    const item = sectionFor('/design-system/').rail.find((entry) => entry.id === 'packages')!
-    const more = item.groups[1].items
-    expect(more.map((entry) => entry.label)).toEqual(['MCP server', 'UI spec'])
-    for (const entry of more) {
-      expect(entry.isExternal).toBe(true)
-      expect(entry.href).toMatch(
-        /^https:\/\/github\.com\/soroush-tech\/design-system\/tree\/main\/packages\//
-      )
+  it('has a section of its own for the packages that are not versioned', () => {
+    for (const [pkg, label] of [
+      ['mcp', 'MCP server documentation'],
+      ['ui-spec', 'UI spec documentation'],
+    ]) {
+      const section = sectionFor(`/${pkg}/`)
+      expect(section.pkg).toBe(pkg)
+      expect(section.label).toBe(label)
+      expect(section.rail.map((item) => item.id)).toEqual(['home', 'get-started', 'packages'])
+      expect(section.rail[1].groups[0].items.map((item) => item.href)).toEqual([
+        `/${pkg}/`,
+        `/${pkg}/releases/`,
+      ])
+      expect(railItemFor(section, `/${pkg}/releases/`).id).toBe('get-started')
+      expect(isVersioned(section.pkg)).toBe(false)
     }
+    expect(isVersioned('markdown')).toBe(true)
   })
 
   it('is the part the packages page belongs to', () => {

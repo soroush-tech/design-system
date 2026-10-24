@@ -35,6 +35,13 @@ describe('Layout', () => {
       expect(aside).not.toContainElement(footer)
   })
 
+  it('has no version menu in the top bar where a package has no released versions', () => {
+    renderLayout(undefined, '/mcp/')
+    expect(
+      screen.queryByRole('button', { name: /Documentation version/, hidden: true })
+    ).not.toBeInTheDocument()
+  })
+
   it('puts the version menu in the top bar, and reads an empty path as the root', () => {
     renderLayout(undefined, '')
     const bar = screen.getByRole('banner')
