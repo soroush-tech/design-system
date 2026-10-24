@@ -34,9 +34,14 @@ export const splitAccessibility = (source: string): SplitAccessibility => {
   // The level of the accessibility section being read, or 0 outside one.
   let level = 0
   for (const line of source.split('\n')) {
-    if (FENCE.test(line)) isFenced = !isFenced
-    if (!isFenced) level = levelAfter(level, line)
-    ;(level > 0 ? accessibility : rest).push(line)
+    if (FENCE.test(line)) {
+      isFenced = !isFenced
+    }
+    if (!isFenced) {
+      level = levelAfter(level, line)
+    }
+    const target = level > 0 ? accessibility : rest
+    target.push(line)
   }
   return {
     rest: rest
