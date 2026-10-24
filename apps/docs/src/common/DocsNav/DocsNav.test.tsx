@@ -97,18 +97,20 @@ describe('DocsNav', () => {
     )
   })
 
-  it('picks the package from a menu that names the current one', async () => {
+  it('picks the package from a select that shows the current one', async () => {
     const user = userEvent.setup()
     renderNav('/design-system/components/')
-    await user.click(screen.getByRole('button', { name: 'Design System' }))
-    const items = screen.getAllByRole('menuitemradio')
-    expect(items.map((item) => item.textContent)).toEqual([
+    const select = screen.getByRole('combobox', { name: 'Package' })
+    expect(select).toHaveTextContent('Design System')
+    await user.click(select)
+    const options = screen.getAllByRole('option')
+    expect(options.map((option) => option.textContent)).toEqual([
       'Design System',
       'Markdown',
       'Styled System',
     ])
-    expect(items[0]).toHaveAttribute('aria-checked', 'true')
-    expect(items[1]).toHaveAttribute('aria-checked', 'false')
+    expect(options[0]).toHaveAttribute('aria-selected', 'true')
+    expect(options[1]).toHaveAttribute('aria-selected', 'false')
   })
 
   it('opens the package that is chosen', async () => {
@@ -116,8 +118,8 @@ describe('DocsNav', () => {
     const assign = vi.fn()
     vi.stubGlobal('location', { ...window.location, assign })
     renderNav('/markdown/components/preview/')
-    await user.click(screen.getByRole('button', { name: 'Markdown' }))
-    await user.click(screen.getByRole('menuitemradio', { name: 'Styled System' }))
+    await user.click(screen.getByRole('combobox', { name: 'Package' }))
+    await user.click(screen.getByRole('option', { name: 'Styled System' }))
     expect(assign).toHaveBeenCalledWith('/styled-system/')
     vi.unstubAllGlobals()
   })

@@ -43,10 +43,10 @@ test.describe('cross-section chrome', () => {
   test('the sidebar picks the package, and opens the one that is chosen', async ({ page }) => {
     await page.goto('/design-system/')
     const nav = page.getByRole('navigation', { name: 'Design system documentation' })
-    await nav.getByRole('button', { name: 'Design System' }).click()
-    await expect(page.getByRole('menuitemradio', { name: 'Design System' })).toBeVisible()
-    await expect(page.getByRole('menuitemradio', { name: 'Styled System' })).toBeVisible()
-    await page.getByRole('menuitemradio', { name: 'Markdown' }).click()
+    await nav.getByRole('combobox', { name: 'Package' }).click()
+    await expect(page.getByRole('option', { name: 'Design System' })).toBeVisible()
+    await expect(page.getByRole('option', { name: 'Styled System' })).toBeVisible()
+    await page.getByRole('option', { name: 'Markdown' }).click()
     await expect(page).toHaveURL(/\/markdown\/$/)
   })
 
