@@ -14,6 +14,9 @@ import { autocompleteCatalog } from '../Autocomplete/Autocomplete.catalog'
 import { scrollAreaCatalog } from '../ScrollArea/ScrollArea.catalog'
 import { fabMenuCatalog } from '../FabMenu/FabMenu/FabMenu.catalog'
 import { fabMenuItemCatalog } from '../FabMenu/FabMenuItem/FabMenuItem.catalog'
+import { navTreeCatalog } from '../NavTree/NavTree/NavTree.catalog'
+import { navGroupCatalog } from '../NavTree/NavGroup/NavGroup.catalog'
+import { navLinkCatalog } from '../NavTree/NavLink/NavLink.catalog'
 import { appBarCatalog } from '../AppBar/AppBar.catalog'
 import { avatarCatalog } from '../Avatar/Avatar.catalog'
 import { backdropCatalog } from '../Backdrop/Backdrop.catalog'
@@ -117,6 +120,9 @@ export const catalogSources: Record<string, CatalogSource> = {
   ScrollArea: { entry: scrollAreaCatalog, folder: 'ScrollArea' },
   FabMenu: { entry: fabMenuCatalog, folder: 'FabMenu' },
   FabMenuItem: { entry: fabMenuItemCatalog, folder: 'FabMenu', family: 'FabMenu' },
+  NavTree: { entry: navTreeCatalog, folder: 'NavTree' },
+  NavGroup: { entry: navGroupCatalog, folder: 'NavTree', family: 'NavTree' },
+  NavLink: { entry: navLinkCatalog, folder: 'NavTree', family: 'NavTree' },
   AppBar: { entry: appBarCatalog, folder: 'AppBar' },
   Avatar: { entry: avatarCatalog, folder: 'Avatar' },
   Backdrop: { entry: backdropCatalog, folder: 'Backdrop' },

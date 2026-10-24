@@ -32,6 +32,21 @@
       "matchPackageNames": ["jsdom"],
       "allowedVersions": "<30.0.0",
       "description": "Hold jsdom at 29.x: jsdom 30 absolutizes relative lengths in getComputedStyle (2rem resolves to 32px, -0.025em to -0.4px), so every design-system toHaveStyle assertion written in rem/em fails. Revisit once those assertions stop comparing against computed style."
+    },
+    {
+      "matchPackageNames": ["tsdown"],
+      "allowedVersions": "<0.23.0",
+      "description": "Hold tsdown at 0.22.x: 0.23 cannot emit declarations with TypeScript 7 (\"does not provide the classic TypeScript API required by tsc\") and every package build fails. Revisit once tsdown supports TypeScript 7, or the packages enable isolatedDeclarations."
+    },
+    {
+      "matchPackageNames": ["vike"],
+      "allowedVersions": "<=0.4.262",
+      "description": "Hold vike at 0.4.262: from 0.4.268 apps/docs/vite/sitemapPlugin finds no prerendered pages in its closeBundle hook, so build/client/sitemap.xml is no longer written. Revisit by emitting the sitemap in a step after the build."
+    },
+    {
+      "matchPackageNames": ["vike-react"],
+      "allowedVersions": "<=0.6.26",
+      "description": "Hold vike-react with vike (see the vike rule)."
     }
   ],
   "platformAutomerge": true

@@ -8,7 +8,7 @@ import type {
   TabsVariant,
 } from './Tabs'
 
-export const tabsVariantValues = ['underline', 'boxed', 'enclosed'] satisfies TabsVariant[]
+export const tabsVariantValues = ['underline', 'boxed', 'enclosed', 'tonal'] satisfies TabsVariant[]
 export const tabsOrientationValues = ['horizontal', 'vertical'] satisfies TabsOrientation[]
 export const tabsOverflowBehaviorValues = [
   'scroll',
@@ -21,6 +21,7 @@ const variantLabels: Record<TabsVariant, string> = {
   underline: 'Underline',
   boxed: 'Boxed',
   enclosed: 'Enclosed',
+  tonal: 'Tonal',
 }
 
 const views: ExampleNode[] = [

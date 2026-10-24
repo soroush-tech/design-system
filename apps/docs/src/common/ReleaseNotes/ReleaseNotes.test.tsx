@@ -22,11 +22,16 @@ describe('releaseNotesFor', () => {
 })
 
 describe('ReleaseNotes', () => {
-  it('renders the Releases heading and each version body', () => {
+  it('renders each version body, headed by the version alone', () => {
     renderWithTheme(<ReleaseNotes pkg="markdown" />)
-    expect(screen.getByRole('heading', { name: 'Releases' })).toBeInTheDocument()
-    expect(
-      screen.getByRole('heading', { name: /@soroush\.tech\/markdown@1\.0\.0/ })
-    ).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'v1.0.0' })).toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: /@soroush\.tech\/markdown@/ })).toBeNull()
+  })
+
+  it('lists the versions newest first', () => {
+    renderWithTheme(<ReleaseNotes pkg="markdown" />)
+    const names = screen.getAllByRole('heading', { level: 2 }).map((heading) => heading.textContent)
+    expect(names[0]).toBe('v1.2.3')
+    expect(names[names.length - 1]).toBe('v1.0.0')
   })
 })

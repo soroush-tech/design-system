@@ -16,11 +16,11 @@
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
-    "@storybook/react-vite": "^10.5.8",
+    "@storybook/react-vite": "^10.6.3",
     "lz-string": "^1.5.0",
-    "react-live": "^4.1.8",
-    "storybook": "^10.5.8",
-    "sucrase": "^3.35.0"
+    "react-live": "^5.0.1",
+    "storybook": "^10.6.3",
+    "sucrase": "^3.35.1"
   },
   "peerDependencies": {
     "@soroush.tech/design-system": "workspace:^",
@@ -34,16 +34,16 @@
     "@soroush.tech/hooks": "workspace:*",
     "@soroush.tech/markdown": "workspace:*",
     "@testing-library/jest-dom": "^7.0.1",
-    "@testing-library/react": "^16.3.2",
-    "@testing-library/user-event": "^14.6.6",
-    "@types/react": "^19.2.18",
-    "@types/react-dom": "^19.2.4",
-    "@vitest/coverage-v8": "^4.1.10",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.8",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitest/coverage-v8": "^5.0.5",
     "jsdom": "^29.1.1",
-    "oxlint": "^1.78.0",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8",
+    "oxlint": "^1.89.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
     "typescript": "~7.0.2",
-    "vitest": "^4.1.10"
+    "vitest": "^5.0.5"
   }
 }

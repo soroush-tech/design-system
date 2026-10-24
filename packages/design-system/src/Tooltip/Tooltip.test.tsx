@@ -382,14 +382,14 @@ describe('Tooltip', () => {
     const lay = () => {
       vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockReturnValue(40)
       vi.spyOn(HTMLElement.prototype, 'offsetHeight', 'get').mockReturnValue(16)
-      vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(
-        function (this: HTMLElement) {
-          if (this.getAttribute('role') !== 'tooltip') return anchorRect
-          const left = Number.parseFloat(this.style.left) || 0
-          const top = Number.parseFloat(this.style.top) || 0
-          return { left, top, width: 40, height: 16, right: left + 40, bottom: top + 16 } as DOMRect
-        }
-      )
+      vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (
+        this: HTMLElement
+      ) {
+        if (this.getAttribute('role') !== 'tooltip') return anchorRect
+        const left = Number.parseFloat(this.style.left) || 0
+        const top = Number.parseFloat(this.style.top) || 0
+        return { left, top, width: 40, height: 16, right: left + 40, bottom: top + 16 } as DOMRect
+      })
     }
 
     it('is fixed above everything but the layers above it, hidden until placed', () => {
@@ -505,14 +505,14 @@ describe('Tooltip', () => {
     const lay = () => {
       vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockReturnValue(40)
       vi.spyOn(HTMLElement.prototype, 'offsetHeight', 'get').mockReturnValue(16)
-      vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(
-        function (this: HTMLElement) {
-          if (this.getAttribute('role') !== 'tooltip') return anchorRect
-          const left = Number.parseFloat(this.style.left) || 0
-          const top = Number.parseFloat(this.style.top) || 0
-          return { left, top, width: 40, height: 16, right: left + 40, bottom: top + 16 } as DOMRect
-        }
-      )
+      vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (
+        this: HTMLElement
+      ) {
+        if (this.getAttribute('role') !== 'tooltip') return anchorRect
+        const left = Number.parseFloat(this.style.left) || 0
+        const top = Number.parseFloat(this.style.top) || 0
+        return { left, top, width: 40, height: 16, right: left + 40, bottom: top + 16 } as DOMRect
+      })
     }
 
     it.each([

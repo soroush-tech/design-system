@@ -302,6 +302,24 @@ describe('Tabs', () => {
     expect(screen.getByRole('tablist').querySelector('[aria-hidden]')).toBeNull()
   })
 
+  it('rounds the container and tints the selected tab in the tonal look, with no indicator', () => {
+    renderViews({ defaultValue: 'canvas', variant: 'tonal' })
+    expect(screen.getByRole('tablist').parentElement).toHaveStyle({
+      borderRadius: '999px',
+      backgroundColor: baseTheme.background.secondary,
+    })
+    expect(tab('Canvas').parentElement).toHaveStyle({ borderRadius: '999px' })
+    expect(getComputedStyle(tab('Canvas').parentElement!).backgroundColor).not.toBe(
+      getComputedStyle(tab('Tokens').parentElement!).backgroundColor
+    )
+    expect(screen.getByRole('tablist').querySelector('[aria-hidden]')).toBeNull()
+  })
+
+  it('leaves the tonal tab to a ground of its own when one is given', () => {
+    renderViews({ defaultValue: 'canvas', variant: 'tonal', selectedBg: 'paper' })
+    expect(tab('Canvas').parentElement).toHaveStyle({ backgroundColor: baseTheme.background.paper })
+  })
+
   // The enclosed look and the divider are drawn with inset shadows, which jsdom doesn't model:
   // their shapes are held in Tabs.browser.test.tsx. Here, each arrangement renders its tabs.
   it('renders the enclosed look, with or without a divider, centred or shared', () => {

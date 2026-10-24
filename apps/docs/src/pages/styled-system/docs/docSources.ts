@@ -1,3 +1,4 @@
+import { rewriteDocLinks } from './rewriteDocLinks'
 import { styledSystemDocs, styledSystemGuides, styledSystemDocSlug } from 'src/common/nav'
 
 const sources = import.meta.glob('packages/styled-system/docs/**/*.md', {
@@ -8,6 +9,8 @@ const sources = import.meta.glob('packages/styled-system/docs/**/*.md', {
 
 const registry = [...styledSystemDocs, ...styledSystemGuides]
 
+const files = registry.map(({ file }) => file)
+
 const findSource = (file: string): string | undefined =>
   Object.entries(sources).find(([key]) => key.endsWith(`/docs/${file}`))?.[1]
 
@@ -15,7 +18,7 @@ const findSource = (file: string): string | undefined =>
 export const docBySlug = new Map(
   registry.map(({ label, file }) => [
     styledSystemDocSlug(file),
-    { label, source: findSource(file) ?? '' },
+    { label, source: rewriteDocLinks(findSource(file) ?? '', file, files) },
   ])
 )
 

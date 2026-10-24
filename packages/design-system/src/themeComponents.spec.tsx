@@ -58,6 +58,7 @@ import { ToggleButton } from './ToggleButton/ToggleButton'
 import { ToggleButtonGroup } from './ToggleButton/ToggleButtonGroup'
 import { TransferList } from './TransferList'
 import { Collapse } from './Collapse'
+import { NavTree, NavGroup, NavLink } from './NavTree'
 import { FabMenu, FabMenuItem } from './FabMenu'
 import { ScrollArea } from './ScrollArea'
 import { Autocomplete } from './Autocomplete'
@@ -208,6 +209,19 @@ const fabMenu = (
   <FabMenu aria-label="Create" defaultOpen>
     <FabMenuItem>One</FabMenuItem>
   </FabMenu>
+)
+// Every part drawn, so each styled element is.
+const navTree = (
+  <NavTree>
+    <NavGroup label="Plain">
+      <NavLink href="#a" note="v1" isExternal>
+        One
+      </NavLink>
+    </NavGroup>
+    <NavGroup label="Folding" isCollapsible isOpen>
+      <NavLink href="#b">Two</NavLink>
+    </NavGroup>
+  </NavTree>
 )
 // Open, so the root, the wrapper and the inner box are all drawn.
 const collapse = (
@@ -451,6 +465,16 @@ const cases: Case[] = [
       </Sidebar>
     ),
   },
+  {
+    name: 'SidebarItem',
+    slot: 'pill',
+    label: 'SidebarItemPill',
+    ui: (
+      <Sidebar aria-label="Panels" layout="stacked">
+        <SidebarItem icon="folder" label="Directory" />
+      </Sidebar>
+    ),
+  },
   { name: 'Skeleton', slot: 'root', label: 'skeleton', ui: <Skeleton /> },
   { name: 'Switch', slot: 'root', label: 'Switch', ui: <Switch /> },
   { name: 'Table', slot: 'root', label: 'Table', ui: table },
@@ -565,6 +589,13 @@ const cases: Case[] = [
   { name: 'ScrollArea', slot: 'viewport', label: 'ScrollAreaViewport', ui: scrollArea },
   { name: 'FabMenu', slot: 'root', label: 'FabMenu', ui: fabMenu },
   { name: 'FabMenu', slot: 'list', label: 'FabMenuList', ui: fabMenu },
+  { name: 'NavTree', slot: 'root', label: 'NavTree', ui: navTree },
+  { name: 'NavGroup', slot: 'root', label: 'NavGroup', ui: navTree },
+  { name: 'NavGroup', slot: 'label', label: 'NavGroupLabel', ui: navTree },
+  { name: 'NavGroup', slot: 'list', label: 'NavGroupList', ui: navTree },
+  { name: 'NavLink', slot: 'root', label: 'NavLink', ui: navTree },
+  { name: 'NavLink', slot: 'label', label: 'NavLinkLabel', ui: navTree },
+  { name: 'NavLink', slot: 'note', label: 'NavLinkNote', ui: navTree },
   { name: 'Collapse', slot: 'root', label: 'Collapse', ui: collapse },
   { name: 'Collapse', slot: 'wrapper', label: 'CollapseWrapper', ui: collapse },
   { name: 'Collapse', slot: 'inner', label: 'CollapseInner', ui: collapse },

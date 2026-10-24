@@ -39,6 +39,7 @@ import { getNextTab, type TabStep } from '../utils/getNextTab'
 import { getPanelId, getTabId } from '../utils/tabIds'
 import { getDividerColor, getDividerShadow, getEnclosedPieceStyle } from '../utils/dividerLine'
 import { surfaceSystem } from '../utils/surfaceSystem'
+import { TONAL_RADIUS } from '../utils/tonalRadius'
 
 export type { TabValue } from '../TabsContext'
 export type TabsVariant = keyof TabsVariants
@@ -79,7 +80,7 @@ export interface TabsProps extends SpaceProps<Theme> {
   as?: 'div' | 'nav'
   /** Default: `'horizontal'`. */
   orientation?: TabsOrientation
-  /** The look: an indicator under the selected tab, or the selected tab boxed. Default: `'underline'`, overridable via `theme.components.Tabs.defaultProps`. */
+  /** The look: an indicator under the selected tab, the selected tab boxed, or `'tonal'` - the tabs in a rounded container, the selected one a tinted pill. Default: `'underline'`, overridable via `theme.components.Tabs.defaultProps`. */
   variant?: TabsVariant
   /** The indicator's or outline's color - resolves to `theme.palette[color]`. Default: `'primary'`. */
   color?: keyof Theme['palette']
@@ -166,6 +167,12 @@ const TabsRoot = styled('div', {
   const isVertical = orientation === 'vertical'
   return {
     display: 'flex',
+    // The tonal container: a rounded ground (the `bg` prop takes its place) the tabs fill.
+    ...(variant === 'tonal' && {
+      padding: theme.space[0.5],
+      borderRadius: TONAL_RADIUS,
+      backgroundColor: get(theme, 'background.secondary'),
+    }),
     flexDirection: isVertical ? 'column' : 'row',
     alignItems: 'stretch',
     minWidth: 0,
@@ -230,7 +237,7 @@ const TabsList = styled('div', {
     display: 'flex',
     flexDirection: isVertical ? ('column' as const) : ('row' as const),
     justifyContent: isCentered ? 'center' : 'flex-start',
-    gap: variant === 'boxed' ? theme.space[0.5] : 0,
+    gap: variant === 'boxed' || variant === 'tonal' ? theme.space[0.5] : 0,
     flex: 1,
     minWidth: 0,
     ...(variant === 'enclosed' && enclosedEnds),
@@ -440,7 +447,7 @@ export function Tabs({
   const variant = variantProp ?? dp.variant ?? 'underline'
   const color = colorProp ?? dp.color ?? themeDefault(theme, 'color', 'primary')
   const size = sizeProp ?? dp.size ?? themeDefault(theme, 'size', 'md')
-  const hasDivider = hasDividerProp ?? dp.hasDivider ?? variant !== 'boxed'
+  const hasDivider = hasDividerProp ?? dp.hasDivider ?? (variant !== 'boxed' && variant !== 'tonal')
   // A boxed tab, and an enclosed one with no divider to outline it, stands out by its ground.
   const isFilled = variant === 'boxed' || (variant === 'enclosed' && !hasDivider)
   const selectedBg = selectedBgProp ?? dp.selectedBg ?? (isFilled ? 'paper' : undefined)

@@ -1,7 +1,12 @@
 import { useId, useMemo, useState, type ElementType, type ReactNode } from 'react'
 import { styled } from '@soroush.tech/design-system'
 import { Flex, type FlexProps } from '@soroush.tech/design-system/Flex'
-import { SidebarContext, type SidebarAnchor, type SidebarItemVariant } from '../SidebarContext'
+import {
+  SidebarContext,
+  type SidebarAnchor,
+  type SidebarItemVariant,
+  type SidebarLayout,
+} from '../SidebarContext'
 
 export interface SidebarProps extends FlexProps {
   /**
@@ -11,9 +16,18 @@ export interface SidebarProps extends FlexProps {
   children: ReactNode
   /**
    * Whether item labels are shown. Controlled - the toggle lives with the
-   * consumer (typically a menu button in the app bar).
+   * consumer (typically a menu button in the app bar). A `stacked` rail always shows
+   * them. Default: `false`.
    */
-  isOpen: boolean
+  isOpen?: boolean
+  /**
+   * How the items are laid out: `'inline'` is the collapsible icon rail, a label beside its
+   * icon while open; `'stacked'` is a navigation rail - each label under its icon, always
+   * shown, in a rail of `stackedWidth`. Default: `'inline'`.
+   */
+  layout?: SidebarLayout
+  /** Rail width of a `stacked` layout. Default: `'5.5rem'`. */
+  stackedWidth?: string
   /** Screen edge the rail hugs - labels render away from it. Default: `'left'`. */
   anchor?: SidebarAnchor
   /** Default variant for every item - an item's own `variant` wins. Default: `'text'`. */
@@ -28,7 +42,13 @@ export interface SidebarProps extends FlexProps {
    * instead. Default: `false`.
    */
   hasPanel?: boolean
-  /** Width of the panel column. Only meaningful with `hasPanel`. Default: `'18rem'`. */
+  /**
+   * The panel column's content, rendered in place - so it is in the server-rendered markup,
+   * unlike the selected item's `children` under `hasPanel`, which are ported in on the client.
+   * For a panel the page already knows, a navigation tree. Takes the place of `hasPanel`.
+   */
+  panel?: ReactNode
+  /** Width of the panel column. Only meaningful with `hasPanel` or `panel`. Default: `'18rem'`. */
   panelWidth?: string
   /**
    * Props for the panel column - any `Flex` prop, plus `as` to change its
@@ -43,8 +63,10 @@ export interface SidebarProps extends FlexProps {
 
 interface SidebarRailProps {
   isOpen?: boolean
+  layout: SidebarLayout
   expandedWidth?: string
   collapsedWidth?: string
+  stackedWidth?: string
 }
 
 // The landmark and the shared surface. It holds no width of its own, so it is
@@ -63,13 +85,22 @@ const SidebarRail = styled(Flex, {
   slot: 'rail',
   label: 'SidebarRail',
   shouldForwardProp: (prop) =>
-    prop !== 'isOpen' && prop !== 'expandedWidth' && prop !== 'collapsedWidth',
-})<SidebarRailProps>(({ isOpen, expandedWidth, collapsedWidth }) => ({
-  width: isOpen ? expandedWidth : collapsedWidth,
-  transition: 'width 200ms ease',
-  overflowX: 'hidden',
-  '@media (prefers-reduced-motion: reduce)': { transition: 'none' },
-}))
+    prop !== 'isOpen' &&
+    prop !== 'layout' &&
+    prop !== 'expandedWidth' &&
+    prop !== 'collapsedWidth' &&
+    prop !== 'stackedWidth',
+})<SidebarRailProps>(({ isOpen, layout, expandedWidth, collapsedWidth, stackedWidth }) =>
+  // A stacked rail has one width and nothing to animate: its labels are always shown.
+  layout === 'stacked'
+    ? { width: stackedWidth, alignItems: 'center' }
+    : {
+        width: isOpen ? expandedWidth : collapsedWidth,
+        transition: 'width 200ms ease',
+        overflowX: 'hidden',
+        '@media (prefers-reduced-motion: reduce)': { transition: 'none' },
+      }
+)
 
 // The panel column - the portal target the selected item renders into, so it is
 // always mounted while `hasPanel`. `:empty` collapses it when nothing has been
@@ -101,12 +132,15 @@ const SidebarPanelRoot = styled(Flex, {
  */
 export function Sidebar({
   children,
-  isOpen,
+  isOpen = false,
   anchor = 'left',
   variant = 'text',
+  layout = 'inline',
   expandedWidth = '14rem',
   collapsedWidth = '3.5rem',
+  stackedWidth = '5.5rem',
   hasPanel = false,
+  panel,
   panelWidth = '18rem',
   panelProps,
   'aria-label': ariaLabel,
@@ -120,9 +154,21 @@ export function Sidebar({
   // it. The content itself is ported, never lifted.
   const [panelLabel, setPanelLabel] = useState<string | null>(null)
 
+  // A panel given in place is not one the items port into.
+  const hasPortPanel = hasPanel && panel == null
+
   const context = useMemo(
-    () => ({ isOpen, anchor, variant, hasPanel, panelId, panelNode, setPanelLabel }),
-    [isOpen, anchor, variant, hasPanel, panelId, panelNode]
+    () => ({
+      isOpen,
+      anchor,
+      variant,
+      layout,
+      hasPanel: hasPortPanel,
+      panelId,
+      panelNode,
+      setPanelLabel,
+    }),
+    [isOpen, anchor, variant, layout, hasPortPanel, panelId, panelNode]
   )
 
   // The panel lives inside the root, so the root's `bg` (and every other Flex
@@ -143,12 +189,19 @@ export function Sidebar({
         gap={1}
         flexShrink={0}
         isOpen={isOpen}
+        layout={layout}
         expandedWidth={expandedWidth}
         collapsedWidth={collapsedWidth}
+        stackedWidth={stackedWidth}
       >
         <SidebarContext.Provider value={context}>{children}</SidebarContext.Provider>
       </SidebarRail>
-      {hasPanel && (
+      {panel != null && (
+        <SidebarPanelRoot as="section" width={panelWidth} {...panelProps}>
+          {panel}
+        </SidebarPanelRoot>
+      )}
+      {hasPortPanel && (
         <SidebarPanelRoot
           as="section"
           width={panelWidth}

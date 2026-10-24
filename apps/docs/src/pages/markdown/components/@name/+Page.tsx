@@ -7,7 +7,7 @@ import { usePageContext } from 'src/hooks/usePageContext'
 export default function Page() {
   const { routeParams } = usePageContext()
   return (
-    <Layout sidebar={<DocsNav />}>
+    <Layout sidebar={<DocsNav />} hasToc>
       <Readme source={readmeForSlug(routeParams.name)} />
     </Layout>
   )

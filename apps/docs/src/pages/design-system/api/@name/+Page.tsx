@@ -8,8 +8,9 @@ import { DocsNav } from 'src/common/DocsNav/DocsNav'
 import { Layout } from 'src/common/Layout'
 import { Readme } from 'src/common/Readme/Readme'
 import { splitReadme } from '@soroush.tech/docs-content'
+import { componentPageParts } from 'src/common/componentPage'
+import { ComponentHero } from 'src/common/ComponentHero/ComponentHero'
 import { usePageContext } from 'src/hooks/usePageContext'
-import { readmeForSlug } from 'src/mdx/readmeSources'
 
 const REPO_SRC =
   'https://github.com/soroush-tech/design-system/tree/main/packages/design-system/src'
@@ -19,7 +20,10 @@ export default function Page() {
   const slug = routeParams.name
   const item = componentBySlug.get(slug)
   const name = item?.name ?? 'Component'
-  const { intro, api } = splitReadme(readmeForSlug(slug))
+  const parts = componentPageParts(slug)
+  // A family member has no tabs of its own, so its README stays whole; a component's accessibility
+  // notes are on their own tab.
+  const { intro, api } = splitReadme(item?.family ? parts.source : parts.rest)
   const importSnippet = `import { ${name} } from '@soroush.tech/design-system/${item ? importSubpathOf(item) : name}'`
   // A family member's demos are under its own heading on its family's page - a PascalCase
   // name's heading id is the name in lower case.
@@ -29,18 +33,24 @@ export default function Page() {
   const demosName = item?.family ?? name
   const sourceDir = item ? item.readmePath.replace(/\/README\.md$/, '') : ''
   return (
-    <Layout sidebar={<DocsNav />}>
-      <Typography variant="h1" gutterBottom>
-        {name} API
-      </Typography>
-      <Typography variant="body1" color="secondary" gutterBottom>
-        API reference for the {name} component: its props with their token values and defaults, the
-        styled-system prop groups, and forwarded HTML attributes.
-      </Typography>
+    <Layout
+      sidebar={<DocsNav />}
+      hasToc
+      head={
+        item && (
+          <ComponentHero
+            item={item}
+            lead={parts.lead}
+            active={item.family ? undefined : 'specs'}
+            hasAccessibility={parts.accessibility !== ''}
+          />
+        )
+      }
+    >
       {/* A family member has no page of its own, so what it is and how it composes is here. */}
       {item?.family && <Readme source={intro} stripChrome />}
       <View as="section" my={4}>
-        <Typography variant="h4" as="h2" gutterBottom>
+        <Typography variant="h4" as="h2" id="demos" gutterBottom>
           Demos
         </Typography>
         <Typography variant="body1">
@@ -51,7 +61,7 @@ export default function Page() {
         </Typography>
       </View>
       <View as="section" my={4}>
-        <Typography variant="h4" as="h2" gutterBottom>
+        <Typography variant="h4" as="h2" id="import" gutterBottom>
           Import
         </Typography>
         <CodeBlock>
@@ -60,7 +70,7 @@ export default function Page() {
       </View>
       <Readme source={api} />
       <View as="section" my={4}>
-        <Typography variant="h4" as="h2" gutterBottom>
+        <Typography variant="h4" as="h2" id="source-code" gutterBottom>
           Source code
         </Typography>
         <Typography variant="body1">

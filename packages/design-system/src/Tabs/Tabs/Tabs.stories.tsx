@@ -152,6 +152,12 @@ export const Boxed: Story = {
   render: (args) => <WithContent args={args} />,
 }
 
+// The tabs in a rounded container, the selected one a tinted pill - a segmented row.
+export const Tonal: Story = {
+  args: { variant: 'tonal', size: 'sm' },
+  render: (args) => <WithContent args={args} />,
+}
+
 // The selected tab outlined on its top and sides, open onto the line along the row's foot.
 export const Enclosed: Story = {
   args: { variant: 'enclosed', defaultValue: 'classic' },

@@ -652,6 +652,7 @@ export interface TabsVariants {
   underline: true
   boxed: true
   enclosed: true
+  tonal: true
 }
 
 /** The resolved props Tabs' styled elements receive - what `ownerState` exposes. */
@@ -871,8 +872,11 @@ export interface ThemeComponents {
     Record<string, unknown>,
     'root' | 'value' | 'valueArea' | 'valueGhost' | 'listbox'
   >
+  NavGroup?: ComponentConfig<Record<string, unknown>, 'root' | 'label' | 'list'>
+  NavLink?: ComponentConfig<Record<string, unknown>, 'root' | 'label' | 'note'>
+  NavTree?: ComponentConfig<Record<string, unknown>, 'root'>
   Sidebar?: ComponentConfig<Record<string, unknown>, 'root' | 'rail' | 'panel'>
-  SidebarItem?: ComponentConfig
+  SidebarItem?: ComponentConfig<Record<string, unknown>, 'root' | 'pill'>
   Skeleton?: ComponentConfig<Record<string, unknown>, 'root' | 'content'>
   Switch?: ComponentConfig<Record<string, unknown>, 'root' | 'input' | 'track' | 'thumb' | 'label'>
   Tab?: ComponentConfig<TabOwnerState, 'root' | 'label' | 'icon' | 'secondaryAction' | 'close'>

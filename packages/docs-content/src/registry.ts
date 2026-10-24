@@ -95,7 +95,12 @@ export const componentCategories: ComponentCategory[] = [
   },
   {
     label: 'Navigation & menus',
-    items: [component('Breadcrumbs'), component('Menu', true), component('Tabs', true)],
+    items: [
+      component('Breadcrumbs'),
+      component('Menu', true),
+      component('NavTree', true),
+      component('Tabs', true),
+    ],
   },
   {
     label: 'Feedback',
@@ -142,6 +147,7 @@ export const allComponents: ComponentNavItem[] = componentCategories.flatMap(
 // A member has no page of its own - an API page each, its demos on the family's page - and
 // stays out of the categories, so the sidebar's groups and the catalog list families.
 const FAMILY_MEMBERS: Record<string, string[]> = {
+  NavTree: ['NavGroup', 'NavLink'],
   FabMenu: ['FabMenuItem'],
   Alert: ['AlertTitle'],
   Accordion: ['AccordionActions', 'AccordionDetails', 'AccordionGroup', 'AccordionSummary'],

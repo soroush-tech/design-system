@@ -11,7 +11,7 @@ export default function Page() {
   const slug = docSlugFromParam(routeParams[WILDCARD] ?? '')
   const doc = docBySlug.get(slug)
   return (
-    <Layout sidebar={<DocsNav />}>
+    <Layout sidebar={<DocsNav />} hasToc>
       <Readme source={doc?.source ?? ''} />
     </Layout>
   )

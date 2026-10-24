@@ -10,13 +10,13 @@ describe('openInCodeSandbox', () => {
     let action = ''
     let target = ''
     let parameters = ''
-    const submitSpy = vi
-      .spyOn(HTMLFormElement.prototype, 'submit')
-      .mockImplementation(function (this: HTMLFormElement) {
-        action = this.action
-        target = this.target
-        parameters = (this.querySelector('input[name="parameters"]') as HTMLInputElement).value
-      })
+    const submitSpy = vi.spyOn(HTMLFormElement.prototype, 'submit').mockImplementation(function (
+      this: HTMLFormElement
+    ) {
+      action = this.action
+      target = this.target
+      parameters = (this.querySelector('input[name="parameters"]') as HTMLInputElement).value
+    })
     openInCodeSandbox(
       'Basic button group',
       "import { Button } from '@soroush.tech/design-system/Button'",

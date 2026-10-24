@@ -10,9 +10,67 @@ test.describe('design-system section', () => {
     ).toBeVisible()
   })
 
-  test('navbar shows the design-system version chip', async ({ page }) => {
+  test('the search is a page of its own: important links first, matches once a word is typed', async ({
+    page,
+  }) => {
     await page.goto('/design-system/')
-    await expect(page.locator('header').getByText(/^v\d+\.\d+\.\d+$/)).toBeVisible()
+    await page
+      .getByRole('navigation', { name: 'Primary' })
+      .getByRole('button', { name: 'Search' })
+      .click()
+    const search = page.getByRole('dialog', { name: 'Search the documentation' })
+    await expect(search.getByRole('heading', { name: 'Most important links' })).toBeVisible()
+    await expect(search.getByRole('link', { name: /Installation/ })).toBeVisible()
+    await search.getByRole('searchbox').fill('autocomplete')
+    await search
+      .getByRole('link', { name: /^Autocomplete/ })
+      .first()
+      .click()
+    await expect(page).toHaveURL(/\/design-system\/components\/autocomplete\//)
+    // The search it led from is kept for next time.
+    await page
+      .getByRole('navigation', { name: 'Primary' })
+      .getByRole('button', { name: 'Search' })
+      .click()
+    await expect(
+      page.getByRole('dialog', { name: 'Search the documentation' }).getByRole('button', {
+        name: 'autocomplete',
+      })
+    ).toBeVisible()
+  })
+
+  test('the rail shows the version of the docs under the search', async ({ page }) => {
+    await page.goto('/design-system/')
+    const rail = page.getByRole('navigation', { name: 'Primary' })
+    await expect(rail.getByRole('button', { name: 'Search' })).toBeVisible()
+    await expect(
+      rail.getByRole('button', { name: /Documentation version, v\d+\.\d+\.\d+/ })
+    ).toBeVisible()
+  })
+
+  test('the version menu lists the released versions and opens the one that is chosen', async ({
+    page,
+  }) => {
+    // The deploy writes /versions.json at the domain root; a local build has none, so it is given.
+    await page.route('**/versions.json', (route) =>
+      route.fulfill({ json: { 'design-system': ['1.3.3'] } })
+    )
+    // A snapshot is a build of its own, so its page is given too.
+    await page.route('**/design-system/1.3.3/', (route) =>
+      route.fulfill({ contentType: 'text/html', body: '<title>1.3.3 snapshot</title>' })
+    )
+    await page.goto('/design-system/')
+    await page
+      .getByRole('navigation', { name: 'Primary' })
+      .getByRole('button', { name: /Documentation version/ })
+      .click()
+    const menu = page.getByRole('menu', { name: 'Documentation version' })
+    await expect(menu.getByRole('menuitemradio', { name: /^Latest/ })).toHaveAttribute(
+      'aria-checked',
+      'true'
+    )
+    await menu.getByRole('menuitemradio', { name: 'v1.3.3' }).click()
+    await expect(page).toHaveURL(/\/design-system\/1\.3\.3\/$/)
   })
 
   test('sidebar navigates to installation', async ({ page }) => {
@@ -51,14 +109,81 @@ test.describe('design-system section', () => {
     await expect(page.getByText('variant="contained"').first()).toBeVisible()
     await page.getByRole('button', { name: 'Expand code' }).first().click()
     await expect(page.getByText(/import \{ Button \}/).first()).toBeVisible()
-    await expect(page.getByRole('link', { name: 'Button API reference' })).toBeVisible()
+    const tabs = page.getByRole('navigation', { name: 'Button pages' })
+    await expect(tabs.getByRole('link', { name: 'Overview' })).toHaveAttribute(
+      'aria-current',
+      'page'
+    )
+    await expect(tabs.getByRole('link', { name: 'Specs' })).toBeVisible()
+  })
+
+  test('a wide window lists the sections of the page in a contents column', async ({ page }) => {
+    await page.setViewportSize({ width: 1600, height: 900 })
+    await page.goto('/design-system/api/button/')
+    const toc = page.getByRole('navigation', { name: 'On this page' })
+    await expect(toc.getByRole('link', { name: 'Button-specific props' })).toBeVisible()
+    await toc.getByRole('link', { name: 'Styled-system props' }).click()
+    await expect(page).toHaveURL(/#styled-system-props$/)
+  })
+
+  test('the head is wider than the content, and the tabs shrink to the content grid when they stick', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 2400, height: 1000 })
+    await page.goto('/design-system/components/button/')
+    const head = page.locator('main header')
+    const tabs = page.getByRole('navigation', { name: 'Button pages' })
+    const headWidth = (await head.boundingBox())!.width
+    // The head is wider than the 1200px grid; in its place, the tabs are as wide as the head.
+    expect(headWidth).toBeGreaterThan(1300)
+    expect((await tabs.boundingBox())!.width).toBeCloseTo(headWidth, 0)
+    // Stuck, they shrink to the grid the content sits in.
+    await page.evaluate(() => window.scrollTo(0, 1500))
+    await expect.poll(async () => Math.round((await tabs.boundingBox())!.width)).toBe(1200)
+  })
+
+  test('a component with accessibility notes has the tab, and the notes are only there', async ({
+    page,
+  }) => {
+    await page.goto('/design-system/components/fab/')
+    const tabs = page.getByRole('navigation', { name: 'Fab pages' })
+    // The notes are not under Overview...
+    await expect(page.getByRole('heading', { level: 2, name: 'Accessibility' })).toHaveCount(0)
+    await tabs.getByRole('link', { name: 'Accessibility' }).click()
+    await expect(page).toHaveURL(/\/design-system\/components\/fab\/accessibility\//)
+    // ...they are on their own tab.
+    await expect(page.getByRole('heading', { level: 2, name: 'Accessibility' })).toBeVisible()
+    await expect(tabs.getByRole('link', { name: 'Accessibility' })).toHaveAttribute(
+      'aria-current',
+      'page'
+    )
+  })
+
+  test('the tabs stay at the top of the window, and a tab opens at the tabs', async ({ page }) => {
+    await page.setViewportSize({ width: 1600, height: 900 })
+    await page.goto('/design-system/components/button/')
+    const tabs = page.getByRole('navigation', { name: 'Button pages' })
+    await page.evaluate(() => window.scrollTo(0, 1500))
+    await expect.poll(async () => (await tabs.boundingBox())?.y).toBe(0)
+    await tabs.getByRole('link', { name: 'Specs' }).click()
+    await expect(page).toHaveURL(/\/design-system\/api\/button\//)
+    // The page is brought to the tabs: they are at the top and the hero above them is scrolled away.
+    await expect.poll(async () => (await tabs.boundingBox())?.y).toBe(0)
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(100)
+  })
+
+  test('a component without accessibility notes has no such tab', async ({ page }) => {
+    await page.goto('/design-system/components/quote/')
+    const tabs = page.getByRole('navigation', { name: 'Quote pages' })
+    await expect(tabs.getByRole('link', { name: 'Specs' })).toBeVisible()
+    await expect(tabs.getByRole('link', { name: 'Accessibility' })).toHaveCount(0)
   })
 
   test('a component page renders its README intro and every story as a demo', async ({ page }) => {
     await page.goto('/design-system/components/button-group/')
     await expect(page.getByRole('heading', { level: 1, name: 'ButtonGroup' })).toBeVisible()
     // The intro comes from the component's README, the demos from its stories file.
-    await expect(page.getByText(/Groups related .*immediate children/)).toBeVisible()
+    await expect(page.getByText(/Groups related .*immediate children/).first()).toBeVisible()
     for (const story of ['Default', 'Variants', 'Sizes And Colors', 'Vertical']) {
       await expect(page.getByRole('heading', { name: story, exact: true })).toBeVisible()
     }
@@ -132,12 +257,16 @@ test.describe('design-system section', () => {
     await page.goto('/design-system/components/quote/')
     await expect(page.getByRole('heading', { level: 1, name: 'Quote' })).toBeVisible()
     await expect(page.getByText(/blockquote/i).first()).toBeVisible()
-    await expect(page.getByRole('link', { name: 'Quote API reference' })).toBeVisible()
   })
 
-  test('a component API page shows import, props reference, and source link', async ({ page }) => {
+  test('a component specs page shows import, props reference, and source link', async ({
+    page,
+  }) => {
     await page.goto('/design-system/api/button/')
-    await expect(page.getByRole('heading', { level: 1, name: 'Button API' })).toBeVisible()
+    await expect(page.getByRole('heading', { level: 1, name: 'Button' })).toBeVisible()
+    await expect(
+      page.getByRole('navigation', { name: 'Button pages' }).getByRole('link', { name: 'Specs' })
+    ).toHaveAttribute('aria-current', 'page')
     await expect(page.getByText(/import \{ Button \} from '@soroush\.tech/)).toBeVisible()
     await expect(page.getByRole('heading', { name: /Button-specific props/ })).toBeVisible()
     await expect(
@@ -159,6 +288,6 @@ test.describe('design-system section', () => {
     await expect(page.getByRole('heading', { level: 1, name: 'Component API' })).toBeVisible()
     await page.locator('main').getByRole('link', { name: 'ButtonGroup API', exact: true }).click()
     await expect(page).toHaveURL(/\/design-system\/api\/button-group\//)
-    await expect(page.getByRole('heading', { level: 1, name: 'ButtonGroup API' })).toBeVisible()
+    await expect(page.getByRole('heading', { level: 1, name: 'ButtonGroup' })).toBeVisible()
   })
 })
