@@ -59,18 +59,26 @@ const Tile = styled('div')(({ theme }) => ({
 // top bar is there, so they sit under that. In its place on the page the bar spans the head, which
 // is wider than the content; stuck, it shrinks to the size of the content grid - the width
 // animates between the two.
+// Stuck, the bar is the width of the content column, with the room beside it left of the bar's
+// pair - the column and the contents are centred together, so the bar is over the column.
+const stuckBar = (room: string) => {
+  const width = `min(100% - ${room}, ${CONTENT_MAX_WIDTH})`
+  return { width, marginInlineStart: `calc((100% - ${width} - ${room}) / 2)` }
+}
+
 const TabBar = styled('div', {
   shouldForwardProp: createShouldForwardProp(['isStuck']),
 })<{ isStuck: boolean }>(({ theme, isStuck }) => ({
   position: 'sticky',
   top: '3.5rem',
   zIndex: 3,
-  width: isStuck ? `min(100%, ${CONTENT_MAX_WIDTH})` : '100%',
-  marginInline: 'auto',
+  ...(isStuck ? stuckBar('0px') : { width: '100%' }),
   marginBottom: theme.space[3],
-  transition: 'width 280ms cubic-bezier(0.2, 0, 0, 1)',
+  transition: 'width 280ms cubic-bezier(0.2, 0, 0, 1), margin 280ms cubic-bezier(0.2, 0, 0, 1)',
   '@media (prefers-reduced-motion: reduce)': { transition: 'none' },
   [theme.breakpoints.up('lg')]: { top: 0 },
+  // Wide, the contents are beside the column: the bar is the column's width and over it.
+  ...(isStuck && { [theme.breakpoints.up('xl')]: stuckBar('var(--toc-room, 0px)') }),
 }))
 
 // A tab was just chosen: the page that replaces this one scrolls to the tabs, so what the tab

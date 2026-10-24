@@ -60,9 +60,30 @@ describe('Layout', () => {
     const column = screen.getByTestId('content').parentElement!
     expect(column).toHaveStyle({ maxWidth: '1200px' })
     expect(column).not.toContainElement(head)
-    // Both are children of the page's own main, the head first.
-    expect(head.parentElement).toBe(column.parentElement)
-    expect(head.nextElementSibling).toBe(column)
+    // Both are in the page's own main, the head first and the row of the column after it.
+    expect(head.parentElement).toBe(column.parentElement!.parentElement)
+    expect(head.nextElementSibling).toBe(column.parentElement)
+  })
+
+  it('puts the contents beside the column, and leaves their room to the head', () => {
+    const { container } = render(
+      <ThemeModeProvider>
+        <PageContext.Provider value={{ urlPathname: '/design-system/' } as VikePageContext}>
+          <Layout hasToc>
+            <div data-testid="content">page content</div>
+          </Layout>
+        </PageContext.Provider>
+      </ThemeModeProvider>
+    )
+    const column = screen.getByTestId('content').parentElement!
+    const contents = container.querySelector('aside[aria-label="Contents"]')!
+    expect(contents.parentElement).toBe(column.parentElement)
+    expect(container.querySelector('main')).toHaveStyle({ '--toc-room': '16rem' })
+  })
+
+  it('leaves no room for contents on a page without them', () => {
+    const { container } = renderLayout()
+    expect(container.querySelector('main')).toHaveStyle({ '--toc-room': '0px' })
   })
 
   it('draws the navigation rail beside the page, for wide screens', () => {

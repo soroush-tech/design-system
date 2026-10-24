@@ -238,7 +238,9 @@ describe('ComponentHero tab bar width', () => {
   it('animates the width', () => {
     stubBarAt(400)
     renderHero()
-    expect(bar()).toHaveStyle({ transition: 'width 280ms cubic-bezier(0.2, 0, 0, 1)' })
+    expect(bar()).toHaveStyle({
+      transition: 'width 280ms cubic-bezier(0.2, 0, 0, 1),margin 280ms cubic-bezier(0.2, 0, 0, 1)',
+    })
   })
 
   it('stops listening to the page once it is gone', () => {
