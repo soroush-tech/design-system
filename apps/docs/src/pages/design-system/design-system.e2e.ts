@@ -143,6 +143,19 @@ test.describe('design-system section', () => {
     )
   })
 
+  test('the tabs stay at the top of the window, and a tab opens at the tabs', async ({ page }) => {
+    await page.setViewportSize({ width: 1600, height: 900 })
+    await page.goto('/design-system/components/button/')
+    const tabs = page.getByRole('navigation', { name: 'Button pages' })
+    await page.evaluate(() => window.scrollTo(0, 1500))
+    await expect.poll(async () => (await tabs.boundingBox())?.y).toBe(0)
+    await tabs.getByRole('link', { name: 'Specs' }).click()
+    await expect(page).toHaveURL(/\/design-system\/api\/button\//)
+    // The page is brought to the tabs: they are at the top and the hero above them is scrolled away.
+    await expect.poll(async () => (await tabs.boundingBox())?.y).toBe(0)
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(100)
+  })
+
   test('a component without accessibility notes has no such tab', async ({ page }) => {
     await page.goto('/design-system/components/quote/')
     const tabs = page.getByRole('navigation', { name: 'Quote pages' })

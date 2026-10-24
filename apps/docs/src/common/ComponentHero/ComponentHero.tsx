@@ -1,3 +1,4 @@
+import { useEffect, useRef, type MouseEvent } from 'react'
 import { styled, createShouldForwardProp, get, type Theme } from '@soroush.tech/design-system'
 import { alpha } from '@soroush.tech/design-system/utils'
 import { Flex } from '@soroush.tech/design-system/Flex'
@@ -33,8 +34,27 @@ const Tile = styled('div')(({ theme }) => ({
   backgroundColor: get(theme, 'background.secondary'),
 }))
 
+// The tabs stay at the top of the window as the page scrolls under them. Below the wide layout
+// the top bar is there, so they sit under it; a ground of the page's own keeps the page from
+// showing through the gaps between the pills.
+const TabBar = styled('nav')(({ theme }) => ({
+  position: 'sticky',
+  top: '3.5rem',
+  zIndex: 3,
+  display: 'flex',
+  flexWrap: 'wrap',
+  gap: theme.space[1],
+  padding: `${theme.space[1.5]} 0`,
+  marginBottom: theme.space[3],
+  backgroundColor: get(theme, 'background.default'),
+  [theme.breakpoints.up('lg')]: { top: 0 },
+}))
+
+// The router reads `keep-scroll-position` off a link; the prop filter would drop it as unknown.
+const forwardTabProp = createShouldForwardProp(['isActive'])
+
 const TabLink = styled('a', {
-  shouldForwardProp: createShouldForwardProp(['isActive']),
+  shouldForwardProp: (prop: string) => prop === 'keep-scroll-position' || forwardTabProp(prop),
 })<{ isActive: boolean }>(({ theme, isActive }) => ({
   flex: '1 1 8rem',
   display: 'flex',
@@ -54,6 +74,13 @@ const TabLink = styled('a', {
   },
 }))
 
+// A tab was just chosen: the page that replaces this one scrolls to the tabs, so what the tab
+// shows starts right under them - whether the reader was down the page or at its head.
+let isSwitchingTab = false
+
+const isPlainClick = (event: MouseEvent): boolean =>
+  event.button === 0 && !event.ctrlKey && !event.shiftKey && !event.altKey && !event.metaKey
+
 export interface ComponentHeroProps {
   item: ComponentNavItem
   /** The line under the name - what the component is. */
@@ -64,13 +91,28 @@ export interface ComponentHeroProps {
   hasAccessibility: boolean
 }
 
-/** The head of a component's pages: its name and what it is, its drawing, and its tabs. */
+/**
+ * The head of a component's pages: its name and what it is, its drawing, and its tabs - which
+ * stay at the top of the window, and bring the page they open to their own place.
+ */
 export function ComponentHero({
   item,
   lead,
   active,
   hasAccessibility,
 }: Readonly<ComponentHeroProps>) {
+  const header = useRef<HTMLDivElement>(null)
+  const bar = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    if (!isSwitchingTab) return
+    isSwitchingTab = false
+    if (!header.current || !bar.current) return
+    // Where the tabs sit in the page when they are not stuck, less where they stick.
+    const place = header.current.getBoundingClientRect().bottom + window.scrollY
+    window.scrollTo({ top: place - Number.parseFloat(getComputedStyle(bar.current).top) })
+  }, [])
+
   const tabs = [
     { id: 'overview', label: 'Overview', path: `/components/${item.slug}/` },
     { id: 'specs', label: 'Specs', path: `/api/${item.slug}/` },
@@ -85,43 +127,43 @@ export function ComponentHero({
       : []),
   ] as const
   return (
-    <View as="header" mb={4}>
-      <Hero>
-        <Flex flexDirection="column" gap={1.5} flex="1 1 18rem" minWidth={0}>
-          <Typography variant="h1" as="h1">
-            {item.name}
-          </Typography>
-          {lead && (
-            <Typography variant="body1" color="secondary">
-              {lead}
+    <>
+      <View as="header" ref={header} mb={active ? 0 : 4}>
+        <Hero>
+          <Flex flexDirection="column" gap={1.5} flex="1 1 18rem" minWidth={0}>
+            <Typography variant="h1" as="h1">
+              {item.name}
             </Typography>
-          )}
-        </Flex>
-        <Tile>
-          <ComponentIllustration name={item.name} />
-        </Tile>
-      </Hero>
+            {lead && (
+              <Typography variant="body1" color="secondary">
+                {lead}
+              </Typography>
+            )}
+          </Flex>
+          <Tile>
+            <ComponentIllustration name={item.name} />
+          </Tile>
+        </Hero>
+      </View>
       {active && (
-        <Flex
-          as="nav"
-          aria-label={`${item.name} pages`}
-          flexDirection="row"
-          flexWrap="wrap"
-          gap={1}
-          mt={1.5}
-        >
+        <TabBar ref={bar} aria-label={`${item.name} pages`}>
           {tabs.map((tab) => (
             <TabLink
               key={tab.id}
               href={sectionPath('design-system', tab.path)}
               isActive={tab.id === active}
               aria-current={tab.id === active ? 'page' : undefined}
+              // The page the tab opens is scrolled by this component, not sent to the top first.
+              keep-scroll-position="true"
+              onClick={(event) => {
+                if (isPlainClick(event)) isSwitchingTab = true
+              }}
             >
               {tab.label}
             </TabLink>
           ))}
-        </Flex>
+        </TabBar>
       )}
-    </View>
+    </>
   )
 }
