@@ -91,6 +91,13 @@ describe('NavRail', () => {
     expect(names).toEqual(['Home', 'Get started', 'Docs', 'Guides', 'Packages'])
   })
 
+  it('opens a component of the markdown docs from Components, which has no page of its own', () => {
+    renderRail('/markdown/components/preview/')
+    const href = within(rail()).getByRole('link', { name: 'Components' }).getAttribute('href')
+    expect(href).toMatch(/^\/markdown\/components\/[a-z-]+\/$/)
+    expect(href).not.toBe('/markdown/components/')
+  })
+
   it('puts the version of the docs under the search, to choose another', () => {
     renderRail('/design-system/')
     const buttons = within(rail()).getAllByRole('button')

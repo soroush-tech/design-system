@@ -186,7 +186,8 @@ const markdownRail: RailItem[] = [
     id: 'components',
     label: 'Components',
     icon: 'add_circle',
-    href: sectionPath('markdown', '/components/'),
+    // There is no page of the list: the rail opens the first component, the sidebar lists the rest.
+    href: componentHref(markdownComponents[0]),
     matches: [sectionPath('markdown', '/components/')],
     groups: [
       {
