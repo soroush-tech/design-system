@@ -37,12 +37,13 @@ describe('section navigation', () => {
     expect(components.groups.slice(1).every((group) => group.isCollapsible)).toBe(true)
   })
 
-  it('opens each section with home, then the get started item', () => {
+  it('opens each section with home, then the packages, then the get started item', () => {
     for (const pkg of ['design-system', 'markdown', 'styled-system', 'mcp', 'ui-spec']) {
       const rail = sectionFor(`/${pkg}/`).rail
       expect(rail[0].id).toBe('home')
       expect(rail[0].groups).toEqual([])
-      expect(rail[1].id).toBe('get-started')
+      expect(rail[1].id).toBe('packages')
+      expect(rail[2].id).toBe('get-started')
     }
   })
 
@@ -96,8 +97,8 @@ describe('the packages in the rail', () => {
       const section = sectionFor(`/${pkg}/`)
       expect(section.pkg).toBe(pkg)
       expect(section.label).toBe(label)
-      expect(section.rail.map((item) => item.id)).toEqual(['home', 'get-started', 'packages'])
-      expect(section.rail[1].groups[0].items.map((item) => item.href)).toEqual([
+      expect(section.rail.map((item) => item.id)).toEqual(['home', 'packages', 'get-started'])
+      expect(section.rail[2].groups[0].items.map((item) => item.href)).toEqual([
         `/${pkg}/`,
         `/${pkg}/releases/`,
       ])

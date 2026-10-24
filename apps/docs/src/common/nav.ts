@@ -110,6 +110,7 @@ const PACKAGES_ITEM: RailItem = {
 /** The design-system section's rail: what each part of the docs opens in the sidebar. */
 const designSystemRail: RailItem[] = [
   HOME,
+  PACKAGES_ITEM,
   {
     id: 'get-started',
     label: 'Get started',
@@ -153,7 +154,6 @@ const designSystemRail: RailItem[] = [
       })),
     ],
   },
-  PACKAGES_ITEM,
   {
     id: 'styles',
     label: 'Styles',
@@ -177,6 +177,7 @@ const designSystemRail: RailItem[] = [
 
 const markdownRail: RailItem[] = [
   HOME,
+  PACKAGES_ITEM,
   {
     id: 'get-started',
     label: 'Get started',
@@ -207,7 +208,6 @@ const markdownRail: RailItem[] = [
       },
     ],
   },
-  PACKAGES_ITEM,
 ]
 
 const styledSystemDocHref = (file: string): string =>
@@ -215,6 +215,7 @@ const styledSystemDocHref = (file: string): string =>
 
 const styledSystemRail: RailItem[] = [
   HOME,
+  PACKAGES_ITEM,
   {
     id: 'get-started',
     label: 'Get started',
@@ -263,12 +264,12 @@ const styledSystemRail: RailItem[] = [
       },
     ],
   },
-  PACKAGES_ITEM,
 ]
 
 // A package with an overview and its releases, and nothing else yet.
 const overviewRail = (pkg: 'mcp' | 'ui-spec'): RailItem[] => [
   HOME,
+  PACKAGES_ITEM,
   {
     id: 'get-started',
     label: 'Get started',
@@ -285,7 +286,6 @@ const overviewRail = (pkg: 'mcp' | 'ui-spec'): RailItem[] => [
       },
     ],
   },
-  PACKAGES_ITEM,
 ]
 
 const SECTIONS: SectionNav[] = (
@@ -321,17 +321,22 @@ export const sectionFor = (pathname: string): SectionNav => {
 /**
  * The rail item a page belongs to: the one whose sidebar lists it, else the one whose
  * prefix covers it (the prefixes of a section do not overlap), else the section's first part
- * after home.
+ * after home and the packages.
  */
 export const railItemFor = (section: SectionNav, pathname: string): RailItem => {
-  const listed = section.rail.find((item) =>
+  // The packages part is looked in last: it lists the other sections' overviews, which are theirs.
+  const inOrder = [
+    ...section.rail.filter((item) => item.id !== 'packages'),
+    ...section.rail.filter((item) => item.id === 'packages'),
+  ]
+  const listed = inOrder.find((item) =>
     item.groups.some((group) => group.items.some((entry) => entry.href === pathname))
   )
   if (listed) return listed
   const covering = section.rail.find((item) =>
     item.matches.some((prefix) => pathname.startsWith(prefix))
   )
-  return covering ?? section.rail[1]
+  return covering ?? section.rail[2]
 }
 
 /** Every page the section lists, for search: a label, the group it sits in, its href. */

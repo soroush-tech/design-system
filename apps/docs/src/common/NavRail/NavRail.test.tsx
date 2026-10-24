@@ -27,7 +27,7 @@ describe('NavRail', () => {
     const names = within(rail())
       .getAllByRole('link')
       .map((link) => link.textContent)
-    expect(names).toEqual(['Home', 'Get started', 'Components', 'Packages', 'Styles'])
+    expect(names).toEqual(['Home', 'Packages', 'Get started', 'Components', 'Styles'])
   })
 
   it('has no API item', () => {
@@ -88,7 +88,7 @@ describe('NavRail', () => {
     const names = within(rail())
       .getAllByRole('link')
       .map((link) => link.textContent)
-    expect(names).toEqual(['Home', 'Get started', 'Docs', 'Guides', 'Packages'])
+    expect(names).toEqual(['Home', 'Packages', 'Get started', 'Docs', 'Guides'])
   })
 
   it('opens a component of the markdown docs from Components, which has no page of its own', () => {
