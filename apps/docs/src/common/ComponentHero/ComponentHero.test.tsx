@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import { screen, within } from '@testing-library/react'
+import { fireEvent, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { renderWithTheme } from 'src/test/utils/wrapper'
 import { allComponents } from 'src/common/nav'
@@ -83,7 +83,8 @@ describe('ComponentHero tabs at the top of the window', () => {
     vi.restoreAllMocks()
   })
 
-  const stubScroll = (heroBottom: number, scrolledBy: number, stuckAt = 0) => {
+  // `barTop` is where the tab bar is in the window: below `stuckAt` it is in its place, at it stuck.
+  const stubScroll = (heroBottom: number, scrolledBy: number, stuckAt = 0, barTop = 400) => {
     const scrollTo = vi.fn()
     vi.stubGlobal('scrollTo', scrollTo)
     vi.stubGlobal('scrollY', scrolledBy)
@@ -102,6 +103,7 @@ describe('ComponentHero tabs at the top of the window', () => {
     })
     vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({
       bottom: heroBottom,
+      top: barTop,
     } as DOMRect)
     return scrollTo
   }
@@ -174,5 +176,64 @@ describe('ComponentHero tabs at the top of the window', () => {
     unmount()
     renderHero({ active: undefined })
     expect(scrollTo).not.toHaveBeenCalled()
+  })
+})
+
+describe('ComponentHero tab bar width', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  const bar = () => screen.getByRole('navigation', { name: 'Button pages' })
+
+  const stubBarAt = (top: number) => {
+    vi.stubGlobal('scrollTo', vi.fn())
+    const computed = window.getComputedStyle.bind(window)
+    vi.spyOn(window, 'getComputedStyle').mockImplementation((element, pseudo) => {
+      const style = computed(element, pseudo)
+      if (element.tagName !== 'NAV') return style
+      return new Proxy(style, {
+        get: (target, property) => {
+          if (property === 'top') return '0px'
+          const value = Reflect.get(target, property)
+          return typeof value === 'function' ? value.bind(target) : value
+        },
+      })
+    })
+    const rect = vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect')
+    rect.mockReturnValue({ top, bottom: 300 } as DOMRect)
+    return rect
+  }
+
+  it('spans the content in its place on the page', async () => {
+    stubBarAt(400)
+    renderHero()
+    await waitFor(() => expect(bar()).toHaveStyle({ width: '100%' }))
+  })
+
+  it('shrinks to the size of its tabs once it sticks, and spans the content again when it does not', async () => {
+    const rect = stubBarAt(0)
+    renderHero()
+    await waitFor(() => expect(bar()).toHaveStyle({ width: 'fit-content' }))
+    rect.mockReturnValue({ top: 400, bottom: 300 } as DOMRect)
+    fireEvent.scroll(window)
+    await waitFor(() => expect(bar()).toHaveStyle({ width: '100%' }))
+    rect.mockReturnValue({ top: 0, bottom: 300 } as DOMRect)
+    fireEvent.scroll(window)
+    await waitFor(() => expect(bar()).toHaveStyle({ width: 'fit-content' }))
+  })
+
+  it('animates the width', () => {
+    stubBarAt(400)
+    renderHero()
+    expect(bar()).toHaveStyle({ transition: 'width 280ms cubic-bezier(0.2, 0, 0, 1)' })
+  })
+
+  it('stops listening to the page once it is gone', () => {
+    stubBarAt(400)
+    const remove = vi.spyOn(window, 'removeEventListener')
+    const { unmount } = renderHero()
+    unmount()
+    expect(remove).toHaveBeenCalledWith('scroll', expect.any(Function))
   })
 })
