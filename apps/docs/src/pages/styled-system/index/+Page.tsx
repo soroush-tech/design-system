@@ -7,7 +7,7 @@ import { ReleaseNotes } from 'src/common/ReleaseNotes/ReleaseNotes'
 
 export default function Page() {
   return (
-    <Layout sidebar={<DocsNav />}>
+    <Layout sidebar={<DocsNav />} hasToc>
       <Typography variant="h1" gutterBottom>
         Styled System
       </Typography>

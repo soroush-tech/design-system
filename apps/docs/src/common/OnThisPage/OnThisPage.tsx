@@ -24,13 +24,30 @@ const READ_LINE = 120
 const TocLink = styled('a')(({ theme }) => ({
   position: 'relative',
   display: 'block',
-  padding: `${theme.space[0.75]} ${theme.space[1.5]}`,
-  borderRadius: '1rem',
+  padding: '0.5rem 1rem',
+  borderRadius: '1.125rem',
+  fontSize: '0.875rem',
+  lineHeight: '1.25rem',
   color: get(theme, 'text.secondary'),
   textDecoration: 'none',
   transition: 'color 200ms',
   '&:hover, &[data-active]': { color: get(theme, 'text.initial') },
-  '&[data-active]': { fontWeight: 600 },
+  '&[data-active]': { fontWeight: 500 },
+  '&:focus-visible': {
+    outline: `2px solid ${get(theme, 'palette.primary.main')}`,
+    outlineOffset: -2,
+  },
+}))
+
+// The name of the page, large over the sections: a link to the head of the page.
+const TocTitle = styled('a')(({ theme }) => ({
+  display: 'block',
+  padding: '0.25rem 1rem 0.75rem',
+  color: get(theme, 'text.initial'),
+  fontSize: '1.5rem',
+  fontWeight: 500,
+  lineHeight: 1.2,
+  textDecoration: 'none',
   '&:focus-visible': {
     outline: `2px solid ${get(theme, 'palette.primary.main')}`,
     outlineOffset: -2,
@@ -119,32 +136,34 @@ export function OnThisPage() {
   // The marker is moved to the current entry, measured after layout.
   useLayoutEffect(() => {
     const entry = list.current?.querySelector<HTMLElement>('a[data-active]')
-    if (!entry || !marker.current) return
+    if (!marker.current) return
+    // At the head of the page no section is current: the ground is put away.
+    if (!entry) {
+      marker.current.style.opacity = '0'
+      return
+    }
     marker.current.style.transform = `translateY(${entry.offsetTop}px)`
     marker.current.style.height = `${entry.offsetHeight}px`
     marker.current.style.opacity = '1'
   }, [current, snapshot])
 
   if (headings.length < 2) return null
-  const entries: Array<Heading & { href: string }> = [
-    ...(title ? [{ id: TOP, text: title, href: '#' }] : []),
-    ...headings.map((heading) => ({ ...heading, href: `#${heading.id}` })),
-  ]
   return (
     <View as="nav" aria-label="On this page">
-      <Typography variant="caption" color="secondary" fontWeight="bold" gutterBottom>
+      <Typography variant="caption" color="secondary" fontWeight="medium" px={2} gutterBottom>
         On this page
       </Typography>
+      {title && <TocTitle href="#">{title}</TocTitle>}
       <View as="ul" ref={list} m={0} p={0} position="relative" style={{ listStyle: 'none' }}>
         <Marker ref={marker} aria-hidden />
-        {entries.map((entry) => (
-          <View as="li" key={entry.id}>
+        {headings.map((heading) => (
+          <View as="li" key={heading.id}>
             <TocLink
-              href={entry.href}
-              data-active={entry.id === current ? '' : undefined}
-              aria-current={entry.id === current ? 'location' : undefined}
+              href={`#${heading.id}`}
+              data-active={heading.id === current ? '' : undefined}
+              aria-current={heading.id === current ? 'location' : undefined}
             >
-              {entry.text}
+              {heading.text}
             </TocLink>
           </View>
         ))}

@@ -50,7 +50,7 @@ export default function Page() {
       {/* A family member has no page of its own, so what it is and how it composes is here. */}
       {item?.family && <Readme source={intro} stripChrome />}
       <View as="section" my={4}>
-        <Typography variant="h4" as="h2" gutterBottom>
+        <Typography variant="h4" as="h2" id="demos" gutterBottom>
           Demos
         </Typography>
         <Typography variant="body1">
@@ -61,7 +61,7 @@ export default function Page() {
         </Typography>
       </View>
       <View as="section" my={4}>
-        <Typography variant="h4" as="h2" gutterBottom>
+        <Typography variant="h4" as="h2" id="import" gutterBottom>
           Import
         </Typography>
         <CodeBlock>
@@ -70,7 +70,7 @@ export default function Page() {
       </View>
       <Readme source={api} />
       <View as="section" my={4}>
-        <Typography variant="h4" as="h2" gutterBottom>
+        <Typography variant="h4" as="h2" id="source-code" gutterBottom>
           Source code
         </Typography>
         <Typography variant="body1">

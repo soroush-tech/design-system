@@ -10,7 +10,7 @@ import { sectionPath } from 'src/common/sectionPath'
 
 export default function Page() {
   return (
-    <Layout sidebar={<DocsNav />}>
+    <Layout sidebar={<DocsNav />} hasToc>
       <Typography variant="h1" gutterBottom>
         Packages
       </Typography>
@@ -22,7 +22,7 @@ export default function Page() {
         {PACKAGES.map((entry) => (
           <Card key={entry.id} p={3} borderRadius="lg">
             <Flex flexDirection="row" alignItems="baseline" justifyContent="space-between" gap={2}>
-              <Typography variant="h5" as="h2">
+              <Typography variant="h5" as="h2" id={entry.id}>
                 {entry.name}
               </Typography>
               <Typography variant="caption" color="secondary">

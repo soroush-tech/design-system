@@ -95,11 +95,11 @@ function LayoutFrame({ children, sidebar, hasToc, head }: Readonly<LayoutProps>)
               display={{ xs: 'none', xl: 'block' }}
               width="14rem"
               minWidth="14rem"
-              px={2}
+              pr={2}
               py={5}
               position="sticky"
-              top={0}
-              maxHeight="100dvh"
+              top="8.5rem"
+              maxHeight="calc(100dvh - 8.5rem)"
               overflowY="auto"
               style={{ alignSelf: 'flex-start' }}
             >

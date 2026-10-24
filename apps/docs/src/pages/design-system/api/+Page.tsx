@@ -1,14 +1,14 @@
 import { Link } from '@soroush.tech/design-system/Link'
 import { Typography } from '@soroush.tech/design-system/Typography'
 import { View } from '@soroush.tech/design-system/View'
-import { componentCategories, membersOf } from 'src/common/nav'
+import { componentCategories, kebabCase, membersOf } from 'src/common/nav'
 import { sectionPath } from 'src/common/sectionPath'
 import { DocsNav } from 'src/common/DocsNav/DocsNav'
 import { Layout } from 'src/common/Layout'
 
 export default function Page() {
   return (
-    <Layout sidebar={<DocsNav />}>
+    <Layout sidebar={<DocsNav />} hasToc>
       <Typography variant="h1" gutterBottom>
         Component API
       </Typography>
@@ -18,7 +18,7 @@ export default function Page() {
       </Typography>
       {componentCategories.map((category) => (
         <View key={category.label} mb={4}>
-          <Typography variant="h5" as="h2" gutterBottom>
+          <Typography variant="h5" as="h2" id={kebabCase(category.label)} gutterBottom>
             {category.label}
           </Typography>
           <View as="ul" m={0} p={0} style={{ listStyle: 'none' }}>

@@ -114,11 +114,13 @@ describe('OnThisPage as the page scrolls', () => {
     expect(screen.getAllByRole('link').map((link) => link.textContent)).toEqual(['A', 'B'])
   })
 
-  it('marks the head of the page as current before any section is reached', () => {
+  it('marks no section as current at the head of the page, and puts the ground away', () => {
     placeHeadings({ examples: 600, props: 1200 })
     renderToc(page)
-    expect(active()).toHaveTextContent('Button')
-    expect(active()).toHaveAttribute('aria-current', 'location')
+    expect(active()).toBeNull()
+    expect(
+      document.querySelector<HTMLElement>('nav[aria-label="On this page"] ul > span')!.style.opacity
+    ).toBe('0')
   })
 
   it('marks the last section above the read line, as the page scrolls', () => {
@@ -129,6 +131,7 @@ describe('OnThisPage as the page scrolls', () => {
       fireEvent.scroll(window)
     })
     expect(active()).toHaveTextContent('Examples')
+    expect(active()).toHaveAttribute('aria-current', 'location')
     placeHeadings({ examples: -400, props: 100 })
     act(() => {
       fireEvent.scroll(window)
@@ -155,7 +158,7 @@ describe('OnThisPage as the page scrolls', () => {
     act(() => {
       fireEvent.scroll(window)
     })
-    expect(active()).toHaveTextContent('Button')
+    expect(active()).toBeNull()
   })
 
   it('slides the tinted ground to the current entry', () => {

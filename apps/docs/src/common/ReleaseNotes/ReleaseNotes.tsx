@@ -12,7 +12,7 @@ export interface ReleaseNotesProps {
 export function ReleaseNotes({ pkg }: Readonly<ReleaseNotesProps>) {
   return (
     <View as="section" mt={5}>
-      <Typography variant="h3" as="h2" gutterBottom>
+      <Typography variant="h3" as="h2" id="releases" gutterBottom>
         Releases
       </Typography>
       {releaseNotesFor(pkg).map(({ version, body }) => (
