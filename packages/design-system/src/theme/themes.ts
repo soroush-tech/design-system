@@ -652,6 +652,7 @@ export interface TabsVariants {
   underline: true
   boxed: true
   enclosed: true
+  tonal: true
 }
 
 /** The resolved props Tabs' styled elements receive - what `ownerState` exposes. */

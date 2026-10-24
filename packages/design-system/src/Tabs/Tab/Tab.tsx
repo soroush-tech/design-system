@@ -10,6 +10,7 @@ import { styled, type Theme, createShouldForwardProp, get } from '../../index'
 import { useDefaultProps, type TabsVariants } from '../../theme'
 import { TabIndexContext, useTabsContext, type TabValue } from '../TabsContext'
 import { getDividerShadow } from '../utils/dividerLine'
+import { TONAL_RADIUS } from '../utils/tonalRadius'
 
 /** Where `icon` sits around a tab's label. */
 export type TabIconPosition = 'start' | 'end' | 'top' | 'bottom'
@@ -170,15 +171,19 @@ const TabRoot = styled('div', {
 }) => {
   const main = get(theme, `palette.${color}.main`)
   const isBoxed = variant === 'boxed'
+  const isTonal = variant === 'tonal'
   const outlineColor = isBoxed && isSelected ? `${main}59` : 'transparent'
   const raised = get(theme, 'background.paper')
   // Selected, the Tabs' selectedBg; otherwise the tab's own bg.
   const groundKey = isSelected && selectedBg ? selectedBg : bg
-  const ground = groundKey ? get(theme, `background.${groundKey}`) : 'transparent'
+  let ground = groundKey ? get(theme, `background.${groundKey}`) : 'transparent'
+  // The tonal look tints the selected tab with its color, unless a ground is given.
+  if (isTonal && isSelected && !groundKey) ground = `${main}29`
   // The boxed and enclosed looks round their tabs a little unless told otherwise.
   const isRounded = isBoxed || variant === 'enclosed'
   let radius: string | number = 0
   if (borderRadius) radius = theme.radii[borderRadius]
+  else if (isTonal) radius = TONAL_RADIUS
   else if (isRounded) radius = theme.radii.sm
   return {
     position: 'relative' as const,

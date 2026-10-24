@@ -197,7 +197,8 @@ export const shouldShowLastButton = {
 export const tabsVariant = {
   control: { type: 'select' },
   options: tabsVariantTokens,
-  description: 'The look: an indicator under the selected tab, or the selected tab boxed.',
+  description:
+    'The look: an indicator under the selected tab, the selected tab boxed, or the tabs in a rounded container with the selected one a tinted pill.',
   table: { category: 'Visual', defaultValue: { summary: 'underline' } },
 } as const
 export const tabsOrientation = {
