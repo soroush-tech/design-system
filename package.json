@@ -23,7 +23,7 @@
   "devDependencies": {
     "ai-watermark-guard": "^0.2.0",
     "husky": "^9.1.7",
-    "oxfmt": "^0.63.0",
+    "oxfmt": "^0.74.0",
     "oxfmt-quick": "^1.0.1"
   }
 }
