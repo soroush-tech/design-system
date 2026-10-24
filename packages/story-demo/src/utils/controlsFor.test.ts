@@ -65,6 +65,26 @@ describe('controlsFor', () => {
     expect(controlsFor(meta, story)[0].kind).toBe('inline-radio')
   })
 
+  it('carries the category of an argType to its control', () => {
+    const annotations: ControlsAnnotations = {
+      parameters: { controls: { include: ['tone', 'disabled', 'bare'] } },
+      argTypes: {
+        tone: {
+          control: { type: 'select' },
+          options: ['calm'],
+          table: { category: 'Visual' },
+        },
+        disabled: { control: 'boolean', table: { category: 'Behavior' } },
+        bare: { control: 'text' },
+      },
+    }
+    expect(controlsFor(annotations, {}).map((model) => model.category)).toEqual([
+      'Visual',
+      'Behavior',
+      undefined,
+    ])
+  })
+
   it('returns no controls without an include list', () => {
     expect(controlsFor({}, {})).toEqual([])
   })

@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { Flex } from '@soroush.tech/design-system/Flex'
 import { NativeSelect } from '@soroush.tech/design-system/NativeSelect'
 import { Switch } from '@soroush.tech/design-system/Switch'
@@ -15,31 +16,38 @@ export interface ArgControlProps {
 
 const numberValue = (text: string): number | undefined => (text === '' ? undefined : Number(text))
 
+/** A control's field: its name above, the control under it - the same for every kind. */
+function Field({ control, children }: Readonly<{ control: ControlModel; children: ReactNode }>) {
+  return (
+    <Flex flexDirection="column" gap={1} minWidth={0}>
+      <Typography variant="caption" color="secondary" title={control.description} m={0}>
+        {control.name}
+      </Typography>
+      {children}
+    </Flex>
+  )
+}
+
 /** One arg's interactive control, picked Storybook-style from its argTypes entry. */
 export function ArgControl({ control, value, disabled, onChange }: Readonly<ArgControlProps>) {
-  const { kind, name, description, defaultValue, options, min, max, step } = control
+  const { kind, name, defaultValue, options, min, max, step } = control
   if (kind === 'boolean') {
     return (
-      <Switch
-        checked={Boolean(value)}
-        disabled={disabled}
-        size="sm"
-        color="primary"
-        onChange={(event) => onChange(name, event.target.checked)}
-      >
-        {name}
-      </Switch>
+      <Field control={control}>
+        <Switch
+          checked={Boolean(value)}
+          disabled={disabled}
+          size="sm"
+          color="primary"
+          aria-label={name}
+          onChange={(event) => onChange(name, event.target.checked)}
+        />
+      </Field>
     )
   }
-  const label = (
-    <Typography variant="caption" color="secondary" title={description} m={0}>
-      {name}
-    </Typography>
-  )
   if (kind === 'select') {
     return (
-      <Flex flexDirection="column" gap={1}>
-        {label}
+      <Field control={control}>
         <NativeSelect
           options={options!.map((option) => ({ label: String(option), value: option }))}
           value={(value as ControlOption | undefined) ?? ''}
@@ -49,13 +57,12 @@ export function ArgControl({ control, value, disabled, onChange }: Readonly<ArgC
           selectProps={{ 'aria-label': name }}
           onChange={(next) => onChange(name, next)}
         />
-      </Flex>
+      </Field>
     )
   }
   if (kind === 'inline-radio') {
     return (
-      <Flex flexDirection="column" gap={1}>
-        {label}
+      <Field control={control}>
         <Flex flexDirection="row" gap={1} flexWrap="wrap" role="radiogroup" aria-label={name}>
           {options!.map((option) => (
             <ToggleButton
@@ -70,13 +77,12 @@ export function ArgControl({ control, value, disabled, onChange }: Readonly<ArgC
             </ToggleButton>
           ))}
         </Flex>
-      </Flex>
+      </Field>
     )
   }
   if (kind === 'range') {
     return (
-      <Flex flexDirection="column" gap={1}>
-        {label}
+      <Field control={control}>
         <input
           type="range"
           aria-label={name}
@@ -87,16 +93,16 @@ export function ArgControl({ control, value, disabled, onChange }: Readonly<ArgC
           value={typeof value === 'number' ? value : (min ?? 0)}
           onChange={(event) => onChange(name, Number(event.target.value))}
         />
-      </Flex>
+      </Field>
     )
   }
   // Text and number controls carry a primitive, so the cast keeps this off Object's
   // default stringification.
   const textValue = value === undefined ? '' : String(value as string | number)
   return (
-    <Flex flexDirection="column" gap={1}>
-      {label}
+    <Field control={control}>
       <TextInput
+        fullWidth
         type={kind === 'number' ? 'number' : 'text'}
         value={textValue}
         placeholder={defaultValue}
@@ -106,6 +112,6 @@ export function ArgControl({ control, value, disabled, onChange }: Readonly<ArgC
           onChange(name, kind === 'number' ? numberValue(event.target.value) : event.target.value)
         }
       />
-    </Flex>
+    </Field>
   )
 }

@@ -6,6 +6,8 @@ export interface ControlModel {
   description?: string
   /** The documented default (`table.defaultValue.summary`) - shown while unset. */
   defaultValue?: string
+  /** The group it is in (`table.category`): `Behavior`, `Visual`, ... */
+  category?: string
   options?: ControlOption[]
   min?: number
   max?: number
@@ -23,7 +25,7 @@ interface ArgType {
   control?: string | ArgTypeControl
   options?: ControlOption[]
   description?: string
-  table?: { defaultValue?: { summary?: string } }
+  table?: { category?: string; defaultValue?: { summary?: string } }
 }
 
 /** The subset of a CSF meta or story annotation the controls panel reads. */
@@ -59,6 +61,7 @@ export const controlsFor = (
     const { type } = control
     if (type === undefined) continue
     const defaultValue = argType.table?.defaultValue?.summary
+    const category = argType.table?.category
     if (OPTION_KINDS.has(type)) {
       if (!argType.options?.length) continue
       models.push({
@@ -66,6 +69,7 @@ export const controlsFor = (
         name,
         description: argType.description,
         defaultValue,
+        category,
         options: argType.options,
       })
       continue
@@ -76,6 +80,7 @@ export const controlsFor = (
       name,
       description: argType.description,
       defaultValue,
+      category,
       min: control.min,
       max: control.max,
       step: control.step,
