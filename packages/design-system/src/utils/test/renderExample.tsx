@@ -16,6 +16,7 @@ import { Tooltip } from '../../Tooltip'
 import { Autocomplete } from '../../Autocomplete'
 import { ScrollArea } from '../../ScrollArea'
 import { FabMenu, FabMenuItem } from '../../FabMenu'
+import { NavTree, NavGroup, NavLink } from '../../NavTree'
 import { AppBar } from '../../AppBar'
 import { Avatar } from '../../Avatar'
 import { Backdrop } from '../../Backdrop'
@@ -102,6 +103,9 @@ const COMPONENTS: Record<string, ElementType> = {
   ScrollArea,
   FabMenu,
   FabMenuItem,
+  NavTree,
+  NavGroup,
+  NavLink,
   AppBar,
   Avatar,
   Backdrop,

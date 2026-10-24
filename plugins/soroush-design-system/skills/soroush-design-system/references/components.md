@@ -2,7 +2,7 @@
 
 # Components
 
-The 96 components shipped by the design system, and when to reach for each.
+The 99 components shipped by the design system, and when to reach for each.
 Import every component from its own subpath.
 
 ## Layout & surfaces
@@ -77,6 +77,9 @@ Import every component from its own subpath.
 - **MenuDivider** - A line between groups of rows in a [`MenuList`](https://docs.soroush.tech/design-system/api/menu-list/), rendered as `<li role="separator">`.
 - **MenuItems** - Menu rows from data - for menus that come from a list of commands.
 - **MenuList** - A list of commands, rendered as a semantic `<ul role="menu">`.
+- **NavTree** - A tree of links to the pages of a site: its [`NavGroup`](https://docs.soroush.tech/design-system/api/nav-group/)s, each with its [`NavLink`](https://docs.soroush.tech/design-system/api/nav-link/)s, and any link of its own.
+- **NavGroup** - A group of a [`NavTree`](https://docs.soroush.tech/design-system/components/nav-tree/): a name over a list of [`NavLink`](https://docs.soroush.tech/design-system/api/nav-link/)s.
+- **NavLink** - A link to a page of the site, a row of a [`NavTree`](https://docs.soroush.tech/design-system/components/nav-tree/): its name, an optional note beside it, and a fill when it is the current page.
 - **Tabs** - A row of tabs.
 - **Tab** - One tab of a `Tabs` row: a label, an icon on any side of it, and - with a `closeLabel` - a close button of its own.
 - **TabContext** - Holds the selected value for a `TabList` and the `TabPanel`s beside it, wherever they sit - the tabs in a toolbar, the panels further down the page.

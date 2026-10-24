@@ -12,6 +12,17 @@ export const navigation: Record<string, () => ReactNode> = {
       <Bar x={104} y={46} w={40} tone="strong" />
     </>
   ),
+  NavTree: () => (
+    <>
+      <Bar x={16} y={14} w={30} tone="faint" />
+      <Box x={16} y={24} w={128} h={14} r={7} fill="strong" />
+      <Bar x={26} y={29} w={44} tone="soft" />
+      <Bar x={26} y={46} w={56} />
+      <Bar x={16} y={62} w={30} tone="faint" />
+      <Bar x={26} y={74} w={48} />
+      <Bar x={26} y={86} w={36} />
+    </>
+  ),
   Menu: () => (
     <>
       <Box x={34} y={10} w={50} h={20} r={5} fill="strong" />

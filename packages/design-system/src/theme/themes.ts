@@ -871,6 +871,9 @@ export interface ThemeComponents {
     Record<string, unknown>,
     'root' | 'value' | 'valueArea' | 'valueGhost' | 'listbox'
   >
+  NavGroup?: ComponentConfig<Record<string, unknown>, 'root' | 'label' | 'list'>
+  NavLink?: ComponentConfig<Record<string, unknown>, 'root' | 'label' | 'note'>
+  NavTree?: ComponentConfig<Record<string, unknown>, 'root'>
   Sidebar?: ComponentConfig<Record<string, unknown>, 'root' | 'rail' | 'panel'>
   SidebarItem?: ComponentConfig<Record<string, unknown>, 'root' | 'pill'>
   Skeleton?: ComponentConfig<Record<string, unknown>, 'root' | 'content'>
