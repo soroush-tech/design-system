@@ -1,10 +1,10 @@
 import { type CSSProperties, type ReactNode } from 'react'
 import { Drawer } from '@soroush.tech/design-system/Drawer'
 import { Flex } from '@soroush.tech/design-system/Flex'
-import { Typography } from '@soroush.tech/design-system/Typography'
 import { View } from '@soroush.tech/design-system/View'
 import { CONTENT_MAX_WIDTH, PANEL_RADIUS, TOC_ROOM, TOC_WIDTH } from 'src/common/layoutSizes'
 import { NavRail } from 'src/common/NavRail/NavRail'
+import { Footer } from 'src/common/Footer/Footer'
 import { OnThisPage } from 'src/common/OnThisPage/OnThisPage'
 import { VersionMenu } from 'src/common/VersionMenu/VersionMenu'
 import { sectionFor } from 'src/common/nav'
@@ -81,55 +81,54 @@ function LayoutFrame({ children, sidebar, hasToc, head }: Readonly<LayoutProps>)
               </View>
             </View>
           )}
-          <Flex
-            as="main"
-            flexDirection="column"
-            flex="1 1 auto"
-            minWidth={0}
-            px={4}
-            py={5}
-            // What the head needs to know to line its tabs up with the content: the room beside it.
-            style={{ '--toc-room': hasToc ? TOC_ROOM : '0px' } as CSSProperties}
-          >
-            {/* The head spans the room the sidebar leaves; the content reads in a column no wider than the grid. */}
-            {head}
-            {/* The contents sit beside the column, so they stay close to it however wide the window. */}
+          {/* The footer is under the content, not under the sidebar. */}
+          <Flex flexDirection="column" flex="1 1 auto" minWidth={0}>
             <Flex
-              flexDirection="row"
-              alignItems="stretch"
-              width="100%"
-              maxWidth={hasToc ? `calc(${CONTENT_MAX_WIDTH} + ${TOC_ROOM})` : CONTENT_MAX_WIDTH}
-              mx="auto"
+              as="main"
+              flexDirection="column"
+              flex="1 1 auto"
+              minWidth={0}
+              px={4}
+              py={5}
+              // What the head needs to know to line its tabs up with the content: the room beside it.
+              style={{ '--toc-room': hasToc ? TOC_ROOM : '0px' } as CSSProperties}
             >
-              <View minWidth={0} maxWidth={CONTENT_MAX_WIDTH} style={{ flex: '1 1 0' }}>
-                {children}
-              </View>
-              {hasToc && (
-                <View
-                  as="aside"
-                  aria-label="Contents"
-                  display={{ xs: 'none', xl: 'block' }}
-                  width={TOC_WIDTH}
-                  minWidth={TOC_WIDTH}
-                  ml={4}
-                >
-                  <View
-                    position="sticky"
-                    top="8.5rem"
-                    maxHeight="calc(100dvh - 8.5rem)"
-                    overflowY="auto"
-                  >
-                    <OnThisPage />
-                  </View>
+              {/* The head spans the room the sidebar leaves; the content reads in a column no wider than the grid. */}
+              {head}
+              {/* The contents sit beside the column, so they stay close to it however wide the window. */}
+              <Flex
+                flexDirection="row"
+                alignItems="stretch"
+                width="100%"
+                maxWidth={hasToc ? `calc(${CONTENT_MAX_WIDTH} + ${TOC_ROOM})` : CONTENT_MAX_WIDTH}
+                mx="auto"
+              >
+                <View minWidth={0} maxWidth={CONTENT_MAX_WIDTH} style={{ flex: '1 1 0' }}>
+                  {children}
                 </View>
-              )}
+                {hasToc && (
+                  <View
+                    as="aside"
+                    aria-label="Contents"
+                    display={{ xs: 'none', xl: 'block' }}
+                    width={TOC_WIDTH}
+                    minWidth={TOC_WIDTH}
+                    ml={4}
+                  >
+                    <View
+                      position="sticky"
+                      top="8.5rem"
+                      maxHeight="calc(100dvh - 8.5rem)"
+                      overflowY="auto"
+                    >
+                      <OnThisPage />
+                    </View>
+                  </View>
+                )}
+              </Flex>
             </Flex>
+            <Footer />
           </Flex>
-        </Flex>
-        <Flex as="footer" justifyContent="center" px={4} py={3}>
-          <Typography variant="body2" color="secondary">
-            @soroush.tech design system
-          </Typography>
         </Flex>
       </Flex>
     </Flex>

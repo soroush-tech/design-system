@@ -22,7 +22,17 @@ describe('Layout', () => {
     renderLayout()
     expect(screen.getByRole('link', { name: 'SOROUSH.DESIGN' })).toHaveAttribute('href', '/')
     expect(screen.getByTestId('content')).toHaveTextContent('page content')
-    expect(screen.getByText('@soroush.tech design system')).toBeInTheDocument()
+    expect(screen.getByRole('contentinfo')).toHaveTextContent('SOROUSH.TECH')
+  })
+
+  it('puts the footer under the content, not under the sidebar', () => {
+    renderLayout(<nav>the sidebar</nav>)
+    const footer = screen.getByRole('contentinfo')
+    const main = screen.getByRole('main')
+    expect(footer.parentElement).toBe(main.parentElement)
+    expect(main.nextElementSibling).toBe(footer)
+    for (const aside of document.querySelectorAll('aside'))
+      expect(aside).not.toContainElement(footer)
   })
 
   it('puts the version menu in the top bar, and reads an empty path as the root', () => {
