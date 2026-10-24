@@ -90,7 +90,7 @@ const subscribe = (onChange: () => void): (() => void) => {
 /** The section the window is at: the last heading above the read line, or the page's head. */
 const readCurrent = (ids: string[]): string => {
   const isAtEnd = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2
-  if (isAtEnd && window.scrollY > 0) return ids[ids.length - 1]
+  if (isAtEnd && window.scrollY > 0) return ids.at(-1)!
   let current = TOP
   for (const id of ids) {
     if ((document.getElementById(id)?.getBoundingClientRect().top ?? Infinity) <= READ_LINE) {

@@ -19,7 +19,7 @@ const resolveFrom = (file: string, target: string): string => {
 export const rewriteDocLinks = (source: string, file: string, files: string[]): string =>
   source.replace(/\]\((\.{1,2}\/[^)\s#]+\.md)(#[\w-]+)?\)/g, (full, href: string, hash = '') => {
     const target = resolveFrom(file, href)
-    return files.includes(target)
-      ? `](${sectionPath('styled-system', `/docs/${styledSystemDocSlug(target)}/`)}${hash})`
-      : full
+    if (!files.includes(target)) return full
+    const route = sectionPath('styled-system', '/docs/' + styledSystemDocSlug(target) + '/')
+    return `](${route}${hash})`
   })

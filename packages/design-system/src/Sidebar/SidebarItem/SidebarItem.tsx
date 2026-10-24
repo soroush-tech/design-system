@@ -91,44 +91,52 @@ const densityStyles = ({ theme, size, layout }: SidebarItemRootProps & { theme: 
   }
 }
 
-// Content pins to the anchored edge so the icon holds its position while the
-// rail opens and closes.
-const layoutStyles = ({ anchor, layout }: SidebarItemRootProps) => ({
+// Where the content sits along the row: pinned to the anchored edge, so the icon holds its
+// position while the rail opens and closes - or in the middle, stacked.
+const justifyFor = ({ anchor, layout }: SidebarItemRootProps): string => {
+  if (layout === 'stacked') return 'center'
+  return anchor === 'right' ? 'flex-end' : 'flex-start'
+}
+
+const layoutStyles = (props: SidebarItemRootProps) => ({
   width: '100%',
   alignItems: 'center',
-  justifyContent: layout === 'stacked' ? 'center' : anchor === 'right' ? 'flex-end' : 'flex-start',
+  justifyContent: justifyFor(props),
 })
 
-// The resting look. Press feedback is Pressable's job - these add only the hover
-// fade and the selected state on top of it. A transparent border on the
-// non-outlined variants keeps every item the same size.
-const stateStyles = ({
+// A stacked item: the fill is the icon's pill, not the row, which carries the label's color.
+const stackedStateStyles = ({
   theme,
   color,
   isSelected,
   itemVariant,
-  layout,
   disabled,
 }: SidebarItemRootProps & { theme: Theme }) => {
   const { main } = theme.palette[color]
-  // Stacked, the fill is the icon's pill, not the row: the row carries the label's color.
-  if (layout === 'stacked') {
-    return {
-      border: `${theme.borderWidths.thin} solid transparent`,
-      borderRadius: theme.radii.sq,
-      color: isSelected ? main : get(theme, 'text.primary'),
-      fontWeight: isSelected ? 600 : 400,
-      '&:disabled, &[aria-disabled="true"]': { opacity: 0.5 },
-      // The tint of a hovered row is on its pill.
-      ...(disabled || itemVariant === 'plain'
-        ? {}
-        : {
-            '&:hover [data-sidebar-pill]': {
-              backgroundColor: alpha(main, isSelected ? 0.32 : 0.08),
-            },
-          }),
-    }
+  return {
+    border: `${theme.borderWidths.thin} solid transparent`,
+    borderRadius: theme.radii.sq,
+    color: isSelected ? main : get(theme, 'text.primary'),
+    fontWeight: isSelected ? 600 : 400,
+    '&:disabled, &[aria-disabled="true"]': { opacity: 0.5 },
+    // The tint of a hovered row is on its pill.
+    ...(disabled || itemVariant === 'plain'
+      ? {}
+      : {
+          '&:hover [data-sidebar-pill]': {
+            backgroundColor: alpha(main, isSelected ? 0.32 : 0.08),
+          },
+        }),
   }
+}
+
+// The resting look. Press feedback is Pressable's job - these add only the hover
+// fade and the selected state on top of it. A transparent border on the
+// non-outlined variants keeps every item the same size.
+const stateStyles = (props: SidebarItemRootProps & { theme: Theme }) => {
+  const { theme, color, isSelected, itemVariant, layout, disabled } = props
+  const { main } = theme.palette[color]
+  if (layout === 'stacked') return stackedStateStyles(props)
   const outlined = itemVariant === 'outlined'
   const base = {
     border: `${theme.borderWidths.thin} solid ${

@@ -148,6 +148,36 @@ const getEnclosedEdgeStyle = (
   }
 }
 
+interface TabLookProps {
+  variant: keyof TabsVariants
+  isSelected: boolean
+  main: string
+}
+
+// The tab's ground: while selected the Tabs' selectedBg, otherwise its own bg; the tonal look
+// tints the selected tab with its color unless a ground is given.
+const groundOf = (
+  theme: Theme,
+  { variant, isSelected, main }: TabLookProps,
+  selectedBg: TabStyleProps['selectedBg'],
+  bg: TabStyleProps['bg']
+): string => {
+  const groundKey = isSelected && selectedBg ? selectedBg : bg
+  if (groundKey) return get(theme, `background.${groundKey}`)
+  return variant === 'tonal' && isSelected ? `${main}29` : 'transparent'
+}
+
+// The tab's corners: its own, else a pill when tonal, else a little when boxed or enclosed.
+const radiusOf = (
+  theme: Theme,
+  variant: keyof TabsVariants,
+  borderRadius: TabStyleProps['borderRadius']
+): string | number => {
+  if (borderRadius) return theme.radii[borderRadius]
+  if (variant === 'tonal') return TONAL_RADIUS
+  return variant === 'boxed' || variant === 'enclosed' ? theme.radii.sm : 0
+}
+
 // The tab's box: the tab itself and its own controls beside it - a secondary action and
 // the close button - inside one outline. Every tab keeps its border, transparent until
 // selected, so selecting one moves nothing.
@@ -171,20 +201,10 @@ const TabRoot = styled('div', {
 }) => {
   const main = get(theme, `palette.${color}.main`)
   const isBoxed = variant === 'boxed'
-  const isTonal = variant === 'tonal'
   const outlineColor = isBoxed && isSelected ? `${main}59` : 'transparent'
   const raised = get(theme, 'background.paper')
-  // Selected, the Tabs' selectedBg; otherwise the tab's own bg.
-  const groundKey = isSelected && selectedBg ? selectedBg : bg
-  let ground = groundKey ? get(theme, `background.${groundKey}`) : 'transparent'
-  // The tonal look tints the selected tab with its color, unless a ground is given.
-  if (isTonal && isSelected && !groundKey) ground = `${main}29`
-  // The boxed and enclosed looks round their tabs a little unless told otherwise.
-  const isRounded = isBoxed || variant === 'enclosed'
-  let radius: string | number = 0
-  if (borderRadius) radius = theme.radii[borderRadius]
-  else if (isTonal) radius = TONAL_RADIUS
-  else if (isRounded) radius = theme.radii.sm
+  const ground = groundOf(theme, { variant, isSelected, main }, selectedBg, bg)
+  const radius = radiusOf(theme, variant, borderRadius)
   return {
     position: 'relative' as const,
     display: 'flex',

@@ -1,7 +1,7 @@
 // What the component pages take out of a component README: its lead sentence for the page's
 // header, and the accessibility sections it gives their own tab.
 
-const HEADING = /^(#{1,6}) +(.*)$/
+const HEADING = /^(#{1,6}) +(\S.*|)$/
 const ACCESSIBILITY_HEADING = /^(Accessibility|Keyboard|Focus|ARIA)\b/
 const FENCE = /^\s*(```|~~~)/
 
@@ -17,6 +17,16 @@ export interface SplitAccessibility {
  * heading to the next heading of the same or a higher level; a `#` inside a code fence is not
  * a heading.
  */
+// The level of the accessibility section a heading opens or closes: `level` is the one being
+// read, or 0 outside one.
+const levelAfter = (level: number, line: string): number => {
+  const heading = HEADING.exec(line)
+  if (!heading) return level
+  const depth = heading[1].length
+  const open = level > 0 && depth <= level ? 0 : level
+  return open === 0 && depth >= 2 && ACCESSIBILITY_HEADING.test(heading[2]) ? depth : open
+}
+
 export const splitAccessibility = (source: string): SplitAccessibility => {
   const rest: string[] = []
   const accessibility: string[] = []
@@ -25,12 +35,7 @@ export const splitAccessibility = (source: string): SplitAccessibility => {
   let level = 0
   for (const line of source.split('\n')) {
     if (FENCE.test(line)) isFenced = !isFenced
-    const heading = isFenced ? null : HEADING.exec(line)
-    if (heading) {
-      const depth = heading[1].length
-      if (level > 0 && depth <= level) level = 0
-      if (level === 0 && depth >= 2 && ACCESSIBILITY_HEADING.test(heading[2])) level = depth
-    }
+    if (!isFenced) level = levelAfter(level, line)
     ;(level > 0 ? accessibility : rest).push(line)
   }
   return {
@@ -47,8 +52,8 @@ export const splitAccessibility = (source: string): SplitAccessibility => {
 
 const plain = (markdown: string): string =>
   markdown
-    .replace(/!\[[^\]]*\]\([^)]*\)/g, '')
-    .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+    .replace(/!\[[^\][]*\]\([^)]*\)/g, '')
+    .replace(/\[([^\][]*)\]\([^)]*\)/g, '$1')
     .replace(/[`*_]/g, '')
     .replace(/\s+/g, ' ')
     .trim()
@@ -76,5 +81,8 @@ export const leadOf = (source: string): string => {
     if (lead.length >= MIN_LEAD) break
   }
   if (lead.length <= MAX_LEAD) return lead
-  return `${lead.slice(0, MAX_LEAD).replace(/\s+\S*$/, '')}...`
+  // Cut at the last space, so a word is not left in half.
+  const cut = lead.slice(0, MAX_LEAD)
+  const space = cut.lastIndexOf(' ')
+  return `${space < 0 ? cut : cut.slice(0, space)}...`
 }

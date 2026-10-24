@@ -30,25 +30,27 @@ describe('splitAccessibility', () => {
     expect(rest).toBe('# Tabs\n\nA row of tabs.\n\n## Props\n\n| a | b |\n\n## Examples\n\nNone.')
   })
 
-  it('takes each of Accessibility, Keyboard, Focus and ARIA at their own level', () => {
-    const source = '## Keyboard\nk\n## Focus\nf\n## ARIA\na\n## Other\no'
-    const { rest, accessibility } = splitAccessibility(source)
-    expect(accessibility).toBe('## Keyboard\nk\n## Focus\nf\n## ARIA\na')
-    expect(rest).toBe('## Other\no')
-  })
-
-  it('ends a section at the next heading of its level or a higher one', () => {
-    const source = '### Keyboard\nk\n### Notes\nn\n## Next\nx'
-    const { rest, accessibility } = splitAccessibility(source)
-    expect(accessibility).toBe('### Keyboard\nk')
-    expect(rest).toBe('### Notes\nn\n## Next\nx')
-  })
-
-  it('does not take a heading inside a code fence for a heading', () => {
-    const source = '## Usage\n```md\n## Accessibility\n```\n## Other\no'
-    const { rest, accessibility } = splitAccessibility(source)
-    expect(accessibility).toBe('')
-    expect(rest).toBe(source)
+  it.each([
+    [
+      'takes each of Accessibility, Keyboard, Focus and ARIA at their own level',
+      '## Keyboard\nk\n## Focus\nf\n## ARIA\na\n## Other\no',
+      '## Keyboard\nk\n## Focus\nf\n## ARIA\na',
+      '## Other\no',
+    ],
+    [
+      'ends a section at the next heading of its level or a higher one',
+      '### Keyboard\nk\n### Notes\nn\n## Next\nx',
+      '### Keyboard\nk',
+      '### Notes\nn\n## Next\nx',
+    ],
+    [
+      'does not take a heading inside a code fence for a heading',
+      '## Usage\n```md\n## Accessibility\n```\n## Other\no',
+      '',
+      '## Usage\n```md\n## Accessibility\n```\n## Other\no',
+    ],
+  ])('%s', (_name, source, accessibility, rest) => {
+    expect(splitAccessibility(source)).toEqual({ rest, accessibility })
   })
 
   it('does not take the title, or a heading that only starts like one, for a section', () => {
@@ -112,6 +114,11 @@ describe('leadOf', () => {
     expect(
       leadOf('# T\n\nA tag, e.g. a label for a thing, that is placed over another element.')
     ).toBe('A tag, e.g. a label for a thing, that is placed over another element.')
+  })
+
+  it('cuts a lead that is one long word where it is', () => {
+    const lead = leadOf(`# T\n\n${'x'.repeat(260)}`)
+    expect(lead).toBe(`${'x'.repeat(200)}...`)
   })
 
   it('cuts a long sentence at a word, with three dots', () => {

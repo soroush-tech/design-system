@@ -120,7 +120,7 @@ None.
 | `src/Select/Select.tsx:251`                              | `ListBox`                    | `ul`                 | `Select`           | `listbox`         | `SelectListbox`              |
 | `src/Sidebar/Sidebar/Sidebar.tsx:83`                     | `SidebarRail`                | `Flex`               | `Sidebar`          | `rail`            | `SidebarRail`                |
 | `src/Sidebar/Sidebar/Sidebar.tsx:109`                    | `SidebarPanelRoot`           | `Flex`               | `Sidebar`          | `panel`           | `SidebarPanel`               |
-| `src/Sidebar/SidebarItem/SidebarItem.tsx:188`            | `SidebarItemPill`            | `span`               | `SidebarItem`      | `pill`            | `SidebarItemPill`            |
+| `src/Sidebar/SidebarItem/SidebarItem.tsx:196`            | `SidebarItemPill`            | `span`               | `SidebarItem`      | `pill`            | `SidebarItemPill`            |
 | `src/Skeleton/Skeleton.tsx:125`                          | `HiddenContent`              | `span`               | `Skeleton`         | `content`         | `SkeletonContent`            |
 | `src/Snackbar/Snackbar.tsx:99`                           | `SnackbarContent`            | `div`                | `Snackbar`         | `content`         | `SnackbarContent`            |
 | `src/Snackbar/Snackbar.tsx:127`                          | `SnackbarMessage`            | `div`                | `Snackbar`         | `message`         | `SnackbarMessage`            |
@@ -130,10 +130,10 @@ None.
 | `src/Switch/Switch.tsx:163`                              | `SwitchThumb`                | `span`               | `Switch`           | `thumb`           | `SwitchThumb`                |
 | `src/Switch/Switch.tsx:308`                              | `SwitchLabel`                | `span`               | `Switch`           | `label`           | `SwitchLabel`                |
 | `src/Table/TableSortLabel/TableSortLabel.tsx:74`         | `SortIcon`                   | `Icon`               | `TableSortLabel`   | `icon`            | `TableSortLabelIcon`         |
-| `src/Tabs/Tab/Tab.tsx:216`                               | `TabLabel`                   | `button`             | `Tab`              | `label`           | `TabLabel`                   |
-| `src/Tabs/Tab/Tab.tsx:282`                               | `SecondaryActionSlot`        | `div`                | `Tab`              | `secondaryAction` | `TabSecondaryAction`         |
-| `src/Tabs/Tab/Tab.tsx:292`                               | `TabClose`                   | `button`             | `Tab`              | `close`           | `TabClose`                   |
-| `src/Tabs/Tab/Tab.tsx:327`                               | `IconSlot`                   | `span`               | `Tab`              | `icon`            | `TabIcon`                    |
+| `src/Tabs/Tab/Tab.tsx:236`                               | `TabLabel`                   | `button`             | `Tab`              | `label`           | `TabLabel`                   |
+| `src/Tabs/Tab/Tab.tsx:302`                               | `SecondaryActionSlot`        | `div`                | `Tab`              | `secondaryAction` | `TabSecondaryAction`         |
+| `src/Tabs/Tab/Tab.tsx:312`                               | `TabClose`                   | `button`             | `Tab`              | `close`           | `TabClose`                   |
+| `src/Tabs/Tab/Tab.tsx:347`                               | `IconSlot`                   | `span`               | `Tab`              | `icon`            | `TabIcon`                    |
 | `src/Tabs/Tabs/Tabs.tsx:195`                             | `TabsList`                   | `div`                | `Tabs`             | `list`            | `TabsList`                   |
 | `src/Tabs/Tabs/Tabs.tsx:257`                             | `TabsIndicator`              | `span`               | `Tabs`             | `indicator`       | `TabsIndicator`              |
 | `src/Tabs/Tabs/Tabs.tsx:278`                             | `StartContent`               | `div`                | `Tabs`             | `startContent`    | `TabsStart`                  |
@@ -216,7 +216,7 @@ None.
 | `src/ScrollArea/ScrollArea.tsx:46`                               | `ScrollAreaRoot`        | `div`                                                           | `ScrollArea`             | `root` | `ScrollArea`             |
 | `src/Select/Select.tsx:195`                                      | `Trigger`               | `div`                                                           | `Select`                 | `root` | `Select`                 |
 | `src/Sidebar/Sidebar/Sidebar.tsx:75`                             | `SidebarRoot`           | `Flex`                                                          | `Sidebar`                | `root` | `Sidebar`                |
-| `src/Sidebar/SidebarItem/SidebarItem.tsx:170`                    | `SidebarItemRoot`       | `Pressable`                                                     | `SidebarItem`            | `root` | `SidebarItem`            |
+| `src/Sidebar/SidebarItem/SidebarItem.tsx:178`                    | `SidebarItemRoot`       | `Pressable`                                                     | `SidebarItem`            | `root` | `SidebarItem`            |
 | `src/Skeleton/Skeleton.tsx:109`                                  | `SkeletonRoot`          | `span`                                                          | `Skeleton`               | `root` | `skeleton`               |
 | `src/Snackbar/Snackbar.tsx:78`                                   | `SnackbarRoot`          | `div`                                                           | `Snackbar`               | `root` | `Snackbar`               |
 | `src/Switch/Switch.tsx:317`                                      | `SwitchRoot`            | `label`                                                         | `Switch`                 | `root` | `Switch`                 |
@@ -230,7 +230,7 @@ None.
 | `src/Table/TablePaginationActions/TablePaginationActions.tsx:27` | `ActionsRoot`           | `div`                                                           | `TablePaginationActions` | `root` | `TablePaginationActions` |
 | `src/Table/TableRow/TableRow.tsx:73`                             | `TableRowBase`          | `tr`                                                            | `TableRow`               | `root` | `TableRow`               |
 | `src/Table/TableSortLabel/TableSortLabel.tsx:38`                 | `SortLabelRoot`         | `button`                                                        | `TableSortLabel`         | `root` | `TableSortLabel`         |
-| `src/Tabs/Tab/Tab.tsx:154`                                       | `TabRoot`               | `div`                                                           | `Tab`                    | `root` | `Tab`                    |
+| `src/Tabs/Tab/Tab.tsx:184`                                       | `TabRoot`               | `div`                                                           | `Tab`                    | `root` | `Tab`                    |
 | `src/Tabs/TabPanel/TabPanel.tsx:25`                              | `TabPanelRoot`          | `div`                                                           | `TabPanel`               | `root` | `TabPanel`               |
 | `src/Tabs/Tabs/Tabs.tsx:155`                                     | `TabsRoot`              | `div`                                                           | `Tabs`                   | `root` | `Tabs`                   |
 | `src/TextInput/TextInput.tsx:246`                                | `TextInputRoot`         | `div`                                                           | `TextInput`              | `root` | `TextInput`              |
