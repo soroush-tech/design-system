@@ -205,22 +205,23 @@ describe('ComponentHero tab bar width', () => {
     return rect
   }
 
-  it('spans the content in its place on the page', async () => {
+  it('spans the head in its place on the page', async () => {
     stubBarAt(400)
     renderHero()
     await waitFor(() => expect(bar()).toHaveStyle({ width: '100%' }))
   })
 
-  it('shrinks to the size of its tabs once it sticks, and spans the content again when it does not', async () => {
+  it('shrinks to the content grid once it sticks, and spans the head again when it does not', async () => {
     const rect = stubBarAt(0)
     renderHero()
-    await waitFor(() => expect(bar()).toHaveStyle({ width: 'fit-content' }))
+    await waitFor(() => expect(bar()).toHaveAttribute('data-stuck'))
     rect.mockReturnValue({ top: 400, bottom: 300 } as DOMRect)
     fireEvent.scroll(window)
-    await waitFor(() => expect(bar()).toHaveStyle({ width: '100%' }))
+    await waitFor(() => expect(bar()).not.toHaveAttribute('data-stuck'))
+    expect(bar()).toHaveStyle({ width: '100%' })
     rect.mockReturnValue({ top: 0, bottom: 300 } as DOMRect)
     fireEvent.scroll(window)
-    await waitFor(() => expect(bar()).toHaveStyle({ width: 'fit-content' }))
+    await waitFor(() => expect(bar()).toHaveAttribute('data-stuck'))
   })
 
   it('animates the width', () => {

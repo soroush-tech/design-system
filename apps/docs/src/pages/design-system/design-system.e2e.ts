@@ -126,6 +126,22 @@ test.describe('design-system section', () => {
     await expect(page).toHaveURL(/#styled-system-props$/)
   })
 
+  test('the head is wider than the content, and the tabs shrink to the content grid when they stick', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 2400, height: 1000 })
+    await page.goto('/design-system/components/button/')
+    const head = page.locator('main header')
+    const tabs = page.getByRole('navigation', { name: 'Button pages' })
+    const headWidth = (await head.boundingBox())!.width
+    // The head is wider than the 1200px grid; in its place, the tabs are as wide as the head.
+    expect(headWidth).toBeGreaterThan(1300)
+    expect((await tabs.boundingBox())!.width).toBeCloseTo(headWidth, 0)
+    // Stuck, they shrink to the grid the content sits in.
+    await page.evaluate(() => window.scrollTo(0, 1500))
+    await expect.poll(async () => Math.round((await tabs.boundingBox())!.width)).toBe(1200)
+  })
+
   test('a component with accessibility notes has the tab, and the notes are only there', async ({
     page,
   }) => {

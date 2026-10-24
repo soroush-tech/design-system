@@ -33,15 +33,20 @@ export default function Page() {
   const demosName = item?.family ?? name
   const sourceDir = item ? item.readmePath.replace(/\/README\.md$/, '') : ''
   return (
-    <Layout sidebar={<DocsNav />} hasToc>
-      {item && (
-        <ComponentHero
-          item={item}
-          lead={parts.lead}
-          active={item.family ? undefined : 'specs'}
-          hasAccessibility={parts.accessibility !== ''}
-        />
-      )}
+    <Layout
+      sidebar={<DocsNav />}
+      hasToc
+      head={
+        item && (
+          <ComponentHero
+            item={item}
+            lead={parts.lead}
+            active={item.family ? undefined : 'specs'}
+            hasAccessibility={parts.accessibility !== ''}
+          />
+        )
+      }
+    >
       {/* A family member has no page of its own, so what it is and how it composes is here. */}
       {item?.family && <Readme source={intro} stripChrome />}
       <View as="section" my={4}>

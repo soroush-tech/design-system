@@ -46,6 +46,25 @@ describe('Layout', () => {
     expect(screen.getByTestId('content').parentElement).toHaveStyle({ maxWidth: '1200px' })
   })
 
+  it('puts a head above the content, outside its column, so it can be wider', () => {
+    render(
+      <ThemeModeProvider>
+        <PageContext.Provider value={{ urlPathname: '/design-system/' } as VikePageContext}>
+          <Layout head={<header data-testid="head">the head</header>}>
+            <div data-testid="content">page content</div>
+          </Layout>
+        </PageContext.Provider>
+      </ThemeModeProvider>
+    )
+    const head = screen.getByTestId('head')
+    const column = screen.getByTestId('content').parentElement!
+    expect(column).toHaveStyle({ maxWidth: '1200px' })
+    expect(column).not.toContainElement(head)
+    // Both are children of the page's own main, the head first.
+    expect(head.parentElement).toBe(column.parentElement)
+    expect(head.nextElementSibling).toBe(column)
+  })
+
   it('draws the navigation rail beside the page, for wide screens', () => {
     renderLayout()
     const rail = screen.getByRole('navigation', { name: 'Primary', hidden: true })

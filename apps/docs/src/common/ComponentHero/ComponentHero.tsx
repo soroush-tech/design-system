@@ -5,6 +5,7 @@ import { Flex } from '@soroush.tech/design-system/Flex'
 import { Typography } from '@soroush.tech/design-system/Typography'
 import { View } from '@soroush.tech/design-system/View'
 import { ComponentIllustration } from 'src/common/ComponentCard/ComponentIllustration'
+import { CONTENT_MAX_WIDTH } from 'src/common/contentWidth'
 import type { ComponentNavItem } from 'src/common/nav'
 import { sectionPath } from 'src/common/sectionPath'
 
@@ -40,9 +41,8 @@ const TAB_RADIUS = '1.625rem'
 // The tabs are one gray container, as M3's: no padding, the tabs filling it end to end, an
 // inactive tab just the gray of the bar and the chosen one in the tone. The bar stays at the top
 // of the window as the page scrolls under it; below the wide layout the top bar is there, so it
-// sits under that. In its place on the page it spans the content; stuck, it shrinks to the size
-// of its tabs - `interpolate-size` lets the width animate between the two, and a browser without
-// it simply changes.
+// sits under that. In its place on the page it spans the head, which is wider than the content; stuck, it shrinks to the size
+// of the content grid - the width animates between the two.
 const TabBar = styled('nav', {
   shouldForwardProp: createShouldForwardProp(['isStuck']),
 })<{ isStuck: boolean }>(({ theme, isStuck }) => ({
@@ -51,12 +51,11 @@ const TabBar = styled('nav', {
   zIndex: 3,
   display: 'flex',
   flexWrap: 'wrap',
-  width: isStuck ? 'fit-content' : '100%',
-  maxWidth: '100%',
+  width: isStuck ? `min(100%, ${CONTENT_MAX_WIDTH})` : '100%',
+  marginInline: 'auto',
   marginBottom: theme.space[3],
   borderRadius: TAB_RADIUS,
   backgroundColor: get(theme, 'background.secondary'),
-  'interpolate-size': 'allow-keywords',
   transition: 'width 280ms cubic-bezier(0.2, 0, 0, 1)',
   '@media (prefers-reduced-motion: reduce)': { transition: 'none' },
   [theme.breakpoints.up('lg')]: { top: 0 },
@@ -68,7 +67,7 @@ const forwardTabProp = createShouldForwardProp(['isActive'])
 const TabLink = styled('a', {
   shouldForwardProp: (prop: string) => prop === 'keep-scroll-position' || forwardTabProp(prop),
 })<{ isActive: boolean }>(({ theme, isActive }) => ({
-  flex: '1 1 auto',
+  flex: '1 1 8rem',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -177,7 +176,12 @@ export function ComponentHero({
         </Hero>
       </View>
       {active && (
-        <TabBar ref={bar} isStuck={isStuck} aria-label={`${item.name} pages`}>
+        <TabBar
+          ref={bar}
+          isStuck={isStuck}
+          data-stuck={isStuck ? '' : undefined}
+          aria-label={`${item.name} pages`}
+        >
           {tabs.map((tab) => (
             <TabLink
               key={tab.id}

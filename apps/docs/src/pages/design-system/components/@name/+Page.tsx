@@ -28,13 +28,18 @@ export default function Page() {
   if (!item) throw new Error(`No component for slug "${slug}"`)
   const { lead, accessibility } = componentPageParts(slug)
   return (
-    <Layout sidebar={<DocsNav />} hasToc>
-      <ComponentHero
-        item={item}
-        lead={lead}
-        active="overview"
-        hasAccessibility={accessibility !== ''}
-      />
+    <Layout
+      sidebar={<DocsNav />}
+      hasToc
+      head={
+        <ComponentHero
+          item={item}
+          lead={lead}
+          active="overview"
+          hasAccessibility={accessibility !== ''}
+        />
+      }
+    >
       <MDXProvider components={routeMdxComponents}>{createElement(mdxForSlug(slug))}</MDXProvider>
     </Layout>
   )

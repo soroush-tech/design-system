@@ -3,6 +3,7 @@ import { Drawer } from '@soroush.tech/design-system/Drawer'
 import { Flex } from '@soroush.tech/design-system/Flex'
 import { Typography } from '@soroush.tech/design-system/Typography'
 import { View } from '@soroush.tech/design-system/View'
+import { CONTENT_MAX_WIDTH } from 'src/common/contentWidth'
 import { NavRail } from 'src/common/NavRail/NavRail'
 import { OnThisPage } from 'src/common/OnThisPage/OnThisPage'
 import { VersionMenu } from 'src/common/VersionMenu/VersionMenu'
@@ -18,13 +19,15 @@ export interface LayoutProps {
   sidebar?: ReactNode
   /** Lists the page's sections in a column beside it, on wide screens. */
   hasToc?: boolean
+  /** The head of the page, as wide as the room beside the sidebar - wider than the content below it. */
+  head?: ReactNode
 }
 
 // The mobile navigation drawer's id - the navbar's menu button opens it through popovertarget,
 // so it works on the prerendered pages with JavaScript off.
 const NAV_DRAWER = 'docs-nav'
 
-function LayoutFrame({ children, sidebar, hasToc }: Readonly<LayoutProps>) {
+function LayoutFrame({ children, sidebar, hasToc, head }: Readonly<LayoutProps>) {
   const { open } = useSearch()
   const { urlPathname } = usePageContext()
   const current = urlPathname || '/'
@@ -69,8 +72,9 @@ function LayoutFrame({ children, sidebar, hasToc }: Readonly<LayoutProps>) {
             </View>
           )}
           <Flex as="main" flexDirection="column" flex="1 1 auto" minWidth={0} px={4} py={5}>
-            {/* The content reads in a column no wider than 1200px, centred in the room the sidebar leaves. */}
-            <View width="100%" maxWidth="1200px" mx="auto">
+            {/* The head spans the room the sidebar leaves; the content reads in a column no wider than the grid. */}
+            {head}
+            <View width="100%" maxWidth={CONTENT_MAX_WIDTH} mx="auto">
               {children}
             </View>
           </Flex>
