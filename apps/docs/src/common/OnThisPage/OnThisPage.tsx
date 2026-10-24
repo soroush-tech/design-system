@@ -1,5 +1,6 @@
-import { useSyncExternalStore } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { styled, get } from '@soroush.tech/design-system'
+import { alpha } from '@soroush.tech/design-system/utils'
 import { Typography } from '@soroush.tech/design-system/Typography'
 import { View } from '@soroush.tech/design-system/View'
 
@@ -8,28 +9,60 @@ interface Heading {
   text: string
 }
 
+interface Outline {
+  /** The name of the page - its `h1`; the first entry, which takes the reader back to the top. */
+  title: string | null
+  headings: Heading[]
+}
+
+/** The id of the title entry: the page's head, before any section. */
+const TOP = ''
+
+/** A section is the current one once its heading has reached this far down the window. */
+const READ_LINE = 120
+
 const TocLink = styled('a')(({ theme }) => ({
+  position: 'relative',
   display: 'block',
-  padding: `${theme.space[0.5]} 0`,
+  padding: `${theme.space[0.75]} ${theme.space[1.5]}`,
+  borderRadius: '1rem',
   color: get(theme, 'text.secondary'),
   textDecoration: 'none',
-  '&:hover': { color: get(theme, 'text.initial') },
+  transition: 'color 200ms',
+  '&:hover, &[data-active]': { color: get(theme, 'text.initial') },
+  '&[data-active]': { fontWeight: 600 },
   '&:focus-visible': {
     outline: `2px solid ${get(theme, 'palette.primary.main')}`,
-    outlineOffset: 2,
+    outlineOffset: -2,
   },
 }))
 
-// The page is the store: its `h2` headings that have an id. A snapshot is their ids and texts as
+// The tinted ground of the current entry: one element that slides to it as the page scrolls, so
+// the reader sees where the page has gone. It sits under the links, which are positioned above it.
+const Marker = styled('span')(({ theme }) => ({
+  position: 'absolute',
+  insetInline: 0,
+  top: 0,
+  height: 0,
+  borderRadius: '1rem',
+  backgroundColor: alpha(get(theme, 'palette.primary.main'), 0.22),
+  opacity: 0,
+  pointerEvents: 'none',
+  transition: 'transform 280ms cubic-bezier(0.2, 0, 0, 1), height 280ms, opacity 160ms',
+  '@media (prefers-reduced-motion: reduce)': { transition: 'none' },
+}))
+
+// The page is the store: its `h1`, and its `h2` headings that have an id. A snapshot is them as
 // one string, so React compares it by value; the page changing - a route, a demo mounting late -
 // is read through a MutationObserver.
-const readHeadings = (): string =>
-  JSON.stringify(
-    Array.from(document.querySelectorAll<HTMLElement>('main h2[id]')).map((heading) => ({
+const readOutline = (): string =>
+  JSON.stringify({
+    title: document.querySelector('main h1')?.textContent ?? null,
+    headings: Array.from(document.querySelectorAll<HTMLElement>('main h2[id]')).map((heading) => ({
       id: heading.id,
       text: heading.textContent,
-    }))
-  )
+    })),
+  } satisfies Outline)
 
 const subscribe = (onChange: () => void): (() => void) => {
   const observer = new MutationObserver(onChange)
@@ -37,24 +70,82 @@ const subscribe = (onChange: () => void): (() => void) => {
   return () => observer.disconnect()
 }
 
+/** The section the window is at: the last heading above the read line, or the page's head. */
+const readCurrent = (ids: string[]): string => {
+  const isAtEnd = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2
+  if (isAtEnd && window.scrollY > 0) return ids[ids.length - 1]
+  let current = TOP
+  for (const id of ids) {
+    if ((document.getElementById(id)?.getBoundingClientRect().top ?? Infinity) <= READ_LINE) {
+      current = id
+    }
+  }
+  return current
+}
+
+const useCurrent = (ids: string[], key: string): string => {
+  const [current, setCurrent] = useState(TOP)
+  useEffect(() => {
+    const update = () => setCurrent(readCurrent(ids))
+    update()
+    window.addEventListener('scroll', update, { passive: true })
+    return () => window.removeEventListener('scroll', update)
+    // The ids are what the key says they are.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [key])
+  return current
+}
+
 /**
- * The sections of the page, as links to them - read from the page's own `h2` headings that have
- * an id, so a page of any source (a README, an MDX file) has one. Nothing on the server: the
- * headings are read from the page once it is on screen.
+ * The page's name and its sections, as links to them - read from the page's own `h1` and `h2`
+ * headings that have an id, so a page of any source (a README, an MDX file) has one. The section
+ * the reader is at has a tinted ground, which slides to the next as the page scrolls. Nothing on
+ * the server: the headings are read from the page once it is on screen.
  */
 export function OnThisPage() {
-  const snapshot = useSyncExternalStore(subscribe, readHeadings, () => '[]')
-  const headings: Heading[] = JSON.parse(snapshot)
+  const snapshot = useSyncExternalStore(
+    subscribe,
+    readOutline,
+    () => '{"title":null,"headings":[]}'
+  )
+  const { title, headings }: Outline = JSON.parse(snapshot)
+  const current = useCurrent(
+    headings.map(({ id }) => id),
+    snapshot
+  )
+  const list = useRef<HTMLDivElement>(null)
+  const marker = useRef<HTMLSpanElement>(null)
+
+  // The marker is moved to the current entry, measured after layout.
+  useLayoutEffect(() => {
+    const entry = list.current?.querySelector<HTMLElement>('a[data-active]')
+    if (!entry || !marker.current) return
+    marker.current.style.transform = `translateY(${entry.offsetTop}px)`
+    marker.current.style.height = `${entry.offsetHeight}px`
+    marker.current.style.opacity = '1'
+  }, [current, snapshot])
+
   if (headings.length < 2) return null
+  const entries: Array<Heading & { href: string }> = [
+    ...(title ? [{ id: TOP, text: title, href: '#' }] : []),
+    ...headings.map((heading) => ({ ...heading, href: `#${heading.id}` })),
+  ]
   return (
     <View as="nav" aria-label="On this page">
       <Typography variant="caption" color="secondary" fontWeight="bold" gutterBottom>
         On this page
       </Typography>
-      <View as="ul" m={0} p={0} style={{ listStyle: 'none' }}>
-        {headings.map((heading) => (
-          <View as="li" key={heading.id}>
-            <TocLink href={`#${heading.id}`}>{heading.text}</TocLink>
+      <View as="ul" ref={list} m={0} p={0} position="relative" style={{ listStyle: 'none' }}>
+        <Marker ref={marker} aria-hidden />
+        {entries.map((entry) => (
+          <View as="li" key={entry.id}>
+            <TocLink
+              href={entry.href}
+              data-active={entry.id === current ? '' : undefined}
+              aria-current={entry.id === current ? 'location' : undefined}
+            >
+              {entry.text}
+            </TocLink>
           </View>
         ))}
       </View>

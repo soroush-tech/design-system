@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { describe, it, expect, vi, afterEach } from 'vitest'
+import { act, fireEvent, render, screen } from '@testing-library/react'
 import { renderToString } from 'react-dom/server'
 import type { ReactNode } from 'react'
 import type { PageContext as VikePageContext } from 'vike/types'
@@ -70,5 +70,104 @@ describe('OnThisPage', () => {
   it('shows nothing for a page without sections', () => {
     renderToc(<p>text</p>)
     expect(screen.queryByRole('navigation', { name: 'On this page' })).not.toBeInTheDocument()
+  })
+})
+
+describe('OnThisPage as the page scrolls', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+    vi.unstubAllGlobals()
+  })
+
+  const page = (
+    <>
+      <h1>Button</h1>
+      <h2 id="examples">Examples</h2>
+      <h2 id="props">Props</h2>
+    </>
+  )
+  const active = () => document.querySelector('nav[aria-label="On this page"] a[data-active]')
+
+  // Where each heading is, as a browser measures it: a map of ids to their top in the window.
+  const placeHeadings = (tops: Record<string, number>) => {
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (
+      this: HTMLElement
+    ) {
+      return { top: tops[this.id] ?? 0 } as DOMRect
+    })
+  }
+
+  it('starts with the name of the page, which takes the reader to the top', () => {
+    renderToc(page)
+    const links = screen.getAllByRole('link')
+    expect(links.map((link) => link.textContent)).toEqual(['Button', 'Examples', 'Props'])
+    expect(links[0]).toHaveAttribute('href', '#')
+  })
+
+  it('has no name entry for a page without an h1', () => {
+    renderToc(
+      <>
+        <h2 id="a">A</h2>
+        <h2 id="b">B</h2>
+      </>
+    )
+    expect(screen.getAllByRole('link').map((link) => link.textContent)).toEqual(['A', 'B'])
+  })
+
+  it('marks the head of the page as current before any section is reached', () => {
+    placeHeadings({ examples: 600, props: 1200 })
+    renderToc(page)
+    expect(active()).toHaveTextContent('Button')
+    expect(active()).toHaveAttribute('aria-current', 'location')
+  })
+
+  it('marks the last section above the read line, as the page scrolls', () => {
+    placeHeadings({ examples: 600, props: 1200 })
+    renderToc(page)
+    placeHeadings({ examples: 80, props: 700 })
+    act(() => {
+      fireEvent.scroll(window)
+    })
+    expect(active()).toHaveTextContent('Examples')
+    placeHeadings({ examples: -400, props: 100 })
+    act(() => {
+      fireEvent.scroll(window)
+    })
+    expect(active()).toHaveTextContent('Props')
+  })
+
+  it('marks the last section at the foot of the page, though its heading is below the line', () => {
+    placeHeadings({ examples: 80, props: 700 })
+    vi.stubGlobal('scrollY', 500)
+    vi.stubGlobal('innerHeight', 800)
+    vi.spyOn(document.documentElement, 'scrollHeight', 'get').mockReturnValue(1300)
+    renderToc(page)
+    expect(active()).toHaveTextContent('Props')
+  })
+
+  it('passes over a section whose heading has left the page', () => {
+    placeHeadings({ examples: 80, props: 700 })
+    renderToc(page)
+    const original = document.getElementById.bind(document)
+    vi.spyOn(document, 'getElementById').mockImplementation((id) =>
+      id === 'examples' ? null : original(id)
+    )
+    act(() => {
+      fireEvent.scroll(window)
+    })
+    expect(active()).toHaveTextContent('Button')
+  })
+
+  it('slides the tinted ground to the current entry', () => {
+    placeHeadings({ examples: 80, props: 700 })
+    renderToc(page)
+    const marker = document.querySelector<HTMLElement>('nav[aria-label="On this page"] ul > span')!
+    expect(marker.style.opacity).toBe('1')
+    expect(marker).toHaveAttribute('aria-hidden', 'true')
+  })
+
+  it('leaves the ground hidden while no entry is measured', () => {
+    renderToc(<p>text</p>)
+    expect(document.querySelector('nav[aria-label="On this page"]')).toBeNull()
   })
 })
