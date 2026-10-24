@@ -1,12 +1,18 @@
 import { test, expect } from '@playwright/test'
 
 test.describe('markdown section', () => {
-  test('overview renders the README and the release history', async ({ page }) => {
+  test('overview renders the README', async ({ page }) => {
     await page.goto('/markdown/')
     await expect(page).toHaveTitle(/Markdown · SOROUSH\.DESIGN/)
     await expect(page.getByRole('heading', { level: 1, name: 'Markdown' })).toBeVisible()
-    await expect(page.getByRole('heading', { name: 'Releases' })).toBeVisible()
     await expect(page.getByRole('navigation', { name: 'Markdown documentation' })).toBeVisible()
+  })
+
+  test('the releases are a page of their own, headed by the version alone', async ({ page }) => {
+    await page.goto('/markdown/releases/')
+    await expect(page.getByRole('heading', { level: 1, name: 'Releases' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'v1.2.3' })).toBeVisible()
+    await expect(page.getByText('@soroush.tech/markdown@')).toHaveCount(0)
   })
 
   test('a markdown component page renders its README', async ({ page }) => {
@@ -16,10 +22,9 @@ test.describe('markdown section', () => {
 })
 
 test.describe('styled-system section', () => {
-  test('overview renders the README and the release history', async ({ page }) => {
+  test('overview renders the README', async ({ page }) => {
     await page.goto('/styled-system/')
     await expect(page.getByRole('heading', { level: 1, name: 'Styled System' })).toBeVisible()
-    await expect(page.getByRole('heading', { name: 'Releases' })).toBeVisible()
   })
 
   test('a docs page and a guide page render from the package docs', async ({ page }) => {

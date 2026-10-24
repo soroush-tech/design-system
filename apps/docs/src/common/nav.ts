@@ -114,7 +114,10 @@ const designSystemRail: RailItem[] = [
     label: 'Get started',
     icon: 'dots',
     href: sectionPath('design-system', '/'),
-    matches: [sectionPath('design-system', '/getting-started/')],
+    matches: [
+      sectionPath('design-system', '/getting-started/'),
+      sectionPath('design-system', '/releases/'),
+    ],
     groups: [
       {
         label: 'Get started',
@@ -125,6 +128,7 @@ const designSystemRail: RailItem[] = [
             href: sectionPath('design-system', '/getting-started/installation/'),
           },
           { label: 'Usage', href: sectionPath('design-system', '/getting-started/usage/') },
+          { label: 'Releases', href: sectionPath('design-system', '/releases/') },
         ],
       },
     ],
@@ -179,7 +183,13 @@ const markdownRail: RailItem[] = [
     href: sectionPath('markdown', '/'),
     matches: [],
     groups: [
-      { label: 'Get started', items: [{ label: 'Overview', href: sectionPath('markdown', '/') }] },
+      {
+        label: 'Get started',
+        items: [
+          { label: 'Overview', href: sectionPath('markdown', '/') },
+          { label: 'Releases', href: sectionPath('markdown', '/releases/') },
+        ],
+      },
     ],
   },
   {
@@ -213,7 +223,10 @@ const styledSystemRail: RailItem[] = [
     groups: [
       {
         label: 'Get started',
-        items: [{ label: 'Overview', href: sectionPath('styled-system', '/') }],
+        items: [
+          { label: 'Overview', href: sectionPath('styled-system', '/') },
+          { label: 'Releases', href: sectionPath('styled-system', '/releases/') },
+        ],
       },
     ],
   },
