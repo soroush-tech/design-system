@@ -28,6 +28,15 @@ test.describe('styled-system section', () => {
     await page.goto('/styled-system/docs/guides/spacing/')
     await expect(page).toHaveTitle(/Spacing · SOROUSH\.DESIGN/)
   })
+
+  test('the links between the package docs open the pages, not the markdown files', async ({
+    page,
+  }) => {
+    await page.goto('/styled-system/docs/guides/')
+    await page.getByRole('main').getByRole('link', { name: 'Theming' }).click()
+    await expect(page).toHaveURL(/\/styled-system\/docs\/guides\/theming\/$/)
+    await expect(page).toHaveTitle(/Theming/)
+  })
 })
 
 test.describe('cross-section chrome', () => {
