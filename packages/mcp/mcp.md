@@ -13,8 +13,8 @@ For the consumer-facing view - how to connect and what the tools do - see
 
 | Piece                                | Lives in                         | Ships via                                     |
 | ------------------------------------ | -------------------------------- | --------------------------------------------- |
-| MCP server (hosted)                  | `packages/mcp/src/worker.ts`     | Cloudflare Worker at `mcp.soroush.tech`       |
-| MCP server (local)                   | `packages/mcp/src/bin.ts`        | `npx -y @soroush.tech/mcp` (npm, public)      |
+| MCP server (hosted)                  | `packages/mcp/src/worker.ts`     | Cloudflare Worker at `mcp.soroush.design`     |
+| MCP server (local)                   | `packages/mcp/src/bin.ts`        | `npx -y @soroush.design/mcp` (npm, public)    |
 | `llms.txt` / `llms-full.txt`         | `apps/docs/scripts/emitLlms.ts`  | The docs build, into `build/client`           |
 | Claude Code plugin                   | `plugins/soroush-design-system/` | `.claude-plugin/marketplace.json` at the root |
 | Shared registry and README splitting | `packages/docs-content/`         | Private workspace package                     |
@@ -26,7 +26,7 @@ library from one registry - which is the whole point of the package existing.
 
 ## Content pipeline
 
-`pnpm --filter @soroush.tech/mcp gen` reads the repo and writes
+`pnpm --filter @soroush.design/mcp gen` reads the repo and writes
 `packages/mcp/src/generated/content.ts`, which both bundlers inline. Nothing is read
 from disk at runtime.
 
@@ -76,7 +76,7 @@ The Worker and the npm package are released separately, both manually:
 
 - **Worker** - `CD · MCP (Cloudflare)` (`workflow_dispatch`, main only). It deploys
   whatever main currently documents, since the bundle is baked at build time. Locally:
-  `pnpm --filter @soroush.tech/mcp deploy` after `wrangler login`.
+  `pnpm --filter @soroush.design/mcp deploy` after `wrangler login`.
 - **npm** - the usual `CD · Packages (npm)` dispatch, which gates on
   `packages/mcp/release-notes/<version>.md`.
 - **`llms.txt`** - no separate deploy. The docs build emits it into `build/client`, and

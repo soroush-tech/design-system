@@ -9,7 +9,7 @@ Monorepo for the `@soroush.tech` UI libraries, extracted from [`soroush-tech/cor
 | [`@soroush.tech/styled-system`](packages/styled-system) | Style-prop system: responsive style functions, `system()`, theme-aware scales |
 | [`@soroush.tech/design-system`](packages/design-system) | Token-driven React component library built on styled-system                   |
 | [`@soroush.tech/markdown`](packages/markdown)           | Markdown companion component library for the design system                    |
-| [`@soroush.tech/mcp`](packages/mcp)                     | MCP server exposing the components, READMEs, and tokens to AI coding tools    |
+| [`@soroush.design/mcp`](packages/mcp)                   | MCP server exposing the components, READMEs, and tokens to AI coding tools    |
 | [`@soroush.tech/ui-spec`](packages/ui-spec)             | Generative-UI spec on A2UI v1.0: catalogs, a behavior schema, and validators  |
 | [`@soroush.tech/hooks`](packages/hooks)                 | Shared React hooks (private, internal)                                        |
 | [`@soroush.tech/lab`](packages/lab)                     | Incubator for components heading into the design system (private, internal)   |
@@ -26,14 +26,14 @@ renders - component READMEs, the live token contract, and the guides:
 
 ```sh
 # The hosted MCP server (no install)
-claude mcp add --transport http soroush https://mcp.soroush.tech/mcp
+claude mcp add --transport http soroush https://mcp.soroush.design/mcp
 
 # Or the Claude Code plugin: MCP server + house-style skill + UI review agent
 claude plugin marketplace add soroush-tech/design-system
 claude plugin install soroush-design-system@soroush-tech
 ```
 
-`npx -y @soroush.tech/mcp` runs the same server locally over stdio, and
+`npx -y @soroush.design/mcp` runs the same server locally over stdio, and
 [docs.soroush.tech/llms.txt](https://docs.soroush.tech/llms.txt) serves a
 machine-readable index. See [`packages/mcp/mcp.md`](packages/mcp/mcp.md) for how it is
 built and kept in sync.

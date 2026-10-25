@@ -28,6 +28,12 @@ describe('ReleaseNotes', () => {
     expect(screen.queryByRole('heading', { name: /@soroush\.tech\/markdown@/ })).toBeNull()
   })
 
+  it('trims the package name of a release of the MCP server, under its own scope', () => {
+    renderWithTheme(<ReleaseNotes pkg="mcp" />)
+    expect(screen.getByRole('heading', { name: 'v0.1.1' })).toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: /@soroush\.design\/mcp@/ })).toBeNull()
+  })
+
   it('lists the versions newest first', () => {
     renderWithTheme(<ReleaseNotes pkg="markdown" />)
     const names = screen.getAllByRole('heading', { level: 2 }).map((heading) => heading.textContent)

@@ -1,4 +1,4 @@
-# @soroush.tech/mcp
+# @soroush.design/mcp
 
 MCP server for the [`@soroush.tech`](https://docs.soroush.tech) design system. It
 gives AI coding tools - Claude Code, Claude, Cursor, or anything else that speaks the
@@ -11,13 +11,13 @@ the library instead of guessing at it.
 The hosted server needs no install:
 
 ```sh
-claude mcp add --transport http soroush https://mcp.soroush.tech/mcp
+claude mcp add --transport http soroush https://mcp.soroush.design/mcp
 ```
 
 Or run it locally over stdio - useful offline, or to pin a version:
 
 ```sh
-npx -y @soroush.tech/mcp
+npx -y @soroush.design/mcp
 ```
 
 For a client configured by file:
@@ -25,7 +25,7 @@ For a client configured by file:
 ```jsonc
 {
   "mcpServers": {
-    "soroush": { "command": "npx", "args": ["-y", "@soroush.tech/mcp"] },
+    "soroush": { "command": "npx", "args": ["-y", "@soroush.design/mcp"] },
   },
 }
 ```
@@ -47,7 +47,7 @@ before writing markup, and `get_tokens` instead of hardcoding a value.
 ## Programmatic use
 
 ```ts
-import { createMcpServer } from '@soroush.tech/mcp'
+import { createMcpServer } from '@soroush.design/mcp'
 
 const server = createMcpServer()
 await server.connect(myTransport)

@@ -19,7 +19,9 @@ export interface PackageInfo {
   docs: DocsSection
 }
 
-const npmOf = (id: string) => `https://www.npmjs.com/package/@soroush.tech/${id}`
+// The MCP server is published under its own scope, `@soroush.design`.
+const npmOf = (id: string) =>
+  `https://www.npmjs.com/package/@soroush.${id === 'mcp' ? 'design' : 'tech'}/${id}`
 const githubOf = (id: string) => `${GITHUB_TREE}/packages/${id}`
 
 /** The packages the docs are about, the ones with a docs section first. */

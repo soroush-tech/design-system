@@ -25,7 +25,7 @@ if (plugin) {
     console.log(stale.length ? `plugin: synced ${stale.join(', ')}` : 'plugin: already up to date')
   } else if (stale.length) {
     console.error(
-      `Plugin references are stale (${stale.join(', ')}). Run \`pnpm --filter @soroush.tech/mcp gen -- --plugin\` and commit.`
+      `Plugin references are stale (${stale.join(', ')}). Run \`pnpm --filter @soroush.design/mcp gen -- --plugin\` and commit.`
     )
     process.exit(1)
   } else {

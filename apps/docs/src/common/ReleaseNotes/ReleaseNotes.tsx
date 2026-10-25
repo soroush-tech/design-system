@@ -8,9 +8,10 @@ export interface ReleaseNotesProps {
 }
 
 // A release's heading names the package and its version, as the file is the version's own:
-// `@soroush.tech/design-system@2.0.0`. The page is the package's, so the version alone is shown.
+// `@soroush.tech/design-system@2.0.0` - under any scope. The page is the package's, so the
+// version alone is shown.
 const titleByVersion = (body: string): string =>
-  body.replace(/^## @soroush\.tech\/[\w-]+@(\S+)/, '## v$1')
+  body.replace(/^## @[\w.-]+\/[\w-]+@(\S+)/, '## v$1')
 
 /** The package's version history, rendered from its in-repo release-notes files. */
 export function ReleaseNotes({ pkg }: Readonly<ReleaseNotesProps>) {

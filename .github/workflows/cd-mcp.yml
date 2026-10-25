@@ -2,7 +2,7 @@
 # CI never runs this workflow, so no job here could prove anything about it.
 name: CD · MCP (Cloudflare)
 
-# Deploys the MCP server to mcp.soroush.tech. Manual only, like the npm publish:
+# Deploys the MCP server to mcp.soroush.design. Manual only, like the npm publish:
 # the content bundle is baked at build time, so a deploy is a deliberate act of
 # publishing whatever main currently documents.
 
@@ -44,7 +44,7 @@ jobs:
 
       # Bakes the component READMEs, guides, and token contract into the Worker bundle.
       - name: Generate the content bundle
-        run: pnpm --filter @soroush.tech/mcp gen
+        run: pnpm --filter @soroush.design/mcp gen
 
       - name: Deploy to Cloudflare Workers
         uses: cloudflare/wrangler-action@953926a2e2182532811c01a25e53647d93bf07c0 # v4.1.3
