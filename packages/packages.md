@@ -46,7 +46,7 @@ Keep the **public API in `index.ts`** (the single entry); extract internal helpe
 
 ## Naming & scope
 
-- Every package is scoped **`@soroush.tech/*`** (apps are not - `apps/web` stays `@soroush/web`).
+- Every package is scoped **`@soroush.tech/*`**, except the MCP server, which is **`@soroush.design/mcp`** (apps are not - `apps/web` stays `@soroush/web`).
 - A Vite plugin's internal `name` field **must equal its package name minus the scope** (`vite-plugin-watch`), so build logs read `[vite-plugin-watch]`. Keep the directory, package name, and plugin `name` in sync.
 
 ---

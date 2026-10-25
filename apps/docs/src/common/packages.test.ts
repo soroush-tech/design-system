@@ -17,7 +17,9 @@ describe('PACKAGES', () => {
   it('gives each package its version, npm page and source folder', () => {
     for (const entry of PACKAGES) {
       expect(entry.version).toMatch(/^\d+\.\d+\.\d+$/)
-      expect(entry.npm).toBe(`https://www.npmjs.com/package/@soroush.tech/${entry.id}`)
+      // The MCP server is published under its own scope.
+      const scope = entry.id === 'mcp' ? 'design' : 'tech'
+      expect(entry.npm).toBe(`https://www.npmjs.com/package/@soroush.${scope}/${entry.id}`)
       expect(entry.github).toBe(
         `https://github.com/soroush-tech/design-system/tree/main/packages/${entry.id}`
       )
