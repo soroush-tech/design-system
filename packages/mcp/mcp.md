@@ -75,8 +75,13 @@ and commit the result.
 The Worker and the npm package are released separately, both manually:
 
 - **Worker** - `CD · MCP (Cloudflare)` (`workflow_dispatch`, main only). It deploys
-  whatever main currently documents, since the bundle is baked at build time. Locally:
-  `pnpm --filter @soroush.design/mcp deploy` after `wrangler login`.
+  whatever main currently documents, since the bundle is baked at build time, then checks the
+  landing page and an MCP `initialize` request against `https://mcp.soroush.design`. It is
+  the only deploy path: Cloudflare has no OIDC federation for Workers, so the job holds one
+  secret pair in the `cd-mcp` environment - `CLOUDFLARE_ACCOUNT_ID` and a
+  `CLOUDFLARE_API_TOKEN` scoped to the `soroush.design` zone and its account alone (Account >
+  Workers Scripts > Edit; Zone > Workers Routes > Edit, DNS > Edit and Zone > Read). The first
+  deploy attaches `mcp.soroush.design` itself; the zone must be active in that account.
 - **npm** - the usual `CD · Packages (npm)` dispatch, which gates on
   `packages/mcp/release-notes/<version>.md`.
 - **`llms.txt`** - no separate deploy. The docs build emits it into `build/client`, and
