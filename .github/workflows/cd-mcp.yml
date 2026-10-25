@@ -8,11 +8,11 @@ name: CD · MCP (Cloudflare)
 #
 # Cloudflare has no OIDC federation for Workers deploys (npm publishing does - see
 # cd-packages.yml), so this job holds the only long-lived secret in the pipeline. Keep it small:
-# CLOUDFLARE_API_TOKEN is scoped to the soroush.design zone and its account alone. The first
-# deploy creates the Worker, its DNS record and its route, so it needs the account-level Workers
-# Editor role, Zone > Workers Routes > Edit, Zone > DNS > Edit and Zone > Zone > Read. Once the
-# Worker exists, swap it for a token with the Editor role on that one Worker (see mcp.md). Both
-# secrets live in the `cd-mcp` environment, which can require a reviewer.
+# CLOUDFLARE_API_TOKEN is scoped to the soroush.design zone and its account alone. Creating the
+# Worker needs the Workers Admin role (Editor can only change one that exists), with Zone >
+# Workers Routes > Edit, Zone > DNS > Edit and Zone > Zone > Read for the route. Once the Worker
+# exists, swap it for a token with the Editor role on that one Worker. Both secrets live in the
+# `cd-mcp` environment, which can require a reviewer.
 
 on:
   workflow_dispatch:
@@ -85,11 +85,11 @@ jobs:
             return 1
           }
           # The response is read whole before it is searched: grep -q would close the pipe early.
-          landing=$(check curl -fsS https://mcp.soroush.design/) \
+          landing=$(check curl --connect-timeout 5 --max-time 15 -fsS https://mcp.soroush.design/) \
             || { echo "::error::the landing page did not answer"; exit 1; }
           grep -q "MCP server" <<<"$landing" \
             || { echo "::error::the landing page is not the MCP server's"; exit 1; }
-          init=$(check curl -fsS https://mcp.soroush.design/mcp \
+          init=$(check curl --connect-timeout 5 --max-time 15 -fsS https://mcp.soroush.design/mcp \
             -H 'Content-Type: application/json' \
             -H 'Accept: application/json, text/event-stream' \
             -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"cd-mcp","version":"0"}}}') \

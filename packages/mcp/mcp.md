@@ -75,16 +75,7 @@ and commit the result.
 The Worker and the npm package are released separately, both manually:
 
 - **Worker** - `CD · MCP (Cloudflare)` (`workflow_dispatch`, main only). It deploys
-  whatever main currently documents, since the bundle is baked at build time, then checks the
-  landing page and an MCP `initialize` request against `https://mcp.soroush.design`. It is
-  the only deploy path: Cloudflare has no OIDC federation for Workers, so the job holds one
-  secret pair in the `cd-mcp` environment - `CLOUDFLARE_ACCOUNT_ID` and a
-  `CLOUDFLARE_API_TOKEN`. The first deploy creates the Worker and attaches
-  `mcp.soroush.design` itself, so the zone must be active in that account and the token needs the
-  account-level Workers Editor role (the old Workers Scripts > Edit) plus Zone > Workers Routes >
-  Edit, DNS > Edit and Zone > Read. After that first run, replace it with a token whose Editor
-  role is scoped to the single `soroush-mcp` Worker, delete the first token, and run the
-  workflow again; if it fails on a route or zone error, add Workers Routes to the narrow token.
+  whatever main currently documents, since the bundle is baked at build time.
 - **npm** - the usual `CD · Packages (npm)` dispatch, which gates on
   `packages/mcp/release-notes/<version>.md`.
 - **`llms.txt`** - no separate deploy. The docs build emits it into `build/client`, and
