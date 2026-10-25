@@ -76,6 +76,9 @@ jobs:
       # answering after the first deploy, so each is retried.
       - name: Check the deployed server
         run: |
+          # Each check is a request and a look at what came back, and the retry covers both: a
+          # fresh domain can answer with a 200 that is not the new Worker's yet. The response is
+          # read whole before it is searched, since grep -q would close the pipe early.
           check() {
             for attempt in 1 2 3 4 5 6; do
               "$@" && return 0
@@ -84,15 +87,18 @@ jobs:
             done
             return 1
           }
-          # The response is read whole before it is searched: grep -q would close the pipe early.
-          landing=$(check curl --connect-timeout 5 --max-time 15 -fsS https://mcp.soroush.design/) \
-            || { echo "::error::the landing page did not answer"; exit 1; }
-          grep -q "MCP server" <<<"$landing" \
+          landing_page() {
+            body=$(curl --connect-timeout 5 --max-time 15 -fsS https://mcp.soroush.design/) \
+              && grep -q "MCP server" <<<"$body"
+          }
+          mcp_initialize() {
+            body=$(curl --connect-timeout 5 --max-time 15 -fsS https://mcp.soroush.design/mcp \
+              -H 'Content-Type: application/json' \
+              -H 'Accept: application/json, text/event-stream' \
+              -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"cd-mcp","version":"0"}}}') \
+              && grep -q '"serverInfo"' <<<"$body"
+          }
+          check landing_page \
             || { echo "::error::the landing page is not the MCP server's"; exit 1; }
-          init=$(check curl --connect-timeout 5 --max-time 15 -fsS https://mcp.soroush.design/mcp \
-            -H 'Content-Type: application/json' \
-            -H 'Accept: application/json, text/event-stream' \
-            -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"cd-mcp","version":"0"}}}') \
-            || { echo "::error::the MCP endpoint did not answer"; exit 1; }
-          grep -q '"serverInfo"' <<<"$init" \
+          check mcp_initialize \
             || { echo "::error::the MCP endpoint did not answer initialize"; exit 1; }
