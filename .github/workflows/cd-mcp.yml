@@ -8,9 +8,11 @@ name: CD · MCP (Cloudflare)
 #
 # Cloudflare has no OIDC federation for Workers deploys (npm publishing does - see
 # cd-packages.yml), so this job holds the only long-lived secret in the pipeline. Keep it small:
-# CLOUDFLARE_API_TOKEN is scoped to the soroush.design zone and its account alone, with
-# Account > Workers Scripts > Edit, Zone > Workers Routes > Edit, Zone > DNS > Edit and
-# Zone > Zone > Read; both secrets live in the `cd-mcp` environment, which can require a reviewer.
+# CLOUDFLARE_API_TOKEN is scoped to the soroush.design zone and its account alone. The first
+# deploy creates the Worker, its DNS record and its route, so it needs the account-level Workers
+# Editor role, Zone > Workers Routes > Edit, Zone > DNS > Edit and Zone > Zone > Read. Once the
+# Worker exists, swap it for a token with the Editor role on that one Worker (see mcp.md). Both
+# secrets live in the `cd-mcp` environment, which can require a reviewer.
 
 on:
   workflow_dispatch:
