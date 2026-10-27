@@ -5,15 +5,15 @@
 #
 # Releases up to design-system 1.3.3 / styled-system 5.8.3 / markdown 1.2.2 were cut in
 # soroush-tech/core and reach this repo through the subtree split: their trees hold only
-# `packages/`, no docs app. Their snapshot is built from the last 1.x setup of this repo
-# (LEGACY_SETUP - main just before design-system 2.0.0) with the tag's packages in place of
-# the setup's, so the README text, docs and components are the release's own. The setup
-# keeps its `.mdx` pages, which those trees never had; a component the release did not have
-# yet loses its page and its registry entry.
+# `packages/`, no docs app. Their snapshot is built from the docs app as of LEGACY_SETUP, so
+# it has the current layout, with the release's own prose (every `.md` under its packages -
+# READMEs, docs, release notes) laid over the setup's. Code, demos and props tables are the
+# setup's: the new layout needs components the old packages do not have. A component the
+# release did not have yet loses its page and its registry entry.
 set -euo pipefail
 
-# Merge of #4: design-system 1.3.4, styled-system 5.8.3, markdown 1.2.2 - the 1.x API.
-LEGACY_SETUP=a527a34ab858a7d9978b3c6fc8c114601e9d075c
+# The docs app with the rail, tree and TOC layout (the merge of #58).
+LEGACY_SETUP=e2a9d9f9f04e446304c5f3d4811d29d3b09025a8
 
 tag=$1
 dir=$2
@@ -25,14 +25,12 @@ for pkg in $(git ls-tree --name-only "$tag:packages"); do
   # Only the packages this setup has (core's bench and the like stay out), and packages.md
   # is a file.
   [[ -d "packages/$pkg" ]] && git ls-tree -d "$tag:packages/$pkg" >/dev/null 2>&1 || continue
-  pages=$(git ls-files "packages/$pkg/*.mdx")
-  git rm -r -q "packages/$pkg"
-  git checkout "$tag" -- "packages/$pkg"
-  [[ -z "$pages" ]] || git checkout "$LEGACY_SETUP" -- $pages
+  # A package with no prose in the release (grep finds nothing) is not an error.
+  git ls-tree -r --name-only "$tag" -- "packages/$pkg" | { grep -E '\.md$' || true; } | while read -r file; do
+    mkdir -p "$(dirname "$file")"
+    git show "$tag:$file" > "$file"
+  done
 done
-
-# A workspace devDependency on core's benchmark package, which never moved here.
-sed -i '/"@soroush.tech\/bench": "workspace:\*",/d' packages/*/package.json
 
 registry=packages/docs-content/src/registry.ts
 for entry in $(grep -oE "(markdownComponent|component)\('[A-Za-z]+'" "$registry" | tr -d "'" | tr '(' ':'); do
@@ -40,8 +38,10 @@ for entry in $(grep -oE "(markdownComponent|component)\('[A-Za-z]+'" "$registry"
   name=${entry##*:}
   pkg=design-system
   [[ "$kind" == markdownComponent ]] && pkg=markdown
-  [[ -n "$(find "packages/$pkg/src" -path "*/$name/README.md")" ]] && continue
+  git ls-tree -r --name-only "$tag" -- "packages/$pkg/src" | grep -q "/$name/README.md$" && continue
   echo "Not in $tag: $name - page and registry entry dropped."
   find "packages/$pkg/src" -name "$name.mdx" -delete
   sed -i -E "/$kind\('$name'/d" "$registry"
+  # The family's members go with it, whether listed on one line or several.
+  sed -i -E "/^  $name: \[.*\],$/d; /^  $name: \[$/,/^  \],$/d" "$registry"
 done

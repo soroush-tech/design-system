@@ -216,19 +216,9 @@ jobs:
         env:
           DOCS_SECTION: ${{ matrix.package }}
           DOCS_BASE: /${{ matrix.package }}/${{ steps.resolve.outputs.version }}/
-          LEGACY: ${{ steps.resolve.outputs.legacy }}
         run: |
-          if [ "$LEGACY" = "true" ]; then
-            # The tag's packages change the dependency graph, so the lockfile follows. The
-            # old packages are built for the docs app, which is not type-checked against
-            # them (styled-system before 5.8.0 does not type `gap`) - vite builds it alone.
-            pnpm install --no-frozen-lockfile --ignore-scripts
-            pnpm --filter '@soroush.tech/docs^...' build
-            pnpm --filter @soroush.tech/docs exec vite build
-          else
-            pnpm install --frozen-lockfile --ignore-scripts
-            pnpm --filter @soroush.tech/docs build
-          fi
+          pnpm install --frozen-lockfile --ignore-scripts
+          pnpm --filter @soroush.tech/docs build
 
       - name: Install the snapshot into docs-dist
         if: steps.resolve.outputs.skip == 'false' && steps.archived.outputs.done == 'false'
