@@ -2,7 +2,7 @@ import { styled, get } from '@soroush.tech/design-system'
 import { Flex } from '@soroush.tech/design-system/Flex'
 import type { IconName } from '@soroush.tech/design-system/Icon'
 import { Sidebar, SidebarItem } from '@soroush.tech/design-system/Sidebar'
-import { isVersioned, sectionFor, railItemFor, type RailIcon } from 'src/common/nav'
+import { sectionFor, railItemFor, type RailIcon } from 'src/common/nav'
 import { useSearch } from 'src/common/Search/SearchContext'
 import { VersionMenu } from 'src/common/VersionMenu/VersionMenu'
 import { usePageContext } from 'src/hooks/usePageContext'
@@ -50,7 +50,7 @@ export function NavRail() {
       gap={1}
     >
       <SidebarItem icon="search" label="Search" aria-pressed={undefined} onSelect={open} />
-      {isVersioned(section.pkg) && <VersionMenu pkg={section.pkg} pathname={current} />}
+      <VersionMenu pkg={section.pkg} pathname={current} />
       <Flex flexDirection="column" alignItems="center" width="100%" mt={2} gap={0.5}>
         {section.rail.map((item) => {
           const isActive = active.id === item.id

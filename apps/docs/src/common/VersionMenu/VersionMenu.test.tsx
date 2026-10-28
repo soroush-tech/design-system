@@ -107,6 +107,21 @@ describe('VersionMenu', () => {
     expect(assign).toHaveBeenCalledWith('/design-system/')
   })
 
+  it.each(['mcp', 'ui-spec'] as const)(
+    'lists the released snapshots of the %s section and goes to one',
+    async (pkg) => {
+      stubManifest({ [pkg]: ['0.1.3'] })
+      const assign = vi.fn()
+      vi.stubGlobal('location', { ...window.location, assign })
+      const user = userEvent.setup()
+      renderWithTheme(<VersionMenu pkg={pkg} pathname={`/${pkg}/`} />)
+      expect(trigger()).toHaveTextContent(`v${PACKAGE_VERSIONS[pkg]}`)
+      await user.click(trigger())
+      await user.click(await screen.findByRole('menuitemradio', { name: 'v0.1.3' }))
+      expect(assign).toHaveBeenCalledWith(`/${pkg}/0.1.3/`)
+    }
+  )
+
   it('lists the live docs alone without manifest entries or on a failed fetch', async () => {
     stubManifest({}, false)
     const user = userEvent.setup()

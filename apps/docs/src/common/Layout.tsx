@@ -7,7 +7,7 @@ import { NavRail } from 'src/common/NavRail/NavRail'
 import { Footer } from 'src/common/Footer/Footer'
 import { OnThisPage } from 'src/common/OnThisPage/OnThisPage'
 import { VersionMenu } from 'src/common/VersionMenu/VersionMenu'
-import { isVersioned, sectionFor } from 'src/common/nav'
+import { sectionFor } from 'src/common/nav'
 import { usePageContext } from 'src/hooks/usePageContext'
 import { Navbar } from 'src/common/Navbar/Navbar'
 import { useSearch } from 'src/common/Search/SearchContext'
@@ -43,9 +43,7 @@ function LayoutFrame({ children, sidebar, hasToc, head }: Readonly<LayoutProps>)
           <Navbar
             menuDrawer={sidebar ? NAV_DRAWER : undefined}
             onSearch={open}
-            versionMenu={
-              isVersioned(pkg) ? <VersionMenu pkg={pkg} pathname={current} /> : undefined
-            }
+            versionMenu={<VersionMenu pkg={pkg} pathname={current} />}
           />
         </View>
         {sidebar && (

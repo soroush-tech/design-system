@@ -35,11 +35,12 @@ describe('Layout', () => {
       expect(aside).not.toContainElement(footer)
   })
 
-  it('has no version menu in the top bar where a package has no released versions', () => {
-    renderLayout(undefined, '/mcp/')
+  it.each(['/mcp/', '/ui-spec/'])('has a version menu in the top bar of %s', (path) => {
+    renderLayout(undefined, path)
+    const bar = screen.getByRole('banner')
     expect(
-      screen.queryByRole('button', { name: /Documentation version/, hidden: true })
-    ).not.toBeInTheDocument()
+      within(bar).getByRole('button', { name: /Documentation version, v\d+\.\d+\.\d+/ })
+    ).toBeInTheDocument()
   })
 
   it('puts the version menu in the top bar, and reads an empty path as the root', () => {
