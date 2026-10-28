@@ -1,1 +1,0 @@
-import"./chunk-Crrb2Aik.js";import{M as e}from"./chunk-tgMEp-Ky.js";export{e as createArchitectureServices};
