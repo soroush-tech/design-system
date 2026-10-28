@@ -38,7 +38,11 @@ for entry in $(grep -oE "(markdownComponent|component)\('[A-Za-z]+'" "$registry"
   name=${entry##*:}
   pkg=design-system
   [[ "$kind" == markdownComponent ]] && pkg=markdown
-  git ls-tree -r --name-only "$tag" -- "packages/$pkg/src" | grep -q "/$name/README.md$" && continue
+  # grep reads the whole listing: -q would close the pipe on the first match, and pipefail would
+  # count git's SIGPIPE as "not found".
+  if git ls-tree -r --name-only "$tag" -- "packages/$pkg/src" | grep "/$name/README.md$" > /dev/null; then
+    continue
+  fi
   echo "Not in $tag: $name - page and registry entry dropped."
   find "packages/$pkg/src" -name "$name.mdx" -delete
   sed -i -E "/$kind\('$name'/d" "$registry"
