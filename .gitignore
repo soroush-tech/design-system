@@ -38,3 +38,7 @@ storybook-static
 test-results
 .vitest-attachments
 __screenshots__/
+
+# Local artifacts
+*.tgz
+.playwright-mcp/
