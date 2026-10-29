@@ -1,5 +1,13 @@
-import { useCallback, useEffect, useRef, type PointerEvent, type SyntheticEvent } from 'react'
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  type PointerEvent,
+  type SyntheticEvent,
+} from 'react'
 import { useControlled } from '../../utils/useControlled'
+import { TooltipGroupContext } from '../TooltipGroupContext'
 
 export interface UseTooltipParams {
   /** Whether it is shown - `undefined` leaves it to the hook. */
@@ -56,12 +64,33 @@ export function useTooltip({
 }: Readonly<UseTooltipParams>) {
   const [isOpen, setIsOpen] = useControlled({ controlled: isOpenProp, default: defaultOpen })
   const timer = useRef<number | undefined>(undefined)
-  const latest = useRef({ isOpen, isOpenProp, isAtPoint, onOpen, onClose })
+  // In a group, one that opens just after another closed - or while one is open - needs no
+  // delay, and the one still showing closes. A tooltip the app controls is left out of it.
+  const group = useContext(TooltipGroupContext)
+  const latest = useRef({ isOpen, isOpenProp, isAtPoint, onOpen, onClose, group })
   useEffect(() => {
-    latest.current = { isOpen, isOpenProp, isAtPoint, onOpen, onClose }
+    latest.current = { isOpen, isOpenProp, isAtPoint, onOpen, onClose, group }
   })
 
   const clear = useCallback(() => window.clearTimeout(timer.current), [])
+
+  // Closes it now, for the group when another tooltip of it opens.
+  const closeNow = useCallback(
+    (event: Event | SyntheticEvent) => {
+      clear()
+      const current = latest.current
+      setIsOpen(false)
+      current.onClose?.(event)
+    },
+    [clear, setIsOpen]
+  )
+  const isInGroup = group !== null && isOpenProp === undefined
+  useEffect(() => {
+    if (!isInGroup || !isOpen) return undefined
+    group.open(closeNow)
+    return () => group.release(closeNow)
+  }, [group, isInGroup, isOpen, closeNow])
+  const getEnterDelay = () => (isInGroup && group.shouldSkipDelay() ? 0 : enterDelay)
 
   // Asks to open or close after a delay; the last ask wins.
   const ask = useCallback(
@@ -73,13 +102,15 @@ export function useTooltip({
         // An open asked for before the tooltip was put at a point is dropped; a close is not.
         if (next && current.isAtPoint) return
         if (current.isOpenProp === undefined) {
+          if (next) current.group?.closeActive(event)
+          else current.group?.release(closeNow)
           setIsOpen(next)
         }
         const notify = next ? current.onOpen : current.onClose
         notify?.(event)
       }, delay)
     },
-    [clear, setIsOpen]
+    [clear, setIsOpen, closeNow]
   )
 
   useEffect(() => clear, [clear])
@@ -105,13 +136,13 @@ export function useTooltip({
     Handler
   > = {
     onMouseEnter: (event) => {
-      if (shouldOpenOnHover) ask(true, event, enterDelay)
+      if (shouldOpenOnHover) ask(true, event, getEnterDelay())
     },
     onMouseLeave: (event) => {
       if (shouldOpenOnHover) ask(false, event, leaveDelay)
     },
     onFocus: (event) => {
-      if (shouldOpenOnFocus && isKeyboardFocus(event)) ask(true, event, enterDelay)
+      if (shouldOpenOnFocus && isKeyboardFocus(event)) ask(true, event, getEnterDelay())
     },
     onBlur: (event) => {
       if (shouldOpenOnFocus) ask(false, event, leaveDelay)

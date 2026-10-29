@@ -6,6 +6,7 @@ import { View } from '../View'
 import { exampleArgs } from '../utils/test/renderExample'
 import { tooltipCatalog, tooltipPlacementValues } from './Tooltip.catalog'
 import { Tooltip } from './Tooltip'
+import { TooltipGroup } from './TooltipGroup'
 
 const meta: Meta<typeof Tooltip> = {
   title: 'Theme/Tooltip',
@@ -177,6 +178,22 @@ export const NotInteractive: Story = {
       </Tooltip>
       <Button variant="outlined">Row</Button>
     </Flex>
+  ),
+}
+
+// Hover the first until it opens, then move along: each next one opens at once.
+export const InAGroup: Story = {
+  args: { enterDelay: 500 },
+  render: (args) => (
+    <TooltipGroup skipDelayDuration={300}>
+      <Flex gap={1}>
+        {['Layers', 'Assets', 'Pages'].map((title) => (
+          <Tooltip key={title} {...args} title={title}>
+            <Button variant="outlined">{title}</Button>
+          </Tooltip>
+        ))}
+      </Flex>
+    </TooltipGroup>
   ),
 }
 

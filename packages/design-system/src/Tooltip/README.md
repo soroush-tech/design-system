@@ -81,6 +81,28 @@ A press of the child closes the tooltip as a native `title` goes away: a mouse o
 which is left to its long press. A press anywhere else cannot let a click through - the click goes to what
 was under the pointer when it went down, which is the tooltip - so only `isInteractive={false}` does.
 
+## A group of tooltips
+
+Around a toolbar or a rail, a tooltip that waits its `enterDelay` for every icon is slow. Wrap them in
+`TooltipGroup` and the next one opens at once while another is open, or within `skipDelayDuration`
+(milliseconds, 300 by default) of the last one closing; after that the tooltip's own `enterDelay` applies
+again. A tooltip that opens closes the one still showing, so two are never up together.
+
+```tsx
+<TooltipGroup skipDelayDuration={300}>
+  <Tooltip title="Layers">
+    <IconButton aria-label="Layers" />
+  </Tooltip>
+  <Tooltip title="Assets">
+    <IconButton aria-label="Assets" />
+  </Tooltip>
+</TooltipGroup>
+```
+
+It renders nothing of its own and takes hover and keyboard focus; a touch keeps `enterTouchDelay`. The
+nearest group wins. Tooltips outside a group are unchanged, and a tooltip whose `isOpen` the app controls
+is left alone: the group neither opens nor closes it, and it does not start the window.
+
 ## A disabled child
 
 A disabled control sends no pointer events of its own (React holds them back), so a `Tooltip` around
