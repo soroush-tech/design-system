@@ -160,6 +160,22 @@ export const OverADisabledButton: Story = {
   ),
 }
 
+// No child: the tooltip is at a point in the window, open when it is told to be.
+export const AtAPoint: Story = {
+  // The meta's example child is left out: there is none.
+  args: {
+    children: undefined,
+    isOpen: true,
+    title: 'Move the track',
+    anchorPosition: { top: 160, left: 200 },
+  },
+  render: (args) => (
+    <View height="240px">
+      <Tooltip {...args} />
+    </View>
+  ),
+}
+
 // A button with text: the tooltip adds to it.
 export const DescribesAButton: Story = {
   args: { shouldDescribeChild: true, title: 'Writes the page to your drafts' },

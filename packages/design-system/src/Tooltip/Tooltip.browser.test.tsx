@@ -51,6 +51,27 @@ describe('Tooltip in a browser', () => {
     )
   })
 
+  it('sits above a point, a gap away and centred on it, with no child', async () => {
+    renderWithTheme(
+      <Tooltip title="Move the track" anchorPosition={{ top: 300, left: 200 }} isOpen />
+    )
+    await vi.waitFor(() => expect(tooltip()).toBeVisible())
+    const surface = tooltip().getBoundingClientRect()
+    expect(surface.bottom).toBeCloseTo(300 - 8, 0)
+    // The position is floored to a whole pixel, so the middle may be a pixel short.
+    expect(Math.abs(surface.left + surface.width / 2 - 200)).toBeLessThanOrEqual(1)
+  })
+
+  it('flips below a point near the top of the window, and follows it as it moves', async () => {
+    const { rerender } = renderWithTheme(
+      <Tooltip title="Agents" anchorPosition={{ top: 4, left: 200 }} isOpen />
+    )
+    await vi.waitFor(() => expect(tooltip()).toBeVisible())
+    expect(tooltip().getBoundingClientRect().top).toBeCloseTo(4 + 8, 0)
+    rerender(<Tooltip title="Agents" anchorPosition={{ top: 300, left: 200 }} isOpen />)
+    await vi.waitFor(() => expect(tooltip().getBoundingClientRect().bottom).toBeCloseTo(300 - 8, 0))
+  })
+
   it('flips below its child where there is no room above it', async () => {
     renderWithTheme(view({}, 0))
     await userEvent.hover(trigger())

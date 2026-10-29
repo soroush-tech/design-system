@@ -14,8 +14,8 @@ None.
 
 | Location                      | Variable             | Base   | Reason                                                   |
 | ----------------------------- | -------------------- | ------ | -------------------------------------------------------- |
-| `src/Tooltip/Tooltip.tsx:146` | `TooltipDescription` | `span` | hidden text, nothing of it to restyle                    |
-| `src/Tooltip/Tooltip.tsx:160` | `TooltipTarget`      | `span` | a layout shim around the child, nothing of it to restyle |
+| `src/Tooltip/Tooltip.tsx:156` | `TooltipDescription` | `span` | hidden text, nothing of it to restyle                    |
+| `src/Tooltip/Tooltip.tsx:170` | `TooltipTarget`      | `span` | a layout shim around the child, nothing of it to restyle |
 
 ## Named slots (135)
 
@@ -147,7 +147,7 @@ None.
 | `src/TextInput/TextInput.tsx:262`                        | `StyledInput`                | `InputBase`          | `TextInput`        | `input`           | `TextInputInput`             |
 | `src/TextInput/TextInput.tsx:271`                        | `StyledTextarea`             | `textarea`           | `TextInput`        | `input`           | `TextInputTextarea`          |
 | `src/TextInput/TextInput.tsx:279`                        | `StyledAutoResizeTextarea`   | `TextAreaAutoResize` | `TextInput`        | `input`           | `TextInputTextarea`          |
-| `src/Tooltip/Tooltip.tsx:164`                            | `TooltipArrow`               | `span`               | `Tooltip`          | `arrow`           | `TooltipArrow`               |
+| `src/Tooltip/Tooltip.tsx:174`                            | `TooltipArrow`               | `span`               | `Tooltip`          | `arrow`           | `TooltipArrow`               |
 | `src/TransferList/TransferList.tsx:87`                   | `TransferListList`           | `Paper`              | `TransferList`     | `list`            | `TransferListList`           |
 | `src/TransferList/TransferList.tsx:99`                   | `TransferListHeader`         | `div`                | `TransferList`     | `header`          | `TransferListHeader`         |
 | `src/TransferList/TransferList.tsx:111`                  | `TransferListTitle`          | `span`               | `TransferList`     | `title`           | `TransferListTitle`          |
@@ -239,7 +239,7 @@ None.
 | `src/TextInput/TextInput.tsx:246`                                | `TextInputRoot`         | `div`                                                           | `TextInput`              | `root` | `TextInput`              |
 | `src/ToggleButton/ToggleButton/ToggleButton.tsx:50`              | `ToggleButtonRoot`      | `Button`                                                        | `ToggleButton`           | `root` | `ToggleButton`           |
 | `src/ToggleButton/ToggleButtonGroup/ToggleButtonGroup.tsx:39`    | `ToggleButtonGroupRoot` | `ButtonGroup`                                                   | `ToggleButtonGroup`      | `root` | `ToggleButtonGroup`      |
-| `src/Tooltip/Tooltip.tsx:115`                                    | `TooltipSurface`        | `div`                                                           | `Tooltip`                | `root` | `Tooltip`                |
+| `src/Tooltip/Tooltip.tsx:125`                                    | `TooltipSurface`        | `div`                                                           | `Tooltip`                | `root` | `Tooltip`                |
 | `src/TransferList/TransferList.tsx:69`                           | `TransferListRoot`      | `div`                                                           | `TransferList`           | `root` | `TransferList`           |
 | `src/Typography/Typography.tsx:89`                               | `TypographyBase`        | `p`                                                             | `Typography`             | `root` | `Typography`             |
 | `src/View/View.tsx:78`                                           | `View`                  | `div`                                                           | `View`                   | `root` | `View`                   |

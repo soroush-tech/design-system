@@ -17,6 +17,7 @@ import { useDefaultProps } from '../theme'
 import { themeDefault } from '../theme/utils/themeDefault'
 import { getSurfaceRadius } from '../utils/getSurfaceRadius'
 import { Portal } from '../Portal'
+import type { PopoverPosition } from '../Popover/utils/computePopoverPosition'
 import { useMergedRefs } from '../Modal/hooks/useMergedRefs'
 import {
   useAnchoredPlacement,
@@ -45,8 +46,17 @@ export interface TooltipSlotProps {
 }
 
 export interface TooltipProps {
-  /** The one element the tooltip is about - it holds a `ref` and takes the handlers. */
-  children: ReactElement
+  /**
+   * The one element the tooltip is about - it holds a `ref` and takes the handlers. Without it, the
+   * tooltip is at `anchorPosition`, and open when `isOpen` says so.
+   */
+  children?: ReactElement
+  /**
+   * A point in the window - client coordinates, as Popover's - to place the tooltip at instead of
+   * beside the child: a hint that depends on where the pointer is. It follows the point and the
+   * `title` as they change.
+   */
+  anchorPosition?: PopoverPosition
   /** What the tooltip says. Nothing says no tooltip. */
   title?: ReactNode
   /** The side of the child it sits on, and the end it lines up with; `auto` takes the side with the most room. Flips for want of room. Default: `'top'`. */
@@ -211,6 +221,7 @@ type ChildProps = Record<string, unknown> & { ref?: Ref<HTMLElement> }
  */
 export function Tooltip({
   children,
+  anchorPosition,
   title,
   placement: placementProp,
   hasArrow: hasArrowProp,
@@ -264,8 +275,10 @@ export function Tooltip({
   const isShown = isOpen && hasTitle
 
   const anchorRef = useRef<HTMLElement | null>(null)
+  // A tooltip at a point goes by the point alone, whatever child it has.
+  const noAnchorRef = useRef<HTMLElement | null>(null)
   const surfaceRef = useRef<HTMLDivElement>(null)
-  const own = children.props as ChildProps
+  const own = (children?.props ?? {}) as ChildProps
   // A disabled control sends no pointer events, so the tooltip is placed against, and listens on,
   // a wrapper of its own; the control keeps its own ref.
   const isChildDisabled = own.disabled === true
@@ -287,7 +300,8 @@ export function Tooltip({
   )
   useAnchoredPlacement({
     isOpen: isShown,
-    anchorRef,
+    anchorRef: anchorPosition ? noAnchorRef : anchorRef,
+    anchorPosition,
     surfaceRef,
     getOrigins,
     margin: MARGIN,
@@ -315,17 +329,20 @@ export function Tooltip({
   // A persistent description points at a copy of the title that is always there, so the open
   // tooltip is not read as well.
   const descriptionId = `${id}-description`
-  const hasPersistentDescription = shouldDescribeChild && isDescriptionPersistent && hasTitle
+  const hasPersistentDescription =
+    children !== undefined && shouldDescribeChild && isDescriptionPersistent && hasTitle
   const describedBy = (shown: boolean) =>
     hasPersistentDescription
       ? [ownDescription, descriptionId].filter(Boolean).join(' ')
       : [ownDescription, shown ? id : undefined].filter(Boolean).join(' ') || undefined
   const ariaProps = shouldDescribeChild ? { 'aria-describedby': describedBy(isShown) } : names
-  const child = cloneElement(children as ReactElement<ChildProps>, {
-    ...(isChildDisabled ? {} : handlers),
-    ...ariaProps,
-    ref,
-  })
+  const child = children
+    ? cloneElement(children as ReactElement<ChildProps>, {
+        ...(isChildDisabled ? {} : handlers),
+        ...ariaProps,
+        ref,
+      })
+    : null
 
   return (
     <>

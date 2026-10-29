@@ -442,6 +442,50 @@ describe('Tooltip', () => {
     })
   })
 
+  describe('at a point', () => {
+    const at = (props: Partial<TooltipProps> = {}) => (
+      <Tooltip title="Move the track" anchorPosition={{ top: 300, left: 400 }} isOpen {...props} />
+    )
+
+    it('needs no child: it is open when it is asked to be, beside the point', () => {
+      renderWithTheme(at())
+      expect(tooltip()).toHaveTextContent('Move the track')
+      // Above the point, a gap away, and as wide as it is.
+      expect(tooltip().style.top).toBe('292px')
+      expect(tooltip().style.left).toBe('400px')
+      expect(tooltip().style.visibility).toBe('visible')
+    })
+
+    it('is closed when it is not asked to be, and says nothing without a title', () => {
+      const { rerender } = renderWithTheme(at({ isOpen: false }))
+      noTooltip()
+      rerender(at({ title: '' }))
+      noTooltip()
+    })
+
+    it('follows the point and the title as they change', () => {
+      const { rerender } = renderWithTheme(at())
+      rerender(at({ title: 'Agents', anchorPosition: { top: 500, left: 120 } }))
+      expect(tooltip()).toHaveTextContent('Agents')
+      expect(tooltip().style.top).toBe('492px')
+      expect(tooltip().style.left).toBe('120px')
+    })
+
+    it('describes no child, and has no hidden copy of its title', () => {
+      renderWithTheme(at({ shouldDescribeChild: true, isDescriptionPersistent: true }))
+      expect(screen.queryByRole('button', { hidden: true })).not.toBeInTheDocument()
+      expect(document.querySelector('[id$="-description"]')).toBeNull()
+    })
+
+    it('is placed at the point, not beside the child, when it has one', () => {
+      renderWithTheme(
+        at({ children: <button type="button">Icon</button>, shouldOpenOnHover: false })
+      )
+      expect(tooltip().style.top).toBe('292px')
+      expect(button()).toHaveAttribute('aria-label', 'Move the track')
+    })
+  })
+
   describe('the child', () => {
     it('keeps its own handlers and ref', () => {
       const onMouseEnter = vi.fn()
