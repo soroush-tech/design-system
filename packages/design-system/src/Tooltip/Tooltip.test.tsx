@@ -300,6 +300,26 @@ describe('Tooltip', () => {
       expect(button()).toHaveAttribute('aria-label', 'Own')
     })
 
+    it('names no child that is hidden from assistive technology', () => {
+      const { unmount } = renderWithTheme(
+        <Tooltip title="Save">
+          <button type="button" aria-hidden="true">
+            Icon
+          </button>
+        </Tooltip>
+      )
+      expect(button()).not.toHaveAttribute('aria-label')
+      unmount()
+      renderWithTheme(
+        <Tooltip title="Save">
+          <button type="button" aria-hidden>
+            Icon
+          </button>
+        </Tooltip>
+      )
+      expect(button()).not.toHaveAttribute('aria-label')
+    })
+
     it('names nothing by a title that is not text', () => {
       renderWithTheme(view({ title: <b>Bold</b> }))
       expect(button()).not.toHaveAttribute('aria-label')
@@ -338,6 +358,82 @@ describe('Tooltip', () => {
         </Tooltip>
       )
       expect(button()).toHaveAttribute('aria-describedby', 'help')
+    })
+  })
+
+  describe('what a parent hands it for its child', () => {
+    it('goes on to the child: its id, aria props and handlers', () => {
+      const calls: string[] = []
+      renderWithTheme(
+        <Tooltip
+          title="More"
+          id="trigger"
+          aria-haspopup="menu"
+          aria-expanded={false}
+          onClick={() => calls.push('forwarded')}
+          onKeyDown={() => calls.push('keydown')}
+        >
+          <button type="button" onClick={() => calls.push('own')}>
+            Icon
+          </button>
+        </Tooltip>
+      )
+      expect(button()).toHaveAttribute('id', 'trigger')
+      expect(button()).toHaveAttribute('aria-haspopup', 'menu')
+      expect(button()).toHaveAttribute('aria-expanded', 'false')
+      fireEvent.click(button())
+      fireEvent.keyDown(button(), { key: 'Enter' })
+      // The child's own handler first, then the one it was handed.
+      expect(calls).toEqual(['own', 'forwarded', 'keydown'])
+    })
+
+    it('gives the ref to the child, with its own, and places the tooltip against the child', () => {
+      const forwarded = { current: null as HTMLElement | null }
+      const own = { current: null as HTMLButtonElement | null }
+      renderWithTheme(
+        <Tooltip title="More" ref={forwarded} defaultOpen>
+          <button type="button" ref={own}>
+            Icon
+          </button>
+        </Tooltip>
+      )
+      expect(forwarded.current).toBe(button())
+      expect(own.current).toBe(button())
+      expect(tooltip().style.visibility).toBe('visible')
+    })
+
+    it('runs the handler of the tooltip and the one it was handed on the same event', () => {
+      const forwarded = vi.fn()
+      renderWithTheme(view({ onMouseEnter: forwarded }))
+      fireEvent.mouseEnter(button())
+      tick(100)
+      expect(forwarded).toHaveBeenCalledTimes(1)
+      expect(tooltip()).toBeInTheDocument()
+    })
+
+    it('adds a description it was handed to the child own and to its own', () => {
+      renderWithTheme(
+        <>
+          <span id="own">Own</span>
+          <span id="handed">Handed</span>
+          <Tooltip title="Save" aria-describedby="handed" shouldDescribeChild defaultOpen>
+            <button type="button" aria-describedby="own">
+              Icon
+            </button>
+          </Tooltip>
+        </>
+      )
+      expect(button()).toHaveAttribute('aria-describedby', `own handed ${tooltip().id}`)
+    })
+
+    it('does not name a child it was handed a name for', () => {
+      renderWithTheme(view({ 'aria-label': 'Handed' }))
+      expect(button()).toHaveAttribute('aria-label', 'Handed')
+    })
+
+    it('leaves what it was handed as undefined alone', () => {
+      renderWithTheme(view({ id: undefined }))
+      expect(button()).not.toHaveAttribute('id')
     })
   })
 

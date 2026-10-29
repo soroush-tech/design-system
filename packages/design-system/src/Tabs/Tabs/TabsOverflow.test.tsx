@@ -58,6 +58,36 @@ describe('Tabs with overflowBehavior="menu"', () => {
     expect(rows[0]).toHaveAttribute('aria-disabled', 'true')
   })
 
+  it('carries no native title of its own: its hints are tooltips, and the list is named', () => {
+    const onTabClose = vi.fn()
+    const { remeasure } = renderRow({ onTabClose })
+    measure(150)
+    remeasure()
+    expect(document.querySelector('[title]')).toBeNull()
+    openMenu()
+    expect(document.querySelector('[title]')).toBeNull()
+    // The list reads as the label of the button that opens it.
+    expect(screen.getByRole('menu')).toHaveAccessibleName('More tabs')
+  })
+
+  it('shows the label of the overflow button and of a close button as a tooltip', () => {
+    vi.useFakeTimers()
+    const { remeasure } = renderRow({ onTabClose: vi.fn() })
+    measure(150)
+    remeasure()
+    fireEvent.mouseEnter(chevron()!)
+    act(() => vi.advanceTimersByTime(100))
+    expect(screen.getByRole('tooltip')).toHaveTextContent('More tabs')
+    fireEvent.mouseLeave(chevron()!)
+    act(() => vi.advanceTimersByTime(0))
+    openMenu()
+    const row = screen.getByRole('menuitem', { name: 'Beta' })
+    fireEvent.mouseEnter(row.parentElement!.querySelector('button[tabindex="-1"]')!)
+    act(() => vi.advanceTimersByTime(100))
+    expect(screen.getByRole('tooltip')).toHaveTextContent('Close Beta')
+    vi.useRealTimers()
+  })
+
   it('selects a tab chosen from the menu, which brings it into the row', () => {
     const onChange = vi.fn()
     const { remeasure } = renderRow({ onChange })
@@ -78,8 +108,10 @@ describe('Tabs with overflowBehavior="menu"', () => {
     openMenu()
     // Beside the row, not inside it - and the pointer's, hidden from assistive technology: a
     // menu owns rows alone.
-    const close = document.querySelector<HTMLButtonElement>('[title="Close Beta"]')!
-    expect(screen.getByRole('menuitem', { name: 'Beta' })).not.toContainElement(close)
+    const row = screen.getByRole('menuitem', { name: 'Beta' })
+    const close = row.parentElement!.querySelector<HTMLButtonElement>('button[tabindex="-1"]')!
+    expect(close).not.toHaveAttribute('title')
+    expect(row).not.toContainElement(close)
     expect(close).toHaveAttribute('aria-hidden', 'true')
     expect(close).toHaveAttribute('tabindex', '-1')
     fireEvent.click(close)

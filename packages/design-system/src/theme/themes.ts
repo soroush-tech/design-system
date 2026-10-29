@@ -525,6 +525,7 @@ export interface TooltipOwnerState {
   shouldDescribeChild?: boolean
   isDescriptionPersistent?: boolean
   isInteractive?: boolean
+  shouldWrapDisabledChild?: boolean
   shouldOpenOnHover?: boolean
   shouldOpenOnFocus?: boolean
   shouldOpenOnTouch?: boolean

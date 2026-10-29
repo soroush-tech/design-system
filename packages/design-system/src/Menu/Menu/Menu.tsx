@@ -17,7 +17,7 @@ import {
 import { styled, type Theme } from '../../index'
 import { useDefaultProps, useTheme } from '../../theme'
 import type { PaperElevation } from '../../Paper'
-import { MenuList } from '../MenuList'
+import { MenuList, type MenuListSlotProps } from '../MenuList'
 import { MenuItem } from '../../MenuItem'
 import { MenuItems, type MenuItemData } from '../MenuItems'
 import { MenuActivationContext } from '../MenuActivationContext'
@@ -85,6 +85,8 @@ export interface MenuProps {
   dense?: boolean
   /** Names the list. Default: the trigger names it (`aria-labelledby`). */
   'aria-label'?: string
+  /** Props for a part: `list` is the `role="menu"` list - and every submenu's - for the app's `data-*`, class and `aria-*`. The menu's own `role`, `id` and name win. */
+  slotProps?: { list?: MenuListSlotProps }
   className?: string
   'data-testid'?: string
 }
@@ -154,6 +156,7 @@ export function Menu({
   dense: denseProp,
   'aria-label': ariaLabel,
   className,
+  slotProps,
   'data-testid': dataTestid,
 }: Readonly<MenuProps>) {
   // Resolution: explicit prop → theme.components.Menu.defaultProps → literal fallback.
@@ -180,8 +183,8 @@ export function Menu({
 
   const margin = Number.parseFloat(String(theme.space[marginThreshold]))
   const menuContext = useMemo<MenuContextValue>(
-    () => ({ align, margin, elevation, layer }),
-    [align, margin, elevation, layer]
+    () => ({ align, margin, elevation, layer, listProps: slotProps?.list }),
+    [align, margin, elevation, layer, slotProps?.list]
   )
   useMenuPlacement({
     isOpen,
@@ -279,6 +282,7 @@ export function Menu({
           <MenuContext.Provider value={menuContext}>
             <MenuActivationContext.Provider value={handleActivate}>
               <MenuList
+                {...slotProps?.list}
                 id={listId}
                 aria-label={ariaLabel}
                 aria-labelledby={ariaLabel ? undefined : triggerId}

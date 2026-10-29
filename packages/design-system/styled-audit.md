@@ -14,8 +14,8 @@ None.
 
 | Location                      | Variable             | Base   | Reason                                                   |
 | ----------------------------- | -------------------- | ------ | -------------------------------------------------------- |
-| `src/Tooltip/Tooltip.tsx:171` | `TooltipDescription` | `span` | hidden text, nothing of it to restyle                    |
-| `src/Tooltip/Tooltip.tsx:185` | `TooltipTarget`      | `span` | a layout shim around the child, nothing of it to restyle |
+| `src/Tooltip/Tooltip.tsx:186` | `TooltipDescription` | `span` | hidden text, nothing of it to restyle                    |
+| `src/Tooltip/Tooltip.tsx:200` | `TooltipTarget`      | `span` | a layout shim around the child, nothing of it to restyle |
 
 ## Named slots (135)
 
@@ -75,14 +75,14 @@ None.
 | `src/LinearProgress/LinearProgress.tsx:147`              | `LinearProgressTraveler`     | `span`               | `LinearProgress`   | `traveler`        | `LinearProgressTraveler`     |
 | `src/LinearProgress/LinearProgress.tsx:158`              | `LinearProgressSegment`      | `span`               | `LinearProgress`   | `segment`         | `LinearProgressSegment`      |
 | `src/LinearProgress/LinearProgress.tsx:171`              | `LinearProgressBarSecondary` | `span`               | `LinearProgress`   | `secondaryBar`    | `LinearProgressBarSecondary` |
-| `src/Menu/ContextMenu/ContextMenu.tsx:73`                | `ContextMenuPaper`           | `MenuPaper`          | `ContextMenu`      | `paper`           | `ContextMenuPaper`           |
-| `src/MenuItem/MenuItem.tsx:221`                          | `CheckSlot`                  | `span`               | `MenuItem`         | `check`           | `MenuItemCheck`              |
-| `src/MenuItem/MenuItem.tsx:228`                          | `StartIconSlot`              | `span`               | `MenuItem`         | `startIcon`       | `MenuItemStartIcon`          |
-| `src/MenuItem/MenuItem.tsx:241`                          | `LabelSlot`                  | `span`               | `MenuItem`         | `label`           | `MenuItemLabel`              |
-| `src/MenuItem/MenuItem.tsx:246`                          | `ShortcutSlot`               | `span`               | `MenuItem`         | `shortcut`        | `MenuItemShortcut`           |
-| `src/MenuItem/MenuItem.tsx:256`                          | `SubmenuIconSlot`            | `span`               | `MenuItem`         | `submenuIcon`     | `MenuItemSubmenuIcon`        |
-| `src/MenuItem/MenuItem.tsx:269`                          | `EntrySlot`                  | `li`                 | `MenuItem`         | `entry`           | `MenuItemEntry`              |
-| `src/MenuItem/MenuItem.tsx:283`                          | `SecondaryActionSlot`        | `span`               | `MenuItem`         | `secondaryAction` | `MenuItemSecondaryAction`    |
+| `src/Menu/ContextMenu/ContextMenu.tsx:80`                | `ContextMenuPaper`           | `MenuPaper`          | `ContextMenu`      | `paper`           | `ContextMenuPaper`           |
+| `src/MenuItem/MenuItem.tsx:222`                          | `CheckSlot`                  | `span`               | `MenuItem`         | `check`           | `MenuItemCheck`              |
+| `src/MenuItem/MenuItem.tsx:229`                          | `StartIconSlot`              | `span`               | `MenuItem`         | `startIcon`       | `MenuItemStartIcon`          |
+| `src/MenuItem/MenuItem.tsx:242`                          | `LabelSlot`                  | `span`               | `MenuItem`         | `label`           | `MenuItemLabel`              |
+| `src/MenuItem/MenuItem.tsx:247`                          | `ShortcutSlot`               | `span`               | `MenuItem`         | `shortcut`        | `MenuItemShortcut`           |
+| `src/MenuItem/MenuItem.tsx:257`                          | `SubmenuIconSlot`            | `span`               | `MenuItem`         | `submenuIcon`     | `MenuItemSubmenuIcon`        |
+| `src/MenuItem/MenuItem.tsx:270`                          | `EntrySlot`                  | `li`                 | `MenuItem`         | `entry`           | `MenuItemEntry`              |
+| `src/MenuItem/MenuItem.tsx:284`                          | `SecondaryActionSlot`        | `span`               | `MenuItem`         | `secondaryAction` | `MenuItemSecondaryAction`    |
 | `src/NativeSelect/NativeSelect.tsx:230`                  | `StyledNativeSelect`         | `select`             | `NativeSelect`     | `select`          | `NativeSelectSelect`         |
 | `src/NativeSelect/NativeSelect.tsx:255`                  | `DropdownIcon`               | `Icon`               | `NativeSelect`     | `icon`            | `NativeSelectIcon`           |
 | `src/NavTree/NavGroup/NavGroup.tsx:26`                   | `NavGroupHeading`            | `Typography`         | `NavGroup`         | `label`           | `NavGroupLabel`              |
@@ -133,21 +133,21 @@ None.
 | `src/Switch/Switch.tsx:163`                              | `SwitchThumb`                | `span`               | `Switch`           | `thumb`           | `SwitchThumb`                |
 | `src/Switch/Switch.tsx:308`                              | `SwitchLabel`                | `span`               | `Switch`           | `label`           | `SwitchLabel`                |
 | `src/Table/TableSortLabel/TableSortLabel.tsx:74`         | `SortIcon`                   | `Icon`               | `TableSortLabel`   | `icon`            | `TableSortLabelIcon`         |
-| `src/Tabs/Tab/Tab.tsx:236`                               | `TabLabel`                   | `button`             | `Tab`              | `label`           | `TabLabel`                   |
-| `src/Tabs/Tab/Tab.tsx:302`                               | `SecondaryActionSlot`        | `div`                | `Tab`              | `secondaryAction` | `TabSecondaryAction`         |
-| `src/Tabs/Tab/Tab.tsx:312`                               | `TabClose`                   | `button`             | `Tab`              | `close`           | `TabClose`                   |
-| `src/Tabs/Tab/Tab.tsx:347`                               | `IconSlot`                   | `span`               | `Tab`              | `icon`            | `TabIcon`                    |
-| `src/Tabs/Tabs/Tabs.tsx:195`                             | `TabsList`                   | `div`                | `Tabs`             | `list`            | `TabsList`                   |
-| `src/Tabs/Tabs/Tabs.tsx:257`                             | `TabsIndicator`              | `span`               | `Tabs`             | `indicator`       | `TabsIndicator`              |
-| `src/Tabs/Tabs/Tabs.tsx:278`                             | `StartContent`               | `div`                | `Tabs`             | `startContent`    | `TabsStart`                  |
-| `src/Tabs/Tabs/Tabs.tsx:291`                             | `EndContent`                 | `div`                | `Tabs`             | `endContent`      | `TabsEnd`                    |
-| `src/Tabs/Tabs/Tabs.tsx:307`                             | `OverflowButton`             | `button`             | `Tabs`             | `overflowButton`  | `TabsOverflowButton`         |
-| `src/Tabs/Tabs/Tabs.tsx:337`                             | `OverflowClose`              | `button`             | `Tabs`             | `overflowClose`   | `TabsOverflowClose`          |
+| `src/Tabs/Tab/Tab.tsx:237`                               | `TabLabel`                   | `button`             | `Tab`              | `label`           | `TabLabel`                   |
+| `src/Tabs/Tab/Tab.tsx:303`                               | `SecondaryActionSlot`        | `div`                | `Tab`              | `secondaryAction` | `TabSecondaryAction`         |
+| `src/Tabs/Tab/Tab.tsx:313`                               | `TabClose`                   | `button`             | `Tab`              | `close`           | `TabClose`                   |
+| `src/Tabs/Tab/Tab.tsx:348`                               | `IconSlot`                   | `span`               | `Tab`              | `icon`            | `TabIcon`                    |
+| `src/Tabs/Tabs/Tabs.tsx:196`                             | `TabsList`                   | `div`                | `Tabs`             | `list`            | `TabsList`                   |
+| `src/Tabs/Tabs/Tabs.tsx:258`                             | `TabsIndicator`              | `span`               | `Tabs`             | `indicator`       | `TabsIndicator`              |
+| `src/Tabs/Tabs/Tabs.tsx:279`                             | `StartContent`               | `div`                | `Tabs`             | `startContent`    | `TabsStart`                  |
+| `src/Tabs/Tabs/Tabs.tsx:292`                             | `EndContent`                 | `div`                | `Tabs`             | `endContent`      | `TabsEnd`                    |
+| `src/Tabs/Tabs/Tabs.tsx:308`                             | `OverflowButton`             | `button`             | `Tabs`             | `overflowButton`  | `TabsOverflowButton`         |
+| `src/Tabs/Tabs/Tabs.tsx:338`                             | `OverflowClose`              | `button`             | `Tabs`             | `overflowClose`   | `TabsOverflowClose`          |
 | `src/Tabs/TabScrollButton/TabScrollButton.tsx:40`        | `TabScrollButtonRoot`        | `button`             | `Tabs`             | `scrollButton`    | `TabsScrollButton`           |
 | `src/TextInput/TextInput.tsx:262`                        | `StyledInput`                | `InputBase`          | `TextInput`        | `input`           | `TextInputInput`             |
 | `src/TextInput/TextInput.tsx:271`                        | `StyledTextarea`             | `textarea`           | `TextInput`        | `input`           | `TextInputTextarea`          |
 | `src/TextInput/TextInput.tsx:279`                        | `StyledAutoResizeTextarea`   | `TextAreaAutoResize` | `TextInput`        | `input`           | `TextInputTextarea`          |
-| `src/Tooltip/Tooltip.tsx:189`                            | `TooltipArrow`               | `span`               | `Tooltip`          | `arrow`           | `TooltipArrow`               |
+| `src/Tooltip/Tooltip.tsx:204`                            | `TooltipArrow`               | `span`               | `Tooltip`          | `arrow`           | `TooltipArrow`               |
 | `src/TransferList/TransferList.tsx:87`                   | `TransferListList`           | `Paper`              | `TransferList`     | `list`            | `TransferListList`           |
 | `src/TransferList/TransferList.tsx:99`                   | `TransferListHeader`         | `div`                | `TransferList`     | `header`          | `TransferListHeader`         |
 | `src/TransferList/TransferList.tsx:111`                  | `TransferListTitle`          | `span`               | `TransferList`     | `title`           | `TransferListTitle`          |
@@ -195,11 +195,11 @@ None.
 | `src/Image/Image.tsx:56`                                         | `StyledImg`             | `img`                                                           | `Image`                  | `root` | `image`                  |
 | `src/LinearProgress/LinearProgress.tsx:219`                      | `LinearProgressRoot`    | `span`                                                          | `LinearProgress`         | `root` | `LinearProgress`         |
 | `src/Link/Link.tsx:42`                                           | `LinkBase`              | `Typography as ComponentType<LinkProps & { as?: ElementType }>` | `Link`                   | `root` | `Link`                   |
-| `src/Menu/ContextMenu/ContextMenu.tsx:79`                        | `ContextMenuRoot`       | `div`                                                           | `ContextMenu`            | `root` | `ContextMenu`            |
-| `src/Menu/Menu/Menu.tsx:93`                                      | `MenuRoot`              | `div`                                                           | `Menu`                   | `root` | `Menu`                   |
+| `src/Menu/ContextMenu/ContextMenu.tsx:86`                        | `ContextMenuRoot`       | `div`                                                           | `ContextMenu`            | `root` | `ContextMenu`            |
+| `src/Menu/Menu/Menu.tsx:95`                                      | `MenuRoot`              | `div`                                                           | `Menu`                   | `root` | `Menu`                   |
 | `src/Menu/MenuDivider/MenuDivider.tsx:8`                         | `MenuDividerRoot`       | `li`                                                            | `MenuDivider`            | `root` | `MenuDivider`            |
-| `src/Menu/MenuList/MenuList.tsx:62`                              | `MenuListRoot`          | `ul`                                                            | `MenuList`               | `root` | `MenuList`               |
-| `src/MenuItem/MenuItem.tsx:214`                                  | `MenuItemRoot`          | `li`                                                            | `MenuItem`               | `root` | `MenuItem`               |
+| `src/Menu/MenuList/MenuList.tsx:80`                              | `MenuListRoot`          | `ul`                                                            | `MenuList`               | `root` | `MenuList`               |
+| `src/MenuItem/MenuItem.tsx:215`                                  | `MenuItemRoot`          | `li`                                                            | `MenuItem`               | `root` | `MenuItem`               |
 | `src/Modal/Modal.tsx:46`                                         | `ModalRoot`             | `View`                                                          | `Modal`                  | `root` | `Modal`                  |
 | `src/NativeSelect/NativeSelect.tsx:169`                          | `NativeSelectRoot`      | `div`                                                           | `NativeSelect`           | `root` | `NativeSelect`           |
 | `src/NavTree/NavGroup/NavGroup.tsx:20`                           | `NavGroupRoot`          | `section`                                                       | `NavGroup`               | `root` | `NavGroup`               |
@@ -233,13 +233,13 @@ None.
 | `src/Table/TablePaginationActions/TablePaginationActions.tsx:27` | `ActionsRoot`           | `div`                                                           | `TablePaginationActions` | `root` | `TablePaginationActions` |
 | `src/Table/TableRow/TableRow.tsx:73`                             | `TableRowBase`          | `tr`                                                            | `TableRow`               | `root` | `TableRow`               |
 | `src/Table/TableSortLabel/TableSortLabel.tsx:38`                 | `SortLabelRoot`         | `button`                                                        | `TableSortLabel`         | `root` | `TableSortLabel`         |
-| `src/Tabs/Tab/Tab.tsx:184`                                       | `TabRoot`               | `div`                                                           | `Tab`                    | `root` | `Tab`                    |
+| `src/Tabs/Tab/Tab.tsx:185`                                       | `TabRoot`               | `div`                                                           | `Tab`                    | `root` | `Tab`                    |
 | `src/Tabs/TabPanel/TabPanel.tsx:25`                              | `TabPanelRoot`          | `div`                                                           | `TabPanel`               | `root` | `TabPanel`               |
-| `src/Tabs/Tabs/Tabs.tsx:155`                                     | `TabsRoot`              | `div`                                                           | `Tabs`                   | `root` | `Tabs`                   |
+| `src/Tabs/Tabs/Tabs.tsx:156`                                     | `TabsRoot`              | `div`                                                           | `Tabs`                   | `root` | `Tabs`                   |
 | `src/TextInput/TextInput.tsx:246`                                | `TextInputRoot`         | `div`                                                           | `TextInput`              | `root` | `TextInput`              |
 | `src/ToggleButton/ToggleButton/ToggleButton.tsx:50`              | `ToggleButtonRoot`      | `Button`                                                        | `ToggleButton`           | `root` | `ToggleButton`           |
 | `src/ToggleButton/ToggleButtonGroup/ToggleButtonGroup.tsx:39`    | `ToggleButtonGroupRoot` | `ButtonGroup`                                                   | `ToggleButtonGroup`      | `root` | `ToggleButtonGroup`      |
-| `src/Tooltip/Tooltip.tsx:131`                                    | `TooltipSurface`        | `div`                                                           | `Tooltip`                | `root` | `Tooltip`                |
+| `src/Tooltip/Tooltip.tsx:146`                                    | `TooltipSurface`        | `div`                                                           | `Tooltip`                | `root` | `Tooltip`                |
 | `src/TransferList/TransferList.tsx:69`                           | `TransferListRoot`      | `div`                                                           | `TransferList`           | `root` | `TransferList`           |
 | `src/Typography/Typography.tsx:89`                               | `TypographyBase`        | `p`                                                             | `Typography`             | `root` | `Typography`             |
 | `src/View/View.tsx:78`                                           | `View`                  | `div`                                                           | `View`                   | `root` | `View`                   |

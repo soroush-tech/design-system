@@ -6,6 +6,7 @@ import {
   type ReactNode,
 } from 'react'
 import { Icon } from '../../Icon'
+import { Tooltip } from '../../Tooltip'
 import { styled, type Theme, createShouldForwardProp, get } from '../../index'
 import { useDefaultProps, type TabsVariants } from '../../theme'
 import { TabIndexContext, useTabsContext, type TabValue } from '../TabsContext'
@@ -493,20 +494,22 @@ export function Tab({
         // Out of the tab order. The pointer's alone - hidden from assistive technology, with Delete
         // closing the focused tab (`aria-keyshortcuts`) - or, with `shouldAnnounceClose`, a button named
         // by `closeLabel`: a sibling of the tab, so nothing interactive is inside it.
-        <TabClose
-          type="button"
-          isAnnounced={tabs.shouldAnnounceClose}
-          aria-hidden={tabs.shouldAnnounceClose ? undefined : true}
-          aria-label={tabs.shouldAnnounceClose ? closeLabel : undefined}
-          title={closeLabel}
-          tabIndex={-1}
-          data-tab-close
-          color={color}
-          isSelected={isSelected}
-          onClick={close}
-        >
-          <Icon name="close" size="0.75rem" color="inherit" />
-        </TabClose>
+        // Its label is shown as a hint, by a tooltip that holds nothing to use - not by a native `title`.
+        <Tooltip title={closeLabel} isInteractive={false}>
+          <TabClose
+            type="button"
+            isAnnounced={tabs.shouldAnnounceClose}
+            aria-hidden={tabs.shouldAnnounceClose ? undefined : true}
+            aria-label={tabs.shouldAnnounceClose ? closeLabel : undefined}
+            tabIndex={-1}
+            data-tab-close
+            color={color}
+            isSelected={isSelected}
+            onClick={close}
+          >
+            <Icon name="close" size="0.75rem" color="inherit" />
+          </TabClose>
+        </Tooltip>
       )}
     </TabRoot>
   )

@@ -45,7 +45,16 @@ export interface TooltipSlotProps {
   arrow?: SlotProps
 }
 
-export interface TooltipProps {
+/**
+ * What a parent that clones its child (a `Menu` with a `Tooltip` for a trigger) hands the tooltip
+ * instead: it is not the tooltip's, so it goes on to the child. The tooltip's own props are left out.
+ */
+export type TooltipForwardedProps = Omit<
+  HTMLAttributes<HTMLElement>,
+  'title' | 'children' | 'className' | 'color'
+> & { ref?: Ref<HTMLElement> }
+
+export interface TooltipProps extends TooltipForwardedProps {
   /**
    * The one element the tooltip is about - it holds a `ref` and takes the handlers. Without it, the
    * tooltip is at `anchorPosition`, and open when `isOpen` says so.
@@ -91,6 +100,12 @@ export interface TooltipProps {
   onOpen?: (event: Event | SyntheticEvent) => void
   /** Fired when it asks to close. */
   onClose?: (event: Event | SyntheticEvent) => void
+  /**
+   * Whether a disabled child (`disabled`) is wrapped in an element of its own, which takes the pointer
+   * handlers and the placement, since a disabled control sends no pointer events. Left out for a child
+   * that is only marked disabled and still takes them - a menu row. Default: `true`.
+   */
+  shouldWrapDisabledChild?: boolean
   /**
    * Whether the pointer can be moved onto the tooltip, which then stays open (WCAG 1.4.13). With
    * `false` it takes no pointer events - a click goes to what is under it - and closes as the
@@ -227,6 +242,29 @@ const getArrowStyle = ({ side, offset }: ArrowState): CSSProperties => {
 
 type ChildProps = Record<string, unknown> & { ref?: Ref<HTMLElement> }
 
+// What the child already has with what it is handed: a handler of each runs, the child's first, a
+// description is added to, anything else is replaced - as it would be had the parent cloned the
+// child itself.
+const mergeForwarded = (own: ChildProps, forwarded: Record<string, unknown>) =>
+  Object.fromEntries(
+    Object.entries(forwarded)
+      .filter(([, value]) => value !== undefined)
+      .map(([name, value]) => {
+        const current = own[name]
+        if (typeof value === 'function' && typeof current === 'function') {
+          return [
+            name,
+            (...args: unknown[]) => {
+              current(...args)
+              value(...args)
+            },
+          ]
+        }
+        if (name === 'aria-describedby' && current) return [name, `${current} ${value}`]
+        return [name, value]
+      })
+  )
+
 /**
  * @description A short description of one child, shown on hover, keyboard focus and a long touch -
  * a `role="tooltip"` in a `Portal`, placed beside its child and flipped for want of room. The
@@ -251,6 +289,7 @@ export function Tooltip({
   onOpen,
   onClose,
   isInteractive: isInteractiveProp,
+  shouldWrapDisabledChild: shouldWrapDisabledChildProp,
   shouldOpenOnHover: shouldOpenOnHoverProp,
   shouldOpenOnFocus: shouldOpenOnFocusProp,
   shouldOpenOnTouch: shouldOpenOnTouchProp,
@@ -262,6 +301,8 @@ export function Tooltip({
   textColor: textColorProp,
   className,
   'data-testid': dataTestid,
+  ref: forwardedRef,
+  ...forwarded
 }: Readonly<TooltipProps>) {
   const dp = useDefaultProps('Tooltip')
   const placement = placementProp ?? dp.placement ?? 'top'
@@ -269,6 +310,7 @@ export function Tooltip({
   const shouldDescribeChild = shouldDescribeChildProp ?? dp.shouldDescribeChild ?? false
   const isDescriptionPersistent = isDescriptionPersistentProp ?? dp.isDescriptionPersistent ?? false
   const isInteractive = isInteractiveProp ?? dp.isInteractive ?? true
+  const shouldWrapDisabledChild = shouldWrapDisabledChildProp ?? dp.shouldWrapDisabledChild ?? true
   const layer = layerProp ?? dp.layer ?? 'tooltip'
   const borderRadius = borderRadiusProp ?? dp.borderRadius
   const bg = bgProp ?? dp.bg
@@ -298,11 +340,14 @@ export function Tooltip({
   // A tooltip at a point goes by the point alone, whatever child it has.
   const noAnchorRef = useRef<HTMLElement | null>(null)
   const surfaceRef = useRef<HTMLDivElement>(null)
-  const own = (children?.props ?? {}) as ChildProps
+  const childProps = (children?.props ?? {}) as ChildProps
+  const forwardedProps = mergeForwarded(childProps, forwarded)
+  const own = { ...childProps, ...forwardedProps } as ChildProps
   // A disabled control sends no pointer events, so the tooltip is placed against, and listens on,
   // a wrapper of its own; the control keeps its own ref.
-  const isChildDisabled = own.disabled === true
-  const ref = useMergedRefs(isChildDisabled ? undefined : anchorRef, own.ref)
+  const isChildDisabled = shouldWrapDisabledChild && own.disabled === true
+  const childRef = useMergedRefs(childProps.ref, forwardedRef)
+  const ref = useMergedRefs(isChildDisabled ? undefined : anchorRef, childRef)
 
   const [arrow, setArrow] = useState<ArrowState | null>(null)
   const getOrigins = useCallback(
@@ -340,8 +385,11 @@ export function Tooltip({
     ])
   )
   const ownDescription = own['aria-describedby'] as string | undefined
+  // A name is for what assistive technology can reach: a child hidden from it is not given one.
+  const isHidden = own['aria-hidden'] === true || own['aria-hidden'] === 'true'
   const names =
     typeof title === 'string' &&
+    !isHidden &&
     own['aria-label'] === undefined &&
     own['aria-labelledby'] === undefined
       ? { 'aria-label': title }
@@ -358,6 +406,7 @@ export function Tooltip({
   const ariaProps = shouldDescribeChild ? { 'aria-describedby': describedBy(isShown) } : names
   const child = children
     ? cloneElement(children as ReactElement<ChildProps>, {
+        ...forwardedProps,
         ...(isChildDisabled || isAtPoint ? {} : handlers),
         ...ariaProps,
         ref,

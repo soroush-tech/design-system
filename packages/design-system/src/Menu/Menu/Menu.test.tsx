@@ -5,6 +5,7 @@ import { renderWithTheme } from '../../utils/test/renderWithTheme'
 import { baseTheme, createTheme, type Theme } from '../../theme/themes'
 import { Button } from '../../Button'
 import { MenuItem } from '../../MenuItem'
+import { Tooltip } from '../../Tooltip'
 import { ThemeProvider } from '../../theme'
 import { Menu, type MenuProps } from './Menu'
 
@@ -27,6 +28,25 @@ afterEach(() => {
 })
 
 describe('Menu', () => {
+  it('opens from a button inside a Tooltip, which hands the Menu its clone on to the button', () => {
+    renderMenu({
+      trigger: (
+        <Tooltip title="More">
+          <button type="button">main</button>
+        </Tooltip>
+      ),
+    })
+    // The tooltip names its child, as it does anywhere.
+    const button = () => screen.getByRole('button', { name: 'More' })
+    expect(button()).toHaveAttribute('aria-haspopup', 'menu')
+    expect(button()).toHaveAttribute('aria-expanded', 'false')
+    fireEvent.click(button())
+    expect(button()).toHaveAttribute('aria-expanded', 'true')
+    expect(button()).toHaveAttribute('aria-controls', screen.getByRole('menu').id)
+    // Placed against the button, and named by it.
+    expect(screen.getByRole('menu')).toHaveAccessibleName('More')
+  })
+
   it('renders its trigger as a closed menu button', () => {
     renderMenu()
     expect(trigger()).toHaveAttribute('aria-haspopup', 'menu')
@@ -223,6 +243,45 @@ describe('Menu', () => {
     expect(onStep).not.toHaveBeenCalled()
     fireEvent.keyDown(row('Parent'), { key: 'ArrowLeft' })
     expect(onStep).toHaveBeenCalledWith(-1)
+  })
+
+  it('puts the data attributes, class and aria an app gives on the list, and every submenu list, through slotProps.list', () => {
+    const onKeyDown = vi.fn()
+    renderWithTheme(
+      <Menu
+        trigger={<Button>main</Button>}
+        isOpen
+        aria-label="Own name"
+        slotProps={{
+          list: {
+            'data-menu': '',
+            'data-keymap-transient': true,
+            className: 'app-menu',
+            'aria-description': 'Branch actions',
+            onKeyDown,
+            // None of these can take the menu's own.
+            ...({ id: 'mine', role: 'list', 'aria-labelledby': 'nobody' } as object),
+          },
+        }}
+      >
+        <MenuItem submenu={[<MenuItem key="leaf">Leaf</MenuItem>]}>Parent</MenuItem>
+      </Menu>
+    )
+    fireEvent.keyDown(row('Parent'), { key: 'ArrowRight' })
+    const [list, submenu] = screen.getAllByRole('menu')
+    for (const element of [list, submenu]) {
+      expect(element).toHaveAttribute('data-menu', '')
+      expect(element).toHaveAttribute('data-keymap-transient', 'true')
+      expect(element).toHaveClass('app-menu')
+      expect(element).toHaveAttribute('aria-description', 'Branch actions')
+    }
+    expect(list).toHaveAttribute('role', 'menu')
+    expect(list.id).not.toBe('mine')
+    expect(list).toHaveAccessibleName('Own name')
+    expect(submenu).toHaveAccessibleName('Parent')
+    // The app's key handler runs before the list's own.
+    fireEvent.keyDown(row('Leaf'), { key: 'ArrowDown' })
+    expect(onKeyDown).toHaveBeenCalled()
   })
 
   it('leaves Left and Right alone without onStep', () => {

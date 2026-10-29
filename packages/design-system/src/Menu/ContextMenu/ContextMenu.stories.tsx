@@ -149,6 +149,32 @@ function FromData(args: Story['args']) {
   )
 }
 
+// No target: the app opens it at a point, from a hit test, a shortcut or a button.
+export const OpenedFromCode: Story = {
+  render: (args) => {
+    const [isOpen, setIsOpen] = useState(false)
+    return (
+      <Flex gap={1} alignItems="center">
+        <button type="button" onClick={() => setIsOpen(true)}>
+          Open at 240, 160
+        </button>
+        <ContextMenu
+          {...args}
+          isOpen={isOpen}
+          anchorPosition={{ top: 160, left: 240 }}
+          onClose={() => setIsOpen(false)}
+          onSelect={() => setIsOpen(false)}
+          aria-label="Canvas"
+          items={[
+            { value: 'paste', label: 'Paste' },
+            { value: 'select-all', label: 'Select all' },
+          ]}
+        />
+      </Flex>
+    )
+  },
+}
+
 export const RowsFromData: Story = {
   render: (args) => <FromData {...args} />,
 }

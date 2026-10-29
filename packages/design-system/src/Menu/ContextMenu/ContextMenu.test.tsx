@@ -40,6 +40,15 @@ afterEach(() => {
 })
 
 describe('ContextMenu corners', () => {
+  it('puts the data attributes an app gives on the list, through slotProps.list', () => {
+    renderMenu({ slotProps: { list: { 'data-menu': '', className: 'app-menu' } } })
+    openAt()
+    const list = screen.getByRole('menu')
+    expect(list).toHaveAttribute('data-menu', '')
+    expect(list).toHaveClass('app-menu')
+    expect(list).toHaveAccessibleName('Canvas')
+  })
+
   it('is square by default, and takes a radius of its own', () => {
     const { unmount } = renderMenu()
     openAt()
@@ -62,6 +71,73 @@ describe('ContextMenu corners', () => {
     )
     openAt()
     expect(surface()).toHaveStyle({ borderRadius: baseTheme.radii.md })
+  })
+})
+
+describe('ContextMenu opened by the app', () => {
+  const controlled = (props: Partial<ContextMenuProps> = {}) => (
+    <>
+      <ContextMenu isOpen anchorPosition={{ top: 80, left: 120 }} aria-label="Canvas" {...props}>
+        <MenuItem value="paste">Paste</MenuItem>
+        <MenuItem value="select-all">Select all</MenuItem>
+      </ContextMenu>
+      <button type="button">Elsewhere</button>
+    </>
+  )
+
+  it('opens at the point with no target, where the app says', () => {
+    renderWithTheme(controlled())
+    expect(surface()).toHaveStyle({ top: '80px', left: '120px', visibility: 'visible' })
+    expect(screen.getByRole('menu')).toHaveAccessibleName('Canvas')
+  })
+
+  it('stays closed when it is not open, or has no point', () => {
+    const { rerender } = renderWithTheme(controlled({ isOpen: false }))
+    expect(screen.queryByRole('menu')).not.toBeInTheDocument()
+    rerender(controlled({ anchorPosition: undefined }))
+    expect(screen.queryByRole('menu')).not.toBeInTheDocument()
+  })
+
+  it('moves the open list as the point changes', () => {
+    const { rerender } = renderWithTheme(controlled())
+    rerender(controlled({ anchorPosition: { top: 40, left: 30 } }))
+    expect(surface()).toHaveStyle({ top: '40px', left: '30px' })
+  })
+
+  it('asks to close through onClose, and is closed only by the app', () => {
+    const onClose = vi.fn()
+    renderWithTheme(controlled({ onClose, onSelect: vi.fn() }))
+    fireEvent.keyDown(row('Paste'), { key: 'Escape' })
+    expect(onClose).toHaveBeenCalledWith(expect.anything(), 'escapeKey')
+    expect(screen.getByRole('menu')).toBeInTheDocument()
+    fireEvent.click(row('Select all'))
+    expect(onClose).toHaveBeenLastCalledWith(expect.anything(), 'select')
+  })
+
+  it('gives the focus back to where it was when the app opened it', () => {
+    const { rerender } = renderWithTheme(controlled({ isOpen: false }))
+    screen.getByRole('button', { name: 'Elsewhere' }).focus()
+    rerender(controlled())
+    expect(row('Paste')).toHaveFocus()
+    fireEvent.keyDown(row('Paste'), { key: 'Escape' })
+    expect(screen.getByRole('button', { name: 'Elsewhere' })).toHaveFocus()
+  })
+
+  it('leaves a right-click on its target to the app, and the browser own menu', () => {
+    renderMenu({ isOpen: false, anchorPosition: { top: 1, left: 1 } })
+    expect(fireEvent.contextMenu(canvas(), { clientX: 120, clientY: 80 })).toBe(true)
+    expect(screen.queryByRole('menu')).not.toBeInTheDocument()
+    expect(fireEvent.keyDown(canvas(), { key: 'ContextMenu' })).toBe(true)
+    expect(screen.queryByRole('menu')).not.toBeInTheDocument()
+  })
+
+  it('does not restore the focus to nowhere when it was closed by focus leaving', () => {
+    const onClose = vi.fn()
+    renderWithTheme(controlled({ onClose }))
+    fireEvent.blur(row('Paste'), {
+      relatedTarget: screen.getByRole('button', { name: 'Elsewhere' }),
+    })
+    expect(onClose).toHaveBeenCalledWith(expect.anything(), 'blur')
   })
 })
 

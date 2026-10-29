@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { fireEvent, screen } from '@testing-library/react'
+import { act, fireEvent, screen } from '@testing-library/react'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { baseTheme, createTheme, type Theme } from '../theme/themes'
 import { MenuList } from '../Menu/MenuList'
@@ -343,16 +343,49 @@ describe('MenuItem in a MenuList', () => {
     expect(screen.getByRole('menuitem', { name: 'Open' })).not.toHaveAttribute('aria-keyshortcuts')
   })
 
-  it('gives a note as the tooltip and accessible description', () => {
+  it('describes the row by its note, open or closed, and has no native title', () => {
     inMenu(
       <MenuItem disabled note="Coming later">
         Checkout
       </MenuItem>
     )
     const row = screen.getByRole('menuitem', { name: 'Checkout' })
-    expect(row).toHaveAttribute('title', 'Coming later')
+    expect(row).not.toHaveAttribute('title')
     expect(row).toHaveAccessibleDescription('Coming later')
     expect(row).toHaveAttribute('aria-disabled', 'true')
+    // The row sits in an entry of its own, with its description: a menu holds entries alone.
+    expect(row.parentElement).toHaveAttribute('role', 'none')
+  })
+
+  it('shows the note as a tooltip beside the row, over a disabled row too, that takes no click', () => {
+    vi.useFakeTimers()
+    inMenu(
+      <MenuItem disabled note="Coming later">
+        Checkout
+      </MenuItem>
+    )
+    const row = screen.getByRole('menuitem', { name: 'Checkout' })
+    // The row itself takes the pointer: nothing is wrapped around it.
+    expect(row.parentElement?.tagName).toBe('LI')
+    fireEvent.mouseEnter(row)
+    act(() => vi.advanceTimersByTime(100))
+    const tooltip = screen.getByRole('tooltip')
+    expect(tooltip).toHaveTextContent('Coming later')
+    expect(tooltip).toHaveStyle({ pointerEvents: 'none' })
+    // The description is the same copy as before it opened: not read twice.
+    expect(row).toHaveAccessibleDescription('Coming later')
+    vi.useRealTimers()
+  })
+
+  it('keeps a row with a note and a submenu in its one entry', () => {
+    inMenu(
+      <MenuItem note="Has more" submenu={<MenuItem>Child</MenuItem>}>
+        Parent
+      </MenuItem>
+    )
+    const row = screen.getByRole('menuitem', { name: 'Parent' })
+    expect(row).toHaveAccessibleDescription('Has more')
+    expect(row.parentElement).toHaveAttribute('role', 'none')
   })
 
   it('is chosen by a click, Enter, or Space on release', () => {

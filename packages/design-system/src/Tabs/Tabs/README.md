@@ -102,9 +102,9 @@ With `overflowBehavior="scroll"` the list scrolls along its orientation when its
 With `overflowBehavior="menu"` the row draws the tabs that fit **whole** and lists the rest in a
 `Menu` behind a button at the list's end. Nothing scrolls, and no tab is cut by the edge.
 
-| Prop            | Type     | Default | Description                                                                    |
-| --------------- | -------- | ------- | ------------------------------------------------------------------------------ |
-| `overflowLabel` | `string` | -       | Names the button that opens the menu of the tabs that don't fit ("More tabs"). |
+| Prop            | Type     | Default | Description                                                                                                                |
+| --------------- | -------- | ------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `overflowLabel` | `string` | -       | Names the button that opens the menu of the tabs that don't fit ("More tabs"), and the menu. Shown as a hint by a tooltip. |
 
 - **The rule:** the tab in the page's tab order - the selected one, or the first enabled one -
   counts first, then the others in order while the next still fits whole with the gap. The first
