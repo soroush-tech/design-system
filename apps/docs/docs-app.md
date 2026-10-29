@@ -52,6 +52,18 @@ running Jekyll over the build; both ride along in every build's output. The
 `VersionSwitcher` reads `/versions.json` from the domain root, so old snapshots list
 newer releases.
 
+What search engines are told about the archived pages is settled when the tree is composed, not
+when a snapshot is built - a snapshot is frozen and cannot know what later releases add or drop.
+`scripts/compose-docs-dist.mjs` ends `live` and `snapshot` by running
+`scripts/canonicalize-docs-dist.mjs` over `docs-dist`. For each archived page
+`<pkg>/<version>/<path>` the live page is `<pkg>/<path>`: where it exists, the archived page's
+canonical and `og:url` are that page and it is `noindex,follow`; where it does not, the archived page
+has no canonical, its own `og:url` and is `index,follow`, and a stub (`data-stub`, `noindex`, a zero
+delay refresh and a canonical to the archived page) is written at the live URL so the removed page
+does not 404 on GitHub Pages. Stubs are rebuilt every run and are never counted as live pages. The run
+ends by checking the tree and fails the deploy on a canonical or stub that leads to no page, or a live
+page that is `noindex`. Its tests are in `scripts/canonicalizeDocsDist.test.js`.
+
 Only stable tags are archived, and a manual dispatch takes an optional `version` to backfill
 one. Releases up to design-system 1.3.3 / styled-system 5.8.3 / markdown 1.2.2 were cut in
 soroush-tech/core and their tags hold only `packages/` - no docs app. For those,

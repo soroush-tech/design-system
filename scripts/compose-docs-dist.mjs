@@ -7,6 +7,9 @@
 //     Installs <buildDir> as <distDir>/<pkg>/<version>/ and records it in versions.json.
 //   node scripts/compose-docs-dist.mjs has <pkg> <version> <distDir>
 //     Exits 0 when versions.json already lists the version (the idempotence check).
+//
+// `live` and `snapshot` end by running canonicalize-docs-dist.mjs over the tree, so what the
+// archived pages tell search engines always follows the live pages of the same deploy.
 import {
   cpSync,
   existsSync,
@@ -17,6 +20,7 @@ import {
   writeFileSync,
 } from 'node:fs'
 import { join } from 'node:path'
+import { canonicalize, compareSemver } from './canonicalize-docs-dist.mjs'
 
 const SEMVER = /^\d+\.\d+\.\d+$/
 
@@ -27,14 +31,6 @@ const readManifest = (distDir) => {
 
 const writeManifest = (distDir, manifest) => {
   writeFileSync(join(distDir, 'versions.json'), `${JSON.stringify(manifest, null, 2)}\n`)
-}
-
-const compareSemver = (a, b) => {
-  const [aParts, bParts] = [a.split('.').map(Number), b.split('.').map(Number)]
-  for (let index = 0; index < 3; index += 1) {
-    if (aParts[index] !== bParts[index]) return aParts[index] - bParts[index]
-  }
-  return 0
 }
 
 // Files that belong to the branch rather than to any one build. `CNAME` is what binds
@@ -81,6 +77,7 @@ if (mode === 'live') {
   cpSync(buildDir, distDir, { recursive: true })
   writeBranchFiles(distDir)
   console.log(`composed live tree from ${buildDir} into ${distDir}`)
+  canonicalize(distDir)
 } else if (mode === 'snapshot') {
   const [pkg, version, buildDir, distDir] = args
   if (!SEMVER.test(version)) throw new Error(`not a version: ${version}`)
@@ -96,6 +93,7 @@ if (mode === 'live') {
   manifest[pkg] = [...versions].sort((a, b) => compareSemver(b, a))
   writeManifest(distDir, manifest)
   console.log(`installed snapshot ${pkg}@${version}`)
+  canonicalize(distDir)
 } else if (mode === 'has') {
   const [pkg, version, distDir] = args
   const listed = (readManifest(distDir)[pkg] ?? []).includes(version)

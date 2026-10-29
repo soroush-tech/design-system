@@ -42,7 +42,9 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'lcov'],
-      include: ['src/**/*.{ts,tsx}'],
+      // The docs-dist script the deploy runs lives at the repository root, with its tests here.
+      allowExternal: true,
+      include: ['src/**/*.{ts,tsx}', '../../scripts/canonicalize-docs-dist.mjs'],
       exclude: [
         '**/*.d.ts',
         '**/*.config.{ts,js}',
