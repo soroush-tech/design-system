@@ -341,6 +341,107 @@ describe('Tooltip', () => {
     })
   })
 
+  describe('a persistent description', () => {
+    const persistent = (props: Partial<TooltipProps> = {}) =>
+      view({ shouldDescribeChild: true, isDescriptionPersistent: true, ...props })
+
+    it('describes the child while the tooltip is closed, by a hidden copy of the title', () => {
+      renderWithTheme(persistent())
+      noTooltip()
+      expect(button()).toHaveAccessibleDescription('Save')
+      expect(button().getAttribute('aria-describedby')).toMatch(/-description$/)
+    })
+
+    it('does not read the open tooltip as well', () => {
+      renderWithTheme(persistent())
+      const before = button().getAttribute('aria-describedby')
+      fireEvent.mouseEnter(button())
+      tick(100)
+      expect(tooltip()).toHaveTextContent('Save')
+      expect(button().getAttribute('aria-describedby')).toBe(before)
+      expect(button()).toHaveAccessibleDescription('Save')
+    })
+
+    it('adds to a description the child already has', () => {
+      renderWithTheme(
+        <>
+          <span id="help">Help</span>
+          <Tooltip title="Save" shouldDescribeChild isDescriptionPersistent>
+            <button type="button" aria-describedby="help">
+              Icon
+            </button>
+          </Tooltip>
+        </>
+      )
+      expect(button().getAttribute('aria-describedby')).toMatch(/^help .+-description$/)
+      expect(button()).toHaveAccessibleDescription('Help Save')
+    })
+
+    it('has no copy without a title, and none without shouldDescribeChild', () => {
+      const { unmount } = renderWithTheme(persistent({ title: '' }))
+      expect(button()).not.toHaveAttribute('aria-describedby')
+      unmount()
+      renderWithTheme(view({ isDescriptionPersistent: true }))
+      expect(button()).toHaveAttribute('aria-label', 'Save')
+      expect(button()).not.toHaveAttribute('aria-describedby')
+    })
+
+    it('keeps a title that is not text as it is', () => {
+      renderWithTheme(persistent({ title: <b>Bold</b> }))
+      expect(button()).toHaveAccessibleDescription('Bold')
+    })
+
+    it('is set for every tooltip by the theme', () => {
+      const theme = createTheme(baseTheme, {
+        components: {
+          Tooltip: { defaultProps: { shouldDescribeChild: true, isDescriptionPersistent: true } },
+        },
+      })
+      render(view(), { wrapper: withTheme(theme) })
+      expect(button()).toHaveAccessibleDescription('Save')
+    })
+  })
+
+  describe('a disabled child', () => {
+    const disabled = () => (
+      <Tooltip title="Save">
+        <button type="button" disabled>
+          Icon
+        </button>
+      </Tooltip>
+    )
+
+    it('opens as the pointer enters it, on a wrapper that takes the handlers', () => {
+      renderWithTheme(disabled())
+      const target = button().parentElement as HTMLElement
+      expect(target.tagName).toBe('SPAN')
+      fireEvent.mouseEnter(target)
+      tick(100)
+      expect(tooltip()).toHaveTextContent('Save')
+      fireEvent.mouseLeave(target)
+      tick(0)
+      noTooltip()
+    })
+
+    it('keeps the control its own ref, and names or describes it as for any other', () => {
+      const ref = { current: null as HTMLButtonElement | null }
+      renderWithTheme(
+        <Tooltip title="Save">
+          <button type="button" disabled ref={ref}>
+            Icon
+          </button>
+        </Tooltip>
+      )
+      expect(ref.current).toBe(button())
+      expect(button()).toHaveAttribute('aria-label', 'Save')
+    })
+
+    it('does not wrap a control that is not disabled', () => {
+      renderWithTheme(view())
+      expect(button().parentElement?.tagName).not.toBe('SPAN')
+    })
+  })
+
   describe('the child', () => {
     it('keeps its own handlers and ref', () => {
       const onMouseEnter = vi.fn()

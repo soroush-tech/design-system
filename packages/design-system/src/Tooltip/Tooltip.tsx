@@ -67,6 +67,12 @@ export interface TooltipProps {
   leaveTouchDelay?: number
   /** Describes the child (`aria-describedby`, while open) instead of naming it (`aria-label`). Default: `false`. */
   shouldDescribeChild?: boolean
+  /**
+   * With `shouldDescribeChild`: the child is described the whole time, as by a native `title`, not
+   * only while the tooltip is open. A visually hidden copy of a `title` sits beside the child for it
+   * to point at. Default: `false`.
+   */
+  isDescriptionPersistent?: boolean
   /** Whether it is shown. Controlled with `onOpen` and `onClose`. */
   isOpen?: boolean
   /** Whether it is shown at first, when uncontrolled. Default: `false`. */
@@ -135,6 +141,26 @@ const TooltipSurface = styled('div', {
   overflowWrap: 'break-word',
 }))
 
+// The text a persistent description points at: there for assistive technology, not to be seen.
+// audit-styled-ignore: hidden text, nothing of it to restyle
+const TooltipDescription = styled('span', { label: 'TooltipDescription' })({
+  position: 'absolute',
+  width: 1,
+  height: 1,
+  margin: -1,
+  padding: 0,
+  border: 0,
+  overflow: 'hidden',
+  clip: 'rect(0 0 0 0)',
+  whiteSpace: 'nowrap',
+})
+
+// A disabled control sends no pointer events of its own, so the tooltip listens on this.
+// audit-styled-ignore: a layout shim around the child, nothing of it to restyle
+const TooltipTarget = styled('span', { label: 'TooltipTarget' })({
+  display: 'inline-grid',
+})
+
 const TooltipArrow = styled('span', {
   name: 'Tooltip',
   slot: 'arrow',
@@ -193,6 +219,7 @@ export function Tooltip({
   enterTouchDelay: enterTouchDelayProp,
   leaveTouchDelay: leaveTouchDelayProp,
   shouldDescribeChild: shouldDescribeChildProp,
+  isDescriptionPersistent: isDescriptionPersistentProp,
   isOpen: isOpenProp,
   defaultOpen = false,
   onOpen,
@@ -213,6 +240,7 @@ export function Tooltip({
   const placement = placementProp ?? dp.placement ?? 'top'
   const hasArrow = hasArrowProp ?? dp.hasArrow ?? false
   const shouldDescribeChild = shouldDescribeChildProp ?? dp.shouldDescribeChild ?? false
+  const isDescriptionPersistent = isDescriptionPersistentProp ?? dp.isDescriptionPersistent ?? false
   const layer = layerProp ?? dp.layer ?? 'tooltip'
   const borderRadius = borderRadiusProp ?? dp.borderRadius
   const bg = bgProp ?? dp.bg
@@ -238,7 +266,10 @@ export function Tooltip({
   const anchorRef = useRef<HTMLElement | null>(null)
   const surfaceRef = useRef<HTMLDivElement>(null)
   const own = children.props as ChildProps
-  const ref = useMergedRefs(anchorRef, own.ref)
+  // A disabled control sends no pointer events, so the tooltip is placed against, and listens on,
+  // a wrapper of its own; the control keeps its own ref.
+  const isChildDisabled = own.disabled === true
+  const ref = useMergedRefs(isChildDisabled ? undefined : anchorRef, own.ref)
 
   const [arrow, setArrow] = useState<ArrowState | null>(null)
   const getOrigins = useCallback(
@@ -281,17 +312,33 @@ export function Tooltip({
     own['aria-labelledby'] === undefined
       ? { 'aria-label': title }
       : {}
-  const ariaProps = shouldDescribeChild
-    ? {
-        'aria-describedby': isShown
-          ? [ownDescription, id].filter(Boolean).join(' ')
-          : ownDescription,
-      }
-    : names
+  // A persistent description points at a copy of the title that is always there, so the open
+  // tooltip is not read as well.
+  const descriptionId = `${id}-description`
+  const hasPersistentDescription = shouldDescribeChild && isDescriptionPersistent && hasTitle
+  const describedBy = (shown: boolean) =>
+    hasPersistentDescription
+      ? [ownDescription, descriptionId].filter(Boolean).join(' ')
+      : [ownDescription, shown ? id : undefined].filter(Boolean).join(' ') || undefined
+  const ariaProps = shouldDescribeChild ? { 'aria-describedby': describedBy(isShown) } : names
+  const child = cloneElement(children as ReactElement<ChildProps>, {
+    ...(isChildDisabled ? {} : handlers),
+    ...ariaProps,
+    ref,
+  })
 
   return (
     <>
-      {cloneElement(children as ReactElement<ChildProps>, { ...handlers, ...ariaProps, ref })}
+      {isChildDisabled ? (
+        <TooltipTarget ref={anchorRef} {...handlers}>
+          {child}
+        </TooltipTarget>
+      ) : (
+        child
+      )}
+      {hasPersistentDescription && (
+        <TooltipDescription id={descriptionId}>{title}</TooltipDescription>
+      )}
       {isShown && (
         <Portal>
           <TooltipSurface

@@ -21,6 +21,7 @@ const meta: Meta<typeof Tooltip> = {
         'enterDelay',
         'leaveDelay',
         'shouldDescribeChild',
+        'isDescriptionPersistent',
         'shouldOpenOnHover',
         'shouldOpenOnFocus',
         'shouldOpenOnTouch',
@@ -66,6 +67,11 @@ const meta: Meta<typeof Tooltip> = {
     shouldDescribeChild: {
       control: 'boolean',
       description: 'Describes the child instead of naming it.',
+      table: { category: 'Behavior', defaultValue: { summary: 'false' } },
+    },
+    isDescriptionPersistent: {
+      control: 'boolean',
+      description: 'With shouldDescribeChild: describes the child while the tooltip is closed too.',
       table: { category: 'Behavior', defaultValue: { summary: 'false' } },
     },
     shouldOpenOnHover: {
@@ -133,6 +139,22 @@ export const NamesAnIcon: Story = {
     <Tooltip {...args} title="Star the page">
       <Button variant="text">
         <Icon name="star" size="1.25em" color="inherit" />
+      </Button>
+    </Tooltip>
+  ),
+}
+
+// A disabled button: the tooltip still opens, and says why.
+export const OverADisabledButton: Story = {
+  args: {
+    shouldDescribeChild: true,
+    isDescriptionPersistent: true,
+    title: 'Fill in the name first',
+  },
+  render: (args) => (
+    <Tooltip {...args}>
+      <Button variant="outlined" disabled>
+        Save
       </Button>
     </Tooltip>
   ),

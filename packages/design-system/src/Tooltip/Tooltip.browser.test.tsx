@@ -32,6 +32,25 @@ describe('Tooltip in a browser', () => {
     await vi.waitFor(() => expect(screen.queryByRole('tooltip')).not.toBeInTheDocument())
   })
 
+  it('opens over a disabled child, beside the control itself', async () => {
+    renderWithTheme(
+      <View position="absolute" top="200px" left="300px">
+        <Tooltip title="Fill in the name first" enterDelay={10}>
+          <button type="button" disabled>
+            Save
+          </button>
+        </Tooltip>
+      </View>
+    )
+    const control = screen.getByRole('button', { name: 'Fill in the name first' })
+    await userEvent.hover(control)
+    await vi.waitFor(() => expect(tooltip()).toBeVisible())
+    expect(tooltip().getBoundingClientRect().bottom).toBeCloseTo(
+      control.getBoundingClientRect().top - 8,
+      0
+    )
+  })
+
   it('flips below its child where there is no room above it', async () => {
     renderWithTheme(view({}, 0))
     await userEvent.hover(trigger())

@@ -523,6 +523,7 @@ export interface TooltipOwnerState {
   enterTouchDelay?: number
   leaveTouchDelay?: number
   shouldDescribeChild?: boolean
+  isDescriptionPersistent?: boolean
   shouldOpenOnHover?: boolean
   shouldOpenOnFocus?: boolean
   shouldOpenOnTouch?: boolean
