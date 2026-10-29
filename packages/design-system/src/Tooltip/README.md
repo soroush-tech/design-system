@@ -92,8 +92,8 @@ is not disabled is not wrapped. A disabled control cannot take the focus, so it 
 
 `theme.components.Tooltip` styles the `root` (the surface) and the `arrow`. Its `defaultProps` set `placement`,
 `hasArrow`, `layer`, `borderRadius`, `bg`, `textColor`, `enterDelay`, `leaveDelay`, `enterTouchDelay`,
-`leaveTouchDelay`, `shouldDescribeChild`, `isDescriptionPersistent`, `shouldOpenOnHover`,
-`shouldOpenOnFocus` and `shouldOpenOnTouch` - not `children`, `title`, `anchorPosition`, `isOpen` or the
+`leaveTouchDelay`, `shouldDescribeChild`, `isDescriptionPersistent`, `shouldWrapDisabledChild`,
+`isInteractive`, `shouldOpenOnHover`, `shouldOpenOnFocus` and `shouldOpenOnTouch` - not `children`, `title`, `anchorPosition`, `isOpen` or the
 handlers. The arrow takes the surface's background. The `tooltip` key of `theme.zOrder` is its layer.
 
 ## Server rendering

@@ -246,7 +246,10 @@ describe('Menu', () => {
   })
 
   it('puts the data attributes, class and aria an app gives on the list, and every submenu list, through slotProps.list', () => {
-    const onKeyDown = vi.fn()
+    let wasPrevented: boolean | undefined
+    const onKeyDown = vi.fn((event: { defaultPrevented: boolean }) => {
+      wasPrevented = event.defaultPrevented
+    })
     renderWithTheme(
       <Menu
         trigger={<Button>main</Button>}
@@ -282,6 +285,18 @@ describe('Menu', () => {
     // The app's key handler runs before the list's own.
     fireEvent.keyDown(row('Leaf'), { key: 'ArrowDown' })
     expect(onKeyDown).toHaveBeenCalled()
+    expect(wasPrevented).toBe(false)
+  })
+
+  it('lets slotProps.list.onKeyDown keep a key from the list by preventing it', () => {
+    renderMenu({
+      isOpen: true,
+      slotProps: { list: { onKeyDown: (event) => event.preventDefault() } },
+    })
+    const first = row('New branch...')
+    first.focus()
+    fireEvent.keyDown(first, { key: 'ArrowDown' })
+    expect(first).toHaveFocus()
   })
 
   it('leaves Left and Right alone without onStep', () => {

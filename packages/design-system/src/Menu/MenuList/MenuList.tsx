@@ -160,6 +160,10 @@ export function MenuList({
     // A key pressed in a nested submenu bubbles through here; that list handles its own.
     if ((event.target as HTMLElement).closest('[role="menu"]') !== list) return
 
+    // The app's handler goes first and can keep the key from the list by preventing it.
+    onKeyDown?.(event)
+    if (event.defaultPrevented) return
+
     const rows = getOwnRows(list)
     const current = list.ownerDocument.activeElement
     const step = STEP_BY_KEY[event.key]
@@ -174,7 +178,6 @@ export function MenuList({
     }
     if (step || target) event.preventDefault()
     target?.focus()
-    onKeyDown?.(event)
   }
 
   return (
