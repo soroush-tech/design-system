@@ -342,6 +342,10 @@ const getRowAria = (state: RowAriaState) => ({
 const joinClassNames = (...names: (string | false | undefined)[]) =>
   names.filter(Boolean).join(' ') || undefined
 
+// A checked radio or checkbox row shows a tick in the icon column.
+const getTick = (role: string, selected: boolean) =>
+  role !== 'menuitem' && selected ? <Icon name="check" size="sm" color="inherit" /> : null
+
 /**
  * @description A row of a list. Inside a `MenuList` it is a menu row - a `menuitem`
  * (or `menuitemradio` / `menuitemcheckbox`) with a leading icon column, its label and a
@@ -495,16 +499,15 @@ export function MenuItem({
     )
   }
 
-  const tick =
-    role !== 'menuitem' && selected ? <Icon name="check" size="sm" color="inherit" /> : null
   const rowId = id ?? fallbackId
   const hasSecondaryAction = secondaryAction != null
   const hasNote = Boolean(note)
+  const isEntry = hasSubmenu || hasSecondaryAction || hasNote
   // In an entry - beside its submenu or its own control - the row is a div: the entry is the li.
   const row = (
     <MenuItemRoot
       {...rootProps}
-      as={hasSubmenu || hasSecondaryAction || hasNote ? 'div' : as}
+      as={isEntry ? 'div' : as}
       id={rowId}
       role={role}
       {...getRowAria({
@@ -520,7 +523,7 @@ export function MenuItem({
       onKeyUp={handleKeyUp}
       onPointerMove={handlePointerMove}
     >
-      <StartIconSlot aria-hidden>{startIcon ?? tick}</StartIconSlot>
+      <StartIconSlot aria-hidden>{startIcon ?? getTick(role, selected)}</StartIconSlot>
       <LabelSlot data-menu-label>{children}</LabelSlot>
       {shortcut != null && <ShortcutSlot aria-hidden>{shortcut}</ShortcutSlot>}
       {hasSubmenu && (
@@ -547,7 +550,7 @@ export function MenuItem({
   ) : (
     row
   )
-  if (!hasSubmenu && !hasSecondaryAction && !hasNote) return row
+  if (!isEntry) return row
   if (!hasSubmenu) {
     return (
       <EntrySlot role="none" hasSecondaryAction={hasSecondaryAction}>

@@ -260,10 +260,19 @@ const mergeForwarded = (own: ChildProps, forwarded: Record<string, unknown>) =>
             },
           ]
         }
-        if (name === 'aria-describedby' && current) return [name, `${current} ${value}`]
+        if (name === 'aria-describedby' && current)
+          return [name, `${String(current)} ${String(value)}`]
         return [name, value]
       })
   )
+
+// A name is for what assistive technology can reach: a child hidden from it is not given one, nor
+// is one that already has its own.
+const getChildName = (title: ReactNode, own: ChildProps) => {
+  const isHidden = own['aria-hidden'] === true || own['aria-hidden'] === 'true'
+  const isNamed = own['aria-label'] !== undefined || own['aria-labelledby'] !== undefined
+  return typeof title === 'string' && !isHidden && !isNamed ? { 'aria-label': title } : {}
+}
 
 /**
  * @description A short description of one child, shown on hover, keyboard focus and a long touch -
@@ -385,15 +394,7 @@ export function Tooltip({
     ])
   )
   const ownDescription = own['aria-describedby'] as string | undefined
-  // A name is for what assistive technology can reach: a child hidden from it is not given one.
-  const isHidden = own['aria-hidden'] === true || own['aria-hidden'] === 'true'
-  const names =
-    typeof title === 'string' &&
-    !isHidden &&
-    own['aria-label'] === undefined &&
-    own['aria-labelledby'] === undefined
-      ? { 'aria-label': title }
-      : {}
+  const names = getChildName(title, own)
   // A persistent description points at a copy of the title that is always there, so the open
   // tooltip is not read as well.
   const descriptionId = `${id}-description`

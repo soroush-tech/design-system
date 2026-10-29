@@ -140,7 +140,7 @@ export function ContextMenu({
   const size = sizeProp ?? dp.size
   const dense = denseProp ?? dp.dense
   const theme = useTheme()
-  const [openPoint, setPoint] = useState<PopoverPosition | null>(null)
+  const [openPoint, setOpenPoint] = useState<PopoverPosition | null>(null)
   // Controlled, the app's `isOpen` and point say; on its own, the target's right-click did.
   const isControlled = isOpenProp !== undefined
   const point = isControlled ? (isOpenProp && anchorPosition) || null : openPoint
@@ -174,12 +174,12 @@ export function ContextMenu({
 
   const openAt = (top: number, left: number) => {
     returnFocusRef.current = document.activeElement as HTMLElement
-    setPoint({ top, left })
+    setOpenPoint({ top, left })
   }
 
   const close = useCallback(
     (event: SyntheticEvent, reason: MenuCloseReason) => {
-      if (!isControlled) setPoint(null)
+      if (!isControlled) setOpenPoint(null)
       onClose?.(event, reason)
       if (reason !== 'blur') returnFocusRef.current?.focus()
     },
