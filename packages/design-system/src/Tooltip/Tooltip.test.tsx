@@ -402,6 +402,92 @@ describe('Tooltip', () => {
     })
   })
 
+  describe('a tooltip that is not interactive', () => {
+    const open = (props: Partial<TooltipProps> = {}) => {
+      renderWithTheme(view(props))
+      fireEvent.mouseEnter(button())
+      tick(100)
+    }
+
+    it('takes no pointer events, where an interactive one does', () => {
+      open({ isInteractive: false })
+      expect(tooltip()).toHaveStyle({ pointerEvents: 'none' })
+    })
+
+    it('is not kept open by the pointer moving onto it, where an interactive one is', () => {
+      open({ isInteractive: false })
+      fireEvent.mouseLeave(button())
+      fireEvent.mouseEnter(tooltip())
+      tick(0)
+      noTooltip()
+    })
+
+    it('is interactive by default: the pointer on it keeps it open', () => {
+      open()
+      expect(tooltip()).not.toHaveStyle({ pointerEvents: 'none' })
+      fireEvent.mouseLeave(button())
+      fireEvent.mouseEnter(tooltip())
+      tick(0)
+      expect(tooltip()).toBeInTheDocument()
+    })
+
+    it('is set for every tooltip by the theme', () => {
+      const theme = createTheme(baseTheme, {
+        components: { Tooltip: { defaultProps: { isInteractive: false } } },
+      })
+      render(view({ defaultOpen: true }), { wrapper: withTheme(theme) })
+      expect(tooltip()).toHaveStyle({ pointerEvents: 'none' })
+    })
+  })
+
+  describe('a press of the child', () => {
+    it('closes an open tooltip, and says so when it is controlled', () => {
+      const onClose = vi.fn()
+      renderWithTheme(view({ defaultOpen: true, isOpen: true, onClose }))
+      fireEvent.pointerDown(button())
+      tick(0)
+      expect(onClose).toHaveBeenCalledTimes(1)
+    })
+
+    it('closes one that is its own', () => {
+      renderWithTheme(view())
+      fireEvent.mouseEnter(button())
+      tick(100)
+      fireEvent.pointerDown(button())
+      tick(0)
+      noTooltip()
+    })
+
+    it('stops one that is about to open', () => {
+      renderWithTheme(view())
+      fireEvent.mouseEnter(button())
+      tick(50)
+      fireEvent.pointerDown(button())
+      tick(1000)
+      noTooltip()
+    })
+
+    it('leaves a touch to its long press: it does not close an open tooltip', () => {
+      renderWithTheme(view({ defaultOpen: true }))
+      fireEvent.pointerDown(button(), { pointerType: 'touch' })
+      tick(1000)
+      expect(tooltip()).toBeInTheDocument()
+    })
+
+    it('closes it from the wrapper of a disabled child, too', () => {
+      renderWithTheme(
+        <Tooltip title="Save" defaultOpen>
+          <button type="button" disabled>
+            Icon
+          </button>
+        </Tooltip>
+      )
+      fireEvent.pointerDown(button().parentElement as HTMLElement)
+      tick(0)
+      noTooltip()
+    })
+  })
+
   describe('a disabled child', () => {
     const disabled = () => (
       <Tooltip title="Save">

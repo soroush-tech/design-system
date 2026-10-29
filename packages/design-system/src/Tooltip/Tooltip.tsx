@@ -91,6 +91,12 @@ export interface TooltipProps {
   onOpen?: (event: Event | SyntheticEvent) => void
   /** Fired when it asks to close. */
   onClose?: (event: Event | SyntheticEvent) => void
+  /**
+   * Whether the pointer can be moved onto the tooltip, which then stays open (WCAG 1.4.13). With
+   * `false` it takes no pointer events - a click goes to what is under it - and closes as the
+   * pointer leaves the child: for a text hint that holds nothing to use. Default: `true`.
+   */
+  isInteractive?: boolean
   /** Opens on hover. Default: `true`. */
   shouldOpenOnHover?: boolean
   /** Opens on keyboard focus. Default: `true`. */
@@ -125,14 +131,23 @@ interface ArrowState {
 const TooltipSurface = styled('div', {
   name: 'Tooltip',
   label: 'Tooltip',
-  shouldForwardProp: createShouldForwardProp(['layer', 'borderRadius', 'bg', 'textColor']),
+  shouldForwardProp: createShouldForwardProp([
+    'layer',
+    'isInteractive',
+    'borderRadius',
+    'bg',
+    'textColor',
+  ]),
 })<{
   layer: keyof Theme['zOrder']
+  isInteractive: boolean
   borderRadius?: keyof Theme['radii']
   bg?: keyof Theme['background']
   textColor?: keyof Theme['text']
-}>(({ theme, layer, borderRadius, bg, textColor }) => ({
+}>(({ theme, layer, isInteractive, borderRadius, bg, textColor }) => ({
   position: 'fixed',
+  // A tooltip that cannot be used is not a click target: the click goes on to what is under it.
+  ...(!isInteractive && { pointerEvents: 'none' }),
   top: 0,
   left: 0,
   // Shown by the placement, as it is placed.
@@ -235,6 +250,7 @@ export function Tooltip({
   defaultOpen = false,
   onOpen,
   onClose,
+  isInteractive: isInteractiveProp,
   shouldOpenOnHover: shouldOpenOnHoverProp,
   shouldOpenOnFocus: shouldOpenOnFocusProp,
   shouldOpenOnTouch: shouldOpenOnTouchProp,
@@ -252,6 +268,7 @@ export function Tooltip({
   const hasArrow = hasArrowProp ?? dp.hasArrow ?? false
   const shouldDescribeChild = shouldDescribeChildProp ?? dp.shouldDescribeChild ?? false
   const isDescriptionPersistent = isDescriptionPersistentProp ?? dp.isDescriptionPersistent ?? false
+  const isInteractive = isInteractiveProp ?? dp.isInteractive ?? true
   const layer = layerProp ?? dp.layer ?? 'tooltip'
   const borderRadius = borderRadiusProp ?? dp.borderRadius
   const bg = bgProp ?? dp.bg
@@ -368,6 +385,7 @@ export function Tooltip({
             id={id}
             role="tooltip"
             layer={layer}
+            isInteractive={isInteractive}
             borderRadius={borderRadius}
             bg={bg}
             textColor={textColor}
@@ -375,7 +393,7 @@ export function Tooltip({
               [slotProps?.root?.className, className].filter(Boolean).join(' ') || undefined
             }
             data-testid={dataTestid ?? slotProps?.root?.['data-testid']}
-            {...(isAtPoint ? {} : surfaceHandlers)}
+            {...(isAtPoint || !isInteractive ? {} : surfaceHandlers)}
           >
             {title}
             {hasArrow && arrow ? (

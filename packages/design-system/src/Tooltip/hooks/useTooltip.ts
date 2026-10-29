@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, type SyntheticEvent } from 'react'
+import { useCallback, useEffect, useRef, type PointerEvent, type SyntheticEvent } from 'react'
 import { useControlled } from '../../utils/useControlled'
 
 export interface UseTooltipParams {
@@ -100,7 +100,8 @@ export function useTooltip({
     | 'onBlur'
     | 'onTouchStart'
     | 'onTouchEnd'
-    | 'onTouchCancel',
+    | 'onTouchCancel'
+    | 'onPointerDown',
     Handler
   > = {
     onMouseEnter: (event) => {
@@ -123,6 +124,11 @@ export function useTooltip({
     },
     onTouchCancel: (event) => {
       if (shouldOpenOnTouch) ask(false, event, leaveTouchDelay)
+    },
+    // A press of the child closes it, as a native `title` goes away. A touch is left to its long
+    // press, which would otherwise be closed as it starts.
+    onPointerDown: (event) => {
+      if ((event as PointerEvent<Element>).pointerType !== 'touch') ask(false, event, 0)
     },
   }
 

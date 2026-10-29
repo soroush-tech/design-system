@@ -22,6 +22,7 @@ const meta: Meta<typeof Tooltip> = {
         'leaveDelay',
         'shouldDescribeChild',
         'isDescriptionPersistent',
+        'isInteractive',
         'shouldOpenOnHover',
         'shouldOpenOnFocus',
         'shouldOpenOnTouch',
@@ -73,6 +74,12 @@ const meta: Meta<typeof Tooltip> = {
       control: 'boolean',
       description: 'With shouldDescribeChild: describes the child while the tooltip is closed too.',
       table: { category: 'Behavior', defaultValue: { summary: 'false' } },
+    },
+    isInteractive: {
+      control: 'boolean',
+      description:
+        'Whether the pointer can move onto the tooltip. False: it takes no pointer events, so a click goes to what is under it.',
+      table: { category: 'Behavior', defaultValue: { summary: 'true' } },
     },
     shouldOpenOnHover: {
       control: 'boolean',
@@ -157,6 +164,19 @@ export const OverADisabledButton: Story = {
         Save
       </Button>
     </Tooltip>
+  ),
+}
+
+// A text hint over a neighbor: a click goes through it to the button it covers.
+export const NotInteractive: Story = {
+  args: { isInteractive: false, placement: 'right', title: 'Layers' },
+  render: (args) => (
+    <Flex gap={1} alignItems="center">
+      <Tooltip {...args}>
+        <Button variant="outlined">Rail</Button>
+      </Tooltip>
+      <Button variant="outlined">Row</Button>
+    </Flex>
   ),
 }
 

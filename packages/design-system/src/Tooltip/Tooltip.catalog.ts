@@ -19,6 +19,7 @@ export const tooltipCatalog = defineCatalogEntry<TooltipProps>()({
     enterDelay: { values: [0, 100, 500], default: 100 },
     leaveDelay: { values: [0, 200, 500], default: 0 },
     shouldDescribeChild: { values: [true, false], default: false },
+    isInteractive: { values: [true, false], default: true },
     isDescriptionPersistent: { values: [true, false], default: false },
     shouldOpenOnHover: { values: [true, false], default: true },
     shouldOpenOnFocus: { values: [true, false], default: true },
