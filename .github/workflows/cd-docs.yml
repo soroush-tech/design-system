@@ -165,7 +165,7 @@ jobs:
           # decide - and a legacy tag has none for mcp or ui-spec.
           has_section=true
           if [ "$legacy" = true ]; then
-            case "$PKG" in mcp | ui-spec) has_section=false ;; esac
+            case "$PKG" in mcp | ui-spec) has_section=false ;; *) ;; esac
           elif ! git cat-file -e "$TAG:apps/docs/src/pages/$PKG" 2>/dev/null; then
             has_section=false
           fi

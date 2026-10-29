@@ -260,8 +260,8 @@ const mergeForwarded = (own: ChildProps, forwarded: Record<string, unknown>) =>
             },
           ]
         }
-        if (name === 'aria-describedby' && current)
-          return [name, `${String(current)} ${String(value)}`]
+        if (name === 'aria-describedby' && typeof current === 'string' && current)
+          return [name, `${current} ${String(value)}`]
         return [name, value]
       })
   )
@@ -270,7 +270,7 @@ const mergeForwarded = (own: ChildProps, forwarded: Record<string, unknown>) =>
 // is one that already has its own.
 const getChildName = (title: ReactNode, own: ChildProps) => {
   const isHidden = own['aria-hidden'] === true || own['aria-hidden'] === 'true'
-  const isNamed = own['aria-label'] !== undefined || own['aria-labelledby'] !== undefined
+  const isNamed = Boolean(own['aria-label'] || own['aria-labelledby'])
   return typeof title === 'string' && !isHidden && !isNamed ? { 'aria-label': title } : {}
 }
 

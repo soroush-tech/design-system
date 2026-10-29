@@ -300,6 +300,17 @@ describe('Tooltip', () => {
       expect(button()).toHaveAttribute('aria-label', 'Own')
     })
 
+    it('names a child whose own name is empty', () => {
+      renderWithTheme(
+        <Tooltip title="Save">
+          <button type="button" aria-label="" aria-labelledby={undefined}>
+            Icon
+          </button>
+        </Tooltip>
+      )
+      expect(button()).toHaveAttribute('aria-label', 'Save')
+    })
+
     it('names no child that is hidden from assistive technology', () => {
       const { unmount } = renderWithTheme(
         <Tooltip title="Save">
