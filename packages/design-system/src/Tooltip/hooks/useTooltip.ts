@@ -5,6 +5,8 @@ export interface UseTooltipParams {
   /** Whether it is shown - `undefined` leaves it to the hook. */
   isOpen?: boolean
   defaultOpen: boolean
+  /** At a point, a request to open is not honored - `isOpen` alone opens it. */
+  isAtPoint?: boolean
   onOpen?: (event: Event | SyntheticEvent) => void
   onClose?: (event: Event | SyntheticEvent) => void
   /** How long the pointer or the focus rests on the child before it opens, in milliseconds. */
@@ -41,6 +43,7 @@ const isKeyboardFocus = (event: SyntheticEvent) => {
 export function useTooltip({
   isOpen: isOpenProp,
   defaultOpen,
+  isAtPoint = false,
   onOpen,
   onClose,
   enterDelay,
@@ -53,9 +56,9 @@ export function useTooltip({
 }: Readonly<UseTooltipParams>) {
   const [isOpen, setIsOpen] = useControlled({ controlled: isOpenProp, default: defaultOpen })
   const timer = useRef<number | undefined>(undefined)
-  const latest = useRef({ isOpen, isOpenProp, onOpen, onClose })
+  const latest = useRef({ isOpen, isOpenProp, isAtPoint, onOpen, onClose })
   useEffect(() => {
-    latest.current = { isOpen, isOpenProp, onOpen, onClose }
+    latest.current = { isOpen, isOpenProp, isAtPoint, onOpen, onClose }
   })
 
   const clear = useCallback(() => window.clearTimeout(timer.current), [])
@@ -67,6 +70,8 @@ export function useTooltip({
       timer.current = window.setTimeout(() => {
         const current = latest.current
         if (current.isOpen === next) return
+        // An open asked for before the tooltip was put at a point is dropped; a close is not.
+        if (next && current.isAtPoint) return
         if (current.isOpenProp === undefined) {
           setIsOpen(next)
         }

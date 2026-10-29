@@ -56,7 +56,7 @@ With `anchorPosition` the tooltip is placed at a point in the window, not beside
 that depends on where the pointer is, such as a canvas. It needs no child, and is open when `isOpen` says
 so; with a `title` that changes as the point does, it follows both. It keeps its gap from the point, and
 flips to the other side for want of room, as it does around a child. With a child and a point, the point
-wins, and the child's hover, focus and touch do not open or close it: `isOpen` does. Nothing describes or names a child it does not have.
+wins, and neither the child's hover, focus and touch nor the pointer on the tooltip open or close it (an open asked for just before is dropped): `isOpen` does. Escape still asks it to close, through `onClose`. Nothing describes or names a child it does not have.
 
 ## A disabled child
 

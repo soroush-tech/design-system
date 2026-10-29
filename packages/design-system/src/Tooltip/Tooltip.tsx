@@ -258,9 +258,12 @@ export function Tooltip({
   const textColor = textColorProp ?? dp.textColor
   const id = useId()
 
+  // At a point, nothing of the child or of the tooltip itself opens or closes it: `isOpen` does.
+  const isAtPoint = anchorPosition !== undefined
   const { isOpen, childHandlers, surfaceHandlers } = useTooltip({
     isOpen: isOpenProp,
     defaultOpen,
+    isAtPoint,
     onOpen,
     onClose,
     enterDelay: enterDelayProp ?? dp.enterDelay ?? 100,
@@ -282,8 +285,6 @@ export function Tooltip({
   // A disabled control sends no pointer events, so the tooltip is placed against, and listens on,
   // a wrapper of its own; the control keeps its own ref.
   const isChildDisabled = own.disabled === true
-  // At a point, nothing of the child opens or closes the tooltip: `isOpen` does.
-  const isAtPoint = anchorPosition !== undefined
   const ref = useMergedRefs(isChildDisabled ? undefined : anchorRef, own.ref)
 
   const [arrow, setArrow] = useState<ArrowState | null>(null)
@@ -374,7 +375,7 @@ export function Tooltip({
               [slotProps?.root?.className, className].filter(Boolean).join(' ') || undefined
             }
             data-testid={dataTestid ?? slotProps?.root?.['data-testid']}
-            {...surfaceHandlers}
+            {...(isAtPoint ? {} : surfaceHandlers)}
           >
             {title}
             {hasArrow && arrow ? (

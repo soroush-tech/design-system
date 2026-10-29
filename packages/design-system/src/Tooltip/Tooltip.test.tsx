@@ -493,6 +493,54 @@ describe('Tooltip', () => {
       expect(onClose).not.toHaveBeenCalled()
     })
 
+    it('is not closed by the pointer leaving it either', () => {
+      const onClose = vi.fn()
+      renderWithTheme(at({ onClose }))
+      fireEvent.mouseEnter(tooltip())
+      fireEvent.mouseLeave(tooltip())
+      tick(1000)
+      expect(onClose).not.toHaveBeenCalled()
+      expect(tooltip()).toBeInTheDocument()
+    })
+
+    it('drops an open its child asked for before it was put at a point', () => {
+      const onOpen = vi.fn()
+      const child = <button type="button">Icon</button>
+      const { rerender } = renderWithTheme(
+        <Tooltip title="Save" onOpen={onOpen}>
+          {child}
+        </Tooltip>
+      )
+      fireEvent.mouseEnter(button())
+      tick(50)
+      rerender(
+        <Tooltip title="Save" onOpen={onOpen} anchorPosition={{ top: 300, left: 200 }}>
+          {child}
+        </Tooltip>
+      )
+      tick(1000)
+      noTooltip()
+      expect(onOpen).not.toHaveBeenCalled()
+    })
+
+    it('still carries out a close asked for before it was put at a point', () => {
+      const child = <button type="button">Icon</button>
+      const { rerender } = renderWithTheme(
+        <Tooltip title="Save" leaveDelay={200} defaultOpen>
+          {child}
+        </Tooltip>
+      )
+      expect(tooltip()).toBeInTheDocument()
+      fireEvent.mouseLeave(button())
+      rerender(
+        <Tooltip title="Save" leaveDelay={200} anchorPosition={{ top: 300, left: 200 }} defaultOpen>
+          {child}
+        </Tooltip>
+      )
+      tick(200)
+      noTooltip()
+    })
+
     it('does not wrap a disabled child, which has nothing to listen for', () => {
       renderWithTheme(
         at({
