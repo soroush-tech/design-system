@@ -282,6 +282,8 @@ export function Tooltip({
   // A disabled control sends no pointer events, so the tooltip is placed against, and listens on,
   // a wrapper of its own; the control keeps its own ref.
   const isChildDisabled = own.disabled === true
+  // At a point, nothing of the child opens or closes the tooltip: `isOpen` does.
+  const isAtPoint = anchorPosition !== undefined
   const ref = useMergedRefs(isChildDisabled ? undefined : anchorRef, own.ref)
 
   const [arrow, setArrow] = useState<ArrowState | null>(null)
@@ -338,7 +340,7 @@ export function Tooltip({
   const ariaProps = shouldDescribeChild ? { 'aria-describedby': describedBy(isShown) } : names
   const child = children
     ? cloneElement(children as ReactElement<ChildProps>, {
-        ...(isChildDisabled ? {} : handlers),
+        ...(isChildDisabled || isAtPoint ? {} : handlers),
         ...ariaProps,
         ref,
       })
@@ -346,7 +348,7 @@ export function Tooltip({
 
   return (
     <>
-      {isChildDisabled ? (
+      {isChildDisabled && !isAtPoint ? (
         <TooltipTarget ref={anchorRef} {...handlers}>
           {child}
         </TooltipTarget>

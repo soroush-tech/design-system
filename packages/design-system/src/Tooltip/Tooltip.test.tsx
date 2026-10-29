@@ -477,6 +477,35 @@ describe('Tooltip', () => {
       expect(document.querySelector('[id$="-description"]')).toBeNull()
     })
 
+    it('is not opened or closed by its child: only isOpen does', () => {
+      const onOpen = vi.fn()
+      const onClose = vi.fn()
+      stubFocusVisible(true)
+      renderWithTheme(
+        at({ isOpen: false, onOpen, onClose, children: <button type="button">Icon</button> })
+      )
+      fireEvent.mouseEnter(button())
+      fireEvent.focus(button())
+      fireEvent.touchStart(button())
+      tick(1000)
+      noTooltip()
+      expect(onOpen).not.toHaveBeenCalled()
+      expect(onClose).not.toHaveBeenCalled()
+    })
+
+    it('does not wrap a disabled child, which has nothing to listen for', () => {
+      renderWithTheme(
+        at({
+          children: (
+            <button type="button" disabled>
+              Icon
+            </button>
+          ),
+        })
+      )
+      expect(button().parentElement?.tagName).not.toBe('SPAN')
+    })
+
     it('is placed at the point, not beside the child, when it has one', () => {
       renderWithTheme(
         at({ children: <button type="button">Icon</button>, shouldOpenOnHover: false })

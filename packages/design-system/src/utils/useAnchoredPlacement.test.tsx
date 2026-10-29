@@ -124,6 +124,17 @@ describe('useAnchoredPlacement', () => {
     expect(surface.style.top).toBe('')
   })
 
+  it('hides a surface that was placed once its point and element are both gone', () => {
+    const { surface, rerender } = place({
+      anchorRef: ref(null),
+      anchorPosition: { top: 200, left: 300 },
+    })
+    expect(surface.style.visibility).toBe('visible')
+    rerender({ anchorRef: ref(null), anchorPosition: undefined })
+    expect(surface.style.visibility).toBe('hidden')
+    expect(surface.style.top).toBe('200px')
+  })
+
   it('places at a point of zero left and top', () => {
     const { surface } = place({ anchorPosition: { top: 0, left: 0 } })
     expect(surface.style.top).toBe('0px')

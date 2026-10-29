@@ -79,7 +79,12 @@ export function useAnchoredPlacement({
     const surface = surfaceRef.current
     const isPoint = pointTop !== undefined
     // A resize or scroll can land between the surface's removal and its listeners'.
-    if (!surface || (!anchor && !isPoint)) return
+    if (!surface) return
+    // With neither an element nor a point, there is nothing to sit by: it is not left where it was.
+    if (!anchor && !isPoint) {
+      surface.style.visibility = 'hidden'
+      return
+    }
     // A point with no element to go by is an anchor of no size, where the point is - placed as
     // against an element, so the gap and the flip apply.
     const isBareAnchor = !anchor

@@ -56,7 +56,7 @@ With `anchorPosition` the tooltip is placed at a point in the window, not beside
 that depends on where the pointer is, such as a canvas. It needs no child, and is open when `isOpen` says
 so; with a `title` that changes as the point does, it follows both. It keeps its gap from the point, and
 flips to the other side for want of room, as it does around a child. With a child and a point, the point
-wins. Nothing describes or names a child it does not have.
+wins, and the child's hover, focus and touch do not open or close it: `isOpen` does. Nothing describes or names a child it does not have.
 
 ## A disabled child
 
@@ -67,8 +67,11 @@ is not disabled is not wrapped. A disabled control cannot take the focus, so it 
 
 ## Customization
 
-`theme.components.Tooltip` styles the `root` (the surface) and the `arrow`. Its `defaultProps` set every
-prop above but `title` and `isOpen`. The arrow takes the surface's background. The `tooltip` key of `theme.zOrder` is its layer.
+`theme.components.Tooltip` styles the `root` (the surface) and the `arrow`. Its `defaultProps` set `placement`,
+`hasArrow`, `layer`, `borderRadius`, `bg`, `textColor`, `enterDelay`, `leaveDelay`, `enterTouchDelay`,
+`leaveTouchDelay`, `shouldDescribeChild`, `isDescriptionPersistent`, `shouldOpenOnHover`,
+`shouldOpenOnFocus` and `shouldOpenOnTouch` - not `children`, `title`, `anchorPosition`, `isOpen` or the
+handlers. The arrow takes the surface's background. The `tooltip` key of `theme.zOrder` is its layer.
 
 ## Server rendering
 
