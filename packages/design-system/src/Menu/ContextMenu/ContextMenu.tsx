@@ -2,6 +2,7 @@ import {
   Children,
   cloneElement,
   useCallback,
+  useLayoutEffect,
   useId,
   useMemo,
   useRef,
@@ -17,7 +18,7 @@ import { styled, type Theme } from '../../index'
 import { useDefaultProps, useTheme } from '../../theme'
 import type { PaperElevation } from '../../Paper'
 import type { PopoverPosition } from '../../Popover/utils/computePopoverPosition'
-import { MenuList } from '../MenuList'
+import { MenuList, type MenuListSlotProps } from '../MenuList'
 import { MenuItem } from '../../MenuItem'
 import { MenuItems, type MenuItemData } from '../MenuItems'
 import { MenuActivationContext } from '../MenuActivationContext'
@@ -33,8 +34,12 @@ interface TargetProps {
 }
 
 export interface ContextMenuProps {
-  /** The element whose right-click opens the menu - the canvas, a row, a card. Its own `onContextMenu` / `onKeyDown` still run. */
-  target: ReactElement<TargetProps>
+  /** The element whose right-click opens the menu - the canvas, a row, a card. Its own `onContextMenu` / `onKeyDown` still run. Optional when the app opens the menu itself, with `isOpen` and `anchorPosition`. */
+  target?: ReactElement<TargetProps>
+  /** Whether the menu is open, when the app decides: it then opens at `anchorPosition` - from a hit test, a shortcut, a toolbar button - and asks to close through `onClose`, whatever was right-clicked. Without it, the menu opens at the target's right-click or context-menu key, as before. */
+  isOpen?: boolean
+  /** With `isOpen`: where the menu opens - a point in the window, client coordinates, as Popover's. A changed point moves the open list. Without one, the menu stays closed. */
+  anchorPosition?: PopoverPosition
   /** `MenuItem` rows and `MenuDivider`s. */
   children?: ReactNode
   /** The rows as data, in place of `children`. */
@@ -64,6 +69,8 @@ export interface ContextMenuProps {
   /** Names the list. */
   'aria-label'?: string
   className?: string
+  /** Props for a part: `list` is the `role="menu"` list - and every submenu's - for the app's `data-*`, class and `aria-*`. The menu's own `role`, `id` and name win. */
+  slotProps?: { list?: MenuListSlotProps }
   'data-testid'?: string
 }
 
@@ -102,6 +109,8 @@ function ContextMenuTarget({ element, onContextMenu, onKeyDown }: ContextMenuTar
  */
 export function ContextMenu({
   target,
+  isOpen: isOpenProp,
+  anchorPosition,
   children,
   items,
   onClose,
@@ -117,6 +126,7 @@ export function ContextMenu({
   dense: denseProp,
   'aria-label': ariaLabel,
   className,
+  slotProps,
   'data-testid': dataTestid,
 }: Readonly<ContextMenuProps>) {
   // Resolution: explicit prop → theme.components.ContextMenu.defaultProps → literal fallback.
@@ -130,7 +140,10 @@ export function ContextMenu({
   const size = sizeProp ?? dp.size
   const dense = denseProp ?? dp.dense
   const theme = useTheme()
-  const [point, setPoint] = useState<PopoverPosition | null>(null)
+  const [openPoint, setOpenPoint] = useState<PopoverPosition | null>(null)
+  // Controlled, the app's `isOpen` and point say; on its own, the target's right-click did.
+  const isControlled = isOpenProp !== undefined
+  const point = isControlled ? (isOpenProp && anchorPosition) || null : openPoint
   const isOpen = point !== null
   const rootRef = useRef<HTMLDivElement>(null)
   const surfaceRef = useRef<HTMLDivElement>(null)
@@ -140,8 +153,8 @@ export function ContextMenu({
 
   const margin = Number.parseFloat(String(theme.space[marginThreshold]))
   const menuContext = useMemo<MenuContextValue>(
-    () => ({ align: 'start', margin, elevation, layer }),
-    [margin, elevation, layer]
+    () => ({ align: 'start', margin, elevation, layer, listProps: slotProps?.list }),
+    [margin, elevation, layer, slotProps?.list]
   )
   useMenuPlacement({
     isOpen,
@@ -153,18 +166,24 @@ export function ContextMenu({
     margin,
   })
 
+  // Opened by the app, the focus that was somewhere else goes back there as it does after a
+  // right-click: read before the list takes it.
+  useLayoutEffect(() => {
+    if (isControlled && isOpen) returnFocusRef.current = document.activeElement as HTMLElement
+  }, [isControlled, isOpen])
+
   const openAt = (top: number, left: number) => {
     returnFocusRef.current = document.activeElement as HTMLElement
-    setPoint({ top, left })
+    setOpenPoint({ top, left })
   }
 
   const close = useCallback(
     (event: SyntheticEvent, reason: MenuCloseReason) => {
-      setPoint(null)
+      if (!isControlled) setOpenPoint(null)
       onClose?.(event, reason)
-      if (reason !== 'blur') (returnFocusRef.current as HTMLElement).focus()
+      if (reason !== 'blur') returnFocusRef.current?.focus()
     },
-    [onClose]
+    [isControlled, onClose]
   )
 
   const handleActivate = useCallback(
@@ -173,14 +192,16 @@ export function ContextMenu({
   )
 
   const handleContextMenu = (event: MouseEvent<HTMLElement>) => {
-    target.props.onContextMenu?.(event)
+    target?.props.onContextMenu?.(event)
+    // Opened by the app, a right-click is the app's: the browser's own menu is left alone.
+    if (isControlled) return
     event.preventDefault()
     openAt(event.clientY, event.clientX)
   }
 
   const handleKeyDown = (event: KeyboardEvent<HTMLElement>) => {
-    target.props.onKeyDown?.(event)
-    if (!isMenuKey(event)) return
+    target?.props.onKeyDown?.(event)
+    if (isControlled || !isMenuKey(event)) return
     event.preventDefault()
     // From the keyboard it opens at the focused element's start corner.
     const { bottom, left } = (event.target as HTMLElement).getBoundingClientRect()
@@ -209,11 +230,13 @@ export function ContextMenu({
       data-testid={dataTestid}
       onBlur={handleBlur}
     >
-      <ContextMenuTarget
-        element={target}
-        onContextMenu={handleContextMenu}
-        onKeyDown={handleKeyDown}
-      />
+      {target && (
+        <ContextMenuTarget
+          element={target}
+          onContextMenu={handleContextMenu}
+          onKeyDown={handleKeyDown}
+        />
+      )}
       {isOpen && (
         <ContextMenuPaper
           ref={surfaceRef}
@@ -226,6 +249,7 @@ export function ContextMenu({
           <MenuContext.Provider value={menuContext}>
             <MenuActivationContext.Provider value={handleActivate}>
               <MenuList
+                {...slotProps?.list}
                 id={listId}
                 aria-label={ariaLabel}
                 shouldAutoFocus

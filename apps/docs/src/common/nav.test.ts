@@ -3,7 +3,6 @@ import {
   allDocComponents,
   componentCategories,
   designSystemNav,
-  isVersioned,
   railItemFor,
   searchEntriesFor,
   sectionFor,
@@ -89,7 +88,7 @@ describe('the packages in the rail', () => {
     for (const entry of docs) expect(entry.note).toMatch(/^v\d+\.\d+\.\d+$/)
   })
 
-  it('has a section of its own for the packages that are not versioned', () => {
+  it('has a section of its own for the MCP server and the UI spec', () => {
     for (const [pkg, label] of [
       ['mcp', 'MCP server documentation'],
       ['ui-spec', 'UI spec documentation'],
@@ -103,9 +102,7 @@ describe('the packages in the rail', () => {
         `/${pkg}/releases/`,
       ])
       expect(railItemFor(section, `/${pkg}/releases/`).id).toBe('get-started')
-      expect(isVersioned(section.pkg)).toBe(false)
     }
-    expect(isVersioned('markdown')).toBe(true)
   })
 
   it('is the part the packages page belongs to', () => {

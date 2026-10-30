@@ -30,7 +30,11 @@ export interface AnchoredPlacement extends PlacementContext {
 
 export interface UseAnchoredPlacementParams {
   isOpen: boolean
-  /** The element the surface is placed against. With `anchorPosition`, only its direction is read. */
+  /**
+   * The element the surface is placed against. With `anchorPosition`, only its direction is read -
+   * and it may hold no element at all: the point then stands for an anchor of no size, and the
+   * surface keeps its `gap` from it and flips round it as it would round an element.
+   */
   anchorRef: RefObject<HTMLElement | null>
   /** A point in the window to place at instead - a context menu opens where it was asked for. */
   anchorPosition?: PopoverPosition | null
@@ -73,13 +77,21 @@ export function useAnchoredPlacement({
   const place = useCallback(() => {
     const anchor = anchorRef.current
     const surface = surfaceRef.current
-    // A resize or scroll can land between the surface's removal and its listeners'.
-    if (!anchor || !surface) return
     const isPoint = pointTop !== undefined
-    const rect = anchor.getBoundingClientRect()
+    // A resize or scroll can land between the surface's removal and its listeners'.
+    if (!surface) return
+    // With neither an element nor a point, there is nothing to sit by: it is not left where it was.
+    if (!anchor && !isPoint) {
+      surface.style.visibility = 'hidden'
+      return
+    }
+    // A point with no element to go by is an anchor of no size, where the point is - placed as
+    // against an element, so the gap and the flip apply.
+    const isBareAnchor = !anchor
+    const rect = anchor ? anchor.getBoundingClientRect() : new DOMRect(pointLeft, pointTop, 0, 0)
     const surfaceSize = { width: surface.offsetWidth, height: surface.offsetHeight }
     const viewport = { width: window.innerWidth, height: window.innerHeight }
-    const context = { anchorRect: rect, surfaceSize, viewport, isRtl: isRtl(anchor) }
+    const context = { anchorRect: rect, surfaceSize, viewport, isRtl: isRtl(anchor ?? surface) }
     const origins = getOrigins(context)
     // The anchor grown by the gap along the axis the surface sits beside it on: the surface keeps
     // clear of the real one there, and lines up with its real edge along the other axis.
@@ -97,8 +109,8 @@ export function useAnchoredPlacement({
       height: rect.height + 2 * gapY,
     }
     const { top, left } = computePopoverPosition({
-      anchorReference: isPoint ? 'anchorPosition' : 'anchorEl',
-      anchorPosition: isPoint ? { top: pointTop, left: pointLeft } : undefined,
+      anchorReference: isPoint && !isBareAnchor ? 'anchorPosition' : 'anchorEl',
+      anchorPosition: isPoint && !isBareAnchor ? { top: pointTop, left: pointLeft } : undefined,
       anchorRect,
       paperRect: surfaceSize,
       ...origins,

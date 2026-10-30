@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Button } from '@soroush.tech/design-system/Button'
 import { Menu } from '@soroush.tech/design-system/Menu'
 import { MenuItem } from '@soroush.tech/design-system/MenuItem'
-import type { DocsPackage } from 'src/common/nav'
+import type { DocsSection } from 'src/common/nav'
 import { PACKAGE_VERSIONS } from 'src/common/packageVersions'
 import { currentVersion } from './utils/versionFromPath'
 
@@ -12,7 +12,7 @@ export interface VersionsManifest {
 }
 
 export interface VersionMenuProps {
-  pkg: DocsPackage
+  pkg: DocsSection
   pathname: string
 }
 
@@ -22,7 +22,7 @@ export interface VersionMenuProps {
  * until the manifest arrives - and none at all where there is no manifest, locally or
  * before the first deploy.
  */
-const useVersions = (pkg: DocsPackage): string[] => {
+const useVersions = (pkg: DocsSection): string[] => {
   const [versions, setVersions] = useState<string[]>([])
   useEffect(() => {
     let disposed = false

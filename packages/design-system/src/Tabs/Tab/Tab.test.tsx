@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { fireEvent, screen } from '@testing-library/react'
+import { act, fireEvent, screen } from '@testing-library/react'
 import { renderWithTheme } from '../../utils/test/renderWithTheme'
 import { Tabs, type TabsProps } from '../Tabs'
 import { baseTheme, createTheme, type Theme } from '../../theme/themes'
@@ -19,8 +19,29 @@ const renderEditor = (props: Partial<TabsProps> = {}) =>
   )
 
 const tab = (name: string) => screen.getByRole('tab', { name })
-// A close button is the pointer's, hidden from assistive technology: found by its tooltip.
-const close = (name: string) => document.querySelector<HTMLButtonElement>(`[title="${name}"]`)!
+// A close button is the pointer's, hidden from assistive technology: found beside its tab, by the
+// label it is closeLabel of ('Close Button' is the one of the tab 'Button').
+const close = (name: string) =>
+  tab(name.replace(/^Close /, '')).parentElement!.querySelector<HTMLButtonElement>(
+    '[data-tab-close]'
+  )!
+
+describe('hints', () => {
+  it('shows the close label as a tooltip, and a title given to the Tab on the tab alone', () => {
+    vi.useFakeTimers()
+    renderWithTheme(
+      <Tabs aria-label="Files">
+        <Tab value="a" label="Alpha" title="About Alpha" closeLabel="Close Alpha" />
+      </Tabs>
+    )
+    expect(document.querySelectorAll('[title]')).toHaveLength(1)
+    expect(tab('Alpha')).toHaveAttribute('title', 'About Alpha')
+    fireEvent.mouseEnter(close('Close Alpha'))
+    act(() => vi.advanceTimersByTime(100))
+    expect(screen.getByRole('tooltip')).toHaveTextContent('Close Alpha')
+    vi.useRealTimers()
+  })
+})
 
 describe('icons', () => {
   /** The order of a tab's icon, by its test id, and its label's text, inside the tab. */
@@ -80,7 +101,8 @@ describe('closable tabs', () => {
     const button = close('Close Button')
     expect(tab('Button')).not.toContainElement(button)
     expect(button).toHaveAttribute('tabindex', '-1')
-    expect(button).toHaveAttribute('title', 'Close Button')
+    // Its label is a tooltip's, never a native title.
+    expect(button).not.toHaveAttribute('title')
     expect(screen.queryByRole('button', { name: /Close Canvas/, hidden: true })).toBeNull()
   })
 

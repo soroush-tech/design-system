@@ -11,6 +11,7 @@ import {
   type ReactNode,
 } from 'react'
 import { Icon } from '../Icon'
+import { Tooltip } from '../Tooltip'
 import { styled, type Theme, createShouldForwardProp, get } from '../index'
 import { useDefaultProps, useTheme } from '../theme'
 import { themeDefault } from '../theme/utils/themeDefault'
@@ -324,8 +325,6 @@ interface RowAriaState {
   submenuId: string
   shortcut: ReactNode
   keyShortcuts?: string
-  note?: string
-  noteId: string
 }
 
 // What a menu row announces: the submenu it opens and whether it's open, whether it's checked,
@@ -337,12 +336,15 @@ const getRowAria = (state: RowAriaState) => ({
   'aria-checked': state.role === 'menuitem' ? undefined : state.selected,
   'aria-keyshortcuts':
     state.keyShortcuts ?? (typeof state.shortcut === 'string' ? state.shortcut : undefined),
-  'aria-describedby': state.note ? state.noteId : undefined,
 })
 
 // The class names given, without the ones left out - none at all when every one is.
 const joinClassNames = (...names: (string | false | undefined)[]) =>
   names.filter(Boolean).join(' ') || undefined
+
+// A checked radio or checkbox row shows a tick in the icon column.
+const getTick = (role: string, selected: boolean) =>
+  role !== 'menuitem' && selected ? <Icon name="check" size="sm" color="inherit" /> : null
 
 /**
  * @description A row of a list. Inside a `MenuList` it is a menu row - a `menuitem`
@@ -390,7 +392,6 @@ export function MenuItem({
   )
   const rootRef = useRef<HTMLLIElement>(null)
   const [isFocusVisible, setIsFocusVisible] = useState(false)
-  const noteId = useId()
   const fallbackId = useId()
   const hasSubmenu = isMenu && submenu !== undefined
   const {
@@ -498,15 +499,15 @@ export function MenuItem({
     )
   }
 
-  const tick =
-    role !== 'menuitem' && selected ? <Icon name="check" size="sm" color="inherit" /> : null
   const rowId = id ?? fallbackId
   const hasSecondaryAction = secondaryAction != null
+  const hasNote = Boolean(note)
+  const isEntry = hasSubmenu || hasSecondaryAction || hasNote
   // In an entry - beside its submenu or its own control - the row is a div: the entry is the li.
   const row = (
     <MenuItemRoot
       {...rootProps}
-      as={hasSubmenu || hasSecondaryAction ? 'div' : as}
+      as={isEntry ? 'div' : as}
       id={rowId}
       role={role}
       {...getRowAria({
@@ -517,15 +518,12 @@ export function MenuItem({
         submenuId,
         shortcut,
         keyShortcuts,
-        note,
-        noteId,
       })}
-      title={note}
       onKeyDown={handleKeyDown}
       onKeyUp={handleKeyUp}
       onPointerMove={handlePointerMove}
     >
-      <StartIconSlot aria-hidden>{startIcon ?? tick}</StartIconSlot>
+      <StartIconSlot aria-hidden>{startIcon ?? getTick(role, selected)}</StartIconSlot>
       <LabelSlot data-menu-label>{children}</LabelSlot>
       {shortcut != null && <ShortcutSlot aria-hidden>{shortcut}</ShortcutSlot>}
       {hasSubmenu && (
@@ -533,21 +531,35 @@ export function MenuItem({
           <Icon name="chevron_right" size="sm" color="inherit" />
         </SubmenuIconSlot>
       )}
-      {note && (
-        <span id={noteId} hidden>
-          {note}
-        </span>
-      )}
     </MenuItemRoot>
   )
-  if (!hasSubmenu && !hasSecondaryAction) return row
+  // The note is a tooltip, not a native title: it opens over a disabled row, which is only marked
+  // disabled and still takes the pointer, and it describes the row the whole time, as a title does.
+  // Beside the row it keeps its description in the row's entry, so a menu holds entries alone.
+  const noted = hasNote ? (
+    <Tooltip
+      title={note}
+      placement="right"
+      isInteractive={false}
+      shouldDescribeChild
+      isDescriptionPersistent
+      shouldWrapDisabledChild={false}
+    >
+      {row}
+    </Tooltip>
+  ) : (
+    row
+  )
+  if (!isEntry) return row
   if (!hasSubmenu) {
     return (
-      <EntrySlot role="none" hasSecondaryAction>
-        {row}
-        <SecondaryActionSlot aria-hidden={shouldAnnounceSecondaryAction ? undefined : true}>
-          {secondaryAction}
-        </SecondaryActionSlot>
+      <EntrySlot role="none" hasSecondaryAction={hasSecondaryAction}>
+        {noted}
+        {hasSecondaryAction && (
+          <SecondaryActionSlot aria-hidden={shouldAnnounceSecondaryAction ? undefined : true}>
+            {secondaryAction}
+          </SecondaryActionSlot>
+        )}
       </EntrySlot>
     )
   }
@@ -561,7 +573,7 @@ export function MenuItem({
       onKeyDown={handleEntryKeyDown}
       onBlur={handleEntryBlur}
     >
-      {row}
+      {noted}
       {hasSecondaryAction && (
         <SecondaryActionSlot aria-hidden={shouldAnnounceSecondaryAction ? undefined : true}>
           {secondaryAction}

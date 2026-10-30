@@ -23,6 +23,8 @@ on:
           - design-system
           - markdown
           - styled-system
+          - mcp
+          - ui-spec
       version:
         description: Stable version to snapshot, e.g. 1.3.3 (empty = the latest release)
         required: false
@@ -114,7 +116,7 @@ jobs:
       fail-fast: false
       max-parallel: 1
       matrix:
-        package: [design-system, markdown, styled-system]
+        package: [design-system, markdown, styled-system, mcp, ui-spec]
     steps:
       - name: Checkout Repository (full history for release tags)
         uses: actions/checkout@v7
@@ -133,6 +135,9 @@ jobs:
             echo "skip=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
+          # The MCP server is published under its own scope.
+          SCOPE=@soroush.tech
+          [ "$PKG" = mcp ] && SCOPE=@soroush.design
           # Stable releases only: an rc is never archived, and `sort -V` ranks 2.0.0-rc.1
           # above 2.0.0.
           if [ -n "$DISPATCH_VERSION" ]; then
@@ -140,13 +145,13 @@ jobs:
               echo "::error::$DISPATCH_VERSION is not a stable version."
               exit 1
             fi
-            TAG="@soroush.tech/$PKG@$DISPATCH_VERSION"
+            TAG="$SCOPE/$PKG@$DISPATCH_VERSION"
             if ! git rev-parse -q --verify "refs/tags/$TAG" >/dev/null; then
               echo "::error::No release tag $TAG."
               exit 1
             fi
           else
-            TAG=$(git tag --list "@soroush.tech/$PKG@*" | grep -E '@[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -1)
+            TAG=$(git tag --list "$SCOPE/$PKG@*" | grep -E '@[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -1)
           fi
           if [ -z "$TAG" ]; then
             echo "No release tag for $PKG."
@@ -155,6 +160,20 @@ jobs:
           fi
           # A tag from before the docs app holds only packages/ - built on the legacy setup.
           if git cat-file -e "$TAG:apps/docs" 2>/dev/null; then legacy=false; else legacy=true; fi
+          # A tag cut before the section had pages has nothing of it to freeze. The legacy setup
+          # only knows the three component packages, so there it is the section's own pages that
+          # decide - and a legacy tag has none for mcp or ui-spec.
+          has_section=true
+          if [ "$legacy" = true ]; then
+            case "$PKG" in mcp | ui-spec) has_section=false ;; *) ;; esac
+          elif ! git cat-file -e "$TAG:apps/docs/src/pages/$PKG" 2>/dev/null; then
+            has_section=false
+          fi
+          if [ "$has_section" = false ]; then
+            echo "$TAG has no docs section for $PKG - skipped."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
           echo "version=${TAG##*@}" >> "$GITHUB_OUTPUT"
           echo "legacy=$legacy" >> "$GITHUB_OUTPUT"

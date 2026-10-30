@@ -6,6 +6,7 @@ import { View } from '../View'
 import { exampleArgs } from '../utils/test/renderExample'
 import { tooltipCatalog, tooltipPlacementValues } from './Tooltip.catalog'
 import { Tooltip } from './Tooltip'
+import { TooltipGroup } from './TooltipGroup'
 
 const meta: Meta<typeof Tooltip> = {
   title: 'Theme/Tooltip',
@@ -21,6 +22,8 @@ const meta: Meta<typeof Tooltip> = {
         'enterDelay',
         'leaveDelay',
         'shouldDescribeChild',
+        'isDescriptionPersistent',
+        'isInteractive',
         'shouldOpenOnHover',
         'shouldOpenOnFocus',
         'shouldOpenOnTouch',
@@ -67,6 +70,17 @@ const meta: Meta<typeof Tooltip> = {
       control: 'boolean',
       description: 'Describes the child instead of naming it.',
       table: { category: 'Behavior', defaultValue: { summary: 'false' } },
+    },
+    isDescriptionPersistent: {
+      control: 'boolean',
+      description: 'With shouldDescribeChild: describes the child while the tooltip is closed too.',
+      table: { category: 'Behavior', defaultValue: { summary: 'false' } },
+    },
+    isInteractive: {
+      control: 'boolean',
+      description:
+        'Whether the pointer can move onto the tooltip. False: it takes no pointer events, so a click goes to what is under it.',
+      table: { category: 'Behavior', defaultValue: { summary: 'true' } },
     },
     shouldOpenOnHover: {
       control: 'boolean',
@@ -135,6 +149,67 @@ export const NamesAnIcon: Story = {
         <Icon name="star" size="1.25em" color="inherit" />
       </Button>
     </Tooltip>
+  ),
+}
+
+// A disabled button: the tooltip still opens, and says why.
+export const OverADisabledButton: Story = {
+  args: {
+    shouldDescribeChild: true,
+    isDescriptionPersistent: true,
+    title: 'Fill in the name first',
+  },
+  render: (args) => (
+    <Tooltip {...args}>
+      <Button variant="outlined" disabled>
+        Save
+      </Button>
+    </Tooltip>
+  ),
+}
+
+// A text hint over a neighbor: a click goes through it to the button it covers.
+export const NotInteractive: Story = {
+  args: { isInteractive: false, placement: 'right', title: 'Layers' },
+  render: (args) => (
+    <Flex gap={1} alignItems="center">
+      <Tooltip {...args}>
+        <Button variant="outlined">Rail</Button>
+      </Tooltip>
+      <Button variant="outlined">Row</Button>
+    </Flex>
+  ),
+}
+
+// Hover the first until it opens, then move along: each next one opens at once.
+export const InAGroup: Story = {
+  args: { enterDelay: 500 },
+  render: (args) => (
+    <TooltipGroup skipDelayDuration={300}>
+      <Flex gap={1}>
+        {['Layers', 'Assets', 'Pages'].map((title) => (
+          <Tooltip key={title} {...args} title={title}>
+            <Button variant="outlined">{title}</Button>
+          </Tooltip>
+        ))}
+      </Flex>
+    </TooltipGroup>
+  ),
+}
+
+// No child: the tooltip is at a point in the window, open when it is told to be.
+export const AtAPoint: Story = {
+  // The meta's example child is left out: there is none.
+  args: {
+    children: undefined,
+    isOpen: true,
+    title: 'Move the track',
+    anchorPosition: { top: 160, left: 200 },
+  },
+  render: (args) => (
+    <View height="240px">
+      <Tooltip {...args} />
+    </View>
   ),
 }
 

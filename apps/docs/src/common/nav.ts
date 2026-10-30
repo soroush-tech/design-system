@@ -19,14 +19,10 @@ import { sectionPath } from 'src/common/sectionPath'
 export * from '@soroush.tech/docs-content'
 
 /**
- * A part of the site that documents a package: the three with versioned snapshots, and the two
- * that live on the live site only.
+ * A part of the site that documents a package. Every section is versioned: the live docs, and
+ * a frozen snapshot per release.
  */
 export type DocsSection = DocsPackage | 'mcp' | 'ui-spec'
-
-/** Whether a section has released snapshots to choose from. */
-export const isVersioned = (pkg: DocsSection): pkg is DocsPackage =>
-  pkg !== 'mcp' && pkg !== 'ui-spec'
 
 export interface NavItem {
   label: string

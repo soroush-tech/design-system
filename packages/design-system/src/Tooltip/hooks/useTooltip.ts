@@ -1,10 +1,21 @@
-import { useCallback, useEffect, useRef, type SyntheticEvent } from 'react'
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  type PointerEvent,
+  type SyntheticEvent,
+} from 'react'
 import { useControlled } from '../../utils/useControlled'
+import { useTheme } from '../../theme'
+import { TooltipGroupContext, getThemeTooltipGroup } from '../TooltipGroupContext'
 
 export interface UseTooltipParams {
   /** Whether it is shown - `undefined` leaves it to the hook. */
   isOpen?: boolean
   defaultOpen: boolean
+  /** At a point, a request to open is not honored - `isOpen` alone opens it. */
+  isAtPoint?: boolean
   onOpen?: (event: Event | SyntheticEvent) => void
   onClose?: (event: Event | SyntheticEvent) => void
   /** How long the pointer or the focus rests on the child before it opens, in milliseconds. */
@@ -18,6 +29,8 @@ export interface UseTooltipParams {
   shouldOpenOnHover: boolean
   shouldOpenOnFocus: boolean
   shouldOpenOnTouch: boolean
+  /** The theme's window: with it, every tooltip under the theme is a group of its own kind. */
+  skipDelayDuration?: number
 }
 
 type Handler = (event: SyntheticEvent) => void
@@ -41,6 +54,7 @@ const isKeyboardFocus = (event: SyntheticEvent) => {
 export function useTooltip({
   isOpen: isOpenProp,
   defaultOpen,
+  isAtPoint = false,
   onOpen,
   onClose,
   enterDelay,
@@ -50,15 +64,40 @@ export function useTooltip({
   shouldOpenOnHover,
   shouldOpenOnFocus,
   shouldOpenOnTouch,
+  skipDelayDuration = 0,
 }: Readonly<UseTooltipParams>) {
   const [isOpen, setIsOpen] = useControlled({ controlled: isOpenProp, default: defaultOpen })
   const timer = useRef<number | undefined>(undefined)
-  const latest = useRef({ isOpen, isOpenProp, onOpen, onClose })
+  // In a group, one that opens just after another closed - or while one is open - needs no
+  // delay, and the one still showing closes. A tooltip the app controls is left out of it.
+  const theme = useTheme()
+  const nearestGroup = useContext(TooltipGroupContext)
+  const group =
+    nearestGroup ?? (skipDelayDuration > 0 ? getThemeTooltipGroup(theme, skipDelayDuration) : null)
+  const latest = useRef({ isOpen, isOpenProp, isAtPoint, onOpen, onClose, group })
   useEffect(() => {
-    latest.current = { isOpen, isOpenProp, onOpen, onClose }
+    latest.current = { isOpen, isOpenProp, isAtPoint, onOpen, onClose, group }
   })
 
   const clear = useCallback(() => window.clearTimeout(timer.current), [])
+
+  // Closes it now, for the group when another tooltip of it opens.
+  const closeNow = useCallback(
+    (event: Event | SyntheticEvent) => {
+      clear()
+      const current = latest.current
+      setIsOpen(false)
+      current.onClose?.(event)
+    },
+    [clear, setIsOpen]
+  )
+  const isInGroup = group !== null && isOpenProp === undefined
+  useEffect(() => {
+    if (!isInGroup || !isOpen) return undefined
+    group.open(closeNow)
+    return () => group.release(closeNow)
+  }, [group, isInGroup, isOpen, closeNow])
+  const getEnterDelay = () => (isInGroup && group.shouldSkipDelay() ? 0 : enterDelay)
 
   // Asks to open or close after a delay; the last ask wins.
   const ask = useCallback(
@@ -67,14 +106,18 @@ export function useTooltip({
       timer.current = window.setTimeout(() => {
         const current = latest.current
         if (current.isOpen === next) return
+        // An open asked for before the tooltip was put at a point is dropped; a close is not.
+        if (next && current.isAtPoint) return
         if (current.isOpenProp === undefined) {
+          if (next) current.group?.closeActive(event)
+          else current.group?.release(closeNow)
           setIsOpen(next)
         }
         const notify = next ? current.onOpen : current.onClose
         notify?.(event)
       }, delay)
     },
-    [clear, setIsOpen]
+    [clear, setIsOpen, closeNow]
   )
 
   useEffect(() => clear, [clear])
@@ -95,17 +138,18 @@ export function useTooltip({
     | 'onBlur'
     | 'onTouchStart'
     | 'onTouchEnd'
-    | 'onTouchCancel',
+    | 'onTouchCancel'
+    | 'onPointerDown',
     Handler
   > = {
     onMouseEnter: (event) => {
-      if (shouldOpenOnHover) ask(true, event, enterDelay)
+      if (shouldOpenOnHover) ask(true, event, getEnterDelay())
     },
     onMouseLeave: (event) => {
       if (shouldOpenOnHover) ask(false, event, leaveDelay)
     },
     onFocus: (event) => {
-      if (shouldOpenOnFocus && isKeyboardFocus(event)) ask(true, event, enterDelay)
+      if (shouldOpenOnFocus && isKeyboardFocus(event)) ask(true, event, getEnterDelay())
     },
     onBlur: (event) => {
       if (shouldOpenOnFocus) ask(false, event, leaveDelay)
@@ -118,6 +162,11 @@ export function useTooltip({
     },
     onTouchCancel: (event) => {
       if (shouldOpenOnTouch) ask(false, event, leaveTouchDelay)
+    },
+    // A press of the child closes it, as a native `title` goes away. A touch is left to its long
+    // press, which would otherwise be closed as it starts.
+    onPointerDown: (event) => {
+      if ((event as PointerEvent<Element>).pointerType !== 'touch') ask(false, event, 0)
     },
   }
 

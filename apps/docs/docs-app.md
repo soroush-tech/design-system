@@ -6,8 +6,8 @@ every input is an in-repo glob over `packages/` and `content/` - no remote fetch
 
 ## Sections
 
-Three per-package sections, independently versioned: `/design-system/`, `/markdown/`,
-`/styled-system/`. The registry in `src/common/nav.ts` drives the sidebars, the component
+Five per-package sections, independently versioned: `/design-system/`, `/markdown/`,
+`/styled-system/`, `/mcp/` and `/ui-spec/`. The registry in `src/common/nav.ts` drives the sidebars, the component
 pages, and the drift tests; `sectionFor(pathname)` picks the active section.
 
 ## Structure
@@ -43,13 +43,26 @@ pages, and the drift tests; `sectionFor(pathname)` picks the active section.
 section-relative routes, links ride the base via `sectionPath()`, cross-section links
 escape to the live site, and every page defaults to noindex. `cd-docs.yml` builds the
 live tree on CI-passed main pushes and freezes a section from its release tag when
-`CD · Packages (npm)` completes; `scripts/compose-docs-dist.mjs` composes the `docs-dist`
+`CD · Packages (npm)` completes (tags are `@soroush.tech/<pkg>@x`, the MCP server's
+`@soroush.design/mcp@x`; a tag cut before its section had pages is skipped); `scripts/compose-docs-dist.mjs` composes the `docs-dist`
 orphan branch (live root + `<pkg>/<version>/` snapshots + `versions.json`). GitHub Pages
 serves that branch at docs.soroush.tech, so pushing it _is_ the deploy - there is no
 publish step. `public/CNAME` carries the domain and `public/.nojekyll` keeps Pages from
 running Jekyll over the build; both ride along in every build's output. The
 `VersionSwitcher` reads `/versions.json` from the domain root, so old snapshots list
 newer releases.
+
+What search engines are told about the archived pages is settled when the tree is composed, not
+when a snapshot is built - a snapshot is frozen and cannot know what later releases add or drop.
+`scripts/compose-docs-dist.mjs` ends `live` and `snapshot` by running
+`scripts/canonicalize-docs-dist.mjs` over `docs-dist`. For each archived page
+`<pkg>/<version>/<path>` the live page is `<pkg>/<path>`: where it exists, the archived page's
+canonical and `og:url` are that page and it is `noindex,follow`; where it does not, the archived page
+has no canonical, its own `og:url` and is `index,follow`, and a stub (`data-stub`, `noindex`, a zero
+delay refresh and a canonical to the archived page) is written at the live URL so the removed page
+does not 404 on GitHub Pages. Stubs are rebuilt every run and are never counted as live pages. The run
+ends by checking the tree and fails the deploy on a canonical or stub that leads to no page, or a live
+page that is `noindex`. Its tests are in `scripts/canonicalizeDocsDist.test.js`.
 
 Only stable tags are archived, and a manual dispatch takes an optional `version` to backfill
 one. Releases up to design-system 1.3.3 / styled-system 5.8.3 / markdown 1.2.2 were cut in

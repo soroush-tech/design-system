@@ -32,6 +32,77 @@ describe('Tooltip in a browser', () => {
     await vi.waitFor(() => expect(screen.queryByRole('tooltip')).not.toBeInTheDocument())
   })
 
+  it('opens over a disabled child, beside the control itself', async () => {
+    renderWithTheme(
+      <View position="absolute" top="200px" left="300px">
+        <Tooltip title="Fill in the name first" enterDelay={10}>
+          <button type="button" disabled>
+            Save
+          </button>
+        </Tooltip>
+      </View>
+    )
+    const control = screen.getByRole('button', { name: 'Fill in the name first' })
+    await userEvent.hover(control)
+    await vi.waitFor(() => expect(tooltip()).toBeVisible())
+    expect(tooltip().getBoundingClientRect().bottom).toBeCloseTo(
+      control.getBoundingClientRect().top - 8,
+      0
+    )
+  })
+
+  it('sits above a point, a gap away and centred on it, with no child', async () => {
+    renderWithTheme(
+      <Tooltip title="Move the track" anchorPosition={{ top: 300, left: 200 }} isOpen />
+    )
+    await vi.waitFor(() => expect(tooltip()).toBeVisible())
+    const surface = tooltip().getBoundingClientRect()
+    expect(surface.bottom).toBeCloseTo(300 - 8, 0)
+    // The position is floored to a whole pixel, so the middle may be a pixel short.
+    expect(Math.abs(surface.left + surface.width / 2 - 200)).toBeLessThanOrEqual(1)
+  })
+
+  it('flips below a point near the top of the window, and follows it as it moves', async () => {
+    const { rerender } = renderWithTheme(
+      <Tooltip title="Agents" anchorPosition={{ top: 4, left: 200 }} isOpen />
+    )
+    await vi.waitFor(() => expect(tooltip()).toBeVisible())
+    expect(tooltip().getBoundingClientRect().top).toBeCloseTo(4 + 8, 0)
+    rerender(<Tooltip title="Agents" anchorPosition={{ top: 300, left: 200 }} isOpen />)
+    await vi.waitFor(() => expect(tooltip().getBoundingClientRect().bottom).toBeCloseTo(300 - 8, 0))
+  })
+
+  // A second button, right where a tooltip to the right of the first one lands.
+  const covered = (props: Partial<TooltipProps>) => (
+    <View position="absolute" top="200px" left="100px">
+      <Tooltip title="Layers" placement="right" isOpen {...props}>
+        <button type="button">Rail</button>
+      </Tooltip>
+      <button type="button" style={{ position: 'absolute', top: 0, left: 70 }}>
+        Row
+      </button>
+    </View>
+  )
+  const centreOf = (element: Element) => {
+    const rect = element.getBoundingClientRect()
+    return { x: rect.left + 8, y: rect.top + rect.height / 2 }
+  }
+
+  it('takes a click meant for what it covers, as it is interactive', async () => {
+    renderWithTheme(covered({}))
+    await vi.waitFor(() => expect(tooltip()).toBeVisible())
+    const { x, y } = centreOf(screen.getByRole('button', { name: 'Row' }))
+    expect(document.elementFromPoint(x, y)).toBe(tooltip())
+  })
+
+  it('lets a click through to what it covers, when it is not interactive', async () => {
+    renderWithTheme(covered({ isInteractive: false }))
+    await vi.waitFor(() => expect(tooltip()).toBeVisible())
+    const row = screen.getByRole('button', { name: 'Row' })
+    const { x, y } = centreOf(row)
+    expect(document.elementFromPoint(x, y)).toBe(row)
+  })
+
   it('flips below its child where there is no room above it', async () => {
     renderWithTheme(view({}, 0))
     await userEvent.hover(trigger())

@@ -20,6 +20,7 @@ import { styled, type Theme, createShouldForwardProp, props, space, get } from '
 import { useDefaultProps, useTheme, type TabsVariants } from '../../theme'
 import { themeDefault } from '../../theme/utils/themeDefault'
 import { Icon } from '../../Icon'
+import { Tooltip } from '../../Tooltip'
 import { View } from '../../View'
 import { Menu } from '../../Menu/Menu'
 import { MenuItem } from '../../MenuItem'
@@ -709,14 +710,13 @@ export function Tabs({
               align="end"
               onSelect={select}
               trigger={
-                <OverflowButton
-                  type="button"
-                  {...styleProps}
-                  aria-label={overflowLabel}
-                  title={overflowLabel}
-                >
-                  <Icon name="expand_more" size="sm" color="inherit" />
-                </OverflowButton>
+                // The label is shown as a hint by a tooltip, not a native `title`; the tooltip hands
+                // the menu's clone on to the button.
+                <Tooltip title={overflowLabel} isInteractive={false}>
+                  <OverflowButton type="button" {...styleProps} aria-label={overflowLabel}>
+                    <Icon name="expand_more" size="sm" color="inherit" />
+                  </OverflowButton>
+                </Tooltip>
               }
             >
               {hiddenTabs.map((tab) => (
@@ -728,17 +728,18 @@ export function Tabs({
                   secondaryAction={
                     tab.closeLabel === undefined ? undefined : (
                       // The pointer's, as a tab's is: a menu owns rows alone, and Delete closes it.
-                      <OverflowClose
-                        type="button"
-                        color={selectedColor}
-                        aria-hidden={shouldAnnounceClose ? undefined : true}
-                        aria-label={shouldAnnounceClose ? tab.closeLabel : undefined}
-                        title={tab.closeLabel}
-                        tabIndex={-1}
-                        onClick={() => onTabClose?.(tab.value)}
-                      >
-                        <Icon name="close" size="0.75rem" color="inherit" />
-                      </OverflowClose>
+                      <Tooltip title={tab.closeLabel} isInteractive={false}>
+                        <OverflowClose
+                          type="button"
+                          color={selectedColor}
+                          aria-hidden={shouldAnnounceClose ? undefined : true}
+                          aria-label={shouldAnnounceClose ? tab.closeLabel : undefined}
+                          tabIndex={-1}
+                          onClick={() => onTabClose?.(tab.value)}
+                        >
+                          <Icon name="close" size="0.75rem" color="inherit" />
+                        </OverflowClose>
+                      </Tooltip>
                     )
                   }
                 >

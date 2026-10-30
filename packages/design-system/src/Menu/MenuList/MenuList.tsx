@@ -1,4 +1,12 @@
-import { useContext, useEffect, useMemo, useRef, type KeyboardEvent, type ReactNode } from 'react'
+import {
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  type AriaAttributes,
+  type KeyboardEvent,
+  type ReactNode,
+} from 'react'
 import type { LayoutProps, SpaceProps } from '@soroush.tech/styled-system'
 import { styled, type Theme, createShouldForwardProp, props, space, layout } from '../../index'
 import { useDefaultProps } from '../../theme'
@@ -40,6 +48,16 @@ export interface MenuListProps extends SpaceProps<Theme>, LayoutProps<Theme> {
   'aria-labelledby'?: string
   'data-testid'?: string
 }
+
+/**
+ * What an app may put on the `role="menu"` list a `Menu` or a `ContextMenu` renders, through
+ * `slotProps.list`: its marks (`data-*`), class, `aria-*` and an `onKeyDown`, which runs before the
+ * list's own. The list's `role`, `id` and name are the menu's, and win.
+ */
+export type MenuListSlotProps = Pick<MenuListProps, 'className' | 'data-testid' | 'onKeyDown'> &
+  Omit<AriaAttributes, 'aria-label' | 'aria-labelledby'> & {
+    [name: `data-${string}`]: string | number | boolean | undefined
+  }
 
 const STEP_BY_KEY: Record<string, RowStep> = {
   ArrowDown: 'next',
@@ -142,6 +160,10 @@ export function MenuList({
     // A key pressed in a nested submenu bubbles through here; that list handles its own.
     if ((event.target as HTMLElement).closest('[role="menu"]') !== list) return
 
+    // The app's handler goes first and can keep the key from the list by preventing it.
+    onKeyDown?.(event)
+    if (event.defaultPrevented) return
+
     const rows = getOwnRows(list)
     const current = list.ownerDocument.activeElement
     const step = STEP_BY_KEY[event.key]
@@ -156,7 +178,6 @@ export function MenuList({
     }
     if (step || target) event.preventDefault()
     target?.focus()
-    onKeyDown?.(event)
   }
 
   return (

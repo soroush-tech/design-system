@@ -523,6 +523,15 @@ export interface TooltipOwnerState {
   enterTouchDelay?: number
   leaveTouchDelay?: number
   shouldDescribeChild?: boolean
+  isDescriptionPersistent?: boolean
+  isInteractive?: boolean
+  shouldWrapDisabledChild?: boolean
+  /**
+   * Theme only. With a value above 0, every tooltip under the theme shares one delay window, as in a
+   * `TooltipGroup` of that duration: no enter delay while another is open or within this many
+   * milliseconds of the last close. A `TooltipGroup` around a tooltip wins.
+   */
+  skipDelayDuration?: number
   shouldOpenOnHover?: boolean
   shouldOpenOnFocus?: boolean
   shouldOpenOnTouch?: boolean

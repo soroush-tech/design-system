@@ -26,6 +26,36 @@ const renderCanvas = () =>
 const surface = () => screen.getByRole('menu').parentElement!
 
 describe('ContextMenu in a browser', () => {
+  it('opens at a point the app gives, with no target, and keeps inside the window', async () => {
+    const view = renderWithTheme(
+      <ContextMenu isOpen anchorPosition={{ top: 60, left: 100 }} aria-label="Canvas">
+        <MenuItem>Paste</MenuItem>
+        <MenuItem>Select all</MenuItem>
+      </ContextMenu>
+    )
+    await vi.waitFor(() => {
+      const box = surface().getBoundingClientRect()
+      expect(Math.abs(box.left - 100)).toBeLessThanOrEqual(1)
+      expect(Math.abs(box.top - 60)).toBeLessThanOrEqual(1)
+    })
+    // A point at the far corner: the list flips and shifts to stay inside.
+    view.rerender(
+      <ContextMenu
+        isOpen
+        anchorPosition={{ top: window.innerHeight - 2, left: window.innerWidth - 2 }}
+        aria-label="Canvas"
+      >
+        <MenuItem>Paste</MenuItem>
+        <MenuItem>Select all</MenuItem>
+      </ContextMenu>
+    )
+    await vi.waitFor(() => {
+      const box = surface().getBoundingClientRect()
+      expect(box.right).toBeLessThanOrEqual(window.innerWidth)
+      expect(box.bottom).toBeLessThanOrEqual(window.innerHeight)
+    })
+  })
+
   it('opens at the pointer on a right-click', async () => {
     renderCanvas()
     // The canvas fills the window, so a point on it is a point in the window.
