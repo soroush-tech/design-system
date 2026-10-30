@@ -7,7 +7,8 @@ import {
   type SyntheticEvent,
 } from 'react'
 import { useControlled } from '../../utils/useControlled'
-import { TooltipGroupContext } from '../TooltipGroupContext'
+import { useTheme } from '../../theme'
+import { TooltipGroupContext, getThemeTooltipGroup } from '../TooltipGroupContext'
 
 export interface UseTooltipParams {
   /** Whether it is shown - `undefined` leaves it to the hook. */
@@ -28,6 +29,8 @@ export interface UseTooltipParams {
   shouldOpenOnHover: boolean
   shouldOpenOnFocus: boolean
   shouldOpenOnTouch: boolean
+  /** The theme's window: with it, every tooltip under the theme is a group of its own kind. */
+  skipDelayDuration?: number
 }
 
 type Handler = (event: SyntheticEvent) => void
@@ -61,12 +64,16 @@ export function useTooltip({
   shouldOpenOnHover,
   shouldOpenOnFocus,
   shouldOpenOnTouch,
+  skipDelayDuration = 0,
 }: Readonly<UseTooltipParams>) {
   const [isOpen, setIsOpen] = useControlled({ controlled: isOpenProp, default: defaultOpen })
   const timer = useRef<number | undefined>(undefined)
   // In a group, one that opens just after another closed - or while one is open - needs no
   // delay, and the one still showing closes. A tooltip the app controls is left out of it.
-  const group = useContext(TooltipGroupContext)
+  const theme = useTheme()
+  const nearestGroup = useContext(TooltipGroupContext)
+  const group =
+    nearestGroup ?? (skipDelayDuration > 0 ? getThemeTooltipGroup(theme, skipDelayDuration) : null)
   const latest = useRef({ isOpen, isOpenProp, isAtPoint, onOpen, onClose, group })
   useEffect(() => {
     latest.current = { isOpen, isOpenProp, isAtPoint, onOpen, onClose, group }

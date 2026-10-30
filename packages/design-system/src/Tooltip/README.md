@@ -103,6 +103,10 @@ It renders nothing of its own and takes hover and keyboard focus; a touch keeps 
 nearest group wins. Tooltips outside a group are unchanged, and a tooltip whose `isOpen` the app controls
 is left alone: the group neither opens nor closes it, and it does not start the window.
 
+To group every tooltip of an app at once, with no wrapper, set `skipDelayDuration` in
+`theme.components.Tooltip.defaultProps` (milliseconds; unset or 0 is off). Every tooltip under that
+theme then shares one window by the same rule, and a `TooltipGroup` around a tooltip wins over it.
+
 ## A disabled child
 
 A disabled control sends no pointer events of its own (React holds them back), so a `Tooltip` around
@@ -115,7 +119,7 @@ is not disabled is not wrapped. A disabled control cannot take the focus, so it 
 `theme.components.Tooltip` styles the `root` (the surface) and the `arrow`. Its `defaultProps` set `placement`,
 `hasArrow`, `layer`, `borderRadius`, `bg`, `textColor`, `enterDelay`, `leaveDelay`, `enterTouchDelay`,
 `leaveTouchDelay`, `shouldDescribeChild`, `isDescriptionPersistent`, `shouldWrapDisabledChild`,
-`isInteractive`, `shouldOpenOnHover`, `shouldOpenOnFocus` and `shouldOpenOnTouch` - not `children`, `title`, `anchorPosition`, `isOpen` or the
+`isInteractive`, `skipDelayDuration`, `shouldOpenOnHover`, `shouldOpenOnFocus` and `shouldOpenOnTouch` - not `children`, `title`, `anchorPosition`, `isOpen` or the
 handlers. The arrow takes the surface's background. The `tooltip` key of `theme.zOrder` is its layer.
 
 ## Server rendering

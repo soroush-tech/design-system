@@ -1,5 +1,7 @@
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest'
-import { act, fireEvent, screen } from '@testing-library/react'
+import { act, fireEvent, render, screen } from '@testing-library/react'
+import { ThemeProvider } from '../theme'
+import { baseTheme, createTheme } from '../theme/themes'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { Tooltip } from './Tooltip'
 import { TooltipGroup } from './TooltipGroup'
@@ -187,5 +189,68 @@ describe('TooltipGroup', () => {
     fireEvent.mouseEnter(icon('Second'))
     tick(0)
     expect(open('Second') ?? screen.getByText('Second')).toBeInTheDocument()
+  })
+})
+
+describe('skipDelayDuration in the theme', () => {
+  const themed = (skipDelayDuration?: number) =>
+    createTheme(baseTheme, {
+      components: { Tooltip: { defaultProps: { enterDelay: 500, skipDelayDuration } } },
+    })
+  const pair = (
+    <>
+      <Tooltip title="First">
+        <button type="button">a</button>
+      </Tooltip>
+      <Tooltip title="Second">
+        <button type="button">b</button>
+      </Tooltip>
+    </>
+  )
+
+  it('groups every tooltip under the theme, with no wrapper', () => {
+    render(<ThemeProvider theme={themed(300)}>{pair}</ThemeProvider>)
+    fireEvent.mouseEnter(icon('First'))
+    tick(499)
+    expect(screen.queryByText('First')).not.toBeInTheDocument()
+    tick(1)
+    fireEvent.mouseLeave(icon('First'))
+    fireEvent.mouseEnter(icon('Second'))
+    tick(0)
+    expect(screen.getByText('Second')).toBeInTheDocument()
+    expect(screen.queryByText('First')).not.toBeInTheDocument()
+    fireEvent.mouseLeave(icon('Second'))
+    tick(400)
+    fireEvent.mouseEnter(icon('First'))
+    tick(499)
+    expect(screen.queryByText('First')).not.toBeInTheDocument()
+  })
+
+  it('is off when unset or 0', () => {
+    for (const duration of [undefined, 0]) {
+      const { unmount } = render(<ThemeProvider theme={themed(duration)}>{pair}</ThemeProvider>)
+      fireEvent.mouseEnter(icon('First'))
+      tick(500)
+      fireEvent.mouseLeave(icon('First'))
+      fireEvent.mouseEnter(icon('Second'))
+      tick(499)
+      expect(screen.queryByText('Second')).not.toBeInTheDocument()
+      unmount()
+    }
+  })
+
+  it('gives way to a TooltipGroup around the tooltip', () => {
+    render(
+      <ThemeProvider theme={themed(5000)}>
+        <TooltipGroup skipDelayDuration={50}>{pair}</TooltipGroup>
+      </ThemeProvider>
+    )
+    fireEvent.mouseEnter(icon('First'))
+    tick(500)
+    fireEvent.mouseLeave(icon('First'))
+    tick(100)
+    fireEvent.mouseEnter(icon('Second'))
+    tick(499)
+    expect(screen.queryByText('Second')).not.toBeInTheDocument()
   })
 })

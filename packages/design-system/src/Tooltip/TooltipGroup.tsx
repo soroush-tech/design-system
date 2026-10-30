@@ -1,14 +1,13 @@
-import { useMemo, useRef, type ReactNode, type SyntheticEvent } from 'react'
-import { TooltipGroupContext, type TooltipGroupState } from './TooltipGroupContext'
-
-type CloseTooltip = (event: Event | SyntheticEvent) => void
+import { useMemo, type ReactNode } from 'react'
+import { TooltipGroupContext, createTooltipGroupState } from './TooltipGroupContext'
 
 export interface TooltipGroupProps {
   children?: ReactNode
   /**
    * How long after a tooltip of the group closes the next one opens with no enter delay, in
    * milliseconds - and for as long as one is open. After it, the tooltip's own `enterDelay`
-   * applies again. A tooltip that opens closes the one still showing, at once.
+   * applies again. A tooltip that opens closes the one still showing, at once. It wins over
+   * `skipDelayDuration` in `theme.components.Tooltip.defaultProps`.
    */
   skipDelayDuration?: number
 }
@@ -21,23 +20,6 @@ export interface TooltipGroupProps {
  * nor closes it, and it does not start the window.
  */
 export function TooltipGroup({ children, skipDelayDuration = 300 }: Readonly<TooltipGroupProps>) {
-  const active = useRef<CloseTooltip | null>(null)
-  const closedAt = useRef(Number.NEGATIVE_INFINITY)
-  const state = useMemo<TooltipGroupState>(
-    () => ({
-      shouldSkipDelay: () =>
-        active.current !== null || Date.now() - closedAt.current < skipDelayDuration,
-      open: (close) => {
-        active.current = close
-      },
-      closeActive: (event) => active.current?.(event),
-      release: (close) => {
-        if (active.current !== close) return
-        active.current = null
-        closedAt.current = Date.now()
-      },
-    }),
-    [skipDelayDuration]
-  )
+  const state = useMemo(() => createTooltipGroupState(skipDelayDuration), [skipDelayDuration])
   return <TooltipGroupContext.Provider value={state}>{children}</TooltipGroupContext.Provider>
 }

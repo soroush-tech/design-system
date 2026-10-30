@@ -341,6 +341,7 @@ export function Tooltip({
     shouldOpenOnHover: shouldOpenOnHoverProp ?? dp.shouldOpenOnHover ?? true,
     shouldOpenOnFocus: shouldOpenOnFocusProp ?? dp.shouldOpenOnFocus ?? true,
     shouldOpenOnTouch: shouldOpenOnTouchProp ?? dp.shouldOpenOnTouch ?? true,
+    skipDelayDuration: dp.skipDelayDuration,
   })
   const hasTitle = title !== undefined && title !== null && title !== ''
   const isShown = isOpen && hasTitle
