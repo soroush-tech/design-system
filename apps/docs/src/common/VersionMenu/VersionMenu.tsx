@@ -4,6 +4,7 @@ import { Menu } from '@soroush.tech/design-system/Menu'
 import { MenuItem } from '@soroush.tech/design-system/MenuItem'
 import type { DocsSection } from 'src/common/nav'
 import { PACKAGE_VERSIONS } from 'src/common/packageVersions'
+import { newestVersion } from './utils/newestVersion'
 import { currentVersion } from './utils/versionFromPath'
 
 /** The manifest the deploy pipeline writes at the domain root. */
@@ -26,7 +27,8 @@ const useVersions = (pkg: DocsSection): string[] => {
   const [versions, setVersions] = useState<string[]>([])
   useEffect(() => {
     let disposed = false
-    fetch('/versions.json')
+    // Revalidated, not served from the 10-minute cache: a release should show at once.
+    fetch('/versions.json', { cache: 'no-cache' })
       .then((response) => (response.ok ? response.json() : {}))
       .then((manifest: VersionsManifest) => {
         if (!disposed) setVersions(manifest[pkg] ?? [])
@@ -48,8 +50,10 @@ const useVersions = (pkg: DocsSection): string[] => {
 export function VersionMenu({ pkg, pathname }: Readonly<VersionMenuProps>) {
   const versions = useVersions(pkg)
   const current = currentVersion(pathname, pkg, import.meta.env.BASE_URL)
-  const live = PACKAGE_VERSIONS[pkg]
-  const shown = current === 'latest' ? live : current
+  // The live build is the newest version. A snapshot is older than the latest, so it names the
+  // newest the manifest knows - and just "Latest" before there is one.
+  const live = current === 'latest' ? PACKAGE_VERSIONS[pkg] : newestVersion(versions)
+  const shown = current === 'latest' ? PACKAGE_VERSIONS[pkg] : current
   return (
     <Menu
       aria-label="Documentation version"
@@ -68,7 +72,7 @@ export function VersionMenu({ pkg, pathname }: Readonly<VersionMenuProps>) {
       }
     >
       <MenuItem value="latest" role="menuitemradio" selected={current === 'latest'}>
-        Latest (v{live})
+        {live === undefined ? 'Latest' : `Latest (v${live})`}
       </MenuItem>
       {versions.map((version) => (
         <MenuItem key={version} value={version} role="menuitemradio" selected={current === version}>

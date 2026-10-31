@@ -49,8 +49,9 @@ orphan branch (live root + `<pkg>/<version>/` snapshots + `versions.json`). GitH
 serves that branch at docs.soroush.tech, so pushing it _is_ the deploy - there is no
 publish step. `public/CNAME` carries the domain and `public/.nojekyll` keeps Pages from
 running Jekyll over the build; both ride along in every build's output. The
-`VersionSwitcher` reads `/versions.json` from the domain root, so old snapshots list
-newer releases.
+`VersionMenu` reads `/versions.json` from the domain root (revalidated, not cached), so old
+snapshots list newer releases; its "Latest" row names the newest version in that manifest
+from a snapshot, and the build's own version on the live site.
 
 What search engines are told about the archived pages is settled when the tree is composed, not
 when a snapshot is built - a snapshot is frozen and cannot know what later releases add or drop.
