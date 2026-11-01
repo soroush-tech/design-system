@@ -172,6 +172,19 @@ test.describe('design-system section', () => {
     await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(100)
   })
 
+  test('a tab chosen from the head leaves the page at the head, with the tabs full width', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 2400, height: 1000 })
+    await page.goto('/design-system/components/button/')
+    const tabs = page.getByRole('navigation', { name: 'Button pages' })
+    const width = (await tabs.boundingBox())!.width
+    await tabs.getByRole('link', { name: 'Specs' }).click()
+    await expect(page).toHaveURL(/\/design-system\/api\/button\//)
+    expect(await page.evaluate(() => window.scrollY)).toBe(0)
+    expect((await tabs.boundingBox())!.width).toBeCloseTo(width, 0)
+  })
+
   test('a component without accessibility notes has no such tab', async ({ page }) => {
     await page.goto('/design-system/components/quote/')
     const tabs = page.getByRole('navigation', { name: 'Quote pages' })
