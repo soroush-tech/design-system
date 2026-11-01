@@ -154,14 +154,16 @@ describe('ComponentHero tabs at the top of the window', () => {
   it('scrolls the page a tab opens to the tabs when the reader was down the page, with the bar stuck', async () => {
     // The bar is at the 56px it sticks at.
     const scrollTo = stubScroll(300, 40, 56, 56)
+    vi.spyOn(HTMLElement.prototype, 'offsetHeight', 'get').mockReturnValue(48)
     const { unmount } = renderHero()
     await waitFor(() => expect(bar()).toHaveAttribute('data-stuck'))
     await chooseTab('Specs')
     unmount()
     // The page that replaces it: its hero ends 300px below the window top, the window is 40px down.
     renderHero({ active: 'specs' })
-    // The tabs' own place is 340px down the page; they stick 56px down, under the top bar.
-    expect(scrollTo).toHaveBeenCalledWith({ top: 284 })
+    // The tabs' own place is 340px down the page; they stick 56px down, under the top bar. The
+    // bar is 48px tall, and the page lands 16px of room below that: 340 - 56 - 48 + 16.
+    expect(scrollTo).toHaveBeenCalledWith({ top: 252 })
     // Stuck from its first paint, so the width does not animate from full.
     expect(bar()).toHaveAttribute('data-stuck')
   })

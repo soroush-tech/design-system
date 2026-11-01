@@ -15,6 +15,18 @@ const globalLocalStyles = (theme: Theme) => css`
   #root {
     min-height: 100dvh;
   }
+
+  /* A section a link brings to the top of the window stops below the sticky tab bar - and under the
+     top bar, below the large breakpoint - not behind them. */
+  main [id] {
+    scroll-margin-top: 9rem;
+  }
+
+  ${theme.breakpoints.up('lg')} {
+    main [id] {
+      scroll-margin-top: 5rem;
+    }
+  }
 `
 
 // This app's own global CSS - brand font-family and #root sizing. Rendered inside

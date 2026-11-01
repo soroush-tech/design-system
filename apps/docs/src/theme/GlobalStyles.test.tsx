@@ -11,4 +11,13 @@ describe('GlobalStyles', () => {
     expect(globalCss).toContain('Space Grotesk')
     expect(globalCss).toContain('box-sizing')
   })
+
+  it('leaves room above a section a link brings to the top, for the sticky bars', () => {
+    renderWithTheme(<GlobalStyles />)
+    const globalCss = Array.from(document.head.querySelectorAll('style'))
+      .map((style) => style.textContent)
+      .join('\n')
+    expect(globalCss).toMatch(/main \[id\]\s*\{\s*scroll-margin-top:\s*9rem/)
+    expect(globalCss).toMatch(/main \[id\]\s*\{\s*scroll-margin-top:\s*5rem/)
+  })
 })

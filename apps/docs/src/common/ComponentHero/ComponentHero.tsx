@@ -94,6 +94,9 @@ const TabBar = styled('div', {
 // and the bar shrinks only when they scroll down.
 let tabSwitch: 'stuck' | 'in-place' | null = null
 
+// The room, in pixels, added where the page lands when a tab is chosen from down the page.
+const LANDING_ROOM = 16
+
 const isPlainClick = (event: MouseEvent): boolean =>
   event.button === 0 && !event.ctrlKey && !event.shiftKey && !event.altKey && !event.metaKey
 
@@ -129,9 +132,11 @@ export function ComponentHero({
     const wasStuck = tabSwitch === 'stuck'
     tabSwitch = null
     if (!wasStuck || !header.current || !bar.current) return
-    // Where the tabs sit in the page when they are not stuck, less where they stick.
+    // Where the tabs sit in the page when they are not stuck, less where they stick and the bar's
+    // own height, plus a little room: the page lands a bit above the tabs, which shows the bar.
     const place = header.current.getBoundingClientRect().bottom + window.scrollY
-    window.scrollTo({ top: place - Number.parseFloat(getComputedStyle(bar.current).top) })
+    const stickAt = Number.parseFloat(getComputedStyle(bar.current).top)
+    window.scrollTo({ top: place - stickAt - bar.current.offsetHeight + LANDING_ROOM })
   }, [])
 
   // The bar is stuck once it has reached the place it sticks at - read before the first paint, so
