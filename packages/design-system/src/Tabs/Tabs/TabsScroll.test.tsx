@@ -134,18 +134,62 @@ describe('scrolling Tabs', () => {
     expect(button('end')).toBeNull()
   })
 
-  it('brings the selected tab into view when the selection changes', () => {
+  // The row is 100 along its axis, from 0; the selected tab is where `tab` says.
+  const placeTab = (tab: [number, number]) => {
+    const box = (start: number, end: number) =>
+      ({ left: start, right: end, top: start, bottom: end }) as DOMRect
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (
+      this: HTMLElement
+    ) {
+      if (this.getAttribute('role') === 'tablist') return box(0, 100)
+      return this.hasAttribute('data-tab-selected') ? box(...tab) : box(0, 0)
+    })
+  }
+  const trackScroll = (axis: 'scrollLeft' | 'scrollTop', from: number) => {
+    let position = from
+    Object.defineProperty(list(), axis, {
+      configurable: true,
+      get: () => position,
+      set: (value: number) => {
+        position = value
+      },
+    })
+    return () => position
+  }
+
+  it('scrolls the row, and not the page, to bring a tab past its end into view', () => {
     const scrollIntoView = vi.fn()
     HTMLElement.prototype.scrollIntoView = scrollIntoView
     renderRow({ defaultValue: 0 })
-    expect(scrollIntoView).toHaveBeenCalledWith({ block: 'nearest', inline: 'nearest' })
+    const position = trackScroll('scrollLeft', 20)
+    placeTab([150, 250])
     fireEvent.click(screen.getByRole('tab', { name: 'Component 9' }))
-    expect(scrollIntoView).toHaveBeenCalledTimes(2)
+    expect(position()).toBe(170)
+    expect(scrollIntoView).not.toHaveBeenCalled()
     delete (HTMLElement.prototype as Partial<HTMLElement>).scrollIntoView
   })
 
-  it('does without scrollIntoView, or a selection', () => {
-    expect(() => renderRow({ defaultValue: 0 })).not.toThrow()
+  it('scrolls back for a tab before its start, and leaves one in view where it is', () => {
+    renderRow({ defaultValue: 0 })
+    const position = trackScroll('scrollLeft', 200)
+    placeTab([-60, 40])
+    fireEvent.click(screen.getByRole('tab', { name: 'Component 1' }))
+    expect(position()).toBe(140)
+    placeTab([10, 90])
+    fireEvent.click(screen.getByRole('tab', { name: 'Component 2' }))
+    expect(position()).toBe(140)
+  })
+
+  it('does the same down a vertical row', () => {
+    renderRow({ defaultValue: 0, orientation: 'vertical' })
+    const position = trackScroll('scrollTop', 0)
+    placeTab([130, 180])
+    fireEvent.click(screen.getByRole('tab', { name: 'Component 9' }))
+    expect(position()).toBe(80)
+  })
+
+  it('does without a selection', () => {
+    expect(() => renderRow()).not.toThrow()
   })
 
   it('re-reads on resize, through a ResizeObserver, and through action.updateOverflow', () => {
