@@ -71,14 +71,14 @@ const Marker = styled('span')(({ theme }) => ({
 
 // The page is the store: its `h1`, and its `h2` headings that have an id. A snapshot is them as
 // one string, so React compares it by value; the page changing - a route, a demo mounting late -
-// is read through a MutationObserver.
+// is read through a MutationObserver. A heading inside a navigation is a demo's - the group of a
+// NavTree on show - not a section of the page.
 const readOutline = (): string =>
   JSON.stringify({
     title: document.querySelector('main h1')?.textContent ?? null,
-    headings: Array.from(document.querySelectorAll<HTMLElement>('main h2[id]')).map((heading) => ({
-      id: heading.id,
-      text: heading.textContent,
-    })),
+    headings: Array.from(document.querySelectorAll<HTMLElement>('main h2[id]'))
+      .filter((heading) => !heading.closest('nav'))
+      .map((heading) => ({ id: heading.id, text: heading.textContent })),
   } satisfies Outline)
 
 const subscribe = (onChange: () => void): (() => void) => {

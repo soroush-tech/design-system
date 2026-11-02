@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type MouseEvent } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState, type MouseEvent } from 'react'
 import { styled, createShouldForwardProp, get, type Theme } from '@soroush.tech/design-system'
 import { alpha } from '@soroush.tech/design-system/utils'
 import { Flex } from '@soroush.tech/design-system/Flex'
@@ -66,24 +66,36 @@ const stuckBar = (room: string) => {
   return { width, marginInlineStart: `calc((100% - ${width} - ${room}) / 2)` }
 }
 
+// Stuck, the bar keeps this far from what it sticks under.
+const STUCK_GAP = '0.5rem'
+
 const TabBar = styled('div', {
-  shouldForwardProp: createShouldForwardProp(['isStuck']),
-})<{ isStuck: boolean }>(({ theme, isStuck }) => ({
+  shouldForwardProp: createShouldForwardProp(['isStuck', 'canAnimate']),
+})<{ isStuck: boolean; canAnimate: boolean }>(({ theme, isStuck, canAnimate }) => ({
   position: 'sticky',
-  top: '3.5rem',
+  top: `calc(3.5rem + ${STUCK_GAP})`,
   zIndex: 3,
   ...(isStuck ? stuckBar('0px') : { width: '100%' }),
   marginBottom: theme.space[3],
-  transition: 'width 280ms cubic-bezier(0.2, 0, 0, 1), margin 280ms cubic-bezier(0.2, 0, 0, 1)',
+  // Only a bar the reader sees change animates - never the one a page opens with.
+  transition: canAnimate
+    ? 'width 280ms cubic-bezier(0.2, 0, 0, 1), margin 280ms cubic-bezier(0.2, 0, 0, 1)'
+    : 'none',
   '@media (prefers-reduced-motion: reduce)': { transition: 'none' },
-  [theme.breakpoints.up('lg')]: { top: 0 },
+  [theme.breakpoints.up('lg')]: { top: STUCK_GAP },
   // Wide, the contents are beside the column: the bar is the column's width and over it.
   ...(isStuck && { [theme.breakpoints.up('xl')]: stuckBar('var(--toc-room, 0px)') }),
 }))
 
-// A tab was just chosen: the page that replaces this one scrolls to the tabs, so what the tab
-// shows starts right under them - whether the reader was down the page or at its head.
-let isSwitchingTab = false
+// A tab was just chosen, and whether the bar was stuck at the top when it was. A reader down the
+// page has the bar stuck: the page that replaces this one is scrolled to the tabs, so what the tab
+// shows starts right under them, and its bar is stuck from the first paint - the width does not
+// animate. A reader at the head has the bar in its place, full width: the page stays where it is,
+// and the bar shrinks only when they scroll down.
+let tabSwitch: 'stuck' | 'in-place' | null = null
+
+// The room, in pixels, added where the page lands when a tab is chosen from down the page.
+const LANDING_ROOM = 16
 
 const isPlainClick = (event: MouseEvent): boolean =>
   event.button === 0 && !event.ctrlKey && !event.shiftKey && !event.altKey && !event.metaKey
@@ -110,17 +122,35 @@ export function ComponentHero({
 }: Readonly<ComponentHeroProps>) {
   const header = useRef<HTMLDivElement>(null)
   const bar = useRef<HTMLDivElement>(null)
-  const [isStuck, setIsStuck] = useState(false)
+  const [isStuck, setIsStuck] = useState(() => tabSwitch === 'stuck')
 
-  // The bar is stuck once it has reached the place it sticks at - read as the page scrolls.
-  useEffect(() => {
+  const [canAnimate, setCanAnimate] = useState(false)
+
+  // A page a tab opens is brought to the tabs before anything is measured or painted, so what is
+  // read below is where the reader will see the bar.
+  useLayoutEffect(() => {
+    const wasStuck = tabSwitch === 'stuck'
+    tabSwitch = null
+    if (!wasStuck || !header.current || !bar.current) return
+    // Where the tabs sit in the page when they are not stuck, less where they stick and the bar's
+    // own height, plus a little room: the page lands a bit above the tabs, which shows the bar.
+    const place = header.current.getBoundingClientRect().bottom + window.scrollY
+    const stickAt = Number.parseFloat(getComputedStyle(bar.current).top)
+    window.scrollTo({ top: place - stickAt - bar.current.offsetHeight + LANDING_ROOM })
+  }, [])
+
+  // The bar is stuck once it has reached the place it sticks at - read before the first paint, so
+  // a page opened with its head scrolled away has the shrunk bar, and again as the page scrolls.
+  useLayoutEffect(() => {
     const element = bar.current
     if (!element) return undefined
     const update = () =>
       setIsStuck(
         element.getBoundingClientRect().top <= Number.parseFloat(getComputedStyle(element).top)
       )
-    const frame = requestAnimationFrame(update)
+    update()
+    // From the next frame on, the width animates as the reader scrolls.
+    const frame = requestAnimationFrame(() => setCanAnimate(true))
     window.addEventListener('scroll', update, { passive: true })
     return () => {
       cancelAnimationFrame(frame)
@@ -135,15 +165,6 @@ export function ComponentHero({
       link.setAttribute('keep-scroll-position', 'true')
     })
   }, [active])
-
-  useEffect(() => {
-    if (!isSwitchingTab) return
-    isSwitchingTab = false
-    if (!header.current || !bar.current) return
-    // Where the tabs sit in the page when they are not stuck, less where they stick.
-    const place = header.current.getBoundingClientRect().bottom + window.scrollY
-    window.scrollTo({ top: place - Number.parseFloat(getComputedStyle(bar.current).top) })
-  }, [])
 
   const tabs = [
     { id: 'overview', label: 'Overview', path: `/components/${item.slug}/` },
@@ -185,7 +206,12 @@ export function ComponentHero({
         </Hero>
       </View>
       {active && (
-        <TabBar ref={bar} isStuck={isStuck} data-stuck={isStuck ? '' : undefined}>
+        <TabBar
+          ref={bar}
+          isStuck={isStuck}
+          canAnimate={canAnimate}
+          data-stuck={isStuck ? '' : undefined}
+        >
           <Tabs
             as="nav"
             variant="tonal"
@@ -201,7 +227,7 @@ export function ComponentHero({
                 label={tab.label}
                 href={sectionPath('design-system', tab.path)}
                 onClick={(event) => {
-                  if (isPlainClick(event)) isSwitchingTab = true
+                  if (isPlainClick(event)) tabSwitch = isStuck ? 'stuck' : 'in-place'
                 }}
               />
             ))}

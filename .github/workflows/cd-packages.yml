@@ -158,6 +158,7 @@ jobs:
       # publish failure is recorded but doesn't abort the loop, so the remaining packages
       # still publish and the step fails at the end.
       - name: Publish packages
+        id: publish
         env:
           CHANNEL: ${{ inputs.channel }}
         run: |
@@ -198,7 +199,7 @@ jobs:
       # release's existence, not on whether npm was newly published in this run, so a
       # rerun can repair a missing release after a successful publish. Runs even when the
       # previous step failed (`!cancelled()`) so packages that did publish still get their
-      # release; a version that never made it to npm is skipped rather than released.
+      # release; a version that never made it to npm is skipped rather than released - and, after a clean publish, fails the step, since its docs snapshot waits on the tag.
       # Notes come from the in-repo file packages/<pkg>/release-notes/<version>.md (its
       # existence was checked in the Resolve step, before publish); --notes-file reads it
       # verbatim. $pkg comes from the resolved list (repo directory names), never spliced
@@ -211,6 +212,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           CHANNEL: ${{ inputs.channel }}
+          PUBLISH_OUTCOME: ${{ steps.publish.outcome }}
         run: |
           # An rc is a GitHub pre-release and never "Latest". --target pins the tag to the
           # published commit. The notes are the target version's file (2.0.0.md for 2.0.0-rc.1).
@@ -221,14 +223,23 @@ jobs:
             version=$(PKG="$pkg" node -p "require('./packages/'+process.env.PKG+'/package.json').version")
             tag="$name@$version"
             # Ask the registry, not npm's cache - the Publish step's lookups cached this package's
-            # metadata from before the publish - and give a fresh version a minute to appear.
+            # metadata from before the publish. The registry can take minutes to list a fresh
+            # version (2.1.0 took three), so after a clean publish wait up to ten; after a failed
+            # one the version may never come, so a minute is enough.
+            attempts=60
+            [ "$PUBLISH_OUTCOME" = "success" ] || attempts=6
             found=""
-            for attempt in 1 2 3 4 5 6; do
+            for _ in $(seq "$attempts"); do
               npm view --prefer-online "$name@$version" version >/dev/null 2>&1 && { found=1; break; }
               sleep 10
             done
             if [ -z "$found" ]; then
               echo "⏭️ \`$tag\` is not on npm - no GitHub Release created." >> "$GITHUB_STEP_SUMMARY"
+              # A published version with no Release also has no tag, so no docs snapshot: red, not green.
+              if [ "$PUBLISH_OUTCOME" = "success" ]; then
+                echo "::error::$tag was published but is not on the registry yet - rerun to create its Release."
+                missing=1
+              fi
               continue
             fi
             if gh release view "$tag" >/dev/null 2>&1; then
@@ -239,3 +250,4 @@ jobs:
               --notes-file "packages/$pkg/release-notes/${version%%-*}.md"
             echo "### 🏷️ Released \`$tag\`" >> "$GITHUB_STEP_SUMMARY"
           done
+          [ -z "$missing" ] || exit 1

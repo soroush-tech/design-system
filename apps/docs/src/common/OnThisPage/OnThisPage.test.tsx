@@ -34,6 +34,23 @@ describe('OnThisPage', () => {
     expect(links.map((link) => link.getAttribute('href'))).toEqual(['#examples', '#props'])
   })
 
+  it('leaves out the headings of a navigation shown in a demo', () => {
+    renderToc(
+      <>
+        <h2 id="examples">Examples</h2>
+        <nav aria-label="Demo">
+          <h2 id="demo-group">Get started</h2>
+        </nav>
+        <h2 id="props">Props</h2>
+      </>
+    )
+    const toc = screen.getByRole('navigation', { name: 'On this page' })
+    expect(Array.from(toc.querySelectorAll('a')).map((link) => link.textContent)).toEqual([
+      'Examples',
+      'Props',
+    ])
+  })
+
   it('shows nothing for a page with fewer than two sections', () => {
     renderToc(<h2 id="only">Only</h2>)
     expect(screen.queryByRole('navigation', { name: 'On this page' })).not.toBeInTheDocument()

@@ -155,6 +155,13 @@ describe('MenuList', () => {
     expect(screen.getByRole('menu', { name: 'Empty' })).toHaveFocus()
   })
 
+  it('focuses without scrolling the page to the menu', () => {
+    const focus = vi.spyOn(HTMLElement.prototype, 'focus')
+    renderBranchMenu({ shouldAutoFocus: true })
+    expect(focus).toHaveBeenCalledWith({ preventScroll: true })
+    focus.mockRestore()
+  })
+
   it('does not move focus on mount without shouldAutoFocus', () => {
     renderBranchMenu()
     expect(document.body).toHaveFocus()

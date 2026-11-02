@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { renderWithTheme } from 'src/test/utils/wrapper'
 import { PACKAGE_VERSIONS } from 'src/common/packageVersions'
 import { VersionMenu } from './VersionMenu'
+import { newestVersion } from './utils/newestVersion'
 import { currentVersion, versionFromPath } from './utils/versionFromPath'
 
 afterEach(() => {
@@ -40,6 +41,18 @@ describe('currentVersion', () => {
   })
 })
 
+describe('newestVersion', () => {
+  it('takes the highest version, by number and not by text', () => {
+    expect(newestVersion(['1.3.3', '2.1.0', '2.0.0'])).toBe('2.1.0')
+    expect(newestVersion(['1.10.0', '1.9.9'])).toBe('1.10.0')
+    expect(newestVersion(['2.0.0', '2.0.0', '1.0.0'])).toBe('2.0.0')
+  })
+
+  it('has none for an empty list', () => {
+    expect(newestVersion([])).toBeUndefined()
+  })
+})
+
 const live = PACKAGE_VERSIONS['design-system']
 const trigger = () => screen.getByRole('button', { name: /Documentation version/ })
 
@@ -48,7 +61,25 @@ describe('VersionMenu', () => {
     stubManifest({ 'design-system': ['1.3.3'] })
     renderWithTheme(<VersionMenu pkg="design-system" pathname="/design-system/" />)
     expect(trigger()).toHaveTextContent(`v${live}`)
-    await waitFor(() => expect(globalThis.fetch).toHaveBeenCalledWith('/versions.json'))
+    await waitFor(() =>
+      expect(globalThis.fetch).toHaveBeenCalledWith('/versions.json', { cache: 'no-cache' })
+    )
+  })
+
+  it('names the newest released version as the latest from a snapshot', async () => {
+    stubManifest({ 'design-system': ['1.3.3', '2.1.0', '2.0.0'] })
+    const user = userEvent.setup()
+    renderWithTheme(<VersionMenu pkg="design-system" pathname="/design-system/1.3.3/" />)
+    await user.click(trigger())
+    expect(await screen.findByRole('menuitemradio', { name: 'Latest (v2.1.0)' })).toBeVisible()
+  })
+
+  it('says just Latest from a snapshot until a version is known', async () => {
+    stubManifest({}, false)
+    const user = userEvent.setup()
+    renderWithTheme(<VersionMenu pkg="design-system" pathname="/design-system/1.3.3/" />)
+    await user.click(trigger())
+    expect(await screen.findByRole('menuitemradio', { name: 'Latest' })).toBeVisible()
   })
 
   it('shows the version of a snapshot on its path', () => {
@@ -103,7 +134,7 @@ describe('VersionMenu', () => {
     const user = userEvent.setup()
     renderWithTheme(<VersionMenu pkg="design-system" pathname="/design-system/1.3.3/" />)
     await user.click(trigger())
-    await user.click(await screen.findByRole('menuitemradio', { name: `Latest (v${live})` }))
+    await user.click(await screen.findByRole('menuitemradio', { name: /^Latest/ }))
     expect(assign).toHaveBeenCalledWith('/design-system/')
   })
 

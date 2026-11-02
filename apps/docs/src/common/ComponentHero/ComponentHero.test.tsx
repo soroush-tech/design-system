@@ -94,6 +94,8 @@ describe('ComponentHero tabs at the top of the window', () => {
     vi.restoreAllMocks()
   })
 
+  const bar = () => screen.getByRole('navigation', { name: 'Button pages' }).parentElement!
+
   // `barTop` is where the tab bar is in the window: below `stuckAt` it is in its place, at it stuck.
   const stubScroll = (heroBottom: number, scrolledBy: number, stuckAt = 0, barTop = 400) => {
     const scrollTo = vi.fn()
@@ -149,20 +151,38 @@ describe('ComponentHero tabs at the top of the window', () => {
     }
   })
 
-  it('scrolls the page a tab opens to the tabs, whether the reader was down it or at its head', async () => {
-    const scrollTo = stubScroll(300, 40, 56)
+  it('scrolls the page a tab opens to the tabs when the reader was down the page, with the bar stuck', async () => {
+    // The bar is at the 56px it sticks at.
+    const scrollTo = stubScroll(300, 40, 56, 56)
+    vi.spyOn(HTMLElement.prototype, 'offsetHeight', 'get').mockReturnValue(48)
     const { unmount } = renderHero()
+    await waitFor(() => expect(bar()).toHaveAttribute('data-stuck'))
     await chooseTab('Specs')
     unmount()
     // The page that replaces it: its hero ends 300px below the window top, the window is 40px down.
     renderHero({ active: 'specs' })
-    // The tabs' own place is 340px down the page; they stick 56px down, under the top bar.
-    expect(scrollTo).toHaveBeenCalledWith({ top: 284 })
+    // The tabs' own place is 340px down the page; they stick 56px down, under the top bar. The
+    // bar is 48px tall, and the page lands 16px of room below that: 340 - 56 - 48 + 16.
+    expect(scrollTo).toHaveBeenCalledWith({ top: 252 })
+    // Stuck from its first paint, so the width does not animate from full.
+    expect(bar()).toHaveAttribute('data-stuck')
+  })
+
+  it('leaves the page where it is, and the bar full width, when the reader was at the head', async () => {
+    const scrollTo = stubScroll(300, 0)
+    const { unmount } = renderHero()
+    await chooseTab('Specs')
+    unmount()
+    renderHero({ active: 'specs' })
+    expect(scrollTo).not.toHaveBeenCalled()
+    expect(bar()).not.toHaveAttribute('data-stuck')
+    expect(bar()).toHaveStyle({ width: '100%' })
   })
 
   it('scrolls once, and not for a page that was not reached by a tab', async () => {
-    const scrollTo = stubScroll(300, 0)
+    const scrollTo = stubScroll(300, 0, 0, 0)
     const { unmount } = renderHero()
+    await waitFor(() => expect(bar()).toHaveAttribute('data-stuck'))
     await chooseTab('Specs')
     unmount()
     const next = renderHero({ active: 'specs' })
@@ -172,8 +192,9 @@ describe('ComponentHero tabs at the top of the window', () => {
   })
 
   it('does not scroll for a click that opens the page elsewhere', async () => {
-    const scrollTo = stubScroll(300, 0)
+    const scrollTo = stubScroll(300, 0, 0, 0)
     const { unmount } = renderHero()
+    await waitFor(() => expect(bar()).toHaveAttribute('data-stuck'))
     await chooseTab('Specs', { ctrlKey: true })
     unmount()
     renderHero({ active: 'specs' })
@@ -181,8 +202,9 @@ describe('ComponentHero tabs at the top of the window', () => {
   })
 
   it('has nothing to scroll to on a page without tabs', async () => {
-    const scrollTo = stubScroll(300, 0)
+    const scrollTo = stubScroll(300, 0, 0, 0)
     const { unmount } = renderHero()
+    await waitFor(() => expect(bar()).toHaveAttribute('data-stuck'))
     await chooseTab('Specs')
     unmount()
     renderHero({ active: undefined })
@@ -202,7 +224,7 @@ describe('ComponentHero tab bar width', () => {
     const computed = window.getComputedStyle.bind(window)
     vi.spyOn(window, 'getComputedStyle').mockImplementation((element, pseudo) => {
       const style = computed(element, pseudo)
-      if (element.tagName !== 'NAV') return style
+      if (!element.querySelector(':scope > nav')) return style
       return new Proxy(style, {
         get: (target, property) => {
           if (property === 'top') return '0px'
@@ -235,12 +257,28 @@ describe('ComponentHero tab bar width', () => {
     await waitFor(() => expect(bar()).toHaveAttribute('data-stuck'))
   })
 
-  it('animates the width', () => {
+  it('animates the width once the page is shown, not as it opens', async () => {
     stubBarAt(400)
     renderHero()
-    expect(bar()).toHaveStyle({
-      transition: 'width 280ms cubic-bezier(0.2, 0, 0, 1),margin 280ms cubic-bezier(0.2, 0, 0, 1)',
-    })
+    expect(bar()).toHaveStyle({ transition: 'none' })
+    await waitFor(() =>
+      expect(bar()).toHaveStyle({
+        transition:
+          'width 280ms cubic-bezier(0.2, 0, 0, 1),margin 280ms cubic-bezier(0.2, 0, 0, 1)',
+      })
+    )
+  })
+
+  it('opens shrunk when the head of the page is already scrolled away', () => {
+    stubBarAt(0)
+    renderHero()
+    expect(bar()).toHaveAttribute('data-stuck')
+  })
+
+  it('keeps a gap from what it sticks under', () => {
+    stubBarAt(400)
+    renderHero()
+    expect(bar()).toHaveStyle({ top: 'calc(3.5rem + 0.5rem)' })
   })
 
   it('stops listening to the page once it is gone', () => {

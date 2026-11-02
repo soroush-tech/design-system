@@ -61,9 +61,10 @@ export interface SidebarProps extends FlexProps {
   'aria-label': string
 }
 
+// Not `layout`: on a Flex that is the page layout grid, which would frame the rail at every breakpoint.
 interface SidebarRailProps {
   isOpen?: boolean
-  layout: SidebarLayout
+  railLayout: SidebarLayout
   expandedWidth?: string
   collapsedWidth?: string
   stackedWidth?: string
@@ -86,13 +87,13 @@ const SidebarRail = styled(Flex, {
   label: 'SidebarRail',
   shouldForwardProp: (prop) =>
     prop !== 'isOpen' &&
-    prop !== 'layout' &&
+    prop !== 'railLayout' &&
     prop !== 'expandedWidth' &&
     prop !== 'collapsedWidth' &&
     prop !== 'stackedWidth',
-})<SidebarRailProps>(({ isOpen, layout, expandedWidth, collapsedWidth, stackedWidth }) =>
+})<SidebarRailProps>(({ isOpen, railLayout, expandedWidth, collapsedWidth, stackedWidth }) =>
   // A stacked rail has one width and nothing to animate: its labels are always shown.
-  layout === 'stacked'
+  railLayout === 'stacked'
     ? { width: stackedWidth, alignItems: 'center' }
     : {
         width: isOpen ? expandedWidth : collapsedWidth,
@@ -189,7 +190,7 @@ export function Sidebar({
         gap={1}
         flexShrink={0}
         isOpen={isOpen}
-        layout={layout}
+        railLayout={layout}
         expandedWidth={expandedWidth}
         collapsedWidth={collapsedWidth}
         stackedWidth={stackedWidth}

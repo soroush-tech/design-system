@@ -164,12 +164,29 @@ test.describe('design-system section', () => {
     await page.goto('/design-system/components/button/')
     const tabs = page.getByRole('navigation', { name: 'Button pages' })
     await page.evaluate(() => window.scrollTo(0, 1500))
-    await expect.poll(async () => (await tabs.boundingBox())?.y).toBe(0)
+    // Stuck, the bar keeps 8px from the top of the window.
+    await expect.poll(async () => (await tabs.boundingBox())?.y).toBe(8)
     await tabs.getByRole('link', { name: 'Specs' }).click()
     await expect(page).toHaveURL(/\/design-system\/api\/button\//)
-    // The page is brought to the tabs: they are at the top and the hero above them is scrolled away.
-    await expect.poll(async () => (await tabs.boundingBox())?.y).toBe(0)
+    // The page is brought to the tabs: the hero above them is scrolled away, and they are in
+    // view near the top - a little below where they stick, so the reader sees which tab is chosen.
     await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(100)
+    const y = (await tabs.boundingBox())!.y
+    expect(y).toBeGreaterThanOrEqual(8)
+    expect(y).toBeLessThan(120)
+  })
+
+  test('a tab chosen from the head leaves the page at the head, with the tabs full width', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 2400, height: 1000 })
+    await page.goto('/design-system/components/button/')
+    const tabs = page.getByRole('navigation', { name: 'Button pages' })
+    const width = (await tabs.boundingBox())!.width
+    await tabs.getByRole('link', { name: 'Specs' }).click()
+    await expect(page).toHaveURL(/\/design-system\/api\/button\//)
+    expect(await page.evaluate(() => window.scrollY)).toBe(0)
+    expect((await tabs.boundingBox())!.width).toBeCloseTo(width, 0)
   })
 
   test('a component without accessibility notes has no such tab', async ({ page }) => {

@@ -7,6 +7,27 @@ import { Sidebar } from './Sidebar'
 import { SidebarItem } from '../SidebarItem'
 
 describe('Sidebar', () => {
+  it.each(['inline', 'stacked'] as const)(
+    'keeps the %s rail at its own width at every breakpoint, not framed as a page',
+    (layout) => {
+      renderWithTheme(
+        <Sidebar aria-label="Panels" layout={layout}>
+          <SidebarItem icon="folder" label="Directory" />
+        </Sidebar>
+      )
+      const rail = screen.getByRole('navigation', { name: 'Panels' }).firstElementChild!
+      // `layout` is the page layout grid on a Flex, which would give the rail `width: 100%` and
+      // inline padding from every breakpoint up.
+      const rules = [...document.styleSheets]
+        .flatMap((sheet) => [...sheet.cssRules])
+        .flatMap((rule) => (rule instanceof CSSMediaRule ? [...rule.cssRules] : [rule]))
+        .filter((rule) => rule instanceof CSSStyleRule && rail.matches(rule.selectorText))
+        .map((rule) => rule.cssText)
+        .join(' ')
+      expect(rules).not.toContain('width: 100%')
+    }
+  )
+
   it('renders a labeled navigation landmark with arbitrary children', () => {
     renderWithTheme(
       <Sidebar aria-label="Editor panels" isOpen={false}>

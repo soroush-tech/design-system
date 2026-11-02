@@ -373,6 +373,12 @@ type TabEntryProps = Partial<Omit<TabEntry, 'disabled'>> & { disabled?: boolean 
 // What the tabs are, read from the children: each tab's value (its position when it has
 // none), whether it can be reached, and what its menu row shows. Positions count every child,
 // as `TabIndexContext` does.
+// How far a span lies past the edge of the view it should be in: negative before it, 0 inside it.
+const overshoot = (start: number, end: number, viewStart: number, viewEnd: number): number => {
+  if (start < viewStart) return start - viewStart
+  return Math.max(end - viewEnd, 0)
+}
+
 const readTabs = (children: ReactNode): TabEntry[] =>
   Children.toArray(children).flatMap((child, index) => {
     if (!isValidElement(child)) return []
@@ -607,16 +613,21 @@ export function Tabs({
     updateOverflow,
   ])
 
-  // A scrolling row brings the selected tab fully into view whenever the selection changes.
+  // A scrolling row brings the selected tab fully into view whenever the selection changes -
+  // by scrolling the row alone: scrollIntoView would scroll the page to the row as well.
   useEffect(() => {
     if (!isScrolling) return
-    const selected = (listRef.current as HTMLDivElement).querySelector<HTMLElement>(
-      '[data-tab-selected]'
-    )
-    if (typeof selected?.scrollIntoView === 'function') {
-      selected.scrollIntoView({ block: 'nearest', inline: 'nearest' })
+    const row = listRef.current as HTMLDivElement
+    const selected = row.querySelector<HTMLElement>('[data-tab-selected]')
+    if (!selected) return
+    const rowBox = row.getBoundingClientRect()
+    const tabBox = selected.getBoundingClientRect()
+    if (isVertical) {
+      row.scrollTop += overshoot(tabBox.top, tabBox.bottom, rowBox.top, rowBox.bottom)
+    } else {
+      row.scrollLeft += overshoot(tabBox.left, tabBox.right, rowBox.left, rowBox.right)
     }
-  }, [isScrolling, selectedValue])
+  }, [isScrolling, isVertical, selectedValue])
 
   const hasScrollButtons =
     isScrolling &&

@@ -137,7 +137,8 @@ export function MenuList({
     if (!shouldAutoFocus || !list) return
     const rows = getOwnRows(list).filter(isRowEnabled)
     const target = rows.find((row) => row.getAttribute('aria-checked') === 'true') ?? rows[0]
-    ;(target ?? list).focus()
+    // A menu open on mount (open by default, or from code) must not scroll the page to itself.
+    ;(target ?? list).focus({ preventScroll: true })
   }, [shouldAutoFocus])
 
   const context = useMemo<MenuListContextValue>(
