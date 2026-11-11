@@ -11,4 +11,6 @@ pnpm gen:publish-options --check
 # committed - this fails the commit when they no longer match the repo they describe.
 pnpm gen:plugin-refs --check
 pnpm check:release-notes
+# `npx skills add` must offer only the public skill; an outside update can undo that.
+pnpm check:skills
 pnpm test

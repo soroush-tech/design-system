@@ -1,6 +1,9 @@
 ---
+name: naming-conventions
 description: JavaScript and TypeScript naming conventions - variables, booleans, functions, classes, React components, constants, privates. Auto-load when naming or reviewing identifiers in .ts/.tsx files.
 paths: '**/*.ts,**/*.tsx,**/*.js,**/*.jsx'
+metadata:
+  internal: true
 ---
 
 # Naming Conventions

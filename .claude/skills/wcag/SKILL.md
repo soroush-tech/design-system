@@ -3,6 +3,8 @@ name: wcag
 description: WCAG accessibility rules for this codebase. Auto-load when fixing a11y violations, reviewing color contrast, adding ARIA attributes, auditing interactive components (progressbar, button, checkbox, switch, nav), or writing a11y tests/stories.
 paths: src/**/*.tsx,src/**/*.ts
 argument-hint: [component or violation]
+metadata:
+  internal: true
 ---
 
 # WCAG Accessibility Patterns

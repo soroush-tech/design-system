@@ -1,5 +1,8 @@
 ---
+name: react-structure
 description: Folder-directory and React component structure for this monorepo - where a new component, hook, helper, or package goes, the per-component file contract, the five-part component anatomy, test placement, and import rules. Use when creating or moving any React component, hook, util, or package, or when reviewing structure. This is the rulebook; each area's own .md stays the authority.
+metadata:
+  internal: true
 ---
 
 # React structure

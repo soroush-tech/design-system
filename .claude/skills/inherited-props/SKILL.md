@@ -1,6 +1,9 @@
 ---
+name: inherited-props
 description: How a design-system container and its children share a look - a row (Tabs, MenuList, Table) sets color/textColor/size/... for every child (Tab, MenuItem, TableCell), a child's own value wins, and the theme's defaultProps sit in between. The resolution chain, the `rowProps` context, the pieces that follow the selected child, the 2- and 3-level forms, and the docs/tests/catalog chores. Use when adding a prop that a parent sets for its children, or a child prop that falls back to its parent's.
 paths: packages/design-system/**
+metadata:
+  internal: true
 ---
 
 # Inherited props - a row's look, a child's own value

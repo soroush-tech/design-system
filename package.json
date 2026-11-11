@@ -9,6 +9,7 @@
     "gen:publish-options": "node scripts/gen-publish-options.mjs",
     "gen:plugin-refs": "pnpm --filter @soroush.design/mcp gen -- --plugin",
     "check:release-notes": "node scripts/check-release-notes.mjs",
+    "check:skills": "node scripts/check-skills.mjs",
     "check:typography": "aiwg --all",
     "build": "pnpm -r build",
     "lint": "pnpm -r lint",

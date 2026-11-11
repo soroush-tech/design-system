@@ -142,6 +142,11 @@ jobs:
       - name: Check release notes
         run: ${{ needs.prepare.outputs.runner }} run check:release-notes
 
+      # Fail the build if `npx skills add soroush-tech/design-system` would offer anything but the
+      # public skill: every skill in .claude/skills marked internal, the plugin's skills/ only ours.
+      - name: Check skills
+        run: ${{ needs.prepare.outputs.runner }} run check:skills
+
       # Fail the build on invisible characters, typographic punctuation or mojibake in any
       # tracked text file. ASCII punctuation is the house rule.
       - name: Check typography
