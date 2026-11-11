@@ -6,6 +6,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 import {
   checkSkills,
   readFrontmatter,
+  reportSkills,
   INTERNAL_DIR,
   PUBLIC_DIR,
 } from '../../../scripts/check-skills.mjs'
@@ -60,6 +61,14 @@ describe('readFrontmatter', () => {
 
   it('reads a file written with Windows line endings', () => {
     expect(readFrontmatter('---\r\nname: a\r\n---\r\n').name).toBe('a')
+  })
+
+  it('skips lines that are not a key and a value, and indented keys outside the metadata block', () => {
+    expect(
+      readFrontmatter(
+        skill(['name: a', 'just text', 'bad key: x', 'tags:', '  internal: true', 'paths: b: c'])
+      )
+    ).toEqual({ name: 'a', tags: '', paths: 'b: c', metadata: {} })
   })
 
   it('finds no frontmatter without an opening or a closing fence', () => {
@@ -145,7 +154,7 @@ describe('checkSkills', () => {
 describe('check-skills from the command line', () => {
   // Each run imports the script afresh, so its command-line branch runs again.
   let runs = 0
-  const run = async (args) => {
+  const run = async (args = []) => {
     const argv = process.argv
     process.argv = [argv[0], SCRIPT, ...args]
     try {
@@ -163,14 +172,21 @@ describe('check-skills from the command line', () => {
 
   it('reports the skills and leaves the exit code alone when all is well', async () => {
     const log = vi.spyOn(console, 'log').mockImplementation(() => {})
-    await run([])
+    await run()
     expect(log).toHaveBeenCalledWith('Skills: soroush-design-system public, the rest internal.')
     expect(process.exitCode).toBeUndefined()
   })
 
-  it('prints each problem and fails when something drifted', async () => {
-    const error = vi.spyOn(console, 'error').mockImplementation(() => {})
+  it('checks this repository whatever arguments it is given', async () => {
+    const log = vi.spyOn(console, 'log').mockImplementation(() => {})
     await run([clean({ [`${PUBLIC_DIR}/vike/SKILL.md`]: INTERNAL('vike') })])
+    expect(log).toHaveBeenCalledWith('Skills: soroush-design-system public, the rest internal.')
+    expect(process.exitCode).toBeUndefined()
+  })
+
+  it('prints each problem and fails when something drifted', () => {
+    const error = vi.spyOn(console, 'error').mockImplementation(() => {})
+    reportSkills(clean({ [`${PUBLIC_DIR}/vike/SKILL.md`]: INTERNAL('vike') }))
     expect(error).toHaveBeenCalledWith(
       'plugins/soroush-design-system/skills/vike is not a public skill; only soroush-design-system.'
     )
