@@ -24,17 +24,25 @@ npm i @soroush.tech/design-system
 
 ## Use it with AI tools
 
+A house-style skill teaches a coding agent how to build with this library. It installs for
+whichever agents you use:
+
+```sh
+npx skills add soroush-tech/design-system
+```
+
 An MCP server serves this library's component inventory, every component's props
 reference, and the live token contract, so an AI assistant writes against the real API
-instead of guessing:
+instead of guessing. Add the hosted server, `https://mcp.soroush.design/mcp`, to any MCP
+client; in Claude Code:
 
 ```sh
 claude mcp add --transport http soroush https://mcp.soroush.design/mcp
 ```
 
 It also runs locally over stdio (`npx -y @soroush.design/mcp`). Claude Code users can
-install the plugin instead, which adds a house-style skill and a UI review agent on top
-of the same server:
+install the plugin instead, which brings the skill, the server and a UI review agent in
+one step:
 
 ```sh
 claude plugin marketplace add soroush-tech/design-system

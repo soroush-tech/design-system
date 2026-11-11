@@ -1,8 +1,9 @@
 # AI surface
 
 How the design system reaches AI coding tools: an MCP server on two transports, an
-`llms.txt` on the docs site, and a Claude Code plugin. All three are generated from the
-same repo sources, so none of them can drift from the library they describe.
+`llms.txt` on the docs site, and a house-style skill, installed with `npx skills add` for any
+agent or as part of a Claude Code plugin. All of them are generated from the same repo sources,
+so none of them can drift from the library they describe.
 
 For the consumer-facing view - how to connect and what the tools do - see
 [`README.md`](./README.md). This document is the contributor's view.
@@ -11,18 +12,36 @@ For the consumer-facing view - how to connect and what the tools do - see
 
 ## The pieces
 
-| Piece                                | Lives in                         | Ships via                                     |
-| ------------------------------------ | -------------------------------- | --------------------------------------------- |
-| MCP server (hosted)                  | `packages/mcp/src/worker.ts`     | Cloudflare Worker at `mcp.soroush.design`     |
-| MCP server (local)                   | `packages/mcp/src/bin.ts`        | `npx -y @soroush.design/mcp` (npm, public)    |
-| `llms.txt` / `llms-full.txt`         | `apps/docs/scripts/emitLlms.ts`  | The docs build, into `build/client`           |
-| Claude Code plugin                   | `plugins/soroush-design-system/` | `.claude-plugin/marketplace.json` at the root |
-| Shared registry and README splitting | `packages/docs-content/`         | Private workspace package                     |
+| Piece                                | Lives in                                    | Ships via                                                   |
+| ------------------------------------ | ------------------------------------------- | ----------------------------------------------------------- |
+| MCP server (hosted)                  | `packages/mcp/src/worker.ts`                | Cloudflare Worker at `mcp.soroush.design`                   |
+| MCP server (local)                   | `packages/mcp/src/bin.ts`                   | `npx -y @soroush.design/mcp` (npm, public)                  |
+| `llms.txt` / `llms-full.txt`         | `apps/docs/scripts/emitLlms.ts`             | The docs build, into `build/client`                         |
+| Claude Code plugin                   | `plugins/soroush-design-system/`            | `.claude-plugin/marketplace.json` at the root               |
+| House-style skill                    | `plugins/.../skills/soroush-design-system/` | The plugin, and `npx skills add soroush-tech/design-system` |
+| Shared registry and README splitting | `packages/docs-content/`                    | Private workspace package                                   |
 
 `@soroush.tech/docs-content` is the seam. It owns the component taxonomy and the
 `splitReadme` / `stripReadmeChrome` / `kebabCase` helpers, and `apps/docs/src/common/nav.ts`
 re-exports it. The docs site, `llms.txt`, and the MCP server therefore all describe one
 library from one registry - which is the whole point of the package existing.
+
+## Which skills are public
+
+`npx skills add soroush-tech/design-system` reads two places: `.claude/skills/` and, through
+`.claude-plugin/marketplace.json`, the plugin's `skills/` folder. It lists every skill with a
+`name` and a `description`, and hides one whose frontmatter has `metadata.internal: true`.
+
+- **Public:** only what is in `plugins/soroush-design-system/skills/` - today
+  `soroush-design-system`, whose name matches its folder.
+- **Internal:** every skill in `.claude/skills/`. They are for working on this repo, so each
+  has a `name` and `metadata.internal: true`. A skill without a `name` is skipped with a warning
+  that prints our path to whoever runs the command.
+
+`pnpm check:skills` (`scripts/check-skills.mjs`) enforces both, in `.husky/pre-commit` and in
+CI's lint job. An outside update command - Vike's, which rewrites `.claude/skills/vike/` - can
+drop the mark or write a copy into the plugin; the check is what catches it. To make a skill
+public, move it into the plugin's `skills/` and add its name to `PUBLIC_SKILLS` in the script.
 
 ## Content pipeline
 
