@@ -1,7 +1,7 @@
 // Vendored from the soroush.tech monorepo's private sitemap plugin, pointed at this
-// site's domain. Emits sitemap.xml from Vike's prerendered output after the bundle
-// closes, skipping any page whose robots meta contains noindex - which also keeps every
-// versioned snapshot page out (their default robots is noindex).
+// site's domain. Emits sitemap.xml from Vike's prerendered output once the pre-render is done,
+// skipping any page whose robots meta contains noindex - which also keeps every versioned
+// snapshot page out (their default robots is noindex).
 import { readFileSync, readdirSync, writeFileSync } from 'node:fs'
 import { resolve, sep } from 'node:path'
 import type { Plugin } from 'vite'
@@ -63,9 +63,12 @@ export default function sitemap({ enable = true }: SitemapOptions = {}): Plugin 
     configResolved({ root }) {
       clientDir = resolve(root, 'build/client')
     },
-    closeBundle: {
+    // Vike pre-renders in its own `buildApp` hook, which runs before the `post` `buildApp`
+    // hooks of other plugins - so this one reads the finished HTML. (`closeBundle` ran before
+    // the pre-render from vike 0.4.270 on, and found no pages.)
+    buildApp: {
       order: 'post',
-      handler() {
+      async handler() {
         const count = generate(clientDir)
         if (count) console.log(`sitemap: wrote ${count} URLs to build/client/sitemap.xml`)
       },

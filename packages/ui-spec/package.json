@@ -1,6 +1,6 @@
 {
   "name": "@soroush.tech/ui-spec",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "The generative-UI spec for the @soroush.tech design system: A2UI v1.0 catalogs, a behavior schema for page data, and validators that return findings as data.",
   "keywords": [
     "a2ui",
@@ -65,11 +65,11 @@
   },
   "devDependencies": {
     "@soroush.tech/eslint-config": "workspace:*",
-    "@types/node": "^26.6.5",
-    "@vitest/coverage-v8": "^5.0.5",
-    "oxlint": "^1.89.0",
-    "tsdown": "^0.22.14",
+    "@types/node": "^26.6.6",
+    "@vitest/coverage-v8": "^5.1.0",
+    "oxlint": "^1.93.0",
+    "tsdown": "^0.23.7",
     "typescript": "~7.0.2",
-    "vitest": "^5.0.5"
+    "vitest": "^5.1.0"
   }
 }

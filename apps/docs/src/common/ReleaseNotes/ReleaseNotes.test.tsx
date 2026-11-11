@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { screen } from '@testing-library/react'
 import designSystemPkg from 'packages/design-system/package.json'
+import markdownPkg from 'packages/markdown/package.json'
 import { renderWithTheme } from 'src/test/utils/wrapper'
 import { ReleaseNotes } from './ReleaseNotes'
 import { releaseNotesFor } from './utils/releaseNotesFor'
@@ -37,7 +38,7 @@ describe('ReleaseNotes', () => {
   it('lists the versions newest first', () => {
     renderWithTheme(<ReleaseNotes pkg="markdown" />)
     const names = screen.getAllByRole('heading', { level: 2 }).map((heading) => heading.textContent)
-    expect(names[0]).toBe('v1.2.3')
+    expect(names[0]).toBe(`v${markdownPkg.version}`)
     expect(names[names.length - 1]).toBe('v1.0.0')
   })
 })
