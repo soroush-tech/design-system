@@ -17,7 +17,8 @@ Layer 2 is what makes two apps look like siblings. Copy it; don't reinvent it.
 
 ## Look it up rather than guessing
 
-This plugin ships an MCP server (`soroush`). Prefer it over recalling an API:
+If the `soroush` MCP server is connected (its tools are listed as `list_components`,
+`get_component`, ...), prefer it over recalling an API:
 
 - `list_components` - the inventory with each component's subpath import.
 - `get_component` with `part: "api"` - a component's real props, token values, and
@@ -26,7 +27,10 @@ This plugin ships an MCP server (`soroush`). Prefer it over recalling an API:
 - `get_tokens` - the live token contract; use it instead of inventing a value.
 - `search_docs`, `get_doc` - guides, including setup, theming, and the layout kit.
 
-The bundled `references/` files mirror the same content for offline reading.
+If it is not connected, read the `references/` files next to this skill - they hold the
+same content - and tell the user the server can be added to any MCP client at
+`https://mcp.soroush.design/mcp`. Every component's full API is also on the docs site,
+`https://docs.soroush.tech`.
 
 ## Setting up a new app
 
@@ -115,5 +119,5 @@ When reviewing UI code in an app that uses this system:
 - [ ] Missing `"use client"` on a file that calls `styled()`
 - [ ] Custom styling prop without `shouldForwardProp`
 - [ ] `style={{}}` where a styled component or styled-system prop belongs
-- [ ] A breakpoint that isn't 600px or 800px
+- [ ] A raw `@media` query instead of a theme breakpoint (600, 840, 1200, 1600px)
 - [ ] A one-off card/chip that duplicates a layout-kit component

@@ -2,8 +2,8 @@ import type { Theme } from '@soroush.tech/design-system'
 import { baseTheme, createTheme } from '@soroush.tech/design-system/theme'
 import { alpha, generateBoxShadow } from '@soroush.tech/design-system/utils'
 
-// Brand color ramps, mirrored from the soroush.tech web app (core repo,
-// apps/web/src/theme/colors) so both apps share one color set.
+// Brand color ramps. Every app that copies them shares one color set, so change which
+// ramp fills a palette slot, never the ramp values.
 const blackAlpha = {
   0: '#00000000',
   100: '#0000001A',

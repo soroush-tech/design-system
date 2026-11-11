@@ -302,7 +302,7 @@ Title carries an optional inline `": Status"` in a palette tone.
 ```
 
 Brand wordmark: mono, bold, `letterSpacings.wide`, `fontSizes[2]`, `text.initial`,
-hovering to `text.primary` - with a glyph prefix (`◧ DIFFCHROMA`). Breadcrumb is a
+hovering to `text.primary` - with a glyph prefix (`◧ MY APP`). Breadcrumb is a
 `<Sep>/</Sep>` separator in `text.secondary` plus a `NavLink`. Right cluster: user
 email in `variant="caption" color="secondary" fontFamily="mono"` + a
 `variant="text" size="sm"` action.
@@ -371,7 +371,7 @@ export default function BuildsPage() {
         {visible.map((build) => <BuildListRow key={build.id} build={build} />)}
         {visible.length === 0 && (
           <Typography variant="body2" color="secondary" p={3} as="div">
-            No builds yet - run the DiffChroma action or `pnpm simulate`.
+            No builds yet - push a commit to start the first one.
           </Typography>
         )}
       </PageCard>
