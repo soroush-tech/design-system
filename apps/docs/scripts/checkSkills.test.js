@@ -22,7 +22,7 @@ afterEach(() => {
 const skill = (fields) => `---\n${fields.join('\n')}\n---\n\n# Skill\n`
 const INTERNAL = (name) =>
   skill([`name: ${name}`, 'description: d', 'metadata:', '  internal: true'])
-const PUBLIC = skill(['name: soroush-design-system', 'description: Build UI'])
+const PUBLIC = (name) => skill([`name: ${name}`, 'description: d'])
 
 const tree = (files) => {
   const root = mkdtempSync(join(tmpdir(), 'skills-'))
@@ -34,12 +34,13 @@ const tree = (files) => {
   return root
 }
 
-// A repository as it should be: two internal skills and the one public skill.
+// A repository as it should be: two internal skills and the public skills.
 const clean = (overrides = {}) =>
   tree({
     [`${INTERNAL_DIR}/commit/SKILL.md`]: INTERNAL('commit'),
     [`${INTERNAL_DIR}/vike/SKILL.md`]: INTERNAL("'vike'"),
-    [`${PUBLIC_DIR}/soroush-design-system/SKILL.md`]: PUBLIC,
+    [`${PUBLIC_DIR}/soroush-design-system/SKILL.md`]: PUBLIC('soroush-design-system'),
+    [`${PUBLIC_DIR}/wcag/SKILL.md`]: PUBLIC('wcag'),
     ...overrides,
   })
 
@@ -78,7 +79,7 @@ describe('readFrontmatter', () => {
 })
 
 describe('checkSkills', () => {
-  it('passes a repository with internal skills marked and only the public skill in the plugin', () => {
+  it('passes a repository with internal skills marked and only the public skills in the plugin', () => {
     expect(checkSkills(clean())).toEqual([])
   })
 
@@ -106,13 +107,14 @@ describe('checkSkills', () => {
   it('names a skill in the plugin that is not a public one - an outside copy written back', () => {
     const root = clean({ [`${PUBLIC_DIR}/vike/SKILL.md`]: INTERNAL('vike') })
     expect(checkSkills(root)).toEqual([
-      'plugins/soroush-design-system/skills/vike is not a public skill; only soroush-design-system.',
+      'plugins/soroush-design-system/skills/vike is not a public skill; only soroush-design-system, wcag.',
     ])
   })
 
-  it('names the public skill when it is missing, misnamed, undescribed or marked internal', () => {
+  it('names a public skill when it is missing, misnamed, undescribed or marked internal', () => {
     expect(checkSkills(tree({ [`${INTERNAL_DIR}/commit/SKILL.md`]: INTERNAL('commit') }))).toEqual([
       'plugins/soroush-design-system/skills/soroush-design-system is missing.',
+      'plugins/soroush-design-system/skills/wcag is missing.',
     ])
     const where = 'plugins/soroush-design-system/skills/soroush-design-system/SKILL.md'
     const root = clean({
@@ -173,14 +175,18 @@ describe('check-skills from the command line', () => {
   it('reports the skills and leaves the exit code alone when all is well', async () => {
     const log = vi.spyOn(console, 'log').mockImplementation(() => {})
     await run()
-    expect(log).toHaveBeenCalledWith('Skills: soroush-design-system public, the rest internal.')
+    expect(log).toHaveBeenCalledWith(
+      'Skills: soroush-design-system, wcag public, the rest internal.'
+    )
     expect(process.exitCode).toBeUndefined()
   })
 
   it('checks this repository whatever arguments it is given', async () => {
     const log = vi.spyOn(console, 'log').mockImplementation(() => {})
     await run([clean({ [`${PUBLIC_DIR}/vike/SKILL.md`]: INTERNAL('vike') })])
-    expect(log).toHaveBeenCalledWith('Skills: soroush-design-system public, the rest internal.')
+    expect(log).toHaveBeenCalledWith(
+      'Skills: soroush-design-system, wcag public, the rest internal.'
+    )
     expect(process.exitCode).toBeUndefined()
   })
 
@@ -188,7 +194,7 @@ describe('check-skills from the command line', () => {
     const error = vi.spyOn(console, 'error').mockImplementation(() => {})
     reportSkills(clean({ [`${PUBLIC_DIR}/vike/SKILL.md`]: INTERNAL('vike') }))
     expect(error).toHaveBeenCalledWith(
-      'plugins/soroush-design-system/skills/vike is not a public skill; only soroush-design-system.'
+      'plugins/soroush-design-system/skills/vike is not a public skill; only soroush-design-system, wcag.'
     )
     expect(process.exitCode).toBe(1)
   })

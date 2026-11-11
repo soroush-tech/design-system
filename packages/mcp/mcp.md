@@ -1,8 +1,8 @@
 # AI surface
 
 How the design system reaches AI coding tools: an MCP server on two transports, an
-`llms.txt` on the docs site, and a house-style skill, installed with `npx skills add` for any
-agent or as part of a Claude Code plugin. All of them are generated from the same repo sources,
+`llms.txt` on the docs site, and two skills (house style and WCAG accessibility), installed with
+`npx skills add` for any agent or as part of a Claude Code plugin. All of them are generated from the same repo sources,
 so none of them can drift from the library they describe.
 
 For the consumer-facing view - how to connect and what the tools do - see
@@ -19,6 +19,7 @@ For the consumer-facing view - how to connect and what the tools do - see
 | `llms.txt` / `llms-full.txt`         | `apps/docs/scripts/emitLlms.ts`             | The docs build, into `build/client`                         |
 | Claude Code plugin                   | `plugins/soroush-design-system/`            | `.claude-plugin/marketplace.json` at the root               |
 | House-style skill                    | `plugins/.../skills/soroush-design-system/` | The plugin, and `npx skills add soroush-tech/design-system` |
+| Accessibility (WCAG) skill           | `plugins/.../skills/wcag/`                  | The plugin, and `npx skills add soroush-tech/design-system` |
 | Shared registry and README splitting | `packages/docs-content/`                    | Private workspace package                                   |
 
 `@soroush.tech/docs-content` is the seam. It owns the component taxonomy and the
@@ -33,7 +34,9 @@ library from one registry - which is the whole point of the package existing.
 `name` and a `description`, and hides one whose frontmatter has `metadata.internal: true`.
 
 - **Public:** only what is in `plugins/soroush-design-system/skills/` - today
-  `soroush-design-system`, whose name matches its folder.
+  `soroush-design-system` and `wcag`, each named after its folder. `wcag` is the app-facing
+  copy of the internal `.claude/skills/wcag/`: the same rules, with this repo's paths and
+  Storybook setup turned into guidance for an app. A change to one is weighed for the other.
 - **Internal:** every skill in `.claude/skills/`. They are for working on this repo, so each
   has a `name` and `metadata.internal: true`. A skill without a `name` is skipped with a warning
   that prints our path to whoever runs the command.

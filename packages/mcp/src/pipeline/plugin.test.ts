@@ -66,8 +66,9 @@ describe('syncPluginReferences', () => {
   })
 
   it('ships nothing that points into a machine or repo the reader does not have', () => {
-    // The skill and the MCP content are read by agents on other people's machines: a local
-    // path, a private repo or one of our own apps is a reference they cannot follow.
+    // The skills and the MCP content are read by agents on other people's machines: a local
+    // path, a private repo or one of our own apps is a reference they cannot follow. Every
+    // public skill counts, not only the one whose references this pipeline writes.
     const unreachable = [
       /diffchroma/i,
       /\bcore repo\b/i,
@@ -75,10 +76,10 @@ describe('syncPluginReferences', () => {
       /\b[A-Z]:\\{1,2}[A-Za-z]/,
       /\/(Users|home)\/[a-z]/,
     ]
-    const skillDir = dirname(pluginReferencesDir())
+    const skillsDir = dirname(dirname(pluginReferencesDir()))
     const shipped = [
       ['the MCP content', JSON.stringify(content)],
-      ...readdirSync(skillDir, { recursive: true, withFileTypes: true })
+      ...readdirSync(skillsDir, { recursive: true, withFileTypes: true })
         .filter((entry) => entry.isFile())
         .map((entry) => {
           const path = join(entry.parentPath, entry.name)

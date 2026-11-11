@@ -32,7 +32,7 @@ For a client configured by file:
 ```
 
 The server pairs with a house-style skill, which tells an agent when and how to use these
-tools. It installs for any coding agent:
+tools, and a WCAG 2.2 AA accessibility skill. Both install for any coding agent:
 
 ```sh
 npx skills add soroush-tech/design-system

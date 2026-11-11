@@ -24,7 +24,8 @@ npm i @soroush.tech/design-system
 
 ## Use it with AI tools
 
-A house-style skill teaches a coding agent how to build with this library. It installs for
+Two skills teach a coding agent how to build with this library: a house-style skill, and a
+WCAG 2.2 AA skill for contrast, labels, landmarks and accessibility tests. Both install for
 whichever agents you use:
 
 ```sh
@@ -41,7 +42,7 @@ claude mcp add --transport http soroush https://mcp.soroush.design/mcp
 ```
 
 It also runs locally over stdio (`npx -y @soroush.design/mcp`). Claude Code users can
-install the plugin instead, which brings the skill, the server and a UI review agent in
+install the plugin instead, which brings the skills, the server and a UI review agent in
 one step:
 
 ```sh

@@ -1,4 +1,4 @@
-// Keeps `npx skills add soroush-tech/design-system` offering our one public skill and nothing else.
+// Keeps `npx skills add soroush-tech/design-system` offering our public skills and nothing else.
 // That tool reads `.claude/skills/` and the plugin's `skills/` folder (through
 // `.claude-plugin/marketplace.json`), and hides a skill whose frontmatter has `metadata.internal`.
 //
@@ -16,7 +16,7 @@ import { fileURLToPath } from 'node:url'
 
 export const INTERNAL_DIR = '.claude/skills'
 export const PUBLIC_DIR = 'plugins/soroush-design-system/skills'
-export const PUBLIC_SKILLS = ['soroush-design-system']
+export const PUBLIC_SKILLS = ['soroush-design-system', 'wcag']
 
 const KEY = /^[\w-]+$/
 

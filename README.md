@@ -26,7 +26,7 @@ renders - component READMEs, the live token contract, and the guides. Both route
 with any coding agent:
 
 ```sh
-# The house-style skill, installed for the agents you use
+# The house-style and accessibility (WCAG) skills, installed for the agents you use
 npx skills add soroush-tech/design-system
 ```
 
