@@ -8,6 +8,7 @@ import { FormControl } from '../FormControl'
 import { FormLabel } from '../FormLabel'
 import { FormHelperText } from '../FormHelperText'
 import { RangeInput, type RangeInputProps } from './RangeInput'
+import { toPx } from '../utils/test/toPx'
 
 afterEach(() => vi.restoreAllMocks())
 
@@ -487,7 +488,7 @@ describe('RangeInput', () => {
       icon: { xl: '2rem' },
     } as never)
     render(range({ size: 'xl' as never }), { wrapper: withTheme(theme) })
-    expect(root()).toHaveStyle({ height: '2rem' })
+    expect(root()).toHaveStyle({ height: toPx('2rem') })
   })
 
   describe('the track', () => {
@@ -613,10 +614,10 @@ describe('RangeInput', () => {
 
   it('takes a size, and a vertical one stands up', () => {
     const { unmount } = renderWithTheme(range({ size: 'lg' }))
-    expect(root()).toHaveStyle({ height: baseTheme.icon.lg })
+    expect(root()).toHaveStyle({ height: toPx(baseTheme.icon.lg) })
     unmount()
     renderWithTheme(range({ orientation: 'vertical' }))
-    expect(root()).toHaveStyle({ height: '12rem' })
+    expect(root()).toHaveStyle({ height: toPx('12rem') })
   })
 
   describe('in a FormControl', () => {
@@ -655,7 +656,7 @@ describe('RangeInput', () => {
           <RangeInput data-testid="range" aria-label="Volume" />
         </FormControl>
       )
-      expect(root()).toHaveStyle({ height: baseTheme.icon.lg })
+      expect(root()).toHaveStyle({ height: toPx(baseTheme.icon.lg) })
       expect(slider()).toHaveAttribute('aria-invalid', 'true')
       expect(slider()).toBeDisabled()
       unmount()
@@ -665,7 +666,7 @@ describe('RangeInput', () => {
         </FormControl>
       )
       expect(slider()).toBeEnabled()
-      expect(root()).toHaveStyle({ height: baseTheme.icon.sm })
+      expect(root()).toHaveStyle({ height: toPx(baseTheme.icon.sm) })
     })
 
     it("takes the field's color, and the error color over it", () => {
@@ -701,7 +702,7 @@ describe('RangeInput', () => {
       },
     })
     const { unmount } = render(range({ defaultValue: [10, 12] }), { wrapper: withTheme(theme) })
-    expect(root()).toHaveStyle({ height: '12rem' })
+    expect(root()).toHaveStyle({ height: toPx('12rem') })
     expect(slider()).toHaveAttribute('step', '5')
     expect(screen.getByText('10')).toBeInTheDocument()
     press('ArrowRight', 0, { shiftKey: true })

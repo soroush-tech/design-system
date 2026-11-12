@@ -4,6 +4,7 @@ import { renderWithTheme } from '@soroush.tech/design-system/utils/test/renderWi
 import { ThemeProvider, baseTheme, createTheme } from '@soroush.tech/design-system/theme'
 import { alpha } from '@soroush.tech/design-system/utils'
 import { Pressable } from './Pressable'
+import { toPx } from '../utils/test/toPx'
 
 /**
  * Emitted CSS rules that target one of the element's classes and contain the given
@@ -196,7 +197,7 @@ describe('Pressable', () => {
     )
     expect(screen.getByRole('button')).toHaveStyle({
       padding: baseTheme.space[2],
-      width: '10rem',
+      width: toPx('10rem'),
       borderRadius: baseTheme.radii.md,
     })
   })
@@ -217,7 +218,7 @@ describe('Pressable', () => {
   it('draws a keyboard-only focus ring', () => {
     renderWithTheme(<Pressable>Focus</Pressable>)
     const pressable = screen.getByRole('button')
-    expect(pressable).toHaveStyle({ outline: 'none' })
+    expect(pressable).toHaveStyle({ outlineStyle: 'none' })
     expect(rulesFor(pressable, ':focus-visible')).toContain(
       `outline:2px solid ${baseTheme.palette.primary.main}`
     )

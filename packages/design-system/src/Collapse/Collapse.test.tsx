@@ -5,6 +5,7 @@ import { ThemeProvider } from '../theme'
 import { baseTheme, createTheme, type Theme } from '../theme/themes'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { Collapse, type CollapseProps } from './Collapse'
+import { toPx } from '../utils/test/toPx'
 
 const withTheme = (theme: Theme) =>
   function Wrapper({ children }: { children: ReactNode }) {
@@ -18,6 +19,7 @@ const view = (props: Partial<CollapseProps> = {}) => (
     <p>Content</p>
   </Collapse>
 )
+// A computed transition gives its time in seconds, as a browser does.
 const transitionOf = () => getComputedStyle(root()).transition
 const tick = (ms: number) => act(() => vi.advanceTimersByTime(ms))
 // A move starts a tick after the render that asks for it: each render here lets it begin.
@@ -60,7 +62,7 @@ describe('Collapse', () => {
 
     it('keeps a collapsed size as it is given', () => {
       mount(view({ collapsedSize: '3rem' }))
-      expect(root()).toHaveStyle({ height: '3rem' })
+      expect(root()).toHaveStyle({ height: toPx('3rem') })
     })
 
     it('narrows, not shortens, when horizontal', () => {
@@ -108,10 +110,10 @@ describe('Collapse', () => {
     it('moves over the standard time and easing of the theme, or the ones it is given', () => {
       const { rerender } = mount(view())
       expect(transitionOf()).toContain(
-        `height ${standard}ms ${baseTheme.transitions.easing.standard}`
+        `height ${standard / 1000}s ${baseTheme.transitions.easing.standard}`
       )
       rerender(view({ timeout: 90, easing: 'exit' }))
-      expect(transitionOf()).toContain(`height 90ms ${baseTheme.transitions.easing.exit}`)
+      expect(transitionOf()).toContain(`height 0.09s ${baseTheme.transitions.easing.exit}`)
     })
   })
 
@@ -174,7 +176,7 @@ describe('Collapse', () => {
       }
       // shouldAppear is off: open at once.
       expect(root().style.width).toBe('')
-      expect(transitionOf()).toContain(`width 77ms ${baseTheme.transitions.easing.enter}`)
+      expect(transitionOf()).toContain(`width 0.077s ${baseTheme.transitions.easing.enter}`)
       rerender(view({ isShown: false, orientation: 'vertical', collapsedSize: 5 }))
       tick(77)
       expect(root()).toHaveStyle({ height: '5px' })

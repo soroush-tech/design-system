@@ -5,6 +5,7 @@ import { Table } from '../Table'
 import { TableHead } from '../TableHead'
 import { TableCell } from '../TableCell'
 import { TableSortLabel } from './TableSortLabel'
+import { toPx } from '../../utils/test/toPx'
 
 const getRevealRule = (button: HTMLElement) => {
   const buttonClasses = Array.from(button.classList)
@@ -131,7 +132,7 @@ describe('TableSortLabel', () => {
         Name
       </TableSortLabel>
     )
-    expect(container.querySelector('svg')).toHaveStyle({ width: '2rem' })
+    expect(container.querySelector('svg')).toHaveStyle({ width: toPx('2rem') })
   })
 
   it('forwards HTML attributes without leaking custom props to the DOM', () => {

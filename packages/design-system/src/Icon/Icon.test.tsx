@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { Icon } from './Icon'
 import { icons, type IconName } from './icons'
+import { toPx } from '../utils/test/toPx'
 
 describe('Icon', () => {
   it('renders the named icon as an svg', () => {
@@ -16,12 +17,18 @@ describe('Icon', () => {
 
   it('defaults size to 1.5rem on both axes', () => {
     const { container } = renderWithTheme(<Icon name="hub" />)
-    expect(container.querySelector('svg')).toHaveStyle({ width: '1.5rem', height: '1.5rem' })
+    expect(container.querySelector('svg')).toHaveStyle({
+      width: toPx('1.5rem'),
+      height: toPx('1.5rem'),
+    })
   })
 
   it('applies a custom size to width and height', () => {
     const { container } = renderWithTheme(<Icon name="hub" size="2rem" />)
-    expect(container.querySelector('svg')).toHaveStyle({ width: '2rem', height: '2rem' })
+    expect(container.querySelector('svg')).toHaveStyle({
+      width: toPx('2rem'),
+      height: toPx('2rem'),
+    })
   })
 
   it('reads a size named for one of the theme icon sizes as that size', () => {
@@ -33,15 +40,19 @@ describe('Icon', () => {
       </>
     )
     const [sm, md, number] = container.querySelectorAll('svg')
-    expect(sm).toHaveStyle({ width: '1rem', height: '1rem' })
-    expect(md).toHaveStyle({ width: '1.25rem', height: '1.25rem' })
+    expect(sm).toHaveStyle({ width: toPx('1rem'), height: toPx('1rem') })
+    expect(md).toHaveStyle({ width: toPx('1.25rem'), height: toPx('1.25rem') })
     expect(number).toHaveStyle({ width: '20px', height: '20px' })
   })
 
   it('resolves fill from the color prop via currentColor', () => {
-    // color → CSS `color`; `fill: currentColor` resolves to it (theme.text.secondary)
+    // color → CSS `color` (theme.text.secondary), and `fill: currentColor` follows it. jsdom
+    // keeps `currentcolor` as the computed fill, where a browser would resolve it.
     const { container } = renderWithTheme(<Icon name="hub" color="secondary" />)
-    expect(container.querySelector('svg')).toHaveStyle({ fill: 'rgb(156, 156, 156)' })
+    expect(container.querySelector('svg')).toHaveStyle({
+      fill: 'currentcolor',
+      color: 'rgb(156, 156, 156)',
+    })
   })
 
   it('forwards passthrough props to the svg element', () => {

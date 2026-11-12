@@ -3,6 +3,7 @@ import { describe, it, expect } from 'vitest'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { baseTheme, typography, fonts } from '../theme/themes'
 import { Typography, type TypographyVariant, type TextColorToken } from '../Typography'
+import { toPx } from '../utils/test/toPx'
 
 describe('Typography', () => {
   // ─── children ────────────────────────────────────────────────────────────────
@@ -145,12 +146,14 @@ describe('Typography', () => {
   describe('gutterBottom', () => {
     it('applies margin-bottom: 0.5em', () => {
       renderWithTheme(<Typography gutterBottom>spaced</Typography>)
-      expect(screen.getByText('spaced')).toHaveStyle({ marginBottom: '0.5em' })
+      const text = screen.getByText('spaced')
+      expect(text).toHaveStyle({ marginBottom: toPx('0.5em', getComputedStyle(text).fontSize) })
     })
 
     it('does not add margin-bottom by default', () => {
       renderWithTheme(<Typography>no gutter</Typography>)
-      expect(screen.getByText('no gutter')).not.toHaveStyle({ marginBottom: '0.5em' })
+      const text = screen.getByText('no gutter')
+      expect(text).not.toHaveStyle({ marginBottom: toPx('0.5em', getComputedStyle(text).fontSize) })
     })
   })
 
@@ -194,7 +197,8 @@ describe('Typography', () => {
         ['loose', '2'],
       ] as const)('lineHeight="%s" → %s', (keyword, value) => {
         renderWithTheme(<Typography lineHeight={keyword}>{keyword}</Typography>)
-        expect(screen.getByText(keyword)).toHaveStyle({ lineHeight: value })
+        const text = screen.getByText(keyword)
+        expect(text).toHaveStyle({ lineHeight: toPx(value, getComputedStyle(text).fontSize) })
       })
     })
 
@@ -208,7 +212,8 @@ describe('Typography', () => {
         ['widest', '0.2em'],
       ] as const)('letterSpacing="%s" → %s', (keyword, value) => {
         renderWithTheme(<Typography letterSpacing={keyword}>{keyword}</Typography>)
-        expect(screen.getByText(keyword)).toHaveStyle({ letterSpacing: value })
+        const text = screen.getByText(keyword)
+        expect(text).toHaveStyle({ letterSpacing: toPx(value, getComputedStyle(text).fontSize) })
       })
     })
 

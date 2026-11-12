@@ -5,6 +5,7 @@ import { ThemeProvider, baseTheme } from '@soroush.tech/design-system/theme'
 import { renderWithTheme } from '@soroush.tech/design-system/utils/test/renderWithTheme'
 import { Sidebar } from './Sidebar'
 import { SidebarItem } from '../SidebarItem'
+import { toPx } from '../../utils/test/toPx'
 
 // What jsdom answers for a `transparent` background.
 const CLEAR = 'rgba(0, 0, 0, 0)'
@@ -51,7 +52,7 @@ describe('Sidebar stacked layout', () => {
       </Sidebar>
     )
     const rail = screen.getByRole('navigation', { name: 'Primary' }).firstElementChild
-    expect(rail).toHaveStyle({ width: '5.5rem' })
+    expect(rail).toHaveStyle({ width: toPx('5.5rem') })
     expect(getComputedStyle(rail!).transition).not.toContain('width')
   })
 
@@ -62,7 +63,7 @@ describe('Sidebar stacked layout', () => {
       </Sidebar>
     )
     expect(screen.getByRole('navigation', { name: 'Primary' }).firstElementChild).toHaveStyle({
-      width: '7rem',
+      width: toPx('7rem'),
     })
   })
 
@@ -74,7 +75,7 @@ describe('Sidebar stacked layout', () => {
     )
     expect(screen.queryByText('Home')).not.toBeInTheDocument()
     expect(screen.getByRole('navigation', { name: 'Primary' }).firstElementChild).toHaveStyle({
-      width: '3.5rem',
+      width: toPx('3.5rem'),
     })
   })
 
@@ -166,7 +167,7 @@ describe('Sidebar panel in place', () => {
         <SidebarItem icon="home" label="Home" />
       </Sidebar>
     )
-    expect(screen.getByText('The tree').parentElement).toHaveStyle({ width: '20rem' })
+    expect(screen.getByText('The tree').parentElement).toHaveStyle({ width: toPx('20rem') })
   })
 
   it('takes the place of hasPanel: the items keep their children in the row', () => {

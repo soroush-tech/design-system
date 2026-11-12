@@ -3,6 +3,7 @@ import { describe, it, expect } from 'vitest'
 import { ThemeProvider } from '../theme'
 import { createTheme, baseTheme, type ComponentConfig } from '../theme/themes'
 import { styled } from './styled'
+import { toPx } from '../utils/test/toPx'
 
 // A consumer-style component registered under a custom theme.components key -
 // exercises the wrapper directly, independent of any design-system component.
@@ -90,8 +91,9 @@ describe('styled (theme customization wrapper)', () => {
         <Label data-testid="label" />
       </>
     )
-    expect(screen.getByTestId('root')).toHaveStyle({ letterSpacing: '1em' })
-    expect(screen.getByTestId('label')).not.toHaveStyle({ letterSpacing: '1em' })
+    // Neither sets a font size: 1em is the 16px default.
+    expect(screen.getByTestId('root')).toHaveStyle({ letterSpacing: toPx('1em') })
+    expect(screen.getByTestId('label')).not.toHaveStyle({ letterSpacing: toPx('1em') })
   })
 
   it('keeps Emotion tag shortcuts working', () => {

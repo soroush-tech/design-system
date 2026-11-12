@@ -6,6 +6,7 @@ import { createTheme, baseTheme, type Theme } from '../theme/themes'
 import { FormControl } from '../FormControl'
 import { FormHelperText } from '../FormHelperText'
 import { Checkbox, type CheckboxSize } from '../Checkbox'
+import { toPx } from '../utils/test/toPx'
 
 describe('Checkbox', () => {
   // ─── element ─────────────────────────────────────────────────────────────────
@@ -146,17 +147,17 @@ describe('Checkbox', () => {
   describe('size', () => {
     it('sm - sets theme.icon.sm font-size on icon wrapper', () => {
       const { container } = renderWithTheme(<Checkbox size="sm" />)
-      expect(container.querySelector('span')).toHaveStyle({ fontSize: '1rem' })
+      expect(container.querySelector('span')).toHaveStyle({ fontSize: toPx('1rem') })
     })
 
     it('md - sets theme.icon.md font-size on icon wrapper', () => {
       const { container } = renderWithTheme(<Checkbox size="md" />)
-      expect(container.querySelector('span')).toHaveStyle({ fontSize: '1.25rem' })
+      expect(container.querySelector('span')).toHaveStyle({ fontSize: toPx('1.25rem') })
     })
 
     it('lg - sets theme.icon.lg font-size on icon wrapper', () => {
       const { container } = renderWithTheme(<Checkbox size="lg" />)
-      expect(container.querySelector('span')).toHaveStyle({ fontSize: '1.5rem' })
+      expect(container.querySelector('span')).toHaveStyle({ fontSize: toPx('1.5rem') })
     })
 
     it('reads augmented sizes from theme.icon (the theme supplies the glyph size)', () => {
@@ -167,7 +168,7 @@ describe('Checkbox', () => {
       const { container } = renderWithTheme(<Checkbox size={'xl' as CheckboxSize} />, {
         wrapper: ({ children }) => <ThemeProvider theme={augmented}>{children}</ThemeProvider>,
       })
-      expect(container.querySelector('span')).toHaveStyle({ fontSize: '2rem' })
+      expect(container.querySelector('span')).toHaveStyle({ fontSize: toPx('2rem') })
     })
 
     it('does not forward size to DOM', () => {

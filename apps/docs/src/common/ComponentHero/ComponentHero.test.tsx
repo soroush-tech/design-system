@@ -261,10 +261,11 @@ describe('ComponentHero tab bar width', () => {
     stubBarAt(400)
     renderHero()
     expect(bar()).toHaveStyle({ transition: 'none' })
+    // A computed transition gives its time in seconds: 280ms reads 0.28s.
     await waitFor(() =>
       expect(bar()).toHaveStyle({
         transition:
-          'width 280ms cubic-bezier(0.2, 0, 0, 1),margin 280ms cubic-bezier(0.2, 0, 0, 1)',
+          'width 0.28s cubic-bezier(0.2, 0, 0, 1), margin 0.28s cubic-bezier(0.2, 0, 0, 1)',
       })
     )
   })
@@ -278,7 +279,8 @@ describe('ComponentHero tab bar width', () => {
   it('keeps a gap from what it sticks under', () => {
     stubBarAt(400)
     renderHero()
-    expect(bar()).toHaveStyle({ top: 'calc(3.5rem + 0.5rem)' })
+    // calc(3.5rem + 0.5rem), computed against the 16px root.
+    expect(bar()).toHaveStyle({ top: '64px' })
   })
 
   it('stops listening to the page once it is gone', () => {

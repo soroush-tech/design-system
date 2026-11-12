@@ -3,6 +3,7 @@ import { describe, it, expect } from 'vitest'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { baseTheme } from '../theme/themes'
 import { LinearProgress } from '../LinearProgress'
+import { toPx } from '../utils/test/toPx'
 
 describe('LinearProgress', () => {
   // ─── element ─────────────────────────────────────────────────────────────────
@@ -302,7 +303,7 @@ describe('LinearProgress', () => {
 
     it('accepts a raw CSS unit string', () => {
       renderWithTheme(<LinearProgress thickness="0.5rem" data-testid="lp" />)
-      expect(screen.getByTestId('lp')).toHaveStyle({ height: '0.5rem' })
+      expect(screen.getByTestId('lp')).toHaveStyle({ height: toPx('0.5rem') })
     })
 
     it('is overridden by the layout height prop', () => {

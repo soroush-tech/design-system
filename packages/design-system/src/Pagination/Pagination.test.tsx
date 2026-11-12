@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from 'vitest'
 import { fireEvent, screen } from '@testing-library/react'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { Pagination } from './Pagination'
+import { toPx } from '../utils/test/toPx'
 
 describe('Pagination', () => {
   it('renders a navigation landmark with the default label', () => {
@@ -79,6 +80,6 @@ describe('Pagination', () => {
       <Pagination count={3} defaultPage={1} color="secondary" shape="rounded" size="lg" />
     )
     const current = screen.getByRole('button', { name: 'page 1' })
-    expect(current).toHaveStyle({ minWidth: '2.5rem' })
+    expect(current).toHaveStyle({ minWidth: toPx('2.5rem') })
   })
 })

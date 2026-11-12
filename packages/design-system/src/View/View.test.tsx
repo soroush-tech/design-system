@@ -142,11 +142,12 @@ describe('View', () => {
   })
 
   describe('layout (the page frame)', () => {
-    // jsdom applies no media query, so the computed style is the base (xs) entry.
+    // jsdom applies media queries against its 1024px window: the computed style is the md entry
+    // (12 columns, a 24px margin and gutter).
     it("sits on the theme's frame without becoming a grid, and stays off the DOM", () => {
       renderWithTheme(<View layout>framed</View>)
       const frame = screen.getByText('framed')
-      expect(frame).toHaveStyle({ paddingInline: '16px', maxWidth: 'none', display: 'block' })
+      expect(frame).toHaveStyle({ paddingInline: '24px', maxWidth: 'none', display: 'block' })
       expect(getComputedStyle(frame).gridTemplateColumns).toBe('none')
       expect(frame).not.toHaveAttribute('layout')
     })

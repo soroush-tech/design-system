@@ -4,6 +4,7 @@ import { act, fireEvent, screen } from '@testing-library/react'
 import { renderWithTheme } from '../../utils/test/renderWithTheme'
 import { Tabs, type TabsActions, type TabsProps } from './Tabs'
 import { Tab } from '../Tab'
+import { toPx } from '../../utils/test/toPx'
 
 interface Box {
   clientWidth?: number
@@ -111,8 +112,11 @@ describe('scrolling Tabs', () => {
     // A strip across the column as tall as a tab, its chevron an icon's size - never as tall as the
     // column is wide.
     expect(button('end')).toHaveStyle({ minHeight: '40px' })
-    expect(button('end')).not.toHaveStyle({ minWidth: '1.5rem' })
-    expect(button('end')!.querySelector('svg')).toHaveStyle({ width: '1rem', height: '1rem' })
+    expect(button('end')).not.toHaveStyle({ minWidth: toPx('1.5rem') })
+    expect(button('end')!.querySelector('svg')).toHaveStyle({
+      width: toPx('1rem'),
+      height: toPx('1rem'),
+    })
   })
 
   it("keeps both buttons with 'always', disabling the one at an end", () => {

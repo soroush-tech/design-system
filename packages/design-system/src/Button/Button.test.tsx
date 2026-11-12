@@ -7,6 +7,7 @@ import { ButtonGroup } from '../ButtonGroup'
 import { createTheme, baseTheme } from '../theme/themes'
 import { Button, type ButtonColor, type ButtonVariant, type ButtonSize } from '../Button'
 import type { ButtonShape } from '../Button'
+import { toPx } from '../utils/test/toPx'
 
 describe('Button', () => {
   // ─── children ────────────────────────────────────────────────────────────────
@@ -86,8 +87,9 @@ describe('Button', () => {
 
     it('applies tight letter spacing', () => {
       renderWithTheme(<Button data-testid="btn">Click</Button>)
-      expect(screen.getByTestId('btn')).toHaveStyle({
-        letterSpacing: baseTheme.letterSpacings.tight,
+      const button = screen.getByTestId('btn')
+      expect(button).toHaveStyle({
+        letterSpacing: toPx(baseTheme.letterSpacings.tight, getComputedStyle(button).fontSize),
       })
     })
   })
@@ -229,7 +231,9 @@ describe('Button', () => {
           <Button data-testid="btn">btn</Button>
         )
         const label = screen.getByText('btn')
-        expect(label).toHaveStyle({ letterSpacing: '0.5em' })
+        expect(label).toHaveStyle({
+          letterSpacing: toPx('0.5em', getComputedStyle(label).fontSize),
+        })
       })
 
       it('per-instance styled-system props beat styleOverrides', () => {

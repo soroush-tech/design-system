@@ -8,6 +8,7 @@ import {
 } from '@soroush.tech/design-system/theme'
 import { renderWithTheme } from '@soroush.tech/design-system/utils/test/renderWithTheme'
 import { PaginationItem, type PaginationItemProps } from './PaginationItem'
+import { toPx } from '../../utils/test/toPx'
 
 describe('PaginationItem', () => {
   it('renders a page number as a button', () => {
@@ -86,12 +87,15 @@ describe('PaginationItem', () => {
       <PaginationItem page={1} size={'xl' as PaginationItemProps['size']} data-testid="item" />,
       { wrapper: ({ children }) => <ThemeProvider theme={augmented}>{children}</ThemeProvider> }
     )
-    expect(screen.getByTestId('item')).toHaveStyle({ minWidth: '2rem', height: '2rem' })
+    expect(screen.getByTestId('item')).toHaveStyle({ minWidth: toPx('2rem'), height: toPx('2rem') })
   })
 
   it('applies size dimensions', () => {
     renderWithTheme(<PaginationItem page={1} size="lg" data-testid="item" />)
-    expect(screen.getByTestId('item')).toHaveStyle({ minWidth: '2.5rem', height: '2.5rem' })
+    expect(screen.getByTestId('item')).toHaveStyle({
+      minWidth: toPx('2.5rem'),
+      height: toPx('2.5rem'),
+    })
   })
 
   it('forwards onClick and disabled', () => {

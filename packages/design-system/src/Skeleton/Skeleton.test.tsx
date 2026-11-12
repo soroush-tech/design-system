@@ -3,6 +3,7 @@ import { describe, it, expect } from 'vitest'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { baseTheme } from '../theme/themes'
 import { Skeleton } from '../Skeleton'
+import { toPx } from '../utils/test/toPx'
 
 describe('Skeleton', () => {
   // ─── element ─────────────────────────────────────────────────────────────────
@@ -91,7 +92,7 @@ describe('Skeleton', () => {
       renderWithTheme(
         <Skeleton variant="rectangular" width="10rem" height="50%" data-testid="sk" />
       )
-      expect(screen.getByTestId('sk')).toHaveStyle({ width: '10rem', height: '50%' })
+      expect(screen.getByTestId('sk')).toHaveStyle({ width: toPx('10rem'), height: '50%' })
     })
 
     it('does not forward width or height to the DOM', () => {

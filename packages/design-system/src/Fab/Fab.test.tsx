@@ -142,8 +142,9 @@ describe('Fab', () => {
       renderWithTheme(view())
       const { duration, easing } = baseTheme.transitions
       const transition = getComputedStyle(fab()).transition
-      expect(transition).toContain(`box-shadow ${duration.standard}ms`)
-      expect(transition).toContain(`background-color ${duration.standard}ms`)
+      // A computed transition gives its time in seconds, as a browser does.
+      expect(transition).toContain(`box-shadow ${duration.standard / 1000}s`)
+      expect(transition).toContain(`background-color ${duration.standard / 1000}s`)
       expect(transition).toContain(easing.standard)
     })
 
@@ -160,7 +161,7 @@ describe('Fab', () => {
         transitions: { duration: { standard: 400 } },
       })
       render(view(), { wrapper: withTheme(theme) })
-      expect(getComputedStyle(fab()).transition).toContain('box-shadow 400ms')
+      expect(getComputedStyle(fab()).transition).toContain('box-shadow 0.4s')
     })
   })
 
@@ -222,9 +223,11 @@ describe('Fab', () => {
       renderWithTheme(extended(false))
       const { duration, easing } = baseTheme.transitions
       expect(getComputedStyle(label()).transition).toContain(
-        `grid-template-columns ${duration.standard}ms ${easing.standard}`
+        `grid-template-columns ${duration.standard / 1000}s ${easing.standard}`
       )
-      expect(getComputedStyle(fab()).transition).toContain(`padding-left ${duration.standard}ms`)
+      expect(getComputedStyle(fab()).transition).toContain(
+        `padding-left ${duration.standard / 1000}s`
+      )
     })
 
     it('is ignored by a circular fab', () => {

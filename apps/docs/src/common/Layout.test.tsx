@@ -145,7 +145,8 @@ describe('Layout', () => {
     const aside = screen.getByRole('complementary', { hidden: true })
     const panel = aside.firstElementChild as HTMLElement
     expect(within(panel).getByTestId('nav')).toBeInTheDocument()
-    expect(panel).toHaveStyle({ borderRadius: '1.75rem' })
+    // 1.75rem, computed against the 16px root.
+    expect(panel).toHaveStyle({ borderRadius: '28px' })
     // Its ground is not the page's: the page behind it shows around, not through.
     expect(getComputedStyle(panel).backgroundColor).not.toBe(
       getComputedStyle(document.body).backgroundColor

@@ -8,6 +8,7 @@ import { FormControl } from '../FormControl'
 import { FormLabel } from '../FormLabel'
 import { FormHelperText } from '../FormHelperText'
 import { Rating } from './Rating'
+import { toPx } from '../utils/test/toPx'
 
 afterEach(() => vi.restoreAllMocks())
 
@@ -330,7 +331,7 @@ describe('Rating', () => {
 
   it('takes size and color: the icons as large as the theme says, in the color it is given', () => {
     renderWithTheme(<Rating size="lg" color="success" defaultValue={1} />)
-    expect(group()).toHaveStyle({ fontSize: baseTheme.icon.lg })
+    expect(group()).toHaveStyle({ fontSize: toPx(baseTheme.icon.lg) })
     expect(getComputedStyle(iconOf('1')).color).not.toBe(getComputedStyle(iconOf('3')).color)
   })
 
@@ -390,7 +391,7 @@ describe('Rating', () => {
           <Rating />
         </FormControl>
       )
-      expect(group()).toHaveStyle({ fontSize: baseTheme.icon.sm })
+      expect(group()).toHaveStyle({ fontSize: toPx(baseTheme.icon.sm) })
       expect(group()).toHaveAttribute('aria-invalid', 'true')
       expect(radios().every((item) => (item as HTMLInputElement).disabled)).toBe(true)
       unmount()
@@ -399,7 +400,7 @@ describe('Rating', () => {
           <Rating size="lg" disabled={false} error={false} />
         </FormControl>
       )
-      expect(group()).toHaveStyle({ fontSize: baseTheme.icon.lg })
+      expect(group()).toHaveStyle({ fontSize: toPx(baseTheme.icon.lg) })
       expect(radios().every((item) => !(item as HTMLInputElement).disabled)).toBe(true)
     })
   })
@@ -420,12 +421,12 @@ describe('Rating', () => {
     })
     const { unmount } = render(<Rating />, { wrapper: withTheme(theme) })
     expect(radios()).toHaveLength(6)
-    expect(group()).toHaveStyle({ fontSize: baseTheme.icon.sm })
+    expect(group()).toHaveStyle({ fontSize: toPx(baseTheme.icon.sm) })
     unmount()
     render(<Rating max={4} precision={1} size="lg" highlightSelectedOnly={false} />, {
       wrapper: withTheme(theme),
     })
     expect(radios()).toHaveLength(4)
-    expect(group()).toHaveStyle({ fontSize: baseTheme.icon.lg })
+    expect(group()).toHaveStyle({ fontSize: toPx(baseTheme.icon.lg) })
   })
 })
