@@ -8,6 +8,7 @@ import type { ReactNode } from 'react'
 import { Menu } from '../../Menu'
 import { MenuItem } from '../../MenuItem'
 import { Tab } from './Tab'
+import { toRgb } from '../../utils/test/toRgb'
 
 const renderEditor = (props: Partial<TabsProps> = {}) =>
   renderWithTheme(
@@ -382,8 +383,8 @@ describe("a tab's own look", () => {
       </Tabs>
     )
     const shadow = (name: string) => getComputedStyle(tab(name).parentElement!).boxShadow
-    expect(shadow('B')).toContain(baseTheme.palette.warning.main.toLowerCase())
+    expect(shadow('B')).toContain(toRgb(baseTheme.palette.warning.main))
     fireEvent.click(tab('B'))
-    expect(shadow('A')).toContain(baseTheme.palette.primary.main.toLowerCase())
+    expect(shadow('A')).toContain(toRgb(baseTheme.palette.primary.main))
   })
 })

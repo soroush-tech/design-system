@@ -1,6 +1,9 @@
 ---
+name: ci-cd
 description: GitHub Actions CI/CD conventions for this repo - the single CI entry workflow (prepare → lint → packages matrix + bench → ci-ok), the action-pinning rule (version tags for `actions/*`, commit SHAs for everything else including our own org), per-package Codecov flags with tokenless-OIDC uploads, the gen:publish-options marker blocks, and manual npm publishing via cd-packages.yml. Use when adding, editing, or debugging any workflow under .github/workflows/.
 paths: .github/workflows/**
+metadata:
+  internal: true
 ---
 
 # CI/CD (GitHub Actions)

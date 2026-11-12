@@ -5,6 +5,7 @@ import { baseTheme } from '@soroush.tech/design-system/theme'
 import { Typography } from '@soroush.tech/design-system/Typography'
 import { Sidebar } from './Sidebar'
 import { SidebarItem } from '../SidebarItem'
+import { toPx } from '../../utils/test/toPx'
 
 describe('Sidebar', () => {
   it.each(['inline', 'stacked'] as const)(
@@ -68,14 +69,14 @@ describe('Sidebar', () => {
         <SidebarItem icon="folder" label="Directory" />
       </Sidebar>
     )
-    expect(rail()).toHaveStyle({ width: '3.5rem' })
+    expect(rail()).toHaveStyle({ width: toPx('3.5rem') })
 
     rerender(
       <Sidebar aria-label="Panels" isOpen expandedWidth="12rem">
         <SidebarItem icon="folder" label="Directory" />
       </Sidebar>
     )
-    expect(rail()).toHaveStyle({ width: '12rem' })
+    expect(rail()).toHaveStyle({ width: toPx('12rem') })
   })
 
   it('passes its variant down to items, letting an explicit item variant win', () => {
@@ -241,7 +242,7 @@ describe('Sidebar', () => {
       const panel = screen.getByRole('complementary', { name: 'Directory' })
       expect(panel).toHaveStyle({ backgroundColor: '#131313' })
       // The consumer's width wins over panelWidth.
-      expect(panel).toHaveStyle({ width: '24rem' })
+      expect(panel).toHaveStyle({ width: toPx('24rem') })
       // The port still lands, so the rail kept its ref and id.
       expect(panel).toContainElement(screen.getByText('Directory tree'))
       expect(screen.getByRole('button', { name: 'Directory' })).toHaveAttribute(

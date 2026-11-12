@@ -1,5 +1,8 @@
 ---
+name: github-issues
 description: Drafting, referencing, and creating GitHub issues in this repo - templates, issue-reference style, and the show-before-create rule. Use when drafting or filing any epic, task, RFC, bug, story, feature, or doc-feedback issue, or when referencing issues in issue/PR bodies.
+metadata:
+  internal: true
 ---
 
 # GitHub issues

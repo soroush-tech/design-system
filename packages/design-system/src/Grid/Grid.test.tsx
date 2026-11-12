@@ -114,12 +114,13 @@ describe('Grid', () => {
   // ─── layout (theme.layout) ──────────────────────────────────────────────
 
   describe('layout (theme.layout)', () => {
-    // jsdom applies no media query, so the computed style is the base (xs) entry.
-    it("lays the grid out from the theme's base layout entry", () => {
+    // jsdom applies media queries against its 1024px window: the computed style is the md entry
+    // (12 columns, a 24px margin and gutter).
+    it("lays the grid out from the theme's layout entry for the window", () => {
       renderWithTheme(<Grid layout>content</Grid>)
       const grid = screen.getByText('content')
-      expect(getComputedStyle(grid).gridTemplateColumns).toBe('repeat(4, minmax(0, 1fr))')
-      expect(grid).toHaveStyle({ columnGap: '16px', paddingInline: '16px' })
+      expect(getComputedStyle(grid).gridTemplateColumns).toBe('repeat(12, minmax(0px, 1fr))')
+      expect(grid).toHaveStyle({ columnGap: '24px', paddingInline: '24px' })
       expect(grid).not.toHaveAttribute('layout')
     })
 
@@ -127,12 +128,19 @@ describe('Grid', () => {
     // owns the column tracks and the inline padding.
     it('lets gridTemplateColumns and padding props reach the base breakpoint only', () => {
       renderWithTheme(
-        <Grid layout gridTemplateColumns="1fr 1fr" px={3}>
+        <Grid layout gridTemplateColumns="1fr 1fr" px={1}>
           content
         </Grid>
       )
       const grid = screen.getByText('content')
-      expect(getComputedStyle(grid).gridTemplateColumns).toBe('1fr 1fr')
+      const className = [...grid.classList].at(-1)!
+      const baseRule = [...document.styleSheets]
+        .flatMap((sheet) => [...sheet.cssRules])
+        .find((rule) => rule instanceof CSSStyleRule && rule.selectorText === `.${className}`)
+      expect(baseRule?.cssText).toContain('grid-template-columns: 1fr 1fr')
+      expect(baseRule?.cssText).toContain('padding-left: 8px')
+      // At the md window the layout's tracks and margin win.
+      expect(getComputedStyle(grid).gridTemplateColumns).toBe('repeat(12, minmax(0px, 1fr))')
       expect(grid).toHaveStyle({ paddingLeft: '24px' })
     })
 
@@ -143,16 +151,19 @@ describe('Grid', () => {
         </Grid>
       )
       const grid = screen.getByText('gapped')
-      // jsdom does not expand the `gap` shorthand into row-gap; the browser does.
-      expect(grid).toHaveStyle({ columnGap: '8px', gap: '8px' })
+      expect(grid).toHaveStyle({ columnGap: '8px', rowGap: '8px' })
       const className = [...grid.classList].at(-1)!
       const css = [...document.styleSheets]
         .flatMap((sheet) => [...sheet.cssRules])
         .map((rule) => rule.cssText)
         .filter((text) => text.includes(className))
         .join('\n')
-      // No breakpoint brings the theme's 16px / 24px gutter back.
-      expect(css.match(/column-gap: [^;]+/g)).toEqual(Array(5).fill('column-gap: 8px'))
+      // No breakpoint brings the theme's 16px / 24px gutter back. The base rule writes its row and
+      // column gaps together as `gap`.
+      expect(css.match(/(?:column-)?gap: [^;]+/g)).toEqual([
+        'gap: 8px',
+        ...Array(4).fill('column-gap: 8px'),
+      ])
     })
 
     it('writes the frame once: View draws it, Grid adds only the columns', () => {

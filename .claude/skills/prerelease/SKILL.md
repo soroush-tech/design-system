@@ -1,6 +1,9 @@
 ---
+name: prerelease
 description: How to ship an @soroush.tech/* package through alpha -> rc -> stable on npm with the `channel` dropdown of CD · Packages, so a change is tried in our own apps before it reaches `latest`. Use when releasing a package, publishing an alpha or release candidate from a branch, promoting to stable, or pointing a consumer app at a prerelease.
 paths: packages/**
+metadata:
+  internal: true
 ---
 
 # Prerelease channel: alpha -> rc -> stable

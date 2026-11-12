@@ -1,5 +1,8 @@
 ---
+name: testing
 description: How this repo runs tests and coverage - the test tiers and their placement, design-system's vitest projects (unit/browser/storybook), the recursive and per-package coverage commands, where coverage output lands (packages/<pkg>/coverage/lcov.info), and how 100% is enforced. Use when running tests or coverage, checking per-file coverage, or verifying 100% on touched files.
+metadata:
+  internal: true
 ---
 
 ## Test tiers (all co-located next to source)

@@ -9,6 +9,7 @@ import { NumberInput } from '../NumberInput'
 import { Select } from '../Select'
 import { TextInput } from '../TextInput'
 import { MenuItem } from '../MenuItem'
+import { toPx } from './test/toPx'
 
 // The inputs share one least width, from the theme, and an instance's own minWidth wins.
 
@@ -33,18 +34,18 @@ const ids = ['text', 'native', 'select', 'number', 'auto']
 describe('input least width', () => {
   it('is 12rem on every input by default', () => {
     render(inputs(), { wrapper: withTheme(baseTheme) })
-    for (const id of ids) expect(screen.getByTestId(id)).toHaveStyle({ minWidth: '12rem' })
+    for (const id of ids) expect(screen.getByTestId(id)).toHaveStyle({ minWidth: toPx('12rem') })
   })
 
   it('is what the theme sets', () => {
     const theme = createTheme(baseTheme, { defaults: { inputMinWidth: '9rem' } })
     render(inputs(), { wrapper: withTheme(theme) })
-    for (const id of ids) expect(screen.getByTestId(id)).toHaveStyle({ minWidth: '9rem' })
+    for (const id of ids) expect(screen.getByTestId(id)).toHaveStyle({ minWidth: toPx('9rem') })
   })
 
   it('is overridden by a minWidth of the instance', () => {
     render(inputs({ minWidth: '5rem' }), { wrapper: withTheme(baseTheme) })
-    for (const id of ids) expect(screen.getByTestId(id)).toHaveStyle({ minWidth: '5rem' })
+    for (const id of ids) expect(screen.getByTestId(id)).toHaveStyle({ minWidth: toPx('5rem') })
   })
 })
 
@@ -72,7 +73,10 @@ describe('input affordance icons', () => {
       const glyphs = [...document.querySelectorAll('svg')]
       expect(glyphs).toHaveLength(4)
       for (const glyph of glyphs) {
-        expect(glyph).toHaveStyle({ width: baseTheme.icon[size], height: baseTheme.icon[size] })
+        expect(glyph).toHaveStyle({
+          width: toPx(baseTheme.icon[size]),
+          height: toPx(baseTheme.icon[size]),
+        })
         expect(glyph).toHaveStyle({ color: baseTheme.palette.error.main })
       }
     }

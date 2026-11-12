@@ -104,11 +104,12 @@ describe('Flex', () => {
   })
 
   describe('layout (theme.layout)', () => {
-    // jsdom applies no media query, so the computed style is the base (xs) entry.
+    // jsdom applies media queries against its 1024px window: the computed style is the md entry
+    // (12 columns, a 24px margin and gutter).
     it('puts the flex container on the page frame and keeps its own flexbox', () => {
       renderWithTheme(<Flex layout>stack</Flex>)
       const stack = screen.getByText('stack')
-      expect(stack).toHaveStyle({ display: 'flex', flexDirection: 'column', paddingInline: '16px' })
+      expect(stack).toHaveStyle({ display: 'flex', flexDirection: 'column', paddingInline: '24px' })
       // The frame has no columns: no tracks, and no column gap of its own.
       expect(stack).not.toHaveStyle({ columnGap: '16px' })
       expect(stack).not.toHaveAttribute('layout')
@@ -124,7 +125,7 @@ describe('Flex', () => {
         flexDirection: 'row',
         flexWrap: 'wrap',
         gap: '8px',
-        paddingInline: '16px',
+        paddingInline: '24px',
       })
     })
   })

@@ -1,6 +1,9 @@
 ---
+name: code-style
 description: JavaScript and TypeScript coding conventions for this project. Use when writing or reviewing any .ts/.tsx file, or when the user asks about code style or conventions.
 argument-hint: [filename]
+metadata:
+  internal: true
 ---
 
 ## Rules

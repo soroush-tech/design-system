@@ -179,7 +179,7 @@ describe('Image', () => {
 
     it('objectPosition applies the correct CSS', () => {
       renderWithTheme(<Image src="photo.jpg" alt="Test" objectPosition="top left" />)
-      expect(screen.getByRole('img')).toHaveStyle({ objectPosition: 'top left' })
+      expect(screen.getByRole('img')).toHaveStyle({ objectPosition: '0% 0%' })
     })
 
     it('borderRadius resolves against theme.radii', () => {

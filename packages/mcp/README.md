@@ -8,7 +8,8 @@ the library instead of guessing at it.
 
 ## Use it
 
-The hosted server needs no install:
+The hosted server needs no install. Add its address, `https://mcp.soroush.design/mcp`, to any
+MCP client that speaks streamable HTTP. In Claude Code:
 
 ```sh
 claude mcp add --transport http soroush https://mcp.soroush.design/mcp
@@ -28,6 +29,13 @@ For a client configured by file:
     "soroush": { "command": "npx", "args": ["-y", "@soroush.design/mcp"] },
   },
 }
+```
+
+The server pairs with a house-style skill, which tells an agent when and how to use these
+tools, and a WCAG 2.2 AA accessibility skill. Both install for any coding agent:
+
+```sh
+npx skills add soroush-tech/design-system
 ```
 
 ## Tools

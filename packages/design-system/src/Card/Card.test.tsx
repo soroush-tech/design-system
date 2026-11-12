@@ -4,6 +4,7 @@ import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { ThemeProvider } from '../theme'
 import { createTheme, baseTheme } from '../theme/themes'
 import { Card } from './Card'
+import { toPx } from '../utils/test/toPx'
 
 describe('Card', () => {
   describe('children', () => {
@@ -57,7 +58,10 @@ describe('Card', () => {
 
     it('forwards iconProps to the Icon', () => {
       const { container } = renderWithTheme(<Card icon="code" iconProps={{ size: '3rem' }} />)
-      expect(container.querySelector('svg')).toHaveStyle({ width: '3rem', height: '3rem' })
+      expect(container.querySelector('svg')).toHaveStyle({
+        width: toPx('3rem'),
+        height: toPx('3rem'),
+      })
     })
   })
 
@@ -108,8 +112,9 @@ describe('Card', () => {
         <Card icon="code" />
       )
       const svg = document.querySelector('svg')
-      expect(svg).toHaveStyle({ width: '3rem', height: '3rem' })
-      expect(svg).toHaveStyle({ fill: baseTheme.text.warning })
+      expect(svg).toHaveStyle({ width: toPx('3rem'), height: toPx('3rem') })
+      // The fill is currentColor (kept as such by jsdom), so the color is what it follows.
+      expect(svg).toHaveStyle({ fill: 'currentcolor', color: baseTheme.text.warning })
     })
 
     it('defaultProps.captionProps restyle the caption', () => {
@@ -132,7 +137,8 @@ describe('Card', () => {
         },
         <Card title="My Title" caption="My Subtitle" />
       )
-      expect(screen.getByText('My Title')).toHaveStyle({ letterSpacing: '0.5em' })
+      const title = screen.getByText('My Title')
+      expect(title).toHaveStyle({ letterSpacing: toPx('0.5em', getComputedStyle(title).fontSize) })
       expect(screen.getByText('My Subtitle')).toHaveStyle({ textDecoration: 'underline' })
       expect(screen.getByText('My Title')).not.toHaveStyle({ textDecoration: 'underline' })
     })

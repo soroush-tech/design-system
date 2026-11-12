@@ -108,8 +108,8 @@ describe('ButtonGroup', () => {
     expect(hasMergeRule).toBe(true)
   })
 
-  // Corner rules live on descendant selectors (`.group > *:first-of-type`), which
-  // jsdom doesn't apply to elements - assert them by scanning the stylesheet.
+  // The divider and single-button rules are asserted on the stylesheet; the corners, which jsdom
+  // applies to the buttons, on their computed style.
   const groupRule = (testid: string, selectorFragment: string) => {
     const groupClasses = Array.from(screen.getByTestId(testid).classList)
     const allRules = Array.from(document.styleSheets).flatMap((sheet) => Array.from(sheet.cssRules))
@@ -129,19 +129,20 @@ describe('ButtonGroup', () => {
       </ButtonGroup>
     )
     const r = baseTheme.radii.md
-
-    const first = groupRule('group', '*:first-of-type')
-    expect(first).toContain(`border-top-left-radius: ${r}`)
-    expect(first).toContain(`border-bottom-left-radius: ${r}`)
-    expect(first).toContain('border-top-right-radius: 0')
-
-    const last = groupRule('group', '*:last-of-type')
-    expect(last).toContain(`border-top-right-radius: ${r}`)
-    expect(last).toContain(`border-bottom-right-radius: ${r}`)
-    expect(last).toContain('border-top-left-radius: 0')
-
-    const middle = groupRule('group', ':not(:first-of-type):not(:last-of-type)')
-    expect(middle).toContain('border-radius: 0')
+    const [first, middle, last] = screen.getAllByRole('button')
+    expect(first).toHaveStyle({
+      borderTopLeftRadius: r,
+      borderBottomLeftRadius: r,
+      borderTopRightRadius: '0px',
+      borderBottomRightRadius: '0px',
+    })
+    expect(last).toHaveStyle({
+      borderTopLeftRadius: '0px',
+      borderBottomLeftRadius: '0px',
+      borderTopRightRadius: r,
+      borderBottomRightRadius: r,
+    })
+    expect(middle).toHaveStyle({ borderRadius: '0px' })
   })
 
   it('keeps the full radius on a single-button group via :only-child', () => {
@@ -162,14 +163,19 @@ describe('ButtonGroup', () => {
       </ButtonGroup>
     )
     const r = baseTheme.radii.sm
-    const first = groupRule('group', '*:first-of-type')
-    expect(first).toContain(`border-top-left-radius: ${r}`)
-    expect(first).toContain(`border-top-right-radius: ${r}`)
-    expect(first).toContain('border-bottom-left-radius: 0')
-
-    const last = groupRule('group', '*:last-of-type')
-    expect(last).toContain(`border-bottom-left-radius: ${r}`)
-    expect(last).toContain('border-top-left-radius: 0')
+    const [first, last] = screen.getAllByRole('button')
+    expect(first).toHaveStyle({
+      borderTopLeftRadius: r,
+      borderTopRightRadius: r,
+      borderBottomLeftRadius: '0px',
+      borderBottomRightRadius: '0px',
+    })
+    expect(last).toHaveStyle({
+      borderTopLeftRadius: '0px',
+      borderTopRightRadius: '0px',
+      borderBottomLeftRadius: r,
+      borderBottomRightRadius: r,
+    })
   })
 
   it('draws an opaque divider between contained buttons', () => {

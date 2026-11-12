@@ -1,5 +1,8 @@
 ---
+name: commit
 description: How to write git commits in this repo that auto-close their GitHub task - a conventional-commits header with the closing keyword appended to the end of the subject line. Use when committing work that resolves a task or issue.
+metadata:
+  internal: true
 ---
 
 # Commit

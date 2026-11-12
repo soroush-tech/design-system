@@ -8,6 +8,7 @@ import { FormControl } from '../FormControl'
 import { FormLabel } from '../FormLabel'
 import { FormHelperText } from '../FormHelperText'
 import { TransferList, type TransferListProps } from './TransferList'
+import { toPx } from '../utils/test/toPx'
 
 const withTheme = (theme: Theme) =>
   function Wrapper({ children }: { children: ReactNode }) {
@@ -315,7 +316,7 @@ describe('TransferList', () => {
         },
       })
       render(list(), { wrapper: withTheme(theme) })
-      expect(lists()[0]).toHaveStyle({ height: '5rem' })
+      expect(lists()[0]).toHaveStyle({ height: toPx('5rem') })
     })
   })
 

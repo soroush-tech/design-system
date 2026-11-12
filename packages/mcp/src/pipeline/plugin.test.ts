@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
-import { mkdtempSync, readFileSync } from 'node:fs'
+import { mkdtempSync, readdirSync, readFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
-import { join } from 'node:path'
+import { dirname, join } from 'node:path'
 import { content } from '../content'
 import {
   pluginReferencesDir,
@@ -63,6 +63,33 @@ describe('syncPluginReferences', () => {
     // The gate the pre-commit hook runs: what is committed must match what the
     // pipeline renders right now.
     expect(syncPluginReferences(content, true).stale).toEqual([])
+  })
+
+  it('ships nothing that points into a machine or repo the reader does not have', () => {
+    // The skills and the MCP content are read by agents on other people's machines: a local
+    // path, a private repo or one of our own apps is a reference they cannot follow. Every
+    // public skill counts, not only the one whose references this pipeline writes.
+    const unreachable = [
+      /diffchroma/i,
+      /\bcore repo\b/i,
+      /\bapps\/(web|dashboard)\b/,
+      /\b[A-Z]:\\{1,2}[A-Za-z]/,
+      /\/(Users|home)\/[a-z]/,
+    ]
+    const skillsDir = dirname(dirname(pluginReferencesDir()))
+    const shipped = [
+      ['the MCP content', JSON.stringify(content)],
+      ...readdirSync(skillsDir, { recursive: true, withFileTypes: true })
+        .filter((entry) => entry.isFile())
+        .map((entry) => {
+          const path = join(entry.parentPath, entry.name)
+          return [path, readFileSync(path, 'utf8')]
+        }),
+    ]
+    const found = shipped.flatMap(([source, text]) =>
+      unreachable.filter((pattern) => pattern.test(text)).map((pattern) => `${source}: ${pattern}`)
+    )
+    expect(found).toEqual([])
   })
 
   it('points at the plugin skill directory', () => {

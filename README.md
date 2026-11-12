@@ -22,13 +22,21 @@ See [`packages/packages.md`](packages/packages.md) for workspace-package convent
 ## Use it with AI tools
 
 The design system is readable by AI coding tools, from the same sources the docs site
-renders - component READMEs, the live token contract, and the guides:
+renders - component READMEs, the live token contract, and the guides. Both routes below work
+with any coding agent:
 
 ```sh
-# The hosted MCP server (no install)
-claude mcp add --transport http soroush https://mcp.soroush.design/mcp
+# The house-style and accessibility (WCAG) skills, installed for the agents you use
+npx skills add soroush-tech/design-system
+```
 
-# Or the Claude Code plugin: MCP server + house-style skill + UI review agent
+and the hosted MCP server at `https://mcp.soroush.design/mcp` (no install), added to any MCP
+client. In Claude Code that is
+`claude mcp add --transport http soroush https://mcp.soroush.design/mcp`.
+
+Claude Code users can install both at once as a plugin, with a UI review agent on top:
+
+```sh
 claude plugin marketplace add soroush-tech/design-system
 claude plugin install soroush-design-system@soroush-tech
 ```

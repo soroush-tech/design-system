@@ -19,7 +19,7 @@ describe('FocusTrap - theme customization', () => {
       </ThemeProvider>
     )
     const wrapper = screen.getByTestId('inner').parentElement
-    expect(wrapper).toHaveStyle({ display: 'contents', outline: 'none' })
+    expect(wrapper).toHaveStyle({ display: 'contents', outlineStyle: 'none' })
   })
 })
 

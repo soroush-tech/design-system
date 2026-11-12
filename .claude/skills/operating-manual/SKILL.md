@@ -2,6 +2,8 @@
 name: operating-manual
 description: Working doctrine for any nontrivial task - diagnosing bugs, reviewing code, answering hard questions, planning changes, or delivering conclusions. Load before starting investigation or analysis work, and run the five-question self-test before sending any answer or verdict.
 argument-hint: [optional: answer or claim to self-test]
+metadata:
+  internal: true
 ---
 
 # Operating Manual

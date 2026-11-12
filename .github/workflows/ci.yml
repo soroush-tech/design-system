@@ -142,6 +142,11 @@ jobs:
       - name: Check release notes
         run: ${{ needs.prepare.outputs.runner }} run check:release-notes
 
+      # Fail the build if `npx skills add soroush-tech/design-system` would offer anything but the
+      # public skill: every skill in .claude/skills marked internal, the plugin's skills/ only ours.
+      - name: Check skills
+        run: ${{ needs.prepare.outputs.runner }} run check:skills
+
       # Fail the build on invisible characters, typographic punctuation or mojibake in any
       # tracked text file. ASCII punctuation is the house rule.
       - name: Check typography
@@ -189,9 +194,18 @@ jobs:
         run: pnpm --filter ${{ matrix.filter }} exec playwright install --with-deps chromium
 
       # On a cache hit the binaries are restored, but Linux system libs live outside the cache.
+      # A stalled package mirror once held this step for ten minutes and failed the job: each
+      # attempt stops after three minutes, and the third failure fails the step.
       - name: Install Playwright system deps
         if: matrix.browsers && steps.playwright-cache.outputs.cache-hit == 'true'
-        run: pnpm --filter ${{ matrix.filter }} exec playwright install-deps chromium
+        env:
+          FILTER: ${{ matrix.filter }}
+        run: |
+          for attempt in 1 2 3; do
+            timeout 180 pnpm --filter "$FILTER" exec playwright install-deps chromium && exit 0
+            echo "::warning::Playwright system deps, attempt $attempt of 3 failed"
+          done
+          exit 1
 
       - name: Save cache - Playwright binaries
         if: always() && matrix.browsers && steps.playwright-cache.outputs.cache-hit != 'true'
@@ -265,9 +279,15 @@ jobs:
         if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: pnpm --filter @soroush.tech/docs exec playwright install --with-deps chromium
 
+      # Same attempts as the packages matrix.
       - name: Install Playwright system deps
         if: steps.playwright-cache.outputs.cache-hit == 'true'
-        run: pnpm --filter @soroush.tech/docs exec playwright install-deps chromium
+        run: |
+          for attempt in 1 2 3; do
+            timeout 180 pnpm --filter @soroush.tech/docs exec playwright install-deps chromium && exit 0
+            echo "::warning::Playwright system deps, attempt $attempt of 3 failed"
+          done
+          exit 1
 
       - name: Save cache - Playwright binaries
         if: always() && steps.playwright-cache.outputs.cache-hit != 'true'

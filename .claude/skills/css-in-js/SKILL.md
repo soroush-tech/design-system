@@ -1,7 +1,10 @@
 ---
+name: css-in-js
 description: CSS-in-JS and styled-system conventions for this design system. Use when writing or reviewing code in @soroush.tech/design-system/, when building design system components, or when the user asks about styling patterns.
 argument-hint: [component-name or filename]
-paths: @soroush.tech/design-system/**
+paths: '@soroush.tech/design-system/**'
+metadata:
+  internal: true
 ---
 
 ## Canonical reference

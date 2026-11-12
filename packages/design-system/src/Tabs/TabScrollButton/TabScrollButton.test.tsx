@@ -7,6 +7,7 @@ import type { ComponentType } from 'react'
 import { Tab } from '../Tab'
 import { Tabs } from '../Tabs'
 import { TabScrollButton, type TabScrollButtonProps } from './TabScrollButton'
+import { toRgb } from '../../utils/test/toRgb'
 
 // It is aria-hidden - out of the accessibility tree - so it is found by its test id.
 const button = () => screen.getByTestId('scroll')
@@ -125,14 +126,14 @@ describe("a scroll button's own look", () => {
   it("draws its stretch of the divider in the row's line - the selected tab's color - or its own", () => {
     enclosedRow((props) => <TabScrollButton {...props} data-testid={`scroll-${props.direction}`} />)
     expect(getComputedStyle(screen.getByTestId('scroll-start')).boxShadow).toContain(
-      baseTheme.palette.warning.main.toLowerCase()
+      toRgb(baseTheme.palette.warning.main)
     )
     cleanup()
     enclosedRow((props) => (
       <TabScrollButton {...props} color="error" data-testid={`scroll-${props.direction}`} />
     ))
     expect(getComputedStyle(screen.getByTestId('scroll-start')).boxShadow).toContain(
-      baseTheme.palette.error.main.toLowerCase()
+      toRgb(baseTheme.palette.error.main)
     )
   })
 
@@ -178,8 +179,6 @@ describe("a scroll button's own look", () => {
     cleanup()
     row({})
     expect(start()).toHaveStyle({ color: baseTheme.text.disabled })
-    expect(getComputedStyle(start()).boxShadow).toContain(
-      baseTheme.palette.success.main.toLowerCase()
-    )
+    expect(getComputedStyle(start()).boxShadow).toContain(toRgb(baseTheme.palette.success.main))
   })
 })
