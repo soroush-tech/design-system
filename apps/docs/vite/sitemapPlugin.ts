@@ -68,9 +68,11 @@ export default function sitemap({ enable = true }: SitemapOptions = {}): Plugin 
     // the pre-render from vike 0.4.270 on, and found no pages.)
     buildApp: {
       order: 'post',
-      async handler() {
+      // The hook's type wants a promise; the work itself is synchronous.
+      handler() {
         const count = generate(clientDir)
         if (count) console.log(`sitemap: wrote ${count} URLs to build/client/sitemap.xml`)
+        return Promise.resolve()
       },
     },
   }
