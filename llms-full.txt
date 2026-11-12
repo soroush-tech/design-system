@@ -7918,14 +7918,14 @@ Your widget now honors `theme.components.MyWidget.styleOverrides` / `.variants` 
 
 # New-app checklist
 
-Reference wiring: `diffChroma/apps/dashboard` (Next.js 15 App Router, React 19, pnpm workspace).
+Reference wiring: a Next.js App Router app on React 19.
 
 ## 1. Install
 
 ```jsonc
 // package.json
 "dependencies": {
-  "@soroush.tech/design-system": "^1.3.1",
+  "@soroush.tech/design-system": "^2.1.2",
   "@emotion/cache": "^11.14.0",
   "react": "^19.2.8",
   "react-dom": "^19.2.8"
@@ -7938,12 +7938,12 @@ Next.js SSR registry needs `createCache`.
 
 ## 2. Theme
 
-Copy `theme.ts` to the app root (`apps/<app>/theme.ts`) so it imports as `@/theme`.
+Copy `theme.ts` to the app root so it imports as `@/theme`.
 It exports `light` and `dark`. The color ramps at the top (`carbonBlack`,
 `cyberCyan`, `kineticGreen`, `forestGreen`, `solarAmber`, `neonRed`, `softGreen`,
-`deepCrimson`, `lightSurface`, `kineticSurface`, `blackAlpha`) are mirrored from the
-soroush.tech web app (`core` repo, `apps/web/src/theme/colors`) - that mirroring is
-the whole point of the file. If a ramp changes upstream, change it in every app.
+`deepCrimson`, `lightSurface`, `kineticSurface`, `blackAlpha`) are the brand: every
+app that copies them shares one color set. Change which ramp fills a palette slot if
+the app needs to, never the ramp values.
 
 ## 3. Provider
 
@@ -7979,14 +7979,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 `<Providers>` wraps everything including the chrome. Route groups then supply their
 own inner layout (rail + `Main`).
 
-## 4. Fonts - known gap
+## 4. Fonts
 
-`theme.fonts` names _Space Grotesk_ and _JetBrains Mono_, but DiffChroma never loads
-them, so it silently renders in system sans/mono. If the new app should actually look
-right, load them - `@fontsource-variable/space-grotesk` + `@fontsource-variable/jetbrains-mono`
-imported once in the root layout, or `next/font` - and consider backporting the same
-fix to DiffChroma. Skipping this and matching DiffChroma exactly is also a valid
-choice; just make it deliberately.
+`theme.fonts` names _Space Grotesk_ and _JetBrains Mono_, but the package does not
+load them. An app that never loads them renders in the system sans and mono fonts.
+To get the intended look, load them once in the root layout -
+`@fontsource-variable/space-grotesk` + `@fontsource-variable/jetbrains-mono`, or
+`next/font`. Leaving the system fonts is also a valid choice; just make it deliberately.
 
 ## 5. Layout scaffold
 
