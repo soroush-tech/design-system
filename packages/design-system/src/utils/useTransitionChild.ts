@@ -1,5 +1,6 @@
 import { cloneElement, useRef, type CSSProperties, type ReactElement, type Ref } from 'react'
 import { useMergedRefs } from '../Modal/hooks/useMergedRefs'
+import { getElementRef } from './getElementRef'
 import { useTheme } from '../theme'
 import {
   useTransition,
@@ -54,7 +55,7 @@ export function useTransitionChild(
     onExited,
   } = props
   const nodeRef = useRef<HTMLElement | null>(null)
-  const ref = useMergedRefs(nodeRef, (children.props as { ref?: Ref<HTMLElement> }).ref)
+  const ref = useMergedRefs(nodeRef, getElementRef<HTMLElement>(children))
   const { status, duration } = useTransition({
     isShown,
     shouldAppear,

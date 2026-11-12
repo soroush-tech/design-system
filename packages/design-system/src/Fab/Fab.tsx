@@ -1,4 +1,4 @@
-import type { ReactNode, Ref } from 'react'
+import { forwardRef, type ForwardedRef, type ReactNode, type Ref } from 'react'
 import { get, space, styled } from '../index'
 import { useDefaultProps } from '../theme'
 import { Button, type ButtonProps } from '../Button'
@@ -140,15 +140,18 @@ const FabLabelText = styled('span', {
  * page's: no position is built in. A fab with no text - a circular one - must be named:
  * `aria-label` or `aria-labelledby`.
  */
-export function Fab({
-  variant: variantProp,
-  color,
-  size,
-  startIcon,
-  isCollapsed = false,
-  children,
-  ...rest
-}: Readonly<FabProps>) {
+export const Fab = forwardRef<HTMLButtonElement, FabProps>(function Fab(
+  {
+    variant: variantProp,
+    color,
+    size,
+    startIcon,
+    isCollapsed = false,
+    children,
+    ...rest
+  }: Readonly<FabProps>,
+  ref: ForwardedRef<HTMLButtonElement>
+) {
   const dp = useDefaultProps('Fab')
   const variant = variantProp ?? dp.variant ?? 'circular'
   const isExtended = variant === 'extended'
@@ -163,6 +166,7 @@ export function Fab({
       // The room between the icon and the label is the label's own, so it collapses with it.
       gap={isExtended ? 0 : undefined}
       {...rest}
+      ref={ref}
     >
       {isExtended ? (
         <FabLabel isCollapsed={isCollapsed}>
@@ -173,4 +177,4 @@ export function Fab({
       )}
     </FabRoot>
   )
-}
+})

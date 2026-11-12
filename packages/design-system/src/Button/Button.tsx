@@ -1,4 +1,10 @@
-import { useContext, type ReactNode, type ButtonHTMLAttributes } from 'react'
+import {
+  forwardRef,
+  useContext,
+  type ButtonHTMLAttributes,
+  type ForwardedRef,
+  type ReactNode,
+} from 'react'
 import { CircularProgress } from '../CircularProgress'
 import { ButtonGroupContext } from '../ButtonGroup/ButtonGroupContext'
 import type {
@@ -231,27 +237,30 @@ const ButtonRoot = styled('button', {
 
 // ─── Public component ─────────────────────────────────────────────────────────
 
-export function Button({
-  variant,
-  color,
-  size,
-  shape,
-  gap = 1,
-  fontWeight = 'bold',
-  letterSpacing = 'tight',
-  startIcon,
-  endIcon,
-  fullWidth,
-  loading = false,
-  loadingIndicator,
-  loadingPosition = 'center',
-  children,
-  disabled,
-  href,
-  target,
-  rel,
-  ...rest
-}: Readonly<ButtonProps>) {
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
+  {
+    variant,
+    color,
+    size,
+    shape,
+    gap = 1,
+    fontWeight = 'bold',
+    letterSpacing = 'tight',
+    startIcon,
+    endIcon,
+    fullWidth,
+    loading = false,
+    loadingIndicator,
+    loadingPosition = 'center',
+    children,
+    disabled,
+    href,
+    target,
+    rel,
+    ...rest
+  }: Readonly<ButtonProps>,
+  ref: ForwardedRef<HTMLButtonElement>
+) {
   // Resolution: explicit prop → enclosing ButtonGroup → theme.components.Button.defaultProps
   // → theme.defaults.* → literal fallback.
   const group = useContext(ButtonGroupContext)
@@ -287,6 +296,7 @@ export function Button({
       disabled={resolvedDisabled}
       aria-busy={loading || undefined}
       {...rest}
+      ref={ref}
     >
       {start != null && <ButtonIcon>{start}</ButtonIcon>}
       <ButtonLabel invisible={isCenter}>{children}</ButtonLabel>
@@ -294,4 +304,4 @@ export function Button({
       {end != null && <ButtonIcon>{end}</ButtonIcon>}
     </ButtonRoot>
   )
-}
+})

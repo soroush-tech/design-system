@@ -1,6 +1,6 @@
 {
   "name": "@soroush.tech/design-system",
-  "version": "2.1.2",
+  "version": "2.2.0",
   "description": "Emotion + @soroush.tech/styled-system React component library - token-driven light/dark themes, layout primitives, forms, and overlays.",
   "keywords": [
     "design-system",
@@ -829,8 +829,8 @@
     "@soroush.tech/styled-system": "workspace:^"
   },
   "peerDependencies": {
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
     "@emotion/css": "^11.13.5",

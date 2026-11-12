@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import { createRef, type ReactNode } from 'react'
 import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
@@ -10,6 +10,12 @@ import type { ButtonShape } from '../Button'
 import { toPx } from '../utils/test/toPx'
 
 describe('Button', () => {
+  it('gives its ref the element it renders, on React 18 as on 19', () => {
+    const ref = createRef<HTMLButtonElement>()
+    renderWithTheme(<Button ref={ref}>Save</Button>)
+    expect(ref.current).toBe(screen.getByRole('button', { name: 'Save' }))
+  })
+
   // ─── children ────────────────────────────────────────────────────────────────
 
   describe('children', () => {
