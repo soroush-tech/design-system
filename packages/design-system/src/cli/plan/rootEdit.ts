@@ -70,7 +70,7 @@ function indentationAt(source: string, index: number): string {
   return line.slice(0, line.length - line.trimStart().length)
 }
 
-/** Wraps a JSX tree in `<Providers>`, keeping a multi-line tree on its own lines, one step deeper. */
+/** Wraps a JSX child in `<Providers>`, keeping a multi-line tree on its own lines, one step deeper. */
 function wrapTree(tree: string, indentation: string): string {
   if (!tree.includes('\n')) return `<Providers>${tree}</Providers>`
   const step = indentation.includes('\t') ? '\t' : '  '
@@ -95,18 +95,26 @@ export function insertImport(source: string, statement: string): string {
 }
 
 /**
- * The root with its rendered tree wrapped in `<Providers>` and the import added, or `null` when
- * it is not the standard shape: one render call whose first argument is a JSX tree.
+ * The root with what it renders wrapped in `<Providers>` and the import added, or `null` when it
+ * is not the standard shape: one render call. A JSX tree is wrapped as it is; any other argument -
+ * a call, a variable - is wrapped as `<Providers>{...}</Providers>`, but only in a file that may
+ * hold JSX (`canHoldJsx`, a `.jsx` or `.tsx` file).
  */
-export function wrapRoot(source: string, importStatement: string): string | null {
+export function wrapRoot(
+  source: string,
+  importStatement: string,
+  canHoldJsx: boolean
+): string | null {
   const calls = [...source.matchAll(RENDER_CALL)]
   if (calls.length !== 1) return null
   const call = calls[0]
   const argument = readFirstArgument(source, call.index + call[0].length)
   if (!argument) return null
-  const tree = source.slice(argument.start, argument.end)
-  if (!tree.startsWith('<') || !tree.endsWith('>')) return null
-  const wrapped = wrapTree(tree, indentationAt(source, argument.start))
+  const rendered = source.slice(argument.start, argument.end)
+  const isTree = rendered.startsWith('<') && rendered.endsWith('>')
+  if (!isTree && (!canHoldJsx || rendered === '')) return null
+  const child = isTree ? rendered : `{${rendered}}`
+  const wrapped = wrapTree(child, indentationAt(source, argument.start))
   const edited = source.slice(0, argument.start) + wrapped + source.slice(argument.end)
   return insertImport(edited, importStatement)
 }

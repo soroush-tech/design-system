@@ -118,13 +118,21 @@ describe('planInit', () => {
     expect(plan.edits).toEqual([])
   })
 
-  it('leaves a root that is not the standard shape alone, and says what to add', () => {
+  it('wraps what the root renders, even when it is not JSX, in a file that can hold JSX', () => {
     const plan = planInit(
       createFacts({ root: { path: 'src/main.tsx', source: 'root.render(app)' } })
     )
+    expect(plan.edits[0].after).toContain('root.render(<Providers>{app}</Providers>)')
+    expect(plan.manual).toEqual([])
+  })
+
+  it('leaves a root that is not the standard shape alone, and says what to add', () => {
+    const plan = planInit(
+      createFacts({ root: { path: 'src/main.ts', source: 'root.render(createElement(App))' } })
+    )
     expect(plan.edits).toEqual([])
     expect(plan.manual).toEqual([
-      "src/main.tsx is not the standard shape, so init leaves it as it is. Add import { Providers } from './theme/Providers' to it, and wrap the tree it renders: render(<Providers><App /></Providers>).",
+      "src/main.ts is not the standard shape, so init leaves it as it is. Add import { Providers } from './theme/Providers' to it, and wrap the tree it renders: render(<Providers><App /></Providers>).",
     ])
   })
 

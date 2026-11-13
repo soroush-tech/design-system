@@ -166,7 +166,7 @@ function planRootEdit(
   const statement = `import { Providers } from '${specifier}'`
   const { path, source } = facts.root
   const isWrapped = source.includes(`'${specifier}'`) || source.includes(`"${specifier}"`)
-  const after = isWrapped ? source : wrapRoot(source, statement)
+  const after = isWrapped ? source : wrapRoot(source, statement, /\.[jt]sx$/.test(path))
   if (after === null) {
     plan.manual.push(
       `${path} is not the standard shape, so init leaves it as it is. Add ${statement} to it, and wrap the tree it renders: render(<Providers><App /></Providers>).`
