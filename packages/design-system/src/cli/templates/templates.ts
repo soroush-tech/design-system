@@ -1,0 +1,124 @@
+/** The first line of every file init writes: a second run finds its own files by it. */
+export const MARKER = '// Set up by @soroush.tech/design-system init.'
+
+export type Scheme = 'light' | 'dark'
+
+const THEMING_DOCS = 'https://docs.soroush.tech/design-system/customization/theming/'
+
+// The augmentation stub stays a comment: an empty interface is an error under some lint rules,
+// and the app's lint is the app's own.
+const AUGMENTATION_STUB = `
+// To add tokens of your own, declare them here, then give them values in each theme:
+//
+// import type { PaletteEntry } from '@soroush.tech/design-system/theme'
+//
+// declare module '@soroush.tech/design-system/theme' {
+//   interface ThemePalette {
+//     brand: PaletteEntry
+//   }
+// }
+`
+
+/**
+ * The app's themes. The default export is an object of named themes, each a `createTheme` call
+ * with a literal object last: the shape tools that edit a theme read and write.
+ */
+export function createThemesSource({ isTypeScript }: { isTypeScript: boolean }): string {
+  return `${MARKER} Your themes: change any value, or add a theme.
+// Every token is listed at ${THEMING_DOCS}
+import { baseTheme, createTheme } from '@soroush.tech/design-system/theme'
+${isTypeScript ? AUGMENTATION_STUB : ''}
+const themes = {
+  light: createTheme(baseTheme, {
+    name: 'light',
+    colorScheme: 'light',
+    logoFilter: 'brightness(0)',
+    portraitBlend: 'multiply',
+    portraitOpacity: 1,
+    palette: {
+      default: { main: '#5E6065', light: '#8F9094', dark: '#111214', contrastText: '#FFFFFF' },
+      primary: { main: '#006E17', light: '#D4F9D2', dark: '#00530F', contrastText: '#FFFFFF' },
+      secondary: { main: '#5ACC57', light: '#D4F9D2', dark: '#3AAA37', contrastText: '#FFFFFF' },
+      success: { main: '#009928', light: '#E8FFE5', dark: '#006413', contrastText: '#FFFFFF' },
+      error: { main: '#BA1A1A', light: '#FFDAD6', dark: '#93000A', contrastText: '#FFFFFF' },
+      info: { main: '#0071A4', light: '#E0FAFF', dark: '#004D70', contrastText: '#FFFFFF' },
+      warning: { main: '#CCA800', light: '#FFF0A0', dark: '#8C6D00', contrastText: '#FFFFFF' },
+    },
+    background: {
+      backdrop: '#00000080',
+      appBar: '#FFFFFFD9',
+      glass: '#FFFFFF4D',
+      modal: '#FFFFFF',
+      default: '#EEEEEE',
+      primary: '#F9F9F9',
+      secondary: '#F3F3F3',
+      paper: '#FFFFFF',
+      terminal: '#EEEEEE',
+      grid: '#5ACC5733',
+      transparent: '#00000000',
+      scrollbar: '#0000004D',
+      scrollbarTrack: '#F3F3F380',
+    },
+    text: {
+      inherit: 'inherit',
+      initial: '#1A1C1C',
+      primary: '#006E17',
+      secondary: '#444748',
+      disabled: '#1A1C1C73',
+      error: '#BA1A1A',
+      success: '#009928',
+      info: '#0071A4',
+      warning: '#8C6D00',
+    },
+    border: {
+      default: '#1A1C1C24',
+      light: '#0073181A',
+      primary: '#006E17',
+      dark: '#003D0B',
+    },
+    skeleton: {
+      highlight: '#FFFFFFA6',
+    },
+  }),
+  dark: createTheme(baseTheme, {
+    name: 'dark',
+    colorScheme: 'dark',
+  }),
+}
+
+export default themes
+`
+}
+
+/**
+ * The providers the app's root renders inside: the theme, and the package's base page styles.
+ * It holds no JSX, so it needs none of the app's JSX settings.
+ */
+export function createProvidersSource({
+  isTypeScript,
+  scheme,
+  themesImport,
+}: {
+  isTypeScript: boolean
+  scheme: Scheme
+  themesImport: string
+}): string {
+  const typeImport = isTypeScript ? `import type { ReactNode } from 'react'\n` : ''
+  const props = isTypeScript ? '{ children }: { readonly children?: ReactNode }' : '{ children }'
+  return `${MARKER} The app's root renders inside Providers.
+import { createElement } from 'react'
+${typeImport}import { Global, globalStyles } from '@soroush.tech/design-system/engine'
+import { ThemeProvider } from '@soroush.tech/design-system/theme'
+import themes from '${themesImport}'
+
+/** Gives every component its theme, and draws the page's base styles. */
+export function Providers(${props}) {
+  return createElement(
+    ThemeProvider,
+    { theme: themes.${scheme} },
+    createElement(Global, { styles: globalStyles }),
+    children
+  )
+}
+`
+}

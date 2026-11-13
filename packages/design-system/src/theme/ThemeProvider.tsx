@@ -5,7 +5,7 @@ import { baseTheme, type Theme, type ThemeDefaults } from './themes'
 import { createTheme, withHelpers } from './utils/createTheme'
 
 interface ThemeProviderProps {
-  children: ReactNode
+  children?: ReactNode
   /**
    * The active theme. Bring one theme, or as many as you like - switching
    * between them is your state, not the provider's. Defaults to the built-in

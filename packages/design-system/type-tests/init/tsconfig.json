@@ -1,0 +1,26 @@
+{
+  // The strictest app init writes into: classic JSX, verbatimModuleSyntax, unused locals and
+  // parameters as errors, and imports that carry `.ts`. src/theme and the edit to src/main.tsx are
+  // init's own output, kept in sync by src/cli/fixture.test.ts.
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2023", "DOM"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "verbatimModuleSyntax": true,
+    "allowImportingTsExtensions": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "skipLibCheck": true,
+    "jsx": "react",
+    "types": [],
+    "paths": {
+      "@soroush.tech/design-system": ["../../dist/index.d.mts"],
+      "@soroush.tech/design-system/*": ["../../dist/*.d.mts"]
+    }
+  },
+  "include": ["src"]
+}
