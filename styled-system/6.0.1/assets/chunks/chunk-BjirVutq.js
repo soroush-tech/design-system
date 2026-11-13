@@ -1,0 +1,6 @@
+import{i as e}from"./chunk-COiEfhsA.js";import{t}from"./chunk-BB4n2A07.js";import{a as n,c as r,i,l as a,n as o,o as s,s as c,t as l,u}from"./chunk-BYHijSO9.js";import{n as d,w as f}from"./chunk-B-kGZV1z.js";var p=e(t(),1),m=/^\s*import\b(?!\s*[(.])/,h=/['"][^'"]*['"];?$/,g=e=>{let t=e.replaceAll(`\r
+`,`
+`),n=t.split(`
+`),r=u(t).split(`
+`),i=[],a=!1;for(let e=0;e<n.length;e++){let t=r[e].trimEnd();a?h.test(t)&&(a=!1):m.test(t)?h.test(t)||(a=!0):i.push(n[e])}let o=i.join(`
+`),s=/^[ \t]*export[ \t]+default[ \t]+function[ \t]+([A-Za-z_$][\w$]*)/m.exec(o)?.[1]??`Demo`;return`${o.replace(/^export\s+default\s+/m,``).replaceAll(/^export\s+(?=const|let|var|function|class)/gm,``).trim()}\n\nrender(<${s} />)\n`},_=f();function v({onCodeChange:e}){let{onChange:t}=(0,p.useContext)(i);return(0,_.jsx)(n,{onChange:n=>{t(n),e(n)}})}function y({code:e,language:t,scope:n,helpersText:i,onCodeChange:u,toolbar:f}){let m=d(),h=(0,p.useMemo)(()=>o(m.syntax),[m]),y=(0,p.useCallback)(e=>g(a(e,{importsText:``,helpersText:i})),[i]);return(0,_.jsx)(r,{code:e,language:t===`ts`?`tsx`:`jsx`,scope:n,noInline:!0,transformCode:y,theme:h,children:(0,_.jsx)(l,{preview:(0,_.jsx)(c,{Component:p.Fragment}),error:(0,_.jsx)(s,{style:{margin:0,whiteSpace:`pre-wrap`,fontFamily:`inherit`}}),toolbar:f,code:(0,_.jsx)(v,{onCodeChange:u})})})}export{y as LiveCode};
