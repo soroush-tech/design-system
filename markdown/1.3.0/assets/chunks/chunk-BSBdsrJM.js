@@ -1,0 +1,1 @@
+import{tt as e}from"./chunk-B_QXYb2z.js";var t=(t,n)=>{let r=e.find(e=>e.id===n).github;return t.replace(/\]\(\.\/([^)\s]+)\)/g,(e,t)=>`](${r}/${t})`)};export{t};

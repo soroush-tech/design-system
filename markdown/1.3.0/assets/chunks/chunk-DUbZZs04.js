@@ -1,0 +1,1 @@
+import{t as e,w as t}from"./chunk-B-kGZV1z.js";import{t as n}from"./chunk-D_COj7j9.js";import{B as r,n as i}from"./chunk-B_QXYb2z.js";var a=t();function o({source:t,title:o}){return(0,a.jsxs)(i,{sidebar:(0,a.jsx)(n,{}),hasToc:!0,children:[o&&(0,a.jsx)(e,{variant:`h1`,gutterBottom:!0,children:o}),(0,a.jsx)(r,{source:t,stripChrome:!!o})]})}export{o as t};
