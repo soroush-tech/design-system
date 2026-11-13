@@ -7925,7 +7925,7 @@ Reference wiring: a Next.js App Router app on React 19.
 ```jsonc
 // package.json
 "dependencies": {
-  "@soroush.tech/design-system": "^2.1.2",
+  "@soroush.tech/design-system": "^2.2.0",
   "@emotion/cache": "^11.14.0",
   "react": "^19.2.8",
   "react-dom": "^19.2.8"
