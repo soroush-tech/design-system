@@ -823,7 +823,7 @@
     "test": "vitest run",
     "test:storybook": "vitest run --project=storybook",
     "test:coverage": "vitest run --coverage",
-    "test:types": "pnpm build && node scripts/check-dts.mjs && tsc -p type-tests/tsconfig.json && tsc -p type-tests/init/tsconfig.json",
+    "test:types": "pnpm build && node scripts/check-dts.mjs && tsc -p type-tests/tsconfig.json",
     "check:dts": "node scripts/check-dts.mjs",
     "audit:styled": "node scripts/audit-styled.mjs",
     "prepublishOnly": "pnpm build"
@@ -832,6 +832,7 @@
     "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
+    "@soroush.design/cli": "workspace:*",
     "@soroush.tech/styled-system": "workspace:^"
   },
   "peerDependencies": {

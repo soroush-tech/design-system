@@ -130,7 +130,7 @@ async function askScheme(io: Io): Promise<Scheme> {
   return /^d(ark)?$/i.test(answer.trim()) ? 'dark' : 'light'
 }
 
-function collectFacts(app: App, scheme: Scheme | undefined, ownPackage: PackageJson): InitFacts {
+function collectFacts(app: App, scheme: Scheme | undefined, designSystem: PackageJson): InitFacts {
   const { root, packageJson, rootCandidates } = app
   const rootPath = rootCandidates.length === 1 ? rootCandidates[0] : undefined
   return {
@@ -141,7 +141,7 @@ function collectFacts(app: App, scheme: Scheme | undefined, ownPackage: PackageJ
     hasDesignSystem: Boolean(getDependency(packageJson, '@soroush.tech/design-system')),
     needsParcelPackageExports: needsParcelPackageExports(packageJson),
     packageManager: detectPackageManager(root, packageJson),
-    version: ownPackage.version!,
+    version: designSystem.version!,
     scheme: scheme ?? 'light',
     readFile: (path) => readText(join(root, path)),
   }
@@ -199,12 +199,13 @@ function applyAndInstall(plan: Plan, root: string, io: Io, fileSystem: FileSyste
 
 /**
  * Sets up the design system in the app in `io.cwd`: checks, plans, shows the plan, and applies it
- * only after a yes. Returns the exit code.
+ * only after a yes. `designSystem` is the package it installs: its version, and the React range it
+ * checks the app against. Returns the exit code.
  */
 export async function runInit(
   options: InitOptions,
   io: Io,
-  ownPackage: PackageJson,
+  designSystem: PackageJson,
   fileSystem: FileSystem = nodeFileSystem
 ): Promise<number> {
   const app = findApp(realpathSync(io.cwd))
@@ -214,7 +215,7 @@ export async function runInit(
   }
   const { root, packageJson, folder } = app
   if (folder) io.write(`This is a workspace's root: init sets up the app in ${folder}.\n\n`)
-  const refusal = findRefusal(root, packageJson, ownPackage.peerDependencies!.react)
+  const refusal = findRefusal(root, packageJson, designSystem.peerDependencies!.react)
   if (refusal) {
     io.write(`${refusal}\n`)
     return 1
@@ -226,7 +227,7 @@ export async function runInit(
     return 1
   }
 
-  const facts = collectFacts(app, options.scheme, ownPackage)
+  const facts = collectFacts(app, options.scheme, designSystem)
   const canAsk = !options.scheme && !isPreviewOnly && !options.isConfirmed
   const plan = await planWithScheme(facts, canAsk, io)
 

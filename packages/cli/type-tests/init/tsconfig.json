@@ -1,7 +1,8 @@
 {
   // The strictest app init writes into: classic JSX, verbatimModuleSyntax, unused locals and
   // parameters as errors, and imports that carry `.ts`. src/theme and the edit to src/main.tsx are
-  // init's own output, kept in sync by src/cli/fixture.test.ts.
+  // init's own output, kept in sync by src/fixture.test.ts. It reads the design system's built
+  // types next to this package, as an app reads the published ones.
   "compilerOptions": {
     "target": "ES2022",
     "lib": ["ES2023", "DOM"],
@@ -18,8 +19,8 @@
     "jsx": "react",
     "types": [],
     "paths": {
-      "@soroush.tech/design-system": ["../../dist/index.d.mts"],
-      "@soroush.tech/design-system/*": ["../../dist/*.d.mts"]
+      "@soroush.tech/design-system": ["../../../design-system/dist/index.d.mts"],
+      "@soroush.tech/design-system/*": ["../../../design-system/dist/*.d.mts"]
     }
   },
   "include": ["src"]

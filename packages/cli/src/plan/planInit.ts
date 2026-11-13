@@ -43,7 +43,7 @@ export interface InitFacts {
   /** A Parcel app that does not read package exports yet. */
   needsParcelPackageExports: boolean
   packageManager: PackageManager
-  /** The version of this package, which the app gets. */
+  /** The version of the design system the app gets. */
   version: string
   scheme: Scheme
   /** A file's content, by its path from the app's root, or `undefined` when there is none. */

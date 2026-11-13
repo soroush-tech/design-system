@@ -16,11 +16,14 @@ Options:
   -h, --help            show this help
 `
 
-/** Reads the command line and runs the command. Returns the exit code. */
+/**
+ * Reads the command line and runs the command, for `designSystem`: the package of
+ * `@soroush.tech/design-system` that init installs. Returns the exit code.
+ */
 export async function main(
   argv: readonly string[],
   io: Io,
-  ownPackage: PackageJson
+  designSystem: PackageJson
 ): Promise<number> {
   let parsed
   try {
@@ -63,6 +66,6 @@ export async function main(
       scheme,
     },
     io,
-    ownPackage
+    designSystem
   )
 }

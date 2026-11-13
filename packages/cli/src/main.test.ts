@@ -6,11 +6,11 @@ import { createTestIo } from './testApp'
 
 vi.mock('./init', () => ({ runInit: vi.fn(async () => 0) }))
 
-const OWN_PACKAGE = { name: '@soroush.tech/design-system', version: '2.2.0' }
+const DESIGN_SYSTEM = { name: '@soroush.tech/design-system', version: '2.2.0' }
 
 async function runMain(...argv: string[]) {
   const { io, getOutput } = createTestIo('.')
-  const code = await main(argv, io, OWN_PACKAGE)
+  const code = await main(argv, io, DESIGN_SYSTEM)
   return { code, output: getOutput(), io }
 }
 
@@ -21,13 +21,13 @@ describe('main', () => {
     expect(runInit).toHaveBeenLastCalledWith(
       { isConfirmed: true, isDryRun: true, isForced: true, scheme: 'dark' },
       io,
-      OWN_PACKAGE
+      DESIGN_SYSTEM
     )
     await runMain('init')
     expect(runInit).toHaveBeenLastCalledWith(
       { isConfirmed: false, isDryRun: false, isForced: false, scheme: undefined },
       expect.anything(),
-      OWN_PACKAGE
+      DESIGN_SYSTEM
     )
   })
 

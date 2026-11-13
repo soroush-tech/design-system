@@ -15,7 +15,7 @@ createRoot(document.getElementById('root')!).render(
 )
 `
 
-const FIXTURE = '../../type-tests/init/src'
+const FIXTURE = '../type-tests/init/src'
 
 describe('the strict fixture app', () => {
   // `pnpm test:types` typechecks these files under the app's strictest settings; this keeps them

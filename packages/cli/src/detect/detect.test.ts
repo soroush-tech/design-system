@@ -13,11 +13,14 @@ import {
   getGitState,
   isWorkspaceRoot,
   needsParcelPackageExports,
-  readOwnPackage,
+  readDesignSystemPackage,
   readPackageJson,
   readText,
   satisfiesRange,
 } from './detect'
+
+// A file inside the design system's own folder in this workspace.
+const DESIGN_SYSTEM_FILE = join(process.cwd(), '../design-system/src/index.ts')
 
 describe('readText and readPackageJson', () => {
   it('reads a file, and gives undefined when there is none', () => {
@@ -120,8 +123,8 @@ describe('satisfiesRange', () => {
     expect(satisfiesRange('18.3.0', '^18.2.5')).toBe(true)
   })
 
-  it("reads this package's own peer range, and throws on a shape it does not read", () => {
-    const { peerDependencies } = readOwnPackage(join(process.cwd(), 'src/cli/bin.ts'))
+  it("reads the design system's peer range, and throws on a shape it does not read", () => {
+    const { peerDependencies } = readDesignSystemPackage(DESIGN_SYSTEM_FILE)
     expect(satisfiesRange('19.0.0', peerDependencies!.react)).toBe(true)
     expect(() => satisfiesRange('19.0.0', '>=18')).toThrow('init cannot read the range >=18')
   })
@@ -184,16 +187,14 @@ describe('findRootFiles', () => {
   })
 })
 
-describe('readOwnPackage', () => {
-  it("finds this package's package.json above a file in it", () => {
-    expect(readOwnPackage(join(process.cwd(), 'src/cli/detect/detect.ts')).name).toBe(
-      '@soroush.tech/design-system'
-    )
+describe('readDesignSystemPackage', () => {
+  it("finds the design system's package.json above a file in it", () => {
+    expect(readDesignSystemPackage(DESIGN_SYSTEM_FILE).name).toBe('@soroush.tech/design-system')
   })
 
   it('throws when there is none', () => {
-    expect(() => readOwnPackage(join(createTestApp(), 'bin.mjs'))).toThrow(
-      'init cannot find its own package.json'
+    expect(() => readDesignSystemPackage(join(createTestApp(), 'bin.mjs'))).toThrow(
+      'init cannot find the package.json of @soroush.tech/design-system'
     )
   })
 })

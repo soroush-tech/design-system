@@ -18,9 +18,9 @@ const collectFolderEntries = (dir: string): [string, string][] =>
       ]
     })
 
-// Two builds: the browser entries ship dual ESM/CJS, while the `init` command line is one
-// ESM-only Node file, as packages/mcp builds its bin. `src/cli` has no index.ts, so the first
-// build never picks it up as an entry.
+// Two builds: the browser entries ship dual ESM/CJS, while the bin is one ESM-only Node file that
+// runs @soroush.design/cli, a dependency the bundler leaves as an import. `src/bin.ts` is no
+// folder's index.ts, so the first build never picks it up as an entry.
 export default defineConfig([
   {
     entry: {
@@ -32,7 +32,7 @@ export default defineConfig([
     clean: true,
   },
   {
-    entry: { bin: 'src/cli/bin.ts' },
+    entry: { bin: 'src/bin.ts' },
     format: ['esm'],
     platform: 'node',
     dts: false,

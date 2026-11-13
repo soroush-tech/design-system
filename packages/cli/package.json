@@ -1,0 +1,69 @@
+{
+  "name": "@soroush.design/cli",
+  "version": "0.1.0",
+  "description": "The command line of the @soroush.tech design system: init sets it up in an existing React app, showing every change first.",
+  "keywords": [
+    "cli",
+    "init",
+    "design-system",
+    "react",
+    "setup"
+  ],
+  "author": "Masoud Soroush <masoud@soroush.tech>",
+  "license": "MIT",
+  "homepage": "https://docs.soroush.tech",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/soroush-tech/design-system.git",
+    "directory": "packages/cli"
+  },
+  "bugs": {
+    "url": "https://github.com/soroush-tech/design-system/issues"
+  },
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "bin": {
+    "soroush-design": "./dist/bin.mjs"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "types": "./src/index.ts",
+  "publishConfig": {
+    "access": "public",
+    "bin": {
+      "soroush-design": "./dist/bin.mjs"
+    },
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      }
+    },
+    "module": "./dist/index.mjs",
+    "types": "./dist/index.d.mts"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "lint": "oxlint --deny-warnings",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:types": "pnpm --filter @soroush.tech/design-system build && tsc -p type-tests/init/tsconfig.json",
+    "prepublishOnly": "pnpm build"
+  },
+  "devDependencies": {
+    "@soroush.tech/eslint-config": "workspace:*",
+    "@types/node": "^26.6.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitest/coverage-v8": "^5.1.0",
+    "oxlint": "^1.93.0",
+    "tsdown": "^0.23.7",
+    "typescript": "~7.0.2",
+    "vitest": "^5.1.0"
+  }
+}

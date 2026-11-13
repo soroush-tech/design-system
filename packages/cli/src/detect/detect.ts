@@ -85,7 +85,7 @@ export function findReactVersion(root: string, packageJson: PackageJson): string
 }
 
 /**
- * Whether `version` is in `range`. Only the shape this package's own peer ranges use is read:
+ * Whether `version` is in `range`. Only the shape the design system's peer ranges use is read:
  * caret ranges joined by `||`, such as `^18.0.0 || ^19.0.0`. Any other shape throws.
  */
 export function satisfiesRange(version: string, range: string): boolean {
@@ -150,12 +150,16 @@ export function findPackageFolder(root: string, path: string): string {
   return ''
 }
 
-/** This package's own `package.json`: the nearest one above `fromFile` that is named for it. */
-export function readOwnPackage(fromFile: string): PackageJson {
+/**
+ * The `package.json` of `@soroush.tech/design-system`: the nearest one above `fromFile` that is named
+ * for it. Its bin finds itself this way.
+ */
+export function readDesignSystemPackage(fromFile: string): PackageJson {
   for (let directory = dirname(fromFile); ; directory = dirname(directory)) {
     const packageJson = readPackageJson(directory)
     if (packageJson?.name === '@soroush.tech/design-system') return packageJson
-    if (dirname(directory) === directory) throw new Error('init cannot find its own package.json')
+    if (dirname(directory) === directory)
+      throw new Error('init cannot find the package.json of @soroush.tech/design-system')
   }
 }
 
@@ -177,7 +181,7 @@ export function findUnsupportedFramework(packageJson: PackageJson): string | und
 
 /**
  * Whether the app builds with Parcel and has not turned on its reading of package exports, which
- * every subpath of this package (`/theme`, `/engine`, `/Button`, ...) needs.
+ * every subpath of the design system (`/theme`, `/engine`, `/Button`, ...) needs.
  */
 export function needsParcelPackageExports(packageJson: PackageJson): boolean {
   const isParcelApp = getDependency(packageJson, 'parcel') !== undefined

@@ -142,19 +142,17 @@ root.render(
 
 describe('insertImport', () => {
   it('puts the import first in a file that has none', () => {
-    expect(insertImport('root.render(<App />)\n', IMPORT, true)).toBe(
-      `${IMPORT}\nroot.render(<App />)\n`
-    )
+    expect(insertImport('root.render(<App />)\n', IMPORT)).toBe(`${IMPORT}\nroot.render(<App />)\n`)
   })
 
   it('reads an import that spans lines as one', () => {
     const source = "import {\n  a,\n  b,\n} from 'x'\n\nrun()\n"
-    expect(insertImport(source, IMPORT, true)).toBe(
+    expect(insertImport(source, IMPORT)).toBe(
       `import {\n  a,\n  b,\n} from 'x'\n${IMPORT}\n\nrun()\n`
     )
   })
 
   it('does not take a dynamic import for a declaration', () => {
-    expect(insertImport("import('x')\n", IMPORT, true)).toBe(`${IMPORT}\nimport('x')\n`)
+    expect(insertImport("import('x')\n", IMPORT)).toBe(`${IMPORT}\nimport('x')\n`)
   })
 })
