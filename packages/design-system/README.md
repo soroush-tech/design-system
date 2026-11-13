@@ -18,7 +18,7 @@ Tired of forking a component library just to change a color? Every token here is
 npm i @soroush.tech/design-system
 ```
 
-`react` and `react-dom` are peer dependencies. Emotion is an internal implementation detail - it ships as a regular dependency, not a peer, so you never install it yourself.
+`react` and `react-dom` are peer dependencies, React 18 or 19 (`^18.0.0 || ^19.0.0`). Emotion is an internal implementation detail - it ships as a regular dependency, not a peer, so you never install it yourself.
 
 ---
 

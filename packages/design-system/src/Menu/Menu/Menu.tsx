@@ -28,6 +28,7 @@ import { MenuPaper } from '../MenuPaper'
 import type { MenuAlign } from '../utils/getMenuOrigins'
 import { isRtl } from '../../utils/isRtl'
 import { assignRef } from '../utils/assignRef'
+import { getElementRef } from '../../utils/getElementRef'
 
 export type { MenuAlign } from '../utils/getMenuOrigins'
 
@@ -211,13 +212,13 @@ export function Menu({
   )
 
   // The menu needs the trigger's element to hand focus back; the trigger's own ref still gets it.
-  const triggerProps = trigger.props
+  const triggerOwnRef = getElementRef<HTMLElement>(trigger)
   const setTriggerRef = useCallback(
     (element: HTMLElement | null) => {
       triggerRef.current = element
-      assignRef(triggerProps.ref, element)
+      assignRef(triggerOwnRef, element)
     },
-    [triggerProps]
+    [triggerOwnRef]
   )
 
   const handleActivate = useCallback(

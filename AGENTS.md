@@ -85,6 +85,7 @@ Read the relevant doc before working in that area:
 | Theming/customization | `packages/design-system/docs/`            | `theming.md` (createTheme, defaults, augmentation) · `customization.md` (`theme.components`)                             |
 | Packages              | `packages/packages.md`                    | Workspace packages: structure, default-export, tsdown + `publishConfig` publishing, 100% coverage, licensing             |
 | Docs app              | `apps/docs/docs-app.md`                   | The docs.soroush.tech Vike SSG app: content pipeline, demos, versioned sections, e2e-only pages                          |
+| Command line          | `packages/cli/cli.md`                     | `init`: detect, plan, apply; its safety rules, and how the design system's bin runs it                                   |
 | AI surface            | `packages/mcp/mcp.md`                     | The MCP server, llms.txt, and the Claude Code plugin: what they serve, and the generated files that must not drift       |
 | Generative-UI spec    | `packages/ui-spec/ui-spec.md`             | A2UI v1.0 catalogs, the behavior document, the validators: vendored files that stay unedited, closed finding codes       |
 

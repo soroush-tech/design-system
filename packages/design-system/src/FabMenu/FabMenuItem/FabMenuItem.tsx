@@ -1,4 +1,4 @@
-import type { MouseEvent, ReactNode } from 'react'
+import { forwardRef, type ForwardedRef, type MouseEvent, type ReactNode } from 'react'
 import { Fab, type FabProps } from '../../Fab'
 import { useFabMenu } from '../FabMenuContext'
 
@@ -19,17 +19,15 @@ export interface FabMenuItemProps extends Omit<
  * icon and a label. Pressing it runs `onClick` and closes the menu, and focus goes back to the
  * trigger. It takes any `Fab` prop but its shape.
  */
-export function FabMenuItem({
-  icon,
-  children,
-  color,
-  onClick,
-  ...rest
-}: Readonly<FabMenuItemProps>) {
+export const FabMenuItem = forwardRef<HTMLButtonElement, FabMenuItemProps>(function FabMenuItem(
+  { icon, children, color, onClick, ...rest }: Readonly<FabMenuItemProps>,
+  ref: ForwardedRef<HTMLButtonElement>
+) {
   const menu = useFabMenu('FabMenuItem')
   return (
     <Fab
       {...rest}
+      ref={ref}
       data-fab-menu-item=""
       variant="extended"
       size={menu.size}
@@ -43,4 +41,4 @@ export function FabMenuItem({
       {children}
     </Fab>
   )
-}
+})

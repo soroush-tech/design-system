@@ -16,5 +16,6 @@
       "@soroush.tech/design-system/*": ["../dist/*.d.mts"]
     }
   },
-  "include": ["."]
+  "include": ["."],
+  "exclude": ["init"]
 }

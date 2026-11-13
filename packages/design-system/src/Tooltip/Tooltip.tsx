@@ -1,11 +1,13 @@
 import {
   cloneElement,
+  forwardRef,
   useCallback,
   useId,
   useRef,
   useState,
   type CSSProperties,
   type ElementType,
+  type ForwardedRef,
   type HTMLAttributes,
   type ReactElement,
   type ReactNode,
@@ -19,6 +21,7 @@ import { getSurfaceRadius } from '../utils/getSurfaceRadius'
 import { Portal } from '../Portal'
 import type { PopoverPosition } from '../Popover/utils/computePopoverPosition'
 import { useMergedRefs } from '../Modal/hooks/useMergedRefs'
+import { getElementRef } from '../utils/getElementRef'
 import {
   useAnchoredPlacement,
   type AnchoredPlacement,
@@ -281,38 +284,40 @@ const getChildName = (title: ReactNode, own: ChildProps) => {
  * `shouldDescribeChild`). It opens and closes after their delays, stays open while the pointer is
  * on the tooltip itself, closes on Escape, and never takes or traps the focus.
  */
-export function Tooltip({
-  children,
-  anchorPosition,
-  title,
-  placement: placementProp,
-  hasArrow: hasArrowProp,
-  enterDelay: enterDelayProp,
-  leaveDelay: leaveDelayProp,
-  enterTouchDelay: enterTouchDelayProp,
-  leaveTouchDelay: leaveTouchDelayProp,
-  shouldDescribeChild: shouldDescribeChildProp,
-  isDescriptionPersistent: isDescriptionPersistentProp,
-  isOpen: isOpenProp,
-  defaultOpen = false,
-  onOpen,
-  onClose,
-  isInteractive: isInteractiveProp,
-  shouldWrapDisabledChild: shouldWrapDisabledChildProp,
-  shouldOpenOnHover: shouldOpenOnHoverProp,
-  shouldOpenOnFocus: shouldOpenOnFocusProp,
-  shouldOpenOnTouch: shouldOpenOnTouchProp,
-  slots,
-  slotProps,
-  layer: layerProp,
-  borderRadius: borderRadiusProp,
-  bg: bgProp,
-  textColor: textColorProp,
-  className,
-  'data-testid': dataTestid,
-  ref: forwardedRef,
-  ...forwarded
-}: Readonly<TooltipProps>) {
+export const Tooltip = forwardRef<HTMLElement, TooltipProps>(function Tooltip(
+  {
+    children,
+    anchorPosition,
+    title,
+    placement: placementProp,
+    hasArrow: hasArrowProp,
+    enterDelay: enterDelayProp,
+    leaveDelay: leaveDelayProp,
+    enterTouchDelay: enterTouchDelayProp,
+    leaveTouchDelay: leaveTouchDelayProp,
+    shouldDescribeChild: shouldDescribeChildProp,
+    isDescriptionPersistent: isDescriptionPersistentProp,
+    isOpen: isOpenProp,
+    defaultOpen = false,
+    onOpen,
+    onClose,
+    isInteractive: isInteractiveProp,
+    shouldWrapDisabledChild: shouldWrapDisabledChildProp,
+    shouldOpenOnHover: shouldOpenOnHoverProp,
+    shouldOpenOnFocus: shouldOpenOnFocusProp,
+    shouldOpenOnTouch: shouldOpenOnTouchProp,
+    slots,
+    slotProps,
+    layer: layerProp,
+    borderRadius: borderRadiusProp,
+    bg: bgProp,
+    textColor: textColorProp,
+    className,
+    'data-testid': dataTestid,
+    ...forwarded
+  }: Readonly<TooltipProps>,
+  forwardedRef: ForwardedRef<HTMLElement>
+) {
   const dp = useDefaultProps('Tooltip')
   const placement = placementProp ?? dp.placement ?? 'top'
   const hasArrow = hasArrowProp ?? dp.hasArrow ?? false
@@ -356,7 +361,7 @@ export function Tooltip({
   // A disabled control sends no pointer events, so the tooltip is placed against, and listens on,
   // a wrapper of its own; the control keeps its own ref.
   const isChildDisabled = shouldWrapDisabledChild && own.disabled === true
-  const childRef = useMergedRefs(childProps.ref, forwardedRef)
+  const childRef = useMergedRefs(getElementRef<HTMLElement>(children), forwardedRef)
   const ref = useMergedRefs(isChildDisabled ? undefined : anchorRef, childRef)
 
   const [arrow, setArrow] = useState<ArrowState | null>(null)
@@ -460,4 +465,4 @@ export function Tooltip({
       )}
     </>
   )
-}
+})

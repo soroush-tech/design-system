@@ -1,6 +1,8 @@
 import {
+  forwardRef,
   type ButtonHTMLAttributes,
   type ElementType,
+  type ForwardedRef,
   type KeyboardEvent,
   type MouseEvent,
 } from 'react'
@@ -167,21 +169,24 @@ const PressableRoot = styled('div', {
  * `feedback` picks what happens while it is held: nothing (default), the content
  * dims, or the surface tints.
  */
-export function Pressable({
-  as,
-  feedback,
-  color,
-  activeOpacity,
-  href,
-  target,
-  rel,
-  type = 'button',
-  disabled = false,
-  onClick,
-  onKeyDown,
-  onKeyUp,
-  ...rest
-}: Readonly<PressableProps>) {
+export const Pressable = forwardRef<HTMLElement, PressableProps>(function Pressable(
+  {
+    as,
+    feedback,
+    color,
+    activeOpacity,
+    href,
+    target,
+    rel,
+    type = 'button',
+    disabled = false,
+    onClick,
+    onKeyDown,
+    onKeyUp,
+    ...rest
+  }: Readonly<PressableProps>,
+  ref: ForwardedRef<HTMLElement>
+) {
   // Resolution: explicit prop → theme.components.Pressable.defaultProps
   // → theme.defaults.* → literal fallback.
   const theme = useTheme()
@@ -257,6 +262,8 @@ export function Pressable({
       onClick={handleClick}
       {...shimProps}
       {...rest}
+      // The root is typed as its default `div`; `as` may make it any element.
+      ref={ref as ForwardedRef<HTMLDivElement>}
     />
   )
-}
+})

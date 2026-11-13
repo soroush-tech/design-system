@@ -9,6 +9,7 @@ Monorepo for the `@soroush.tech` UI libraries, extracted from [`soroush-tech/cor
 | [`@soroush.tech/styled-system`](packages/styled-system) | Style-prop system: responsive style functions, `system()`, theme-aware scales |
 | [`@soroush.tech/design-system`](packages/design-system) | Token-driven React component library built on styled-system                   |
 | [`@soroush.tech/markdown`](packages/markdown)           | Markdown companion component library for the design system                    |
+| [`@soroush.design/cli`](packages/cli)                   | The command line: `init` sets the design system up in an existing React app   |
 | [`@soroush.design/mcp`](packages/mcp)                   | MCP server exposing the components, READMEs, and tokens to AI coding tools    |
 | [`@soroush.tech/ui-spec`](packages/ui-spec)             | Generative-UI spec on A2UI v1.0: catalogs, a behavior schema, and validators  |
 | [`@soroush.tech/hooks`](packages/hooks)                 | Shared React hooks (private, internal)                                        |

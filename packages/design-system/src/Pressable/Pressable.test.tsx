@@ -1,3 +1,4 @@
+import { createRef } from 'react'
 import { describe, it, expect, vi } from 'vitest'
 import { render, fireEvent, screen } from '@testing-library/react'
 import { renderWithTheme } from '@soroush.tech/design-system/utils/test/renderWithTheme'
@@ -24,6 +25,12 @@ const rulesFor = (element: HTMLElement, pseudo: string) => {
 }
 
 describe('Pressable', () => {
+  it('gives its ref the element it renders, on React 18 as on 19', () => {
+    const ref = createRef<HTMLElement>()
+    renderWithTheme(<Pressable ref={ref}>Open</Pressable>)
+    expect(ref.current).toBe(screen.getByRole('button', { name: 'Open' }))
+  })
+
   it('renders a div that is announced and focusable as a button', () => {
     renderWithTheme(<Pressable>Open</Pressable>)
     const pressable = screen.getByRole('button', { name: 'Open' })

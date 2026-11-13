@@ -242,6 +242,50 @@ jobs:
           flags: ${{ matrix.flag }}
           name: ${{ matrix.flag }}
 
+  # The React versions the published packages declare in `peerDependencies`: their unit tests
+  # on the lowest (18.0.0) and on 19.0.0, so a change that needs a newer React fails here and
+  # not in an app. The workspace installs with React pinned by a pnpm override, never committed.
+  react-range:
+    needs: [prepare, lint]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        react: ['18.0.0', '19.0.0']
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Setup pnpm, Node and dependencies
+        uses: ./.github/actions/setup
+        with:
+          node_version: ${{ needs.prepare.outputs.node_version }}
+          manager: ${{ needs.prepare.outputs.manager }}
+          command: ${{ needs.prepare.outputs.command }}
+
+      - name: Install React ${{ matrix.react }}
+        env:
+          REACT: ${{ matrix.react }}
+        run: |
+          {
+            echo
+            echo 'overrides:'
+            echo "  react: $REACT"
+            echo "  react-dom: $REACT"
+          } >> pnpm-workspace.yaml
+          pnpm install --no-frozen-lockfile --ignore-scripts
+          node -e "const v=require('./packages/design-system/node_modules/react/package.json').version; if (v !== process.env.REACT) { console.error('react is ' + v); process.exit(1) }"
+
+      - name: Run Unit Tests
+        run: |
+          pnpm --filter @soroush.tech/design-system exec vitest run --project=unit
+          pnpm --filter @soroush.tech/markdown test
+
   # The docs app (apps/docs): unit coverage, the prerender build (which itself gates
   # every page), and the Playwright e2e suite against the built output.
   docs:
@@ -377,7 +421,7 @@ jobs:
   ci-ok:
     name: ci-ok
     if: always()
-    needs: [prepare, lint, packages, docs, bench]
+    needs: [prepare, lint, packages, docs, bench, react-range]
     runs-on: ubuntu-latest
     permissions: {}
     timeout-minutes: 5

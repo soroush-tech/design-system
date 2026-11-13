@@ -6,6 +6,10 @@
     {
       "files": ["*.config.ts", "vitest.setup.ts", "scripts/**", ".storybook/**"],
       "env": { "node": true }
+    },
+    {
+      "files": ["src/bin.ts", "src/bin.test.ts"],
+      "env": { "node": true, "browser": false }
     }
   ]
 }
