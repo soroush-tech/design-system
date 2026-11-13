@@ -12,6 +12,7 @@ export interface PackageJson {
   devDependencies?: Record<string, string>
   peerDependencies?: Record<string, string>
   '@parcel/resolver-default'?: { packageExports?: boolean }
+  workspaces?: string[] | { packages?: string[] }
 }
 
 /** A file's text, or `undefined` when it cannot be read. */
@@ -131,6 +132,22 @@ export function findRootFiles(root: string, folder = '', depth = 0): string[] {
     }
   }
   return found
+}
+
+/** Whether the folder is a workspace's root: pnpm's `pnpm-workspace.yaml`, or a `workspaces` field. */
+export function isWorkspaceRoot(root: string, packageJson: PackageJson): boolean {
+  return packageJson.workspaces !== undefined || existsSync(join(root, 'pnpm-workspace.yaml'))
+}
+
+/**
+ * The folder of the package a file belongs to: the nearest one above it, inside `root`, with a
+ * `package.json`, by its path from the root - `''` for the root itself.
+ */
+export function findPackageFolder(root: string, path: string): string {
+  for (let folder = posix.dirname(path); folder !== '.'; folder = posix.dirname(folder)) {
+    if (existsSync(join(root, folder, 'package.json'))) return folder
+  }
+  return ''
 }
 
 /** This package's own `package.json`: the nearest one above `fromFile` that is named for it. */

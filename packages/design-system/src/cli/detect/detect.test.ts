@@ -7,9 +7,11 @@ import {
   detectPackageManager,
   findReactVersion,
   findRootFiles,
+  findPackageFolder,
   findUnsupportedFramework,
   getDependency,
   getGitState,
+  isWorkspaceRoot,
   needsParcelPackageExports,
   readOwnPackage,
   readPackageJson,
@@ -218,5 +220,23 @@ describe('needsParcelPackageExports', () => {
       })
     ).toBe(false)
     expect(needsParcelPackageExports({ devDependencies: { vite: '^8.0.0' } })).toBe(false)
+  })
+})
+
+describe('isWorkspaceRoot', () => {
+  it("tells a workspace's root by pnpm-workspace.yaml or a workspaces field", () => {
+    expect(isWorkspaceRoot(createTestApp({ 'pnpm-workspace.yaml': '' }), {})).toBe(true)
+    expect(isWorkspaceRoot(createTestApp(), { workspaces: ['apps/*'] })).toBe(true)
+    expect(isWorkspaceRoot(createTestApp(), { workspaces: { packages: ['apps/*'] } })).toBe(true)
+    expect(isWorkspaceRoot(createTestApp(), {})).toBe(false)
+  })
+})
+
+describe('findPackageFolder', () => {
+  it('finds the nearest package above a file, and the root when there is none in between', () => {
+    const root = createTestApp({ 'apps/web/package.json': '{}', 'apps/web/src/main.tsx': '' })
+    expect(findPackageFolder(root, 'apps/web/src/main.tsx')).toBe('apps/web')
+    expect(findPackageFolder(root, 'src/main.tsx')).toBe('')
+    expect(findPackageFolder(root, 'main.tsx')).toBe('')
   })
 })

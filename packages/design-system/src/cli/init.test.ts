@@ -290,3 +290,84 @@ describe('runInit', () => {
     expect(getOutput()).not.toContain('Default color scheme')
   })
 })
+
+describe('runInit in a workspace', () => {
+  const REACT_APP = JSON.stringify({
+    name: '@acme/web',
+    dependencies: { react: '^19.0.0', 'react-dom': '^19.0.0' },
+  })
+  // A workspace's root, as pnpm keeps it: no React of its own, and its apps under apps/.
+  const createWorkspace = (files: Record<string, string> = {}) =>
+    createTestApp({
+      'package.json': JSON.stringify({ name: 'acme', private: true }),
+      'pnpm-workspace.yaml': "packages:\n  - 'apps/*'\n",
+      'pnpm-lock.yaml': '',
+      ...files,
+    })
+
+  it('sets up the one app in it, from its root, and installs in that app', async () => {
+    const root = createWorkspace({
+      'apps/web/package.json': REACT_APP,
+      'apps/web/src/main.tsx': VITE_ROOT,
+      'packages/utils/package.json': JSON.stringify({ name: '@acme/utils' }),
+    })
+    const app = join(root, 'apps/web')
+    const { io, commands, getOutput } = createTestIo(root)
+    expect(await runInit(YES, io, OWN_PACKAGE)).toBe(0)
+
+    expect(getOutput()).toMatch(
+      /^This is a workspace's root: init sets up the app in apps\/web\.\n\ninit will set up @soroush\.tech\/design-system in @acme\/web:/
+    )
+    expect(read(app, 'src/theme/themes.ts').startsWith(MARKER)).toBe(true)
+    expect(read(app, 'src/main.tsx')).toContain("import { Providers } from './theme/Providers.ts'")
+    expect(existsSync(join(root, 'src'))).toBe(false)
+    // pnpm adds the package to the app it runs in, not to the workspace's root.
+    expect(commands.at(-1)).toEqual({
+      command: 'pnpm',
+      args: ['add', '@soroush.tech/design-system@^2.2.0', '--ignore-scripts'],
+      options: { cwd: app, env: {}, showOutput: true },
+    })
+  })
+
+  it('refuses a root with more than one app, or none, and names where to run it', async () => {
+    const several = createWorkspace({
+      'apps/web/package.json': REACT_APP,
+      'apps/web/src/main.tsx': VITE_ROOT,
+      'src/main.tsx': VITE_ROOT,
+    })
+    const { io, getOutput } = createTestIo(several)
+    expect(await runInit(YES, io, OWN_PACKAGE)).toBe(1)
+    expect(getOutput()).toBe(
+      "This is a workspace's root with more than one app (apps/web, .). Run init in the one to set up, for example: cd apps/web\n"
+    )
+    expect(listApp(several)).not.toContain('apps/web/src/theme')
+
+    const none = createTestIo(createWorkspace({ 'apps/web/package.json': REACT_APP }))
+    expect(await runInit(YES, none.io, OWN_PACKAGE)).toBe(1)
+    expect(none.getOutput()).toMatch(/^This is a workspace's root, and init found no app in it/)
+  })
+
+  it("sets up a workspace's root that is the app itself", async () => {
+    const root = createViteApp({
+      'package.json': JSON.stringify({
+        name: 'acme',
+        workspaces: ['packages/*'],
+        dependencies: { react: '^19.0.0', 'react-dom': '^19.0.0' },
+      }),
+    })
+    const { io, getOutput } = createTestIo(root)
+    expect(await runInit(YES, io, OWN_PACKAGE)).toBe(0)
+    expect(getOutput()).toMatch(/^init will set up @soroush\.tech\/design-system in acme:/)
+    expect(existsSync(join(root, 'src/theme/themes.ts'))).toBe(true)
+  })
+
+  it("never takes a nested package's root for the app's own", async () => {
+    const root = createViteApp({
+      'examples/demo/package.json': REACT_APP,
+      'examples/demo/src/main.tsx': VITE_ROOT,
+    })
+    expect(await runInit(YES, createTestIo(root).io, OWN_PACKAGE)).toBe(0)
+    expect(read(root, 'src/main.tsx')).toContain('<Providers>')
+    expect(read(root, 'examples/demo/src/main.tsx')).toBe(VITE_ROOT)
+  })
+})

@@ -4,11 +4,13 @@ import { applyPlan, type ApplyError } from './apply/applyPlan'
 import { nodeFileSystem, type FileSystem } from './apply/fileSystem'
 import {
   detectPackageManager,
+  findPackageFolder,
   findReactVersion,
   findRootFiles,
   findUnsupportedFramework,
   getDependency,
   getGitState,
+  isWorkspaceRoot,
   needsParcelPackageExports,
   readPackageJson,
   readText,
@@ -84,6 +86,47 @@ function findGitRefusal(root: string, io: Io): string | undefined {
   return undefined
 }
 
+interface App {
+  root: string
+  packageJson: PackageJson
+  /** The files in the app that start it, by their path from its folder. */
+  rootCandidates: string[]
+  /** The app's folder from where init ran, when init ran in a workspace's root: `''` otherwise. */
+  folder: string
+}
+
+/**
+ * The app init sets up from `cwd`: the folder itself, or - in a workspace's root - the one package
+ * in it that starts an app. A string says why there is none. A file in a nested package is never
+ * taken for the app's own.
+ */
+function findApp(cwd: string): App | string {
+  const packageJson = readPackageJson(cwd)
+  if (!packageJson) return "There is no package.json in this folder. Run init in your app's folder."
+  const rootFilesByFolder = new Map<string, string[]>()
+  for (const path of findRootFiles(cwd)) {
+    const folder = findPackageFolder(cwd, path)
+    rootFilesByFolder.set(folder, [...(rootFilesByFolder.get(folder) ?? []), path])
+  }
+  if (!isWorkspaceRoot(cwd, packageJson)) {
+    return { root: cwd, packageJson, rootCandidates: rootFilesByFolder.get('') ?? [], folder: '' }
+  }
+  const folders = [...rootFilesByFolder.keys()]
+  if (folders.length === 0) {
+    return "This is a workspace's root, and init found no app in it that calls createRoot(...).render( or ReactDOM.render(. Run init in your app's folder."
+  }
+  if (folders.length > 1) {
+    const names = folders.map((folder) => folder || '.').join(', ')
+    return `This is a workspace's root with more than one app (${names}). Run init in the one to set up, for example: cd ${folders.find(Boolean)}`
+  }
+  const [folder] = folders
+  const root = join(cwd, folder)
+  const rootCandidates = rootFilesByFolder
+    .get(folder)!
+    .map((path) => (folder ? path.slice(folder.length + 1) : path))
+  return { root, packageJson: readPackageJson(root)!, rootCandidates, folder }
+}
+
 async function askScheme(io: Io): Promise<Scheme> {
   const answer = await io.ask('Default color scheme, light or dark? (light) ')
   return /^d(ark)?$/i.test(answer.trim()) ? 'dark' : 'light'
@@ -99,12 +142,13 @@ export async function runInit(
   ownPackage: PackageJson,
   fileSystem: FileSystem = nodeFileSystem
 ): Promise<number> {
-  const root = realpathSync(io.cwd)
-  const packageJson = readPackageJson(root)
-  if (!packageJson) {
-    io.write("There is no package.json in this folder. Run init in your app's folder.\n")
+  const app = findApp(realpathSync(io.cwd))
+  if (typeof app === 'string') {
+    io.write(`${app}\n`)
     return 1
   }
+  const { root, packageJson, rootCandidates, folder } = app
+  if (folder) io.write(`This is a workspace's root: init sets up the app in ${folder}.\n\n`)
   const refusal = findRefusal(root, packageJson, ownPackage.peerDependencies!.react)
   if (refusal) {
     io.write(`${refusal}\n`)
@@ -117,7 +161,6 @@ export async function runInit(
     return 1
   }
 
-  const rootCandidates = findRootFiles(root)
   const rootPath = rootCandidates.length === 1 ? rootCandidates[0] : undefined
   const facts: InitFacts = {
     isTypeScript: rootPath ? /\.m?tsx?$/.test(rootPath) : existsSync(join(root, 'tsconfig.json')),
