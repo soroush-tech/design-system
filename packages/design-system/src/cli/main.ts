@@ -46,7 +46,8 @@ export async function main(
   }
   const [command, ...extra] = positionals
   if (command !== 'init' || extra.length > 0) {
-    io.write(`${command ? `Unknown command: ${positionals.join(' ')}\n\n` : ''}${USAGE}`)
+    const unknown = command ? `Unknown command: ${positionals.join(' ')}\n\n` : ''
+    io.write(unknown + USAGE)
     return 1
   }
   const { scheme } = values

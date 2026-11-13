@@ -20,4 +20,9 @@ describe('getElementRef', () => {
   it('is empty for an element given no ref: undefined on React 19, null on React 18', () => {
     expect(getElementRef(createElement('button')) ?? undefined).toBeUndefined()
   })
+
+  it('is undefined for no element', () => {
+    expect(getElementRef(undefined)).toBeUndefined()
+    expect(getElementRef(null)).toBeUndefined()
+  })
 })

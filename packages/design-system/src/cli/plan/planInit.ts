@@ -5,7 +5,7 @@ import {
   MARKER,
   type Scheme,
 } from '../templates/templates'
-import { readExtensionStyle, toImportSpecifier } from './importPath'
+import { readExtensionStyle, toImportSpecifier, type ExtensionStyle } from './importPath'
 import { wrapRoot } from './rootEdit'
 
 export type PackageManagerName = 'npm' | 'pnpm' | 'yarn' | 'bun'
@@ -85,13 +85,45 @@ export function planInit(facts: InitFacts): Plan {
   const providersPath = `${themeDir}/Providers.${extension}`
   const style = facts.root ? readExtensionStyle(facts.root.source) : ''
 
-  const ownership = (path: string) => {
-    const content = facts.readFile(path)
-    if (content === undefined) return 'missing'
-    return content.startsWith(MARKER) ? 'ours' : 'theirs'
+  if (planThemeFiles(plan, facts, { themesPath, providersPath, style })) {
+    planRootEdit(plan, facts, providersPath, style)
+  } else {
+    plan.manual.push(`Set up the theme by hand: ${SETUP_DOCS}`)
   }
-  const themes = ownership(themesPath)
-  const providers = ownership(providersPath)
+  if (facts.needsParcelPackageExports) {
+    plan.manual.push(
+      'Parcel finds @soroush.tech/design-system/theme and the other subpaths only once it reads package exports. Add to package.json: "@parcel/resolver-default": { "packageExports": true }'
+    )
+  }
+  if (!facts.hasDesignSystem)
+    plan.install = createInstallCommand(facts.packageManager, facts.version)
+  return plan
+}
+
+interface ThemePaths {
+  themesPath: string
+  providersPath: string
+  style: ExtensionStyle
+}
+
+/** Whether a file is missing, was written by init, or by someone else. */
+function getOwnership(facts: InitFacts, path: string): 'missing' | 'ours' | 'theirs' {
+  const content = facts.readFile(path)
+  if (content === undefined) return 'missing'
+  return content.startsWith(MARKER) ? 'ours' : 'theirs'
+}
+
+/**
+ * Plans the themes and the providers, never over a file init did not write. Returns whether the
+ * app ends up with init's providers.
+ */
+function planThemeFiles(
+  plan: Plan,
+  facts: InitFacts,
+  { themesPath, providersPath, style }: ThemePaths
+): boolean {
+  const themes = getOwnership(facts, themesPath)
+  const providers = getOwnership(facts, providersPath)
 
   if (themes === 'missing') {
     plan.creates.push({ path: themesPath, content: createThemesSource(facts) })
@@ -114,37 +146,34 @@ export function planInit(facts: InitFacts): Plan {
     })
   }
 
-  const hasProviders =
-    providers === 'ours' || plan.creates.some((file) => file.path === providersPath)
-  if (!hasProviders) {
-    plan.manual.push(`Set up the theme by hand: ${SETUP_DOCS}`)
-  } else if (!facts.root) {
+  return providers === 'ours' || plan.creates.some((file) => file.path === providersPath)
+}
+
+/** Plans the root's edit, or the lines to add by hand when init cannot make it. */
+function planRootEdit(
+  plan: Plan,
+  facts: InitFacts,
+  providersPath: string,
+  style: ExtensionStyle
+): void {
+  if (!facts.root) {
     plan.manual.push(
       `${describeRootProblem(facts)} In the file that renders your app, import { Providers } from ${providersPath} and wrap the tree it renders: render(<Providers><App /></Providers>).`
     )
-  } else {
-    const specifier = toImportSpecifier(facts.root.path, providersPath, style)
-    const statement = `import { Providers } from '${specifier}'`
-    const { path, source } = facts.root
-    const isWrapped = source.includes(`'${specifier}'`) || source.includes(`"${specifier}"`)
-    const after = isWrapped ? source : wrapRoot(source, statement)
-    if (after === null) {
-      plan.manual.push(
-        `${path} is not the standard shape, so init leaves it as it is. Add ${statement} to it, and wrap the tree it renders: render(<Providers><App /></Providers>).`
-      )
-    } else if (after !== source) {
-      plan.edits.push({ path, before: source, after })
-    }
+    return
   }
-
-  if (facts.needsParcelPackageExports) {
+  const specifier = toImportSpecifier(facts.root.path, providersPath, style)
+  const statement = `import { Providers } from '${specifier}'`
+  const { path, source } = facts.root
+  const isWrapped = source.includes(`'${specifier}'`) || source.includes(`"${specifier}"`)
+  const after = isWrapped ? source : wrapRoot(source, statement)
+  if (after === null) {
     plan.manual.push(
-      'Parcel finds @soroush.tech/design-system/theme and the other subpaths only once it reads package exports. Add to package.json: "@parcel/resolver-default": { "packageExports": true }'
+      `${path} is not the standard shape, so init leaves it as it is. Add ${statement} to it, and wrap the tree it renders: render(<Providers><App /></Providers>).`
     )
+  } else if (after !== source) {
+    plan.edits.push({ path, before: source, after })
   }
-  if (!facts.hasDesignSystem)
-    plan.install = createInstallCommand(facts.packageManager, facts.version)
-  return plan
 }
 
 /** Whether the plan has nothing to write or install. */

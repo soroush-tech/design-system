@@ -361,10 +361,7 @@ export const Tooltip = forwardRef<HTMLElement, TooltipProps>(function Tooltip(
   // A disabled control sends no pointer events, so the tooltip is placed against, and listens on,
   // a wrapper of its own; the control keeps its own ref.
   const isChildDisabled = shouldWrapDisabledChild && own.disabled === true
-  const childRef = useMergedRefs(
-    children ? getElementRef<HTMLElement>(children) : undefined,
-    forwardedRef
-  )
+  const childRef = useMergedRefs(getElementRef<HTMLElement>(children), forwardedRef)
   const ref = useMergedRefs(isChildDisabled ? undefined : anchorRef, childRef)
 
   const [arrow, setArrow] = useState<ArrowState | null>(null)

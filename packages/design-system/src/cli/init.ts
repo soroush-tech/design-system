@@ -38,10 +38,8 @@ const FONTS_DOCS = `${SETUP_DOCS}#fonts`
 function formatClosing({ creates, manual }: Plan): string {
   const themes = creates.find((file) => /\/themes\.[jt]s$/.test(file.path))
   const themesStep = themes ? `\n  - Make the themes your own in ${themes.path}.` : ''
-  const leftToYou =
-    manual.length > 0
-      ? `\nStill left to you:\n${manual.map((step) => `  - ${step}`).join('\n')}\n`
-      : ''
+  const steps = manual.map((step) => `  - ${step}`).join('\n')
+  const leftToYou = manual.length > 0 ? `\nStill left to you:\n${steps}\n` : ''
   return `Done: the design system is set up.
 ${leftToYou}
 Next:
@@ -132,6 +130,73 @@ async function askScheme(io: Io): Promise<Scheme> {
   return /^d(ark)?$/i.test(answer.trim()) ? 'dark' : 'light'
 }
 
+function collectFacts(app: App, scheme: Scheme | undefined, ownPackage: PackageJson): InitFacts {
+  const { root, packageJson, rootCandidates } = app
+  const rootPath = rootCandidates.length === 1 ? rootCandidates[0] : undefined
+  return {
+    isTypeScript: rootPath ? /\.m?tsx?$/.test(rootPath) : existsSync(join(root, 'tsconfig.json')),
+    hasSrcFolder: existsSync(join(root, 'src')),
+    root: rootPath ? { path: rootPath, source: readText(join(root, rootPath))! } : undefined,
+    rootCandidates,
+    hasDesignSystem: Boolean(getDependency(packageJson, '@soroush.tech/design-system')),
+    needsParcelPackageExports: needsParcelPackageExports(packageJson),
+    packageManager: detectPackageManager(root, packageJson),
+    version: ownPackage.version!,
+    scheme: scheme ?? 'light',
+    readFile: (path) => readText(join(root, path)),
+  }
+}
+
+/** Plans, asking for the default scheme first when init creates the providers and may ask. */
+async function planWithScheme(facts: InitFacts, canAsk: boolean, io: Io): Promise<Plan> {
+  const plan = planInit(facts)
+  const createsProviders = plan.creates.some((file) => /\/Providers\.[jt]s$/.test(file.path))
+  return createsProviders && canAsk ? planInit({ ...facts, scheme: await askScheme(io) }) : plan
+}
+
+/** Whether to apply the plan: never on a dry run or with no terminal, else on --yes or a yes. */
+async function isApproved(options: InitOptions, isPreviewOnly: boolean, io: Io): Promise<boolean> {
+  if (options.isDryRun) {
+    io.write('Dry run: nothing was changed.\n')
+    return false
+  }
+  if (isPreviewOnly) {
+    io.write('Preview only: there is no terminal to answer in. Run again with --yes to apply.\n')
+    return false
+  }
+  if (options.isConfirmed) return true
+  const isYes = /^y(es)?$/i.test((await io.ask('Apply these changes? (y/N) ')).trim())
+  if (!isYes) io.write('Nothing was changed.\n')
+  return isYes
+}
+
+/** Writes the plan, then installs the package. Returns the exit code. */
+function applyAndInstall(plan: Plan, root: string, io: Io, fileSystem: FileSystem): number {
+  try {
+    applyPlan(plan, root, fileSystem)
+  } catch (error) {
+    const { message, isUndone } = error as ApplyError
+    const outcome = isUndone
+      ? 'Every change it made was taken back.'
+      : 'It could not take back every change: check git status.'
+    io.write(`init stopped: ${message}. ${outcome}\n`)
+    return 1
+  }
+  if (plan.install) {
+    const { command, args, env } = plan.install
+    io.write(`\nInstalling with ${command}:\n`)
+    if (io.run(command, args, { cwd: root, env, showOutput: true }).status !== 0) {
+      const commandLine = [command, ...args].join(' ')
+      io.write(
+        `\nThe install failed. The files are written; install the package yourself:\n  ${commandLine}\n`
+      )
+      return 1
+    }
+  }
+  io.write(formatClosing(plan))
+  return 0
+}
+
 /**
  * Sets up the design system in the app in `io.cwd`: checks, plans, shows the plan, and applies it
  * only after a yes. Returns the exit code.
@@ -147,7 +212,7 @@ export async function runInit(
     io.write(`${app}\n`)
     return 1
   }
-  const { root, packageJson, rootCandidates, folder } = app
+  const { root, packageJson, folder } = app
   if (folder) io.write(`This is a workspace's root: init sets up the app in ${folder}.\n\n`)
   const refusal = findRefusal(root, packageJson, ownPackage.peerDependencies!.react)
   if (refusal) {
@@ -161,69 +226,17 @@ export async function runInit(
     return 1
   }
 
-  const rootPath = rootCandidates.length === 1 ? rootCandidates[0] : undefined
-  const facts: InitFacts = {
-    isTypeScript: rootPath ? /\.m?tsx?$/.test(rootPath) : existsSync(join(root, 'tsconfig.json')),
-    hasSrcFolder: existsSync(join(root, 'src')),
-    root: rootPath ? { path: rootPath, source: readText(join(root, rootPath))! } : undefined,
-    rootCandidates,
-    hasDesignSystem: Boolean(getDependency(packageJson, '@soroush.tech/design-system')),
-    needsParcelPackageExports: needsParcelPackageExports(packageJson),
-    packageManager: detectPackageManager(root, packageJson),
-    version: ownPackage.version!,
-    scheme: options.scheme ?? 'light',
-    readFile: (path) => readText(join(root, path)),
-  }
-  let plan = planInit(facts)
-  const createsProviders = plan.creates.some((file) => /\/Providers\.[jt]s$/.test(file.path))
-  if (createsProviders && !options.scheme && !isPreviewOnly && !options.isConfirmed) {
-    plan = planInit({ ...facts, scheme: await askScheme(io) })
-  }
+  const facts = collectFacts(app, options.scheme, ownPackage)
+  const canAsk = !options.scheme && !isPreviewOnly && !options.isConfirmed
+  const plan = await planWithScheme(facts, canAsk, io)
 
   if (isPlanEmpty(plan)) {
     const leftovers = plan.skips.length + plan.manual.length > 0 ? `\n${formatPlan(plan)}` : ''
     io.write(`The design system is already set up here: init has nothing to change.\n${leftovers}`)
     return 0
   }
-  io.write(
-    `init will set up @soroush.tech/design-system in ${packageJson.name ?? 'this app'}:\n\n${formatPlan(plan)}\n`
-  )
-  if (options.isDryRun) {
-    io.write('Dry run: nothing was changed.\n')
-    return 0
-  }
-  if (isPreviewOnly) {
-    io.write('Preview only: there is no terminal to answer in. Run again with --yes to apply.\n')
-    return 0
-  }
-  if (
-    !options.isConfirmed &&
-    !/^y(es)?$/i.test((await io.ask('Apply these changes? (y/N) ')).trim())
-  ) {
-    io.write('Nothing was changed.\n')
-    return 0
-  }
-
-  try {
-    applyPlan(plan, root, fileSystem)
-  } catch (error) {
-    const { message, isUndone } = error as ApplyError
-    const outcome = isUndone
-      ? 'Every change it made was taken back.'
-      : 'It could not take back every change: check git status.'
-    io.write(`init stopped: ${message}. ${outcome}\n`)
-    return 1
-  }
-  if (plan.install) {
-    const { command, args, env } = plan.install
-    io.write(`\nInstalling with ${command}:\n`)
-    if (io.run(command, args, { cwd: root, env, showOutput: true }).status !== 0) {
-      io.write(
-        `\nThe install failed. The files are written; install the package yourself:\n  ${[command, ...args].join(' ')}\n`
-      )
-      return 1
-    }
-  }
-  io.write(formatClosing(plan))
-  return 0
+  const appName = packageJson.name ?? 'this app'
+  io.write(`init will set up @soroush.tech/design-system in ${appName}:\n\n${formatPlan(plan)}\n`)
+  if (!(await isApproved(options, isPreviewOnly, io))) return 0
+  return applyAndInstall(plan, root, io, fileSystem)
 }
