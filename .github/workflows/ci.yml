@@ -286,6 +286,43 @@ jobs:
           pnpm --filter @soroush.tech/design-system exec vitest run --project=unit
           pnpm --filter @soroush.tech/markdown test
 
+  # The apps `create` starts (packages/cli): the design system and the cli are packed from this
+  # checkout, an app is created on them, then typechecked, built and served, and its server HTML
+  # checked for the design system's styles. One row per language, each with another package
+  # manager.
+  create-smoke:
+    needs: [prepare, lint]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - lang: ts
+            pm: npm
+          - lang: js
+            pm: pnpm
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Setup pnpm, Node and dependencies
+        uses: ./.github/actions/setup
+        with:
+          node_version: ${{ needs.prepare.outputs.node_version }}
+          manager: ${{ needs.prepare.outputs.manager }}
+          command: ${{ needs.prepare.outputs.command }}
+
+      - name: Create, build and serve a ${{ matrix.lang }} app with ${{ matrix.pm }}
+        env:
+          SMOKE_LANG: ${{ matrix.lang }}
+          SMOKE_PM: ${{ matrix.pm }}
+        run: node scripts/smoke-create.mjs --lang "$SMOKE_LANG" --pm "$SMOKE_PM"
+
   # The docs app (apps/docs): unit coverage, the prerender build (which itself gates
   # every page), and the Playwright e2e suite against the built output.
   docs:
@@ -421,7 +458,7 @@ jobs:
   ci-ok:
     name: ci-ok
     if: always()
-    needs: [prepare, lint, packages, docs, bench, react-range]
+    needs: [prepare, lint, packages, docs, bench, react-range, create-smoke]
     runs-on: ubuntu-latest
     permissions: {}
     timeout-minutes: 5

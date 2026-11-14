@@ -20,7 +20,8 @@
     "format": "oxfmt",
     "format:check": "oxfmt --check",
     "storybook": "pnpm --filter @soroush.tech/design-system storybook",
-    "build:storybook": "pnpm --filter @soroush.tech/design-system build:storybook"
+    "build:storybook": "pnpm --filter @soroush.tech/design-system build:storybook",
+    "smoke:create": "node scripts/smoke-create.mjs"
   },
   "devDependencies": {
     "ai-watermark-guard": "^0.2.0",

@@ -80,3 +80,7 @@ install; no path outside the app, and no symbolic link.
   `init` writes into, and `type-tests/create-vike`, the TypeScript app the Vike starter writes,
   under its own `tsconfig.json`. `src/fixture.test.ts` and `src/create/vike/vike.test.ts` keep
   them equal to what the commands write; after a template change, update them with `vitest run -u`.
+- `pnpm smoke:create [--lang ts|js] [--pm npm|pnpm]`, from the repo's root: packs the design system
+  and the packages it depends on, creates an app on them with the built cli, typechecks, builds
+  and serves it, and checks its server HTML for the styles. CI's `create-smoke` job runs it in
+  TypeScript with npm and in JavaScript with pnpm.
