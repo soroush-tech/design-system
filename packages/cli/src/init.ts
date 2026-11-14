@@ -2,6 +2,7 @@ import { existsSync, realpathSync } from 'node:fs'
 import { join } from 'node:path'
 import { applyPlan, type ApplyError } from './apply/applyPlan'
 import { nodeFileSystem, type FileSystem } from './apply/fileSystem'
+import { AGENT_STEPS, FONTS_STEP, SETUP_DOCS } from './closing'
 import {
   detectPackageManager,
   findPackageFolder,
@@ -32,9 +33,6 @@ export interface InitOptions {
   scheme: Scheme | undefined
 }
 
-const SETUP_DOCS = 'https://docs.soroush.tech/design-system/getting-started/installation/'
-const FONTS_DOCS = `${SETUP_DOCS}#fonts`
-
 function formatClosing({ creates, manual }: Plan): string {
   const themes = creates.find((file) => /\/themes\.[jt]s$/.test(file.path))
   const themesStep = themes ? `\n  - Make the themes your own in ${themes.path}.` : ''
@@ -44,13 +42,9 @@ function formatClosing({ creates, manual }: Plan): string {
 ${leftToYou}
 Next:
   - Use a component: import { Button } from '@soroush.tech/design-system/Button'${themesStep}
-  - Fonts: the theme names Space Grotesk and JetBrains Mono, and does not load them. To add them,
-    see ${FONTS_DOCS}
+${FONTS_STEP}
 
-For a coding agent, if you use one (any agent):
-  - The house-style skill: npx skills add soroush-tech/design-system
-  - The MCP server, for any MCP client: https://mcp.soroush.design/mcp
-`
+${AGENT_STEPS}`
 }
 
 /** Why init refuses this app, or `undefined` when it can set it up. */
@@ -125,7 +119,8 @@ function findApp(cwd: string): App | string {
   return { root, packageJson: readPackageJson(root)!, rootCandidates, folder }
 }
 
-async function askScheme(io: Io): Promise<Scheme> {
+/** Asks for the default color scheme: light, unless the answer is dark. */
+export async function askScheme(io: Io): Promise<Scheme> {
   const answer = await io.ask('Default color scheme, light or dark? (light) ')
   return /^d(ark)?$/i.test(answer.trim()) ? 'dark' : 'light'
 }

@@ -1,7 +1,7 @@
 {
   "name": "@soroush.design/cli",
-  "version": "0.1.1",
-  "description": "The command line of the @soroush.tech design system: init sets it up in an existing React app, showing every change first.",
+  "version": "0.2.0",
+  "description": "The command line of the @soroush.tech design system: init sets it up in an existing React app, and create starts a new one, each showing every change first.",
   "keywords": [
     "cli",
     "init",
