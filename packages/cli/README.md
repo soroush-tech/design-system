@@ -7,7 +7,7 @@ an existing React app.
 ## Start a new app: `create`
 
 ```sh
-npx @soroush.tech/design-system create my-app
+npx @soroush.design/cli create my-app
 ```
 
 It makes the app in a new folder, `my-app`, or in an empty one, and never writes in a folder that

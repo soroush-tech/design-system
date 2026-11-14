@@ -8,7 +8,7 @@ import type { Io } from './io'
 import type { PackageManagerName } from './plan/planInit'
 import { CancelledError } from './prompt'
 
-const BIN = 'npx @soroush.tech/design-system'
+const BIN = 'npx @soroush.design/cli'
 
 /** The help with no command: the commands, and how to get each one's own help. */
 export const USAGE = `Usage: ${BIN} <command> [options]

@@ -6,7 +6,7 @@ To start a new app on the design system - a Vike app, prerendered at build time,
 between pages with no reload - in TypeScript or JavaScript:
 
 ```sh
-npx @soroush.tech/design-system create my-app
+npx @soroush.design/cli create my-app
 ```
 
 It makes the app in a new folder, with the themes, the providers and a few pages, shows every file
