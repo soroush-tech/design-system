@@ -309,7 +309,10 @@ jobs:
             flags: --sample-data
           - lang: js
             pm: pnpm
-            flags: ''
+            flags: --render spa --sample-data
+          - lang: js
+            pm: npm
+            flags: --render ssg
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v7

@@ -54,8 +54,17 @@ default.
 
 ### The Vike starter
 
-`src/create/vike/vike.ts` writes an isomorphic Vike app - every page prerendered at build time (`prerender: true`), then
-client routing (`clientRouting: true`) - with no renderer package:
+`src/create/vike/vike.ts` writes a Vike app with no renderer package, rendered as the developer
+picks (`StarterFacts.rendering`):
+
+- `isomorphic`: every page prerendered at build time (`prerender: true`), then client routing
+  (`clientRouting: true`).
+- `spa`: `Page` and `Layout` load in the browser only (`meta` `env`); `+onRenderHtml` writes an
+  empty shell and `+onRenderClient` renders into it, with no `@emotion/server`.
+- `ssg`: `Page` and `Layout` load at build time only, and there is no `+onRenderClient`, so a page
+  ships no script; the layout has no scheme switch.
+
+Each has its type-test fixture: `type-tests/create-vike`, `-spa` and `-ssg`. In the isomorphic app:
 
 - `+onRenderHtml` renders the page with `@emotion/server` on the design system's `styleCache`, and
   puts the styles it used in the head, so the page is drawn styled before any script runs.

@@ -1,6 +1,16 @@
 import type { Scheme } from '../templates/templates'
 import { vikeStarter } from './vike/vike'
 
+/**
+ * How the app's pages are rendered: `isomorphic`, prerendered to HTML at build time and then
+ * moving between pages in the browser; `spa`, rendered in the browser only; `ssg`, HTML only, with
+ * no JavaScript in the browser.
+ */
+export type Rendering = 'isomorphic' | 'spa' | 'ssg'
+
+/** The renderings, in the order create offers them. The first is the default. */
+export const RENDERINGS: readonly Rendering[] = ['isomorphic', 'spa', 'ssg']
+
 /** What a starter is told: everything the developer chose, and the design system to install. */
 export interface StarterFacts {
   /** The app's folder, as it was typed. */
@@ -10,6 +20,7 @@ export interface StarterFacts {
   /** What its pages call it. */
   title: string
   isTypeScript: boolean
+  rendering: Rendering
   scheme: Scheme
   /** Adds the pages that read sample data. */
   hasSampleData: boolean

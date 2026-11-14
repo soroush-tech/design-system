@@ -15,7 +15,7 @@ import {
   PACKAGE_MANAGERS,
   readPackageManager,
 } from './packageManager'
-import { STARTERS, type Starter } from './starters'
+import { RENDERINGS, STARTERS, type Rendering, type Starter } from './starters'
 
 export interface CreateOptions {
   /** The app's folder: asked for, or `my-app`, when missing. */
@@ -28,6 +28,8 @@ export interface CreateOptions {
   isTypeScript: boolean | undefined
   /** The package manager to install with: asked for, or the one that ran create, when missing. */
   packageManager: PackageManagerName | undefined
+  /** How the pages are rendered: asked for, or isomorphic, when missing. */
+  rendering: Rendering | undefined
   scheme: Scheme | undefined
   /** Adds the pages that read sample data: asked for, or not, when missing. */
   hasSampleData: boolean | undefined
@@ -163,6 +165,18 @@ async function askName(io: Io): Promise<string> {
   return answer || DEFAULT_NAME
 }
 
+/** What the rendering question says of each one. */
+const RENDERING_LABELS: Readonly<Record<Rendering, string>> = {
+  isomorphic: 'Isomorphic (recommended): HTML from the build, then no reload',
+  spa: 'SPA: rendered in the browser',
+  ssg: 'SSG: HTML only, no JavaScript',
+}
+
+async function askRendering(io: Io): Promise<Rendering> {
+  const choices = RENDERINGS.map((value) => ({ value, label: RENDERING_LABELS[value] }))
+  return (await io.select('Rendering', choices)) as Rendering
+}
+
 async function askSampleData(io: Io): Promise<boolean> {
   return (await io.select('Add sample data pages?', YES_OR_NO, 1)) === 'yes'
 }
@@ -291,6 +305,7 @@ export async function runCreate(
     io.write(`${packageManager.refusal}\n`)
     return 1
   }
+  const rendering = options.rendering ?? (canAsk ? await askRendering(io) : RENDERINGS[0])
   const scheme = options.scheme ?? (canAsk ? await askScheme(io) : 'light')
   const hasSampleData = options.hasSampleData ?? (canAsk ? await askSampleData(io) : false)
 
@@ -300,6 +315,7 @@ export async function runCreate(
       packageName,
       title,
       isTypeScript,
+      rendering,
       scheme,
       hasSampleData,
       version: designSystem.version!,
@@ -311,8 +327,9 @@ export async function runCreate(
   }
   const language = isTypeScript ? 'TypeScript' : 'JavaScript'
   const packageNote = packageName === name ? '' : ` (package ${packageName})`
+  const renderingName = rendering === 'isomorphic' ? rendering : rendering.toUpperCase()
   io.write(
-    `create will make ${name}${packageNote}, a ${starter.title} app in ${language}, in ./${name}:\n\n`
+    `create will make ${name}${packageNote}, a ${starter.title} app in ${language} (${renderingName}), in ./${name}:\n\n`
   )
   io.write(`${formatPlan(plan)}\n`)
   if (!(await isApproved(options, isPreviewOnly, io))) return 0

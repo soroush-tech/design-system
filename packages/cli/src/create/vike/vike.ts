@@ -4,7 +4,7 @@
 // here is the one `init` reuses for an existing Vike app (#80).
 import { devDependencies } from '../../../package.json'
 import { createProvidersSource, createThemesSource } from '../../templates/templates'
-import type { Starter, StarterFacts, StarterFile } from '../starters'
+import type { Rendering, Starter, StarterFacts, StarterFile } from '../starters'
 
 /** The versions the starter installs: the ones this package is tested with. */
 const VERSIONS = devDependencies
@@ -15,7 +15,14 @@ const toRange = (version: string) => (/^\d/.test(version) ? `^${version}` : vers
 const pickVersions = (names: readonly (keyof typeof VERSIONS)[]) =>
   Object.fromEntries(names.map((name) => [name, toRange(VERSIONS[name])]))
 
-function createPackageJson({ packageName, isTypeScript, version }: StarterFacts): string {
+function createPackageJson({
+  packageName,
+  isTypeScript,
+  rendering,
+  version,
+}: StarterFacts): string {
+  // An SPA's server draws no page, so it extracts no styles.
+  const renderer = rendering === 'spa' ? ([] as const) : (['@emotion/server'] as const)
   const packageJson = {
     name: packageName,
     private: true,
@@ -29,7 +36,7 @@ function createPackageJson({ packageName, isTypeScript, version }: StarterFacts)
     },
     dependencies: {
       '@soroush.tech/design-system': toRange(version),
-      ...pickVersions(['@emotion/server', 'react', 'react-dom', 'vike']),
+      ...pickVersions([...renderer, 'react', 'react-dom', 'vike']),
     },
     devDependencies: pickVersions([
       '@vitejs/plugin-react',
@@ -105,13 +112,15 @@ const ITEMS_LINK = `          <Link href="/items" underline="hover">
           </Link>
 `
 
-function createSources({ title, isTypeScript, scheme, hasSampleData }: StarterFacts) {
-  const t = (typeScriptOnly: string) => (isTypeScript ? typeScriptOnly : '')
-  const x = isTypeScript ? 'ts' : 'js'
-  return {
-    config: `${t("import type { Config } from 'vike/types'\n\n")}// The settings of every page: https://vike.dev/config
-export default {
-  // Isomorphic: every page is HTML at build time, then the app moves between pages in the
+/** The layout's light and dark switch, in a page that has JavaScript. */
+const SCHEME_SWITCH = `          <Button size="sm" variant="outlined" onClick={() => setScheme(otherScheme)}>
+            {otherScheme}
+          </Button>
+`
+
+/** The settings of each rendering, in +config. */
+const CONFIG_SETTINGS: Readonly<Record<Rendering, string>> = {
+  isomorphic: `  // Isomorphic: every page is HTML at build time, then the app moves between pages in the
   // browser, with no reload.
   prerender: true,
   clientRouting: true,
@@ -119,7 +128,42 @@ export default {
   // +Layout is a setting of this app's own: the component every page renders inside.
   meta: {
     Layout: { env: { server: true, client: true } },
-  },
+  },`,
+  spa: `  // SPA: every page is an empty HTML shell from the build, which the browser renders; the app
+  // moves between pages with no reload.
+  prerender: true,
+  clientRouting: true,
+  // The page and +Layout, a setting of this app's own, load in the browser only.
+  meta: {
+    Page: { env: { server: false, client: true } },
+    Layout: { env: { server: false, client: true } },
+  },`,
+  ssg: `  // SSG: every page is HTML at build time, with no JavaScript in the browser: a link loads the
+  // next page.
+  prerender: true,
+  // The page and +Layout, a setting of this app's own, load at build time only.
+  meta: {
+    Page: { env: { server: true, client: false } },
+    Layout: { env: { server: true, client: false } },
+  },`,
+}
+
+/** What the second page says of how it got there. */
+const ABOUT_TEXT: Readonly<Record<Rendering, string>> = {
+  isomorphic: `A second page: it is HTML with its styles from the build, and the app moves to it without a
+        reload.`,
+  spa: `A second page: the browser renders it, with its styles, and the app moves to it without a
+        reload.`,
+  ssg: 'A second page: it is HTML with its styles from the build, and a link loads it as a new page.',
+}
+
+function createSources({ title, isTypeScript, rendering, scheme, hasSampleData }: StarterFacts) {
+  const t = (typeScriptOnly: string) => (isTypeScript ? typeScriptOnly : '')
+  const x = isTypeScript ? 'ts' : 'js'
+  return {
+    config: `${t("import type { Config } from 'vike/types'\n\n")}// The settings of every page: https://vike.dev/config
+export default {
+${CONFIG_SETTINGS[rendering]}
 }${t(' satisfies Config')}
 `,
     PageShell: `import { StrictMode } from 'react'
@@ -127,9 +171,8 @@ import { CacheProvider, styleCache } from '@soroush.tech/design-system/engine'
 ${t("import type { PageContext } from 'vike/types'\n")}import { PageContextProvider } from './usePageContext'
 
 /**
- * The page inside its +Layout, the same on the server and in the browser. The Emotion cache is the
- * design system's, so the server can find the styles the page used, and every component of the
- * page can read its pageContext.
+ * The page inside its +Layout. The Emotion cache is the design system's, so the styles the page
+ * uses are found where it is drawn, and every component of the page can read its pageContext.
  */
 export function PageShell({ pageContext }${t(': { readonly pageContext: PageContext }')}) {
   const { Page, config } = pageContext
@@ -149,6 +192,34 @@ export function PageShell({ pageContext }${t(': { readonly pageContext: PageCont
       </CacheProvider>
     </StrictMode>
   )
+}
+`,
+    spaOnRenderHtml: `import { escapeInject } from 'vike/server'
+${t("import type { OnRenderHtmlSync } from 'vike/types'\n")}
+/** The page's HTML shell, from the build: the browser renders the page in #root. */
+export const onRenderHtml${t(': OnRenderHtmlSync')} = () => {
+  return escapeInject\`<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>${title}</title>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>\`
+}
+`,
+    spaOnRenderClient: `import { createRoot${t(', type Root')} } from 'react-dom/client'
+${t("import type { OnRenderClientSync } from 'vike/types'\n")}import { PageShell } from './PageShell'
+
+let root${t(': Root | undefined')}
+
+/** Draws the page in the browser, and each page the app moves to. */
+export const onRenderClient${t(': OnRenderClientSync')} = (pageContext) => {
+  root ??= createRoot(document.getElementById('root')${t('!')})
+  root.render(<PageShell pageContext={pageContext} />)
 }
 `,
     onRenderHtml: `import createEmotionServer from '@emotion/server/create-instance'
@@ -196,7 +267,22 @@ export const onRenderClient${t(': OnRenderClientSync')} = (pageContext) => {
   }
 }
 `,
-    Layout: `import { useState${t(', type ReactNode')} } from 'react'
+    Layout: `${
+      rendering === 'ssg'
+        ? `${t("import type { ReactNode } from 'react'\n")}import { Flex } from '@soroush.tech/design-system/Flex'
+import { Link } from '@soroush.tech/design-system/Link'
+import { Typography } from '@soroush.tech/design-system/Typography'
+import { View } from '@soroush.tech/design-system/View'
+import { Providers } from '../theme/Providers'
+
+/**
+ * The frame every page renders in, inside the app's providers. A page has no JavaScript in the
+ * browser, so it is drawn in the default scheme, which src/theme/Providers.${x} sets.
+ */
+export default function Layout({ children }${t(': { readonly children: ReactNode }')}) {
+  return (
+    <Providers>`
+        : `import { useState${t(', type ReactNode')} } from 'react'
 import { Button } from '@soroush.tech/design-system/Button'
 import { Flex } from '@soroush.tech/design-system/Flex'
 import { Link } from '@soroush.tech/design-system/Link'
@@ -212,7 +298,8 @@ export default function Layout({ children }${t(': { readonly children: ReactNode
   const [scheme, setScheme] = useState${t("<'light' | 'dark'>")}('${scheme}')
   const otherScheme = scheme === 'light' ? 'dark' : 'light'
   return (
-    <Providers scheme={scheme}>
+    <Providers scheme={scheme}>`
+    }
       <Flex
         as="header"
         flexDirection="row"
@@ -233,10 +320,7 @@ export default function Layout({ children }${t(': { readonly children: ReactNode
           <Link href="/about" underline="hover">
             About
           </Link>
-${hasSampleData ? ITEMS_LINK : ''}          <Button size="sm" variant="outlined" onClick={() => setScheme(otherScheme)}>
-            {otherScheme}
-          </Button>
-        </Flex>
+${hasSampleData ? ITEMS_LINK : ''}${rendering === 'ssg' ? '' : SCHEME_SWITCH}        </Flex>
       </Flex>
       <View as="main" px={3} py={4}>
         {children}
@@ -275,8 +359,7 @@ export default function Page() {
     <Flex gap={2}>
       <Typography variant="h2">About</Typography>
       <Typography color="secondary">
-        A second page: it is HTML with its styles from the build, and the app moves to it without a
-        reload.
+        ${ABOUT_TEXT[rendering]}
       </Typography>
     </Flex>
   )
@@ -480,8 +563,30 @@ export default function Page() {
   ]
 }
 
-function createReadme({ title, isTypeScript, hasSampleData }: StarterFacts): string {
+/** How the README says each rendering works, and which files render the pages. */
+const README_RENDERING: Readonly<Record<Rendering, { summary: string; renderers: string }>> = {
+  isomorphic: {
+    summary:
+      'prerendered at build time with its styles in the HTML, then moving between pages with no reload.',
+    renderers:
+      '`+onRenderHtml` and `+onRenderClient` render the pages, with the styles each page uses in its HTML.',
+  },
+  spa: {
+    summary:
+      'a single-page app: each page is an HTML shell from the build, rendered in the browser, which moves between pages with no reload.',
+    renderers:
+      '`+onRenderHtml` writes the HTML shell of each page, and `+onRenderClient` renders the page in it.',
+  },
+  ssg: {
+    summary:
+      'every page prerendered to HTML at build time, with its styles, and no JavaScript in the browser.',
+    renderers: '`+onRenderHtml` renders the pages to HTML, with the styles each page uses.',
+  },
+}
+
+function createReadme({ title, isTypeScript, rendering, hasSampleData }: StarterFacts): string {
   const x = isTypeScript ? 'ts' : 'js'
+  const { summary, renderers } = README_RENDERING[rendering]
   const sampleData = hasSampleData
     ? `- \`src/pages/items/\` lists the sample items of \`src/data/items.${x}\`, with a page for each.
   Their \`+data\` hooks read the data at build time: make them fetch your own.
@@ -489,15 +594,14 @@ function createReadme({ title, isTypeScript, hasSampleData }: StarterFacts): str
     : ''
   return `# ${title}
 
-A [Vike](https://vike.dev) app on the [@soroush.tech design system](https://docs.soroush.tech),
-prerendered at build time with its styles in the HTML, then moving between pages with no reload.
+A [Vike](https://vike.dev) app on the [@soroush.tech design system](https://docs.soroush.tech):
+${summary}
 
 - \`npm run dev\` starts it, \`npm run build\` builds it, and \`npm run preview\` serves the build.
 - \`src/pages/\` holds the pages: a folder per route, each with its \`+Page\`.
 - \`src/pages/+Layout.${x}x\` is the frame every page renders in, inside the app's providers.
 - \`src/theme/themes.${x}\` holds the light and the dark theme: make them your own.
-- \`src/pages/+onRenderHtml.${x}x\` and \`+onRenderClient.${x}x\` render the pages, with the styles each
-  page uses in its HTML.
+- In \`src/pages/\`, ${renderers}
 ${sampleData}
 Fonts: the theme names Space Grotesk and JetBrains Mono, and does not load them. See
 https://docs.soroush.tech/design-system/getting-started/installation/#fonts
@@ -506,9 +610,13 @@ https://docs.soroush.tech/design-system/getting-started/installation/#fonts
 
 /** The files of the Vike app `facts` describe. */
 function createFiles(facts: StarterFacts): StarterFile[] {
-  const { isTypeScript, scheme } = facts
+  const { isTypeScript, rendering, scheme } = facts
   const x = isTypeScript ? 'ts' : 'js'
   const sources = createSources(facts)
+  const isSpa = rendering === 'spa'
+  // An SSG page has no JavaScript in the browser, so it has nothing to render there.
+  const onRenderClient =
+    rendering === 'ssg' ? undefined : isSpa ? sources.spaOnRenderClient : sources.onRenderClient
   return [
     { path: 'package.json', content: createPackageJson(facts) },
     { path: `vite.config.${x}`, content: VITE_CONFIG },
@@ -524,8 +632,13 @@ function createFiles(facts: StarterFacts): StarterFile[] {
     { path: `src/pages/+config.${x}`, content: sources.config },
     { path: `src/pages/PageShell.${x}x`, content: sources.PageShell },
     { path: `src/pages/usePageContext.${x}x`, content: sources.usePageContext },
-    { path: `src/pages/+onRenderHtml.${x}x`, content: sources.onRenderHtml },
-    { path: `src/pages/+onRenderClient.${x}x`, content: sources.onRenderClient },
+    {
+      path: `src/pages/+onRenderHtml.${x}x`,
+      content: isSpa ? sources.spaOnRenderHtml : sources.onRenderHtml,
+    },
+    ...(onRenderClient
+      ? [{ path: `src/pages/+onRenderClient.${x}x`, content: onRenderClient }]
+      : []),
     { path: `src/pages/+Layout.${x}x`, content: sources.Layout },
     { path: `src/pages/index/+Page.${x}x`, content: sources.home },
     { path: `src/pages/about/+Page.${x}x`, content: sources.about },

@@ -9,7 +9,8 @@
 //    on `/` and `/about`, and the 404 page. With `--sample-data`, the list of sample items and the
 //    page of each, too.
 //
-//   node scripts/smoke-create.mjs [--lang ts|js] [--pm npm|pnpm] [--framework vike] [--sample-data]
+//   node scripts/smoke-create.mjs [--lang ts|js] [--pm npm|pnpm] [--framework vike]
+//     [--render isomorphic|spa|ssg] [--sample-data]
 //
 // The temp folder is removed when every check passes, and kept, with its path printed, when one
 // fails.
@@ -38,14 +39,20 @@ const { values } = parseArgs({
     lang: { type: 'string', default: 'ts' },
     pm: { type: 'string', default: 'npm' },
     framework: { type: 'string', default: 'vike' },
+    render: { type: 'string', default: 'isomorphic' },
     'sample-data': { type: 'boolean', default: false },
   },
 })
-const { lang, pm, framework, 'sample-data': hasSampleData } = values
-if (!['ts', 'js'].includes(lang) || !['npm', 'pnpm'].includes(pm)) {
-  console.error('--lang is ts or js, and --pm is npm or pnpm.')
+const { lang, pm, framework, render, 'sample-data': hasSampleData } = values
+if (
+  !['ts', 'js'].includes(lang) ||
+  !['npm', 'pnpm'].includes(pm) ||
+  !['isomorphic', 'spa', 'ssg'].includes(render)
+) {
+  console.error('--lang is ts or js, --pm is npm or pnpm, and --render is isomorphic, spa or ssg.')
   process.exit(1)
 }
+const isSpa = render === 'spa'
 
 /** Runs a command, showing its output, and throws when it fails. */
 function run(command, args, cwd) {
@@ -134,8 +141,17 @@ function check(condition, message) {
  */
 async function checkSampleDataPages(appDir, fetchPage) {
   const list = await fetchPage('/items')
-  check(list.status === 200 && list.html.includes('>Items</h2>'), '/items answers with its page')
-  const ids = [...list.html.matchAll(/href="\/items\/([^"]+)"/g)].map(([, id]) => id)
+  if (isSpa) {
+    // An SPA's HTML holds no page: its items are the folders the build wrote.
+    check(list.status === 200, '/items answers 200')
+  } else {
+    check(list.status === 200 && list.html.includes('>Items</h2>'), '/items answers with its page')
+  }
+  const ids = isSpa
+    ? readdirSync(join(appDir, 'dist/client/items'), { withFileTypes: true })
+        .filter((entry) => entry.isDirectory())
+        .map((entry) => entry.name)
+    : [...list.html.matchAll(/href="\/items\/([^"]+)"/g)].map(([, id]) => id)
   check(ids.length > 0, `/items lists the sample items: ${ids.join(', ')}`)
   for (const id of ids) {
     check(
@@ -144,10 +160,27 @@ async function checkSampleDataPages(appDir, fetchPage) {
     )
     const item = await fetchPage(`/items/${id}`)
     check(
-      item.status === 200 && item.html.includes('>All items</a>'),
+      item.status === 200 && (isSpa || item.html.includes('>All items</a>')),
       `/items/${id} answers with its page`
     )
   }
+}
+
+/** Checks `/`: its page and styles in the HTML, or an SPA's empty shell and its script. */
+function checkHome(home) {
+  check(home.status === 200, '/ answers 200')
+  if (isSpa) {
+    check(home.html.includes('<div id="root"></div>'), "/ is the SPA's empty shell")
+    check(/<script[^>]* type="module"/.test(home.html), '/ loads the script that renders it')
+    return
+  }
+  check(
+    home.html.includes('<style data-emotion="soroush-global'),
+    "/ carries the page's base styles"
+  )
+  check(/<style data-emotion="soroush [^"]/.test(home.html), "/ carries its components' styles")
+  check(home.html.includes(`>${APP}</h2>`), "/ has the starter's heading")
+  if (render === 'ssg') check(!home.html.includes('<script'), '/ ships no script')
 }
 
 /** Serves the app's build with its own Vite, and checks the HTML of its pages. */
@@ -165,22 +198,15 @@ async function checkServedPages(appDir) {
       return { status: response.status, html: await response.text() }
     }
     console.log(`\nChecking the pages ${base} serves:`)
-    const home = await fetchPage('/')
-    check(home.status === 200, '/ answers 200')
-    check(
-      home.html.includes('<style data-emotion="soroush-global'),
-      "/ carries the page's base styles"
-    )
-    check(/<style data-emotion="soroush [^"]/.test(home.html), "/ carries its components' styles")
-    check(home.html.includes(`>${APP}</h2>`), "/ has the starter's heading")
+    checkHome(await fetchPage('/'))
     const about = await fetchPage('/about')
     check(
-      about.status === 200 && about.html.includes('>About</h2>'),
+      about.status === 200 && (isSpa || about.html.includes('>About</h2>')),
       '/about answers with its page'
     )
     const missing = await fetchPage('/no-such-page')
     check(missing.status === 404, '/no-such-page answers 404')
-    check(missing.html.includes('Page not found'), '/no-such-page shows the 404 page')
+    if (!isSpa) check(missing.html.includes('Page not found'), '/no-such-page shows the 404 page')
     if (hasSampleData) await checkSampleDataPages(appDir, fetchPage)
   } finally {
     await server.close()
@@ -213,6 +239,7 @@ try {
   }
   const { name, version, peerDependencies } = packages.get(DESIGN_SYSTEM).manifest
   const argv = ['create', APP, '--yes', `--${lang}`, '--framework', framework, '--no-git']
+  argv.push('--render', render)
   if (hasSampleData) argv.push('--sample-data')
   console.log(`\n$ create ${argv.slice(1).join(' ')}   (with ${pm})`)
   const code = await cli.default(argv, io, { name, version, peerDependencies })

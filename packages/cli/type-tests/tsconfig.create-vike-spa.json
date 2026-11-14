@@ -1,0 +1,13 @@
+{
+  // The SPA Vike app create writes, under the app's own tsconfig.json: create-vike-spa/ is the starter's
+  // output, kept in sync by src/create/vike/vike.test.ts. It reads the design system's built types
+  // next to this package, as an app reads the published ones, and the rest from this package's
+  // devDependencies, which are the versions the starter installs.
+  "extends": "./create-vike-spa/tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "@soroush.tech/design-system": ["../../design-system/dist/index.d.mts"],
+      "@soroush.tech/design-system/*": ["../../design-system/dist/*.d.mts"]
+    }
+  }
+}

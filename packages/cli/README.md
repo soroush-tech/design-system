@@ -26,6 +26,7 @@ a write or the install fails, it takes the new app away.
 | `--framework <name>` | The app's framework: `vike`, the default and only one yet         |
 | `--ts`, `--js`       | TypeScript (the default) or JavaScript                            |
 | `--pm <name>`        | `npm`, `pnpm`, `yarn` or `bun`: the one that ran it, if not given |
+| `--render <name>`    | `isomorphic` (the default), `spa` or `ssg`                        |
 | `--scheme <name>`    | The default color scheme: `light` or `dark`                       |
 | `--sample-data`      | Add the sample data pages                                         |
 | `--no-git`           | Do not run `git init`                                             |
@@ -33,9 +34,17 @@ a write or the install fails, it takes the new app away.
 
 ### The Vike app
 
-A [Vike](https://vike.dev) app, isomorphic: every page is prerendered to HTML at build time, with
-the styles it uses, so it is drawn styled before any script runs. Then the app takes over in the
-browser and moves between pages without a reload.
+A [Vike](https://vike.dev) app, rendered the way you pick:
+
+- **Isomorphic** (the default): every page is prerendered to HTML at build time, with the styles
+  it uses, so it is drawn styled before any script runs. Then the app takes over in the browser
+  and moves between pages without a reload.
+- **SPA**: every page is an empty HTML shell from the build, and the browser renders it, with its
+  styles. It moves between pages without a reload.
+- **SSG**: every page is prerendered to HTML with its styles, and ships no JavaScript: a link loads
+  the next page. It has no light and dark switch, since that needs JavaScript.
+
+All three build to static files that any static host serves.
 
 - `src/pages/` holds the pages - a home page, a second page and a 404 page - built from the design
   system's components and theme tokens only.

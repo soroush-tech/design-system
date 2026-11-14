@@ -45,7 +45,9 @@ describe('main', () => {
       '--title',
       'Shop',
       '--pm',
-      'pnpm'
+      'pnpm',
+      '--render',
+      'ssg'
     )
     expect(code).toBe(0)
     expect(runCreate).toHaveBeenLastCalledWith(
@@ -55,6 +57,7 @@ describe('main', () => {
         framework: 'vike',
         isTypeScript: false,
         packageManager: 'pnpm',
+        rendering: 'ssg',
         scheme: 'dark',
         hasSampleData: true,
         isConfirmed: true,
@@ -129,6 +132,13 @@ describe('main', () => {
     expect(await runMain('init', '--scheme', 'blue')).toMatchObject({
       code: 1,
       output: '--scheme is light or dark, not blue.\n',
+    })
+  })
+
+  it('refuses a rendering create does not know', async () => {
+    expect(await runMain('create', '--render', 'ssr')).toMatchObject({
+      code: 1,
+      output: '--render is isomorphic, spa, ssg, not ssr.\n',
     })
   })
 

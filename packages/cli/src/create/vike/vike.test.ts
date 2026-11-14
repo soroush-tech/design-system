@@ -10,6 +10,7 @@ const FACTS: StarterFacts = {
   packageName: 'my-app',
   title: 'My App',
   isTypeScript: true,
+  rendering: 'isomorphic',
   scheme: 'light',
   hasSampleData: true,
   version: '2.3.0',
@@ -49,14 +50,22 @@ const SHARED_PATHS = [
 describe('the Vike starter', () => {
   // `pnpm test:types` typechecks these files as the app's own tsconfig.json sets it; this keeps
   // them what create writes. After a template change, update them with `vitest run -u`.
-  it('writes the TypeScript app the fixture holds', async () => {
-    const files = createFiles()
+  // One fixture per rendering: create-vike (isomorphic), create-vike-spa and create-vike-ssg.
+  it.each([
+    ['isomorphic', FIXTURE],
+    ['spa', `${FIXTURE}-spa`],
+    ['ssg', `${FIXTURE}-ssg`],
+  ] as const)('writes the %s TypeScript app its fixture holds', async (rendering, fixture) => {
+    const files = createFiles({ rendering })
     for (const [path, content] of files) {
-      await expect(content).toMatchFileSnapshot(`${FIXTURE}/${path}`)
+      await expect(content).toMatchFileSnapshot(`${fixture}/${path}`)
     }
+    const shared = SHARED_PATHS.filter(
+      (path) => rendering !== 'ssg' || path !== 'src/pages/+onRenderClient'
+    )
     expect([...files.keys()].sort()).toEqual(
       [
-        ...SHARED_PATHS.map((path) =>
+        ...shared.map((path) =>
           /\/(theme\/|\+config)/.test(path)
             ? `${path}.ts`
             : path.startsWith('src/')
@@ -69,6 +78,36 @@ describe('the Vike starter', () => {
         ...SAMPLE_DATA_PATHS,
       ].sort()
     )
+  })
+
+  it('renders an SPA in the browser only, from an empty shell', () => {
+    const files = createFiles({ rendering: 'spa' })
+    expect(files.get('src/pages/+config.ts')).toContain(
+      'Page: { env: { server: false, client: true } }'
+    )
+    expect(files.get('src/pages/+onRenderHtml.tsx')).toContain('<div id="root"></div>')
+    expect(files.get('src/pages/+onRenderHtml.tsx')).not.toContain('renderToString')
+    expect(files.get('src/pages/+onRenderClient.tsx')).not.toContain('hydrateRoot')
+    expect(files.get('src/pages/+Layout.tsx')).toContain('setScheme')
+    const packageJson = JSON.parse(files.get('package.json')!)
+    expect(packageJson.dependencies['@emotion/server']).toBeUndefined()
+    expect(files.get('README.md')).toContain('a single-page app')
+  })
+
+  it('renders SSG pages to HTML only, with no client renderer and no scheme switch', () => {
+    const files = createFiles({ rendering: 'ssg' })
+    expect(files.get('src/pages/+config.ts')).toContain(
+      'Page: { env: { server: true, client: false } }'
+    )
+    expect(files.get('src/pages/+config.ts')).not.toContain('clientRouting')
+    expect(files.has('src/pages/+onRenderClient.tsx')).toBe(false)
+    expect(files.get('src/pages/+Layout.tsx')).not.toMatch(/useState|Button|scheme=/)
+    expect(files.get('src/pages/+Layout.tsx')).toContain('<Providers>')
+    expect(files.get('src/pages/about/+Page.tsx')).toContain('a link loads it as a new')
+    expect(JSON.parse(files.get('package.json')!).dependencies['@emotion/server']).toBeDefined()
+    expect(
+      createFiles({ rendering: 'ssg', isTypeScript: false }).get('src/pages/+Layout.jsx')
+    ).toMatch(/^import \{ Flex \}/)
   })
 
   it('calls the app by its title in its pages and README, and by its package name in package.json', () => {
@@ -102,11 +141,13 @@ describe('the Vike starter', () => {
     expect(paths).toContain('src/pages/+Layout.jsx')
     expect(paths).toContain('src/theme/themes.js')
     expect(paths.some((path) => /\.tsx?$|tsconfig/.test(path))).toBe(false)
-    for (const [path, content] of files) {
-      if (!/\.jsx?$/.test(path)) continue
-      expect(content, path).not.toMatch(
-        /import type|export type|interface |as const|as Data|<Data>|: Root|satisfies|<'light'|readonly |\)!/
-      )
+    for (const rendering of ['isomorphic', 'spa', 'ssg'] as const) {
+      for (const [path, content] of createFiles({ isTypeScript: false, rendering })) {
+        if (!/\.jsx?$/.test(path)) continue
+        expect(content, `${rendering} ${path}`).not.toMatch(
+          /import type|export type|interface |as const|as Data|<Data>|: Root|satisfies|<'light'|readonly |\)!/
+        )
+      }
     }
     expect(files.get('src/pages/+onRenderClient.jsx')).toContain(
       "const container = document.getElementById('root')\n"

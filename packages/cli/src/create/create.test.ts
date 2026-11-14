@@ -25,6 +25,7 @@ const YES: CreateOptions = {
   framework: undefined,
   isTypeScript: undefined,
   packageManager: undefined,
+  rendering: undefined,
   scheme: undefined,
   hasSampleData: undefined,
   isConfirmed: true,
@@ -93,6 +94,7 @@ describe('runCreate', () => {
       packageName: 'my-app',
       title: 'my-app',
       isTypeScript: true,
+      rendering: 'isomorphic',
       scheme: 'light',
       hasSampleData: false,
       version: '2.3.0',
@@ -106,7 +108,9 @@ describe('runCreate', () => {
     expect(test.commands[2].options).toEqual({ cwd: app })
 
     const output = getOutput()
-    expect(output).toContain('create will make my-app, a Test app in TypeScript, in ./my-app:')
+    expect(output).toContain(
+      'create will make my-app, a Test app in TypeScript (isomorphic), in ./my-app:'
+    )
     expect(output).toContain('Create:\n  package.json\n  src/theme/themes.ts')
     expect(output).toContain('Install:\n  npm install --ignore-scripts')
     expect(output).toContain('Done: my-app is ready. Start it with:\n  cd my-app\n  npm run dev')
@@ -264,7 +268,9 @@ describe('runCreate', () => {
   it('prints the plan and exits on --dry-run, asking nothing', async () => {
     const { cwd, create, getOutput, listCommands } = setUp({ isInteractive: true })
     expect(await create({ ...ASK, isDryRun: true })).toBe(0)
-    expect(getOutput()).toContain('create will make my-app, a Test app in TypeScript, in ./my-app:')
+    expect(getOutput()).toContain(
+      'create will make my-app, a Test app in TypeScript (isomorphic), in ./my-app:'
+    )
     expect(getOutput()).toContain('Dry run: nothing was written.')
     expect(getOutput()).not.toContain('?')
     expect(listCommands()).toEqual([])
@@ -283,7 +289,7 @@ describe('runCreate', () => {
   it('asks what it was not told in a terminal, in its order, typing only the name and title', async () => {
     const { cwd, createFiles, create, getOutput } = setUp({
       isInteractive: true,
-      answers: ['', '', 'js', '', 'dark', 'yes', ''],
+      answers: ['', '', 'js', '', 'ssg', 'dark', 'yes', ''],
     })
     expect(await create(ASK)).toBe(0)
     const output = getOutput()
@@ -292,6 +298,7 @@ describe('runCreate', () => {
       'App title? (my-app) ',
       '? Language\n',
       '? Package manager\n',
+      '? Rendering\n',
       '? Default color scheme\n',
       '? Add sample data pages?\n',
       '? Create it?\n',
@@ -299,7 +306,7 @@ describe('runCreate', () => {
     const positions = questions.map((question) => output.indexOf(question))
     expect(positions.every((position) => position >= 0)).toBe(true)
     expect(positions).toEqual([...positions].sort((a, b) => a - b))
-    expect(output).toContain('a Test app in JavaScript')
+    expect(output).toContain('a Test app in JavaScript (SSG)')
     expect(createFiles).toHaveBeenCalledWith(
       expect.objectContaining({
         name: 'my-app',
@@ -384,6 +391,7 @@ describe('runCreate', () => {
       title: 'my-app',
       isTypeScript: true,
       packageManager: 'npm' as const,
+      rendering: 'spa' as const,
       scheme: 'light' as const,
       hasSampleData: false,
     }

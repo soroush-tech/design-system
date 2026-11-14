@@ -52,7 +52,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "test:types": "pnpm --filter @soroush.tech/design-system build && tsc -p type-tests/init/tsconfig.json && tsc -p type-tests/tsconfig.create-vike.json",
+    "test:types": "pnpm --filter @soroush.tech/design-system build && tsc -p type-tests/init/tsconfig.json && tsc -p type-tests/tsconfig.create-vike.json && tsc -p type-tests/tsconfig.create-vike-spa.json && tsc -p type-tests/tsconfig.create-vike-ssg.json",
     "prepublishOnly": "pnpm build"
   },
   "devDependencies": {
