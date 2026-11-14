@@ -1,15 +1,16 @@
 # Command line
 
 `@soroush.design/cli` holds the design system's command line: `init` sets the design system up in
-an existing app, and `create` starts a new one (RFC #84). This is the contributor's view;
-[`README.md`](./README.md) is the user's.
+an existing app, and `create` starts a new one (RFC #84). This is the contributor's view. The
+user's is [`docs/command-line.md`](./docs/command-line.md), which the docs site's `/cli/` page
+renders; [`README.md`](./README.md) is npm's short page, which points there.
 
 ## Two ways in, one command line
 
-| Run as                                 | Bin                                 | The design system it installs                    |
-| -------------------------------------- | ----------------------------------- | ------------------------------------------------ |
-| `npx @soroush.tech/design-system init` | `packages/design-system/src/bin.ts` | That package itself, found by its `package.json` |
-| `npx @soroush.design/cli init`         | `packages/cli/src/bin.ts`           | The workspace's version, read at build time      |
+| Run as                                 | Bin                                 | The design system it installs                                                            |
+| -------------------------------------- | ----------------------------------- | ---------------------------------------------------------------------------------------- |
+| `npx @soroush.tech/design-system init` | `packages/design-system/src/bin.ts` | That package itself, found by its `package.json`                                         |
+| `npx @soroush.design/cli init`         | `packages/cli/src/bin.ts`           | The workspace's version, read at build time; a prerelease cli asks for its own channel's |
 
 `@soroush.tech/design-system` depends on this package at an exact version, and its bin is a
 shim: it calls this package's default export, `main(argv, io, designSystem)`, with its own

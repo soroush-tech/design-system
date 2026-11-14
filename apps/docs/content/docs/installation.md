@@ -21,7 +21,7 @@ In a client-rendered React app - built with Vite, webpack, Rspack, Parcel or Cre
 in TypeScript or JavaScript - one command sets the design system up:
 
 ```sh
-npx @soroush.tech/design-system init
+npx @soroush.design/cli init
 ```
 
 It shows every change before it makes one, and writes nothing until you say yes:
@@ -35,7 +35,7 @@ It shows every change before it makes one, and writes nothing until you say yes:
 It runs in a git repository with no uncommitted change, never overwrites a file, and takes back
 every change if a write fails. Run in a workspace's root, it sets up the one app in it. Add
 `--dry-run` to see the changes and exit. In PowerShell, quote the package name, since `@` starts a
-splat there: `npx '@soroush.tech/design-system' init`.
+splat there: `npx '@soroush.design/cli' init`.
 
 Every option, and what `init` checks first, are in the [command line](/cli/) docs. Next.js, Vike
 and React Router apps are not supported by `init` yet: set those up by hand, below.
