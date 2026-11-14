@@ -7,6 +7,10 @@ on:
     branches:
       - 'main'
   pull_request:
+  # Weekly on main too: create-smoke installs a new app's libraries fresh from npm, within the
+  # ranges the starter writes, so a new release of one of them can break it with no push here.
+  schedule:
+    - cron: '0 6 * * 1'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
