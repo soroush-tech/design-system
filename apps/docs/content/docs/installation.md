@@ -1,5 +1,17 @@
 # Installation
 
+## Start a new app
+
+To start a new app on the design system, server-rendered with Vike, in TypeScript or JavaScript:
+
+```sh
+npx @soroush.tech/design-system create my-app
+```
+
+It makes the app in a new folder, with the themes, the providers and a few pages, shows every file
+first, and installs it with the package manager you ran it with. Its options are in the
+[command line](/cli/) docs. For an app you already have, use `init`, below.
+
 ## Set it up with one command
 
 In a client-rendered React app - built with Vite, webpack, Rspack, Parcel or Create React App,
