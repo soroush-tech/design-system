@@ -2,6 +2,7 @@
 import { PassThrough } from 'node:stream'
 import { describe, expect, it } from 'vitest'
 import { createNodeIo, toWindowsCommandLine } from './io'
+import { CancelledError } from './prompt'
 
 function createStreams(isTTY: boolean) {
   const stdin = Object.assign(new PassThrough(), { isTTY })
@@ -29,6 +30,61 @@ describe('createNodeIo', () => {
     expect(await answer).toBe('yes')
     // A terminal also gets readline's cursor codes around the question.
     expect(getWritten()).toMatch(/^hello\n[\s\S]*Apply\? /)
+  })
+
+  it('picks a choice with the arrow keys, in raw mode only while it is open', async () => {
+    const { stdin, stdout, getWritten } = createStreams(true)
+    const modes: boolean[] = []
+    const terminal = Object.assign(stdin, {
+      isRaw: false,
+      setRawMode: (mode: boolean) => modes.push(mode),
+    })
+    const io = createNodeIo({ stdin: terminal, stdout })
+    const choices = [
+      { value: 'ts', label: 'TypeScript' },
+      { value: 'js', label: 'JavaScript' },
+    ]
+    const answer = io.select('Language', choices)
+    // Down, a key it ignores, then Enter.
+    stdin.write('\u001B[B')
+    stdin.write('x')
+    stdin.write('\r')
+    expect(await answer).toBe('js')
+    expect(modes).toEqual([true, false])
+    expect(getWritten()).toContain('? Language  (arrows to move, enter to pick)\n> TypeScript')
+    expect(getWritten()).toContain('? Language: JavaScript\n')
+  })
+
+  it('toggles choices with space in a choice of several', async () => {
+    const { stdin, stdout, getWritten } = createStreams(true)
+    const io = createNodeIo({ stdin, stdout })
+    const choices = [
+      { value: 'query', label: 'TanStack Query' },
+      { value: 'msw', label: 'msw' },
+    ]
+    const answer = io.selectMany('Libraries', choices, ['query'])
+    stdin.write(' ')
+    stdin.write('\u001B[A')
+    stdin.write(' ')
+    stdin.write('\r')
+    expect(await answer).toEqual(['msw'])
+    expect(getWritten()).toContain('? Libraries: msw\n')
+    const none = io.selectMany('Libraries', choices)
+    stdin.write('\r')
+    expect(await none).toEqual([])
+    expect(getWritten()).toContain('? Libraries: none\n')
+  })
+
+  it('stops a choice on Ctrl+C or Escape, with nothing picked', async () => {
+    const { stdin, stdout } = createStreams(true)
+    const io = createNodeIo({ stdin, stdout })
+    const choices = [{ value: 'light', label: 'light' }]
+    const stopped = io.select('Scheme', choices)
+    stdin.write('\u0003')
+    await expect(stopped).rejects.toBeInstanceOf(CancelledError)
+    const escaped = io.select('Scheme', choices)
+    stdin.write('\u001B')
+    await expect(escaped).rejects.toBeInstanceOf(CancelledError)
   })
 
   it.each(['linux', 'win32'] as const)(

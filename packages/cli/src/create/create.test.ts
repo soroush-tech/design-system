@@ -24,6 +24,7 @@ const YES: CreateOptions = {
   title: undefined,
   framework: undefined,
   isTypeScript: undefined,
+  packageManager: undefined,
   scheme: undefined,
   hasSampleData: undefined,
   isConfirmed: true,
@@ -279,19 +280,25 @@ describe('runCreate', () => {
     expect(existsSync(join(cwd, 'my-app'))).toBe(false)
   })
 
-  it('asks what it was not told in a terminal: the name, the language, the scheme and a yes', async () => {
+  it('asks what it was not told in a terminal, in its order, typing only the name and title', async () => {
     const { cwd, createFiles, create, getOutput } = setUp({
       isInteractive: true,
-      answers: ['', '', 'js', 'dark', 'y', ''],
+      answers: ['', '', 'js', '', 'dark', 'yes', ''],
     })
     expect(await create(ASK)).toBe(0)
     const output = getOutput()
-    expect(output).toContain('App name? (my-app) ')
-    expect(output).toContain('App title? (my-app) ')
-    expect(output).toContain('TypeScript or JavaScript? (TypeScript) ')
-    expect(output).toContain('Default color scheme, light or dark? (light) ')
-    expect(output).toContain('Add sample data pages? (y/N) ')
-    expect(output).toContain('Create it? (Y/n) ')
+    const questions = [
+      'App name? (my-app) ',
+      'App title? (my-app) ',
+      '? Language\n',
+      '? Package manager\n',
+      '? Default color scheme\n',
+      '? Add sample data pages?\n',
+      '? Create it?\n',
+    ]
+    const positions = questions.map((question) => output.indexOf(question))
+    expect(positions.every((position) => position >= 0)).toBe(true)
+    expect(positions).toEqual([...positions].sort((a, b) => a - b))
     expect(output).toContain('a Test app in JavaScript')
     expect(createFiles).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -304,10 +311,10 @@ describe('runCreate', () => {
     expect(existsSync(join(cwd, 'my-app/src/theme/themes.js'))).toBe(true)
   })
 
-  it('takes the name it is given, and TypeScript for any other answer', async () => {
+  it('takes the name and title it is given, and the choices each start on', async () => {
     const { cwd, createFiles, create } = setUp({
       isInteractive: true,
-      answers: [' shop ', ' Shop ', 'ts', '', '', 'yes'],
+      answers: [' shop ', ' Shop ', '', '', '', '', ''],
     })
     expect(await create(ASK)).toBe(0)
     expect(createFiles).toHaveBeenCalledWith(
@@ -322,13 +329,61 @@ describe('runCreate', () => {
     expect(existsSync(join(cwd, 'shop/package.json'))).toBe(true)
   })
 
+  it('installs with the package manager picked, once it answers --version', async () => {
+    const versions: Record<string, RunResult> = {
+      pnpm: { status: 0, stdout: '10.4.1\n' },
+      bun: { status: null, stdout: '' },
+    }
+    const run = (command: string, args: readonly string[]) =>
+      args[0] === '--version' ? versions[command] : runOutsideGit(command, args)
+    const { cwd, create, getOutput, listCommands } = setUp({
+      isInteractive: true,
+      answers: ['', '', '', 'pnpm', '', '', ''],
+      run,
+    })
+    expect(await create(ASK)).toBe(0)
+    expect(listCommands()).toEqual([
+      'pnpm --version',
+      'pnpm install --ignore-scripts',
+      'git rev-parse --is-inside-work-tree',
+      'git init',
+    ])
+    expect(getOutput()).toContain('  pnpm dev')
+
+    expect(await create({ ...YES, name: 'other', packageManager: 'bun' })).toBe(1)
+    expect(getOutput()).toContain(
+      'bun is not installed: install it, or pick another package manager.'
+    )
+    expect(existsSync(join(cwd, 'other'))).toBe(false)
+  })
+
+  it('tells a yarn Berry from a classic yarn by its version', async () => {
+    let yarnVersion = '4.5.0'
+    const run = (command: string, args: readonly string[]) =>
+      args[0] === '--version' ? { status: 0, stdout: yarnVersion } : runOutsideGit(command, args)
+    const { create, test } = setUp({ run })
+    expect(await create({ ...YES, packageManager: 'yarn' })).toBe(0)
+    expect(test.commands[1]).toMatchObject({
+      command: 'yarn',
+      args: ['install'],
+      options: { env: { YARN_ENABLE_SCRIPTS: 'false' } },
+    })
+    yarnVersion = '1.22.22'
+    expect(await create({ ...YES, name: 'classic', packageManager: 'yarn' })).toBe(0)
+    expect(test.commands.at(-3)).toMatchObject({
+      command: 'yarn',
+      args: ['install', '--ignore-scripts'],
+    })
+  })
+
   it('writes nothing without a yes', async () => {
-    const { cwd, create, getOutput, listCommands } = setUp({ isInteractive: true, answers: ['n'] })
+    const { cwd, create, getOutput, listCommands } = setUp({ isInteractive: true, answers: ['no'] })
     const options = {
       ...ASK,
       name: 'my-app',
       title: 'my-app',
       isTypeScript: true,
+      packageManager: 'npm' as const,
       scheme: 'light' as const,
       hasSampleData: false,
     }

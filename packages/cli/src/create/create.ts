@@ -7,9 +7,14 @@ import type { PackageJson } from '../detect/detect'
 import { askScheme } from '../init'
 import type { Io } from '../io'
 import { formatPlan } from '../plan/formatPlan'
-import type { PackageManager, Plan } from '../plan/planInit'
+import type { PackageManager, PackageManagerName, Plan } from '../plan/planInit'
 import type { Scheme } from '../templates/templates'
-import { createAppInstallCommand, formatRunScript, readPackageManager } from './packageManager'
+import {
+  createAppInstallCommand,
+  formatRunScript,
+  PACKAGE_MANAGERS,
+  readPackageManager,
+} from './packageManager'
 import { STARTERS, type Starter } from './starters'
 
 export interface CreateOptions {
@@ -21,6 +26,8 @@ export interface CreateOptions {
   framework: string | undefined
   /** TypeScript or JavaScript: asked for, or TypeScript, when missing. */
   isTypeScript: boolean | undefined
+  /** The package manager to install with: asked for, or the one that ran create, when missing. */
+  packageManager: PackageManagerName | undefined
   scheme: Scheme | undefined
   /** Adds the pages that read sample data: asked for, or not, when missing. */
   hasSampleData: boolean | undefined
@@ -106,9 +113,44 @@ function isInsideRepository(folder: string, io: Io): boolean {
   return status === 0 && stdout.trim() === 'true'
 }
 
+const YES_OR_NO = [
+  { value: 'yes', label: 'Yes' },
+  { value: 'no', label: 'No' },
+]
+
 async function askLanguage(io: Io): Promise<boolean> {
-  const answer = await io.ask('TypeScript or JavaScript? (TypeScript) ')
-  return !/^j(s|avascript)?$/i.test(answer.trim())
+  const choices = [
+    { value: 'ts', label: 'TypeScript (recommended)' },
+    { value: 'js', label: 'JavaScript' },
+  ]
+  return (await io.select('Language', choices)) === 'ts'
+}
+
+/** Asks for the package manager, starting on the one that ran create. */
+async function askPackageManager(io: Io, detected: PackageManagerName) {
+  const choices = PACKAGE_MANAGERS.map((name) => ({
+    value: name,
+    label: name === detected ? `${name} (the one that ran create)` : name,
+  }))
+  const answer = await io.select('Package manager', choices, PACKAGE_MANAGERS.indexOf(detected))
+  return answer as PackageManagerName
+}
+
+/**
+ * The package manager to install with, or why it cannot be used: one other than the one that ran
+ * create must answer `--version`, which also says whether a yarn is Berry.
+ */
+function resolvePackageManager(
+  name: PackageManagerName,
+  detected: PackageManager,
+  io: Io
+): PackageManager | { refusal: string } {
+  if (name === detected.name) return detected
+  const { status, stdout } = io.run(name, ['--version'], { cwd: io.cwd })
+  if (status !== 0) {
+    return { refusal: `${name} is not installed: install it, or pick another package manager.` }
+  }
+  return { name, isYarnBerry: name === 'yarn' && Number.parseInt(stdout, 10) >= 2 }
 }
 
 async function askTitle(io: Io, name: string): Promise<string> {
@@ -122,8 +164,7 @@ async function askName(io: Io): Promise<string> {
 }
 
 async function askSampleData(io: Io): Promise<boolean> {
-  const answer = await io.ask('Add sample data pages? (y/N) ')
-  return /^y(es)?$/i.test(answer.trim())
+  return (await io.select('Add sample data pages?', YES_OR_NO, 1)) === 'yes'
 }
 
 /** Whether to create the app: never on a dry run or with no terminal, else on --yes or a yes. */
@@ -137,8 +178,7 @@ async function isApproved(options: CreateOptions, isPreviewOnly: boolean, io: Io
     return false
   }
   if (options.isConfirmed) return true
-  const answer = (await io.ask('Create it? (Y/n) ')).trim()
-  const isYes = answer === '' || /^y(es)?$/i.test(answer)
+  const isYes = (await io.select('Create it?', YES_OR_NO)) === 'yes'
   if (!isYes) io.write('Nothing was written.\n')
   return isYes
 }
@@ -230,23 +270,30 @@ export async function runCreate(
     io.write(`${nameRefusal}\n`)
     return 1
   }
-  const title = (options.title ?? (canAsk ? await askTitle(io, name) : name)).trim() || name
-  if (isRefusedTitle(title)) {
-    io.write(`${title} is not a title create can use: it cannot hold \` $ { } < > or \\.\n`)
-    return 1
-  }
-  const packageName = toPackageName(name)
   const target = join(realpathSync(io.cwd), name)
   const folder = getFolderState(target, name)
   if (typeof folder === 'object') {
     io.write(`${folder.refusal}\n`)
     return 1
   }
+  const title = (options.title ?? (canAsk ? await askTitle(io, name) : name)).trim() || name
+  if (isRefusedTitle(title)) {
+    io.write(`${title} is not a title create can use: it cannot hold \` $ { } < > or \\.\n`)
+    return 1
+  }
+  const packageName = toPackageName(name)
   const isTypeScript = options.isTypeScript ?? (canAsk ? await askLanguage(io) : true)
+  const detected = readPackageManager(userAgent)
+  const packageManagerName =
+    options.packageManager ?? (canAsk ? await askPackageManager(io, detected.name) : detected.name)
+  const packageManager = resolvePackageManager(packageManagerName, detected, io)
+  if ('refusal' in packageManager) {
+    io.write(`${packageManager.refusal}\n`)
+    return 1
+  }
   const scheme = options.scheme ?? (canAsk ? await askScheme(io) : 'light')
   const hasSampleData = options.hasSampleData ?? (canAsk ? await askSampleData(io) : false)
 
-  const packageManager = readPackageManager(userAgent)
   const plan: Plan = {
     creates: starter.createFiles({
       name,

@@ -1,9 +1,12 @@
 import { parseArgs } from 'node:util'
 import { runCreate } from './create/create'
+import { PACKAGE_MANAGERS } from './create/packageManager'
 import { STARTERS } from './create/starters'
 import type { PackageJson } from './detect/detect'
 import { runInit } from './init'
 import type { Io } from './io'
+import type { PackageManagerName } from './plan/planInit'
+import { CancelledError } from './prompt'
 
 const BIN = 'npx @soroush.tech/design-system'
 
@@ -49,6 +52,8 @@ Options:
       --title <text>      what the app's pages call it: the name when not given
       --framework <name>  the app's framework: ${[`${defaultFramework} (the default)`, ...otherFrameworks].join(', ')}
       --ts, --js          TypeScript (the default) or JavaScript
+      --pm <name>         the package manager: npm, pnpm, yarn or bun; the one that ran create
+                          when not given
       --scheme <name>     the default color scheme: light (the default) or dark
       --sample-data       add a list of sample items, and a page for each
       --no-git            do not run git init
@@ -74,6 +79,7 @@ const OPTIONS = {
   title: { type: 'string' },
   ts: { type: 'boolean' },
   js: { type: 'boolean' },
+  pm: { type: 'string' },
   'sample-data': { type: 'boolean' },
   'no-git': { type: 'boolean' },
 } as const
@@ -81,7 +87,7 @@ const OPTIONS = {
 /** The options only one command takes. */
 const OWN_OPTIONS: Record<string, readonly string[]> = {
   init: ['force'],
-  create: ['framework', 'title', 'ts', 'js', 'sample-data', 'no-git'],
+  create: ['framework', 'title', 'ts', 'js', 'pm', 'sample-data', 'no-git'],
 }
 
 /** Why the command line is wrong for `command`, or `undefined` when it is right. */
@@ -99,9 +105,24 @@ function findMisuse(command: string, extra: string[], used: string[]): string | 
 
 /**
  * Reads the command line and runs the command, for `designSystem`: the package of
- * `@soroush.tech/design-system` the command installs. Returns the exit code.
+ * `@soroush.tech/design-system` the command installs. Returns the exit code: 130 when the person
+ * stops it at a question, which is before anything is written.
  */
 export async function main(
+  argv: readonly string[],
+  io: Io,
+  designSystem: PackageJson
+): Promise<number> {
+  try {
+    return await runCommandLine(argv, io, designSystem)
+  } catch (error) {
+    if (!(error instanceof CancelledError)) throw error
+    io.write('Stopped: nothing was written.\n')
+    return 130
+  }
+}
+
+async function runCommandLine(
   argv: readonly string[],
   io: Io,
   designSystem: PackageJson
@@ -140,6 +161,11 @@ export async function main(
     io.write('--ts and --js do not go together: give one.\n')
     return 1
   }
+  const { pm } = values
+  if (pm !== undefined && !PACKAGE_MANAGERS.includes(pm as PackageManagerName)) {
+    io.write(`--pm is ${PACKAGE_MANAGERS.join(', ')}, not ${pm}.\n`)
+    return 1
+  }
   const isConfirmed = Boolean(values.yes)
   const isDryRun = Boolean(values['dry-run'])
   if (command === 'create') {
@@ -150,6 +176,7 @@ export async function main(
         title: values.title,
         framework: values.framework,
         isTypeScript,
+        packageManager: pm as PackageManagerName | undefined,
         scheme,
         hasSampleData: values['sample-data'],
         isConfirmed,

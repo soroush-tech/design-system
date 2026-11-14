@@ -120,7 +120,7 @@ describe('runInit', () => {
     const root = createViteApp()
     const { io, getOutput } = createTestIo(root, { isInteractive: true, answers: ['dark', 'y'] })
     expect(await runInit(ASK, io, DESIGN_SYSTEM)).toBe(0)
-    expect(getOutput()).toContain('Default color scheme, light or dark? (light) ')
+    expect(getOutput()).toContain('? Default color scheme\n')
     expect(getOutput()).toContain('Apply these changes? (y/N) ')
     expect(read(root, 'src/theme/Providers.ts')).toContain("scheme = 'dark',")
   })

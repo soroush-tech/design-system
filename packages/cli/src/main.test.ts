@@ -4,6 +4,7 @@ import { runCreate } from './create/create'
 import { runInit } from './init'
 import { STARTERS } from './create/starters'
 import { HELP, main, USAGE } from './main'
+import { CancelledError } from './prompt'
 import { createTestIo } from './testApp'
 
 vi.mock('./init', () => ({ runInit: vi.fn(async () => 0) }))
@@ -42,7 +43,9 @@ describe('main', () => {
       'dark',
       '--sample-data',
       '--title',
-      'Shop'
+      'Shop',
+      '--pm',
+      'pnpm'
     )
     expect(code).toBe(0)
     expect(runCreate).toHaveBeenLastCalledWith(
@@ -51,6 +54,7 @@ describe('main', () => {
         title: 'Shop',
         framework: 'vike',
         isTypeScript: false,
+        packageManager: 'pnpm',
         scheme: 'dark',
         hasSampleData: true,
         isConfirmed: true,
@@ -126,6 +130,24 @@ describe('main', () => {
       code: 1,
       output: '--scheme is light or dark, not blue.\n',
     })
+  })
+
+  it('refuses a package manager create does not know', async () => {
+    expect(await runMain('create', '--pm', 'pip')).toMatchObject({
+      code: 1,
+      output: '--pm is npm, pnpm, yarn, bun, not pip.\n',
+    })
+    expect(await runMain('init', '--pm', 'npm')).toMatchObject({ code: 1 })
+  })
+
+  it('stops with 130 and says nothing was written, when a question is stopped', async () => {
+    vi.mocked(runCreate).mockRejectedValueOnce(new CancelledError())
+    expect(await runMain('create')).toMatchObject({
+      code: 130,
+      output: 'Stopped: nothing was written.\n',
+    })
+    vi.mocked(runInit).mockRejectedValueOnce(new Error('the disk is full'))
+    await expect(runMain('init')).rejects.toThrow('the disk is full')
   })
 
   it('refuses an option of the other command, and --ts with --js', async () => {

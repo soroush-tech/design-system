@@ -1,5 +1,8 @@
 import type { InstallCommand, PackageManager, PackageManagerName } from '../plan/planInit'
 
+/** The package managers create installs with, in the order it offers them. */
+export const PACKAGE_MANAGERS: readonly PackageManagerName[] = ['npm', 'pnpm', 'yarn', 'bun']
+
 /**
  * The package manager that ran `create`, from the user agent it gives the commands it starts
  * (`pnpm/10.4.1 npm/? node/v24.1.0 ...`), else npm. A new app has no lockfile to read it from.

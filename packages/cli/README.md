@@ -11,23 +11,25 @@ npx @soroush.tech/design-system create my-app
 ```
 
 It makes the app in a new folder, `my-app`, or in an empty one, and never writes in a folder that
-holds anything. It asks for what you did not give it - the name, TypeScript or JavaScript, the
-default color scheme, whether to add sample data pages - then shows every file and the install, and writes nothing before a yes.
-It installs with the package manager you ran it with (`npx`, `pnpm dlx`, `yarn dlx`, `bunx`), with
+holds anything. It asks for what you did not give it - the name and the title typed, then the
+language, the package manager, the default color scheme and the sample data pages picked with the
+arrow keys - then shows every file and the install, and writes nothing before a yes. The package
+manager starts on the one you ran it with (`npx`, `pnpm dlx`, `yarn dlx`, `bunx`). It installs with
 no scripts, and runs `git init` with no commit, unless the folder is already in a repository. When
 a write or the install fails, it takes the new app away.
 
-| Option               | What it does                                              |
-| -------------------- | --------------------------------------------------------- |
-| `-y`, `--yes`        | Create without asking: TypeScript and light, unless given |
-| `--dry-run`          | Show the files and exit                                   |
-| `--title <text>`     | What the app's pages call it: the name when not given     |
-| `--framework <name>` | The app's framework: `vike`, the default and only one yet |
-| `--ts`, `--js`       | TypeScript (the default) or JavaScript                    |
-| `--scheme <name>`    | The default color scheme: `light` or `dark`               |
-| `--sample-data`      | Add the sample data pages                                 |
-| `--no-git`           | Do not run `git init`                                     |
-| `-h`, `--help`       | Show the options of `create`                              |
+| Option               | What it does                                                      |
+| -------------------- | ----------------------------------------------------------------- |
+| `-y`, `--yes`        | Create without asking: TypeScript and light, unless given         |
+| `--dry-run`          | Show the files and exit                                           |
+| `--title <text>`     | What the app's pages call it: the name when not given             |
+| `--framework <name>` | The app's framework: `vike`, the default and only one yet         |
+| `--ts`, `--js`       | TypeScript (the default) or JavaScript                            |
+| `--pm <name>`        | `npm`, `pnpm`, `yarn` or `bun`: the one that ran it, if not given |
+| `--scheme <name>`    | The default color scheme: `light` or `dark`                       |
+| `--sample-data`      | Add the sample data pages                                         |
+| `--no-git`           | Do not run `git init`                                             |
+| `-h`, `--help`       | Show the options of `create`                                      |
 
 ### The Vike app
 

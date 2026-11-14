@@ -119,10 +119,13 @@ function findApp(cwd: string): App | string {
   return { root, packageJson: readPackageJson(root)!, rootCandidates, folder }
 }
 
-/** Asks for the default color scheme: light, unless the answer is dark. */
+/** Asks for the default color scheme, starting on light. */
 export async function askScheme(io: Io): Promise<Scheme> {
-  const answer = await io.ask('Default color scheme, light or dark? (light) ')
-  return /^d(ark)?$/i.test(answer.trim()) ? 'dark' : 'light'
+  const choices = [
+    { value: 'light', label: 'light' },
+    { value: 'dark', label: 'dark' },
+  ]
+  return (await io.select('Default color scheme', choices)) as Scheme
 }
 
 function collectFacts(app: App, scheme: Scheme | undefined, designSystem: PackageJson): InitFacts {
