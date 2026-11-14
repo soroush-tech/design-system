@@ -35,7 +35,7 @@ describe('Layout', () => {
       expect(aside).not.toContainElement(footer)
   })
 
-  it.each(['/mcp/', '/ui-spec/'])('has a version menu in the top bar of %s', (path) => {
+  it.each(['/mcp/', '/ui-spec/', '/cli/'])('has a version menu in the top bar of %s', (path) => {
     renderLayout(undefined, path)
     const bar = screen.getByRole('banner')
     expect(

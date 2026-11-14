@@ -44,10 +44,11 @@ test.describe('styled-system section', () => {
   })
 })
 
-test.describe('mcp and ui-spec sections', () => {
+test.describe('mcp, ui-spec and cli sections', () => {
   for (const [path, name] of [
     ['mcp', 'MCP server'],
     ['ui-spec', 'UI spec'],
+    ['cli', 'Command line'],
   ]) {
     test(`${name} has an overview and its releases`, async ({ page }) => {
       await page.goto(`/${path}/`)

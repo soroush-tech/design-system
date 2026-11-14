@@ -25,6 +25,7 @@ on:
           - styled-system
           - mcp
           - ui-spec
+          - cli
       version:
         description: Stable version to snapshot, e.g. 1.3.3 (empty = the latest release)
         required: false
@@ -116,7 +117,7 @@ jobs:
       fail-fast: false
       max-parallel: 1
       matrix:
-        package: [design-system, markdown, styled-system, mcp, ui-spec]
+        package: [design-system, markdown, styled-system, mcp, ui-spec, cli]
     steps:
       - name: Checkout Repository (full history for release tags)
         uses: actions/checkout@v7
@@ -135,9 +136,9 @@ jobs:
             echo "skip=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          # The MCP server is published under its own scope.
+          # The MCP server and the command line are published under their own scope.
           SCOPE=@soroush.tech
-          [ "$PKG" = mcp ] && SCOPE=@soroush.design
+          case "$PKG" in mcp | cli) SCOPE=@soroush.design ;; *) ;; esac
           # Stable releases only: an rc is never archived, and `sort -V` ranks 2.0.0-rc.1
           # above 2.0.0.
           if [ -n "$DISPATCH_VERSION" ]; then
@@ -162,10 +163,10 @@ jobs:
           if git cat-file -e "$TAG:apps/docs" 2>/dev/null; then legacy=false; else legacy=true; fi
           # A tag cut before the section had pages has nothing of it to freeze. The legacy setup
           # only knows the three component packages, so there it is the section's own pages that
-          # decide - and a legacy tag has none for mcp or ui-spec.
+          # decide - and a legacy tag has none for mcp, ui-spec or cli.
           has_section=true
           if [ "$legacy" = true ]; then
-            case "$PKG" in mcp | ui-spec) has_section=false ;; *) ;; esac
+            case "$PKG" in mcp | ui-spec | cli) has_section=false ;; *) ;; esac
           elif ! git cat-file -e "$TAG:apps/docs/src/pages/$PKG" 2>/dev/null; then
             has_section=false
           fi
