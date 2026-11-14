@@ -26,6 +26,7 @@ const YES: CreateOptions = {
   isTypeScript: undefined,
   packageManager: undefined,
   rendering: undefined,
+  libraries: undefined,
   scheme: undefined,
   hasSampleData: undefined,
   isConfirmed: true,
@@ -95,6 +96,7 @@ describe('runCreate', () => {
       title: 'my-app',
       isTypeScript: true,
       rendering: 'isomorphic',
+      libraries: [],
       scheme: 'light',
       hasSampleData: false,
       version: '2.3.0',
@@ -383,6 +385,39 @@ describe('runCreate', () => {
     })
   })
 
+  it('asks for the libraries after the rendering, again while two hold global state', async () => {
+    const { createFiles, create, getOutput } = setUp({
+      isInteractive: true,
+      answers: ['', '', '', '', '', 'zustand,jotai', 'tanstack-query,jotai', '', '', ''],
+    })
+    expect(await create(ASK)).toBe(0)
+    const output = getOutput()
+    expect(output.indexOf('? Libraries\n')).toBeGreaterThan(output.indexOf('? Rendering\n'))
+    expect(output).toContain('zustand and Jotai both hold global state: pick one.')
+    expect(createFiles).toHaveBeenCalledWith(
+      expect.objectContaining({ libraries: ['tanstack-query', 'jotai'] })
+    )
+  })
+
+  it('offers an SSG app no library, and refuses one given, or two that hold global state', async () => {
+    const { cwd, createFiles, create, getOutput } = setUp({
+      isInteractive: true,
+      answers: ['', '', '', '', 'ssg', '', '', ''],
+    })
+    expect(await create(ASK)).toBe(0)
+    expect(getOutput()).not.toContain('? Libraries')
+    expect(createFiles).toHaveBeenCalledWith(expect.objectContaining({ libraries: [] }))
+
+    const ssg = { ...YES, name: 'static', rendering: 'ssg' as const, libraries: ['msw' as const] }
+    expect(await create(ssg)).toBe(1)
+    expect(getOutput()).toContain('An SSG app has no JavaScript in the browser')
+    const both = { ...YES, name: 'both', libraries: ['zustand' as const, 'jotai' as const] }
+    expect(await create(both)).toBe(1)
+    expect(getOutput()).toContain('both hold global state: pick one.')
+    expect(existsSync(join(cwd, 'static'))).toBe(false)
+    expect(existsSync(join(cwd, 'both'))).toBe(false)
+  })
+
   it('writes nothing without a yes', async () => {
     const { cwd, create, getOutput, listCommands } = setUp({ isInteractive: true, answers: ['no'] })
     const options = {
@@ -392,6 +427,7 @@ describe('runCreate', () => {
       isTypeScript: true,
       packageManager: 'npm' as const,
       rendering: 'spa' as const,
+      libraries: [],
       scheme: 'light' as const,
       hasSampleData: false,
     }

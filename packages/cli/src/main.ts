@@ -1,5 +1,6 @@
 import { parseArgs } from 'node:util'
 import { runCreate } from './create/create'
+import { LIBRARY_NAMES, type Library } from './create/libraries'
 import { PACKAGE_MANAGERS } from './create/packageManager'
 import { RENDERINGS, STARTERS, type Rendering } from './create/starters'
 import type { PackageJson } from './detect/detect'
@@ -55,6 +56,7 @@ Options:
       --pm <name>         the package manager: npm, pnpm, yarn or bun; the one that ran create
                           when not given
       --render <name>     how pages render: isomorphic (the default), spa or ssg
+      --with <names>      the libraries to add, by comma: ${LIBRARY_NAMES.join(', ')}
       --scheme <name>     the default color scheme: light (the default) or dark
       --sample-data       add a list of sample items, and a page for each
       --no-git            do not run git init
@@ -82,6 +84,7 @@ const OPTIONS = {
   js: { type: 'boolean' },
   pm: { type: 'string' },
   render: { type: 'string' },
+  with: { type: 'string' },
   'sample-data': { type: 'boolean' },
   'no-git': { type: 'boolean' },
 } as const
@@ -89,7 +92,7 @@ const OPTIONS = {
 /** The options only one command takes. */
 const OWN_OPTIONS: Record<string, readonly string[]> = {
   init: ['force'],
-  create: ['framework', 'title', 'ts', 'js', 'pm', 'render', 'sample-data', 'no-git'],
+  create: ['framework', 'title', 'ts', 'js', 'pm', 'render', 'with', 'sample-data', 'no-git'],
 }
 
 /** Why the command line is wrong for `command`, or `undefined` when it is right. */
@@ -163,6 +166,16 @@ async function runCommandLine(
     io.write('--ts and --js do not go together: give one.\n')
     return 1
   }
+  // `--with` names the libraries by comma; `--with ''` adds none.
+  const libraries = values.with
+    ?.split(',')
+    .map((name) => name.trim())
+    .filter(Boolean)
+  const unknownLibrary = libraries?.find((name) => !LIBRARY_NAMES.includes(name as Library))
+  if (unknownLibrary !== undefined) {
+    io.write(`--with takes ${LIBRARY_NAMES.join(', ')}, not ${unknownLibrary}.\n`)
+    return 1
+  }
   const { render } = values
   if (render !== undefined && !RENDERINGS.includes(render as Rendering)) {
     io.write(`--render is ${RENDERINGS.join(', ')}, not ${render}.\n`)
@@ -185,6 +198,7 @@ async function runCommandLine(
         isTypeScript,
         packageManager: pm as PackageManagerName | undefined,
         rendering: render as Rendering | undefined,
+        libraries: libraries as Library[] | undefined,
         scheme,
         hasSampleData: values['sample-data'],
         isConfirmed,

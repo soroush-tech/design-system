@@ -10,7 +10,7 @@
 //    page of each, too.
 //
 //   node scripts/smoke-create.mjs [--lang ts|js] [--pm npm|pnpm] [--framework vike]
-//     [--render isomorphic|spa|ssg] [--sample-data]
+//     [--render isomorphic|spa|ssg] [--with <libraries>] [--sample-data]
 //
 // The temp folder is removed when every check passes, and kept, with its path printed, when one
 // fails.
@@ -40,10 +40,11 @@ const { values } = parseArgs({
     pm: { type: 'string', default: 'npm' },
     framework: { type: 'string', default: 'vike' },
     render: { type: 'string', default: 'isomorphic' },
+    with: { type: 'string', default: '' },
     'sample-data': { type: 'boolean', default: false },
   },
 })
-const { lang, pm, framework, render, 'sample-data': hasSampleData } = values
+const { lang, pm, framework, render, with: libraries, 'sample-data': hasSampleData } = values
 if (
   !['ts', 'js'].includes(lang) ||
   !['npm', 'pnpm'].includes(pm) ||
@@ -239,7 +240,7 @@ try {
   }
   const { name, version, peerDependencies } = packages.get(DESIGN_SYSTEM).manifest
   const argv = ['create', APP, '--yes', `--${lang}`, '--framework', framework, '--no-git']
-  argv.push('--render', render)
+  argv.push('--render', render, '--with', libraries)
   if (hasSampleData) argv.push('--sample-data')
   console.log(`\n$ create ${argv.slice(1).join(' ')}   (with ${pm})`)
   const code = await cli.default(argv, io, { name, version, peerDependencies })
@@ -253,6 +254,8 @@ try {
   console.log('\nChecking the build:')
   const pages = ['index.html', 'about/index.html', '404.html']
   if (hasSampleData) pages.push('items/index.html')
+  // msw's plugin ships the mock API's worker with the build.
+  if (libraries.includes('msw')) pages.push('mockServiceWorker.js')
   for (const page of pages) {
     check(existsSync(join(appDir, 'dist/client', page)), `the build prerendered ${page}`)
   }

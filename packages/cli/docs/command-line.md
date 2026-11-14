@@ -31,8 +31,9 @@ arrow keys:
 2. The package manager: npm, pnpm, yarn or bun, starting on the one you ran it with (`npx`,
    `pnpm dlx`, `yarn dlx`, `bunx`). One you pick must be installed.
 3. The rendering: isomorphic, SPA or SSG - see below.
-4. The default color scheme: light or dark.
-5. Whether to add the sample data pages.
+4. The libraries, toggled with space - see below. An SSG app is offered none.
+5. The default color scheme: light or dark.
+6. Whether to add the sample data pages.
 
 Then it shows every file and the install, and writes nothing before a yes. It installs with no
 scripts, and runs `git init` with no commit, unless the folder is already in a repository. When a
@@ -48,6 +49,7 @@ written.
 | `--ts`, `--js`       | TypeScript (the default) or JavaScript                            |
 | `--pm <name>`        | `npm`, `pnpm`, `yarn` or `bun`: the one that ran it, if not given |
 | `--render <name>`    | `isomorphic` (the default), `spa` or `ssg`                        |
+| `--with <names>`     | The libraries, by comma: `--with tanstack-query,msw,zustand`      |
 | `--scheme <name>`    | The default color scheme: `light` or `dark`                       |
 | `--sample-data`      | Add the sample data pages                                         |
 | `--no-git`           | Do not run `git init`                                             |
@@ -64,6 +66,19 @@ written.
   the next page. It has no light and dark switch, since that needs JavaScript.
 
 All three build to static files that any static host serves.
+
+### Libraries
+
+Each library comes installed, wired in, and with an example of its use:
+
+- **TanStack Query** (`tanstack-query`): the query client lives in `+Layout`. With the sample data
+  pages, each page starts on its build-time data, then its query fetches it again in the browser,
+  from `src/data/api`, and keeps it in the cache.
+- **msw** (`msw`): a mock API in the browser. `src/mocks/handlers` says what it answers - the
+  sample items, with the sample data pages - and it starts before the first page while `VITE_MSW`
+  in `.env` is true, in development and in the build. Set it to false once your own API answers.
+- **zustand** (`zustand`) or **Jotai** (`jotai`): the color scheme moves out of `+Layout` into
+  `src/state/scheme`, a store or an atom any component can read. An app takes one of the two.
 
 ### The Vike app
 

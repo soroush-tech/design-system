@@ -47,7 +47,9 @@ describe('main', () => {
       '--pm',
       'pnpm',
       '--render',
-      'ssg'
+      'ssg',
+      '--with',
+      'tanstack-query, msw'
     )
     expect(code).toBe(0)
     expect(runCreate).toHaveBeenLastCalledWith(
@@ -58,6 +60,7 @@ describe('main', () => {
         isTypeScript: false,
         packageManager: 'pnpm',
         rendering: 'ssg',
+        libraries: ['tanstack-query', 'msw'],
         scheme: 'dark',
         hasSampleData: true,
         isConfirmed: true,
@@ -132,6 +135,19 @@ describe('main', () => {
     expect(await runMain('init', '--scheme', 'blue')).toMatchObject({
       code: 1,
       output: '--scheme is light or dark, not blue.\n',
+    })
+  })
+
+  it('takes no library for an empty --with, and refuses one create does not know', async () => {
+    await runMain('create', '--with', '')
+    expect(runCreate).toHaveBeenLastCalledWith(
+      expect.objectContaining({ libraries: [] }),
+      expect.anything(),
+      DESIGN_SYSTEM
+    )
+    expect(await runMain('create', '--with', 'msw,redux')).toMatchObject({
+      code: 1,
+      output: '--with takes tanstack-query, msw, zustand, jotai, not redux.\n',
     })
   })
 

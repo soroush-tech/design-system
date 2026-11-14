@@ -11,6 +11,7 @@ const FACTS: StarterFacts = {
   title: 'My App',
   isTypeScript: true,
   rendering: 'isomorphic',
+  libraries: [],
   scheme: 'light',
   hasSampleData: true,
   version: '2.3.0',
@@ -92,6 +93,86 @@ describe('the Vike starter', () => {
     const packageJson = JSON.parse(files.get('package.json')!)
     expect(packageJson.dependencies['@emotion/server']).toBeUndefined()
     expect(files.get('README.md')).toContain('a single-page app')
+  })
+
+  // The libraries' fixtures: create-vike-libraries (isomorphic, sample data, TanStack Query, msw,
+  // zustand) and create-vike-jotai (SPA, TanStack Query, Jotai).
+  it.each([
+    [
+      `${FIXTURE}-libraries`,
+      { libraries: ['tanstack-query', 'msw', 'zustand'] },
+      ['src/state/scheme.ts', 'src/mocks/handlers.ts', 'src/data/api.ts', '.env'],
+    ],
+    [
+      `${FIXTURE}-jotai`,
+      { rendering: 'spa', hasSampleData: false, libraries: ['jotai', 'tanstack-query'] },
+      ['src/state/scheme.ts'],
+    ],
+  ] as const)('writes the app %s holds', async (fixture, facts, paths) => {
+    const files = createFiles(facts)
+    for (const [path, content] of files) {
+      await expect(content).toMatchFileSnapshot(`${fixture}/${path}`)
+    }
+    for (const path of paths) expect(files.has(path), path).toBe(true)
+  })
+
+  it('installs each library, msw only for development', () => {
+    const packageJson = JSON.parse(
+      createFiles({ libraries: ['tanstack-query', 'msw', 'jotai'] }).get('package.json')!
+    )
+    expect(packageJson.dependencies['@tanstack/react-query']).toBe(
+      devDependencies['@tanstack/react-query']
+    )
+    expect(packageJson.dependencies.jotai).toBe(devDependencies.jotai)
+    expect(packageJson.dependencies.zustand).toBeUndefined()
+    expect(packageJson.dependencies.msw).toBeUndefined()
+    expect(packageJson.devDependencies.msw).toBe(devDependencies.msw)
+  })
+
+  it('starts the mock API before the first page, in the browser, while VITE_MSW is true', () => {
+    for (const rendering of ['isomorphic', 'spa'] as const) {
+      const files = createFiles({ rendering, libraries: ['msw'] })
+      const onRenderClient = files.get('src/pages/+onRenderClient.tsx')!
+      expect(onRenderClient).toContain("import { startMocks } from '../mocks/start'")
+      expect(onRenderClient).toContain('const mocks = startMocks()\n')
+      expect(onRenderClient).toContain(
+        'OnRenderClientAsync = async (pageContext) => {\n  await mocks\n'
+      )
+      expect(files.get('vite.config.ts')).toContain("msw({ mode: 'worker-only' })")
+      expect(files.get('.env')).toContain('VITE_MSW=true')
+    }
+    expect(
+      createFiles({ libraries: ['msw'], hasSampleData: false }).get('src/mocks/handlers.ts')
+    ).toContain("http.get('/api/hello'")
+    expect(createFiles().get('vite.config.ts')).not.toContain('msw')
+  })
+
+  it('holds the scheme where the state library says, and the query client in +Layout', () => {
+    const zustand = createFiles({ libraries: ['zustand'] }).get('src/pages/+Layout.tsx')!
+    expect(zustand).toContain('const { scheme, setScheme } = useScheme()')
+    expect(zustand).toMatch(/^import type \{ ReactNode \} from 'react'/)
+    const jotai = createFiles({ libraries: ['jotai'], isTypeScript: false })
+    expect(jotai.get('src/pages/+Layout.jsx')).toContain(
+      'const [scheme, setScheme] = useAtom(schemeAtom)'
+    )
+    expect(jotai.get('src/state/scheme.js')).toContain("export const schemeAtom = atom('light')")
+    const query = createFiles({ libraries: ['tanstack-query'] }).get('src/pages/+Layout.tsx')!
+    expect(query).toContain('const [queryClient] = useState(() => new QueryClient())')
+    expect(query).toContain('    <QueryClientProvider client={queryClient}>\n      <Providers')
+  })
+
+  it('reads the sample items through the query, from the mock API or from the items themselves', () => {
+    const withMocks = createFiles({ libraries: ['tanstack-query', 'msw'] })
+    expect(withMocks.get('src/data/api.ts')).toContain("await fetch('/api/items')")
+    expect(withMocks.get('src/pages/items/+Page.tsx')).toContain('queryFn: fetchItems,')
+    expect(withMocks.get('src/pages/items/@id/+Page.tsx')).toContain(
+      'queryFn: () => fetchItem(initialItem.id),'
+    )
+    const withoutMocks = createFiles({ libraries: ['tanstack-query'], isTypeScript: false })
+    expect(withoutMocks.get('src/data/api.js')).toContain('return items.map(')
+    expect(
+      createFiles({ libraries: ['tanstack-query'], hasSampleData: false }).has('src/data/api.ts')
+    ).toBe(false)
   })
 
   it('renders SSG pages to HTML only, with no client renderer and no scheme switch', () => {

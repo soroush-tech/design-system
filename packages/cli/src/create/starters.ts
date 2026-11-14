@@ -1,4 +1,5 @@
 import type { Scheme } from '../templates/templates'
+import type { Library } from './libraries'
 import { vikeStarter } from './vike/vike'
 
 /**
@@ -21,6 +22,8 @@ export interface StarterFacts {
   title: string
   isTypeScript: boolean
   rendering: Rendering
+  /** The libraries to add, with their wiring and an example of each. */
+  libraries: readonly Library[]
   scheme: Scheme
   /** Adds the pages that read sample data. */
   hasSampleData: boolean

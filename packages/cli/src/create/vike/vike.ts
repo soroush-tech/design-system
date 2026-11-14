@@ -4,6 +4,7 @@
 // here is the one `init` reuses for an existing Vike app (#80).
 import { devDependencies } from '../../../package.json'
 import { createProvidersSource, createThemesSource } from '../../templates/templates'
+import type { Library } from '../libraries'
 import type { Rendering, Starter, StarterFacts, StarterFile } from '../starters'
 
 /** The versions the starter installs: the ones this package is tested with. */
@@ -15,14 +16,25 @@ const toRange = (version: string) => (/^\d/.test(version) ? `^${version}` : vers
 const pickVersions = (names: readonly (keyof typeof VERSIONS)[]) =>
   Object.fromEntries(names.map((name) => [name, toRange(VERSIONS[name])]))
 
+/** The package each library installs: in the app's code, or (msw) only in development. */
+const LIBRARY_PACKAGES = {
+  'tanstack-query': '@tanstack/react-query',
+  zustand: 'zustand',
+  jotai: 'jotai',
+} as const
+
 function createPackageJson({
   packageName,
   isTypeScript,
   rendering,
+  libraries,
   version,
 }: StarterFacts): string {
   // An SPA's server draws no page, so it extracts no styles.
   const renderer = rendering === 'spa' ? ([] as const) : (['@emotion/server'] as const)
+  const libraryPackages = libraries.flatMap((library) =>
+    library === 'msw' ? [] : [LIBRARY_PACKAGES[library]]
+  )
   const packageJson = {
     name: packageName,
     private: true,
@@ -36,10 +48,11 @@ function createPackageJson({
     },
     dependencies: {
       '@soroush.tech/design-system': toRange(version),
-      ...pickVersions([...renderer, 'react', 'react-dom', 'vike']),
+      ...pickVersions([...renderer, ...libraryPackages, 'react', 'react-dom', 'vike']),
     },
     devDependencies: pickVersions([
       '@vitejs/plugin-react',
+      ...(libraries.includes('msw') ? (['msw'] as const) : ([] as const)),
       'vite',
       ...(isTypeScript
         ? (['@types/react', '@types/react-dom', 'typescript'] as const)
@@ -49,7 +62,19 @@ function createPackageJson({
   return `${JSON.stringify(packageJson, null, 2)}\n`
 }
 
-const VITE_CONFIG = `import react from '@vitejs/plugin-react'
+/** The Vite config: with msw, its plugin serves the mock API's worker, in development and in the build. */
+const createViteConfig = ({ libraries }: StarterFacts) =>
+  libraries.includes('msw')
+    ? `import react from '@vitejs/plugin-react'
+import { msw } from 'msw/vite'
+import vike from 'vike/plugin'
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  plugins: [react(), vike(), msw({ mode: 'worker-only' })],
+})
+`
+    : `import react from '@vitejs/plugin-react'
 import vike from 'vike/plugin'
 import { defineConfig } from 'vite'
 
@@ -157,7 +182,117 @@ const ABOUT_TEXT: Readonly<Record<Rendering, string>> = {
   ssg: 'A second page: it is HTML with its styles from the build, and a link loads it as a new page.',
 }
 
-function createSources({ title, isTypeScript, rendering, scheme, hasSampleData }: StarterFacts) {
+/** Indents each line by `spaces`: the layout's tree, which has no blank line. */
+const indentLines = (text: string, spaces: number) =>
+  text
+    .split('\n')
+    .map((line) => `${' '.repeat(spaces)}${line}`)
+    .join('\n')
+
+/** Where the layout keeps the scheme it switches: its own state, a zustand store or a Jotai atom. */
+const SCHEME_HOLDERS = {
+  zustand: { name: 'useScheme', line: 'const { scheme, setScheme } = useScheme()' },
+  jotai: { name: 'schemeAtom', line: 'const [scheme, setScheme] = useAtom(schemeAtom)' },
+} as const
+
+/**
+ * The +Layout, the frame every page renders in: it holds the app's providers, the light and dark
+ * switch when the page has JavaScript, and the query client of TanStack Query.
+ */
+function createLayout({
+  title,
+  isTypeScript,
+  rendering,
+  libraries,
+  scheme,
+  hasSampleData,
+}: StarterFacts): string {
+  const t = (typeScriptOnly: string) => (isTypeScript ? typeScriptOnly : '')
+  const x = isTypeScript ? 'ts' : 'js'
+  const hasSwitch = rendering !== 'ssg'
+  const hasQuery = libraries.includes('tanstack-query')
+  const holder = libraries.includes('zustand')
+    ? 'zustand'
+    : libraries.includes('jotai')
+      ? 'jotai'
+      : undefined
+  const hasState = hasQuery || (hasSwitch && holder === undefined)
+  const imports = [
+    hasState
+      ? `import { useState${t(', type ReactNode')} } from 'react'\n`
+      : t("import type { ReactNode } from 'react'\n"),
+    hasSwitch ? "import { Button } from '@soroush.tech/design-system/Button'\n" : '',
+    "import { Flex } from '@soroush.tech/design-system/Flex'\n",
+    "import { Link } from '@soroush.tech/design-system/Link'\n",
+    "import { Typography } from '@soroush.tech/design-system/Typography'\n",
+    "import { View } from '@soroush.tech/design-system/View'\n",
+    hasQuery ? "import { QueryClient, QueryClientProvider } from '@tanstack/react-query'\n" : '',
+    holder === 'jotai' ? "import { useAtom } from 'jotai'\n" : '',
+    holder ? `import { ${SCHEME_HOLDERS[holder].name} } from '../state/scheme'\n` : '',
+    "import { Providers } from '../theme/Providers'\n",
+  ].join('')
+  const about = !hasSwitch
+    ? `The frame every page renders in, inside the app's providers. A page has no JavaScript in the
+ * browser, so it is drawn in the default scheme, which src/theme/Providers.${x} sets.`
+    : holder
+      ? `The frame every page renders in. The app's providers live here, in the app itself, so the
+ * scheme, held in src/state/scheme.${x}, can switch the theme.`
+      : `The frame every page renders in. The app's providers live here, in the app itself, so the
+ * scheme it holds can switch the theme.`
+  const hooks = [
+    hasQuery ? '  const [queryClient] = useState(() => new QueryClient())\n' : '',
+    hasSwitch
+      ? `  ${holder ? SCHEME_HOLDERS[holder].line : `const [scheme, setScheme] = useState${t("<'light' | 'dark'>")}('${scheme}')`}
+  const otherScheme = scheme === 'light' ? 'dark' : 'light'
+`
+      : '',
+  ].join('')
+  const frame = `<Providers${hasSwitch ? ' scheme={scheme}' : ''}>
+  <Flex
+    as="header"
+    flexDirection="row"
+    alignItems="center"
+    justifyContent="space-between"
+    gap={2}
+    px={3}
+    py={2}
+    bg="paper"
+  >
+    <Typography variant="h6" as="span">
+      ${title}
+    </Typography>
+    <Flex as="nav" flexDirection="row" alignItems="center" gap={2}>
+      <Link href="/" underline="hover">
+        Home
+      </Link>
+      <Link href="/about" underline="hover">
+        About
+      </Link>
+${`${hasSampleData ? ITEMS_LINK : ''}${hasSwitch ? SCHEME_SWITCH : ''}`.replaceAll(/^ {4}/gm, '')}    </Flex>
+  </Flex>
+  <View as="main" px={3} py={4}>
+    {children}
+  </View>
+</Providers>`
+  const tree = hasQuery
+    ? `<QueryClientProvider client={queryClient}>
+${indentLines(frame, 2)}
+</QueryClientProvider>`
+    : frame
+  return `${imports}
+/**
+ * ${about}
+ */
+export default function Layout({ children }${t(': { readonly children: ReactNode }')}) {
+${hooks}  return (
+${indentLines(tree, 4)}
+  )
+}
+`
+}
+
+function createSources(facts: StarterFacts) {
+  const { title, isTypeScript, rendering } = facts
   const t = (typeScriptOnly: string) => (isTypeScript ? typeScriptOnly : '')
   const x = isTypeScript ? 'ts' : 'js'
   return {
@@ -267,68 +402,7 @@ export const onRenderClient${t(': OnRenderClientSync')} = (pageContext) => {
   }
 }
 `,
-    Layout: `${
-      rendering === 'ssg'
-        ? `${t("import type { ReactNode } from 'react'\n")}import { Flex } from '@soroush.tech/design-system/Flex'
-import { Link } from '@soroush.tech/design-system/Link'
-import { Typography } from '@soroush.tech/design-system/Typography'
-import { View } from '@soroush.tech/design-system/View'
-import { Providers } from '../theme/Providers'
-
-/**
- * The frame every page renders in, inside the app's providers. A page has no JavaScript in the
- * browser, so it is drawn in the default scheme, which src/theme/Providers.${x} sets.
- */
-export default function Layout({ children }${t(': { readonly children: ReactNode }')}) {
-  return (
-    <Providers>`
-        : `import { useState${t(', type ReactNode')} } from 'react'
-import { Button } from '@soroush.tech/design-system/Button'
-import { Flex } from '@soroush.tech/design-system/Flex'
-import { Link } from '@soroush.tech/design-system/Link'
-import { Typography } from '@soroush.tech/design-system/Typography'
-import { View } from '@soroush.tech/design-system/View'
-import { Providers } from '../theme/Providers'
-
-/**
- * The frame every page renders in. The app's providers live here, in the app itself, so the
- * scheme it holds can switch the theme.
- */
-export default function Layout({ children }${t(': { readonly children: ReactNode }')}) {
-  const [scheme, setScheme] = useState${t("<'light' | 'dark'>")}('${scheme}')
-  const otherScheme = scheme === 'light' ? 'dark' : 'light'
-  return (
-    <Providers scheme={scheme}>`
-    }
-      <Flex
-        as="header"
-        flexDirection="row"
-        alignItems="center"
-        justifyContent="space-between"
-        gap={2}
-        px={3}
-        py={2}
-        bg="paper"
-      >
-        <Typography variant="h6" as="span">
-          ${title}
-        </Typography>
-        <Flex as="nav" flexDirection="row" alignItems="center" gap={2}>
-          <Link href="/" underline="hover">
-            Home
-          </Link>
-          <Link href="/about" underline="hover">
-            About
-          </Link>
-${hasSampleData ? ITEMS_LINK : ''}${rendering === 'ssg' ? '' : SCHEME_SWITCH}        </Flex>
-      </Flex>
-      <View as="main" px={3} py={4}>
-        {children}
-      </View>
-    </Providers>
-  )
-}
-`,
+    Layout: createLayout(facts),
     home: `import { Button } from '@soroush.tech/design-system/Button'
 import { Flex } from '@soroush.tech/design-system/Flex'
 import { Typography } from '@soroush.tech/design-system/Typography'
@@ -414,8 +488,30 @@ export default function Page() {
  * The sample data pages: a list of items and a page for each, which read `src/data/items` in their
  * +data hooks, at build time.
  */
-function createSampleDataFiles({ isTypeScript }: StarterFacts): StarterFile[] {
+function createSampleDataFiles({ isTypeScript, libraries }: StarterFacts): StarterFile[] {
   const t = (typeScriptOnly: string) => (isTypeScript ? typeScriptOnly : '')
+  const hasQuery = libraries.includes('tanstack-query')
+  // With TanStack Query, a page starts on its build-time data, then its query fetches it again in
+  // the browser and keeps it in the cache.
+  const queryImport = (api: string, fetcher: string) =>
+    hasQuery
+      ? `import { useQuery } from '@tanstack/react-query'\nimport { ${fetcher} } from '${api}'\n`
+      : ''
+  const listRead = hasQuery
+    ? `  const { data: items } = useQuery({
+    queryKey: ['items'],
+    queryFn: fetchItems,
+    initialData: useData${t('<Data>')}(),
+  })`
+    : `  const items = useData${t('<Data>')}()`
+  const itemRead = hasQuery
+    ? `  const initialItem = useData${t('<Data>')}()
+  const { data: item } = useQuery({
+    queryKey: ['items', initialItem.id],
+    queryFn: () => fetchItem(initialItem.id),
+    initialData: initialItem,
+  })`
+    : `  const item = useData${t('<Data>')}()`
   const x = isTypeScript ? 'ts' : 'js'
   const dataType = t('\nexport type Data = ReturnType<typeof data>\n')
   const items = `${t(`/** One sample item. */
@@ -491,11 +587,11 @@ ${dataType}`
   const listPage = `import { Flex } from '@soroush.tech/design-system/Flex'
 import { Link } from '@soroush.tech/design-system/Link'
 import { Typography } from '@soroush.tech/design-system/Typography'
-import { useData } from '../usePageContext'
+${queryImport('../../data/api', 'fetchItems')}import { useData } from '../usePageContext'
 ${t("import type { Data } from './+data'\n")}import { StatusChip } from './StatusChip'
 
 export default function Page() {
-  const items = useData${t('<Data>')}()
+${listRead}
   return (
     <Flex gap={2}>
       <Typography variant="h2">Items</Typography>
@@ -537,11 +633,11 @@ export function onBeforePrerenderStart() {
   const itemPage = `import { Flex } from '@soroush.tech/design-system/Flex'
 import { Link } from '@soroush.tech/design-system/Link'
 import { Typography } from '@soroush.tech/design-system/Typography'
-import { useData } from '../../usePageContext'
+${queryImport('../../../data/api', 'fetchItem')}import { useData } from '../../usePageContext'
 import { StatusChip } from '../StatusChip'
 ${t("import type { Data } from './+data'\n")}
 export default function Page() {
-  const item = useData${t('<Data>')}()
+${itemRead}
   return (
     <Flex gap={2} alignItems="flex-start">
       <Typography variant="h2">{item.title}</Typography>
@@ -584,7 +680,13 @@ const README_RENDERING: Readonly<Record<Rendering, { summary: string; renderers:
   },
 }
 
-function createReadme({ title, isTypeScript, rendering, hasSampleData }: StarterFacts): string {
+function createReadme({
+  title,
+  isTypeScript,
+  rendering,
+  libraries,
+  hasSampleData,
+}: StarterFacts): string {
   const x = isTypeScript ? 'ts' : 'js'
   const { summary, renderers } = README_RENDERING[rendering]
   const sampleData = hasSampleData
@@ -592,6 +694,13 @@ function createReadme({ title, isTypeScript, rendering, hasSampleData }: Starter
   Their \`+data\` hooks read the data at build time: make them fetch your own.
 `
     : ''
+  const libraryLines: Readonly<Record<Library, string>> = {
+    'tanstack-query': `- [TanStack Query](https://tanstack.com/query): the query client lives in \`+Layout\`.${hasSampleData ? ` The items pages start on their build-time data, then query \`src/data/api.${x}\` in the browser.` : ''}\n`,
+    msw: `- [msw](https://mswjs.io): \`src/mocks/handlers.${x}\` is a mock API, which answers in the browser while \`VITE_MSW\` in \`.env\` is true.\n`,
+    zustand: `- [zustand](https://zustand.docs.pmnd.rs): \`src/state/scheme.${x}\` holds the color scheme, in a store.\n`,
+    jotai: `- [Jotai](https://jotai.org): \`src/state/scheme.${x}\` holds the color scheme, in an atom.\n`,
+  }
+  const libraryText = libraries.map((library) => libraryLines[library]).join('')
   return `# ${title}
 
 A [Vike](https://vike.dev) app on the [@soroush.tech design system](https://docs.soroush.tech):
@@ -602,24 +711,172 @@ ${summary}
 - \`src/pages/+Layout.${x}x\` is the frame every page renders in, inside the app's providers.
 - \`src/theme/themes.${x}\` holds the light and the dark theme: make them your own.
 - In \`src/pages/\`, ${renderers}
-${sampleData}
+${sampleData}${libraryText}
 Fonts: the theme names Space Grotesk and JetBrains Mono, and does not load them. See
 https://docs.soroush.tech/design-system/getting-started/installation/#fonts
 `
 }
 
+/**
+ * The client renderer with msw: the mock API starts as the module loads, and the first page waits
+ * for it, so no request leaves before the mock can answer it.
+ */
+function withMocks(onRenderClient: string): string {
+  return onRenderClient
+    .replaceAll('OnRenderClientSync', 'OnRenderClientAsync')
+    .replace(
+      "import { PageShell } from './PageShell'\n",
+      "import { startMocks } from '../mocks/start'\nimport { PageShell } from './PageShell'\n"
+    )
+    .replace(/^(let root.*\n)/m, '$1const mocks = startMocks()\n')
+    .replace('= (pageContext) => {\n', '= async (pageContext) => {\n  await mocks\n')
+}
+
+/** The files each library adds: its setup, and the example that uses it. */
+function createLibraryFiles({
+  isTypeScript,
+  libraries,
+  scheme,
+  hasSampleData,
+}: StarterFacts): StarterFile[] {
+  const t = (typeScriptOnly: string) => (isTypeScript ? typeScriptOnly : '')
+  const x = isTypeScript ? 'ts' : 'js'
+  const files: StarterFile[] = []
+  const hasMocks = libraries.includes('msw')
+  if (libraries.includes('zustand')) {
+    files.push({
+      path: `src/state/scheme.${x}`,
+      content: `import { create } from 'zustand'
+${t(`
+interface SchemeState {
+  scheme: 'light' | 'dark'
+  setScheme: (scheme: 'light' | 'dark') => void
+}
+`)}
+/** The color scheme the app is drawn in: a zustand store, which any component can read. */
+export const useScheme = create${t('<SchemeState>()')}((set) => ({
+  scheme: '${scheme}',
+  setScheme: (scheme) => set({ scheme }),
+}))
+`,
+    })
+  }
+  if (libraries.includes('jotai')) {
+    files.push({
+      path: `src/state/scheme.${x}`,
+      content: `import { atom } from 'jotai'
+
+/** The color scheme the app is drawn in: a Jotai atom, which any component can read. */
+export const schemeAtom = atom${t("<'light' | 'dark'>")}('${scheme}')
+`,
+    })
+  }
+  if (hasMocks) {
+    const handlers = hasSampleData
+      ? `import { http, HttpResponse } from 'msw'
+import { items } from '../data/items'
+
+/** The mock API: what it answers, by method and path. Add a handler for each call the app makes. */
+export const handlers = [
+  http.get('/api/items', () =>
+    HttpResponse.json(items.map(({ id, title, status }) => ({ id, title, status })))
+  ),
+  http.get('/api/items/:id', ({ params }) => {
+    const item = items.find(({ id }) => id === params.id)
+    return item ? HttpResponse.json(item) : new HttpResponse(null, { status: 404 })
+  }),
+]
+`
+      : `import { http, HttpResponse } from 'msw'
+
+/** The mock API: what it answers, by method and path. Add a handler for each call the app makes. */
+export const handlers = [
+  http.get('/api/hello', () => HttpResponse.json({ message: 'Hello from the mock API' })),
+]
+`
+    files.push(
+      { path: `src/mocks/handlers.${x}`, content: handlers },
+      {
+        path: `src/mocks/browser.${x}`,
+        content: `import { setupWorker } from 'msw/browser'
+import { handlers } from './handlers'
+
+/** The mock API in the browser: a service worker answers the requests the handlers match. */
+export const worker = setupWorker(...handlers)
+`,
+      },
+      {
+        path: `src/mocks/start.${x}`,
+        content: `/**
+ * Starts the mock API in the browser while VITE_MSW, in .env, is true. Set it to false once the
+ * app's own API answers.
+ */
+export async function startMocks() {
+  if (import.meta.env.VITE_MSW !== 'true') return
+  const { worker } = await import('./browser')
+  await worker.start()
+}
+`,
+      },
+      {
+        path: '.env',
+        content: `# The mock API in src/mocks answers in the browser while this is true. Set it to false once
+# the app's own API answers.
+VITE_MSW=true
+`,
+      }
+    )
+  }
+  if (libraries.includes('tanstack-query') && hasSampleData) {
+    files.push({
+      path: `src/data/api.${x}`,
+      content: hasMocks
+        ? `${t("import type { Item } from './items'\n\n")}/** The items, from the API: while VITE_MSW is true, the mock API of src/mocks answers. */
+export async function fetchItems()${t(": Promise<Pick<Item, 'id' | 'title' | 'status'>[]>")} {
+  const response = await fetch('/api/items')
+  if (!response.ok) throw new Error(\`GET /api/items answered \${response.status}\`)
+  return response.json()
+}
+
+/** One item, from the API. */
+export async function fetchItem(id${t(': string')})${t(': Promise<Item>')} {
+  const response = await fetch(\`/api/items/\${id}\`)
+  if (!response.ok) throw new Error(\`GET /api/items/\${id} answered \${response.status}\`)
+  return response.json()
+}
+`
+        : `import { items } from './items'
+
+/** The items, as an API would answer: make it fetch from yours. */
+export async function fetchItems() {
+  return items.map(({ id, title, status }) => ({ id, title, status }))
+}
+
+/** One item, as an API would answer: make it fetch from yours. */
+export async function fetchItem(id${t(': string')}) {
+  const item = items.find((candidate) => candidate.id === id)
+  if (!item) throw new Error(\`There is no item \${id}.\`)
+  return item
+}
+`,
+    })
+  }
+  return files
+}
+
 /** The files of the Vike app `facts` describe. */
 function createFiles(facts: StarterFacts): StarterFile[] {
-  const { isTypeScript, rendering, scheme } = facts
+  const { isTypeScript, rendering, scheme, libraries } = facts
   const x = isTypeScript ? 'ts' : 'js'
   const sources = createSources(facts)
   const isSpa = rendering === 'spa'
   // An SSG page has no JavaScript in the browser, so it has nothing to render there.
-  const onRenderClient =
+  const renderer =
     rendering === 'ssg' ? undefined : isSpa ? sources.spaOnRenderClient : sources.onRenderClient
+  const onRenderClient = renderer && libraries.includes('msw') ? withMocks(renderer) : renderer
   return [
     { path: 'package.json', content: createPackageJson(facts) },
-    { path: `vite.config.${x}`, content: VITE_CONFIG },
+    { path: `vite.config.${x}`, content: createViteConfig(facts) },
     ...(isTypeScript ? [{ path: 'tsconfig.json', content: TSCONFIG }] : []),
     { path: '.gitignore', content: GITIGNORE },
     { path: 'README.md', content: createReadme(facts) },
@@ -644,6 +901,7 @@ function createFiles(facts: StarterFacts): StarterFile[] {
     { path: `src/pages/about/+Page.${x}x`, content: sources.about },
     { path: `src/pages/_error/+Page.${x}x`, content: sources.error },
     ...(facts.hasSampleData ? createSampleDataFiles(facts) : []),
+    ...createLibraryFiles(facts),
   ]
 }
 

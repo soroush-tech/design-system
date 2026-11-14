@@ -15,6 +15,7 @@ import {
   PACKAGE_MANAGERS,
   readPackageManager,
 } from './packageManager'
+import { findLibraryConflict, LIBRARIES, type Library } from './libraries'
 import { RENDERINGS, STARTERS, type Rendering, type Starter } from './starters'
 
 export interface CreateOptions {
@@ -30,6 +31,8 @@ export interface CreateOptions {
   packageManager: PackageManagerName | undefined
   /** How the pages are rendered: asked for, or isomorphic, when missing. */
   rendering: Rendering | undefined
+  /** The libraries to add: asked for, or none, when missing. */
+  libraries: readonly Library[] | undefined
   scheme: Scheme | undefined
   /** Adds the pages that read sample data: asked for, or not, when missing. */
   hasSampleData: boolean | undefined
@@ -177,6 +180,17 @@ async function askRendering(io: Io): Promise<Rendering> {
   return (await io.select('Rendering', choices)) as Rendering
 }
 
+/** Asks for the libraries, again while two of one group are picked. */
+async function askLibraries(io: Io): Promise<Library[]> {
+  const choices = LIBRARIES.map(({ name, label }) => ({ value: name, label }))
+  for (;;) {
+    const libraries = (await io.selectMany('Libraries', choices)) as Library[]
+    const conflict = findLibraryConflict(libraries)
+    if (!conflict) return libraries
+    io.write(`${conflict}\n`)
+  }
+}
+
 async function askSampleData(io: Io): Promise<boolean> {
   return (await io.select('Add sample data pages?', YES_OR_NO, 1)) === 'yes'
 }
@@ -306,6 +320,17 @@ export async function runCreate(
     return 1
   }
   const rendering = options.rendering ?? (canAsk ? await askRendering(io) : RENDERINGS[0])
+  // An SSG page has no JavaScript in the browser, where every library works.
+  const libraryRefusal =
+    rendering === 'ssg' && options.libraries?.length
+      ? 'An SSG app has no JavaScript in the browser, so it takes no library: leave out --with.'
+      : findLibraryConflict(options.libraries ?? [])
+  if (libraryRefusal) {
+    io.write(`${libraryRefusal}\n`)
+    return 1
+  }
+  const libraries =
+    options.libraries ?? (canAsk && rendering !== 'ssg' ? await askLibraries(io) : [])
   const scheme = options.scheme ?? (canAsk ? await askScheme(io) : 'light')
   const hasSampleData = options.hasSampleData ?? (canAsk ? await askSampleData(io) : false)
 
@@ -316,6 +341,7 @@ export async function runCreate(
       title,
       isTypeScript,
       rendering,
+      libraries,
       scheme,
       hasSampleData,
       version: designSystem.version!,
