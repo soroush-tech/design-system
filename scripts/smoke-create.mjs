@@ -250,6 +250,8 @@ try {
   const { name: packageName } = JSON.parse(readFileSync(join(appDir, 'package.json'), 'utf8'))
   check(packageName === 'smoke-app', `the ${APP} folder holds the package smoke-app`)
   if (lang === 'ts') run(pm, ['run', 'typecheck'], appDir)
+  // The Vitest recipe's own test must pass in the app it was written into.
+  if (libraries.includes('vitest')) run(pm, ['run', 'test'], appDir)
   run(pm, ['run', 'build'], appDir)
   console.log('\nChecking the build:')
   const pages = ['index.html', 'about/index.html', '404.html']

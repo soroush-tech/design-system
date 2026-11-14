@@ -77,8 +77,16 @@ Each library comes installed, wired in, and with an example of its use:
 - **msw** (`msw`): a mock API in the browser. `src/mocks/handlers` says what it answers - the
   sample items, with the sample data pages - and it starts before the first page while `VITE_MSW`
   in `.env` is true, in development and in the build. Set it to false once your own API answers.
-- **zustand** (`zustand`) or **Jotai** (`jotai`): the color scheme moves out of `+Layout` into
-  `src/state/scheme`, a store or an atom any component can read. An app takes one of the two.
+- **SWR** (`swr`): fetches and caches data, the other way to TanStack Query - an app takes one
+  of the two. With the sample data pages, it fetches the items the way the query does.
+- **zustand** (`zustand`), **Jotai** (`jotai`) or **Redux Toolkit** (`redux-toolkit`): the color
+  scheme moves out of `+Layout` into a store or an atom any component can read -
+  `src/state/scheme`, or with Redux Toolkit a slice of `src/state/store`, whose provider wraps
+  every page in `PageShell`. An app takes one of the three.
+- **React Hook Form + Zod** (`react-hook-form`): a `/form` page, linked from the header, whose two
+  fields - the design system's `TextInput` - a Zod schema checks before the form is sent.
+- **Vitest + Testing Library** (`vitest`): `npm run test` runs `src/pages/index/Page.test`, which
+  renders the home page in jsdom, inside the app's providers.
 
 ### The Vike app
 

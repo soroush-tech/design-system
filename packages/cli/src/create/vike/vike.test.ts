@@ -108,12 +108,58 @@ describe('the Vike starter', () => {
       { rendering: 'spa', hasSampleData: false, libraries: ['jotai', 'tanstack-query'] },
       ['src/state/scheme.ts'],
     ],
+    [
+      `${FIXTURE}-more`,
+      { libraries: ['swr', 'redux-toolkit', 'react-hook-form', 'vitest'] },
+      [
+        'src/state/store.ts',
+        'src/data/api.ts',
+        'src/pages/form/+Page.tsx',
+        'vitest.config.ts',
+        'src/pages/index/Page.test.tsx',
+      ],
+    ],
   ] as const)('writes the app %s holds', async (fixture, facts, paths) => {
     const files = createFiles(facts)
     for (const [path, content] of files) {
       await expect(content).toMatchFileSnapshot(`${fixture}/${path}`)
     }
     for (const path of paths) expect(files.has(path), path).toBe(true)
+  })
+
+  it('fetches the sample items through SWR, starting on the build-time data', () => {
+    const files = createFiles({ libraries: ['swr'], isTypeScript: false })
+    expect(files.get('src/pages/items/+Page.jsx')).toContain("useSWR('items', fetchItems, {")
+    expect(files.get('src/pages/items/@id/+Page.jsx')).toContain('{ fallbackData: initialItem }')
+    expect(JSON.parse(files.get('package.json')!).dependencies.swr).toBe(devDependencies.swr)
+  })
+
+  it('provides the Redux store in PageShell, and keeps the scheme in a slice of it', () => {
+    const files = createFiles({ libraries: ['redux-toolkit'] })
+    const pageShell = files.get('src/pages/PageShell.tsx')!
+    expect(pageShell).toContain("import { Provider as StoreProvider } from 'react-redux'")
+    expect(pageShell).toContain(
+      '        <StoreProvider store={store}>\n          <PageContextProvider'
+    )
+    expect(files.get('src/pages/+Layout.tsx')).toContain(
+      "const setScheme = (next: 'light' | 'dark') => dispatch(schemeChanged(next))"
+    )
+    expect(
+      createFiles({ libraries: ['redux-toolkit'], isTypeScript: false }).get('src/state/store.js')
+    ).toContain('schemeChanged: (_scheme, action) => action.payload,')
+  })
+
+  it('adds a validated form page and its link, and a test the app runs', () => {
+    const files = createFiles({ libraries: ['react-hook-form', 'vitest'], title: "Shop's" })
+    expect(files.get('src/pages/+Layout.tsx')).toContain('<Link href="/form"')
+    expect(files.get('src/pages/form/+Page.tsx')).toContain('resolver: zodResolver(schema),')
+    expect(files.get('src/pages/index/Page.test.tsx')).toContain(
+      String.raw`screen.getByRole('heading', { name: 'Shop\'s' })`
+    )
+    const packageJson = JSON.parse(files.get('package.json')!)
+    expect(packageJson.scripts.test).toBe('vitest run')
+    expect(packageJson.devDependencies.jsdom).toBe(devDependencies.jsdom)
+    expect(packageJson.dependencies.zod).toBe(devDependencies.zod)
   })
 
   it('installs each library, msw only for development', () => {
@@ -222,8 +268,18 @@ describe('the Vike starter', () => {
     expect(paths).toContain('src/pages/+Layout.jsx')
     expect(paths).toContain('src/theme/themes.js')
     expect(paths.some((path) => /\.tsx?$|tsconfig/.test(path))).toBe(false)
-    for (const rendering of ['isomorphic', 'spa', 'ssg'] as const) {
-      for (const [path, content] of createFiles({ isTypeScript: false, rendering })) {
+    // Every library's files too: the two sets hold each one, with no two of one group.
+    const librarySets = [
+      [],
+      ['tanstack-query', 'msw', 'zustand', 'react-hook-form', 'vitest'],
+      ['swr', 'jotai'],
+      ['redux-toolkit'],
+    ] as const
+    for (const [rendering, libraries] of [
+      ...(['isomorphic', 'spa', 'ssg'] as const).map((value) => [value, []] as const),
+      ...librarySets.map((set) => ['isomorphic', set] as const),
+    ]) {
+      for (const [path, content] of createFiles({ isTypeScript: false, rendering, libraries })) {
         if (!/\.jsx?$/.test(path)) continue
         expect(content, `${rendering} ${path}`).not.toMatch(
           /import type|export type|interface |as const|as Data|<Data>|: Root|satisfies|<'light'|readonly |\)!/

@@ -147,7 +147,8 @@ describe('main', () => {
     )
     expect(await runMain('create', '--with', 'msw,redux')).toMatchObject({
       code: 1,
-      output: '--with takes tanstack-query, msw, zustand, jotai, not redux.\n',
+      output:
+        '--with takes tanstack-query, swr, msw, zustand, jotai, redux-toolkit, react-hook-form, vitest, not redux.\n',
     })
   })
 

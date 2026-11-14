@@ -313,6 +313,9 @@ jobs:
           - lang: js
             pm: npm
             flags: --render ssg
+          - lang: ts
+            pm: pnpm
+            flags: --sample-data --with swr,redux-toolkit,react-hook-form,vitest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v7

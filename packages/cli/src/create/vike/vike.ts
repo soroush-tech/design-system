@@ -3,7 +3,7 @@
 // TypeScript has, so the JavaScript app is the same file with the types taken out. The Vike wiring
 // here is the one `init` reuses for an existing Vike app (#80).
 import { devDependencies } from '../../../package.json'
-import { createProvidersSource, createThemesSource } from '../../templates/templates'
+import { createProvidersSource, createThemesSource, type Scheme } from '../../templates/templates'
 import type { Library } from '../libraries'
 import type { Rendering, Starter, StarterFacts, StarterFile } from '../starters'
 
@@ -16,12 +16,23 @@ const toRange = (version: string) => (/^\d/.test(version) ? `^${version}` : vers
 const pickVersions = (names: readonly (keyof typeof VERSIONS)[]) =>
   Object.fromEntries(names.map((name) => [name, toRange(VERSIONS[name])]))
 
-/** The package each library installs: in the app's code, or (msw) only in development. */
-const LIBRARY_PACKAGES = {
-  'tanstack-query': '@tanstack/react-query',
-  zustand: 'zustand',
-  jotai: 'jotai',
-} as const
+type Package = keyof typeof VERSIONS
+
+/** The packages each library installs: for the app's code, and for its development only. */
+const LIBRARY_PACKAGES: Readonly<
+  Record<Library, { dependencies?: readonly Package[]; devDependencies?: readonly Package[] }>
+> = {
+  'tanstack-query': { dependencies: ['@tanstack/react-query'] },
+  swr: { dependencies: ['swr'] },
+  msw: { devDependencies: ['msw'] },
+  zustand: { dependencies: ['zustand'] },
+  jotai: { dependencies: ['jotai'] },
+  'redux-toolkit': { dependencies: ['@reduxjs/toolkit', 'react-redux'] },
+  'react-hook-form': { dependencies: ['react-hook-form', 'zod', '@hookform/resolvers'] },
+  vitest: {
+    devDependencies: ['vitest', '@testing-library/react', '@testing-library/dom', 'jsdom'],
+  },
+}
 
 function createPackageJson({
   packageName,
@@ -32,8 +43,11 @@ function createPackageJson({
 }: StarterFacts): string {
   // An SPA's server draws no page, so it extracts no styles.
   const renderer = rendering === 'spa' ? ([] as const) : (['@emotion/server'] as const)
-  const libraryPackages = libraries.flatMap((library) =>
-    library === 'msw' ? [] : [LIBRARY_PACKAGES[library]]
+  const libraryPackages = libraries.flatMap(
+    (library) => LIBRARY_PACKAGES[library].dependencies ?? []
+  )
+  const libraryDevPackages = libraries.flatMap(
+    (library) => LIBRARY_PACKAGES[library].devDependencies ?? []
   )
   const packageJson = {
     name: packageName,
@@ -45,6 +59,7 @@ function createPackageJson({
       build: 'vite build',
       preview: 'vite preview',
       ...(isTypeScript ? { typecheck: 'tsc --noEmit' } : {}),
+      ...(libraries.includes('vitest') ? { test: 'vitest run' } : {}),
     },
     dependencies: {
       '@soroush.tech/design-system': toRange(version),
@@ -52,7 +67,7 @@ function createPackageJson({
     },
     devDependencies: pickVersions([
       '@vitejs/plugin-react',
-      ...(libraries.includes('msw') ? (['msw'] as const) : ([] as const)),
+      ...libraryDevPackages,
       'vite',
       ...(isTypeScript
         ? (['@types/react', '@types/react-dom', 'typescript'] as const)
@@ -189,11 +204,43 @@ const indentLines = (text: string, spaces: number) =>
     .map((line) => `${' '.repeat(spaces)}${line}`)
     .join('\n')
 
-/** Where the layout keeps the scheme it switches: its own state, a zustand store or a Jotai atom. */
-const SCHEME_HOLDERS = {
-  zustand: { name: 'useScheme', line: 'const { scheme, setScheme } = useScheme()' },
-  jotai: { name: 'schemeAtom', line: 'const [scheme, setScheme] = useAtom(schemeAtom)' },
-} as const
+type SchemeHolder = 'zustand' | 'jotai' | 'redux-toolkit'
+
+/**
+ * Where the layout keeps the scheme it switches - a zustand store, a Jotai atom or the Redux
+ * store, else its own state - as the imports and the lines that read it.
+ */
+function getSchemeHolder(
+  holder: SchemeHolder | undefined,
+  t: (typeScriptOnly: string) => string,
+  scheme: Scheme
+): { imports: string; lines: string } {
+  if (holder === 'zustand') {
+    return {
+      imports: "import { useScheme } from '../state/scheme'\n",
+      lines: '  const { scheme, setScheme } = useScheme()\n',
+    }
+  }
+  if (holder === 'jotai') {
+    return {
+      imports: "import { useAtom } from 'jotai'\nimport { schemeAtom } from '../state/scheme'\n",
+      lines: '  const [scheme, setScheme] = useAtom(schemeAtom)\n',
+    }
+  }
+  if (holder === 'redux-toolkit') {
+    return {
+      imports: `import { useDispatch, useSelector } from 'react-redux'\nimport { schemeChanged${t(', type RootState')} } from '../state/store'\n`,
+      lines: `  const scheme = useSelector((state${t(': RootState')}) => state.scheme)
+  const dispatch = useDispatch()
+  const setScheme = (next${t(": 'light' | 'dark'")}) => dispatch(schemeChanged(next))
+`,
+    }
+  }
+  return {
+    imports: '',
+    lines: `  const [scheme, setScheme] = useState${t("<'light' | 'dark'>")}('${scheme}')\n`,
+  }
+}
 
 /**
  * The +Layout, the frame every page renders in: it holds the app's providers, the light and dark
@@ -211,11 +258,10 @@ function createLayout({
   const x = isTypeScript ? 'ts' : 'js'
   const hasSwitch = rendering !== 'ssg'
   const hasQuery = libraries.includes('tanstack-query')
-  const holder = libraries.includes('zustand')
-    ? 'zustand'
-    : libraries.includes('jotai')
-      ? 'jotai'
-      : undefined
+  const holder = (['zustand', 'jotai', 'redux-toolkit'] as const).find((library) =>
+    libraries.includes(library)
+  )
+  const schemeHolder = getSchemeHolder(holder, t, scheme)
   const hasState = hasQuery || (hasSwitch && holder === undefined)
   const imports = [
     hasState
@@ -227,8 +273,7 @@ function createLayout({
     "import { Typography } from '@soroush.tech/design-system/Typography'\n",
     "import { View } from '@soroush.tech/design-system/View'\n",
     hasQuery ? "import { QueryClient, QueryClientProvider } from '@tanstack/react-query'\n" : '',
-    holder === 'jotai' ? "import { useAtom } from 'jotai'\n" : '',
-    holder ? `import { ${SCHEME_HOLDERS[holder].name} } from '../state/scheme'\n` : '',
+    hasSwitch ? schemeHolder.imports : '',
     "import { Providers } from '../theme/Providers'\n",
   ].join('')
   const about = !hasSwitch
@@ -236,15 +281,13 @@ function createLayout({
  * browser, so it is drawn in the default scheme, which src/theme/Providers.${x} sets.`
     : holder
       ? `The frame every page renders in. The app's providers live here, in the app itself, so the
- * scheme, held in src/state/scheme.${x}, can switch the theme.`
+ * scheme, held in src/state/${holder === 'redux-toolkit' ? 'store' : 'scheme'}.${x}, can switch the theme.`
       : `The frame every page renders in. The app's providers live here, in the app itself, so the
  * scheme it holds can switch the theme.`
   const hooks = [
     hasQuery ? '  const [queryClient] = useState(() => new QueryClient())\n' : '',
     hasSwitch
-      ? `  ${holder ? SCHEME_HOLDERS[holder].line : `const [scheme, setScheme] = useState${t("<'light' | 'dark'>")}('${scheme}')`}
-  const otherScheme = scheme === 'light' ? 'dark' : 'light'
-`
+      ? `${schemeHolder.lines}  const otherScheme = scheme === 'light' ? 'dark' : 'light'\n`
       : '',
   ].join('')
   const frame = `<Providers${hasSwitch ? ' scheme={scheme}' : ''}>
@@ -268,7 +311,7 @@ function createLayout({
       <Link href="/about" underline="hover">
         About
       </Link>
-${`${hasSampleData ? ITEMS_LINK : ''}${hasSwitch ? SCHEME_SWITCH : ''}`.replaceAll(/^ {4}/gm, '')}    </Flex>
+${`${hasSampleData ? ITEMS_LINK : ''}${libraries.includes('react-hook-form') ? FORM_LINK : ''}${hasSwitch ? SCHEME_SWITCH : ''}`.replaceAll(/^ {4}/gm, '')}    </Flex>
   </Flex>
   <View as="main" px={3} py={4}>
     {children}
@@ -491,19 +534,27 @@ export default function Page() {
 function createSampleDataFiles({ isTypeScript, libraries }: StarterFacts): StarterFile[] {
   const t = (typeScriptOnly: string) => (isTypeScript ? typeScriptOnly : '')
   const hasQuery = libraries.includes('tanstack-query')
-  // With TanStack Query, a page starts on its build-time data, then its query fetches it again in
+  const hasSwr = libraries.includes('swr')
+  // With TanStack Query or SWR, a page starts on its build-time data, then fetches it again in
   // the browser and keeps it in the cache.
   const queryImport = (api: string, fetcher: string) =>
     hasQuery
       ? `import { useQuery } from '@tanstack/react-query'\nimport { ${fetcher} } from '${api}'\n`
-      : ''
+      : hasSwr
+        ? `import useSWR from 'swr'\nimport { ${fetcher} } from '${api}'\n`
+        : ''
   const listRead = hasQuery
     ? `  const { data: items } = useQuery({
     queryKey: ['items'],
     queryFn: fetchItems,
     initialData: useData${t('<Data>')}(),
   })`
-    : `  const items = useData${t('<Data>')}()`
+    : hasSwr
+      ? `  const initialItems = useData${t('<Data>')}()
+  const { data: items = initialItems } = useSWR('items', fetchItems, {
+    fallbackData: initialItems,
+  })`
+      : `  const items = useData${t('<Data>')}()`
   const itemRead = hasQuery
     ? `  const initialItem = useData${t('<Data>')}()
   const { data: item } = useQuery({
@@ -511,7 +562,14 @@ function createSampleDataFiles({ isTypeScript, libraries }: StarterFacts): Start
     queryFn: () => fetchItem(initialItem.id),
     initialData: initialItem,
   })`
-    : `  const item = useData${t('<Data>')}()`
+    : hasSwr
+      ? `  const initialItem = useData${t('<Data>')}()
+  const { data: item = initialItem } = useSWR(
+    ['items', initialItem.id],
+    () => fetchItem(initialItem.id),
+    { fallbackData: initialItem }
+  )`
+      : `  const item = useData${t('<Data>')}()`
   const x = isTypeScript ? 'ts' : 'js'
   const dataType = t('\nexport type Data = ReturnType<typeof data>\n')
   const items = `${t(`/** One sample item. */
@@ -699,6 +757,10 @@ function createReadme({
     msw: `- [msw](https://mswjs.io): \`src/mocks/handlers.${x}\` is a mock API, which answers in the browser while \`VITE_MSW\` in \`.env\` is true.\n`,
     zustand: `- [zustand](https://zustand.docs.pmnd.rs): \`src/state/scheme.${x}\` holds the color scheme, in a store.\n`,
     jotai: `- [Jotai](https://jotai.org): \`src/state/scheme.${x}\` holds the color scheme, in an atom.\n`,
+    swr: `- [SWR](https://swr.vercel.app): fetches and caches data.${hasSampleData ? ` The items pages start on their build-time data, then fetch \`src/data/api.${x}\` in the browser.` : ''}\n`,
+    'redux-toolkit': `- [Redux Toolkit](https://redux-toolkit.js.org): \`src/state/store.${x}\` holds the color scheme, in a slice of the store \`PageShell\` provides.\n`,
+    'react-hook-form': `- [React Hook Form](https://react-hook-form.com) and [Zod](https://zod.dev): \`/form\` is a form whose values a Zod schema checks.\n`,
+    vitest: `- [Vitest](https://vitest.dev) and [Testing Library](https://testing-library.com): \`npm run test\` runs \`src/pages/index/Page.test.${x}x\`.\n`,
   }
   const libraryText = libraries.map((library) => libraryLines[library]).join('')
   return `# ${title}
@@ -715,6 +777,125 @@ ${sampleData}${libraryText}
 Fonts: the theme names Space Grotesk and JetBrains Mono, and does not load them. See
 https://docs.soroush.tech/design-system/getting-started/installation/#fonts
 `
+}
+
+/** The layout's link to the form page, when the app has React Hook Form. */
+const FORM_LINK = `          <Link href="/form" underline="hover">
+            Form
+          </Link>
+`
+
+/**
+ * The form page of React Hook Form: two fields of the design system's TextInput, which a Zod
+ * schema checks before the form is sent.
+ */
+function createFormPage(isTypeScript: boolean): string {
+  const t = (typeScriptOnly: string) => (isTypeScript ? typeScriptOnly : '')
+  return `import { useState } from 'react'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Controller, useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { Button } from '@soroush.tech/design-system/Button'
+import { Flex } from '@soroush.tech/design-system/Flex'
+import { TextInput } from '@soroush.tech/design-system/TextInput'
+import { Typography } from '@soroush.tech/design-system/Typography'
+
+/** What the form takes, and what it says when a value will not do. */
+const schema = z.object({
+  name: z.string().trim().min(1, 'Your name, please.'),
+  email: z.email('An email address, please.'),
+})
+${t(`
+type Values = z.infer<typeof schema>
+`)}
+export default function Page() {
+  const [sent, setSent] = useState${t('<Values | null>')}(null)
+  const { control, handleSubmit } = useForm${t('<Values>')}({
+    resolver: zodResolver(schema),
+    defaultValues: { name: '', email: '' },
+  })
+  return (
+    <Flex gap={2} alignItems="flex-start">
+      <Typography variant="h2">Form</Typography>
+      <Typography color="secondary">
+        React Hook Form holds the values, and a Zod schema checks them when the form is sent.
+      </Typography>
+      <form noValidate onSubmit={handleSubmit(setSent)}>
+        <Flex gap={2} alignItems="flex-start">
+          <Controller
+            name="name"
+            control={control}
+            render={({ field, fieldState }) => (
+              <Flex gap={1}>
+                <TextInput
+                  name={field.name}
+                  value={field.value}
+                  onChange={field.onChange}
+                  placeholder="Name"
+                  error={fieldState.invalid}
+                  inputProps={{ 'aria-label': 'Name', onBlur: field.onBlur }}
+                />
+                <Typography variant="caption" color="error">
+                  {fieldState.error?.message}
+                </Typography>
+              </Flex>
+            )}
+          />
+          <Controller
+            name="email"
+            control={control}
+            render={({ field, fieldState }) => (
+              <Flex gap={1}>
+                <TextInput
+                  name={field.name}
+                  value={field.value}
+                  onChange={field.onChange}
+                  type="email"
+                  placeholder="Email"
+                  error={fieldState.invalid}
+                  inputProps={{ 'aria-label': 'Email', onBlur: field.onBlur }}
+                />
+                <Typography variant="caption" color="error">
+                  {fieldState.error?.message}
+                </Typography>
+              </Flex>
+            )}
+          />
+          <Button type="submit">Send</Button>
+        </Flex>
+      </form>
+      {sent ? <Typography>Thanks, {sent.name}: the form was valid.</Typography> : null}
+    </Flex>
+  )
+}
+`
+}
+
+/**
+ * PageShell with Redux Toolkit: the store's provider wraps every page, so +Layout and the pages
+ * read the store.
+ */
+function withStore(pageShell: string): string {
+  const lines = pageShell
+    .replace(
+      "import { CacheProvider, styleCache } from '@soroush.tech/design-system/engine'\n",
+      "import { CacheProvider, styleCache } from '@soroush.tech/design-system/engine'\nimport { Provider as StoreProvider } from 'react-redux'\n"
+    )
+    .replace(
+      "import { PageContextProvider } from './usePageContext'\n",
+      "import { store } from '../state/store'\nimport { PageContextProvider } from './usePageContext'\n"
+    )
+    .split('\n')
+  const start = lines.findIndex((line) => line.trimStart().startsWith('<PageContextProvider'))
+  const end = lines.findIndex((line) => line.trimStart() === '</PageContextProvider>')
+  const indent = lines[start].slice(0, lines[start].indexOf('<'))
+  return [
+    ...lines.slice(0, start),
+    `${indent}<StoreProvider store={store}>`,
+    ...lines.slice(start, end + 1).map((line) => `  ${line}`),
+    `${indent}</StoreProvider>`,
+    ...lines.slice(end + 1),
+  ].join('\n')
 }
 
 /**
@@ -734,6 +915,7 @@ function withMocks(onRenderClient: string): string {
 
 /** The files each library adds: its setup, and the example that uses it. */
 function createLibraryFiles({
+  title,
   isTypeScript,
   libraries,
   scheme,
@@ -827,7 +1009,68 @@ VITE_MSW=true
       }
     )
   }
-  if (libraries.includes('tanstack-query') && hasSampleData) {
+  if (libraries.includes('redux-toolkit')) {
+    files.push({
+      path: `src/state/store.${x}`,
+      content: `import { configureStore, createSlice${t(', type PayloadAction')} } from '@reduxjs/toolkit'
+
+/** The color scheme the app is drawn in: a slice of the store. */
+const schemeSlice = createSlice({
+  name: 'scheme',
+  initialState: '${scheme}'${t(" as 'light' | 'dark'")},
+  reducers: {
+    schemeChanged: (_scheme, action${t(": PayloadAction<'light' | 'dark'>")}) => action.payload,
+  },
+})
+
+export const { schemeChanged } = schemeSlice.actions
+
+/** The app's Redux store, which PageShell provides to every page. */
+export const store = configureStore({ reducer: { scheme: schemeSlice.reducer } })
+${t(`
+export type RootState = ReturnType<typeof store.getState>
+`)}`,
+    })
+  }
+  if (libraries.includes('react-hook-form')) {
+    files.push({ path: `src/pages/form/+Page.${x}x`, content: createFormPage(isTypeScript) })
+  }
+  if (libraries.includes('vitest')) {
+    files.push(
+      {
+        path: `vitest.config.${x}`,
+        content: `import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vitest/config'
+
+// The tests render components in jsdom, with no Vike: a page is a component like any other.
+export default defineConfig({
+  plugins: [react()],
+  test: { environment: 'jsdom' },
+})
+`,
+      },
+      {
+        path: `src/pages/index/Page.test.${x}x`,
+        content: `import { render, screen } from '@testing-library/react'
+import { describe, expect, it } from 'vitest'
+import { Providers } from '../../theme/Providers'
+import Page from './+Page'
+
+describe('the home page', () => {
+  it('shows the app title', () => {
+    render(
+      <Providers>
+        <Page />
+      </Providers>
+    )
+    expect(screen.getByRole('heading', { name: '${title.replaceAll("'", String.raw`\'`)}' })).toBeTruthy()
+  })
+})
+`,
+      }
+    )
+  }
+  if ((libraries.includes('tanstack-query') || libraries.includes('swr')) && hasSampleData) {
     files.push({
       path: `src/data/api.${x}`,
       content: hasMocks
@@ -887,7 +1130,12 @@ function createFiles(facts: StarterFacts): StarterFile[] {
       content: createProvidersSource({ isTypeScript, scheme, themesImport: './themes' }),
     },
     { path: `src/pages/+config.${x}`, content: sources.config },
-    { path: `src/pages/PageShell.${x}x`, content: sources.PageShell },
+    {
+      path: `src/pages/PageShell.${x}x`,
+      content: libraries.includes('redux-toolkit')
+        ? withStore(sources.PageShell)
+        : sources.PageShell,
+    },
     { path: `src/pages/usePageContext.${x}x`, content: sources.usePageContext },
     {
       path: `src/pages/+onRenderHtml.${x}x`,

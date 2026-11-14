@@ -72,7 +72,7 @@ files: `createLibraryFiles` adds their own (the store or atom, the mock API, `sr
 `createLayout` holds the query client and the scheme where the state library says, and
 `withMocks` makes the client renderer start msw first. Their versions are this package's
 devDependencies too. `type-tests/create-vike-libraries` (TanStack Query, msw, zustand) and
-`-jotai` typecheck them. In the isomorphic app:
+`-jotai` typecheck them, and `-more` (SWR, Redux Toolkit, React Hook Form, Vitest). In the isomorphic app:
 
 - `+onRenderHtml` renders the page with `@emotion/server` on the design system's `styleCache`, and
   puts the styles it used in the head, so the page is drawn styled before any script runs.
