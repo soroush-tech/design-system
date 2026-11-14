@@ -25,6 +25,8 @@ const YES: CreateOptions = {
   framework: undefined,
   isTypeScript: undefined,
   packageManager: undefined,
+  // Most tests look at the app alone; the workspace has tests of its own.
+  layout: 'standalone',
   rendering: undefined,
   libraries: undefined,
   scheme: undefined,
@@ -291,15 +293,16 @@ describe('runCreate', () => {
   it('asks what it was not told in a terminal, in its order, typing only the name and title', async () => {
     const { cwd, createFiles, create, getOutput } = setUp({
       isInteractive: true,
-      answers: ['', '', 'js', '', 'ssg', 'dark', 'yes', ''],
+      answers: ['', '', 'js', '', '', 'ssg', 'dark', 'yes', ''],
     })
-    expect(await create(ASK)).toBe(0)
+    expect(await create({ ...ASK, layout: undefined })).toBe(0)
     const output = getOutput()
     const questions = [
       'App name? (my-app) ',
       'App title? (my-app) ',
       '? Language\n',
       '? Package manager\n',
+      '? Repository\n',
       '? Rendering\n',
       '? Default color scheme\n',
       '? Add sample data pages?\n',
@@ -308,7 +311,7 @@ describe('runCreate', () => {
     const positions = questions.map((question) => output.indexOf(question))
     expect(positions.every((position) => position >= 0)).toBe(true)
     expect(positions).toEqual([...positions].sort((a, b) => a - b))
-    expect(output).toContain('a Test app in JavaScript (SSG)')
+    expect(output).toContain('a Test app in JavaScript (SSG), in a workspace, in ./my-app:')
     expect(createFiles).toHaveBeenCalledWith(
       expect.objectContaining({
         name: 'my-app',
@@ -317,7 +320,30 @@ describe('runCreate', () => {
         hasSampleData: true,
       })
     )
-    expect(existsSync(join(cwd, 'my-app/src/theme/themes.js'))).toBe(true)
+    expect(existsSync(join(cwd, 'my-app/apps/web/src/theme/themes.js'))).toBe(true)
+  })
+
+  it('makes a workspace by default, with the app in apps/web, and installs it from the root', async () => {
+    const { cwd, createFiles, create, getOutput, test } = setUp({
+      dependencies: { userAgent: 'pnpm/10.4.1 npm/? node/v24.1.0 linux x64' },
+    })
+    expect(await create({ ...YES, name: 'testApp', layout: undefined })).toBe(0)
+    const root = join(cwd, 'testApp')
+    expect(createFiles).toHaveBeenCalledWith(
+      expect.objectContaining({ name: 'testApp', packageName: '@test-app/web' })
+    )
+    expect(JSON.parse(read(join(root, 'package.json')))).toMatchObject({ name: 'test-app' })
+    expect(read(join(root, 'pnpm-workspace.yaml'))).toBe('packages:\n  - apps/*\n  - services/*\n')
+    expect(existsSync(join(root, 'services/.gitkeep'))).toBe(true)
+    expect(existsSync(join(root, 'apps/web/src/theme/themes.ts'))).toBe(true)
+    expect(test.commands[0].options.cwd).toBe(root)
+
+    const output = getOutput()
+    expect(output).toContain(
+      'create will make testApp (package test-app), a Test app in TypeScript (isomorphic), in a workspace, in ./testApp:'
+    )
+    expect(output).toContain('  cd testApp\n  pnpm dev')
+    expect(output).toContain('Make the themes your own in apps/web/src/theme/themes.ts.')
   })
 
   it('takes the name and title it is given, and the choices each start on', async () => {

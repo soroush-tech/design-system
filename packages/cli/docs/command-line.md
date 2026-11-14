@@ -30,10 +30,11 @@ arrow keys:
 1. The language: TypeScript (recommended) or JavaScript.
 2. The package manager: npm, pnpm, yarn or bun, starting on the one you ran it with (`npx`,
    `pnpm dlx`, `yarn dlx`, `bunx`). One you pick must be installed.
-3. The rendering: isomorphic, SPA or SSG - see below.
-4. The libraries, toggled with space - see below. An SSG app is offered none.
-5. The default color scheme: light or dark.
-6. Whether to add the sample data pages.
+3. The repository: a workspace (recommended) or the app alone - see below.
+4. The rendering: isomorphic, SPA or SSG - see below.
+5. The libraries, toggled with space - see below. An SSG app is offered none.
+6. The default color scheme: light or dark.
+7. Whether to add the sample data pages.
 
 Then it shows every file and the install, and writes nothing before a yes. It installs with no
 scripts, and runs `git init` with no commit, unless the folder is already in a repository. When a
@@ -42,18 +43,35 @@ written.
 
 | Option               | What it does                                                      |
 | -------------------- | ----------------------------------------------------------------- |
-| `-y`, `--yes`        | Create without asking: TypeScript, isomorphic, light, no samples  |
+| `-y`, `--yes`        | Create without asking: TypeScript, a workspace, isomorphic, light |
 | `--dry-run`          | Show the files and exit                                           |
 | `--title <text>`     | What the app's pages call it: the name when not given             |
 | `--framework <name>` | The app's framework: `vike`, the default and only one yet         |
 | `--ts`, `--js`       | TypeScript (the default) or JavaScript                            |
 | `--pm <name>`        | `npm`, `pnpm`, `yarn` or `bun`: the one that ran it, if not given |
+| `--layout <name>`    | `workspace` (the default) or `standalone`                         |
 | `--render <name>`    | `isomorphic` (the default), `spa` or `ssg`                        |
 | `--with <names>`     | The libraries, by comma: `--with tanstack-query,msw,zustand`      |
 | `--scheme <name>`    | The default color scheme: `light` or `dark`                       |
 | `--sample-data`      | Add the sample data pages                                         |
 | `--no-git`           | Do not run `git init`                                             |
 | `-h`, `--help`       | Show the options of `create`                                      |
+
+### Repository
+
+- **Workspace** (the default): the app is `apps/web` of a workspace, with room for more apps
+  beside it and for back-end services in `services/`. The root's `package.json` lists the
+  workspaces (pnpm's are in `pnpm-workspace.yaml`), and its `dev`, `build` and `preview` scripts
+  run the app's with your package manager's own workspace command. The app's package is named after
+  the workspace's: `testApp` holds `@test-app/web`. It installs once, at the root.
+- **Standalone**: the app alone, at the folder's root.
+
+```
+testApp/
+  package.json
+  apps/web/      the app
+  services/      empty, for your services
+```
 
 ### Rendering
 

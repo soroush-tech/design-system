@@ -17,6 +17,7 @@ import {
 } from './packageManager'
 import { findLibraryConflict, LIBRARIES, type Library } from './libraries'
 import { RENDERINGS, STARTERS, type Rendering, type Starter } from './starters'
+import { createWorkspaceFiles, LAYOUTS, toAppPackageName, type Layout } from './workspace'
 
 export interface CreateOptions {
   /** The app's folder: asked for, or `my-app`, when missing. */
@@ -29,6 +30,8 @@ export interface CreateOptions {
   isTypeScript: boolean | undefined
   /** The package manager to install with: asked for, or the one that ran create, when missing. */
   packageManager: PackageManagerName | undefined
+  /** How the repository holds the app: asked for, or a workspace, when missing. */
+  layout: Layout | undefined
   /** How the pages are rendered: asked for, or isomorphic, when missing. */
   rendering: Rendering | undefined
   /** The libraries to add: asked for, or none, when missing. */
@@ -156,6 +159,17 @@ function resolvePackageManager(
     return { refusal: `${name} is not installed: install it, or pick another package manager.` }
   }
   return { name, isYarnBerry: name === 'yarn' && Number.parseInt(stdout, 10) >= 2 }
+}
+
+/** What the repository question says of each layout. */
+const LAYOUT_LABELS: Readonly<Record<Layout, string>> = {
+  workspace: 'Workspace (recommended): the app in apps/web, with room for more apps and services',
+  standalone: 'Standalone: the app alone',
+}
+
+async function askLayout(io: Io): Promise<Layout> {
+  const choices = LAYOUTS.map((value) => ({ value, label: LAYOUT_LABELS[value] }))
+  return (await io.select('Repository', choices)) as Layout
 }
 
 async function askTitle(io: Io, name: string): Promise<string> {
@@ -319,6 +333,8 @@ export async function runCreate(
     io.write(`${packageManager.refusal}\n`)
     return 1
   }
+  const layout = options.layout ?? (canAsk ? await askLayout(io) : LAYOUTS[0])
+  const isWorkspace = layout === 'workspace'
   const rendering = options.rendering ?? (canAsk ? await askRendering(io) : RENDERINGS[0])
   // An SSG page has no JavaScript in the browser, where every library works.
   const libraryRefusal =
@@ -334,18 +350,27 @@ export async function runCreate(
   const scheme = options.scheme ?? (canAsk ? await askScheme(io) : 'light')
   const hasSampleData = options.hasSampleData ?? (canAsk ? await askSampleData(io) : false)
 
+  const appFiles = starter.createFiles({
+    name,
+    packageName: isWorkspace ? toAppPackageName(packageName) : packageName,
+    title,
+    isTypeScript,
+    rendering,
+    libraries,
+    scheme,
+    hasSampleData,
+    version: designSystem.version!,
+  })
   const plan: Plan = {
-    creates: starter.createFiles({
-      name,
-      packageName,
-      title,
-      isTypeScript,
-      rendering,
-      libraries,
-      scheme,
-      hasSampleData,
-      version: designSystem.version!,
-    }),
+    creates: isWorkspace
+      ? createWorkspaceFiles(appFiles, {
+          packageName,
+          title,
+          isTypeScript,
+          libraries,
+          packageManager: packageManager.name,
+        })
+      : appFiles,
     edits: [],
     skips: [],
     manual: [],
@@ -355,7 +380,7 @@ export async function runCreate(
   const packageNote = packageName === name ? '' : ` (package ${packageName})`
   const renderingName = rendering === 'isomorphic' ? rendering : rendering.toUpperCase()
   io.write(
-    `create will make ${name}${packageNote}, a ${starter.title} app in ${language} (${renderingName}), in ./${name}:\n\n`
+    `create will make ${name}${packageNote}, a ${starter.title} app in ${language} (${renderingName}), ${isWorkspace ? 'in a workspace, ' : ''}in ./${name}:\n\n`
   )
   io.write(`${formatPlan(plan)}\n`)
   if (!(await isApproved(options, isPreviewOnly, io))) return 0

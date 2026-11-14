@@ -53,6 +53,15 @@ When a write or the install fails, it takes the app away: the folder it made, or
 the empty folder it was given. To add a starter, add it to `STARTERS`; the first one is the
 default.
 
+### The workspace
+
+A starter writes the app alone. For the workspace layout (the default), `src/create/workspace.ts`
+moves its files to `apps/web` and adds the root's: `package.json` with the workspaces and the
+scripts that run the app's (each package manager's own workspace command, no task runner),
+`pnpm-workspace.yaml` for pnpm, a README, a `.gitignore`, and `services/.gitkeep`. The starter is
+told the app's package name, `@<name>/web`. The workspace adds no source, so it has no type-test
+fixture of its own; two `create-smoke` rows build it from the root.
+
 ### The Vike starter
 
 `src/create/vike/vike.ts` writes a Vike app with no renderer package, rendered as the developer

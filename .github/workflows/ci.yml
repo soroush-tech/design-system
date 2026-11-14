@@ -306,7 +306,7 @@ jobs:
         include:
           - lang: ts
             pm: npm
-            flags: --sample-data --with tanstack-query,msw,zustand
+            flags: --layout workspace --sample-data --with tanstack-query,msw,zustand
           - lang: js
             pm: pnpm
             flags: --render spa --sample-data --with jotai,tanstack-query
@@ -315,7 +315,7 @@ jobs:
             flags: --render ssg
           - lang: ts
             pm: pnpm
-            flags: --sample-data --with swr,redux-toolkit,react-hook-form,vitest
+            flags: --layout workspace --sample-data --with swr,redux-toolkit,react-hook-form,vitest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v7

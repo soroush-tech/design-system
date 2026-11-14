@@ -59,6 +59,7 @@ describe('main', () => {
         framework: 'vike',
         isTypeScript: false,
         packageManager: 'pnpm',
+        layout: undefined,
         rendering: 'ssg',
         libraries: ['tanstack-query', 'msw'],
         scheme: 'dark',
@@ -150,6 +151,20 @@ describe('main', () => {
       output:
         '--with takes tanstack-query, swr, msw, zustand, jotai, redux-toolkit, react-hook-form, vitest, not redux.\n',
     })
+  })
+
+  it('takes a layout, and refuses one create does not know', async () => {
+    await runMain('create', '--layout', 'standalone')
+    expect(runCreate).toHaveBeenLastCalledWith(
+      expect.objectContaining({ layout: 'standalone' }),
+      expect.anything(),
+      DESIGN_SYSTEM
+    )
+    expect(await runMain('create', '--layout', 'monorepo')).toMatchObject({
+      code: 1,
+      output: '--layout is workspace, standalone, not monorepo.\n',
+    })
+    expect(HELP.create).toContain('--layout <name>')
   })
 
   it('refuses a rendering create does not know', async () => {

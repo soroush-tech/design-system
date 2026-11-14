@@ -3,6 +3,7 @@ import { runCreate } from './create/create'
 import { LIBRARY_NAMES, type Library } from './create/libraries'
 import { PACKAGE_MANAGERS } from './create/packageManager'
 import { RENDERINGS, STARTERS, type Rendering } from './create/starters'
+import { LAYOUTS, type Layout } from './create/workspace'
 import type { PackageJson } from './detect/detect'
 import { runInit } from './init'
 import type { Io } from './io'
@@ -48,13 +49,15 @@ an empty one. Its package.json takes the name in lowercase: testApp is test-app.
 the options do not say, shows every file first, and writes nothing until you say yes.
 
 Options:
-  -y, --yes               create without asking: TypeScript, light, no sample data
+  -y, --yes               create without asking: TypeScript, a workspace, light, no sample data
       --dry-run           show the files and exit
       --title <text>      what the app's pages call it: the name when not given
       --framework <name>  the app's framework: ${[`${defaultFramework} (the default)`, ...otherFrameworks].join(', ')}
       --ts, --js          TypeScript (the default) or JavaScript
       --pm <name>         the package manager: npm, pnpm, yarn or bun; the one that ran create
                           when not given
+      --layout <name>     workspace (the default): the app in apps/web, with room for more
+                          apps and services; or standalone: the app alone
       --render <name>     how pages render: isomorphic (the default), spa or ssg
       --with <names>      the libraries to add, by comma: ${LIBRARY_NAMES.join(', ')}
       --scheme <name>     the default color scheme: light (the default) or dark
@@ -83,6 +86,7 @@ const OPTIONS = {
   ts: { type: 'boolean' },
   js: { type: 'boolean' },
   pm: { type: 'string' },
+  layout: { type: 'string' },
   render: { type: 'string' },
   with: { type: 'string' },
   'sample-data': { type: 'boolean' },
@@ -92,7 +96,18 @@ const OPTIONS = {
 /** The options only one command takes. */
 const OWN_OPTIONS: Record<string, readonly string[]> = {
   init: ['force'],
-  create: ['framework', 'title', 'ts', 'js', 'pm', 'render', 'with', 'sample-data', 'no-git'],
+  create: [
+    'framework',
+    'title',
+    'ts',
+    'js',
+    'pm',
+    'layout',
+    'render',
+    'with',
+    'sample-data',
+    'no-git',
+  ],
 }
 
 /** Why the command line is wrong for `command`, or `undefined` when it is right. */
@@ -181,6 +196,12 @@ async function runCommandLine(
     io.write(`--render is ${RENDERINGS.join(', ')}, not ${render}.\n`)
     return 1
   }
+  const { layout } = values
+  if (layout !== undefined && !LAYOUTS.includes(layout as Layout)) {
+    io.write(`--layout is ${LAYOUTS.join(', ')}, not ${layout}.
+`)
+    return 1
+  }
   const { pm } = values
   if (pm !== undefined && !PACKAGE_MANAGERS.includes(pm as PackageManagerName)) {
     io.write(`--pm is ${PACKAGE_MANAGERS.join(', ')}, not ${pm}.\n`)
@@ -197,6 +218,7 @@ async function runCommandLine(
         framework: values.framework,
         isTypeScript,
         packageManager: pm as PackageManagerName | undefined,
+        layout: layout as Layout | undefined,
         rendering: render as Rendering | undefined,
         libraries: libraries as Library[] | undefined,
         scheme,

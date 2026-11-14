@@ -10,7 +10,10 @@
 //    page of each, too.
 //
 //   node scripts/smoke-create.mjs [--lang ts|js] [--pm npm|pnpm] [--framework vike]
-//     [--render isomorphic|spa|ssg] [--with <libraries>] [--sample-data]
+//     [--layout standalone|workspace] [--render isomorphic|spa|ssg] [--with <libraries>]
+//     [--sample-data]
+//
+// In a workspace, the app is apps/web, and its scripts run from the workspace's root.
 //
 // The temp folder is removed when every check passes, and kept, with its path printed, when one
 // fails.
@@ -39,21 +42,27 @@ const { values } = parseArgs({
     lang: { type: 'string', default: 'ts' },
     pm: { type: 'string', default: 'npm' },
     framework: { type: 'string', default: 'vike' },
+    layout: { type: 'string', default: 'standalone' },
     render: { type: 'string', default: 'isomorphic' },
     with: { type: 'string', default: '' },
     'sample-data': { type: 'boolean', default: false },
   },
 })
-const { lang, pm, framework, render, with: libraries, 'sample-data': hasSampleData } = values
+const { lang, pm, framework, layout, render, with: libraries } = values
+const hasSampleData = values['sample-data']
 if (
   !['ts', 'js'].includes(lang) ||
   !['npm', 'pnpm'].includes(pm) ||
+  !['standalone', 'workspace'].includes(layout) ||
   !['isomorphic', 'spa', 'ssg'].includes(render)
 ) {
-  console.error('--lang is ts or js, --pm is npm or pnpm, and --render is isomorphic, spa or ssg.')
+  console.error(
+    '--lang is ts or js, --pm is npm or pnpm, --layout is standalone or workspace, and --render is isomorphic, spa or ssg.'
+  )
   process.exit(1)
 }
 const isSpa = render === 'spa'
+const isWorkspace = layout === 'workspace'
 
 /** Runs a command, showing its output, and throws when it fails. */
 function run(command, args, cwd) {
@@ -115,19 +124,24 @@ function pack(names, packages, destination) {
   return tarballs
 }
 
+const readJson = (path) => JSON.parse(readFileSync(path, 'utf8'))
+const writeJson = (path, value) => writeFileSync(path, `${JSON.stringify(value, null, 2)}\n`)
+
 /**
- * Points the new app at the tarballs: the design system as its dependency, and the packages the
- * design system depends on as overrides, the way each package manager reads them.
+ * Points the new app at the tarballs: the design system as the app's dependency, and the packages
+ * the design system depends on as overrides, in the root's package.json, where each package
+ * manager reads them. `rootDir` is where the install runs; `appDir` is the app's own folder.
  */
-function useTarballs(appDir, tarballs) {
-  const path = join(appDir, 'package.json')
-  const manifest = JSON.parse(readFileSync(path, 'utf8'))
+function useTarballs(rootDir, appDir, tarballs) {
   const toSpec = (name) => `file:${tarballs[name].replaceAll('\\', '/')}`
-  manifest.dependencies[DESIGN_SYSTEM] = toSpec(DESIGN_SYSTEM)
+  const appManifest = readJson(join(appDir, 'package.json'))
+  appManifest.dependencies[DESIGN_SYSTEM] = toSpec(DESIGN_SYSTEM)
+  writeJson(join(appDir, 'package.json'), appManifest)
+  const rootManifest = readJson(join(rootDir, 'package.json'))
   const overrides = Object.fromEntries(Object.keys(tarballs).map((name) => [name, toSpec(name)]))
-  if (pm === 'pnpm') manifest.pnpm = { overrides }
-  else manifest.overrides = overrides
-  writeFileSync(path, `${JSON.stringify(manifest, null, 2)}\n`)
+  if (pm === 'pnpm') rootManifest.pnpm = { overrides }
+  else rootManifest.overrides = overrides
+  writeJson(join(rootDir, 'package.json'), rootManifest)
 }
 
 /** Throws unless `condition` holds. */
@@ -234,25 +248,42 @@ try {
   const io = {
     ...nodeIo,
     run: (command, args, options) => {
-      if (command === pm && args[0] === 'install') useTarballs(options.cwd, tarballs)
+      if (command === pm && args[0] === 'install') {
+        useTarballs(
+          options.cwd,
+          isWorkspace ? join(options.cwd, 'apps/web') : options.cwd,
+          tarballs
+        )
+      }
       return nodeIo.run(command, args, options)
     },
   }
   const { name, version, peerDependencies } = packages.get(DESIGN_SYSTEM).manifest
   const argv = ['create', APP, '--yes', `--${lang}`, '--framework', framework, '--no-git']
-  argv.push('--render', render, '--with', libraries)
+  argv.push('--layout', layout, '--render', render, '--with', libraries)
   if (hasSampleData) argv.push('--sample-data')
   console.log(`\n$ create ${argv.slice(1).join(' ')}   (with ${pm})`)
   const code = await cli.default(argv, io, { name, version, peerDependencies })
   if (code !== 0) throw new Error(`create exited with ${code}`)
 
-  const appDir = join(workDir, APP)
-  const { name: packageName } = JSON.parse(readFileSync(join(appDir, 'package.json'), 'utf8'))
-  check(packageName === 'smoke-app', `the ${APP} folder holds the package smoke-app`)
-  if (lang === 'ts') run(pm, ['run', 'typecheck'], appDir)
+  const rootDir = join(workDir, APP)
+  const appDir = isWorkspace ? join(rootDir, 'apps/web') : rootDir
+  check(
+    readJson(join(rootDir, 'package.json')).name === 'smoke-app',
+    `${APP} is the package smoke-app`
+  )
+  if (isWorkspace) {
+    check(
+      readJson(join(appDir, 'package.json')).name === '@smoke-app/web',
+      'apps/web is the package @smoke-app/web'
+    )
+    check(existsSync(join(rootDir, 'services/.gitkeep')), 'the workspace has its services folder')
+  }
+  // In a workspace, the root's scripts run the app's: running them from there checks both.
+  if (lang === 'ts') run(pm, ['run', 'typecheck'], rootDir)
   // The Vitest recipe's own test must pass in the app it was written into.
-  if (libraries.includes('vitest')) run(pm, ['run', 'test'], appDir)
-  run(pm, ['run', 'build'], appDir)
+  if (libraries.includes('vitest')) run(pm, ['run', 'test'], rootDir)
+  run(pm, ['run', 'build'], rootDir)
   console.log('\nChecking the build:')
   const pages = ['index.html', 'about/index.html', '404.html']
   if (hasSampleData) pages.push('items/index.html')
@@ -272,7 +303,7 @@ try {
       console.warn(`Could not remove ${workDir}; it is a temp folder, so it can stay.`)
     }
     console.log(
-      `\nThe ${framework} app in ${lang === 'ts' ? 'TypeScript' : 'JavaScript'}, with ${pm}, works.`
+      `\nThe ${framework} app in ${lang === 'ts' ? 'TypeScript' : 'JavaScript'} (${layout}), with ${pm}, works.`
     )
   } else {
     console.error(`\nThe smoke test failed. Its files are in ${workDir}`)
