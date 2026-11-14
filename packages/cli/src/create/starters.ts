@@ -3,8 +3,12 @@ import { vikeStarter } from './vike/vike'
 
 /** What a starter is told: everything the developer chose, and the design system to install. */
 export interface StarterFacts {
-  /** The app's name, which is also its folder's. */
+  /** The app's folder, as it was typed. */
   name: string
+  /** The name in its package.json: the folder's, in the lowercase npm takes. */
+  packageName: string
+  /** What its pages call it. */
+  title: string
   isTypeScript: boolean
   scheme: Scheme
   /** Adds the pages that read sample data. */

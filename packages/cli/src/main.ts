@@ -40,12 +40,13 @@ Example:
   create: `Usage: ${BIN} create [name] [options]
 
 Starts a new app on the design system in ./<name>, my-app when it is not given: a new folder, or
-an empty one. It asks for what the options do not say, shows every file first, and writes nothing
-until you say yes.
+an empty one. Its package.json takes the name in lowercase: testApp is test-app. It asks for what
+the options do not say, shows every file first, and writes nothing until you say yes.
 
 Options:
   -y, --yes               create without asking: TypeScript, light, no sample data
       --dry-run           show the files and exit
+      --title <text>      what the app's pages call it: the name when not given
       --framework <name>  the app's framework: ${[`${defaultFramework} (the default)`, ...otherFrameworks].join(', ')}
       --ts, --js          TypeScript (the default) or JavaScript
       --scheme <name>     the default color scheme: light (the default) or dark
@@ -70,6 +71,7 @@ const OPTIONS = {
   help: { type: 'boolean', short: 'h' },
   force: { type: 'boolean' },
   framework: { type: 'string' },
+  title: { type: 'string' },
   ts: { type: 'boolean' },
   js: { type: 'boolean' },
   'sample-data': { type: 'boolean' },
@@ -79,7 +81,7 @@ const OPTIONS = {
 /** The options only one command takes. */
 const OWN_OPTIONS: Record<string, readonly string[]> = {
   init: ['force'],
-  create: ['framework', 'ts', 'js', 'sample-data', 'no-git'],
+  create: ['framework', 'title', 'ts', 'js', 'sample-data', 'no-git'],
 }
 
 /** Why the command line is wrong for `command`, or `undefined` when it is right. */
@@ -145,6 +147,7 @@ export async function main(
     return runCreate(
       {
         name: extra[0],
+        title: values.title,
         framework: values.framework,
         isTypeScript,
         scheme,

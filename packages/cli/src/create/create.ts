@@ -13,8 +13,10 @@ import { createAppInstallCommand, formatRunScript, readPackageManager } from './
 import { STARTERS, type Starter } from './starters'
 
 export interface CreateOptions {
-  /** The app's name, and its folder's: asked for, or `my-app`, when missing. */
+  /** The app's folder: asked for, or `my-app`, when missing. */
   name: string | undefined
+  /** What the app's pages call it: asked for, or the name, when missing. */
+  title: string | undefined
   /** The starter, by its name in `STARTERS`: the first one when missing. */
   framework: string | undefined
   /** TypeScript or JavaScript: asked for, or TypeScript, when missing. */
@@ -38,14 +40,29 @@ export interface CreateDependencies {
 }
 
 const DEFAULT_NAME = 'my-app'
-// A package name with no scope, since it is also the folder's: lowercase, and safe in a path.
-const APP_NAME = /^[a-z0-9][a-z0-9._~-]*$/
+// A folder name that is safe in a path and on a command line, and that npm's rules turn into a
+// package name.
+const APP_NAME = /^[A-Za-z0-9][A-Za-z0-9._~-]*$/
 const MAX_NAME_LENGTH = 214
+// What a title cannot hold, besides a control character: it is written into code and HTML as it is.
+const TITLE_REFUSED = /[`${}<>\\]/
+
+/** Whether `title` holds a character create cannot write into code and HTML as it is. */
+const isRefusedTitle = (title: string) =>
+  TITLE_REFUSED.test(title) || [...title].some((character) => character < ' ')
+
+/**
+ * The package name of the app in the folder `name`: lowercase, as npm takes it, with a `-` where a
+ * capital started a word (`testApp` -> `test-app`).
+ */
+export function toPackageName(name: string): string {
+  return name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase()
+}
 
 /** Why `name` cannot name a new app, or `undefined` when it can. */
 function findNameRefusal(name: string): string | undefined {
-  if (APP_NAME.test(name) && name.length <= MAX_NAME_LENGTH) return undefined
-  return `${name} is not a name create can use: it names the folder and the package, so it takes lowercase letters, digits, and . _ ~ -, and starts with a letter or a digit.`
+  if (APP_NAME.test(name) && toPackageName(name).length <= MAX_NAME_LENGTH) return undefined
+  return `${name} is not a name create can use: it names the folder, so it takes letters, digits, and . _ ~ -, and starts with a letter or a digit.`
 }
 
 /**
@@ -92,6 +109,11 @@ function isInsideRepository(folder: string, io: Io): boolean {
 async function askLanguage(io: Io): Promise<boolean> {
   const answer = await io.ask('TypeScript or JavaScript? (TypeScript) ')
   return !/^j(s|avascript)?$/i.test(answer.trim())
+}
+
+async function askTitle(io: Io, name: string): Promise<string> {
+  const answer = (await io.ask(`App title? (${name}) `)).trim()
+  return answer || name
 }
 
 async function askName(io: Io): Promise<string> {
@@ -208,6 +230,12 @@ export async function runCreate(
     io.write(`${nameRefusal}\n`)
     return 1
   }
+  const title = (options.title ?? (canAsk ? await askTitle(io, name) : name)).trim() || name
+  if (isRefusedTitle(title)) {
+    io.write(`${title} is not a title create can use: it cannot hold \` $ { } < > or \\.\n`)
+    return 1
+  }
+  const packageName = toPackageName(name)
   const target = join(realpathSync(io.cwd), name)
   const folder = getFolderState(target, name)
   if (typeof folder === 'object') {
@@ -222,6 +250,8 @@ export async function runCreate(
   const plan: Plan = {
     creates: starter.createFiles({
       name,
+      packageName,
+      title,
       isTypeScript,
       scheme,
       hasSampleData,
@@ -233,7 +263,10 @@ export async function runCreate(
     install: createAppInstallCommand(packageManager),
   }
   const language = isTypeScript ? 'TypeScript' : 'JavaScript'
-  io.write(`create will make ${name}, a ${starter.title} app in ${language}, in ./${name}:\n\n`)
+  const packageNote = packageName === name ? '' : ` (package ${packageName})`
+  io.write(
+    `create will make ${name}${packageNote}, a ${starter.title} app in ${language}, in ./${name}:\n\n`
+  )
   io.write(`${formatPlan(plan)}\n`)
   if (!(await isApproved(options, isPreviewOnly, io))) return 0
   return writeAndInstall(

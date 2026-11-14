@@ -1,4 +1,4 @@
-# my-app
+# My App
 
 A [Vike](https://vike.dev) app on the [@soroush.tech design system](https://docs.soroush.tech),
 prerendered at build time with its styles in the HTML, then moving between pages with no reload.

@@ -21,6 +21,7 @@ a write or the install fails, it takes the new app away.
 | -------------------- | --------------------------------------------------------- |
 | `-y`, `--yes`        | Create without asking: TypeScript and light, unless given |
 | `--dry-run`          | Show the files and exit                                   |
+| `--title <text>`     | What the app's pages call it: the name when not given     |
 | `--framework <name>` | The app's framework: `vike`, the default and only one yet |
 | `--ts`, `--js`       | TypeScript (the default) or JavaScript                    |
 | `--scheme <name>`    | The default color scheme: `light` or `dark`               |

@@ -26,7 +26,7 @@ export default function Layout({ children }: { readonly children: ReactNode }) {
         bg="paper"
       >
         <Typography variant="h6" as="span">
-          my-app
+          My App
         </Typography>
         <Flex as="nav" flexDirection="row" alignItems="center" gap={2}>
           <Link href="/" underline="hover">

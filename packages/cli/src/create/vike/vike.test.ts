@@ -6,7 +6,9 @@ import type { StarterFacts } from '../starters'
 import { vikeStarter } from './vike'
 
 const FACTS: StarterFacts = {
-  name: 'my-app',
+  name: 'myApp',
+  packageName: 'my-app',
+  title: 'My App',
   isTypeScript: true,
   scheme: 'light',
   hasSampleData: true,
@@ -69,6 +71,17 @@ describe('the Vike starter', () => {
     )
   })
 
+  it('calls the app by its title in its pages and README, and by its package name in package.json', () => {
+    const files = createFiles({ title: 'Shop & Co' })
+    expect(files.get('src/pages/+onRenderHtml.tsx')).toContain('<title>Shop & Co</title>')
+    expect(files.get('src/pages/+Layout.tsx')).toContain('          Shop & Co\n')
+    expect(files.get('src/pages/index/+Page.tsx')).toContain(
+      '<Typography variant="h2">Shop & Co</Typography>'
+    )
+    expect(files.get('README.md')!.startsWith('# Shop & Co\n')).toBe(true)
+    expect([...files.values()].some((content) => content.includes('myApp'))).toBe(false)
+  })
+
   it('writes the sample data pages, and links to them, only when asked to', () => {
     const files = createFiles({ hasSampleData: false })
     const paths = [...files.keys()]
@@ -105,6 +118,7 @@ describe('the Vike starter', () => {
 
   it('installs the design system it was given, and the versions this package is tested with', () => {
     const packageJson = JSON.parse(createFiles().get('package.json')!)
+    expect(packageJson.name).toBe('my-app')
     expect(packageJson.dependencies).toEqual({
       '@soroush.tech/design-system': '^2.3.0',
       '@emotion/server': devDependencies['@emotion/server'],

@@ -30,7 +30,7 @@ import { parseArgs } from 'node:util'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 
 const DESIGN_SYSTEM = '@soroush.tech/design-system'
-const APP = 'smoke-app'
+const APP = 'smokeApp'
 
 const repoRoot = join(dirname(fileURLToPath(import.meta.url)), '..')
 const { values } = parseArgs({
@@ -219,6 +219,8 @@ try {
   if (code !== 0) throw new Error(`create exited with ${code}`)
 
   const appDir = join(workDir, APP)
+  const { name: packageName } = JSON.parse(readFileSync(join(appDir, 'package.json'), 'utf8'))
+  check(packageName === 'smoke-app', `the ${APP} folder holds the package smoke-app`)
   if (lang === 'ts') run(pm, ['run', 'typecheck'], appDir)
   run(pm, ['run', 'build'], appDir)
   console.log('\nChecking the build:')

@@ -14,13 +14,14 @@ import { describe, expect, it, vi } from 'vitest'
 import { nodeFileSystem, type FileSystem } from '../apply/fileSystem'
 import type { RunOptions, RunResult } from '../io'
 import { createTestIo } from '../testApp'
-import { runCreate, type CreateDependencies, type CreateOptions } from './create'
+import { runCreate, toPackageName, type CreateDependencies, type CreateOptions } from './create'
 import type { Starter, StarterFacts } from './starters'
 
 const DESIGN_SYSTEM = { name: '@soroush.tech/design-system', version: '2.3.0' }
 
 const YES: CreateOptions = {
   name: 'my-app',
+  title: undefined,
   framework: undefined,
   isTypeScript: undefined,
   scheme: undefined,
@@ -88,6 +89,8 @@ describe('runCreate', () => {
     expect(existsSync(join(app, 'src/theme/themes.ts'))).toBe(true)
     expect(createFiles).toHaveBeenCalledWith({
       name: 'my-app',
+      packageName: 'my-app',
+      title: 'my-app',
       isTypeScript: true,
       scheme: 'light',
       hasSampleData: false,
@@ -164,11 +167,46 @@ describe('runCreate', () => {
     expect(await create({ ...YES, name: 'file' })).toBe(1)
     expect(getOutput()).toContain('file exists, and is not a folder.')
 
-    for (const name of ['My-App', 'my app', '.hidden', '../up', '-dash', 'a'.repeat(215)]) {
+    for (const name of ['my app', '.hidden', '../up', '-dash', 'a'.repeat(215), 'aB'.repeat(72)]) {
       expect(await create({ ...YES, name })).toBe(1)
       expect(getOutput()).toContain(`${name} is not a name create can use`)
     }
     expect(listCommands()).toEqual([])
+  })
+
+  it('keeps the name as typed for the folder, and makes its package name and title from it', async () => {
+    const { cwd, createFiles, create, getOutput } = setUp()
+    expect(await create({ ...YES, name: 'testApp' })).toBe(0)
+    expect(getOutput()).toContain('create will make testApp (package test-app), a Test app')
+    expect(createFiles).toHaveBeenCalledWith(
+      expect.objectContaining({ name: 'testApp', packageName: 'test-app', title: 'testApp' })
+    )
+    expect(existsSync(join(cwd, 'testApp/package.json'))).toBe(true)
+
+    expect(await create({ ...YES, name: 'shop', title: ' My Shop ' })).toBe(0)
+    expect(getOutput()).toContain('create will make shop, a Test app')
+    expect(createFiles).toHaveBeenLastCalledWith(
+      expect.objectContaining({ name: 'shop', packageName: 'shop', title: 'My Shop' })
+    )
+    expect(await create({ ...YES, name: 'blank', title: '  ' })).toBe(0)
+    expect(createFiles).toHaveBeenLastCalledWith(expect.objectContaining({ title: 'blank' }))
+  })
+
+  it('refuses a title that code or HTML would read as its own', async () => {
+    const { cwd, create, getOutput } = setUp()
+    for (const title of ['A <b>', 'a `b`', '${x}', 'a\\b', 'line\nbreak']) {
+      expect(await create({ ...YES, title })).toBe(1)
+      expect(getOutput()).toContain('is not a title create can use')
+    }
+    expect(existsSync(join(cwd, 'my-app'))).toBe(false)
+  })
+
+  it('makes a package name npm takes from a folder name', () => {
+    expect(toPackageName('testApp')).toBe('test-app')
+    expect(toPackageName('MyShop')).toBe('my-shop')
+    expect(toPackageName('app2Go')).toBe('app2-go')
+    expect(toPackageName('my-app')).toBe('my-app')
+    expect(toPackageName('API')).toBe('api')
   })
 
   it('takes the new folder away when a write fails', async () => {
@@ -244,11 +282,12 @@ describe('runCreate', () => {
   it('asks what it was not told in a terminal: the name, the language, the scheme and a yes', async () => {
     const { cwd, createFiles, create, getOutput } = setUp({
       isInteractive: true,
-      answers: ['', 'js', 'dark', 'y', ''],
+      answers: ['', '', 'js', 'dark', 'y', ''],
     })
     expect(await create(ASK)).toBe(0)
     const output = getOutput()
     expect(output).toContain('App name? (my-app) ')
+    expect(output).toContain('App title? (my-app) ')
     expect(output).toContain('TypeScript or JavaScript? (TypeScript) ')
     expect(output).toContain('Default color scheme, light or dark? (light) ')
     expect(output).toContain('Add sample data pages? (y/N) ')
@@ -268,12 +307,13 @@ describe('runCreate', () => {
   it('takes the name it is given, and TypeScript for any other answer', async () => {
     const { cwd, createFiles, create } = setUp({
       isInteractive: true,
-      answers: [' shop ', 'ts', '', '', 'yes'],
+      answers: [' shop ', ' Shop ', 'ts', '', '', 'yes'],
     })
     expect(await create(ASK)).toBe(0)
     expect(createFiles).toHaveBeenCalledWith(
       expect.objectContaining({
         name: 'shop',
+        title: 'Shop',
         isTypeScript: true,
         scheme: 'light',
         hasSampleData: false,
@@ -287,6 +327,7 @@ describe('runCreate', () => {
     const options = {
       ...ASK,
       name: 'my-app',
+      title: 'my-app',
       isTypeScript: true,
       scheme: 'light' as const,
       hasSampleData: false,

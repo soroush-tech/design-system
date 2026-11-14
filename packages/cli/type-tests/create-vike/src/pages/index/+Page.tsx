@@ -5,7 +5,7 @@ import { Typography } from '@soroush.tech/design-system/Typography'
 export default function Page() {
   return (
     <Flex gap={2} alignItems="flex-start">
-      <Typography variant="h2">my-app</Typography>
+      <Typography variant="h2">My App</Typography>
       <Typography color="secondary">
         A Vike app on the design system. Edit src/pages/index/+Page.tsx, and make the themes your
         own in src/theme/themes.ts.

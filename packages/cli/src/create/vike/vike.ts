@@ -15,9 +15,9 @@ const toRange = (version: string) => (/^\d/.test(version) ? `^${version}` : vers
 const pickVersions = (names: readonly (keyof typeof VERSIONS)[]) =>
   Object.fromEntries(names.map((name) => [name, toRange(VERSIONS[name])]))
 
-function createPackageJson({ name, isTypeScript, version }: StarterFacts): string {
+function createPackageJson({ packageName, isTypeScript, version }: StarterFacts): string {
   const packageJson = {
-    name,
+    name: packageName,
     private: true,
     version: '0.0.0',
     type: 'module',
@@ -105,7 +105,7 @@ const ITEMS_LINK = `          <Link href="/items" underline="hover">
           </Link>
 `
 
-function createSources({ name, isTypeScript, scheme, hasSampleData }: StarterFacts) {
+function createSources({ title, isTypeScript, scheme, hasSampleData }: StarterFacts) {
   const t = (typeScriptOnly: string) => (isTypeScript ? typeScriptOnly : '')
   const x = isTypeScript ? 'ts' : 'js'
   return {
@@ -170,7 +170,7 @@ export const onRenderHtml${t(': OnRenderHtmlSync')} = (pageContext) => {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>${name}</title>
+    <title>${title}</title>
     \${dangerouslySkipEscape(styles)}
   </head>
   <body>
@@ -224,7 +224,7 @@ export default function Layout({ children }${t(': { readonly children: ReactNode
         bg="paper"
       >
         <Typography variant="h6" as="span">
-          ${name}
+          ${title}
         </Typography>
         <Flex as="nav" flexDirection="row" alignItems="center" gap={2}>
           <Link href="/" underline="hover">
@@ -252,7 +252,7 @@ import { Typography } from '@soroush.tech/design-system/Typography'
 export default function Page() {
   return (
     <Flex gap={2} alignItems="flex-start">
-      <Typography variant="h2">${name}</Typography>
+      <Typography variant="h2">${title}</Typography>
       <Typography color="secondary">
         A Vike app on the design system. Edit src/pages/index/+Page.${x}x, and make the themes your
         own in src/theme/themes.${x}.
@@ -480,14 +480,14 @@ export default function Page() {
   ]
 }
 
-function createReadme({ name, isTypeScript, hasSampleData }: StarterFacts): string {
+function createReadme({ title, isTypeScript, hasSampleData }: StarterFacts): string {
   const x = isTypeScript ? 'ts' : 'js'
   const sampleData = hasSampleData
     ? `- \`src/pages/items/\` lists the sample items of \`src/data/items.${x}\`, with a page for each.
   Their \`+data\` hooks read the data at build time: make them fetch your own.
 `
     : ''
-  return `# ${name}
+  return `# ${title}
 
 A [Vike](https://vike.dev) app on the [@soroush.tech design system](https://docs.soroush.tech),
 prerendered at build time with its styles in the HTML, then moving between pages with no reload.

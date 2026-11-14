@@ -36,11 +36,19 @@ describe('main', () => {
 
   it('runs create with its options', async () => {
     const argv = ['create', 'my-app', '-y', '--dry-run', '--framework', 'vike', '--js', '--no-git']
-    const { code, io } = await runMain(...argv, '--scheme', 'dark', '--sample-data')
+    const { code, io } = await runMain(
+      ...argv,
+      '--scheme',
+      'dark',
+      '--sample-data',
+      '--title',
+      'Shop'
+    )
     expect(code).toBe(0)
     expect(runCreate).toHaveBeenLastCalledWith(
       {
         name: 'my-app',
+        title: 'Shop',
         framework: 'vike',
         isTypeScript: false,
         scheme: 'dark',

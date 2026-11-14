@@ -18,7 +18,7 @@ export const onRenderHtml: OnRenderHtmlSync = (pageContext) => {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>my-app</title>
+    <title>My App</title>
     ${dangerouslySkipEscape(styles)}
   </head>
   <body>
