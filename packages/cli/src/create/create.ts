@@ -20,6 +20,8 @@ export interface CreateOptions {
   /** TypeScript or JavaScript: asked for, or TypeScript, when missing. */
   isTypeScript: boolean | undefined
   scheme: Scheme | undefined
+  /** Adds the pages that read sample data: asked for, or not, when missing. */
+  hasSampleData: boolean | undefined
   /** Creates without asking. */
   isConfirmed: boolean
   /** Prints the plan and exits. */
@@ -95,6 +97,11 @@ async function askLanguage(io: Io): Promise<boolean> {
 async function askName(io: Io): Promise<string> {
   const answer = (await io.ask(`App name? (${DEFAULT_NAME}) `)).trim()
   return answer || DEFAULT_NAME
+}
+
+async function askSampleData(io: Io): Promise<boolean> {
+  const answer = await io.ask('Add sample data pages? (y/N) ')
+  return /^y(es)?$/i.test(answer.trim())
 }
 
 /** Whether to create the app: never on a dry run or with no terminal, else on --yes or a yes. */
@@ -209,10 +216,17 @@ export async function runCreate(
   }
   const isTypeScript = options.isTypeScript ?? (canAsk ? await askLanguage(io) : true)
   const scheme = options.scheme ?? (canAsk ? await askScheme(io) : 'light')
+  const hasSampleData = options.hasSampleData ?? (canAsk ? await askSampleData(io) : false)
 
   const packageManager = readPackageManager(userAgent)
   const plan: Plan = {
-    creates: starter.createFiles({ name, isTypeScript, scheme, version: designSystem.version! }),
+    creates: starter.createFiles({
+      name,
+      isTypeScript,
+      scheme,
+      hasSampleData,
+      version: designSystem.version!,
+    }),
     edits: [],
     skips: [],
     manual: [],

@@ -7,6 +7,8 @@ export interface StarterFacts {
   name: string
   isTypeScript: boolean
   scheme: Scheme
+  /** Adds the pages that read sample data. */
+  hasSampleData: boolean
   /** The version of the design system the app gets. */
   version: string
 }

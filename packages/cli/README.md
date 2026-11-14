@@ -12,7 +12,7 @@ npx @soroush.tech/design-system create my-app
 
 It makes the app in a new folder, `my-app`, or in an empty one, and never writes in a folder that
 holds anything. It asks for what you did not give it - the name, TypeScript or JavaScript, the
-default color scheme - then shows every file and the install, and writes nothing before a yes.
+default color scheme, whether to add sample data pages - then shows every file and the install, and writes nothing before a yes.
 It installs with the package manager you ran it with (`npx`, `pnpm dlx`, `yarn dlx`, `bunx`), with
 no scripts, and runs `git init` with no commit, unless the folder is already in a repository. When
 a write or the install fails, it takes the new app away.
@@ -24,6 +24,7 @@ a write or the install fails, it takes the new app away.
 | `--framework <name>` | The app's framework: `vike`, the default and only one yet |
 | `--ts`, `--js`       | TypeScript (the default) or JavaScript                    |
 | `--scheme <name>`    | The default color scheme: `light` or `dark`               |
+| `--sample-data`      | Add the sample data pages                                 |
 | `--no-git`           | Do not run `git init`                                     |
 
 ### The Vike app
@@ -40,6 +41,15 @@ browser and moves between pages without a reload.
 - `src/pages/+onRenderHtml` and `+onRenderClient` render the pages with the design system's
   Emotion cache. There is no renderer package to install.
 - `npm run dev` starts it, `npm run build` builds it, and `npm run preview` serves the build.
+
+With sample data pages, it also shows how data gets onto a page, with no data library:
+
+- `src/data/items` holds six sample items.
+- `/items` lists them, and `/items/<id>` shows one. Each page's `+data` reads the items at build
+  time, and the build prerenders one page per item. Moving between them in the browser loads only
+  their data, with no reload.
+- A page reads its data with `useData()`, from `src/pages/usePageContext`. Make the `+data` hooks
+  fetch your own data, and remove `src/data/items`.
 
 The switch does not remember the scheme across a reload, and the theme's fonts are not loaded: see
 the [fonts guide](https://docs.soroush.tech/design-system/getting-started/installation/#fonts).

@@ -24,6 +24,7 @@ Options of init:
 Options of create:
       --framework <name>  the app's framework
       --ts, --js          TypeScript (the default) or JavaScript
+      --sample-data       add pages that read sample data
       --no-git            do not run git init
 `
 
@@ -36,13 +37,14 @@ const OPTIONS = {
   framework: { type: 'string' },
   ts: { type: 'boolean' },
   js: { type: 'boolean' },
+  'sample-data': { type: 'boolean' },
   'no-git': { type: 'boolean' },
 } as const
 
 /** The options only one command takes. */
 const OWN_OPTIONS: Record<string, readonly string[]> = {
   init: ['force'],
-  create: ['framework', 'ts', 'js', 'no-git'],
+  create: ['framework', 'ts', 'js', 'sample-data', 'no-git'],
 }
 
 /** Why the command line is wrong for `command`, or `undefined` when it is right. */
@@ -109,6 +111,7 @@ export async function main(
         framework: values.framework,
         isTypeScript,
         scheme,
+        hasSampleData: values['sample-data'],
         isConfirmed,
         isDryRun,
         isGit: !values['no-git'],

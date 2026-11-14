@@ -302,8 +302,10 @@ jobs:
         include:
           - lang: ts
             pm: npm
+            flags: --sample-data
           - lang: js
             pm: pnpm
+            flags: ''
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v7
@@ -317,11 +319,13 @@ jobs:
           manager: ${{ needs.prepare.outputs.manager }}
           command: ${{ needs.prepare.outputs.command }}
 
-      - name: Create, build and serve a ${{ matrix.lang }} app with ${{ matrix.pm }}
+      - name: Create, build and serve a ${{ matrix.lang }} app with ${{ matrix.pm }} ${{ matrix.flags }}
         env:
           SMOKE_LANG: ${{ matrix.lang }}
           SMOKE_PM: ${{ matrix.pm }}
-        run: node scripts/smoke-create.mjs --lang "$SMOKE_LANG" --pm "$SMOKE_PM"
+          SMOKE_FLAGS: ${{ matrix.flags }}
+        # SMOKE_FLAGS is unquoted on purpose: it is this matrix's own flags, or none.
+        run: node scripts/smoke-create.mjs --lang "$SMOKE_LANG" --pm "$SMOKE_PM" $SMOKE_FLAGS
 
   # The docs app (apps/docs): unit coverage, the prerender build (which itself gates
   # every page), and the Playwright e2e suite against the built output.

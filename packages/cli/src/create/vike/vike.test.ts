@@ -9,12 +9,23 @@ const FACTS: StarterFacts = {
   name: 'my-app',
   isTypeScript: true,
   scheme: 'light',
+  hasSampleData: true,
   version: '2.3.0',
 }
 const FIXTURE = '../../../type-tests/create-vike'
 
 const createFiles = (facts: Partial<StarterFacts> = {}) =>
   new Map(vikeStarter.createFiles({ ...FACTS, ...facts }).map((file) => [file.path, file.content]))
+
+const SAMPLE_DATA_PATHS = [
+  'src/data/items.ts',
+  'src/pages/items/StatusChip.tsx',
+  'src/pages/items/+data.ts',
+  'src/pages/items/+Page.tsx',
+  'src/pages/items/@id/+data.ts',
+  'src/pages/items/@id/+onBeforePrerenderStart.ts',
+  'src/pages/items/@id/+Page.tsx',
+]
 
 const SHARED_PATHS = [
   'package.json',
@@ -24,6 +35,7 @@ const SHARED_PATHS = [
   'src/theme/Providers',
   'src/pages/+config',
   'src/pages/PageShell',
+  'src/pages/usePageContext',
   'src/pages/+onRenderHtml',
   'src/pages/+onRenderClient',
   'src/pages/+Layout',
@@ -52,7 +64,21 @@ describe('the Vike starter', () => {
         'vite.config.ts',
         'tsconfig.json',
         'src/vike.d.ts',
+        ...SAMPLE_DATA_PATHS,
       ].sort()
+    )
+  })
+
+  it('writes the sample data pages, and links to them, only when asked to', () => {
+    const files = createFiles({ hasSampleData: false })
+    const paths = [...files.keys()]
+    expect(paths.filter((path) => /items/.test(path))).toEqual([])
+    expect(files.get('src/pages/+Layout.tsx')).not.toContain('/items')
+    expect(files.get('README.md')).not.toContain('src/pages/items/')
+    expect(createFiles().get('src/pages/+Layout.tsx')).toContain('<Link href="/items"')
+    expect(createFiles().get('README.md')).toContain('src/pages/items/')
+    expect(createFiles({ isTypeScript: false }).get('src/data/items.js')).toContain(
+      'src/theme/themes.js'
     )
   })
 
@@ -65,7 +91,9 @@ describe('the Vike starter', () => {
     expect(paths.some((path) => /\.tsx?$|tsconfig/.test(path))).toBe(false)
     for (const [path, content] of files) {
       if (!/\.jsx?$/.test(path)) continue
-      expect(content, path).not.toMatch(/import type|: Root|satisfies|<'light'|readonly |\)!/)
+      expect(content, path).not.toMatch(
+        /import type|export type|interface |as const|as Data|<Data>|: Root|satisfies|<'light'|readonly |\)!/
+      )
     }
     expect(files.get('src/pages/+onRenderClient.jsx')).toContain(
       "const container = document.getElementById('root')\n"

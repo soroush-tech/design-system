@@ -6,9 +6,10 @@
 //    install first points the new app at those tarballs;
 // 3. typechecks (TypeScript) and builds the app, checks that the build prerendered its pages,
 //    serves the build, and checks the HTML: the design system's styles and the starter's content
-//    on `/` and `/about`, and the 404 page.
+//    on `/` and `/about`, and the 404 page. With `--sample-data`, the list of sample items and the
+//    page of each, too.
 //
-//   node scripts/smoke-create.mjs [--lang ts|js] [--pm npm|pnpm] [--framework vike]
+//   node scripts/smoke-create.mjs [--lang ts|js] [--pm npm|pnpm] [--framework vike] [--sample-data]
 //
 // The temp folder is removed when every check passes, and kept, with its path printed, when one
 // fails.
@@ -37,9 +38,10 @@ const { values } = parseArgs({
     lang: { type: 'string', default: 'ts' },
     pm: { type: 'string', default: 'npm' },
     framework: { type: 'string', default: 'vike' },
+    'sample-data': { type: 'boolean', default: false },
   },
 })
-const { lang, pm, framework } = values
+const { lang, pm, framework, 'sample-data': hasSampleData } = values
 if (!['ts', 'js'].includes(lang) || !['npm', 'pnpm'].includes(pm)) {
   console.error('--lang is ts or js, and --pm is npm or pnpm.')
   process.exit(1)
@@ -126,6 +128,28 @@ function check(condition, message) {
   console.log(`  ok  ${message}`)
 }
 
+/**
+ * Checks the sample data pages: the list, built from its +data, and the page of each item it
+ * links to, prerendered and served.
+ */
+async function checkSampleDataPages(appDir, fetchPage) {
+  const list = await fetchPage('/items')
+  check(list.status === 200 && list.html.includes('>Items</h2>'), '/items answers with its page')
+  const ids = [...list.html.matchAll(/href="\/items\/([^"]+)"/g)].map(([, id]) => id)
+  check(ids.length > 0, `/items lists the sample items: ${ids.join(', ')}`)
+  for (const id of ids) {
+    check(
+      existsSync(join(appDir, 'dist/client/items', id, 'index.html')),
+      `the build prerendered items/${id}/index.html`
+    )
+    const item = await fetchPage(`/items/${id}`)
+    check(
+      item.status === 200 && item.html.includes('>All items</a>'),
+      `/items/${id} answers with its page`
+    )
+  }
+}
+
 /** Serves the app's build with its own Vite, and checks the HTML of its pages. */
 async function checkServedPages(appDir) {
   const require = createRequire(join(appDir, 'package.json'))
@@ -157,6 +181,7 @@ async function checkServedPages(appDir) {
     const missing = await fetchPage('/no-such-page')
     check(missing.status === 404, '/no-such-page answers 404')
     check(missing.html.includes('Page not found'), '/no-such-page shows the 404 page')
+    if (hasSampleData) await checkSampleDataPages(appDir, fetchPage)
   } finally {
     await server.close()
     process.chdir(cwd)
@@ -188,6 +213,7 @@ try {
   }
   const { name, version, peerDependencies } = packages.get(DESIGN_SYSTEM).manifest
   const argv = ['create', APP, '--yes', `--${lang}`, '--framework', framework, '--no-git']
+  if (hasSampleData) argv.push('--sample-data')
   console.log(`\n$ create ${argv.slice(1).join(' ')}   (with ${pm})`)
   const code = await cli.default(argv, io, { name, version, peerDependencies })
   if (code !== 0) throw new Error(`create exited with ${code}`)
@@ -196,7 +222,9 @@ try {
   if (lang === 'ts') run(pm, ['run', 'typecheck'], appDir)
   run(pm, ['run', 'build'], appDir)
   console.log('\nChecking the build:')
-  for (const page of ['index.html', 'about/index.html', '404.html']) {
+  const pages = ['index.html', 'about/index.html', '404.html']
+  if (hasSampleData) pages.push('items/index.html')
+  for (const page of pages) {
     check(existsSync(join(appDir, 'dist/client', page)), `the build prerendered ${page}`)
   }
   await checkServedPages(appDir)

@@ -10,7 +10,9 @@ npx @soroush.tech/design-system create my-app
 ```
 
 It makes the app in a new folder, with the themes, the providers and a few pages, shows every file
-first, and installs it with the package manager you ran it with. Its options are in the
+first, and installs it with the package manager you ran it with. Add `--sample-data`, or answer
+yes to its question, for two pages that show how data gets onto a page: a list of sample items,
+and a page for each. Its options are in the
 [command line](/cli/) docs. For an app you already have, use `init`, below.
 
 ## Set it up with one command

@@ -99,7 +99,13 @@ declare global {
 export {}
 `
 
-function createSources({ name, isTypeScript, scheme }: StarterFacts) {
+/** The layout's link to the sample data pages, when the app has them. */
+const ITEMS_LINK = `          <Link href="/items" underline="hover">
+            Items
+          </Link>
+`
+
+function createSources({ name, isTypeScript, scheme, hasSampleData }: StarterFacts) {
   const t = (typeScriptOnly: string) => (isTypeScript ? typeScriptOnly : '')
   const x = isTypeScript ? 'ts' : 'js'
   return {
@@ -118,10 +124,12 @@ export default {
 `,
     PageShell: `import { StrictMode } from 'react'
 import { CacheProvider, styleCache } from '@soroush.tech/design-system/engine'
-${t("import type { PageContext } from 'vike/types'\n")}
+${t("import type { PageContext } from 'vike/types'\n")}import { PageContextProvider } from './usePageContext'
+
 /**
  * The page inside its +Layout, the same on the server and in the browser. The Emotion cache is the
- * design system's, so the server can find the styles the page used.
+ * design system's, so the server can find the styles the page used, and every component of the
+ * page can read its pageContext.
  */
 export function PageShell({ pageContext }${t(': { readonly pageContext: PageContext }')}) {
   const { Page, config } = pageContext
@@ -129,13 +137,15 @@ export function PageShell({ pageContext }${t(': { readonly pageContext: PageCont
   return (
     <StrictMode>
       <CacheProvider value={styleCache}>
-        {Layout ? (
-          <Layout>
+        <PageContextProvider pageContext={pageContext}>
+          {Layout ? (
+            <Layout>
+              <Page />
+            </Layout>
+          ) : (
             <Page />
-          </Layout>
-        ) : (
-          <Page />
-        )}
+          )}
+        </PageContextProvider>
       </CacheProvider>
     </StrictMode>
   )
@@ -223,7 +233,7 @@ export default function Layout({ children }${t(': { readonly children: ReactNode
           <Link href="/about" underline="hover">
             About
           </Link>
-          <Button size="sm" variant="outlined" onClick={() => setScheme(otherScheme)}>
+${hasSampleData ? ITEMS_LINK : ''}          <Button size="sm" variant="outlined" onClick={() => setScheme(otherScheme)}>
             {otherScheme}
           </Button>
         </Flex>
@@ -272,6 +282,33 @@ export default function Page() {
   )
 }
 `,
+    usePageContext: `import { createContext, useContext${t(', type ReactNode')} } from 'react'
+${t("import type { PageContext } from 'vike/types'\n")}
+const Context = createContext${t('<PageContext | undefined>')}(undefined)
+
+/** Gives every component of the page its pageContext: https://vike.dev/pageContext */
+export function PageContextProvider({
+  pageContext,
+  children,
+}${t(`: {
+  readonly pageContext: PageContext
+  readonly children: ReactNode
+}`)}) {
+  return <Context.Provider value={pageContext}>{children}</Context.Provider>
+}
+
+/** The pageContext of the page on screen: its URL, its route's parameters, its data. */
+export function usePageContext() {
+  const pageContext = useContext(Context)
+  if (!pageContext) throw new Error('usePageContext runs only inside a page.')
+  return pageContext
+}
+
+/** What the page's +data returned: https://vike.dev/data */
+export function useData${t('<Data>')}() {
+  return usePageContext().data${t(' as Data')}
+}
+`,
     error: `import { Flex } from '@soroush.tech/design-system/Flex'
 import { Link } from '@soroush.tech/design-system/Link'
 import { Typography } from '@soroush.tech/design-system/Typography'
@@ -290,8 +327,166 @@ export default function Page() {
   }
 }
 
-function createReadme({ name, isTypeScript }: StarterFacts): string {
+/**
+ * The sample data pages: a list of items and a page for each, which read `src/data/items` in their
+ * +data hooks, at build time.
+ */
+function createSampleDataFiles({ isTypeScript }: StarterFacts): StarterFile[] {
+  const t = (typeScriptOnly: string) => (isTypeScript ? typeScriptOnly : '')
   const x = isTypeScript ? 'ts' : 'js'
+  const dataType = t('\nexport type Data = ReturnType<typeof data>\n')
+  const items = `${t(`/** One sample item. */
+export interface Item {
+  id: string
+  title: string
+  summary: string
+  status: 'todo' | 'doing' | 'done'
+}
+
+`)}/**
+ * Sample data, so the items pages have something to show: each page's +data reads it at build
+ * time. Make the +data hooks fetch your own data instead, and remove this file.
+ */
+export const items${t(': readonly Item[]')} = [
+  {
+    id: 'theme',
+    title: 'Make the theme your own',
+    summary: 'Change the colors and fonts of both themes in src/theme/themes.${x}.',
+    status: 'doing',
+  },
+  {
+    id: 'fonts',
+    title: 'Load the fonts',
+    summary: 'The theme names Space Grotesk and JetBrains Mono, and does not load them.',
+    status: 'todo',
+  },
+  {
+    id: 'pages',
+    title: 'Add a page',
+    summary: 'A folder in src/pages with a +Page in it is a new route.',
+    status: 'todo',
+  },
+  {
+    id: 'data',
+    title: 'Read your own data',
+    summary: 'Each +data here reads this file. Make it fetch from your API, at build time.',
+    status: 'todo',
+  },
+  {
+    id: 'build',
+    title: 'Build it',
+    summary: 'The build prerenders every page, these items among them, to HTML with its styles.',
+    status: 'done',
+  },
+  {
+    id: 'deploy',
+    title: 'Deploy it',
+    summary: 'The build is static files in dist/client, which any static host serves.',
+    status: 'todo',
+  },
+]
+`
+  const statusChip = `import { Chip } from '@soroush.tech/design-system/Chip'
+${t("import type { Item } from '../../data/items'\n")}
+const COLORS = { todo: 'default', doing: 'primary', done: 'success' }${t(' as const')}
+
+/** An item's status, in its palette color. */
+export function StatusChip({ status }${t(": { readonly status: Item['status'] }")}) {
+  return <Chip label={status} size="sm" variant="outlined" color={COLORS[status]} />
+}
+`
+  const listData = `import { items } from '../../data/items'
+
+/**
+ * The list page's data: what it shows of each item. It runs at build time, as the page is
+ * prerendered. https://vike.dev/data
+ */
+export function data() {
+  return items.map(({ id, title, status }) => ({ id, title, status }))
+}
+${dataType}`
+  const listPage = `import { Flex } from '@soroush.tech/design-system/Flex'
+import { Link } from '@soroush.tech/design-system/Link'
+import { Typography } from '@soroush.tech/design-system/Typography'
+import { useData } from '../usePageContext'
+${t("import type { Data } from './+data'\n")}import { StatusChip } from './StatusChip'
+
+export default function Page() {
+  const items = useData${t('<Data>')}()
+  return (
+    <Flex gap={2}>
+      <Typography variant="h2">Items</Typography>
+      <Typography color="secondary">
+        Sample data from src/data/items.${x}, which this page's +data reads at build time.
+      </Typography>
+      <Flex gap={1}>
+        {items.map((item) => (
+          <Flex key={item.id} flexDirection="row" alignItems="center" gap={2}>
+            <Link href={\`/items/\${item.id}\`}>{item.title}</Link>
+            <StatusChip status={item.status} />
+          </Flex>
+        ))}
+      </Flex>
+    </Flex>
+  )
+}
+`
+  const itemData = `import { render } from 'vike/abort'
+${t("import type { PageContextServer } from 'vike/types'\n")}import { items } from '../../../data/items'
+
+/**
+ * One item's data, by the id in the URL, or the 404 page for an id with no item. It runs at build
+ * time, for each URL +onBeforePrerenderStart lists. https://vike.dev/data
+ */
+export function data(pageContext${t(': PageContextServer')}) {
+  const item = items.find(({ id }) => id === pageContext.routeParams.id)
+  if (!item) throw render(404)
+  return item
+}
+${dataType}`
+  const itemPrerender = `import { items } from '../../../data/items'
+
+/** The URLs of this route the build prerenders: one per item. https://vike.dev/onBeforePrerenderStart */
+export function onBeforePrerenderStart() {
+  return items.map(({ id }) => \`/items/\${id}\`)
+}
+`
+  const itemPage = `import { Flex } from '@soroush.tech/design-system/Flex'
+import { Link } from '@soroush.tech/design-system/Link'
+import { Typography } from '@soroush.tech/design-system/Typography'
+import { useData } from '../../usePageContext'
+import { StatusChip } from '../StatusChip'
+${t("import type { Data } from './+data'\n")}
+export default function Page() {
+  const item = useData${t('<Data>')}()
+  return (
+    <Flex gap={2} alignItems="flex-start">
+      <Typography variant="h2">{item.title}</Typography>
+      <StatusChip status={item.status} />
+      <Typography color="secondary">{item.summary}</Typography>
+      <Link href="/items">All items</Link>
+    </Flex>
+  )
+}
+`
+  return [
+    { path: `src/data/items.${x}`, content: items },
+    { path: `src/pages/items/StatusChip.${x}x`, content: statusChip },
+    { path: `src/pages/items/+data.${x}`, content: listData },
+    { path: `src/pages/items/+Page.${x}x`, content: listPage },
+    { path: `src/pages/items/@id/+data.${x}`, content: itemData },
+    { path: `src/pages/items/@id/+onBeforePrerenderStart.${x}`, content: itemPrerender },
+    { path: `src/pages/items/@id/+Page.${x}x`, content: itemPage },
+  ]
+}
+
+function createReadme({ name, isTypeScript, hasSampleData }: StarterFacts): string {
+  const x = isTypeScript ? 'ts' : 'js'
+  const sampleData = hasSampleData
+    ? `- \`src/pages/items/\` lists the sample items of \`src/data/items.${x}\`, with a page for each.
+  Their \`+data\` hooks read the data at build time: make them fetch your own.
+`
+    : ''
   return `# ${name}
 
 A [Vike](https://vike.dev) app on the [@soroush.tech design system](https://docs.soroush.tech),
@@ -303,7 +498,7 @@ prerendered at build time with its styles in the HTML, then moving between pages
 - \`src/theme/themes.${x}\` holds the light and the dark theme: make them your own.
 - \`src/pages/+onRenderHtml.${x}x\` and \`+onRenderClient.${x}x\` render the pages, with the styles each
   page uses in its HTML.
-
+${sampleData}
 Fonts: the theme names Space Grotesk and JetBrains Mono, and does not load them. See
 https://docs.soroush.tech/design-system/getting-started/installation/#fonts
 `
@@ -328,12 +523,14 @@ function createFiles(facts: StarterFacts): StarterFile[] {
     },
     { path: `src/pages/+config.${x}`, content: sources.config },
     { path: `src/pages/PageShell.${x}x`, content: sources.PageShell },
+    { path: `src/pages/usePageContext.${x}x`, content: sources.usePageContext },
     { path: `src/pages/+onRenderHtml.${x}x`, content: sources.onRenderHtml },
     { path: `src/pages/+onRenderClient.${x}x`, content: sources.onRenderClient },
     { path: `src/pages/+Layout.${x}x`, content: sources.Layout },
     { path: `src/pages/index/+Page.${x}x`, content: sources.home },
     { path: `src/pages/about/+Page.${x}x`, content: sources.about },
     { path: `src/pages/_error/+Page.${x}x`, content: sources.error },
+    ...(facts.hasSampleData ? createSampleDataFiles(facts) : []),
   ]
 }
 

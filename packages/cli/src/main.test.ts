@@ -35,7 +35,7 @@ describe('main', () => {
 
   it('runs create with its options', async () => {
     const argv = ['create', 'my-app', '-y', '--dry-run', '--framework', 'vike', '--js', '--no-git']
-    const { code, io } = await runMain(...argv, '--scheme', 'dark')
+    const { code, io } = await runMain(...argv, '--scheme', 'dark', '--sample-data')
     expect(code).toBe(0)
     expect(runCreate).toHaveBeenLastCalledWith(
       {
@@ -43,6 +43,7 @@ describe('main', () => {
         framework: 'vike',
         isTypeScript: false,
         scheme: 'dark',
+        hasSampleData: true,
         isConfirmed: true,
         isDryRun: true,
         isGit: false,
@@ -58,7 +59,11 @@ describe('main', () => {
     )
     await runMain('create')
     expect(runCreate).toHaveBeenLastCalledWith(
-      expect.objectContaining({ isTypeScript: undefined, framework: undefined }),
+      expect.objectContaining({
+        isTypeScript: undefined,
+        framework: undefined,
+        hasSampleData: undefined,
+      }),
       expect.anything(),
       DESIGN_SYSTEM
     )

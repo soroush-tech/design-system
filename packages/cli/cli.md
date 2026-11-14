@@ -34,8 +34,8 @@ Publish this package first: the design system's release names its exact version.
 ## How `create` works, and where a starter plugs in
 
 `create` is the same for every framework. A starter, in `src/create/starters.ts`, only supplies
-the files: `createFiles(facts)` gets the name, the language, the scheme and the design system's
-version, and returns each file by its path from the app's folder, its `package.json` among them.
+the files: `createFiles(facts)` gets the name, the language, the scheme, whether to add the
+sample data pages, and the design system's version, and returns each file by its path from the app's folder, its `package.json` among them.
 `create` does the rest:
 
 1. It reads the options, and asks for what it was not told, in a terminal only.
@@ -62,6 +62,12 @@ client routing (`clientRouting: true`) - with no renderer package:
 - `+Layout` is a setting of the app's own (`meta` in `+config`), and it renders `<Providers>`: the
   providers live in the app, not in the files that start it, so the scheme it holds can switch
   the theme. `src/theme/` is `init`'s own templates.
+- `PageShell` gives every component the page's `pageContext`, through `usePageContext` and
+  `useData` in `src/pages/usePageContext`.
+- With `--sample-data` (or a yes to its question), `createSampleDataFiles` adds `src/data/items`,
+  six sample items, and two routes that read them in `+data` at build time: `/items`, and
+  `/items/@id`, whose `+onBeforePrerenderStart` lists one URL per item for the build to
+  prerender. An id with no item throws `render(404)`. They use no data library.
 - Each file is written once, in TypeScript; `t(...)` holds what only TypeScript has, so the
   JavaScript app is the same file with the types taken out.
 - The versions it installs are this package's own `devDependencies`, which the fixture below is
@@ -79,9 +85,10 @@ install; no path outside the app, and no symbolic link.
 - `pnpm test:coverage`: unit tests in Node, 100% coverage.
 - `pnpm test:types`: builds the design system, then typechecks `type-tests/init`, the strictest app
   `init` writes into, and `type-tests/create-vike`, the TypeScript app the Vike starter writes,
-  under its own `tsconfig.json`. `src/fixture.test.ts` and `src/create/vike/vike.test.ts` keep
+  sample data pages included, under its own `tsconfig.json`. `src/fixture.test.ts` and `src/create/vike/vike.test.ts` keep
   them equal to what the commands write; after a template change, update them with `vitest run -u`.
-- `pnpm smoke:create [--lang ts|js] [--pm npm|pnpm]`, from the repo's root: packs the design system
-  and the packages it depends on, creates an app on them with the built cli, typechecks, builds
-  and serves it, and checks its server HTML for the styles. CI's `create-smoke` job runs it in
-  TypeScript with npm and in JavaScript with pnpm.
+- `pnpm smoke:create [--lang ts|js] [--pm npm|pnpm] [--sample-data]`, from the repo's root: packs
+  the design system and the packages it depends on, creates an app on them with the built cli,
+  typechecks, builds and serves it, and checks its prerendered pages and their HTML for the
+  styles. CI's `create-smoke` job runs it in TypeScript with npm and the sample data pages, and in
+  JavaScript with pnpm without them.

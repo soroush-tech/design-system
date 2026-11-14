@@ -24,6 +24,7 @@ const YES: CreateOptions = {
   framework: undefined,
   isTypeScript: undefined,
   scheme: undefined,
+  hasSampleData: undefined,
   isConfirmed: true,
   isDryRun: false,
   isGit: true,
@@ -89,6 +90,7 @@ describe('runCreate', () => {
       name: 'my-app',
       isTypeScript: true,
       scheme: 'light',
+      hasSampleData: false,
       version: '2.3.0',
     })
     expect(listCommands()).toEqual([
@@ -242,17 +244,23 @@ describe('runCreate', () => {
   it('asks what it was not told in a terminal: the name, the language, the scheme and a yes', async () => {
     const { cwd, createFiles, create, getOutput } = setUp({
       isInteractive: true,
-      answers: ['', 'js', 'dark', ''],
+      answers: ['', 'js', 'dark', 'y', ''],
     })
     expect(await create(ASK)).toBe(0)
     const output = getOutput()
     expect(output).toContain('App name? (my-app) ')
     expect(output).toContain('TypeScript or JavaScript? (TypeScript) ')
     expect(output).toContain('Default color scheme, light or dark? (light) ')
+    expect(output).toContain('Add sample data pages? (y/N) ')
     expect(output).toContain('Create it? (Y/n) ')
     expect(output).toContain('a Test app in JavaScript')
     expect(createFiles).toHaveBeenCalledWith(
-      expect.objectContaining({ name: 'my-app', isTypeScript: false, scheme: 'dark' })
+      expect.objectContaining({
+        name: 'my-app',
+        isTypeScript: false,
+        scheme: 'dark',
+        hasSampleData: true,
+      })
     )
     expect(existsSync(join(cwd, 'my-app/src/theme/themes.js'))).toBe(true)
   })
@@ -260,18 +268,29 @@ describe('runCreate', () => {
   it('takes the name it is given, and TypeScript for any other answer', async () => {
     const { cwd, createFiles, create } = setUp({
       isInteractive: true,
-      answers: [' shop ', 'ts', '', 'yes'],
+      answers: [' shop ', 'ts', '', '', 'yes'],
     })
     expect(await create(ASK)).toBe(0)
     expect(createFiles).toHaveBeenCalledWith(
-      expect.objectContaining({ name: 'shop', isTypeScript: true, scheme: 'light' })
+      expect.objectContaining({
+        name: 'shop',
+        isTypeScript: true,
+        scheme: 'light',
+        hasSampleData: false,
+      })
     )
     expect(existsSync(join(cwd, 'shop/package.json'))).toBe(true)
   })
 
   it('writes nothing without a yes', async () => {
     const { cwd, create, getOutput, listCommands } = setUp({ isInteractive: true, answers: ['n'] })
-    const options = { ...ASK, name: 'my-app', isTypeScript: true, scheme: 'light' as const }
+    const options = {
+      ...ASK,
+      name: 'my-app',
+      isTypeScript: true,
+      scheme: 'light' as const,
+      hasSampleData: false,
+    }
     expect(await create(options)).toBe(0)
     expect(getOutput()).toContain('Nothing was written.')
     expect(listCommands()).toEqual([])

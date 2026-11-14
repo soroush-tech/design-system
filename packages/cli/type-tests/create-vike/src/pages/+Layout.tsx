@@ -35,6 +35,9 @@ export default function Layout({ children }: { readonly children: ReactNode }) {
           <Link href="/about" underline="hover">
             About
           </Link>
+          <Link href="/items" underline="hover">
+            Items
+          </Link>
           <Button size="sm" variant="outlined" onClick={() => setScheme(otherScheme)}>
             {otherScheme}
           </Button>
