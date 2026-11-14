@@ -122,6 +122,8 @@ describe('the Vike starter', () => {
   ] as const)('writes the app %s holds', async (fixture, facts, paths) => {
     const files = createFiles(facts)
     for (const [path, content] of files) {
+      // The repository ignores .env files, so a fixture holds none: msw's .env is checked below.
+      if (path === '.env') continue
       await expect(content).toMatchFileSnapshot(`${fixture}/${path}`)
     }
     for (const path of paths) expect(files.has(path), path).toBe(true)
