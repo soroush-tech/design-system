@@ -10,6 +10,8 @@ export interface FileSystem {
   removeFile: (path: string) => void
   createDirectory: (path: string) => void
   removeDirectory: (path: string) => void
+  /** Removes a folder and everything in it, or a file. */
+  removeTree: (path: string) => void
   /** Whether a path is a symbolic link, or `undefined` when nothing is there. */
   isSymbolicLink: (path: string) => boolean | undefined
 }
@@ -21,6 +23,7 @@ export const nodeFileSystem: FileSystem = {
   removeFile: (path) => rmSync(path),
   createDirectory: (path) => mkdirSync(path),
   removeDirectory: (path) => rmdirSync(path),
+  removeTree: (path) => rmSync(path, { recursive: true, force: true }),
   isSymbolicLink: (path) => {
     try {
       return lstatSync(path).isSymbolicLink()

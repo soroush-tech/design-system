@@ -92,7 +92,8 @@ export default themes
 
 /**
  * The providers the app's root renders inside: the theme, and the package's base page styles.
- * It holds no JSX, so it needs none of the app's JSX settings.
+ * `scheme` picks the theme, `scheme` by default, so an app can switch it. It holds no JSX, so it
+ * needs none of the app's JSX settings.
  */
 export function createProvidersSource({
   isTypeScript,
@@ -103,8 +104,20 @@ export function createProvidersSource({
   scheme: Scheme
   themesImport: string
 }): string {
-  const typeImport = isTypeScript ? `import type { ReactNode } from 'react'\n` : ''
-  const props = isTypeScript ? '{ children }: { readonly children?: ReactNode }' : '{ children }'
+  const typeImport = isTypeScript
+    ? `import type { ReactNode } from 'react'
+`
+    : ''
+  const props = isTypeScript
+    ? `{
+  children,
+  scheme = '${scheme}',
+}: {
+  readonly children?: ReactNode
+  /** The theme to draw with, by its name in themes. */
+  readonly scheme?: keyof typeof themes
+}`
+    : `{ children, scheme = '${scheme}' }`
   return `${MARKER} The app's root renders inside Providers.
 import { createElement } from 'react'
 ${typeImport}import { Global, globalStyles } from '@soroush.tech/design-system/engine'
@@ -115,7 +128,7 @@ import themes from '${themesImport}'
 export function Providers(${props}) {
   return createElement(
     ThemeProvider,
-    { theme: themes.${scheme} },
+    { theme: themes[scheme] },
     createElement(Global, { styles: globalStyles }),
     children
   )

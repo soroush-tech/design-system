@@ -1,10 +1,14 @@
 // @vitest-environment node
 import { describe, expect, it, vi } from 'vitest'
+import { runCreate } from './create/create'
 import { runInit } from './init'
-import { main, USAGE } from './main'
+import { STARTERS } from './create/starters'
+import { HELP, main, USAGE } from './main'
+import { CancelledError } from './prompt'
 import { createTestIo } from './testApp'
 
 vi.mock('./init', () => ({ runInit: vi.fn(async () => 0) }))
+vi.mock('./create/create', () => ({ runCreate: vi.fn(async () => 0) }))
 
 const DESIGN_SYSTEM = { name: '@soroush.tech/design-system', version: '2.2.0' }
 
@@ -31,27 +35,143 @@ describe('main', () => {
     )
   })
 
-  it('prints the usage for --help, and for no command', async () => {
+  it('runs create with its options', async () => {
+    const argv = ['create', 'my-app', '-y', '--dry-run', '--framework', 'vike', '--js', '--no-git']
+    const { code, io } = await runMain(
+      ...argv,
+      '--scheme',
+      'dark',
+      '--sample-data',
+      '--title',
+      'Shop',
+      '--pm',
+      'pnpm',
+      '--render',
+      'ssg'
+    )
+    expect(code).toBe(0)
+    expect(runCreate).toHaveBeenLastCalledWith(
+      {
+        name: 'my-app',
+        title: 'Shop',
+        framework: 'vike',
+        isTypeScript: false,
+        packageManager: 'pnpm',
+        rendering: 'ssg',
+        scheme: 'dark',
+        hasSampleData: true,
+        isConfirmed: true,
+        isDryRun: true,
+        isGit: false,
+      },
+      io,
+      DESIGN_SYSTEM
+    )
+    await runMain('create', '--ts')
+    expect(runCreate).toHaveBeenLastCalledWith(
+      expect.objectContaining({ name: undefined, isTypeScript: true, isGit: true }),
+      expect.anything(),
+      DESIGN_SYSTEM
+    )
+    await runMain('create')
+    expect(runCreate).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        isTypeScript: undefined,
+        framework: undefined,
+        hasSampleData: undefined,
+      }),
+      expect.anything(),
+      DESIGN_SYSTEM
+    )
+  })
+
+  it("prints a command's own help for --help, and the usage with no command", async () => {
     expect(await runMain('--help')).toMatchObject({ code: 0, output: USAGE })
-    expect(await runMain('init', '-h')).toMatchObject({ code: 0, output: USAGE })
+    expect(await runMain('init', '-h')).toMatchObject({ code: 0, output: HELP.init })
+    expect(await runMain('create', 'my-app', '--help')).toMatchObject({
+      code: 0,
+      output: HELP.create,
+    })
+    expect(await runMain('--help', 'build')).toMatchObject({ code: 0, output: USAGE })
     expect(await runMain()).toMatchObject({ code: 1, output: USAGE })
   })
 
+  it("lists each command's own options, and the starters create has", () => {
+    expect(USAGE).toContain('create --help')
+    expect(HELP.init).toContain('--force')
+    expect(HELP.init).not.toContain('--framework')
+    for (const option of ['--framework', '--ts, --js', '--sample-data', '--no-git', '--scheme']) {
+      expect(HELP.create).toContain(option)
+    }
+    expect(HELP.create).not.toContain('--force')
+    const [first, ...others] = Object.keys(STARTERS)
+    expect(HELP.create).toContain(
+      `the app's framework: ${[`${first} (the default)`, ...others].join(', ')}\n`
+    )
+  })
+
   it('refuses an unknown command, an unknown option and an unknown scheme', async () => {
-    expect(await runMain('create')).toMatchObject({
+    expect(await runMain('build')).toMatchObject({
       code: 1,
-      output: `Unknown command: create\n\n${USAGE}`,
+      output: `Unknown command: build\n\n${USAGE}`,
     })
+    expect(await runMain('toString')).toMatchObject({ code: 1 })
     expect(await runMain('init', 'now')).toMatchObject({
       code: 1,
-      output: `Unknown command: init now\n\n${USAGE}`,
+      output: `Unknown command: init now\n\n${HELP.init}`,
+    })
+    expect(await runMain('create', 'one', 'two')).toMatchObject({
+      code: 1,
+      output: `Unknown command: create one two\n\n${HELP.create}`,
     })
     const unknownOption = await runMain('init', '--colour')
     expect(unknownOption.code).toBe(1)
-    expect(unknownOption.output).toMatch(/^Unknown option '--colour'[\s\S]*Usage:/)
+    expect(unknownOption.output).toMatch(/^Unknown option '--colour'/)
+    expect(unknownOption.output.endsWith(HELP.init)).toBe(true)
+    expect((await runMain('--colour')).output.endsWith(USAGE)).toBe(true)
     expect(await runMain('init', '--scheme', 'blue')).toMatchObject({
       code: 1,
       output: '--scheme is light or dark, not blue.\n',
+    })
+  })
+
+  it('refuses a rendering create does not know', async () => {
+    expect(await runMain('create', '--render', 'ssr')).toMatchObject({
+      code: 1,
+      output: '--render is isomorphic, spa, ssg, not ssr.\n',
+    })
+  })
+
+  it('refuses a package manager create does not know', async () => {
+    expect(await runMain('create', '--pm', 'pip')).toMatchObject({
+      code: 1,
+      output: '--pm is npm, pnpm, yarn, bun, not pip.\n',
+    })
+    expect(await runMain('init', '--pm', 'npm')).toMatchObject({ code: 1 })
+  })
+
+  it('stops with 130 and says nothing was written, when a question is stopped', async () => {
+    vi.mocked(runCreate).mockRejectedValueOnce(new CancelledError())
+    expect(await runMain('create')).toMatchObject({
+      code: 130,
+      output: 'Stopped: nothing was written.\n',
+    })
+    vi.mocked(runInit).mockRejectedValueOnce(new Error('the disk is full'))
+    await expect(runMain('init')).rejects.toThrow('the disk is full')
+  })
+
+  it('refuses an option of the other command, and --ts with --js', async () => {
+    expect(await runMain('init', '--js')).toMatchObject({
+      code: 1,
+      output: `--js is an option of create, not of init.\n\n${HELP.init}`,
+    })
+    expect(await runMain('create', 'my-app', '--force')).toMatchObject({
+      code: 1,
+      output: `--force is an option of init, not of create.\n\n${HELP.create}`,
+    })
+    expect(await runMain('create', '--ts', '--js')).toMatchObject({
+      code: 1,
+      output: '--ts and --js do not go together: give one.\n',
     })
   })
 })

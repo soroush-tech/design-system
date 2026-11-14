@@ -84,6 +84,26 @@ const compareVersions = (a, b) => {
   return 0
 }
 
+/**
+ * Whether the staged package is exactly what npm has: the same as the tag of its published
+ * version (`<name>@<version>`). Undoing a bump that was never released puts a package back there,
+ * and then there is nothing new to release. A tag this clone lacks counts as a difference, so the
+ * check still runs.
+ */
+const matchesRelease = (dir, name, version) => {
+  try {
+    execFileSync(
+      'git',
+      ['diff', '--cached', '--quiet', `${name}@${version}`, '--', `packages/${dir}`],
+      { cwd: repoRoot, stdio: 'ignore' }
+    )
+    return true
+  } catch {
+    // 1: the staged package differs from the release; 128: no such tag here.
+    return false
+  }
+}
+
 /** Latest published version, `null` when never published, `undefined` when the registry failed. */
 const latestPublishedVersion = async (name) => {
   try {
@@ -153,9 +173,20 @@ for (const { name } of unreachable) {
   console.warn(`Warning: could not reach the registry for ${name} - version check skipped.`)
 }
 
+const atRelease = results.filter(
+  ({ dir, name, version, published }) =>
+    version === published && matchesRelease(dir, name, published)
+)
+for (const { name, published } of atRelease) {
+  console.log(`${name}: staged as released in ${published} - nothing new to release.`)
+}
+
 const stale = results.filter(
-  ({ version, published }) =>
-    published !== undefined && published !== null && compareVersions(version, published) <= 0
+  (result) =>
+    !atRelease.includes(result) &&
+    result.published !== undefined &&
+    result.published !== null &&
+    compareVersions(result.version, result.published) <= 0
 )
 
 if (stale.length > 0) {
@@ -170,8 +201,9 @@ if (stale.length > 0) {
   process.exit(1)
 }
 
-for (const { name, version, published } of results) {
-  if (published === undefined) continue
+for (const result of results) {
+  const { name, version, published } = result
+  if (published === undefined || atRelease.includes(result)) continue
   const live = published === null ? 'unpublished' : published
   console.log(`${name}: ${version} is ahead of npm (${live}).`)
 }

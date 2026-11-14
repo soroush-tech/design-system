@@ -1,7 +1,7 @@
 {
   "name": "@soroush.design/cli",
-  "version": "0.1.0",
-  "description": "The command line of the @soroush.tech design system: init sets it up in an existing React app, showing every change first.",
+  "version": "0.2.0",
+  "description": "The command line of the @soroush.tech design system: init sets it up in an existing React app, and create starts a new one, each showing every change first.",
   "keywords": [
     "cli",
     "init",
@@ -52,18 +52,24 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "test:types": "pnpm --filter @soroush.tech/design-system build && tsc -p type-tests/init/tsconfig.json",
+    "test:types": "pnpm --filter @soroush.tech/design-system build && tsc -p type-tests/init/tsconfig.json && tsc -p type-tests/tsconfig.create-vike.json && tsc -p type-tests/tsconfig.create-vike-spa.json && tsc -p type-tests/tsconfig.create-vike-ssg.json",
     "prepublishOnly": "pnpm build"
   },
   "devDependencies": {
+    "@emotion/server": "^11.11.0",
     "@soroush.tech/eslint-config": "workspace:*",
     "@types/node": "^26.6.6",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.3.0",
     "@vitest/coverage-v8": "^5.1.0",
     "oxlint": "^1.93.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
     "tsdown": "^0.23.7",
     "typescript": "~7.0.2",
+    "vike": "0.4.270",
+    "vite": "~8.3.8",
     "vitest": "^5.1.0"
   }
 }

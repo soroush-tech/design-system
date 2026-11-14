@@ -138,7 +138,7 @@ describe('VersionMenu', () => {
     expect(assign).toHaveBeenCalledWith('/design-system/')
   })
 
-  it.each(['mcp', 'ui-spec'] as const)(
+  it.each(['mcp', 'ui-spec', 'cli'] as const)(
     'lists the released snapshots of the %s section and goes to one',
     async (pkg) => {
       stubManifest({ [pkg]: ['0.1.3'] })

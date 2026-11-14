@@ -7,6 +7,15 @@ const CONTEXT = {
 }
 
 describe('snippetToModule', () => {
+  it('names the wrapper so it shadows no Demo of the helpers', () => {
+    const module = snippetToModule('<Demo size="sm" />', {
+      importsText: '',
+      helpersText: 'function Demo(props) {\n  return <Sample {...props} />\n}',
+    })
+    expect(module).toContain('export default function Example() {')
+    expect(module.match(/function Demo\b/g)).toHaveLength(1)
+  })
+
   it('wraps a trailing JSX statement in the Demo return, setup above it', () => {
     const visible = "const args = { size: 'sm' }\n\n<Sample {...args}>{items}</Sample>"
     expect(snippetToModule(visible, CONTEXT)).toBe(
