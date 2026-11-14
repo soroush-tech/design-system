@@ -2,7 +2,8 @@
 
 ## Start a new app
 
-To start a new app on the design system, server-rendered with Vike, in TypeScript or JavaScript:
+To start a new app on the design system - a Vike app, prerendered at build time, that then moves
+between pages with no reload - in TypeScript or JavaScript:
 
 ```sh
 npx @soroush.tech/design-system create my-app

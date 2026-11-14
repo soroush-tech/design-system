@@ -4,15 +4,24 @@
 //    them);
 // 2. runs the built cli's `create` in a temp folder, through its own `main`, with an Io whose
 //    install first points the new app at those tarballs;
-// 3. typechecks (TypeScript) and builds the app, serves the build, and checks the server's HTML:
-//    the design system's styles and the starter's content on `/` and `/about`, and the 404 page.
+// 3. typechecks (TypeScript) and builds the app, checks that the build prerendered its pages,
+//    serves the build, and checks the HTML: the design system's styles and the starter's content
+//    on `/` and `/about`, and the 404 page.
 //
 //   node scripts/smoke-create.mjs [--lang ts|js] [--pm npm|pnpm] [--framework vike]
 //
 // The temp folder is removed when every check passes, and kept, with its path printed, when one
 // fails.
 import { spawnSync } from 'node:child_process'
-import { mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs'
 import { createRequire } from 'node:module'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
@@ -186,6 +195,10 @@ try {
   const appDir = join(workDir, APP)
   if (lang === 'ts') run(pm, ['run', 'typecheck'], appDir)
   run(pm, ['run', 'build'], appDir)
+  console.log('\nChecking the build:')
+  for (const page of ['index.html', 'about/index.html', '404.html']) {
+    check(existsSync(join(appDir, 'dist/client', page)), `the build prerendered ${page}`)
+  }
   await checkServedPages(appDir)
   isPassed = true
 } finally {

@@ -28,8 +28,9 @@ a write or the install fails, it takes the new app away.
 
 ### The Vike app
 
-A [Vike](https://vike.dev) app, rendered on the server: each page's HTML carries the styles it
-uses, so it is drawn styled before any script runs.
+A [Vike](https://vike.dev) app, isomorphic: every page is prerendered to HTML at build time, with
+the styles it uses, so it is drawn styled before any script runs. Then the app takes over in the
+browser and moves between pages without a reload.
 
 - `src/pages/` holds the pages - a home page, a second page and a 404 page - built from the design
   system's components and theme tokens only.

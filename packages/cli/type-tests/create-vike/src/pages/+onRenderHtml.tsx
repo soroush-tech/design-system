@@ -6,8 +6,8 @@ import type { OnRenderHtmlSync } from 'vike/types'
 import { PageShell } from './PageShell'
 
 /**
- * Renders the page on the server, with the styles it uses in the head, so it is drawn styled
- * before any script runs.
+ * Renders the page to HTML - at build time, as the app is prerendered - with the styles it uses
+ * in the head, so it is drawn styled before any script runs.
  */
 export const onRenderHtml: OnRenderHtmlSync = (pageContext) => {
   const { extractCriticalToChunks, constructStyleTagsFromChunks } = createEmotionServer(styleCache)

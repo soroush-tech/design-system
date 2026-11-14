@@ -52,7 +52,8 @@ default.
 
 ### The Vike starter
 
-`src/create/vike/vike.ts` writes a server-rendered Vike app, with no renderer package:
+`src/create/vike/vike.ts` writes an isomorphic Vike app - every page prerendered at build time (`prerender: true`), then
+client routing (`clientRouting: true`) - with no renderer package:
 
 - `+onRenderHtml` renders the page with `@emotion/server` on the design system's `styleCache`, and
   puts the styles it used in the head, so the page is drawn styled before any script runs.

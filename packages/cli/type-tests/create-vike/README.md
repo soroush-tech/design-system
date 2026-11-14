@@ -1,7 +1,7 @@
 # my-app
 
 A [Vike](https://vike.dev) app on the [@soroush.tech design system](https://docs.soroush.tech),
-rendered on the server with its styles in the HTML.
+prerendered at build time with its styles in the HTML, then moving between pages with no reload.
 
 - `npm run dev` starts it, `npm run build` builds it, and `npm run preview` serves the build.
 - `src/pages/` holds the pages: a folder per route, each with its `+Page`.

@@ -1,7 +1,7 @@
-// The Vike starter: a server-rendered React app on the design system. Each file is written once,
-// in TypeScript; `t(...)` holds what only TypeScript has, so the JavaScript app is the same file
-// with the types taken out. The Vike wiring here is the one `init` reuses for an existing Vike
-// app (#80).
+// The Vike starter: an isomorphic React app on the design system, prerendered at build time, then
+// routed in the browser. Each file is written once, in TypeScript; `t(...)` holds what only
+// TypeScript has, so the JavaScript app is the same file with the types taken out. The Vike wiring
+// here is the one `init` reuses for an existing Vike app (#80).
 import { devDependencies } from '../../../package.json'
 import { createProvidersSource, createThemesSource } from '../../templates/templates'
 import type { Starter, StarterFacts, StarterFile } from '../starters'
@@ -105,6 +105,9 @@ function createSources({ name, isTypeScript, scheme }: StarterFacts) {
   return {
     config: `${t("import type { Config } from 'vike/types'\n\n")}// The settings of every page: https://vike.dev/config
 export default {
+  // Isomorphic: every page is HTML at build time, then the app moves between pages in the
+  // browser, with no reload.
+  prerender: true,
   clientRouting: true,
   hydrationCanBeAborted: true,
   // +Layout is a setting of this app's own: the component every page renders inside.
@@ -145,8 +148,8 @@ import { dangerouslySkipEscape, escapeInject } from 'vike/server'
 ${t("import type { OnRenderHtmlSync } from 'vike/types'\n")}import { PageShell } from './PageShell'
 
 /**
- * Renders the page on the server, with the styles it uses in the head, so it is drawn styled
- * before any script runs.
+ * Renders the page to HTML - at build time, as the app is prerendered - with the styles it uses
+ * in the head, so it is drawn styled before any script runs.
  */
 export const onRenderHtml${t(': OnRenderHtmlSync')} = (pageContext) => {
   const { extractCriticalToChunks, constructStyleTagsFromChunks } = createEmotionServer(styleCache)
@@ -262,7 +265,7 @@ export default function Page() {
     <Flex gap={2}>
       <Typography variant="h2">About</Typography>
       <Typography color="secondary">
-        A second page: the server draws it with its styles, and the app moves to it without a
+        A second page: it is HTML with its styles from the build, and the app moves to it without a
         reload.
       </Typography>
     </Flex>
@@ -292,7 +295,7 @@ function createReadme({ name, isTypeScript }: StarterFacts): string {
   return `# ${name}
 
 A [Vike](https://vike.dev) app on the [@soroush.tech design system](https://docs.soroush.tech),
-rendered on the server with its styles in the HTML.
+prerendered at build time with its styles in the HTML, then moving between pages with no reload.
 
 - \`npm run dev\` starts it, \`npm run build\` builds it, and \`npm run preview\` serves the build.
 - \`src/pages/\` holds the pages: a folder per route, each with its \`+Page\`.
