@@ -50,6 +50,22 @@ When a write or the install fails, it takes the app away: the folder it made, or
 the empty folder it was given. To add a starter, add it to `STARTERS`; the first one is the
 default.
 
+### The Vike starter
+
+`src/create/vike/vike.ts` writes a server-rendered Vike app, with no renderer package:
+
+- `+onRenderHtml` renders the page with `@emotion/server` on the design system's `styleCache`, and
+  puts the styles it used in the head, so the page is drawn styled before any script runs.
+  `+onRenderClient` hydrates it with the same cache. Both render `PageShell`, the page inside
+  `+Layout`.
+- `+Layout` is a setting of the app's own (`meta` in `+config`), and it renders `<Providers>`: the
+  providers live in the app, not in the files that start it, so the scheme it holds can switch
+  the theme. `src/theme/` is `init`'s own templates.
+- Each file is written once, in TypeScript; `t(...)` holds what only TypeScript has, so the
+  JavaScript app is the same file with the types taken out.
+- The versions it installs are this package's own `devDependencies`, which the fixture below is
+  checked against. Bump them there.
+
 ## The rules each change keeps
 
 Each has a test: nothing is written before a yes; a clean git tree unless `--force` (`init`); a
@@ -60,6 +76,7 @@ install; no path outside the app, and no symbolic link.
 ## Tests
 
 - `pnpm test:coverage`: unit tests in Node, 100% coverage.
-- `pnpm test:types`: builds the design system and typechecks `type-tests/init`, the strictest app
-  `init` writes into. `src/fixture.test.ts` keeps its files equal to `init`'s output; after a
-  template change, update them with `vitest run -u`.
+- `pnpm test:types`: builds the design system, then typechecks `type-tests/init`, the strictest app
+  `init` writes into, and `type-tests/create-vike`, the TypeScript app the Vike starter writes,
+  under its own `tsconfig.json`. `src/fixture.test.ts` and `src/create/vike/vike.test.ts` keep
+  them equal to what the commands write; after a template change, update them with `vitest run -u`.

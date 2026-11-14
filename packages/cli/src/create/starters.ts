@@ -1,4 +1,5 @@
 import type { Scheme } from '../templates/templates'
+import { vikeStarter } from './vike/vike'
 
 /** What a starter is told: everything the developer chose, and the design system to install. */
 export interface StarterFacts {
@@ -27,4 +28,4 @@ export interface Starter {
 }
 
 /** The starters, by the name `--framework` takes. The first is the default. */
-export const STARTERS: Readonly<Record<string, Starter>> = {}
+export const STARTERS: Readonly<Record<string, Starter>> = { vike: vikeStarter }

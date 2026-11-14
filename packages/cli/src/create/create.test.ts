@@ -297,6 +297,7 @@ describe('runCreate', () => {
     const { io, getOutput } = createTestIo(cwd)
     expect(await runCreate(YES, io, DESIGN_SYSTEM, { starters: {} })).toBe(1)
     expect(getOutput()).toBe('create has no starter for any framework. It has: none yet.\n')
-    expect(await runCreate({ ...YES, framework: 'vike' }, io, DESIGN_SYSTEM)).toBe(1)
+    expect(await runCreate({ ...YES, framework: 'next' }, io, DESIGN_SYSTEM)).toBe(1)
+    expect(getOutput()).toContain('create has no starter for next. It has: vike.')
   })
 })
