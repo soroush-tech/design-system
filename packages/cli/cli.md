@@ -22,7 +22,9 @@ Publish this package first: the design system's release names its exact version.
 
 ## Layout
 
-- `src/main.ts` reads the command line; `src/init.ts` runs `init`, `src/create/` runs `create`.
+- `src/main.ts` reads the command line, and holds the help: `USAGE` with no command, and `HELP`,
+  each command's own, which `<command> --help` and a wrong option print. `src/init.ts` runs
+  `init`, and `src/create/` runs `create`.
 - `src/detect/` reads the app: its package manager, React, its root, a workspace's apps, git.
 - `src/plan/` works out every change from what `detect` read, writing nothing: the files, the
   root's edit, the install. It reads files only through `InitFacts.readFile`.

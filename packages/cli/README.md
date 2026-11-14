@@ -26,6 +26,7 @@ a write or the install fails, it takes the new app away.
 | `--scheme <name>`    | The default color scheme: `light` or `dark`               |
 | `--sample-data`      | Add the sample data pages                                 |
 | `--no-git`           | Do not run `git init`                                     |
+| `-h`, `--help`       | Show the options of `create`                              |
 
 ### The Vike app
 
@@ -80,7 +81,7 @@ npx '@soroush.tech/design-system' init
 | `--dry-run`       | Show the changes and exit                    |
 | `--force`         | Run outside git, or with uncommitted changes |
 | `--scheme <name>` | The default color scheme: `light` or `dark`  |
-| `-h`, `--help`    | Show the help                                |
+| `-h`, `--help`    | Show the options of `init`                   |
 
 ### What `init` does
 

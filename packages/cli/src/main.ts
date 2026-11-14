@@ -1,32 +1,67 @@
 import { parseArgs } from 'node:util'
 import { runCreate } from './create/create'
+import { STARTERS } from './create/starters'
 import type { PackageJson } from './detect/detect'
 import { runInit } from './init'
 import type { Io } from './io'
 
-export const USAGE = `Usage: npx @soroush.tech/design-system <command> [options]
+const BIN = 'npx @soroush.tech/design-system'
+
+/** The help with no command: the commands, and how to get each one's own help. */
+export const USAGE = `Usage: ${BIN} <command> [options]
 
 Commands:
   init            set up @soroush.tech/design-system in the React app in this folder
   create [name]   start a new app on the design system, in a new folder
 
 Each shows every change first, and writes nothing until you say yes.
+For a command's options, run it with --help: ${BIN} create --help
+`
+
+const [defaultFramework, ...otherFrameworks] = Object.keys(STARTERS)
+
+/** Each command's own help, by its name. */
+export const HELP: Readonly<Record<string, string>> = {
+  init: `Usage: ${BIN} init [options]
+
+Sets the design system up in the React app in this folder, or in a workspace's root that holds
+one app. It shows every change first, and writes nothing until you say yes.
 
 Options:
-  -y, --yes             apply without asking
-      --dry-run         show the changes and exit
-      --scheme <name>   the default color scheme: light or dark
-  -h, --help            show this help
+  -y, --yes               apply without asking
+      --dry-run           show the changes and exit
+      --force             run outside git, or with uncommitted changes
+      --scheme <name>     the default color scheme: light (the default) or dark
+  -h, --help              show this help
 
-Options of init:
-      --force           run outside git, or with uncommitted changes
+Example:
+  ${BIN} init --scheme dark
+`,
+  create: `Usage: ${BIN} create [name] [options]
 
-Options of create:
-      --framework <name>  the app's framework
+Starts a new app on the design system in ./<name>, my-app when it is not given: a new folder, or
+an empty one. It asks for what the options do not say, shows every file first, and writes nothing
+until you say yes.
+
+Options:
+  -y, --yes               create without asking: TypeScript, light, no sample data
+      --dry-run           show the files and exit
+      --framework <name>  the app's framework: ${[`${defaultFramework} (the default)`, ...otherFrameworks].join(', ')}
       --ts, --js          TypeScript (the default) or JavaScript
-      --sample-data       add pages that read sample data
+      --scheme <name>     the default color scheme: light (the default) or dark
+      --sample-data       add a list of sample items, and a page for each
       --no-git            do not run git init
-`
+  -h, --help              show this help
+
+Examples:
+  ${BIN} create my-app
+  ${BIN} create my-app --yes --js --sample-data
+`,
+}
+
+/** The help of `command`, or the one with no command. */
+const getHelp = (command: string | undefined) =>
+  command && Object.hasOwn(HELP, command) ? HELP[command] : USAGE
 
 const OPTIONS = {
   yes: { type: 'boolean', short: 'y' },
@@ -73,15 +108,17 @@ export async function main(
   try {
     parsed = parseArgs({ args: [...argv], allowPositionals: true, options: OPTIONS })
   } catch (error) {
-    io.write(`${(error as Error).message}\n\n${USAGE}`)
+    // The command line did not parse, so the command is the first word that names one.
+    const command = argv.find((arg) => Object.hasOwn(HELP, arg))
+    io.write(`${(error as Error).message}\n\n${getHelp(command)}`)
     return 1
   }
   const { values, positionals } = parsed
+  const [command, ...extra] = positionals
   if (values.help) {
-    io.write(USAGE)
+    io.write(getHelp(command))
     return 0
   }
-  const [command, ...extra] = positionals
   if (!command || !Object.hasOwn(OWN_OPTIONS, command)) {
     const unknown = command ? `Unknown command: ${positionals.join(' ')}\n\n` : ''
     io.write(unknown + USAGE)
@@ -89,7 +126,7 @@ export async function main(
   }
   const misuse = findMisuse(command, extra, Object.keys(values))
   if (misuse) {
-    io.write(`${misuse}\n\n${USAGE}`)
+    io.write(`${misuse}\n\n${getHelp(command)}`)
     return 1
   }
   const { scheme } = values
