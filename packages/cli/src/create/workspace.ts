@@ -1,5 +1,4 @@
 import type { PackageManagerName } from '../plan/planInit'
-import type { Library } from './libraries'
 import type { StarterFile } from './starters'
 
 /**
@@ -21,8 +20,6 @@ export const toAppPackageName = (packageName: string) => `@${packageName}/web`
 export interface WorkspaceFacts {
   packageName: string
   title: string
-  isTypeScript: boolean
-  libraries: readonly Library[]
   packageManager: PackageManagerName
 }
 
@@ -47,16 +44,15 @@ const GITIGNORE = `node_modules/
 .DS_Store
 `
 
-function createRootFiles(facts: WorkspaceFacts): StarterFile[] {
-  const { packageName, title, isTypeScript, libraries, packageManager } = facts
+/** The names of the scripts in the app's package.json, which the root runs by the same names. */
+function readAppScripts(appFiles: readonly StarterFile[]): string[] {
+  const packageJson = appFiles.find((file) => file.path === 'package.json')
+  return Object.keys(JSON.parse(packageJson?.content ?? '{}').scripts ?? {})
+}
+
+function createRootFiles(facts: WorkspaceFacts, scripts: readonly string[]): StarterFile[] {
+  const { packageName, title, packageManager } = facts
   const app = toAppPackageName(packageName)
-  const scripts = [
-    'dev',
-    'build',
-    'preview',
-    ...(isTypeScript ? ['typecheck'] : []),
-    ...(libraries.includes('vitest') ? ['test'] : []),
-  ]
   const isPnpm = packageManager === 'pnpm'
   const packageJson = {
     name: packageName,
@@ -105,7 +101,7 @@ export function createWorkspaceFiles(
   facts: WorkspaceFacts
 ): StarterFile[] {
   return [
-    ...createRootFiles(facts),
+    ...createRootFiles(facts, readAppScripts(appFiles)),
     ...appFiles.map((file) => ({ ...file, path: `${APP_FOLDER}/${file.path}` })),
   ]
 }

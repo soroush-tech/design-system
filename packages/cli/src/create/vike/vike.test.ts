@@ -49,11 +49,17 @@ const SHARED_PATHS = [
 ]
 
 describe('the Vike starter', () => {
+  it('offers every rendering, and the libraries', () => {
+    expect(vikeStarter.renderings).toEqual(['isomorphic', 'ssr', 'spa', 'ssg'])
+    expect(vikeStarter.hasLibraries).toBe(true)
+  })
+
   // `pnpm test:types` typechecks these files as the app's own tsconfig.json sets it; this keeps
   // them what create writes. After a template change, update them with `vitest run -u`.
-  // One fixture per rendering: create-vike (isomorphic), create-vike-spa and create-vike-ssg.
+  // One fixture per rendering: create-vike (isomorphic), create-vike-ssr, -spa and -ssg.
   it.each([
     ['isomorphic', FIXTURE],
+    ['ssr', `${FIXTURE}-ssr`],
     ['spa', `${FIXTURE}-spa`],
     ['ssg', `${FIXTURE}-ssg`],
   ] as const)('writes the %s TypeScript app its fixture holds', async (rendering, fixture) => {
@@ -79,9 +85,28 @@ describe('the Vike starter', () => {
         'vite.config.ts',
         'tsconfig.json',
         'src/vike.d.ts',
-        ...SAMPLE_DATA_PATHS,
+        // A server renders any item asked for: it has no list of them to prerender.
+        ...SAMPLE_DATA_PATHS.filter(
+          (path) => rendering !== 'ssr' || !path.endsWith('+onBeforePrerenderStart.ts')
+        ),
       ].sort()
     )
+  })
+
+  it('renders each page on its own server, on each request, when SSR', () => {
+    const files = createFiles({ rendering: 'ssr' })
+    const config = files.get('src/pages/+config.ts')!
+    expect(config).toContain('  server: true,\n  clientRouting: true,')
+    expect(config).not.toContain('prerender')
+    expect(JSON.parse(files.get('package.json')!).scripts.start).toBe('node dist/server/index.mjs')
+    expect(files.get('src/pages/+onRenderHtml.tsx')).toContain('on the server, on each request')
+    expect(files.get('src/pages/items/+data.ts')).toContain('on the server, on each request')
+    expect(files.get('src/pages/items/@id/+data.ts')).toContain('server, on each request')
+    expect(files.get('src/data/items.ts')).toContain('npm start runs the server the build wrote')
+    expect(files.get('README.md')).toContain('`npm start` runs the server the build wrote')
+    expect(files.get('README.md')).toContain('read the data on each request')
+    // The others build static files, with no server to start.
+    expect(JSON.parse(createFiles().get('package.json')!).scripts).not.toHaveProperty('start')
   })
 
   it('renders an SPA in the browser only, from an empty shell', () => {

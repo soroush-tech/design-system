@@ -51,7 +51,7 @@ const PATHS = [
 
 describe('the Astro starter', () => {
   it('offers the renderings it writes, and no library yet', () => {
-    expect(astroStarter.renderings).toEqual(['isomorphic', 'ssg'])
+    expect(astroStarter.renderings).toEqual(['isomorphic', 'ssr', 'ssg'])
     expect(astroStarter.hasLibraries).toBe(false)
   })
 
@@ -59,14 +59,14 @@ describe('the Astro starter', () => {
   // `astro check` on a whole app. After a template change, update them with `vitest run -u`.
   it.each([
     ['isomorphic', FIXTURE],
+    ['ssr', `${FIXTURE}-ssr`],
     ['ssg', `${FIXTURE}-ssg`],
   ] as const)('writes the %s TypeScript app its fixture holds', async (rendering, fixture) => {
     const files = createFiles({ rendering })
     for (const [path, content] of files) {
       await expect(content).toMatchFileSnapshot(`${fixture}/${path}`)
     }
-    const islands =
-      rendering === 'isomorphic' ? ['src/theme/scheme.ts', 'src/components/Counter.tsx'] : []
+    const islands = rendering === 'ssg' ? [] : ['src/theme/scheme.ts', 'src/components/Counter.tsx']
     expect([...files.keys()].sort()).toEqual([...PATHS, ...islands, ...SAMPLE_DATA_PATHS].sort())
   })
 
@@ -124,6 +124,28 @@ describe('the Astro starter', () => {
       'onClick={() => setScheme(otherScheme)}'
     )
     expect(files.get('src/theme/Theme.tsx')).toContain('theme={themes[useScheme()]}')
+  })
+
+  it('renders each page on a Node server, on each request, when SSR', () => {
+    const files = createFiles({ rendering: 'ssr' })
+    const config = files.get('astro.config.mjs')!
+    expect(config).toContain("import node from '@astrojs/node'")
+    expect(config).toContain("output: 'server',\n  adapter: node({ mode: 'standalone' }),")
+    const packageJson = JSON.parse(files.get('package.json')!)
+    expect(packageJson.scripts.start).toBe('node dist/server/entry.mjs')
+    expect(packageJson.dependencies['@astrojs/node']).toBe(devDependencies['@astrojs/node'])
+    const item = files.get('src/pages/items/[id].astro')!
+    expect(item).toContain('const item = items.find(({ id }) => id === Astro.params.id)')
+    expect(item).toContain("if (!item) return Astro.rewrite('/404')")
+    expect(item).not.toContain('getStaticPaths')
+    // The islands hydrate, and the router moves between pages, as in an isomorphic app.
+    expect(files.get('src/layouts/Layout.astro')).toContain('<ClientRouter />')
+    expect(files.get('src/pages/index.astro')).toContain('<Home client:load />')
+    expect(files.get('README.md')).toContain('`npm start` runs the server the build wrote')
+    expect(files.get('src/data/items.ts')).toContain('read it\n * on each request.')
+    const isomorphic = JSON.parse(createFiles().get('package.json')!)
+    expect(isomorphic.scripts).not.toHaveProperty('start')
+    expect(isomorphic.dependencies).not.toHaveProperty('@astrojs/node')
   })
 
   it('writes HTML with no script and no switch, when SSG', () => {

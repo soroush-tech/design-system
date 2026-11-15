@@ -52,7 +52,7 @@ written.
 | `--ts`, `--js`       | TypeScript (the default) or JavaScript                            |
 | `--pm <name>`        | `npm`, `pnpm`, `yarn` or `bun`: the one that ran it, if not given |
 | `--layout <name>`    | `workspace` (the default) or `standalone`                         |
-| `--render <name>`    | `isomorphic` (the default), `spa` or `ssg`                        |
+| `--render <name>`    | `isomorphic` (the default), `ssr`, `spa` or `ssg`                 |
 | `--with <names>`     | The libraries, by comma: `--with tanstack-query,msw,zustand`      |
 | `--scheme <name>`    | The default color scheme: `light` or `dark`                       |
 | `--sample-data`      | Add the sample data pages                                         |
@@ -80,13 +80,18 @@ testApp/
 - **Isomorphic** (the default): every page is prerendered to HTML at build time, with the styles
   it uses, so it is drawn styled before any script runs. Then the app takes over in the browser
   and moves between pages without a reload.
+- **SSR**: every page is rendered to HTML on a server, on each request, with its styles - its data
+  read as it is asked for. Then the app takes over in the browser, as in an isomorphic app. The
+  build writes a Node server, which `npm start` runs on `PORT`: Vike's own server
+  (`node dist/server/index.mjs`, port 3000 by default) or Astro's Node adapter, standalone
+  (`node dist/server/entry.mjs`, `HOST` and `PORT`, port 4321 by default).
 - **SPA**: every page is an empty HTML shell from the build, and the browser renders it, with its
   styles. It moves between pages without a reload.
 - **SSG**: every page is prerendered to HTML with its styles, and ships no JavaScript: a link loads
   the next page. It has no light and dark switch, since that needs JavaScript.
 
-All three build to static files that any static host serves. An Astro app renders isomorphic or
-SSG.
+Isomorphic, SPA and SSG build to static files that any static host serves; SSR needs a Node host.
+An Astro app renders isomorphic, SSR or SSG.
 
 ### Framework
 

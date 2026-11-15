@@ -52,11 +52,12 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "test:types": "pnpm --filter @soroush.tech/design-system build && tsc -p type-tests/init/tsconfig.json && tsc -p type-tests/tsconfig.create-vike.json && tsc -p type-tests/tsconfig.create-vike-spa.json && tsc -p type-tests/tsconfig.create-vike-ssg.json && tsc -p type-tests/tsconfig.create-vike-libraries.json && tsc -p type-tests/tsconfig.create-vike-jotai.json && tsc -p type-tests/tsconfig.create-vike-more.json && tsc -p type-tests/tsconfig.create-astro.json && tsc -p type-tests/tsconfig.create-astro-ssg.json",
+    "test:types": "pnpm --filter @soroush.tech/design-system build && tsc -p type-tests/init/tsconfig.json && tsc -p type-tests/tsconfig.create-vike.json && tsc -p type-tests/tsconfig.create-vike-spa.json && tsc -p type-tests/tsconfig.create-vike-ssg.json && tsc -p type-tests/tsconfig.create-vike-ssr.json && tsc -p type-tests/tsconfig.create-vike-libraries.json && tsc -p type-tests/tsconfig.create-vike-jotai.json && tsc -p type-tests/tsconfig.create-vike-more.json && tsc -p type-tests/tsconfig.create-astro.json && tsc -p type-tests/tsconfig.create-astro-ssg.json && tsc -p type-tests/tsconfig.create-astro-ssr.json",
     "prepublishOnly": "pnpm build"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.12",
+    "@astrojs/node": "^11.1.13",
     "@astrojs/react": "^7.1.9",
     "@emotion/server": "^11.11.0",
     "@hookform/resolvers": "^7.0.6",

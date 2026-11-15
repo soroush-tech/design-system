@@ -7,8 +7,8 @@ export interface Item {
 }
 
 /**
- * Sample data, so the items pages have something to show: the pages in src/pages/items read it at
- * build time. Make them fetch your own data instead, and remove this file.
+ * Sample data, so the items pages have something to show: the pages in src/pages/items read it
+ * at build time. Make them fetch your own data instead, and remove this file.
  */
 export const items: readonly Item[] = [
   {

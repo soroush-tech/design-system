@@ -168,9 +168,9 @@ describe('main', () => {
   })
 
   it('refuses a rendering create does not know', async () => {
-    expect(await runMain('create', '--render', 'ssr')).toMatchObject({
+    expect(await runMain('create', '--render', 'edge')).toMatchObject({
       code: 1,
-      output: '--render is isomorphic, spa, ssg, not ssr.\n',
+      output: '--render is isomorphic, ssr, spa, ssg, not edge.\n',
     })
   })
 

@@ -1,0 +1,79 @@
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Controller, useForm } from 'react-hook-form'
+import useSWRMutation from 'swr/mutation'
+import { z } from 'zod'
+import { Button } from '@soroush.tech/design-system/Button'
+import { Flex } from '@soroush.tech/design-system/Flex'
+import { TextInput } from '@soroush.tech/design-system/TextInput'
+import { Typography } from '@soroush.tech/design-system/Typography'
+import { sendMessage } from '../../data/api'
+/** What the form takes, and what it says when a value will not do. */
+const schema = z.object({
+  name: z.string().trim().min(1, 'Your name, please.'),
+  email: z.email('An email address, please.'),
+})
+/** A form whose values a Zod schema checks; once they pass, it sends them with SWR's mutation. */
+export default function Page() {
+  const { trigger, data } = useSWRMutation('messages', (_key, { arg }) => sendMessage(arg))
+  const { control, handleSubmit } = useForm({
+    resolver: zodResolver(schema),
+    defaultValues: { name: '', email: '' },
+  })
+  return (
+    <Flex gap={2} alignItems="flex-start">
+      <Typography variant="h2">Form</Typography>
+      <Typography color="secondary">
+        React Hook Form holds the values, and a Zod schema checks them when the form is sent.
+      </Typography>
+      <form noValidate onSubmit={handleSubmit((values) => trigger(values))}>
+        <Flex gap={2} alignItems="flex-start">
+          <Controller
+            name="name"
+            control={control}
+            render={({ field, fieldState }) => (
+              <Flex gap={1}>
+                <TextInput
+                  name={field.name}
+                  value={field.value}
+                  onChange={field.onChange}
+                  placeholder="Name"
+                  error={fieldState.invalid}
+                  inputProps={{ 'aria-label': 'Name', autoComplete: 'name', onBlur: field.onBlur }}
+                />
+                <Typography variant="caption" color="error">
+                  {fieldState.error?.message}
+                </Typography>
+              </Flex>
+            )}
+          />
+          <Controller
+            name="email"
+            control={control}
+            render={({ field, fieldState }) => (
+              <Flex gap={1}>
+                <TextInput
+                  name={field.name}
+                  value={field.value}
+                  onChange={field.onChange}
+                  type="email"
+                  placeholder="Email"
+                  error={fieldState.invalid}
+                  inputProps={{
+                    'aria-label': 'Email',
+                    autoComplete: 'email',
+                    onBlur: field.onBlur,
+                  }}
+                />
+                <Typography variant="caption" color="error">
+                  {fieldState.error?.message}
+                </Typography>
+              </Flex>
+            )}
+          />
+          <Button type="submit">Send</Button>
+        </Flex>
+      </form>
+      {data ? <Typography>{data.message}</Typography> : null}
+    </Flex>
+  )
+}

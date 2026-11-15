@@ -191,6 +191,7 @@ async function askName(io: Io): Promise<string> {
 /** What the rendering question says of each one. */
 const RENDERING_LABELS: Readonly<Record<Rendering, string>> = {
   isomorphic: 'Isomorphic (recommended): HTML from the build, then no reload',
+  ssr: 'SSR: HTML from a server, on each request, then no reload',
   spa: 'SPA: rendered in the browser',
   ssg: 'SSG: HTML only, no JavaScript',
 }
@@ -411,13 +412,7 @@ export async function runCreate(
   })
   const plan: Plan = {
     creates: isWorkspace
-      ? createWorkspaceFiles(appFiles, {
-          packageName,
-          title,
-          isTypeScript,
-          libraries,
-          packageManager: packageManager.name,
-        })
+      ? createWorkspaceFiles(appFiles, { packageName, title, packageManager: packageManager.name })
       : appFiles,
     edits: [],
     skips: [],

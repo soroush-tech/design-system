@@ -58,7 +58,7 @@ Options:
                           when not given
       --layout <name>     workspace (the default): the app in apps/web, with room for more
                           apps and services; or standalone: the app alone
-      --render <name>     how pages render: isomorphic (the default), spa or ssg
+      --render <name>     how pages render: isomorphic (the default), ssr, spa or ssg
       --with <names>      the libraries to add, by comma: ${LIBRARY_NAMES.join(', ')}
       --scheme <name>     the default color scheme: light (the default) or dark
       --sample-data       add a list of sample items, and a page for each

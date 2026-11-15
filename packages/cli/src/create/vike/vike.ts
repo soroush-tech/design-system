@@ -57,6 +57,8 @@ function createPackageJson({
       dev: 'vite',
       build: 'vite build',
       preview: 'vite preview',
+      // An SSR app runs the server the build writes, on PORT (3000 by default).
+      ...(rendering === 'ssr' ? { start: 'node dist/server/index.mjs' } : {}),
       ...(isTypeScript ? { typecheck: 'tsc --noEmit' } : {}),
       ...(libraries.includes('vitest') ? { test: 'vitest run' } : {}),
     },
@@ -168,6 +170,15 @@ const CONFIG_SETTINGS: Readonly<Record<Rendering, string>> = {
   meta: {
     Layout: { env: { server: true, client: true } },
   },`,
+  ssr: `  // SSR: every page is rendered on the server, on each request, then the app moves between pages
+  // in the browser, with no reload. Vike's own server runs the build: npm start.
+  server: true,
+  clientRouting: true,
+  hydrationCanBeAborted: true,
+  // +Layout is a setting of this app's own: the component every page renders inside.
+  meta: {
+    Layout: { env: { server: true, client: true } },
+  },`,
   spa: `  // SPA: every page is an empty HTML shell from the build, which the browser renders; the app
   // moves between pages with no reload.
   prerender: true,
@@ -190,6 +201,8 @@ const CONFIG_SETTINGS: Readonly<Record<Rendering, string>> = {
 /** What the second page says of how it got there. */
 const ABOUT_TEXT: Readonly<Record<Rendering, string>> = {
   isomorphic: `A second page: it is HTML with its styles from the build, and the app moves to it without a
+        reload.`,
+  ssr: `A second page: the server renders it, with its styles, and the app moves to it without a
         reload.`,
   spa: `A second page: the browser renders it, with its styles, and the app moves to it without a
         reload.`,
@@ -409,8 +422,13 @@ import { dangerouslySkipEscape, escapeInject } from 'vike/server'
 ${t("import type { OnRenderHtmlSync } from 'vike/types'\n")}import { PageShell } from './PageShell'
 
 /**
- * Renders the page to HTML - at build time, as the app is prerendered - with the styles it uses
- * in the head, so it is drawn styled before any script runs.
+${
+  rendering === 'ssr'
+    ? ` * Renders the page to HTML - on the server, on each request - with the styles it uses in the
+ * head, so it is drawn styled before any script runs.`
+    : ` * Renders the page to HTML - at build time, as the app is prerendered - with the styles it uses
+ * in the head, so it is drawn styled before any script runs.`
+}
  */
 export const onRenderHtml${t(': OnRenderHtmlSync')} = (pageContext) => {
   const { extractCriticalToChunks, constructStyleTagsFromChunks } = createEmotionServer(styleCache)
@@ -533,7 +551,14 @@ export default function Page() {
  * The sample data pages: a list of items and a page for each, which read `src/data/items` in their
  * +data hooks, at build time.
  */
-function createSampleDataFiles({ isTypeScript, libraries }: StarterFacts): StarterFile[] {
+function createSampleDataFiles({
+  isTypeScript,
+  rendering,
+  libraries,
+}: StarterFacts): StarterFile[] {
+  // An SSR app reads its data on each request; the others, as the build prerenders each page.
+  const isServer = rendering === 'ssr'
+  const when = isServer ? 'on each request' : 'at build time'
   const t = (typeScriptOnly: string) => (isTypeScript ? typeScriptOnly : '')
   const hasQuery = libraries.includes('tanstack-query')
   const hasSwr = libraries.includes('swr')
@@ -608,19 +633,19 @@ export const items${t(': readonly Item[]')} = [
   {
     id: 'data',
     title: 'Read your own data',
-    summary: 'Each +data here reads this file. Make it fetch from your API, at build time.',
+    summary: 'Each +data here reads this file. Make it fetch from your API, ${when}.',
     status: 'todo',
   },
   {
     id: 'build',
     title: 'Build it',
-    summary: 'The build prerenders every page, these items among them, to HTML with its styles.',
+    summary: ${isServer ? "'The server renders every page, these items among them, to HTML with its styles.'" : "'The build prerenders every page, these items among them, to HTML with its styles.'"},
     status: 'done',
   },
   {
     id: 'deploy',
     title: 'Deploy it',
-    summary: 'The build is static files in dist/client, which any static host serves.',
+    summary: ${isServer ? "'npm start runs the server the build wrote, on any Node host.'" : "'The build is static files in dist/client, which any static host serves.'"},
     status: 'todo',
   },
 ]
@@ -637,8 +662,7 @@ export function StatusChip({ status }${t(": { readonly status: Item['status'] }"
   const listData = `import { items } from '../../data/items'
 
 /**
- * The list page's data: what it shows of each item. It runs at build time, as the page is
- * prerendered. https://vike.dev/data
+ * The list page's data: what it shows of each item. It runs ${isServer ? 'on the server, on each request' : 'at build time, as the page is\n * prerendered'}. https://vike.dev/data
  */
 export function data() {
   return items.map(({ id, title, status }) => ({ id, title, status }))
@@ -656,7 +680,7 @@ ${listRead}
     <Flex gap={2}>
       <Typography variant="h2">Items</Typography>
       <Typography color="secondary">
-        Sample data from src/data/items.${x}, which this page's +data reads at build time.
+        Sample data from src/data/items.${x}, which this page's +data reads ${when}.
       </Typography>
       <Flex gap={1}>
         {items.map((item) => (
@@ -674,8 +698,7 @@ ${listRead}
 ${t("import type { PageContextServer } from 'vike/types'\n")}import { items } from '../../../data/items'
 
 /**
- * One item's data, by the id in the URL, or the 404 page for an id with no item. It runs at build
- * time, for each URL +onBeforePrerenderStart lists. https://vike.dev/data
+ * One item's data, by the id in the URL, or the 404 page for an id with no item. It runs ${isServer ? 'on the\n * server, on each request' : 'at build\n * time, for each URL +onBeforePrerenderStart lists'}. https://vike.dev/data
  */
 export function data(pageContext${t(': PageContextServer')}) {
   const item = items.find(({ id }) => id === pageContext.routeParams.id)
@@ -714,7 +737,10 @@ ${itemRead}
     { path: `src/pages/items/+data.${x}`, content: listData },
     { path: `src/pages/items/+Page.${x}x`, content: listPage },
     { path: `src/pages/items/@id/+data.${x}`, content: itemData },
-    { path: `src/pages/items/@id/+onBeforePrerenderStart.${x}`, content: itemPrerender },
+    // A server renders any item asked for; a build, the ones listed.
+    ...(isServer
+      ? []
+      : [{ path: `src/pages/items/@id/+onBeforePrerenderStart.${x}`, content: itemPrerender }]),
     { path: `src/pages/items/@id/+Page.${x}x`, content: itemPage },
   ]
 }
@@ -726,6 +752,12 @@ const README_RENDERING: Readonly<Record<Rendering, { summary: string; renderers:
       'prerendered at build time with its styles in the HTML, then moving between pages with no reload.',
     renderers:
       '`+onRenderHtml` and `+onRenderClient` render the pages, with the styles each page uses in its HTML.',
+  },
+  ssr: {
+    summary:
+      'every page rendered on the server, on each request, with its styles in the HTML, then moving between pages with no reload.',
+    renderers:
+      '`+onRenderHtml` renders each page on the server and `+onRenderClient` takes it over in the browser, with the styles each page uses in its HTML.',
   },
   spa: {
     summary:
@@ -751,7 +783,7 @@ function createReadme({
   const { summary, renderers } = README_RENDERING[rendering]
   const sampleData = hasSampleData
     ? `- \`src/pages/items/\` lists the sample items of \`src/data/items.${x}\`, with a page for each.
-  Their \`+data\` hooks read the data at build time: make them fetch your own.
+  Their \`+data\` hooks read the data ${rendering === 'ssr' ? 'on each request' : 'at build time'}: make them fetch your own.
 `
     : ''
   const hasForm = libraries.includes('react-hook-form')
@@ -782,7 +814,7 @@ A [Vike](https://vike.dev) app on the [@soroush.tech design system](https://docs
 ${summary}
 
 - \`npm run dev\` starts it, \`npm run build\` builds it, and \`npm run preview\` serves the build.
-- \`src/pages/\` holds the pages: a folder per route, each with its \`+Page\`.
+${rendering === 'ssr' ? '- `npm start` runs the server the build wrote, on `PORT` (3000 by default), on any Node host.\n' : ''}- \`src/pages/\` holds the pages: a folder per route, each with its \`+Page\`.
 - \`src/pages/+Layout.${x}x\` is the frame every page renders in, inside the app's providers.
 - \`src/theme/themes.${x}\` holds the light and the dark theme: make them your own.
 - In \`src/pages/\`, ${renderers}
@@ -1090,7 +1122,7 @@ function createFiles(facts: StarterFacts): StarterFile[] {
 export const vikeStarter: Starter = {
   title: 'Vike',
   label: 'Vike (recommended): React pages, rendered as you pick',
-  renderings: ['isomorphic', 'spa', 'ssg'],
+  renderings: ['isomorphic', 'ssr', 'spa', 'ssg'],
   hasLibraries: true,
   createFiles,
 }

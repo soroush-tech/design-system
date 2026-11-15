@@ -1,23 +1,27 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest'
 import type { PackageManagerName } from '../plan/planInit'
+import type { StarterFile } from './starters'
 import { createWorkspaceFiles, toAppPackageName, type WorkspaceFacts } from './workspace'
 
 const FACTS: WorkspaceFacts = {
   packageName: 'test-app',
   title: 'Test App',
-  isTypeScript: true,
-  libraries: [],
   packageManager: 'npm',
 }
+const APP_SCRIPTS = { dev: 'vite', build: 'vite build', preview: 'vite preview', typecheck: 'tsc' }
+const APP_PACKAGE = JSON.stringify({ name: '@test-app/web', scripts: APP_SCRIPTS })
 const APP_FILES = [
-  { path: 'package.json', content: '{}' },
+  { path: 'package.json', content: APP_PACKAGE },
   { path: 'src/pages/index/+Page.tsx', content: 'export default 1\n' },
 ]
 
-const createFiles = (facts: Partial<WorkspaceFacts> = {}) =>
+const createFiles = (
+  facts: Partial<WorkspaceFacts> = {},
+  appFiles: readonly StarterFile[] = APP_FILES
+) =>
   new Map(
-    createWorkspaceFiles(APP_FILES, { ...FACTS, ...facts }).map((file) => [file.path, file.content])
+    createWorkspaceFiles(appFiles, { ...FACTS, ...facts }).map((file) => [file.path, file.content])
   )
 
 const readScripts = (files: Map<string, string>) =>
@@ -38,7 +42,7 @@ describe('the workspace', () => {
       'apps/web/package.json',
       'apps/web/src/pages/index/+Page.tsx',
     ])
-    expect(files.get('apps/web/package.json')).toBe('{}')
+    expect(files.get('apps/web/package.json')).toBe(APP_PACKAGE)
     expect(files.get('services/.gitkeep')).toBe('')
     expect(files.get('README.md')).toMatch(/^# Test App\n/)
     expect(files.get('README.md')).toContain('`apps/web/` is the web app, `@test-app/web`')
@@ -80,8 +84,15 @@ describe('the workspace', () => {
     expect(createFiles({ packageManager: 'bun' }).get('README.md')).toContain('`bun run dev`')
   })
 
-  it('has a test script with Vitest, and no typecheck in JavaScript', () => {
-    const scripts = readScripts(createFiles({ isTypeScript: false, libraries: ['vitest'] }))
-    expect(Object.keys(scripts)).toEqual(['dev', 'build', 'preview', 'test'])
+  it('runs each script the app has, by its own name, and none the app lacks', () => {
+    const scripts = { dev: 'vite', build: 'vite build', start: 'node dist/server/index.mjs' }
+    const app = [{ path: 'package.json', content: JSON.stringify({ scripts }) }]
+    expect(readScripts(createFiles({}, app))).toEqual({
+      dev: 'npm run dev --workspace=@test-app/web',
+      build: 'npm run build --workspace=@test-app/web',
+      start: 'npm run start --workspace=@test-app/web',
+    })
+    expect(readScripts(createFiles({}, [{ path: 'package.json', content: '{}' }]))).toEqual({})
+    expect(readScripts(createFiles({}, []))).toEqual({})
   })
 })

@@ -17,7 +17,7 @@
 //
 // The temp folder is removed when every check passes, and kept, with its path printed, when one
 // fails.
-import { spawnSync } from 'node:child_process'
+import { spawn, spawnSync } from 'node:child_process'
 import {
   existsSync,
   mkdirSync,
@@ -55,18 +55,22 @@ if (
   !['npm', 'pnpm'].includes(pm) ||
   !['vike', 'astro'].includes(framework) ||
   !['standalone', 'workspace'].includes(layout) ||
-  !['isomorphic', 'spa', 'ssg'].includes(render)
+  !['isomorphic', 'ssr', 'spa', 'ssg'].includes(render)
 ) {
   console.error(
-    '--lang is ts or js, --pm is npm or pnpm, --framework is vike or astro, --layout is standalone or workspace, and --render is isomorphic, spa or ssg.'
+    '--lang is ts or js, --pm is npm or pnpm, --framework is vike or astro, --layout is standalone or workspace, and --render is isomorphic, ssr, spa or ssg.'
   )
   process.exit(1)
 }
 const isSpa = render === 'spa'
 const isWorkspace = layout === 'workspace'
 const isAstro = framework === 'astro'
-// Where the build writes the pages: Vike's client build, or Astro's dist.
-const PAGES_DIR = isAstro ? 'dist' : 'dist/client'
+// An SSR app renders each page on its own server, which the build writes.
+const isServer = render === 'ssr'
+const SERVER_ENTRY = isAstro ? 'dist/server/entry.mjs' : 'dist/server/index.mjs'
+// Where the build writes the pages and their files: Vike's client build, or Astro's dist - its
+// client folder, for a server.
+const PAGES_DIR = isAstro && !isServer ? 'dist' : 'dist/client'
 // The key of the Emotion cache that draws the styles: the design system's, which Vike's renderer
 // gives the page, or Emotion's own, which each Astro island makes as it renders.
 const STYLE_KEY = isAstro ? 'css' : 'soroush'
@@ -176,16 +180,58 @@ async function checkSampleDataPages(appDir, fetchPage) {
     : [...list.html.matchAll(/href="\/items\/([^"]+)"/g)].map(([, id]) => id)
   check(ids.length > 0, `/items lists the sample items: ${ids.join(', ')}`)
   for (const id of ids) {
-    check(
-      existsSync(join(appDir, PAGES_DIR, 'items', id, 'index.html')),
-      `the build prerendered items/${id}/index.html`
-    )
+    // A server renders each item as it is asked for; a build writes them all.
+    if (!isServer) {
+      check(
+        existsSync(join(appDir, PAGES_DIR, 'items', id, 'index.html')),
+        `the build prerendered items/${id}/index.html`
+      )
+    }
     const item = await fetchPage(`/items/${id}`)
     check(
       item.status === 200 && (isSpa || item.html.includes('>All items</a>')),
       `/items/${id} answers with its page`
     )
   }
+  if (!isSpa) {
+    const unknown = await fetchPage('/items/no-such-item')
+    check(
+      unknown.status === 404 && unknown.html.includes('Page not found'),
+      '/items/no-such-item answers 404, with the 404 page'
+    )
+  }
+}
+
+/**
+ * Starts the server an SSR build wrote, as `npm start` does, on a free port, and waits until it
+ * answers.
+ */
+async function startBuiltServer(appDir) {
+  const port = 4500 + Math.floor(Math.random() * 400)
+  const server = spawn(process.execPath, [SERVER_ENTRY], {
+    cwd: appDir,
+    env: { ...process.env, NODE_ENV: 'production', HOST: 'localhost', PORT: String(port) },
+    stdio: 'inherit',
+  })
+  const base = `http://localhost:${port}/`
+  for (let attempt = 0; ; attempt += 1) {
+    try {
+      await fetch(base)
+      break
+    } catch (error) {
+      if (attempt === 60 || server.exitCode !== null) {
+        server.kill()
+        throw new Error(`The server at ${SERVER_ENTRY} did not answer: ${error}`)
+      }
+      await new Promise((resolve) => setTimeout(resolve, 500))
+    }
+  }
+  const stop = () =>
+    new Promise((resolve) => {
+      server.once('exit', resolve)
+      server.kill()
+    })
+  return { base, stop }
 }
 
 /** Checks `/`: its page and styles in the HTML, or an SPA's empty shell and its script. */
@@ -224,6 +270,7 @@ function checkHome(home) {
  * and returns its address and how to stop it.
  */
 async function startServer(appDir) {
+  if (isServer) return startBuiltServer(appDir)
   const require = createRequire(join(appDir, 'package.json'))
   if (isAstro) {
     const { preview } = await import(pathToFileURL(require.resolve('astro')).href)
@@ -324,12 +371,25 @@ try {
   if (libraries.includes('vitest')) run(pm, ['run', 'test'], rootDir)
   run(pm, ['run', 'build'], rootDir)
   console.log('\nChecking the build:')
-  const pages = ['index.html', 'about/index.html', '404.html']
-  if (hasSampleData) pages.push('items/index.html')
+  if (isServer) {
+    check(existsSync(join(appDir, SERVER_ENTRY)), `the build wrote the server, ${SERVER_ENTRY}`)
+    check(
+      !existsSync(join(appDir, PAGES_DIR, 'index.html')),
+      'the build prerendered no page: the server renders each one'
+    )
+  } else {
+    const pages = ['index.html', 'about/index.html', '404.html']
+    if (hasSampleData) pages.push('items/index.html')
+    for (const page of pages) {
+      check(existsSync(join(appDir, PAGES_DIR, page)), `the build prerendered ${page}`)
+    }
+  }
   // msw's plugin ships the mock API's worker with the build.
-  if (libraries.includes('msw')) pages.push('mockServiceWorker.js')
-  for (const page of pages) {
-    check(existsSync(join(appDir, PAGES_DIR, page)), `the build prerendered ${page}`)
+  if (libraries.includes('msw')) {
+    check(
+      existsSync(join(appDir, PAGES_DIR, 'mockServiceWorker.js')),
+      "the build ships msw's worker"
+    )
   }
   await checkServedPages(appDir)
   isPassed = true

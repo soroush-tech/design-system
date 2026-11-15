@@ -314,6 +314,12 @@ jobs:
             pm: npm
             flags: --render ssg
           - lang: ts
+            pm: npm
+            flags: --render ssr --sample-data --with tanstack-query,msw
+          - lang: ts
+            pm: pnpm
+            flags: --framework astro --layout workspace --render ssr --sample-data
+          - lang: ts
             pm: pnpm
             flags: --framework astro --layout workspace --sample-data
           - lang: js

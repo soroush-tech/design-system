@@ -11,7 +11,13 @@ import { pickVersions, toRange, VERSIONS } from '../versions'
 // version under an alias.
 const TYPESCRIPT_RANGE = VERSIONS['typescript-astro'].replace('npm:typescript@', '')
 
-function createPackageJson({ packageName, isTypeScript, version }: StarterFacts): string {
+function createPackageJson({
+  packageName,
+  isTypeScript,
+  rendering,
+  version,
+}: StarterFacts): string {
+  const isServer = rendering === 'ssr'
   const packageJson = {
     name: packageName,
     private: true,
@@ -21,11 +27,19 @@ function createPackageJson({ packageName, isTypeScript, version }: StarterFacts)
       dev: 'astro dev',
       build: 'astro build',
       preview: 'astro preview',
+      // An SSR app runs the server the build writes, on HOST and PORT (4321 by default).
+      ...(isServer ? { start: 'node dist/server/entry.mjs' } : {}),
       ...(isTypeScript ? { typecheck: 'astro check' } : {}),
     },
     dependencies: {
       '@soroush.tech/design-system': toRange(version),
-      ...pickVersions(['@astrojs/react', 'astro', 'react', 'react-dom']),
+      ...pickVersions([
+        ...(isServer ? (['@astrojs/node'] as const) : ([] as const)),
+        '@astrojs/react',
+        'astro',
+        'react',
+        'react-dom',
+      ]),
     },
     ...(isTypeScript
       ? {
@@ -39,7 +53,23 @@ function createPackageJson({ packageName, isTypeScript, version }: StarterFacts)
   return `${JSON.stringify(packageJson, null, 2)}\n`
 }
 
-const ASTRO_CONFIG = `import react from '@astrojs/react'
+/** The settings of the app: with SSR, the Node server that renders each page. */
+const createAstroConfig = ({ rendering }: StarterFacts) =>
+  rendering === 'ssr'
+    ? `import node from '@astrojs/node'
+import react from '@astrojs/react'
+import { defineConfig } from 'astro/config'
+
+// The settings of the app: https://docs.astro.build/en/reference/configuration-reference/
+export default defineConfig({
+  // SSR: every page is rendered on the server, on each request, by the Node server the build
+  // writes: npm start.
+  output: 'server',
+  adapter: node({ mode: 'standalone' }),
+  integrations: [react()],
+})
+`
+    : `import react from '@astrojs/react'
 import { defineConfig } from 'astro/config'
 
 // The settings of the app: https://docs.astro.build/en/reference/configuration-reference/
@@ -96,9 +126,9 @@ const KEEP_STYLES_SCRIPT = `    <script>
 `
 
 function createLayout({ title, rendering }: StarterFacts): string {
-  const isIsomorphic = rendering === 'isomorphic'
+  const hasIslands = rendering !== 'ssg'
   return `---
-${isIsomorphic ? "import { ClientRouter } from 'astro:transitions'\n" : ''}import Header from '../components/Header'
+${hasIslands ? "import { ClientRouter } from 'astro:transitions'\n" : ''}import Header from '../components/Header'
 ---
 
 <html lang="en">
@@ -106,13 +136,13 @@ ${isIsomorphic ? "import { ClientRouter } from 'astro:transitions'\n" : ''}impor
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>${title}</title>
-${isIsomorphic ? '    <ClientRouter />\n' : ''}  </head>
+${hasIslands ? '    <ClientRouter />\n' : ''}  </head>
   <body>
-    <Header${isIsomorphic ? ' client:load transition:persist' : ''} />
+    <Header${hasIslands ? ' client:load transition:persist' : ''} />
     <main>
       <slot />
     </main>
-${isIsomorphic ? KEEP_STYLES_SCRIPT : ''}  </body>
+${hasIslands ? KEEP_STYLES_SCRIPT : ''}  </body>
 </html>
 `
 }
@@ -126,7 +156,7 @@ function createPage(
   props = ''
 ): string {
   const up = '../'.repeat(depth)
-  const directive = rendering === 'isomorphic' ? ' client:load' : ''
+  const directive = rendering === 'ssg' ? '' : ' client:load'
   return `---
 import ${component} from '${up}components/${component}'
 import Layout from '${up}layouts/Layout.astro'
@@ -142,6 +172,8 @@ ${frontmatter}---
 const ABOUT_TEXT = {
   isomorphic: `A second page: it is HTML with its styles from the build, and the app moves to it without
           a reload.`,
+  ssr: `A second page: the server renders it, with its styles, and the app moves to it without a
+          reload.`,
   ssg: `A second page: it is HTML with its styles from the build, and a link loads it as a new
           page.`,
 }
@@ -150,14 +182,14 @@ function createSources(facts: StarterFacts) {
   const { title, isTypeScript, rendering, scheme, hasSampleData } = facts
   const t = (typeScriptOnly: string) => (isTypeScript ? typeScriptOnly : '')
   const x = isTypeScript ? 'ts' : 'js'
-  const isIsomorphic = rendering === 'isomorphic'
+  const hasIslands = rendering !== 'ssg'
   const itemsLink = hasSampleData
     ? `          <Link href="/items" underline="hover">
             Items
           </Link>
 `
     : ''
-  const schemeSwitch = isIsomorphic
+  const schemeSwitch = hasIslands
     ? `          <Button size="sm" variant="outlined" onClick={() => setScheme(otherScheme)}>
             {otherScheme}
           </Button>
@@ -198,28 +230,28 @@ export function useScheme()${t(': Scheme')} {
 }
 `,
     Theme: `${t("import type { ReactNode } from 'react'\n")}import { ThemeProvider } from '@soroush.tech/design-system/theme'
-${isIsomorphic ? "import { useScheme } from './scheme'\n" : ''}import themes from './themes'
+${hasIslands ? "import { useScheme } from './scheme'\n" : ''}import themes from './themes'
 
 /**
  * The theme of an island. Astro renders each island as a React root of its own, so each page's
  * component renders inside Theme; the header's Providers draw the base styles, once a page.
  */
 export function Theme({ children }${t(': { readonly children: ReactNode }')}) {
-  return <ThemeProvider theme={themes${isIsomorphic ? '[useScheme()]' : `.${scheme}`}}>{children}</ThemeProvider>
+  return <ThemeProvider theme={themes${hasIslands ? '[useScheme()]' : `.${scheme}`}}>{children}</ThemeProvider>
 }
 `,
-    Header: `${isIsomorphic ? "import { Button } from '@soroush.tech/design-system/Button'\n" : ''}import { Flex } from '@soroush.tech/design-system/Flex'
+    Header: `${hasIslands ? "import { Button } from '@soroush.tech/design-system/Button'\n" : ''}import { Flex } from '@soroush.tech/design-system/Flex'
 import { Link } from '@soroush.tech/design-system/Link'
 import { Typography } from '@soroush.tech/design-system/Typography'
 import { Providers } from '../theme/Providers'
-${isIsomorphic ? "import { setScheme, useScheme } from '../theme/scheme'\n" : ''}
+${hasIslands ? "import { setScheme, useScheme } from '../theme/scheme'\n" : ''}
 /**
- * The header of every page${isIsomorphic ? ', an island of its own' : ''}. Its Providers draw the base styles, once a
- * page${isIsomorphic ? ', and its button switches the scheme of every island' : ''}.
+ * The header of every page${hasIslands ? ', an island of its own' : ''}. Its Providers draw the base styles, once a
+ * page${hasIslands ? ', and its button switches the scheme of every island' : ''}.
  */
 export default function Header() {
-${isIsomorphic ? "  const scheme = useScheme()\n  const otherScheme = scheme === 'light' ? 'dark' : 'light'\n" : ''}  return (
-    <Providers${isIsomorphic ? ' scheme={scheme}' : ''}>
+${hasIslands ? "  const scheme = useScheme()\n  const otherScheme = scheme === 'light' ? 'dark' : 'light'\n" : ''}  return (
+    <Providers${hasIslands ? ' scheme={scheme}' : ''}>
       <Flex
         as="header"
         flexDirection="row"
@@ -250,7 +282,7 @@ ${itemsLink}${schemeSwitch}        </Flex>
 import { Flex } from '@soroush.tech/design-system/Flex'
 import { Typography } from '@soroush.tech/design-system/Typography'
 import { Theme } from '../theme/Theme'
-${isIsomorphic ? "import { Counter } from './Counter'\n" : ''}
+${hasIslands ? "import { Counter } from './Counter'\n" : ''}
 export default function Home() {
   return (
     <Theme>
@@ -260,7 +292,7 @@ export default function Home() {
           An Astro app on the design system. Edit src/components/Home.${x}x, and make the themes your
           own in src/theme/themes.${x}.
         </Typography>
-${isIsomorphic ? '        <Counter />\n' : ''}        <Flex flexDirection="row" gap={1}>
+${hasIslands ? '        <Counter />\n' : ''}        <Flex flexDirection="row" gap={1}>
           <Button href="https://docs.soroush.tech">Components</Button>
           <Button href="https://astro.build" variant="outlined">
             Astro
@@ -314,9 +346,12 @@ export default function NotFound() {
  * time.
  */
 function createSampleDataFiles(facts: StarterFacts): StarterFile[] {
-  const { isTypeScript } = facts
+  const { isTypeScript, rendering } = facts
   const t = (typeScriptOnly: string) => (isTypeScript ? typeScriptOnly : '')
   const x = isTypeScript ? 'ts' : 'js'
+  // An SSR app reads its data on each request; the others, as the build writes each page.
+  const isServer = rendering === 'ssr'
+  const when = isServer ? 'on each request' : 'at build time'
   const items = `${t(`/** One sample item. */
 export interface Item {
   id: string
@@ -326,8 +361,8 @@ export interface Item {
 }
 
 `)}/**
- * Sample data, so the items pages have something to show: the pages in src/pages/items read it at
- * build time. Make them fetch your own data instead, and remove this file.
+ * Sample data, so the items pages have something to show: the pages in src/pages/items read it
+ * ${when}. Make them fetch your own data instead, and remove this file.
  */
 export const items${t(': readonly Item[]')} = [
   {
@@ -351,19 +386,19 @@ export const items${t(': readonly Item[]')} = [
   {
     id: 'data',
     title: 'Read your own data',
-    summary: 'The items pages read this file at build time. Make them fetch from your API.',
+    summary: 'The items pages read this file ${when}. Make them fetch from your API.',
     status: 'todo',
   },
   {
     id: 'build',
     title: 'Build it',
-    summary: 'The build writes every page, these items among them, as HTML with its styles.',
+    summary: ${isServer ? "'The server renders every page, these items among them, as HTML with its styles.'" : "'The build writes every page, these items among them, as HTML with its styles.'"},
     status: 'done',
   },
   {
     id: 'deploy',
     title: 'Deploy it',
-    summary: 'The build is static files in dist, which any static host serves.',
+    summary: ${isServer ? "'npm start runs the server the build wrote, on any Node host.'" : "'The build is static files in dist, which any static host serves.'"},
     status: 'todo',
   },
 ]
@@ -383,7 +418,7 @@ import { Typography } from '@soroush.tech/design-system/Typography'
 ${t("import type { Item } from '../data/items'\n")}import { Theme } from '../theme/Theme'
 import { StatusChip } from './StatusChip'
 
-/** The list of items, as src/pages/items/index.astro reads it at build time. */
+/** The list of items, as src/pages/items/index.astro reads it ${when}. */
 export default function ItemList({
   items,
 }${t(": {\n  readonly items: readonly Pick<Item, 'id' | 'title' | 'status'>[]\n}")}) {
@@ -392,7 +427,7 @@ export default function ItemList({
       <Flex gap={2} px={3} py={4}>
         <Typography variant="h2">Items</Typography>
         <Typography color="secondary">
-          Sample data from src/data/items.${x}, which this page reads at build time.
+          Sample data from src/data/items.${x}, which this page reads ${when}.
         </Typography>
         <Flex gap={1}>
           {items.map((item) => (
@@ -413,7 +448,7 @@ import { Typography } from '@soroush.tech/design-system/Typography'
 ${t("import type { Item } from '../data/items'\n")}import { Theme } from '../theme/Theme'
 import { StatusChip } from './StatusChip'
 
-/** One item, as src/pages/items/[id].astro reads it at build time. */
+/** One item, as src/pages/items/[id].astro reads it ${when}. */
 export default function ItemDetails({ item }${t(': { readonly item: Item }')}) {
   return (
     <Theme>
@@ -429,24 +464,31 @@ export default function ItemDetails({ item }${t(': { readonly item: Item }')}) {
 `
   const listFrontmatter = `import { items } from '../../data/items'
 
-// What the list shows of each item, read at build time.
+// What the list shows of each item, read ${when}.
 const summaries = items.map(({ id, title, status }) => ({ id, title, status }))
 `
-  const itemFrontmatter = `${t("import type { GetStaticPaths, InferGetStaticPropsType } from 'astro'\n")}import { items } from '../../data/items'
+  const itemFrontmatter = isServer
+    ? `import { items } from '../../data/items'
+
+// The item of the id in the URL, read on each request, or the 404 page for an id with no item.
+const item = items.find(({ id }) => id === Astro.params.id)
+if (!item) return Astro.rewrite('/404')
+`
+    : `${t("import type { GetStaticPaths, InferGetStaticPropsType } from 'astro'\n")}import { items } from '../../data/items'
 
 /** The pages this route writes at build time: one per item. */
 export ${
-    isTypeScript
-      ? `const getStaticPaths = (() =>
+        isTypeScript
+          ? `const getStaticPaths = (() =>
   items.map((item) => ({ params: { id: item.id }, props: { item } }))) satisfies GetStaticPaths
 
 type Props = InferGetStaticPropsType<typeof getStaticPaths>
 `
-      : `function getStaticPaths() {
+          : `function getStaticPaths() {
   return items.map((item) => ({ params: { id: item.id }, props: { item } }))
 }
 `
-  }
+      }
 const { item } = Astro.props
 `
   return [
@@ -469,6 +511,9 @@ const { item } = Astro.props
 const README_RENDERING = {
   isomorphic: `every page is HTML from the build, with its styles, and its parts are React islands
 that hydrate in the browser. Astro's client router moves between pages with no reload.`,
+  ssr: `every page is rendered on the server, on each request, with its styles, and its parts are
+React islands that hydrate in the browser. Astro's client router moves between pages with no
+reload.`,
   ssg: `every page is HTML from the build, with its styles, and no JavaScript in the browser: its
 React parts render at build time only.`,
 }
@@ -477,11 +522,11 @@ function createReadme({ title, isTypeScript, rendering, hasSampleData }: Starter
   const x = isTypeScript ? 'ts' : 'js'
   const sampleData = hasSampleData
     ? `- \`src/pages/items/\` lists the sample items of \`src/data/items.${x}\`, with a page for each,
-  read at build time: make them fetch your own.
+  read ${rendering === 'ssr' ? 'on each request' : 'at build time'}: make them fetch your own.
 `
     : ''
   const islands =
-    rendering === 'isomorphic'
+    rendering !== 'ssg'
       ? `- Each React part of a page is an island, a React root of its own: it renders inside
   \`Theme\`, and the islands share the color scheme through \`src/theme/scheme.${x}\`, not context.
 - \`src/layouts/Layout.astro\` keeps the design system's styles as the client router moves
@@ -495,7 +540,7 @@ An [Astro](https://astro.build) app on the [@soroush.tech design system](https:/
 ${README_RENDERING[rendering as keyof typeof README_RENDERING]}
 
 - \`npm run dev\` starts it, \`npm run build\` builds it, and \`npm run preview\` serves the build.
-- \`src/pages/\` holds the pages: an \`.astro\` file per route, which renders a component of
+${rendering === 'ssr' ? '- `npm start` runs the server the build wrote, on `HOST` and `PORT` (4321 by default), on any\n  Node host.\n' : ''}- \`src/pages/\` holds the pages: an \`.astro\` file per route, which renders a component of
   \`src/components/\` in \`src/layouts/Layout.astro\`.
 - \`src/components/Header.${x}x\` draws the header, inside the app's providers, which draw the base
   styles once a page.
@@ -513,7 +558,7 @@ function createFiles(facts: StarterFacts): StarterFile[] {
   const sources = createSources(facts)
   return [
     { path: 'package.json', content: createPackageJson(facts) },
-    { path: 'astro.config.mjs', content: ASTRO_CONFIG },
+    { path: 'astro.config.mjs', content: createAstroConfig(facts) },
     ...(isTypeScript ? [{ path: 'tsconfig.json', content: TSCONFIG }] : []),
     { path: '.gitignore', content: GITIGNORE },
     { path: 'README.md', content: createReadme(facts) },
@@ -522,15 +567,13 @@ function createFiles(facts: StarterFacts): StarterFile[] {
       path: `src/theme/Providers.${x}`,
       content: createProvidersSource({ isTypeScript, scheme, themesImport: './themes' }),
     },
-    ...(rendering === 'isomorphic'
-      ? [{ path: `src/theme/scheme.${x}`, content: sources.scheme }]
-      : []),
+    ...(rendering !== 'ssg' ? [{ path: `src/theme/scheme.${x}`, content: sources.scheme }] : []),
     { path: `src/theme/Theme.${x}x`, content: sources.Theme },
     { path: 'src/layouts/Layout.astro', content: createLayout(facts) },
     { path: `src/components/Header.${x}x`, content: sources.Header },
     { path: `src/components/Home.${x}x`, content: sources.Home },
     // An island that hydrates counts; an SSG page has no JavaScript to count with.
-    ...(rendering === 'isomorphic'
+    ...(rendering !== 'ssg'
       ? [{ path: `src/components/Counter.${x}x`, content: createCounterSource(facts, '../state') }]
       : []),
     { path: `src/components/About.${x}x`, content: sources.About },
@@ -545,7 +588,7 @@ function createFiles(facts: StarterFacts): StarterFile[] {
 export const astroStarter: Starter = {
   title: 'Astro',
   label: 'Astro: HTML pages, with React islands',
-  renderings: ['isomorphic', 'ssg'],
+  renderings: ['isomorphic', 'ssr', 'ssg'],
   hasLibraries: false,
   createFiles,
 }

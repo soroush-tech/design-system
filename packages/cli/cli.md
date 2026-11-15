@@ -57,7 +57,8 @@ default.
 
 A starter writes the app alone. For the workspace layout (the default), `src/create/workspace.ts`
 moves its files to `apps/web` and adds the root's: `package.json` with the workspaces and the
-scripts that run the app's (each package manager's own workspace command, no task runner),
+scripts that run the app's, one for each script the app's own `package.json` has (each package
+manager's own workspace command, no task runner),
 `pnpm-workspace.yaml` for pnpm, a README, a `.gitignore`, and `services/.gitkeep`. The starter is
 told the app's package name, `@<name>/web`. The workspace adds no source, so it has no type-test
 fixture of its own; two `create-smoke` rows build it from the root.
@@ -73,8 +74,10 @@ island is its own React root: a page's component renders inside `Theme`, the hea
 HTML it got). Isomorphic, the layout has Astro's `<ClientRouter />` and a script on
 `astro:before-swap` that keeps Emotion's style tags in the head, which the router would otherwise
 replace, and moves the next page's inline styles there, except its base styles, which the header
-draws. `Starter.renderings` lists `isomorphic` and `ssg`; `hasLibraries` is false until its
-recipes land. Its fixtures are `type-tests/create-astro` and `-ssg`: `test:types` checks their
+draws. SSR has all of that, with `output: 'server'` and `@astrojs/node` standalone, and an item
+route that reads its id on each request (`Astro.rewrite('/404')` for an unknown one).
+`Starter.renderings` lists `isomorphic`, `ssr` and `ssg`; `hasLibraries` is false until its
+recipes land. Its fixtures are `type-tests/create-astro`, `-ssr` and `-ssg`: `test:types` checks their
 TypeScript, and the smoke test runs `astro check` on a whole app. `astro check` takes TypeScript 6
 at most, so the starter's TypeScript is this package's `typescript-astro` alias.
 
@@ -87,10 +90,13 @@ picks (`StarterFacts.rendering`):
   (`clientRouting: true`).
 - `spa`: `Page` and `Layout` load in the browser only (`meta` `env`); `+onRenderHtml` writes an
   empty shell and `+onRenderClient` renders into it, with no `@emotion/server`.
+- `ssr`: `server: true`, Vike's built-in server, renders each page on request, with client
+  routing after; `+data` runs on the server, and there is no `+onBeforePrerenderStart`. `npm start`
+  runs `node dist/server/index.mjs`.
 - `ssg`: `Page` and `Layout` load at build time only, and there is no `+onRenderClient`, so a page
   ships no script; the layout has no scheme switch.
 
-Each has its type-test fixture: `type-tests/create-vike`, `-spa` and `-ssg`.
+Each has its type-test fixture: `type-tests/create-vike`, `-ssr`, `-spa` and `-ssg`.
 
 The libraries (`src/create/libraries.ts`, `StarterFacts.libraries`) are asked by job: the
 `group` of each library is its question (data, state), and the rest share the last one. Their
