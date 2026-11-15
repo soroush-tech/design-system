@@ -1,0 +1,12 @@
+---
+import ItemList from '../../components/ItemList'
+import Layout from '../../layouts/Layout.astro'
+import { items } from '../../data/items'
+
+// What the list shows of each item, read at build time.
+const summaries = items.map(({ id, title, status }) => ({ id, title, status }))
+---
+
+<Layout>
+  <ItemList items={summaries} />
+</Layout>

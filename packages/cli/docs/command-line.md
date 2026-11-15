@@ -32,9 +32,10 @@ arrow keys:
    `pnpm dlx`, `yarn dlx`, `bunx`). One you pick must be installed.
 3. The repository: a workspace (recommended) or the app alone - see below.
 4. The rendering: isomorphic, SPA or SSG - see below.
-5. The libraries, toggled with space - see below. An SSG app is offered none.
-6. The default color scheme: light or dark.
-7. Whether to add the sample data pages.
+5. The framework: Vike (recommended) or Astro, of the ones that render as picked - see below.
+6. The libraries, toggled with space - see below. An SSG app, and an Astro app, are offered none.
+7. The default color scheme: light or dark.
+8. Whether to add the sample data pages.
 
 Then it shows every file and the install, and writes nothing before a yes. It installs with no
 scripts, and runs `git init` with no commit, unless the folder is already in a repository. When a
@@ -46,7 +47,7 @@ written.
 | `-y`, `--yes`        | Create without asking: TypeScript, a workspace, isomorphic, light |
 | `--dry-run`          | Show the files and exit                                           |
 | `--title <text>`     | What the app's pages call it: the name when not given             |
-| `--framework <name>` | The app's framework: `vike`, the default and only one yet         |
+| `--framework <name>` | The app's framework: `vike` (the default) or `astro`              |
 | `--ts`, `--js`       | TypeScript (the default) or JavaScript                            |
 | `--pm <name>`        | `npm`, `pnpm`, `yarn` or `bun`: the one that ran it, if not given |
 | `--layout <name>`    | `workspace` (the default) or `standalone`                         |
@@ -83,7 +84,13 @@ testApp/
 - **SSG**: every page is prerendered to HTML with its styles, and ships no JavaScript: a link loads
   the next page. It has no light and dark switch, since that needs JavaScript.
 
-All three build to static files that any static host serves.
+All three build to static files that any static host serves. An Astro app renders isomorphic or
+SSG.
+
+### Framework
+
+- **Vike** (the default): React pages, rendered as you pick - see the Vike app below.
+- **Astro**: HTML pages whose React parts are islands - see the Astro app below.
 
 ### Libraries
 
@@ -125,6 +132,23 @@ With sample data pages, it also shows how data gets onto a page, with no data li
   their data, with no reload.
 - A page reads its data with `useData()`, from `src/pages/usePageContext`. Make the `+data` hooks
   fetch your own data, and remove `src/data/items`.
+
+### The Astro app
+
+- `src/pages/` holds the pages, an `.astro` file per route: each renders a React component of
+  `src/components/` - a home page, a second page and a 404 page - in `src/layouts/Layout.astro`.
+- Each React part of a page is an island, a React root of its own, so no context crosses from one
+  to another:
+  - each page's component renders inside `Theme` (`src/theme/Theme`);
+  - the header renders `<Providers>`, which draws the base styles once a page, and holds the light
+    and dark switch;
+  - the islands share the scheme through `src/theme/scheme`.
+- Isomorphic, the islands hydrate in the browser and Astro's client router moves between pages
+  with no reload. The layout keeps the design system's styles as it does.
+- SSG, the React parts render at build time only, and a page ships no JavaScript.
+- With sample data pages, `/items` and `/items/<id>` read `src/data/items` at build time, with one
+  page written per item.
+- It takes no library yet: `--with` is refused.
 
 The switch does not remember the scheme across a reload, and the theme's fonts are not loaded: see
 the [fonts guide](https://docs.soroush.tech/design-system/getting-started/installation/#fonts).

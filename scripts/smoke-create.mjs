@@ -9,7 +9,7 @@
 //    on `/` and `/about`, and the 404 page. With `--sample-data`, the list of sample items and the
 //    page of each, too.
 //
-//   node scripts/smoke-create.mjs [--lang ts|js] [--pm npm|pnpm] [--framework vike]
+//   node scripts/smoke-create.mjs [--lang ts|js] [--pm npm|pnpm] [--framework vike|astro]
 //     [--layout standalone|workspace] [--render isomorphic|spa|ssg] [--with <libraries>]
 //     [--sample-data]
 //
@@ -53,16 +53,23 @@ const hasSampleData = values['sample-data']
 if (
   !['ts', 'js'].includes(lang) ||
   !['npm', 'pnpm'].includes(pm) ||
+  !['vike', 'astro'].includes(framework) ||
   !['standalone', 'workspace'].includes(layout) ||
   !['isomorphic', 'spa', 'ssg'].includes(render)
 ) {
   console.error(
-    '--lang is ts or js, --pm is npm or pnpm, --layout is standalone or workspace, and --render is isomorphic, spa or ssg.'
+    '--lang is ts or js, --pm is npm or pnpm, --framework is vike or astro, --layout is standalone or workspace, and --render is isomorphic, spa or ssg.'
   )
   process.exit(1)
 }
 const isSpa = render === 'spa'
 const isWorkspace = layout === 'workspace'
+const isAstro = framework === 'astro'
+// Where the build writes the pages: Vike's client build, or Astro's dist.
+const PAGES_DIR = isAstro ? 'dist' : 'dist/client'
+// The key of the Emotion cache that draws the styles: the design system's, which Vike's renderer
+// gives the page, or Emotion's own, which each Astro island makes as it renders.
+const STYLE_KEY = isAstro ? 'css' : 'soroush'
 
 /** Runs a command, showing its output, and throws when it fails. */
 function run(command, args, cwd) {
@@ -163,14 +170,14 @@ async function checkSampleDataPages(appDir, fetchPage) {
     check(list.status === 200 && list.html.includes('>Items</h2>'), '/items answers with its page')
   }
   const ids = isSpa
-    ? readdirSync(join(appDir, 'dist/client/items'), { withFileTypes: true })
+    ? readdirSync(join(appDir, PAGES_DIR, 'items'), { withFileTypes: true })
         .filter((entry) => entry.isDirectory())
         .map((entry) => entry.name)
     : [...list.html.matchAll(/href="\/items\/([^"]+)"/g)].map(([, id]) => id)
   check(ids.length > 0, `/items lists the sample items: ${ids.join(', ')}`)
   for (const id of ids) {
     check(
-      existsSync(join(appDir, 'dist/client/items', id, 'index.html')),
+      existsSync(join(appDir, PAGES_DIR, 'items', id, 'index.html')),
       `the build prerendered items/${id}/index.html`
     )
     const item = await fetchPage(`/items/${id}`)
@@ -190,24 +197,49 @@ function checkHome(home) {
     return
   }
   check(
-    home.html.includes('<style data-emotion="soroush-global'),
+    home.html.includes(`<style data-emotion="${STYLE_KEY}-global`),
     "/ carries the page's base styles"
   )
-  check(/<style data-emotion="soroush [^"]/.test(home.html), "/ carries its components' styles")
+  check(
+    new RegExp(`<style data-emotion="${STYLE_KEY} [^"]`).test(home.html),
+    "/ carries its components' styles"
+  )
   check(home.html.includes(`>${APP}</h2>`), "/ has the starter's heading")
   if (render === 'ssg') check(!home.html.includes('<script'), '/ ships no script')
+  if (isAstro && render === 'isomorphic') {
+    check(home.html.includes('<astro-island'), "/ hydrates its parts as Astro's islands")
+  }
 }
 
-/** Serves the app's build with its own Vite, and checks the HTML of its pages. */
-async function checkServedPages(appDir) {
+/**
+ * Serves the app's build with its own server - Vite's preview for Vike, Astro's own for Astro -
+ * and returns its address and how to stop it.
+ */
+async function startServer(appDir) {
   const require = createRequire(join(appDir, 'package.json'))
+  if (isAstro) {
+    const { preview } = await import(pathToFileURL(require.resolve('astro')).href)
+    const server = await preview({ root: appDir, logLevel: 'warn', server: { port: 4400 } })
+    return { base: `http://localhost:${server.port}/`, stop: () => server.stop() }
+  }
   const { preview } = await import(pathToFileURL(require.resolve('vite')).href)
   // Vike takes the folder it runs in for the app's root.
   const cwd = process.cwd()
   process.chdir(appDir)
   const server = await preview({ root: appDir, logLevel: 'warn', preview: { port: 0 } })
+  return {
+    base: server.resolvedUrls.local[0],
+    stop: async () => {
+      await server.close()
+      process.chdir(cwd)
+    },
+  }
+}
+
+/** Serves the app's build, and checks the HTML of its pages. */
+async function checkServedPages(appDir) {
+  const { base, stop } = await startServer(appDir)
   try {
-    const base = server.resolvedUrls.local[0]
     const fetchPage = async (path) => {
       const response = await fetch(new URL(path, base))
       return { status: response.status, html: await response.text() }
@@ -224,8 +256,7 @@ async function checkServedPages(appDir) {
     if (!isSpa) check(missing.html.includes('Page not found'), '/no-such-page shows the 404 page')
     if (hasSampleData) await checkSampleDataPages(appDir, fetchPage)
   } finally {
-    await server.close()
-    process.chdir(cwd)
+    await stop()
   }
 }
 
@@ -290,7 +321,7 @@ try {
   // msw's plugin ships the mock API's worker with the build.
   if (libraries.includes('msw')) pages.push('mockServiceWorker.js')
   for (const page of pages) {
-    check(existsSync(join(appDir, 'dist/client', page)), `the build prerendered ${page}`)
+    check(existsSync(join(appDir, PAGES_DIR, page)), `the build prerendered ${page}`)
   }
   await checkServedPages(appDir)
   isPassed = true

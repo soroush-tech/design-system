@@ -43,12 +43,22 @@ function createTestStarter() {
     { path: 'package.json', content: JSON.stringify({ name }) },
     { path: `src/theme/themes.${isTypeScript ? 'ts' : 'js'}`, content: 'export default {}\n' },
   ])
-  const starter: Starter = { title: 'Test', createFiles }
+  const starter: Starter = {
+    title: 'Test',
+    label: 'Test: the test starter',
+    renderings: ['isomorphic', 'spa', 'ssg'],
+    hasLibraries: true,
+    createFiles,
+  }
   return { starter, createFiles }
 }
 
+/** A starter that renders only isomorphic and SSG apps, and takes no library. */
 const BARE: Starter = {
   title: 'Bare',
+  label: 'Bare: the bare starter',
+  renderings: ['isomorphic', 'ssg'],
+  hasLibraries: false,
   createFiles: () => [{ path: 'package.json', content: '{}' }],
 }
 
@@ -293,7 +303,7 @@ describe('runCreate', () => {
   it('asks what it was not told in a terminal, in its order, typing only the name and title', async () => {
     const { cwd, createFiles, create, getOutput } = setUp({
       isInteractive: true,
-      answers: ['', '', 'js', '', '', 'ssg', 'dark', 'yes', ''],
+      answers: ['', '', 'js', '', '', 'ssg', '', 'dark', 'yes', ''],
     })
     expect(await create({ ...ASK, layout: undefined })).toBe(0)
     const output = getOutput()
@@ -304,6 +314,7 @@ describe('runCreate', () => {
       '? Package manager\n',
       '? Repository\n',
       '? Rendering\n',
+      '? Framework\n',
       '? Default color scheme\n',
       '? Add sample data pages?\n',
       '? Create it?\n',
@@ -414,7 +425,7 @@ describe('runCreate', () => {
   it('asks for the libraries after the rendering, again while two hold global state', async () => {
     const { createFiles, create, getOutput } = setUp({
       isInteractive: true,
-      answers: ['', '', '', '', '', 'zustand,jotai', 'tanstack-query,jotai', '', '', ''],
+      answers: ['', '', '', '', '', '', 'zustand,jotai', 'tanstack-query,jotai', '', '', ''],
     })
     expect(await create(ASK)).toBe(0)
     const output = getOutput()
@@ -477,12 +488,56 @@ describe('runCreate', () => {
     expect(existsSync(join(cwd, 'other'))).toBe(false)
   })
 
+  it('asks for the framework after the rendering, of the ones that render it', async () => {
+    const spa = setUp({ isInteractive: true, answers: ['', '', '', '', 'spa', '', '', ''] })
+    expect(await spa.create(ASK)).toBe(0)
+    expect(spa.getOutput()).not.toContain('? Framework')
+    expect(spa.getOutput()).toContain('a Test app in TypeScript (SPA)')
+
+    const { cwd, createFiles, create, getOutput } = setUp({
+      isInteractive: true,
+      answers: ['', '', '', '', '', 'bare', '', '', ''],
+    })
+    expect(await create(ASK)).toBe(0)
+    const output = getOutput()
+    // Bare takes no library, so there is no question for them.
+    expect(output).not.toContain('? Libraries')
+    expect(output).toContain('a Bare app in TypeScript (isomorphic)')
+    expect(createFiles).not.toHaveBeenCalled()
+    expect(readdirSync(join(cwd, 'my-app'))).toEqual(['package.json'])
+  })
+
+  it('offers the renderings of the framework given, and refuses another one', async () => {
+    const asked = setUp({ isInteractive: true, answers: ['', '', '', '', 'spa'] })
+    await expect(asked.create({ ...ASK, framework: 'bare' })).rejects.toThrow(
+      'Rendering offers no spa'
+    )
+    const { cwd, create, getOutput } = setUp({
+      isInteractive: true,
+      answers: ['', '', '', '', 'ssg', '', '', ''],
+    })
+    expect(await create({ ...ASK, framework: 'bare' })).toBe(0)
+    expect(getOutput()).not.toContain('? Framework')
+    expect(getOutput()).toContain('a Bare app in TypeScript (SSG)')
+
+    expect(await create({ ...YES, name: 'spa', framework: 'bare', rendering: 'spa' })).toBe(1)
+    expect(getOutput()).toContain('Bare does not render spa: it renders isomorphic or ssg.')
+    expect(await create({ ...YES, name: 'mocked', framework: 'bare', libraries: ['msw'] })).toBe(1)
+    expect(getOutput()).toContain('Bare takes no library yet: leave out --with.')
+    expect(await create({ ...YES, name: 'none', framework: 'bare', libraries: [] })).toBe(0)
+    const astro = setUp({ dependencies: { starters: { astro: { ...BARE, title: 'Astro' } } } })
+    expect(await astro.create(YES)).toBe(0)
+    expect(astro.getOutput()).toContain('create will make my-app, an Astro app in TypeScript')
+    expect(existsSync(join(cwd, 'spa'))).toBe(false)
+    expect(existsSync(join(cwd, 'mocked'))).toBe(false)
+  })
+
   it('says when it has no starter at all', async () => {
     const cwd = createWorkspace()
     const { io, getOutput } = createTestIo(cwd)
     expect(await runCreate(YES, io, DESIGN_SYSTEM, { starters: {} })).toBe(1)
     expect(getOutput()).toBe('create has no starter for any framework. It has: none yet.\n')
     expect(await runCreate({ ...YES, framework: 'next' }, io, DESIGN_SYSTEM)).toBe(1)
-    expect(getOutput()).toContain('create has no starter for next. It has: vike.')
+    expect(getOutput()).toContain('create has no starter for next. It has: vike, astro.')
   })
 })

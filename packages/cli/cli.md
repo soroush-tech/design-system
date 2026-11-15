@@ -62,6 +62,22 @@ scripts that run the app's (each package manager's own workspace command, no tas
 told the app's package name, `@<name>/web`. The workspace adds no source, so it has no type-test
 fixture of its own; two `create-smoke` rows build it from the root.
 
+### The Astro starter
+
+`src/create/astro/astro.ts` writes an Astro app whose React parts are islands. Astro renders an
+island with plain `react-dom/server`, not as a server component, so the design system needs no
+`'use client'`, and Emotion writes each island's styles into its HTML with no extraction. Each
+island is its own React root: a page's component renders inside `Theme`, the header's
+`<Providers>` draws the base styles once a page, and the scheme is a small shared store
+(`useSyncExternalStore`, with the default as the server snapshot, so an island hydrates on the
+HTML it got). Isomorphic, the layout has Astro's `<ClientRouter />` and a script on
+`astro:before-swap` that keeps Emotion's style tags in the head, which the router would otherwise
+replace, and moves the next page's inline styles there, except its base styles, which the header
+draws. `Starter.renderings` lists `isomorphic` and `ssg`; `hasLibraries` is false until its
+recipes land. Its fixtures are `type-tests/create-astro` and `-ssg`: `test:types` checks their
+TypeScript, and the smoke test runs `astro check` on a whole app. `astro check` takes TypeScript 6
+at most, so the starter's TypeScript is this package's `typescript-astro` alias.
+
 ### The Vike starter
 
 `src/create/vike/vike.ts` writes a Vike app with no renderer package, rendered as the developer

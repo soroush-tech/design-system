@@ -1,5 +1,6 @@
 import type { Scheme } from '../templates/templates'
 import type { Library } from './libraries'
+import { astroStarter } from './astro/astro'
 import { vikeStarter } from './vike/vike'
 
 /**
@@ -44,8 +45,17 @@ export interface StarterFile {
 export interface Starter {
   /** How the plan names it: `create will make my-app, a <title> app`. */
   title: string
+  /** What the framework question says of it. */
+  label: string
+  /** The renderings it writes, in the order create offers them. */
+  renderings: readonly Rendering[]
+  /** Whether it adds the libraries create offers. */
+  hasLibraries: boolean
   createFiles: (facts: StarterFacts) => StarterFile[]
 }
 
 /** The starters, by the name `--framework` takes. The first is the default. */
-export const STARTERS: Readonly<Record<string, Starter>> = { vike: vikeStarter }
+export const STARTERS: Readonly<Record<string, Starter>> = {
+  vike: vikeStarter,
+  astro: astroStarter,
+}

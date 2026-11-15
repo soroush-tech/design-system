@@ -189,9 +189,19 @@ const RENDERING_LABELS: Readonly<Record<Rendering, string>> = {
   ssg: 'SSG: HTML only, no JavaScript',
 }
 
-async function askRendering(io: Io): Promise<Rendering> {
-  const choices = RENDERINGS.map((value) => ({ value, label: RENDERING_LABELS[value] }))
+async function askRendering(io: Io, renderings: readonly Rendering[]): Promise<Rendering> {
+  const choices = renderings.map((value) => ({ value, label: RENDERING_LABELS[value] }))
   return (await io.select('Rendering', choices)) as Rendering
+}
+
+/** Asks for the framework, of the ones `names` lists. */
+async function askFramework(
+  io: Io,
+  starters: Readonly<Record<string, Starter>>,
+  names: readonly string[]
+): Promise<string> {
+  const choices = names.map((value) => ({ value, label: starters[value].label }))
+  return io.select('Framework', choices)
 }
 
 /** Asks for the libraries, again while two of one group are picked. */
@@ -299,13 +309,15 @@ export async function runCreate(
   const isPreviewOnly = options.isDryRun || (!io.isInteractive && !options.isConfirmed)
   const canAsk = !isPreviewOnly && !options.isConfirmed
 
-  const framework = options.framework ?? Object.keys(starters)[0]
-  const starter = framework && Object.hasOwn(starters, framework) ? starters[framework] : undefined
-  if (!starter) {
-    const names = Object.keys(starters).join(', ') || 'none yet'
-    io.write(`create has no starter for ${framework ?? 'any framework'}. It has: ${names}.\n`)
+  const frameworks = Object.keys(starters)
+  const given = options.framework
+  if (frameworks.length === 0 || (given !== undefined && !Object.hasOwn(starters, given))) {
+    const names = frameworks.join(', ') || 'none yet'
+    io.write(`create has no starter for ${given ?? 'any framework'}. It has: ${names}.\n`)
     return 1
   }
+  // The frameworks the app may be on: the one --framework names, else each one create has.
+  const pool = given === undefined ? frameworks : [given]
   const name = options.name ?? (canAsk ? await askName(io) : DEFAULT_NAME)
   const nameRefusal = findNameRefusal(name)
   if (nameRefusal) {
@@ -335,18 +347,38 @@ export async function runCreate(
   }
   const layout = options.layout ?? (canAsk ? await askLayout(io) : LAYOUTS[0])
   const isWorkspace = layout === 'workspace'
-  const rendering = options.rendering ?? (canAsk ? await askRendering(io) : RENDERINGS[0])
-  // An SSG page has no JavaScript in the browser, where every library works.
-  const libraryRefusal =
-    rendering === 'ssg' && options.libraries?.length
-      ? 'An SSG app has no JavaScript in the browser, so it takes no library: leave out --with.'
-      : findLibraryConflict(options.libraries ?? [])
+  const offered = RENDERINGS.filter((rendering) =>
+    pool.some((framework) => starters[framework].renderings.includes(rendering))
+  )
+  if (options.rendering !== undefined && !offered.includes(options.rendering)) {
+    const titles = pool.map((framework) => starters[framework].title).join(' or ')
+    io.write(
+      `${titles} does not render ${options.rendering}: it renders ${offered.join(' or ')}.\n`
+    )
+    return 1
+  }
+  const rendering =
+    options.rendering ??
+    (canAsk && offered.length > 1 ? await askRendering(io, offered) : offered[0])
+  // The framework comes after the rendering: the question offers the ones that render it.
+  const candidates = pool.filter((framework) => starters[framework].renderings.includes(rendering))
+  const framework =
+    canAsk && candidates.length > 1 ? await askFramework(io, starters, candidates) : candidates[0]
+  const starter = starters[framework]
+  const libraryRefusal = !options.libraries?.length
+    ? undefined
+    : rendering === 'ssg'
+      ? // An SSG page has no JavaScript in the browser, where every library works.
+        'An SSG app has no JavaScript in the browser, so it takes no library: leave out --with.'
+      : starter.hasLibraries
+        ? findLibraryConflict(options.libraries)
+        : `${starter.title} takes no library yet: leave out --with.`
   if (libraryRefusal) {
     io.write(`${libraryRefusal}\n`)
     return 1
   }
-  const libraries =
-    options.libraries ?? (canAsk && rendering !== 'ssg' ? await askLibraries(io) : [])
+  const takesLibraries = starter.hasLibraries && rendering !== 'ssg'
+  const libraries = options.libraries ?? (canAsk && takesLibraries ? await askLibraries(io) : [])
   const scheme = options.scheme ?? (canAsk ? await askScheme(io) : 'light')
   const hasSampleData = options.hasSampleData ?? (canAsk ? await askSampleData(io) : false)
 
@@ -380,7 +412,7 @@ export async function runCreate(
   const packageNote = packageName === name ? '' : ` (package ${packageName})`
   const renderingName = rendering === 'isomorphic' ? rendering : rendering.toUpperCase()
   io.write(
-    `create will make ${name}${packageNote}, a ${starter.title} app in ${language} (${renderingName}), ${isWorkspace ? 'in a workspace, ' : ''}in ./${name}:\n\n`
+    `create will make ${name}${packageNote}, ${/^[AEIOU]/.test(starter.title) ? 'an' : 'a'} ${starter.title} app in ${language} (${renderingName}), ${isWorkspace ? 'in a workspace, ' : ''}in ./${name}:\n\n`
   )
   io.write(`${formatPlan(plan)}\n`)
   if (!(await isApproved(options, isPreviewOnly, io))) return 0

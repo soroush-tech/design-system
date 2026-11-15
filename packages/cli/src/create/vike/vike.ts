@@ -2,21 +2,10 @@
 // routed in the browser. Each file is written once, in TypeScript; `t(...)` holds what only
 // TypeScript has, so the JavaScript app is the same file with the types taken out. The Vike wiring
 // here is the one `init` reuses for an existing Vike app (#80).
-import { devDependencies } from '../../../package.json'
 import { createProvidersSource, createThemesSource, type Scheme } from '../../templates/templates'
 import type { Library } from '../libraries'
 import type { Rendering, Starter, StarterFacts, StarterFile } from '../starters'
-
-/** The versions the starter installs: the ones this package is tested with. */
-const VERSIONS = devDependencies
-
-/** A version from this package's own manifest, as a range an app takes. */
-const toRange = (version: string) => (/^\d/.test(version) ? `^${version}` : version)
-
-const pickVersions = (names: readonly (keyof typeof VERSIONS)[]) =>
-  Object.fromEntries(names.map((name) => [name, toRange(VERSIONS[name])]))
-
-type Package = keyof typeof VERSIONS
+import { pickVersions, toRange, type Package } from '../versions'
 
 /** The packages each library installs: for the app's code, and for its development only. */
 const LIBRARY_PACKAGES: Readonly<
@@ -1153,4 +1142,10 @@ function createFiles(facts: StarterFacts): StarterFile[] {
   ]
 }
 
-export const vikeStarter: Starter = { title: 'Vike', createFiles }
+export const vikeStarter: Starter = {
+  title: 'Vike',
+  label: 'Vike (recommended): React pages, rendered as you pick',
+  renderings: ['isomorphic', 'spa', 'ssg'],
+  hasLibraries: true,
+  createFiles,
+}
