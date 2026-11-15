@@ -63,70 +63,76 @@ manager's own workspace command, no task runner),
 told the app's package name, `@<name>/web`. The workspace adds no source, so it has no type-test
 fixture of its own; two `create-smoke` rows build it from the root.
 
+### The templates
+
+A starter's files are real files, in `templates/<framework>/ts/`, as `templates/templates.md`
+says: a `base/` app, then a layer per rendering, the sample data and each library
+(`with/<library>/`), laid one over the other by `src/create/template/`. Where several choices
+meet in one file, it marks its lines with `// @if <condition>` (`{/* @if */}` in JSX,
+`<!-- @if -->` in Markdown), and `create` keeps the lines whose condition holds. Two rules keep a
+template a file the tools can read:
+
+- **Every branch is whole:** a statement, a JSX element, a list item. With all its branches in
+  it, a template must parse, since the formatter and the JavaScript build read it that way; two
+  returns or two declarations of a name are fine, a half-open element is not.
+- **TypeScript's own lines are marked `// @if ts`** when stripping the types would leave something
+  behind, such as the doc comment over an interface. `// @if ts` and `// @else` also hold two
+  forms of a statement where the JavaScript is not the TypeScript stripped (zustand's
+  `create<State>()(...)`, Astro's `getStaticPaths`).
+
+`templates/<framework>/js/` is made from the `ts/` folder by `scripts/gen-templates.mjs` (the types
+taken out by `ts-blank-space`, the paths a text names turned to `.js`, then the formatter), which
+`pnpm build` runs before tsdown and the tests run in their global setup; git ignores it. `create`
+only copies and chooses, with nothing to strip or format at run time. Lint skips `templates/`, since a
+template is not a program until its markers are applied; the apps it writes are linted and
+typechecked as the `type-tests/create-*` fixtures, which the starters' tests keep in step.
+
+What stays in code: `package.json` (its packages come from the choices, at the versions in this
+package's own `devDependencies`), and the themes and `Providers`, which are `init`'s templates
+(`src/templates/templates.ts`).
+
 ### The Astro starter
 
-`src/create/astro/astro.ts` writes an Astro app whose React parts are islands. Astro renders an
-island with plain `react-dom/server`, not as a server component, so the design system needs no
+`templates/astro/` writes an Astro app whose React parts are islands. Astro renders an island
+with plain `react-dom/server`, not as a server component, so the design system needs no
 `'use client'`, and Emotion writes each island's styles into its HTML with no extraction. Each
 island is its own React root: a page's component renders inside `Theme`, the header's
 `<Providers>` draws the base styles once a page, and the scheme is a small shared store
 (`useSyncExternalStore`, with the default as the server snapshot, so an island hydrates on the
-HTML it got). Isomorphic, the layout has Astro's `<ClientRouter />` and a script on
-`astro:before-swap` that keeps Emotion's style tags in the head, which the router would otherwise
-replace, and moves the next page's inline styles there, except its base styles, which the header
-draws. SSR has all of that, with `output: 'server'` and `@astrojs/node` standalone, and an item
-route that reads its id on each request (`Astro.rewrite('/404')` for an unknown one).
+HTML it got). With islands (isomorphic and SSR), the layout has Astro's `<ClientRouter />` and a
+script on `astro:before-swap` that keeps Emotion's style tags in the head, which the router would
+otherwise replace, and moves the next page's inline styles there, except its base styles, which
+the header draws. SSR adds `output: 'server'` with `@astrojs/node` standalone, and an item route
+that reads its id on each request (`Astro.rewrite('/404')` for an unknown one).
 `Starter.renderings` lists `isomorphic`, `ssr` and `ssg`; `hasLibraries` is false until its
-recipes land. Its fixtures are `type-tests/create-astro`, `-ssr` and `-ssg`: `test:types` checks their
-TypeScript, and the smoke test runs `astro check` on a whole app. `astro check` takes TypeScript 6
-at most, so the starter's TypeScript is this package's `typescript-astro` alias.
+libraries land. Its fixtures are `type-tests/create-astro`, `-ssr` and `-ssg`: `test:types`
+checks their TypeScript, and the smoke test runs `astro check` on a whole app. `astro check` takes
+TypeScript 6 at most, so the starter's TypeScript is this package's `typescript-astro` alias.
 
 ### The Vike starter
 
-`src/create/vike/vike.ts` writes a Vike app with no renderer package, rendered as the developer
-picks (`StarterFacts.rendering`):
+`templates/vike/` writes a Vike app with no renderer package, rendered as the developer picks:
 
-- `isomorphic`: every page prerendered at build time (`prerender: true`), then client routing
-  (`clientRouting: true`).
-- `spa`: `Page` and `Layout` load in the browser only (`meta` `env`); `+onRenderHtml` writes an
-  empty shell and `+onRenderClient` renders into it, with no `@emotion/server`.
-- `ssr`: `server: true`, Vike's built-in server, renders each page on request, with client
-  routing after; `+data` runs on the server, and there is no `+onBeforePrerenderStart`. `npm start`
-  runs `node dist/server/index.mjs`.
-- `ssg`: `Page` and `Layout` load at build time only, and there is no `+onRenderClient`, so a page
-  ships no script; the layout has no scheme switch.
+- `isomorphic` (`base/`): every page prerendered at build time, then client routing.
+- `ssr/`: `server: true`, Vike's built-in server, renders each page on request, with client
+  routing after; `+data` runs on the server, and there is no `+onBeforePrerenderStart`.
+  `npm start` runs `node dist/server/index.mjs`.
+- `spa/`: `Page` and `Layout` load in the browser only; `+onRenderHtml` writes an empty shell and
+  `+onRenderClient` renders into it, with no `@emotion/server`.
+- `ssg/`: `Page` and `Layout` load at build time only, and there is no `+onRenderClient`, so a
+  page ships no script; the layout has no scheme switch.
 
-Each has its type-test fixture: `type-tests/create-vike`, `-ssr`, `-spa` and `-ssg`.
+`+onRenderHtml` renders the page with `@emotion/server` on the design system's `styleCache`, and
+puts the styles it used in the head; `+onRenderClient` hydrates it with the same cache. Both
+render `PageShell`, the page inside `+Layout`, which renders `<Providers>`: the providers live in
+the app, so the scheme it holds can switch the theme.
 
-The libraries (`src/create/libraries.ts`, `StarterFacts.libraries`) are asked by job: the
-`group` of each library is its question (data, state), and the rest share the last one. Their
-examples are in `src/create/recipes.ts`, for every starter: `src/data/api` and the msw handlers
-that answer it, the home page's `Counter` (its count in the state library, or its own state) and
-`Greeting` (read through the data library), and the form, which sends through it. Every choice
-shows in the app. In the Vike starter, `createLibraryFiles` adds their files (the store or atom,
-the mock API, `src/data/api`),
-`createLayout` holds the query client and the scheme where the state library says, and
-`withMocks` makes the client renderer start msw first. Their versions are this package's
-devDependencies too. `type-tests/create-vike-libraries` (TanStack Query, msw, zustand) and
-`-jotai` typecheck them, and `-more` (SWR, Redux Toolkit, React Hook Form, Vitest). In the isomorphic app:
-
-- `+onRenderHtml` renders the page with `@emotion/server` on the design system's `styleCache`, and
-  puts the styles it used in the head, so the page is drawn styled before any script runs.
-  `+onRenderClient` hydrates it with the same cache. Both render `PageShell`, the page inside
-  `+Layout`.
-- `+Layout` is a setting of the app's own (`meta` in `+config`), and it renders `<Providers>`: the
-  providers live in the app, not in the files that start it, so the scheme it holds can switch
-  the theme. `src/theme/` is `init`'s own templates.
-- `PageShell` gives every component the page's `pageContext`, through `usePageContext` and
-  `useData` in `src/pages/usePageContext`.
-- With `--sample-data` (or a yes to its question), `createSampleDataFiles` adds `src/data/items`,
-  six sample items, and two routes that read them in `+data` at build time: `/items`, and
-  `/items/@id`, whose `+onBeforePrerenderStart` lists one URL per item for the build to
-  prerender. An id with no item throws `render(404)`. They use no data library.
-- Each file is written once, in TypeScript; `t(...)` holds what only TypeScript has, so the
-  JavaScript app is the same file with the types taken out.
-- The versions it installs are this package's own `devDependencies`, which the fixture below is
-  checked against. Bump them there.
+The libraries are asked by job (`src/create/libraries.ts`: a library's `group` is its question),
+and every choice shows in the app: the home page's `Counter` keeps its count in the state library
+or its own state, its `Greeting` reads `src/data/api` through the data library, the form sends
+through it, and msw answers each of those calls. The fixtures: `type-tests/create-vike`, `-ssr`,
+`-spa` and `-ssg` for the renderings, `-libraries` (TanStack Query, msw, zustand), `-jotai` and
+`-more` (SWR, Redux Toolkit, React Hook Form, Vitest) for the libraries.
 
 ## The rules each change keeps
 

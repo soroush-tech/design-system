@@ -31,6 +31,8 @@ dist-ssr
 *.local
 .env
 .env.local
+# The cli's JavaScript templates, made from its TypeScript ones by its build and its tests.
+packages/cli/templates/*/js/
 
 # Test
 *storybook.log

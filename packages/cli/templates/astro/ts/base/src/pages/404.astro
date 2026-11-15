@@ -1,0 +1,12 @@
+---
+import NotFound from '../components/NotFound'
+import Layout from '../layouts/Layout.astro'
+---
+
+<Layout>
+  {/* @if ssg */}
+  <NotFound />
+  {/* @else */}
+  <NotFound client:load />
+  {/* @endif */}
+</Layout>

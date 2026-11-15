@@ -1,0 +1,20 @@
+---
+import ItemList from '../../components/ItemList'
+import Layout from '../../layouts/Layout.astro'
+import { items } from '../../data/items'
+
+// @if ssr
+// What the list shows of each item, read on each request.
+// @else
+// What the list shows of each item, read at build time.
+// @endif
+const summaries = items.map(({ id, title, status }) => ({ id, title, status }))
+---
+
+<Layout>
+  {/* @if ssg */}
+  <ItemList items={summaries} />
+  {/* @else */}
+  <ItemList items={summaries} client:load />
+  {/* @endif */}
+</Layout>

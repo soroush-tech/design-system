@@ -1,0 +1,39 @@
+---
+import ItemDetails from '../../components/ItemDetails'
+import Layout from '../../layouts/Layout.astro'
+// @if ssr
+import { items } from '../../data/items'
+
+// The item of the id in the URL, read on each request, or the 404 page for an id with no item.
+const item = items.find(({ id }) => id === Astro.params.id)
+if (!item) return Astro.rewrite('/404')
+// @elif ts
+import type { GetStaticPaths, InferGetStaticPropsType } from 'astro'
+import { items } from '../../data/items'
+
+/** The pages this route writes at build time: one per item. */
+export const getStaticPaths = (() =>
+  items.map((item) => ({ params: { id: item.id }, props: { item } }))) satisfies GetStaticPaths
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>
+
+const { item } = Astro.props
+// @else
+import { items } from '../../data/items'
+
+/** The pages this route writes at build time: one per item. */
+export function getStaticPaths() {
+  return items.map((item) => ({ params: { id: item.id }, props: { item } }))
+}
+
+const { item } = Astro.props
+// @endif
+---
+
+<Layout>
+  {/* @if ssg */}
+  <ItemDetails item={item} />
+  {/* @else */}
+  <ItemDetails item={item} client:load />
+  {/* @endif */}
+</Layout>

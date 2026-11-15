@@ -1,0 +1,12 @@
+---
+import Home from '../components/Home'
+import Layout from '../layouts/Layout.astro'
+---
+
+<Layout>
+  {/* @if ssg */}
+  <Home />
+  {/* @else */}
+  <Home client:load />
+  {/* @endif */}
+</Layout>

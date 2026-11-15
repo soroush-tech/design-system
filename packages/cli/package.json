@@ -23,7 +23,8 @@
   "type": "module",
   "sideEffects": false,
   "files": [
-    "dist"
+    "dist",
+    "templates"
   ],
   "bin": {
     "soroush-design": "./dist/bin.mjs"
@@ -47,13 +48,14 @@
     "types": "./dist/index.d.mts"
   },
   "scripts": {
-    "build": "tsdown",
-    "lint": "oxlint --deny-warnings",
+    "build": "node scripts/gen-templates.mjs && tsdown",
+    "lint": "oxlint --deny-warnings --ignore-pattern=templates/**",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:types": "pnpm --filter @soroush.tech/design-system build && tsc -p type-tests/init/tsconfig.json && tsc -p type-tests/tsconfig.create-vike.json && tsc -p type-tests/tsconfig.create-vike-spa.json && tsc -p type-tests/tsconfig.create-vike-ssg.json && tsc -p type-tests/tsconfig.create-vike-ssr.json && tsc -p type-tests/tsconfig.create-vike-libraries.json && tsc -p type-tests/tsconfig.create-vike-jotai.json && tsc -p type-tests/tsconfig.create-vike-more.json && tsc -p type-tests/tsconfig.create-astro.json && tsc -p type-tests/tsconfig.create-astro-ssg.json && tsc -p type-tests/tsconfig.create-astro-ssr.json",
-    "prepublishOnly": "pnpm build"
+    "prepublishOnly": "pnpm build",
+    "gen:templates": "node scripts/gen-templates.mjs"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.12",
@@ -81,6 +83,7 @@
     "react-hook-form": "^7.92.0",
     "react-redux": "^9.3.1",
     "swr": "^2.5.1",
+    "ts-blank-space": "^0.9.0",
     "tsdown": "^0.23.7",
     "typescript": "~7.0.2",
     "typescript-astro": "npm:typescript@^6.0.3",

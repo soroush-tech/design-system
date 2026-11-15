@@ -1,0 +1,12 @@
+---
+import About from '../components/About'
+import Layout from '../layouts/Layout.astro'
+---
+
+<Layout>
+  {/* @if ssg */}
+  <About />
+  {/* @else */}
+  <About client:load />
+  {/* @endif */}
+</Layout>
