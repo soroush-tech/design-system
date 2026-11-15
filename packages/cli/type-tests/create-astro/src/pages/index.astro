@@ -1,8 +1,11 @@
 ---
+import Counter from '../components/Counter'
 import Home from '../components/Home'
 import Layout from '../layouts/Layout.astro'
 ---
 
 <Layout>
-  <Home client:load />
+  <Home client:load>
+    <Counter client:only="react" />
+  </Home>
 </Layout>

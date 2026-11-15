@@ -7,7 +7,7 @@ import { items } from '../data/items'
 export const handlers = [
   http.get('/api/greeting', () => HttpResponse.json({ message: 'Hello from the mock API' })),
   // @if react-hook-form
-  http.post('/api/messages', async ({ request }) => {
+  http.post<never, { name: string }>('/api/messages', async ({ request }) => {
     const { name } = await request.json()
     return HttpResponse.json({ message: `Thanks, ${name}: the mock API took your message.` })
   }),

@@ -1,30 +1,33 @@
+import type { ReactNode } from 'react'
 import { Button } from '@soroush.tech/design-system/Button'
 import { Flex } from '@soroush.tech/design-system/Flex'
 import { Typography } from '@soroush.tech/design-system/Typography'
-import { Theme } from '../theme/Theme'
-// @if !ssg
-import { Counter } from './Counter'
-// @endif
+import { withIsland } from '../theme/Island'
 
-export default function Home() {
+// @if ssg
+/** The home page. */
+// @elif tanstack-query || swr || msw
+/** The home page. Its children are the islands of its greeting and its counter. */
+// @else
+/** The home page. Its child is the island of its counter. */
+// @endif
+function Home({ children }: { readonly children?: ReactNode }) {
   return (
-    <Theme>
-      <Flex gap={2} alignItems="flex-start" px={3} py={4}>
-        <Typography variant="h2">__TITLE__</Typography>
-        <Typography color="secondary">
-          An Astro app on the design system. Edit src/components/Home.tsx, and make the themes your
-          own in src/theme/themes.ts.
-        </Typography>
-        {/* @if !ssg */}
-        <Counter />
-        {/* @endif */}
-        <Flex flexDirection="row" gap={1}>
-          <Button href="https://docs.soroush.tech">Components</Button>
-          <Button href="https://astro.build" variant="outlined">
-            Astro
-          </Button>
-        </Flex>
+    <Flex gap={2} alignItems="flex-start" px={3} py={4}>
+      <Typography variant="h2">__TITLE__</Typography>
+      <Typography color="secondary">
+        An Astro app on the design system. Edit src/components/Home.tsx, and make the themes your
+        own in src/theme/themes.ts.
+      </Typography>
+      {children}
+      <Flex flexDirection="row" gap={1}>
+        <Button href="https://docs.soroush.tech">Components</Button>
+        <Button href="https://astro.build" variant="outlined">
+          Astro
+        </Button>
       </Flex>
-    </Theme>
+    </Flex>
   )
 }
+
+export default withIsland(Home)

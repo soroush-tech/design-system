@@ -11,6 +11,7 @@ prerendered at build time with its styles in the HTML, then moving between pages
 - `src/pages/items/` lists the sample items of `src/data/items.ts`, with a page for each.
   Their `+data` hooks read the data at build time: make them fetch your own.
 - `src/pages/index/Counter.tsx` counts the presses of its button, in its own state.
+- [Vitest](https://vitest.dev) and [Testing Library](https://testing-library.com): `npm run test` runs `src/pages/index/Page.test.tsx`, which checks the title and the counter.
 
 Fonts: the theme names Space Grotesk and JetBrains Mono, and does not load them. See
 https://docs.soroush.tech/design-system/getting-started/installation/#fonts

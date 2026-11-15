@@ -10,6 +10,7 @@ a single-page app: each page is an HTML shell from the build, rendered in the br
 - In `src/pages/`, `+onRenderHtml` writes the HTML shell of each page, and `+onRenderClient` renders the page in it.
 - [TanStack Query](https://tanstack.com/query): the query client lives in `+Layout`. The home page's `Greeting` reads `src/data/api.ts` with a query.
 - [Jotai](https://jotai.org): `src/state/scheme.ts` holds the color scheme and `src/state/counter.ts` the home page's count, in atoms.
+- [Vitest](https://vitest.dev) and [Testing Library](https://testing-library.com): `npm run test` runs `src/pages/index/Page.test.tsx`, which checks the title and the counter.
 
 Fonts: the theme names Space Grotesk and JetBrains Mono, and does not load them. See
 https://docs.soroush.tech/design-system/getting-started/installation/#fonts

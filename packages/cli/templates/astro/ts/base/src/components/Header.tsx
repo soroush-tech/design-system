@@ -83,6 +83,11 @@ export default function Header() {
             Items
           </Link>
           {/* @endif */}
+          {/* @if react-hook-form */}
+          <Link href="/form" underline="hover">
+            Form
+          </Link>
+          {/* @endif */}
           <Button size="sm" variant="outlined" onClick={() => setScheme(otherScheme)}>
             {otherScheme}
           </Button>

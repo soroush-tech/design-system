@@ -5,5 +5,6 @@
 export async function startMocks() {
   if (import.meta.env.VITE_MSW !== 'true') return
   const { worker } = await import('./browser')
-  await worker.start()
+  // A request the mock API has no handler for - a page the router fetches - goes to the network.
+  await worker.start({ onUnhandledFrame: 'bypass' })
 }

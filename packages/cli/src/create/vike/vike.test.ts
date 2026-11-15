@@ -83,6 +83,8 @@ describe('the Vike starter', () => {
               : path
         ),
         'vite.config.ts',
+        'vitest.config.ts',
+        'src/pages/index/Page.test.tsx',
         'tsconfig.json',
         'src/vike.d.ts',
         // A server renders any item asked for: it has no list of them to prerender.
@@ -138,13 +140,16 @@ describe('the Vike starter', () => {
     ],
     [
       `${FIXTURE}-more`,
-      { libraries: ['swr', 'redux-toolkit', 'react-hook-form', 'vitest'] },
+      { libraries: ['swr', 'msw', 'redux-toolkit', 'react-hook-form'] },
       [
         'src/state/store.ts',
         'src/data/api.ts',
         'src/pages/form/+Page.tsx',
         'vitest.config.ts',
         'src/pages/index/Page.test.tsx',
+        // With msw, the tests' own mock API, from Node.
+        'src/mocks/server.ts',
+        'src/mocks/setupTests.ts',
       ],
     ],
   ] as const)('writes the app %s holds', async (fixture, facts, paths) => {
@@ -179,8 +184,8 @@ describe('the Vike starter', () => {
     ).toContain('schemeChanged: (_scheme, action) => action.payload,')
   })
 
-  it('adds a validated form page and its link, and a test the app runs', () => {
-    const files = createFiles({ libraries: ['react-hook-form', 'vitest'], title: "Shop's" })
+  it('adds a validated form page and its link, and a test every app runs', () => {
+    const files = createFiles({ libraries: ['react-hook-form'], title: "Shop's" })
     expect(files.get('src/pages/+Layout.tsx')).toContain('<Link href="/form"')
     expect(files.get('src/pages/form/+Page.tsx')).toContain('resolver: zodResolver(schema),')
     expect(files.get('src/pages/index/Page.test.tsx')).toContain(
@@ -250,7 +255,7 @@ describe('the Vike starter', () => {
     const noItems = createFiles({ libraries: ['tanstack-query'], hasSampleData: false })
     expect(noItems.get('src/data/api.ts')).not.toContain('fetchItems')
     expect(noItems.get('src/data/api.ts')).toContain('export async function fetchGreeting()')
-    expect(createFiles({ libraries: ['vitest'] }).has('src/data/api.ts')).toBe(false)
+    expect(createFiles({ libraries: ['zustand'] }).has('src/data/api.ts')).toBe(false)
   })
 
   it('counts on the home page, in its own state or in the state library picked', () => {
@@ -315,7 +320,9 @@ describe('the Vike starter', () => {
 
     const api = createFiles({ libraries: ['react-hook-form', 'msw'] })
     expect(api.get('src/data/api.ts')).toContain("fetch('/api/messages', {")
-    expect(api.get('src/mocks/handlers.ts')).toContain("http.post('/api/messages'")
+    expect(api.get('src/mocks/handlers.ts')).toContain(
+      "http.post<never, { name: string }>('/api/messages'"
+    )
     expect(
       createFiles({ libraries: ['react-hook-form', 'swr'], isTypeScript: false }).get(
         'src/data/api.js'
@@ -325,11 +332,37 @@ describe('the Vike starter', () => {
 
   it("tests the home page inside the app's providers", () => {
     const test = (libraries: StarterFacts['libraries']) =>
-      createFiles({ libraries: ['vitest', ...libraries] }).get('src/pages/index/Page.test.tsx')!
+      createFiles({ libraries }).get('src/pages/index/Page.test.tsx')!
     expect(test([])).toContain("fireEvent.click(screen.getByRole('button', { name: 'Count' }))")
     expect(test([])).not.toMatch(/QueryClientProvider|StoreProvider/)
     expect(test(['tanstack-query'])).toContain('<QueryClientProvider client={new QueryClient()}>')
     expect(test(['redux-toolkit'])).toContain('<StoreProvider store={store}>')
+    // An SSG page has no counter to press.
+    const ssg = createFiles({ rendering: 'ssg' }).get('src/pages/index/Page.test.tsx')!
+    expect(ssg).not.toContain('Count')
+    expect(ssg).toContain("import { cleanup, render, screen } from '@testing-library/react'")
+    expect(JSON.parse(createFiles({ rendering: 'ssg' }).get('package.json')!).scripts.test).toBe(
+      'vitest run'
+    )
+  })
+
+  it("answers the tests' requests from msw's Node server, with msw", () => {
+    const files = createFiles({ libraries: ['msw'] })
+    expect(files.get('src/mocks/server.ts')).toContain(
+      'export const server = setupServer(...handlers)'
+    )
+    expect(files.get('src/mocks/setupTests.ts')).toContain(
+      "beforeAll(() => server.listen({ onUnhandledFrame: 'error' }))"
+    )
+    expect(files.get('vitest.config.ts')).toContain("setupFiles: ['./src/mocks/setupTests.ts']")
+    expect(files.get('src/pages/index/Page.test.tsx')).toContain(
+      "await screen.findByText('Hello from the mock API')"
+    )
+    // Without msw, the tests have no mock API.
+    const plain = createFiles()
+    expect(plain.has('src/mocks/server.ts')).toBe(false)
+    expect(plain.get('vitest.config.ts')).not.toContain('setupFiles')
+    expect(plain.get('src/pages/index/Page.test.tsx')).not.toContain('mock API')
   })
 
   it('renders SSG pages to HTML only, with no client renderer and no scheme switch', () => {
@@ -382,7 +415,7 @@ describe('the Vike starter', () => {
     // Every library's files too: the two sets hold each one, with no two of one group.
     const librarySets = [
       [],
-      ['tanstack-query', 'msw', 'zustand', 'react-hook-form', 'vitest'],
+      ['tanstack-query', 'msw', 'zustand', 'react-hook-form'],
       ['swr', 'jotai'],
       ['redux-toolkit'],
     ] as const
@@ -421,14 +454,19 @@ describe('the Vike starter', () => {
       build: 'vite build',
       preview: 'vite preview',
       typecheck: 'tsc --noEmit',
+      test: 'vitest run',
     })
+    expect(packageJson.devDependencies.vitest).toBe(devDependencies.vitest)
     const prerelease = JSON.parse(createFiles({ version: '2.3.0-alpha.1' }).get('package.json')!)
     expect(prerelease.dependencies['@soroush.tech/design-system']).toBe('^2.3.0-alpha.1')
   })
 
   it('renders <Providers> in +Layout only, starting on the scheme it was given', () => {
     const files = createFiles({ scheme: 'dark' })
-    const withProviders = [...files].filter(([, content]) => content.includes('<Providers'))
+    // The app's own code; its test renders the page inside them, as the app does.
+    const withProviders = [...files].filter(
+      ([path, content]) => content.includes('<Providers') && !path.includes('.test.')
+    )
     expect(withProviders.map(([path]) => path)).toEqual(['src/pages/+Layout.tsx'])
     expect(files.get('src/pages/+Layout.tsx')).toContain("useState<'light' | 'dark'>('dark')")
     expect(files.get('src/theme/Providers.ts')).toContain("scheme = 'dark'")

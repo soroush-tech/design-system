@@ -1,0 +1,3 @@
+# The mock API in src/mocks answers in the browser while this is true. Set it to false once
+# the app's own API answers. Astro hands the browser only the variables named PUBLIC_.
+PUBLIC_MSW=true

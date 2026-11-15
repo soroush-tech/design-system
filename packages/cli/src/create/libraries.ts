@@ -7,7 +7,6 @@ export type Library =
   | 'jotai'
   | 'redux-toolkit'
   | 'react-hook-form'
-  | 'vitest'
 
 /** Libraries of one group do the same job: an app takes one of them. */
 export type LibraryGroup = 'data' | 'state'
@@ -28,7 +27,6 @@ export const LIBRARIES: readonly LibraryInfo[] = [
   { name: 'jotai', label: 'Jotai: atoms of global state', group: 'state' },
   { name: 'redux-toolkit', label: 'Redux Toolkit: a store of global state', group: 'state' },
   { name: 'react-hook-form', label: 'React Hook Form + Zod: a form, validated' },
-  { name: 'vitest', label: 'Vitest + Testing Library: tests' },
 ]
 
 export const LIBRARY_NAMES: readonly Library[] = LIBRARIES.map(({ name }) => name)

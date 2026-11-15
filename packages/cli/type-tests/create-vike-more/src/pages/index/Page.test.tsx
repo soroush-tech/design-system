@@ -30,4 +30,9 @@ describe('the home page', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Count' }))
     expect(screen.getByText('Count: 1')).toBeTruthy()
   })
+
+  it('shows the greeting the mock API answers', async () => {
+    renderPage()
+    expect(await screen.findByText('Hello from the mock API')).toBeTruthy()
+  })
 })

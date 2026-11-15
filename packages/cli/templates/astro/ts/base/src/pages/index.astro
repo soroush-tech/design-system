@@ -1,4 +1,10 @@
 ---
+// @if !ssg
+import Counter from '../components/Counter'
+// @endif
+// @if tanstack-query || swr || msw
+import Greeting from '../components/Greeting'
+// @endif
 import Home from '../components/Home'
 import Layout from '../layouts/Layout.astro'
 ---
@@ -7,6 +13,11 @@ import Layout from '../layouts/Layout.astro'
   {/* @if ssg */}
   <Home />
   {/* @else */}
-  <Home client:load />
+  <Home client:load>
+    {/* @if tanstack-query || swr || msw */}
+    <Greeting client:only="react" />
+    {/* @endif */}
+    <Counter client:only="react" />
+  </Home>
   {/* @endif */}
 </Layout>

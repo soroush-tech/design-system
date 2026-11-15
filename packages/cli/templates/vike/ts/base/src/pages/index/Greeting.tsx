@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react'
 // @endif
 import { Typography } from '@soroush.tech/design-system/Typography'
 // @if !tanstack-query && !swr
-import type { Greeting } from '../../data/api'
+import type { Greeting as Reply } from '../../data/api'
 // @endif
 import { fetchGreeting } from '../../data/api'
 
@@ -35,7 +35,7 @@ export function Greeting() {
 // @else
 /** What the API says, read with fetch, as the page loads. */
 export function Greeting() {
-  const [data, setData] = useState<Greeting>()
+  const [data, setData] = useState<Reply>()
   useEffect(() => {
     fetchGreeting().then(setData, () => setData({ message: 'The API did not answer.' }))
   }, [])

@@ -425,7 +425,7 @@ describe('runCreate', () => {
   it('asks for the libraries by job, after the framework: data, state, then the rest', async () => {
     const { createFiles, create, getOutput } = setUp({
       isInteractive: true,
-      answers: ['', '', '', '', '', '', 'swr', 'jotai', 'vitest,msw', '', '', ''],
+      answers: ['', '', '', '', '', '', 'swr', 'jotai', 'react-hook-form,msw', '', '', ''],
     })
     expect(await create(ASK)).toBe(0)
     const output = getOutput()
@@ -436,7 +436,7 @@ describe('runCreate', () => {
     expect(output).not.toContain('? Libraries')
     // In the order create offers them, not the order they were picked.
     expect(createFiles).toHaveBeenCalledWith(
-      expect.objectContaining({ libraries: ['swr', 'msw', 'jotai', 'vitest'] })
+      expect.objectContaining({ libraries: ['swr', 'msw', 'jotai', 'react-hook-form'] })
     )
   })
 

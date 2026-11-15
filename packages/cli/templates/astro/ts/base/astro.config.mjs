@@ -2,6 +2,9 @@
 import node from '@astrojs/node'
 // @endif
 import react from '@astrojs/react'
+// @if msw
+import { msw } from 'msw/vite'
+// @endif
 import { defineConfig } from 'astro/config'
 
 // The settings of the app: https://docs.astro.build/en/reference/configuration-reference/
@@ -13,4 +16,8 @@ export default defineConfig({
   adapter: node({ mode: 'standalone' }),
   // @endif
   integrations: [react()],
+  // @if msw
+  // msw's plugin serves the mock API's worker, in development and in the build.
+  vite: { plugins: [msw({ mode: 'worker-only' })] },
+  // @endif
 })

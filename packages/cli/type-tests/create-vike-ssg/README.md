@@ -10,6 +10,7 @@ every page prerendered to HTML at build time, with its styles, and no JavaScript
 - In `src/pages/`, `+onRenderHtml` renders the pages to HTML, with the styles each page uses.
 - `src/pages/items/` lists the sample items of `src/data/items.ts`, with a page for each.
   Their `+data` hooks read the data at build time: make them fetch your own.
+- [Vitest](https://vitest.dev) and [Testing Library](https://testing-library.com): `npm run test` runs `src/pages/index/Page.test.tsx`, which checks the title.
 
 Fonts: the theme names Space Grotesk and JetBrains Mono, and does not load them. See
 https://docs.soroush.tech/design-system/getting-started/installation/#fonts

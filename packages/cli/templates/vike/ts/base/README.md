@@ -75,7 +75,11 @@ every page prerendered to HTML at build time, with its styles, and no JavaScript
 <!-- @if react-hook-form -->
 - [React Hook Form](https://react-hook-form.com) and [Zod](https://zod.dev): `/form` is a form whose values a Zod schema checks.
 <!-- @endif -->
-<!-- @if vitest -->
+<!-- @if ssg -->
+- [Vitest](https://vitest.dev) and [Testing Library](https://testing-library.com): `npm run test` runs `src/pages/index/Page.test.tsx`, which checks the title.
+<!-- @elif msw -->
+- [Vitest](https://vitest.dev) and [Testing Library](https://testing-library.com): `npm run test` runs `src/pages/index/Page.test.tsx`, which checks the title, the counter and the greeting, which msw's Node server, `src/mocks/server.ts`, answers.
+<!-- @else -->
 - [Vitest](https://vitest.dev) and [Testing Library](https://testing-library.com): `npm run test` runs `src/pages/index/Page.test.tsx`, which checks the title and the counter.
 <!-- @endif -->
 

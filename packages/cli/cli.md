@@ -96,7 +96,9 @@ package's own `devDependencies`), and the themes and `Providers`, which are `ini
 `templates/astro/` writes an Astro app whose React parts are islands. Astro renders an island
 with plain `react-dom/server`, not as a server component, so the design system needs no
 `'use client'`, and Emotion writes each island's styles into its HTML with no extraction. Each
-island is its own React root: a page's component renders inside `Theme`, the header's
+island is its own React root: each is exported inside `withIsland` (`src/theme/Island`), which
+renders it inside the theme - and the query client and the Redux store, one of each in the
+browser for every island - so its hooks find them; the header's
 `<Providers>` draws the base styles once a page, and the scheme is a small shared store
 (`useSyncExternalStore`, with the default as the server snapshot, so an island hydrates on the
 HTML it got). With islands (isomorphic and SSR), the layout has Astro's `<ClientRouter />` and a
@@ -104,8 +106,13 @@ script on `astro:before-swap` that keeps Emotion's style tags in the head, which
 otherwise replace, and moves the next page's inline styles there, except its base styles, which
 the header draws. SSR adds `output: 'server'` with `@astrojs/node` standalone, and an item route
 that reads its id on each request (`Astro.rewrite('/404')` for an unknown one).
-`Starter.renderings` lists `isomorphic`, `ssr` and `ssg`; `hasLibraries` is false until its
-libraries land. Its fixtures are `type-tests/create-astro`, `-ssr` and `-ssg`: `test:types`
+The home page's counter and greeting are islands of their own with `client:only`, children of
+the `Home` island: what they show lives in memory (a store, the query cache), so an island that
+hydrates again after the router moves back cannot meet a stale copy in the HTML. msw's switch is
+`PUBLIC_MSW` (Astro hands the browser only `PUBLIC_` variables), and `src/data/api` waits for the
+worker before each request. `Starter.renderings` lists `isomorphic`, `ssr` and `ssg`. Its
+fixtures are `type-tests/create-astro`, `-ssr` and `-ssg`, and `-libraries` (TanStack Query, msw,
+zustand, React Hook Form) and `-more` (SSR, SWR, Redux Toolkit): `test:types`
 checks their TypeScript, and the smoke test runs `astro check` on a whole app. `astro check` takes
 TypeScript 6 at most, so the starter's TypeScript is this package's `typescript-astro` alias.
 
@@ -132,7 +139,8 @@ and every choice shows in the app: the home page's `Counter` keeps its count in 
 or its own state, its `Greeting` reads `src/data/api` through the data library, the form sends
 through it, and msw answers each of those calls. The fixtures: `type-tests/create-vike`, `-ssr`,
 `-spa` and `-ssg` for the renderings, `-libraries` (TanStack Query, msw, zustand), `-jotai` and
-`-more` (SWR, Redux Toolkit, React Hook Form, Vitest) for the libraries.
+`-more` (SWR, msw, Redux Toolkit, React Hook Form) for the libraries. Vitest is in every app,
+in the base layer; with msw, `with/msw/` adds msw's Node server and the tests' setup.
 
 ## The rules each change keeps
 

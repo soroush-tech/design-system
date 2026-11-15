@@ -6,6 +6,8 @@
   "extends": "./create-astro/tsconfig.json",
   "include": ["./create-astro/src/**/*.ts", "./create-astro/src/**/*.tsx"],
   "compilerOptions": {
+    // What astro sync writes into an app, as astro check runs: import.meta.env and the like.
+    "types": ["astro/client"],
     "paths": {
       "@soroush.tech/design-system": ["../../design-system/dist/index.d.mts"],
       "@soroush.tech/design-system/*": ["../../design-system/dist/*.d.mts"]

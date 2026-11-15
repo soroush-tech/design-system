@@ -251,18 +251,27 @@ function checkHome(home) {
     "/ carries its components' styles"
   )
   check(home.html.includes(`>${APP}</h2>`), "/ has the starter's heading")
-  // React's server HTML puts a comment between the text and the number.
-  if (render !== 'ssg') check(/Count: (<!-- -->)?0/.test(home.html), '/ has its counter, at 0')
-  if (/tanstack-query|swr|msw/.test(libraries)) {
-    check(
-      home.html.includes('Asking the API for a greeting'),
-      '/ has the greeting, which the browser asks the API for'
-    )
+  const hasGreeting = /tanstack-query|swr|msw/.test(libraries)
+  if (isAstro) {
+    // Astro's counter and greeting are islands that render in the browser only: the HTML holds
+    // where each one goes.
+    const island = (name) => new RegExp(`<astro-island[^>]*component-url="[^"]*/${name}\\.`)
+    if (render !== 'ssg') {
+      check(home.html.includes('<astro-island'), "/ hydrates its parts as Astro's islands")
+      check(island('Counter').test(home.html), '/ has the island of its counter')
+    }
+    if (hasGreeting) check(island('Greeting').test(home.html), '/ has the island of its greeting')
+  } else {
+    // React's server HTML puts a comment between the text and the number.
+    if (render !== 'ssg') check(/Count: (<!-- -->)?0/.test(home.html), '/ has its counter, at 0')
+    if (hasGreeting) {
+      check(
+        home.html.includes('Asking the API for a greeting'),
+        '/ has the greeting, which the browser asks the API for'
+      )
+    }
   }
   if (render === 'ssg') check(!home.html.includes('<script'), '/ ships no script')
-  if (isAstro && render === 'isomorphic') {
-    check(home.html.includes('<astro-island'), "/ hydrates its parts as Astro's islands")
-  }
 }
 
 /**
@@ -367,8 +376,8 @@ try {
   }
   // In a workspace, the root's scripts run the app's: running them from there checks both.
   if (lang === 'ts') run(pm, ['run', 'typecheck'], rootDir)
-  // The Vitest recipe's own test must pass in the app it was written into.
-  if (libraries.includes('vitest')) run(pm, ['run', 'test'], rootDir)
+  // Every app has its own tests, which must pass in the app they were written into.
+  run(pm, ['run', 'test'], rootDir)
   run(pm, ['run', 'build'], rootDir)
   console.log('\nChecking the build:')
   if (isServer) {

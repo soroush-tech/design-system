@@ -38,7 +38,7 @@ const PATHS = [
   'README.md',
   'src/theme/themes.ts',
   'src/theme/Providers.ts',
-  'src/theme/Theme.tsx',
+  'src/theme/Island.tsx',
   'src/layouts/Layout.astro',
   'src/components/Header.tsx',
   'src/components/Home.tsx',
@@ -47,12 +47,14 @@ const PATHS = [
   'src/pages/index.astro',
   'src/pages/about.astro',
   'src/pages/404.astro',
+  'vitest.config.ts',
+  'src/components/Home.test.tsx',
 ]
 
 describe('the Astro starter', () => {
-  it('offers the renderings it writes, and no library yet', () => {
+  it('offers the renderings it writes, and the libraries', () => {
     expect(astroStarter.renderings).toEqual(['isomorphic', 'ssr', 'ssg'])
-    expect(astroStarter.hasLibraries).toBe(false)
+    expect(astroStarter.hasLibraries).toBe(true)
   })
 
   // `pnpm test:types` typechecks the components and the theme of these apps; the smoke test runs
@@ -81,6 +83,7 @@ describe('the Astro starter', () => {
         build: 'astro build',
         preview: 'astro preview',
         typecheck: 'astro check',
+        test: 'vitest run',
       },
     })
     expect(packageJson.dependencies).toEqual({
@@ -93,22 +96,37 @@ describe('the Astro starter', () => {
     // Astro's type checker takes TypeScript 6 at most.
     expect(packageJson.devDependencies.typescript).toMatch(/^\^6\./)
     expect(packageJson.devDependencies['@astrojs/check']).toBe(devDependencies['@astrojs/check'])
+    expect(packageJson.devDependencies.vitest).toBe(devDependencies.vitest)
   })
 
   it('writes a JavaScript app with no type in it', () => {
-    for (const rendering of ['isomorphic', 'ssg'] as const) {
-      const files = createFiles({ isTypeScript: false, rendering })
+    for (const [rendering, libraries] of [
+      ['isomorphic', ['tanstack-query', 'msw', 'jotai', 'react-hook-form']],
+      ['ssr', ['swr', 'redux-toolkit']],
+      ['ssr', ['msw', 'zustand', 'react-hook-form']],
+      ['ssg', []],
+    ] as const) {
+      const files = createFiles({ isTypeScript: false, rendering, libraries })
       expect(files.has('tsconfig.json')).toBe(false)
       const packageJson = JSON.parse(files.get('package.json')!)
-      expect(packageJson).not.toHaveProperty('devDependencies')
+      expect(packageJson.devDependencies).not.toHaveProperty('typescript')
+      expect(packageJson.devDependencies).toHaveProperty('vitest')
       expect(packageJson.scripts).not.toHaveProperty('typecheck')
       for (const [path, content] of files) {
         expect(path).not.toMatch(/\.tsx?$/)
         if (/\.(jsx?|astro)$/.test(path)) {
-          expect(content, path).not.toMatch(/\b(interface|type|satisfies|readonly)\b|: string/)
+          // A declaration, not a JSX attribute such as type="email".
+          expect(content, path).not.toMatch(
+            /\b(interface|satisfies|readonly)\b|\btype [A-Z]|: string/
+          )
         }
       }
-      expect(files.get('src/pages/items/[id].astro')).toContain('export function getStaticPaths()')
+      // A server reads the item asked for; a build lists the items it writes.
+      if (rendering !== 'ssr') {
+        expect(files.get('src/pages/items/[id].astro')).toContain(
+          'export function getStaticPaths()'
+        )
+      }
     }
   })
 
@@ -119,11 +137,13 @@ describe('the Astro starter', () => {
     expect(layout).toContain('<ClientRouter />')
     expect(layout).toContain('<Header client:load transition:persist />')
     expect(layout).toContain("document.addEventListener('astro:before-swap'")
-    expect(files.get('src/pages/index.astro')).toContain('<Home client:load />')
+    expect(files.get('src/pages/index.astro')).toContain(
+      '<Home client:load>\n    <Counter client:only="react" />\n  </Home>'
+    )
     expect(files.get('src/components/Header.tsx')).toContain(
       'onClick={() => setScheme(otherScheme)}'
     )
-    expect(files.get('src/theme/Theme.tsx')).toContain('theme={themes[useScheme()]}')
+    expect(files.get('src/theme/Island.tsx')).toContain('theme={themes[useScheme()]}')
   })
 
   it('renders each page on a Node server, on each request, when SSR', () => {
@@ -140,7 +160,7 @@ describe('the Astro starter', () => {
     expect(item).not.toContain('getStaticPaths')
     // The islands hydrate, and the router moves between pages, as in an isomorphic app.
     expect(files.get('src/layouts/Layout.astro')).toContain('<ClientRouter />')
-    expect(files.get('src/pages/index.astro')).toContain('<Home client:load />')
+    expect(files.get('src/pages/index.astro')).toContain('<Home client:load>')
     expect(files.get('README.md')).toContain('`npm start` runs the server the build wrote')
     expect(files.get('src/data/items.ts')).toContain('read it\n * on each request.')
     const isomorphic = JSON.parse(createFiles().get('package.json')!)
@@ -157,7 +177,9 @@ describe('the Astro starter', () => {
       if (path.endsWith('.astro')) expect(content, path).not.toContain('client:load')
     }
     expect(files.get('src/components/Header.tsx')).not.toMatch(/Button|setScheme/)
-    expect(files.get('src/theme/Theme.tsx')).toContain('theme={themes.dark}')
+    expect(files.get('src/theme/Island.tsx')).toContain('theme={themes.dark}')
+    expect(files.get('src/pages/index.astro')).toContain('  <Home />\n')
+    expect(files.get('src/components/Home.test.tsx')).not.toContain('Count')
     expect(files.get('README.md')).toContain('no JavaScript in the browser')
   })
 
@@ -173,6 +195,78 @@ describe('the Astro starter', () => {
     expect(files.get('src/theme/themes.ts')!.startsWith(MARKER)).toBe(true)
     expect(files.get('src/theme/Providers.ts')).toContain("scheme = 'dark'")
     expect(files.get('src/theme/scheme.ts')).toContain("let current: Scheme = 'dark'")
+  })
+
+  // The libraries' fixtures: create-astro-libraries (isomorphic, sample data, TanStack Query, msw,
+  // zustand, React Hook Form) and create-astro-more (SSR, sample data, SWR, Redux Toolkit).
+  it.each([
+    [
+      `${FIXTURE}-libraries`,
+      { libraries: ['tanstack-query', 'msw', 'zustand', 'react-hook-form'] },
+    ],
+    [`${FIXTURE}-more`, { rendering: 'ssr', libraries: ['swr', 'redux-toolkit'] }],
+  ] as const)('writes the app %s holds', async (fixture, facts) => {
+    for (const [path, content] of createFiles(facts)) {
+      // The repository ignores .env files, so a fixture holds none: msw's .env is checked below.
+      if (path === '.env') continue
+      await expect(content).toMatchFileSnapshot(`${fixture}/${path}`)
+    }
+  })
+
+  it('reads and sends through the data library, and greets from an island of its own', () => {
+    const query = createFiles({ libraries: ['tanstack-query', 'react-hook-form'] })
+    expect(query.get('src/pages/index.astro')).toContain('<Greeting client:only="react" />')
+    expect(query.get('src/components/Greeting.tsx')).toContain("queryKey: ['greeting']")
+    expect(query.get('src/theme/Island.tsx')).toContain(
+      'const [queryClient] = useState(getQueryClient)'
+    )
+    expect(query.get('src/data/queryClient.ts')).toContain('browserClient ??= new QueryClient()')
+    expect(query.get('src/components/ItemList.tsx')).toContain('initialData: initialItems,')
+    expect(query.get('src/components/Form.tsx')).toContain(
+      'useMutation({ mutationFn: sendMessage })'
+    )
+    expect(query.get('src/pages/form.astro')).toContain('<Form client:load />')
+    expect(query.get('src/components/Header.tsx')).toContain('<Link href="/form"')
+    const swr = createFiles({ libraries: ['swr'] })
+    expect(swr.get('src/components/Greeting.tsx')).toContain("useSWR('greeting', fetchGreeting)")
+    expect(swr.get('src/components/ItemDetails.tsx')).toContain('fallbackData: initialItem')
+    expect(createFiles().has('src/components/Greeting.tsx')).toBe(false)
+    expect(createFiles().get('src/pages/index.astro')).not.toContain('Greeting')
+  })
+
+  it('starts the mock API in the browser before the first request, and in the tests from Node', () => {
+    const files = createFiles({ libraries: ['msw'] })
+    expect(files.get('.env')).toContain('PUBLIC_MSW=true')
+    expect(files.get('src/mocks/start.ts')).toContain("import.meta.env.PUBLIC_MSW !== 'true'")
+    expect(files.get('src/data/api.ts')).toContain(
+      "await mocks\n  const response = await fetch('/api/greeting')"
+    )
+    expect(files.get('astro.config.mjs')).toContain(
+      "vite: { plugins: [msw({ mode: 'worker-only' })] },"
+    )
+    expect(files.get('vitest.config.ts')).toContain("setupFiles: ['./src/mocks/setupTests.ts']")
+    expect(files.get('src/components/Home.test.tsx')).toContain(
+      "findByText('Hello from the mock API')"
+    )
+    expect(files.get('src/mocks/server.ts')).toContain('setupServer(...handlers)')
+    expect(createFiles().get('astro.config.mjs')).not.toContain('msw')
+  })
+
+  it('keeps the count in the state library picked, in an island of its own', () => {
+    const counter = (libraries: StarterFacts['libraries']) =>
+      createFiles({ libraries }).get('src/components/Counter.tsx')!
+    expect(counter([])).toContain('const [count, setCount] = useState(0)')
+    expect(counter(['zustand'])).toContain('const { count, increment } = useCounter()')
+    expect(counter(['jotai'])).toContain('useAtom(countAtom)')
+    expect(counter(['redux-toolkit'])).toContain('dispatch(incremented())')
+    const redux = createFiles({ libraries: ['redux-toolkit'] })
+    expect(redux.get('src/state/store.ts')).toContain('reducer: { count: countSlice.reducer }')
+    expect(redux.get('src/theme/Island.tsx')).toContain('<StoreProvider store={store}>')
+    // The scheme stays in src/theme/scheme, whose server snapshot keeps hydration on the HTML.
+    expect(redux.get('src/components/Header.tsx')).toContain("from '../theme/scheme'")
+    expect(createFiles({ libraries: ['zustand'] }).get('src/state/counter.ts')).toContain(
+      'export const useCounter = create'
+    )
   })
 
   it('names the app by its title', () => {

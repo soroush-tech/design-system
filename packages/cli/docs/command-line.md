@@ -34,7 +34,7 @@ arrow keys:
 4. The rendering: isomorphic, SPA or SSG - see below.
 5. The framework: Vike (recommended) or Astro, of the ones that render as picked - see below.
 6. The libraries, by job - see below: one for data fetching, one for state management (each, or
-   none), then the rest, toggled with space. An SSG app, and an Astro app, are offered none.
+   none), then the rest, toggled with space. An SSG app is offered none.
 7. The default color scheme: light or dark.
 8. Whether to add the sample data pages.
 
@@ -102,11 +102,11 @@ An Astro app renders isomorphic, SSR or SSG.
 
 The libraries are asked by job, as each app takes one library per job:
 
-| Question         | The choices                                                       |
-| ---------------- | ----------------------------------------------------------------- |
-| Data fetching    | None, TanStack Query or SWR                                       |
-| State management | None, zustand, Jotai or Redux Toolkit                             |
-| More             | msw, React Hook Form + Zod, Vitest + Testing Library: any of them |
+| Question         | The choices                                 |
+| ---------------- | ------------------------------------------- |
+| Data fetching    | None, TanStack Query or SWR                 |
+| State management | None, zustand, Jotai or Redux Toolkit       |
+| More             | msw, React Hook Form + Zod: either, or both |
 
 `--with` takes the same names, by comma, and refuses two of one job. Each library comes
 installed, wired in, and with an example of its use - and each choice shows in the app:
@@ -129,8 +129,11 @@ installed, wired in, and with an example of its use - and each choice shows in t
 - **React Hook Form + Zod** (`react-hook-form`): a `/form` page, linked from the header, whose two
   fields - the design system's `TextInput` - a Zod schema checks. Once they pass, it sends them
   through the data library, or to `src/data/api` with msw alone, and shows what came back.
-- **Vitest + Testing Library** (`vitest`): `npm run test` runs `src/pages/index/Page.test`, which
-  renders the home page in jsdom, inside the app's providers, and checks its title and counter.
+
+Every app has its tests, whatever it is asked: **Vitest + Testing Library** on jsdom, and
+`npm run test`, which checks the home page's title and its counter. With msw, msw's Node server
+(`src/mocks/server`) answers the tests' requests, as the worker answers the app's in the browser,
+and a test checks the greeting it gives.
 
 ### The Vike app
 
@@ -158,7 +161,8 @@ With sample data pages, it also shows how data gets onto a page, with no data li
   `src/components/` - a home page, a second page and a 404 page - in `src/layouts/Layout.astro`.
 - Each React part of a page is an island, a React root of its own, so no context crosses from one
   to another:
-  - each page's component renders inside `Theme` (`src/theme/Theme`);
+  - each island is exported inside `withIsland` (`src/theme/Island`), which renders it inside
+    the theme, and the query client and the Redux store when the app has them;
   - the header renders `<Providers>`, which draws the base styles once a page, and holds the light
     and dark switch;
   - the islands share the scheme through `src/theme/scheme`.
@@ -167,7 +171,13 @@ With sample data pages, it also shows how data gets onto a page, with no data li
 - SSG, the React parts render at build time only, and a page ships no JavaScript.
 - With sample data pages, `/items` and `/items/<id>` read `src/data/items` at build time, with one
   page written per item.
-- It takes no library yet: `--with` is refused.
+- The home page's counter and greeting are islands of their own, which render in the browser
+  only (`client:only`): what they show is in memory - a count in the state library, a greeting in
+  the query cache - not in the HTML, so moving back to the page cannot hydrate on a stale copy.
+- The libraries work as in the Vike app, island by island: in the browser, every island shares one
+  query client and one store, and the scheme stays in `src/theme/scheme`. With msw, the mock
+  API's switch is `PUBLIC_MSW` in `.env`, as Astro hands the browser only `PUBLIC_` variables,
+  and each request waits for it to start. The form is an island on its own `/form` page.
 
 The switch does not remember the scheme across a reload, and the theme's fonts are not loaded: see
 the [fonts guide](https://docs.soroush.tech/design-system/getting-started/installation/#fonts).

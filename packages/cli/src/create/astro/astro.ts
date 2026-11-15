@@ -6,7 +6,7 @@
 import { createProvidersSource, createThemesSource } from '../../templates/templates'
 import type { Starter, StarterFacts, StarterFile } from '../starters'
 import { createTemplateFiles } from '../template/starterFiles'
-import { pickVersions, toRange, VERSIONS } from '../versions'
+import { getLibraryPackages, pickVersions, TEST_PACKAGES, toRange, VERSIONS } from '../versions'
 
 // Astro's type checker (`astro check`) takes TypeScript 6 at most: this package keeps that
 // version under an alias.
@@ -16,9 +16,12 @@ function createPackageJson({
   packageName,
   isTypeScript,
   rendering,
+  libraries,
   version,
 }: StarterFacts): string {
   const isServer = rendering === 'ssr'
+  const { dependencies: libraryPackages, devDependencies: libraryDevPackages } =
+    getLibraryPackages(libraries)
   const packageJson = {
     name: packageName,
     private: true,
@@ -31,25 +34,27 @@ function createPackageJson({
       // An SSR app runs the server the build writes, on HOST and PORT (4321 by default).
       ...(isServer ? { start: 'node dist/server/entry.mjs' } : {}),
       ...(isTypeScript ? { typecheck: 'astro check' } : {}),
+      test: 'vitest run',
     },
     dependencies: {
       '@soroush.tech/design-system': toRange(version),
       ...pickVersions([
         ...(isServer ? (['@astrojs/node'] as const) : ([] as const)),
         '@astrojs/react',
+        ...libraryPackages,
         'astro',
         'react',
         'react-dom',
       ]),
     },
-    ...(isTypeScript
-      ? {
-          devDependencies: {
-            ...pickVersions(['@astrojs/check', '@types/react', '@types/react-dom']),
-            typescript: TYPESCRIPT_RANGE,
-          },
-        }
-      : {}),
+    devDependencies: {
+      ...pickVersions([
+        ...(isTypeScript ? (['@astrojs/check', '@types/react', '@types/react-dom'] as const) : []),
+        ...libraryDevPackages,
+        ...TEST_PACKAGES,
+      ]),
+      ...(isTypeScript ? { typescript: TYPESCRIPT_RANGE } : {}),
+    },
   }
   return `${JSON.stringify(packageJson, null, 2)}\n`
 }
@@ -73,6 +78,6 @@ export const astroStarter: Starter = {
   title: 'Astro',
   label: 'Astro: HTML pages, with React islands',
   renderings: ['isomorphic', 'ssr', 'ssg'],
-  hasLibraries: false,
+  hasLibraries: true,
   createFiles,
 }
