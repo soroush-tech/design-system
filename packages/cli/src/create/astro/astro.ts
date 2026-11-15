@@ -3,6 +3,7 @@
 // react-dom/server, so the design system needs no 'use client' here, and an island's styles are in
 // its HTML. Each file is written once, in TypeScript; `t(...)` holds what only TypeScript has.
 import { createProvidersSource, createThemesSource } from '../../templates/templates'
+import { createCounterSource } from '../recipes'
 import type { Starter, StarterFacts, StarterFile } from '../starters'
 import { pickVersions, toRange, VERSIONS } from '../versions'
 
@@ -249,7 +250,7 @@ ${itemsLink}${schemeSwitch}        </Flex>
 import { Flex } from '@soroush.tech/design-system/Flex'
 import { Typography } from '@soroush.tech/design-system/Typography'
 import { Theme } from '../theme/Theme'
-
+${isIsomorphic ? "import { Counter } from './Counter'\n" : ''}
 export default function Home() {
   return (
     <Theme>
@@ -259,7 +260,7 @@ export default function Home() {
           An Astro app on the design system. Edit src/components/Home.${x}x, and make the themes your
           own in src/theme/themes.${x}.
         </Typography>
-        <Flex flexDirection="row" gap={1}>
+${isIsomorphic ? '        <Counter />\n' : ''}        <Flex flexDirection="row" gap={1}>
           <Button href="https://docs.soroush.tech">Components</Button>
           <Button href="https://astro.build" variant="outlined">
             Astro
@@ -528,6 +529,10 @@ function createFiles(facts: StarterFacts): StarterFile[] {
     { path: 'src/layouts/Layout.astro', content: createLayout(facts) },
     { path: `src/components/Header.${x}x`, content: sources.Header },
     { path: `src/components/Home.${x}x`, content: sources.Home },
+    // An island that hydrates counts; an SSG page has no JavaScript to count with.
+    ...(rendering === 'isomorphic'
+      ? [{ path: `src/components/Counter.${x}x`, content: createCounterSource(facts, '../state') }]
+      : []),
     { path: `src/components/About.${x}x`, content: sources.About },
     { path: `src/components/NotFound.${x}x`, content: sources.NotFound },
     { path: 'src/pages/index.astro', content: createPage(facts, 'Home', 1) },

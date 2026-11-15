@@ -33,7 +33,8 @@ arrow keys:
 3. The repository: a workspace (recommended) or the app alone - see below.
 4. The rendering: isomorphic, SPA or SSG - see below.
 5. The framework: Vike (recommended) or Astro, of the ones that render as picked - see below.
-6. The libraries, toggled with space - see below. An SSG app, and an Astro app, are offered none.
+6. The libraries, by job - see below: one for data fetching, one for state management (each, or
+   none), then the rest, toggled with space. An SSG app, and an Astro app, are offered none.
 7. The default color scheme: light or dark.
 8. Whether to add the sample data pages.
 
@@ -94,24 +95,37 @@ SSG.
 
 ### Libraries
 
-Each library comes installed, wired in, and with an example of its use:
+The libraries are asked by job, as each app takes one library per job:
 
-- **TanStack Query** (`tanstack-query`): the query client lives in `+Layout`. With the sample data
-  pages, each page starts on its build-time data, then its query fetches it again in the browser,
-  from `src/data/api`, and keeps it in the cache.
-- **msw** (`msw`): a mock API in the browser. `src/mocks/handlers` says what it answers - the
-  sample items, with the sample data pages - and it starts before the first page while `VITE_MSW`
-  in `.env` is true, in development and in the build. Set it to false once your own API answers.
-- **SWR** (`swr`): fetches and caches data, the other way to TanStack Query - an app takes one
-  of the two. With the sample data pages, it fetches the items the way the query does.
+| Question         | The choices                                                       |
+| ---------------- | ----------------------------------------------------------------- |
+| Data fetching    | None, TanStack Query or SWR                                       |
+| State management | None, zustand, Jotai or Redux Toolkit                             |
+| More             | msw, React Hook Form + Zod, Vitest + Testing Library: any of them |
+
+`--with` takes the same names, by comma, and refuses two of one job. Each library comes
+installed, wired in, and with an example of its use - and each choice shows in the app:
+
+- **A counter** on the home page, in any app with JavaScript in the browser: its count lives in
+  the component's own state, or in the state library picked.
+- **TanStack Query** (`tanstack-query`): the query client lives in `+Layout`. The home page's
+  `Greeting` reads `src/data/api` with a query, and the form, if there is one, sends its values
+  with a mutation. With the sample data pages, each page starts on its build-time data, then its
+  query fetches it again in the browser and keeps it in the cache.
+- **SWR** (`swr`): the same examples, with `useSWR` and `useSWRMutation`.
+- **msw** (`msw`): a mock API in the browser. `src/mocks/handlers` answers each call
+  `src/data/api` makes - the greeting, the form's values, the sample items - while `VITE_MSW` in
+  `.env` is true, in development and in the build. Set it to false once your own API answers.
+  With no data library, the greeting is read with `fetch`.
 - **zustand** (`zustand`), **Jotai** (`jotai`) or **Redux Toolkit** (`redux-toolkit`): the color
-  scheme moves out of `+Layout` into a store or an atom any component can read -
-  `src/state/scheme`, or with Redux Toolkit a slice of `src/state/store`, whose provider wraps
-  every page in `PageShell`. An app takes one of the three.
+  scheme and the count move into stores or atoms any component can read - `src/state/scheme` and
+  `src/state/counter`, or with Redux Toolkit two slices of `src/state/store`, whose provider wraps
+  every page in `PageShell`.
 - **React Hook Form + Zod** (`react-hook-form`): a `/form` page, linked from the header, whose two
-  fields - the design system's `TextInput` - a Zod schema checks before the form is sent.
+  fields - the design system's `TextInput` - a Zod schema checks. Once they pass, it sends them
+  through the data library, or to `src/data/api` with msw alone, and shows what came back.
 - **Vitest + Testing Library** (`vitest`): `npm run test` runs `src/pages/index/Page.test`, which
-  renders the home page in jsdom, inside the app's providers.
+  renders the home page in jsdom, inside the app's providers, and checks its title and counter.
 
 ### The Vike app
 

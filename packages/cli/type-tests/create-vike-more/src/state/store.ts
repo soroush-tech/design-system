@@ -9,9 +9,21 @@ const schemeSlice = createSlice({
   },
 })
 
+/** The home page's count: another slice. */
+const countSlice = createSlice({
+  name: 'count',
+  initialState: 0,
+  reducers: {
+    incremented: (count) => count + 1,
+  },
+})
+
 export const { schemeChanged } = schemeSlice.actions
+export const { incremented } = countSlice.actions
 
 /** The app's Redux store, which PageShell provides to every page. */
-export const store = configureStore({ reducer: { scheme: schemeSlice.reducer } })
+export const store = configureStore({
+  reducer: { scheme: schemeSlice.reducer, count: countSlice.reducer },
+})
 
 export type RootState = ReturnType<typeof store.getState>

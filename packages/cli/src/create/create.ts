@@ -15,7 +15,13 @@ import {
   PACKAGE_MANAGERS,
   readPackageManager,
 } from './packageManager'
-import { findLibraryConflict, LIBRARIES, type Library } from './libraries'
+import {
+  findLibraryConflict,
+  LIBRARIES,
+  LIBRARY_NAMES,
+  type Library,
+  type LibraryGroup,
+} from './libraries'
 import { RENDERINGS, STARTERS, type Rendering, type Starter } from './starters'
 import { createWorkspaceFiles, LAYOUTS, toAppPackageName, type Layout } from './workspace'
 
@@ -204,15 +210,25 @@ async function askFramework(
   return io.select('Framework', choices)
 }
 
-/** Asks for the libraries, again while two of one group are picked. */
+/** The choices of one job's question: the libraries of `group`, or those of none. */
+const getLibraryChoices = (group: LibraryGroup | undefined) =>
+  LIBRARIES.filter((library) => library.group === group).map(({ name, label }) => ({
+    value: name,
+    label,
+  }))
+
+const NO_LIBRARY = { value: 'none', label: 'None' }
+
+/**
+ * Asks for the libraries by job: one that fetches data, one that holds state - each of them or
+ * none - then the others, toggled. Returns them in the order create offers them.
+ */
 async function askLibraries(io: Io): Promise<Library[]> {
-  const choices = LIBRARIES.map(({ name, label }) => ({ value: name, label }))
-  for (;;) {
-    const libraries = (await io.selectMany('Libraries', choices)) as Library[]
-    const conflict = findLibraryConflict(libraries)
-    if (!conflict) return libraries
-    io.write(`${conflict}\n`)
-  }
+  const data = await io.select('Data fetching', [NO_LIBRARY, ...getLibraryChoices('data')])
+  const state = await io.select('State management', [NO_LIBRARY, ...getLibraryChoices('state')])
+  const more = await io.selectMany('More', getLibraryChoices(undefined))
+  const picked = new Set([data, state, ...more])
+  return LIBRARY_NAMES.filter((name) => picked.has(name))
 }
 
 async function askSampleData(io: Io): Promise<boolean> {

@@ -422,18 +422,28 @@ describe('runCreate', () => {
     })
   })
 
-  it('asks for the libraries after the rendering, again while two hold global state', async () => {
+  it('asks for the libraries by job, after the framework: data, state, then the rest', async () => {
     const { createFiles, create, getOutput } = setUp({
       isInteractive: true,
-      answers: ['', '', '', '', '', '', 'zustand,jotai', 'tanstack-query,jotai', '', '', ''],
+      answers: ['', '', '', '', '', '', 'swr', 'jotai', 'vitest,msw', '', '', ''],
     })
     expect(await create(ASK)).toBe(0)
     const output = getOutput()
-    expect(output.indexOf('? Libraries\n')).toBeGreaterThan(output.indexOf('? Rendering\n'))
-    expect(output).toContain('zustand and Jotai both hold global state: pick one.')
+    const questions = ['? Framework\n', '? Data fetching\n', '? State management\n', '? More\n']
+    const positions = questions.map((question) => output.indexOf(question))
+    expect(positions.every((position) => position >= 0)).toBe(true)
+    expect(positions).toEqual([...positions].sort((a, b) => a - b))
+    expect(output).not.toContain('? Libraries')
+    // In the order create offers them, not the order they were picked.
     expect(createFiles).toHaveBeenCalledWith(
-      expect.objectContaining({ libraries: ['tanstack-query', 'jotai'] })
+      expect.objectContaining({ libraries: ['swr', 'msw', 'jotai', 'vitest'] })
     )
+  })
+
+  it('takes no library when each job is left on None', async () => {
+    const { createFiles, create } = setUp({ isInteractive: true, answers: [] })
+    expect(await create(ASK)).toBe(0)
+    expect(createFiles).toHaveBeenCalledWith(expect.objectContaining({ libraries: [] }))
   })
 
   it('offers an SSG app no library, and refuses one given, or two that hold global state', async () => {

@@ -65,8 +65,9 @@ describe('the Astro starter', () => {
     for (const [path, content] of files) {
       await expect(content).toMatchFileSnapshot(`${fixture}/${path}`)
     }
-    const scheme = rendering === 'isomorphic' ? ['src/theme/scheme.ts'] : []
-    expect([...files.keys()].sort()).toEqual([...PATHS, ...scheme, ...SAMPLE_DATA_PATHS].sort())
+    const islands =
+      rendering === 'isomorphic' ? ['src/theme/scheme.ts', 'src/components/Counter.tsx'] : []
+    expect([...files.keys()].sort()).toEqual([...PATHS, ...islands, ...SAMPLE_DATA_PATHS].sort())
   })
 
   it('installs Astro with React, the versions this package is tested with', () => {

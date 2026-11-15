@@ -205,6 +205,14 @@ function checkHome(home) {
     "/ carries its components' styles"
   )
   check(home.html.includes(`>${APP}</h2>`), "/ has the starter's heading")
+  // React's server HTML puts a comment between the text and the number.
+  if (render !== 'ssg') check(/Count: (<!-- -->)?0/.test(home.html), '/ has its counter, at 0')
+  if (/tanstack-query|swr|msw/.test(libraries)) {
+    check(
+      home.html.includes('Asking the API for a greeting'),
+      '/ has the greeting, which the browser asks the API for'
+    )
+  }
   if (render === 'ssg') check(!home.html.includes('<script'), '/ ships no script')
   if (isAstro && render === 'isomorphic') {
     check(home.html.includes('<astro-island'), "/ hydrates its parts as Astro's islands")

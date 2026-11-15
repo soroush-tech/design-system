@@ -10,6 +10,7 @@ a single-page app: each page is an HTML shell from the build, rendered in the br
 - In `src/pages/`, `+onRenderHtml` writes the HTML shell of each page, and `+onRenderClient` renders the page in it.
 - `src/pages/items/` lists the sample items of `src/data/items.ts`, with a page for each.
   Their `+data` hooks read the data at build time: make them fetch your own.
+- `src/pages/index/Counter.tsx` counts the presses of its button, in its own state.
 
 Fonts: the theme names Space Grotesk and JetBrains Mono, and does not load them. See
 https://docs.soroush.tech/design-system/getting-started/installation/#fonts

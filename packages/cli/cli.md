@@ -92,8 +92,13 @@ picks (`StarterFacts.rendering`):
 
 Each has its type-test fixture: `type-tests/create-vike`, `-spa` and `-ssg`.
 
-The libraries (`src/create/libraries.ts`, `StarterFacts.libraries`) are written into the same
-files: `createLibraryFiles` adds their own (the store or atom, the mock API, `src/data/api`),
+The libraries (`src/create/libraries.ts`, `StarterFacts.libraries`) are asked by job: the
+`group` of each library is its question (data, state), and the rest share the last one. Their
+examples are in `src/create/recipes.ts`, for every starter: `src/data/api` and the msw handlers
+that answer it, the home page's `Counter` (its count in the state library, or its own state) and
+`Greeting` (read through the data library), and the form, which sends through it. Every choice
+shows in the app. In the Vike starter, `createLibraryFiles` adds their files (the store or atom,
+the mock API, `src/data/api`),
 `createLayout` holds the query client and the scheme where the state library says, and
 `withMocks` makes the client renderer start msw first. Their versions are this package's
 devDependencies too. `type-tests/create-vike-libraries` (TanStack Query, msw, zustand) and

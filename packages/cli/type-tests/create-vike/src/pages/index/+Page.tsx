@@ -1,6 +1,7 @@
 import { Button } from '@soroush.tech/design-system/Button'
 import { Flex } from '@soroush.tech/design-system/Flex'
 import { Typography } from '@soroush.tech/design-system/Typography'
+import { Counter } from './Counter'
 
 export default function Page() {
   return (
@@ -10,6 +11,7 @@ export default function Page() {
         A Vike app on the design system. Edit src/pages/index/+Page.tsx, and make the themes your
         own in src/theme/themes.ts.
       </Typography>
+      <Counter />
       <Flex flexDirection="row" gap={1}>
         <Button href="https://docs.soroush.tech">Components</Button>
         <Button href="https://vike.dev" variant="outlined">

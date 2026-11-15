@@ -4,6 +4,16 @@
 // here is the one `init` reuses for an existing Vike app (#80).
 import { createProvidersSource, createThemesSource, type Scheme } from '../../templates/templates'
 import type { Library } from '../libraries'
+import {
+  createApiSource,
+  createCounterSource,
+  createCounterStateSource,
+  createFormSource,
+  createGreetingSource,
+  createHandlersSource,
+  getStateLibrary,
+  hasApi,
+} from '../recipes'
 import type { Rendering, Starter, StarterFacts, StarterFile } from '../starters'
 import { pickVersions, toRange, type Package } from '../versions'
 
@@ -324,9 +334,12 @@ ${indentLines(tree, 4)}
 }
 
 function createSources(facts: StarterFacts) {
-  const { title, isTypeScript, rendering } = facts
+  const { title, isTypeScript, rendering, libraries } = facts
   const t = (typeScriptOnly: string) => (isTypeScript ? typeScriptOnly : '')
   const x = isTypeScript ? 'ts' : 'js'
+  // A page with JavaScript in the browser counts; one with an API greets.
+  const hasCounter = rendering !== 'ssg'
+  const hasGreeting = hasApi(libraries)
   return {
     config: `${t("import type { Config } from 'vike/types'\n\n")}// The settings of every page: https://vike.dev/config
 export default {
@@ -438,7 +451,7 @@ export const onRenderClient${t(': OnRenderClientSync')} = (pageContext) => {
     home: `import { Button } from '@soroush.tech/design-system/Button'
 import { Flex } from '@soroush.tech/design-system/Flex'
 import { Typography } from '@soroush.tech/design-system/Typography'
-
+${hasCounter ? "import { Counter } from './Counter'\n" : ''}${hasGreeting ? "import { Greeting } from './Greeting'\n" : ''}
 export default function Page() {
   return (
     <Flex gap={2} alignItems="flex-start">
@@ -447,7 +460,7 @@ export default function Page() {
         A Vike app on the design system. Edit src/pages/index/+Page.${x}x, and make the themes your
         own in src/theme/themes.${x}.
       </Typography>
-      <Flex flexDirection="row" gap={1}>
+${hasGreeting ? '      <Greeting />\n' : ''}${hasCounter ? '      <Counter />\n' : ''}      <Flex flexDirection="row" gap={1}>
         <Button href="https://docs.soroush.tech">Components</Button>
         <Button href="https://vike.dev" variant="outlined">
           Vike
@@ -741,17 +754,28 @@ function createReadme({
   Their \`+data\` hooks read the data at build time: make them fetch your own.
 `
     : ''
+  const hasForm = libraries.includes('react-hook-form')
+  const formSends = hasForm ? ', and the form sends its values with a mutation' : ''
+  const answers = [
+    'the greeting',
+    ...(hasForm ? ['the form'] : []),
+    ...(hasSampleData ? ['the sample items'] : []),
+  ]
   const libraryLines: Readonly<Record<Library, string>> = {
-    'tanstack-query': `- [TanStack Query](https://tanstack.com/query): the query client lives in \`+Layout\`.${hasSampleData ? ` The items pages start on their build-time data, then query \`src/data/api.${x}\` in the browser.` : ''}\n`,
-    msw: `- [msw](https://mswjs.io): \`src/mocks/handlers.${x}\` is a mock API, which answers in the browser while \`VITE_MSW\` in \`.env\` is true.\n`,
-    zustand: `- [zustand](https://zustand.docs.pmnd.rs): \`src/state/scheme.${x}\` holds the color scheme, in a store.\n`,
-    jotai: `- [Jotai](https://jotai.org): \`src/state/scheme.${x}\` holds the color scheme, in an atom.\n`,
-    swr: `- [SWR](https://swr.vercel.app): fetches and caches data.${hasSampleData ? ` The items pages start on their build-time data, then fetch \`src/data/api.${x}\` in the browser.` : ''}\n`,
-    'redux-toolkit': `- [Redux Toolkit](https://redux-toolkit.js.org): \`src/state/store.${x}\` holds the color scheme, in a slice of the store \`PageShell\` provides.\n`,
+    'tanstack-query': `- [TanStack Query](https://tanstack.com/query): the query client lives in \`+Layout\`. The home page's \`Greeting\` reads \`src/data/api.${x}\` with a query${formSends}.${hasSampleData ? ` The items pages start on their build-time data, then query it in the browser.` : ''}\n`,
+    msw: `- [msw](https://mswjs.io): \`src/mocks/handlers.${x}\` is a mock API, which answers ${answers.join(', ')} in the browser while \`VITE_MSW\` in \`.env\` is true.\n`,
+    zustand: `- [zustand](https://zustand.docs.pmnd.rs): \`src/state/scheme.${x}\` holds the color scheme and \`src/state/counter.${x}\` the home page's count, in stores.\n`,
+    jotai: `- [Jotai](https://jotai.org): \`src/state/scheme.${x}\` holds the color scheme and \`src/state/counter.${x}\` the home page's count, in atoms.\n`,
+    swr: `- [SWR](https://swr.vercel.app): the home page's \`Greeting\` reads \`src/data/api.${x}\` with SWR${formSends}.${hasSampleData ? ` The items pages start on their build-time data, then fetch it in the browser.` : ''}\n`,
+    'redux-toolkit': `- [Redux Toolkit](https://redux-toolkit.js.org): \`src/state/store.${x}\` holds the color scheme and the home page's count, in slices of the store \`PageShell\` provides.\n`,
     'react-hook-form': `- [React Hook Form](https://react-hook-form.com) and [Zod](https://zod.dev): \`/form\` is a form whose values a Zod schema checks.\n`,
-    vitest: `- [Vitest](https://vitest.dev) and [Testing Library](https://testing-library.com): \`npm run test\` runs \`src/pages/index/Page.test.${x}x\`.\n`,
+    vitest: `- [Vitest](https://vitest.dev) and [Testing Library](https://testing-library.com): \`npm run test\` runs \`src/pages/index/Page.test.${x}x\`, which checks the title and the counter.\n`,
   }
-  const libraryText = libraries.map((library) => libraryLines[library]).join('')
+  const counter =
+    rendering !== 'ssg' && getStateLibrary(libraries) === undefined
+      ? `- \`src/pages/index/Counter.${x}x\` counts the presses of its button, in its own state.\n`
+      : ''
+  const libraryText = counter + libraries.map((library) => libraryLines[library]).join('')
   return `# ${title}
 
 A [Vike](https://vike.dev) app on the [@soroush.tech design system](https://docs.soroush.tech):
@@ -773,92 +797,6 @@ const FORM_LINK = `          <Link href="/form" underline="hover">
             Form
           </Link>
 `
-
-/**
- * The form page of React Hook Form: two fields of the design system's TextInput, which a Zod
- * schema checks before the form is sent.
- */
-function createFormPage(isTypeScript: boolean): string {
-  const t = (typeScriptOnly: string) => (isTypeScript ? typeScriptOnly : '')
-  return `import { useState } from 'react'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Controller, useForm } from 'react-hook-form'
-import { z } from 'zod'
-import { Button } from '@soroush.tech/design-system/Button'
-import { Flex } from '@soroush.tech/design-system/Flex'
-import { TextInput } from '@soroush.tech/design-system/TextInput'
-import { Typography } from '@soroush.tech/design-system/Typography'
-
-/** What the form takes, and what it says when a value will not do. */
-const schema = z.object({
-  name: z.string().trim().min(1, 'Your name, please.'),
-  email: z.email('An email address, please.'),
-})
-${t(`
-type Values = z.infer<typeof schema>
-`)}
-export default function Page() {
-  const [sent, setSent] = useState${t('<Values | null>')}(null)
-  const { control, handleSubmit } = useForm${t('<Values>')}({
-    resolver: zodResolver(schema),
-    defaultValues: { name: '', email: '' },
-  })
-  return (
-    <Flex gap={2} alignItems="flex-start">
-      <Typography variant="h2">Form</Typography>
-      <Typography color="secondary">
-        React Hook Form holds the values, and a Zod schema checks them when the form is sent.
-      </Typography>
-      <form noValidate onSubmit={handleSubmit(setSent)}>
-        <Flex gap={2} alignItems="flex-start">
-          <Controller
-            name="name"
-            control={control}
-            render={({ field, fieldState }) => (
-              <Flex gap={1}>
-                <TextInput
-                  name={field.name}
-                  value={field.value}
-                  onChange={field.onChange}
-                  placeholder="Name"
-                  error={fieldState.invalid}
-                  inputProps={{ 'aria-label': 'Name', onBlur: field.onBlur }}
-                />
-                <Typography variant="caption" color="error">
-                  {fieldState.error?.message}
-                </Typography>
-              </Flex>
-            )}
-          />
-          <Controller
-            name="email"
-            control={control}
-            render={({ field, fieldState }) => (
-              <Flex gap={1}>
-                <TextInput
-                  name={field.name}
-                  value={field.value}
-                  onChange={field.onChange}
-                  type="email"
-                  placeholder="Email"
-                  error={fieldState.invalid}
-                  inputProps={{ 'aria-label': 'Email', onBlur: field.onBlur }}
-                />
-                <Typography variant="caption" color="error">
-                  {fieldState.error?.message}
-                </Typography>
-              </Flex>
-            )}
-          />
-          <Button type="submit">Send</Button>
-        </Flex>
-      </form>
-      {sent ? <Typography>Thanks, {sent.name}: the form was valid.</Typography> : null}
-    </Flex>
-  )
-}
-`
-}
 
 /**
  * PageShell with Redux Toolkit: the store's provider wraps every page, so +Layout and the pages
@@ -903,18 +841,13 @@ function withMocks(onRenderClient: string): string {
 }
 
 /** The files each library adds: its setup, and the example that uses it. */
-function createLibraryFiles({
-  title,
-  isTypeScript,
-  libraries,
-  scheme,
-  hasSampleData,
-}: StarterFacts): StarterFile[] {
+function createLibraryFiles(facts: StarterFacts): StarterFile[] {
+  const { title, isTypeScript, libraries, scheme } = facts
   const t = (typeScriptOnly: string) => (isTypeScript ? typeScriptOnly : '')
   const x = isTypeScript ? 'ts' : 'js'
   const files: StarterFile[] = []
-  const hasMocks = libraries.includes('msw')
-  if (libraries.includes('zustand')) {
+  const stateLibrary = getStateLibrary(libraries)
+  if (stateLibrary === 'zustand') {
     files.push({
       path: `src/state/scheme.${x}`,
       content: `import { create } from 'zustand'
@@ -932,7 +865,7 @@ export const useScheme = create${t('<SchemeState>()')}((set) => ({
 `,
     })
   }
-  if (libraries.includes('jotai')) {
+  if (stateLibrary === 'jotai') {
     files.push({
       path: `src/state/scheme.${x}`,
       content: `import { atom } from 'jotai'
@@ -942,31 +875,12 @@ export const schemeAtom = atom${t("<'light' | 'dark'>")}('${scheme}')
 `,
     })
   }
-  if (hasMocks) {
-    const handlers = hasSampleData
-      ? `import { http, HttpResponse } from 'msw'
-import { items } from '../data/items'
-
-/** The mock API: what it answers, by method and path. Add a handler for each call the app makes. */
-export const handlers = [
-  http.get('/api/items', () =>
-    HttpResponse.json(items.map(({ id, title, status }) => ({ id, title, status })))
-  ),
-  http.get('/api/items/:id', ({ params }) => {
-    const item = items.find(({ id }) => id === params.id)
-    return item ? HttpResponse.json(item) : new HttpResponse(null, { status: 404 })
-  }),
-]
-`
-      : `import { http, HttpResponse } from 'msw'
-
-/** The mock API: what it answers, by method and path. Add a handler for each call the app makes. */
-export const handlers = [
-  http.get('/api/hello', () => HttpResponse.json({ message: 'Hello from the mock API' })),
-]
-`
+  if (stateLibrary === 'zustand' || stateLibrary === 'jotai') {
+    files.push({ path: `src/state/counter.${x}`, content: createCounterStateSource(facts) })
+  }
+  if (libraries.includes('msw')) {
     files.push(
-      { path: `src/mocks/handlers.${x}`, content: handlers },
+      { path: `src/mocks/handlers.${x}`, content: createHandlersSource(facts) },
       {
         path: `src/mocks/browser.${x}`,
         content: `import { setupWorker } from 'msw/browser'
@@ -998,7 +912,7 @@ VITE_MSW=true
       }
     )
   }
-  if (libraries.includes('redux-toolkit')) {
+  if (stateLibrary === 'redux-toolkit') {
     files.push({
       path: `src/state/store.${x}`,
       content: `import { configureStore, createSlice${t(', type PayloadAction')} } from '@reduxjs/toolkit'
@@ -1012,17 +926,32 @@ const schemeSlice = createSlice({
   },
 })
 
+/** The home page's count: another slice. */
+const countSlice = createSlice({
+  name: 'count',
+  initialState: 0,
+  reducers: {
+    incremented: (count) => count + 1,
+  },
+})
+
 export const { schemeChanged } = schemeSlice.actions
+export const { incremented } = countSlice.actions
 
 /** The app's Redux store, which PageShell provides to every page. */
-export const store = configureStore({ reducer: { scheme: schemeSlice.reducer } })
+export const store = configureStore({
+  reducer: { scheme: schemeSlice.reducer, count: countSlice.reducer },
+})
 ${t(`
 export type RootState = ReturnType<typeof store.getState>
 `)}`,
     })
   }
   if (libraries.includes('react-hook-form')) {
-    files.push({ path: `src/pages/form/+Page.${x}x`, content: createFormPage(isTypeScript) })
+    files.push({
+      path: `src/pages/form/+Page.${x}x`,
+      content: createFormSource(facts, '../../data/api', 'Page'),
+    })
   }
   if (libraries.includes('vitest')) {
     files.push(
@@ -1038,62 +967,61 @@ export default defineConfig({
 })
 `,
       },
-      {
-        path: `src/pages/index/Page.test.${x}x`,
-        content: `import { render, screen } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
-import { Providers } from '../../theme/Providers'
-import Page from './+Page'
-
-describe('the home page', () => {
-  it('shows the app title', () => {
-    render(
-      <Providers>
-        <Page />
-      </Providers>
-    )
-    expect(screen.getByRole('heading', { name: '${title.replaceAll("'", String.raw`\'`)}' })).toBeTruthy()
-  })
-})
-`,
-      }
+      { path: `src/pages/index/Page.test.${x}x`, content: createPageTest(title, libraries) }
     )
   }
-  if ((libraries.includes('tanstack-query') || libraries.includes('swr')) && hasSampleData) {
-    files.push({
-      path: `src/data/api.${x}`,
-      content: hasMocks
-        ? `${t("import type { Item } from './items'\n\n")}/** The items, from the API: while VITE_MSW is true, the mock API of src/mocks answers. */
-export async function fetchItems()${t(": Promise<Pick<Item, 'id' | 'title' | 'status'>[]>")} {
-  const response = await fetch('/api/items')
-  if (!response.ok) throw new Error(\`GET /api/items answered \${response.status}\`)
-  return response.json()
-}
-
-/** One item, from the API. */
-export async function fetchItem(id${t(': string')})${t(': Promise<Item>')} {
-  const response = await fetch(\`/api/items/\${id}\`)
-  if (!response.ok) throw new Error(\`GET /api/items/\${id} answered \${response.status}\`)
-  return response.json()
-}
-`
-        : `import { items } from './items'
-
-/** The items, as an API would answer: make it fetch from yours. */
-export async function fetchItems() {
-  return items.map(({ id, title, status }) => ({ id, title, status }))
-}
-
-/** One item, as an API would answer: make it fetch from yours. */
-export async function fetchItem(id${t(': string')}) {
-  const item = items.find((candidate) => candidate.id === id)
-  if (!item) throw new Error(\`There is no item \${id}.\`)
-  return item
-}
-`,
-    })
+  if (hasApi(libraries)) {
+    files.push({ path: `src/data/api.${x}`, content: createApiSource(facts) })
   }
   return files
+}
+
+/**
+ * The test of the home page: its title, and its counter. The page renders inside the providers
+ * the app gives it - the theme's, the query client's, the Redux store's.
+ */
+function createPageTest(title: string, libraries: readonly Library[]): string {
+  const hasQuery = libraries.includes('tanstack-query')
+  const hasStore = libraries.includes('redux-toolkit')
+  const imports = [
+    "import { cleanup, fireEvent, render, screen } from '@testing-library/react'\n",
+    hasQuery ? "import { QueryClient, QueryClientProvider } from '@tanstack/react-query'\n" : '',
+    hasStore ? "import { Provider as StoreProvider } from 'react-redux'\n" : '',
+    "import { afterEach, describe, expect, it } from 'vitest'\n",
+    hasStore ? "import { store } from '../../state/store'\n" : '',
+    "import { Providers } from '../../theme/Providers'\n",
+    "import Page from './+Page'\n",
+  ].join('')
+  let tree = '<Page />'
+  if (hasStore) tree = `<StoreProvider store={store}>\n  ${tree}\n</StoreProvider>`
+  if (hasQuery) {
+    tree = `<QueryClientProvider client={new QueryClient()}>\n${indentLines(tree, 2)}\n</QueryClientProvider>`
+  }
+  tree = `<Providers>\n${indentLines(tree, 2)}\n</Providers>`
+  return `${imports}
+/** The home page, inside the providers the app gives it. */
+function renderPage() {
+  render(
+${indentLines(tree, 4)}
+  )
+}
+
+describe('the home page', () => {
+  // Vitest has no globals here, so Testing Library cannot clean up on its own.
+  afterEach(cleanup)
+
+  it('shows the app title', () => {
+    renderPage()
+    expect(screen.getByRole('heading', { name: '${title.replaceAll("'", String.raw`\'`)}' })).toBeTruthy()
+  })
+
+  it('counts each press of its button', () => {
+    renderPage()
+    fireEvent.click(screen.getByRole('button', { name: 'Count' }))
+    expect(screen.getByText('Count: 1')).toBeTruthy()
+  })
+})
+`
 }
 
 /** The files of the Vike app `facts` describe. */
@@ -1135,6 +1063,23 @@ function createFiles(facts: StarterFacts): StarterFile[] {
       : []),
     { path: `src/pages/+Layout.${x}x`, content: sources.Layout },
     { path: `src/pages/index/+Page.${x}x`, content: sources.home },
+    // A page with JavaScript in the browser counts; one with an API greets.
+    ...(rendering === 'ssg'
+      ? []
+      : [
+          {
+            path: `src/pages/index/Counter.${x}x`,
+            content: createCounterSource(facts, '../../state'),
+          },
+        ]),
+    ...(hasApi(libraries)
+      ? [
+          {
+            path: `src/pages/index/Greeting.${x}x`,
+            content: createGreetingSource(facts, '../../data/api'),
+          },
+        ]
+      : []),
     { path: `src/pages/about/+Page.${x}x`, content: sources.about },
     { path: `src/pages/_error/+Page.${x}x`, content: sources.error },
     ...(facts.hasSampleData ? createSampleDataFiles(facts) : []),

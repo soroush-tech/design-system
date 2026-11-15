@@ -61,8 +61,11 @@ describe('the Vike starter', () => {
     for (const [path, content] of files) {
       await expect(content).toMatchFileSnapshot(`${fixture}/${path}`)
     }
-    const shared = SHARED_PATHS.filter(
-      (path) => rendering !== 'ssg' || path !== 'src/pages/+onRenderClient'
+    // An SSG page renders nothing in the browser, and has no counter.
+    const shared = [...SHARED_PATHS, 'src/pages/index/Counter'].filter(
+      (path) =>
+        rendering !== 'ssg' ||
+        (path !== 'src/pages/+onRenderClient' && path !== 'src/pages/index/Counter')
     )
     expect([...files.keys()].sort()).toEqual(
       [
@@ -191,7 +194,7 @@ describe('the Vike starter', () => {
     }
     expect(
       createFiles({ libraries: ['msw'], hasSampleData: false }).get('src/mocks/handlers.ts')
-    ).toContain("http.get('/api/hello'")
+    ).toContain("http.get('/api/greeting'")
     expect(createFiles().get('vite.config.ts')).not.toContain('msw')
   })
 
@@ -218,9 +221,90 @@ describe('the Vike starter', () => {
     )
     const withoutMocks = createFiles({ libraries: ['tanstack-query'], isTypeScript: false })
     expect(withoutMocks.get('src/data/api.js')).toContain('return items.map(')
+    // With no sample items, the API still greets.
+    const noItems = createFiles({ libraries: ['tanstack-query'], hasSampleData: false })
+    expect(noItems.get('src/data/api.ts')).not.toContain('fetchItems')
+    expect(noItems.get('src/data/api.ts')).toContain('export async function fetchGreeting()')
+    expect(createFiles({ libraries: ['vitest'] }).has('src/data/api.ts')).toBe(false)
+  })
+
+  it('counts on the home page, in its own state or in the state library picked', () => {
+    const own = createFiles()
+    expect(own.get('src/pages/index/+Page.tsx')).toContain("import { Counter } from './Counter'")
+    expect(own.get('src/pages/index/+Page.tsx')).toContain('      <Counter />\n')
+    expect(own.get('src/pages/index/Counter.tsx')).toContain(
+      'const [count, setCount] = useState(0)'
+    )
+    expect(own.get('README.md')).toContain('counts the presses of its button, in its own state')
+
+    const zustand = createFiles({ libraries: ['zustand'] })
+    expect(zustand.get('src/pages/index/Counter.tsx')).toContain(
+      'const { count, increment } = useCounter()'
+    )
+    expect(zustand.get('src/state/counter.ts')).toContain('export const useCounter = create')
+    expect(zustand.get('README.md')).not.toContain('in its own state')
+
+    const jotai = createFiles({ libraries: ['jotai'], isTypeScript: false })
+    expect(jotai.get('src/pages/index/Counter.jsx')).toContain('useAtom(countAtom)')
+    expect(jotai.get('src/state/counter.js')).toContain('export const countAtom = atom(0)')
+
+    const redux = createFiles({ libraries: ['redux-toolkit'] })
+    expect(redux.get('src/pages/index/Counter.tsx')).toContain('dispatch(incremented())')
+    expect(redux.get('src/state/store.ts')).toContain('count: countSlice.reducer')
+    expect(redux.has('src/state/counter.ts')).toBe(false)
+
+    // An SSG page has no JavaScript in the browser to count with.
+    const ssg = createFiles({ rendering: 'ssg' })
+    expect(ssg.has('src/pages/index/Counter.tsx')).toBe(false)
+    expect(ssg.get('src/pages/index/+Page.tsx')).not.toContain('Counter')
+  })
+
+  it('greets from the API through the data library picked, or fetch with msw alone', () => {
+    const query = createFiles({ libraries: ['tanstack-query'] })
+    expect(query.get('src/pages/index/+Page.tsx')).toContain('      <Greeting />\n')
+    expect(query.get('src/pages/index/Greeting.tsx')).toContain(
+      "useQuery({ queryKey: ['greeting'], queryFn: fetchGreeting })"
+    )
+    expect(query.get('src/data/api.ts')).toContain("message: 'Hello from src/data/api")
+    expect(createFiles({ libraries: ['swr'] }).get('src/pages/index/Greeting.tsx')).toContain(
+      "useSWR('greeting', fetchGreeting)"
+    )
+    const mocked = createFiles({ libraries: ['msw'], isTypeScript: false })
+    expect(mocked.get('src/pages/index/Greeting.jsx')).toContain('fetchGreeting().then(setData')
+    expect(mocked.get('src/data/api.js')).toContain("await fetch('/api/greeting')")
+    expect(createFiles().has('src/pages/index/Greeting.tsx')).toBe(false)
+    expect(createFiles().get('src/pages/index/+Page.tsx')).not.toContain('Greeting')
+  })
+
+  it('sends the form through the data library picked, the mock API, or nowhere', () => {
+    const page = (libraries: StarterFacts['libraries'], isTypeScript = true) =>
+      createFiles({ libraries: ['react-hook-form', ...libraries], isTypeScript }).get(
+        `src/pages/form/+Page.${isTypeScript ? 'tsx' : 'jsx'}`
+      )!
+    expect(page(['tanstack-query'])).toContain('useMutation({ mutationFn: sendMessage })')
+    expect(page(['swr'])).toContain('useSWRMutation(')
+    expect(page(['swr'], false)).toContain('(_key, { arg }) => sendMessage(arg)')
+    expect(page(['msw'])).toContain('setAnswer((await sendMessage(values)).message)')
+    expect(page([])).toContain('handleSubmit(setSent)')
+    expect(page([])).not.toContain('sendMessage')
+
+    const api = createFiles({ libraries: ['react-hook-form', 'msw'] })
+    expect(api.get('src/data/api.ts')).toContain("fetch('/api/messages', {")
+    expect(api.get('src/mocks/handlers.ts')).toContain("http.post('/api/messages'")
     expect(
-      createFiles({ libraries: ['tanstack-query'], hasSampleData: false }).has('src/data/api.ts')
-    ).toBe(false)
+      createFiles({ libraries: ['react-hook-form', 'swr'], isTypeScript: false }).get(
+        'src/data/api.js'
+      )
+    ).toContain('your message was sent.')
+  })
+
+  it("tests the home page inside the app's providers", () => {
+    const test = (libraries: StarterFacts['libraries']) =>
+      createFiles({ libraries: ['vitest', ...libraries] }).get('src/pages/index/Page.test.tsx')!
+    expect(test([])).toContain("fireEvent.click(screen.getByRole('button', { name: 'Count' }))")
+    expect(test([])).not.toMatch(/QueryClientProvider|StoreProvider/)
+    expect(test(['tanstack-query'])).toContain('<QueryClientProvider client={new QueryClient()}>')
+    expect(test(['redux-toolkit'])).toContain('<StoreProvider store={store}>')
   })
 
   it('renders SSG pages to HTML only, with no client renderer and no scheme switch', () => {

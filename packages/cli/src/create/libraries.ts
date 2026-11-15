@@ -10,7 +10,7 @@ export type Library =
   | 'vitest'
 
 /** Libraries of one group do the same job: an app takes one of them. */
-type LibraryGroup = 'data' | 'state'
+export type LibraryGroup = 'data' | 'state'
 
 interface LibraryInfo {
   name: Library
