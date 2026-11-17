@@ -6,18 +6,17 @@ export interface Greeting {
 }
 
 /** A greeting, as an API would answer: make it fetch from yours. */
-export async function fetchGreeting(): Promise<Greeting> {
-  return { message: 'Hello from src/data/api: make it fetch from your API.' }
+export function fetchGreeting(): Promise<Greeting> {
+  return Promise.resolve({ message: 'Hello from src/data/api: make it fetch from your API.' })
 }
 
 /** The items, as an API would answer: make it fetch from yours. */
-export async function fetchItems() {
-  return items.map(({ id, title, status }) => ({ id, title, status }))
+export function fetchItems() {
+  return Promise.resolve(items.map(({ id, title, status }) => ({ id, title, status })))
 }
 
 /** One item, as an API would answer: make it fetch from yours. */
-export async function fetchItem(id: string) {
+export function fetchItem(id: string) {
   const item = items.find((candidate) => candidate.id === id)
-  if (!item) throw new Error(`There is no item ${id}.`)
-  return item
+  return item ? Promise.resolve(item) : Promise.reject(new Error(`There is no item ${id}.`))
 }

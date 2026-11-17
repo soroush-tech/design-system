@@ -10,7 +10,23 @@ export type Flags = ReadonlySet<string>
 
 // A marker is a line of its own, in the comment the file's language has: `// @if msw`,
 // `{/* @if msw */}` in JSX, `<!-- @if msw -->` in Markdown and HTML.
-const MARKER = /^\s*(?:\/\/|\{\/\*|<!--)\s*@(if|elif|else|endif)\b\s*(.*?)\s*(?:\*\/\}|-->)?\s*$/
+const COMMENTS: readonly (readonly [open: string, close: string])[] = [
+  ['//', ''],
+  ['{/*', '*/}'],
+  ['<!--', '-->'],
+]
+
+/** The marker `line` holds - its word and its condition - or `undefined` when it holds none. */
+function readMarker(line: string): { word: string; expression: string } | undefined {
+  const text = line.trim()
+  for (const [open, close] of COMMENTS) {
+    if (!text.startsWith(open) || !text.endsWith(close)) continue
+    const inner = text.slice(open.length, text.length - close.length).trim()
+    const match = /^@(if|elif|else|endif)\b(.*)$/.exec(inner)
+    if (match) return { word: match[1], expression: match[2].trim() }
+  }
+  return undefined
+}
 
 /**
  * Whether `expression` holds for `flags`: names, `!`, `&&`, `||` and parentheses, as in
@@ -77,12 +93,12 @@ export function renderTemplate(
   const isKept = () => open.every((block) => block.isKept)
   const lines: string[] = []
   for (const line of source.split('\n')) {
-    const marker = MARKER.exec(line)
+    const marker = readMarker(line)
     if (!marker) {
       if (isKept()) lines.push(line)
       continue
     }
-    const [, word, expression] = marker
+    const { word, expression } = marker
     const block = open.at(-1)
     if (word === 'if') {
       const holds = isConditionMet(expression, flags)

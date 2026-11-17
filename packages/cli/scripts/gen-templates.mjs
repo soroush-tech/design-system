@@ -42,7 +42,7 @@ function listFiles(folder) {
     }
   }
   visit(folder)
-  return files.sort()
+  return files.sort((a, b) => a.localeCompare(b))
 }
 
 /** `source` with its types blanked out, as TypeScript or TSX, and the lines left empty gone. */
@@ -64,7 +64,7 @@ function stripTypes(source, isJsx) {
     blanked
       .split('\n')
       // A statement taken out whole leaves its line empty, or a ; that keeps the next line apart.
-      .filter((line, index) => !/^\s*;?\s*$/.test(line) || before[index].trim() === '')
+      .filter((line, index) => !['', ';'].includes(line.trim()) || before[index].trim() === '')
       .join('\n')
   )
 }

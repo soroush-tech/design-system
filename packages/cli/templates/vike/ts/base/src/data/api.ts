@@ -30,8 +30,8 @@ export async function fetchGreeting(): Promise<Greeting> {
 }
 // @else
 /** A greeting, as an API would answer: make it fetch from yours. */
-export async function fetchGreeting(): Promise<Greeting> {
-  return { message: 'Hello from src/data/api: make it fetch from your API.' }
+export function fetchGreeting(): Promise<Greeting> {
+  return Promise.resolve({ message: 'Hello from src/data/api: make it fetch from your API.' })
 }
 // @endif
 // @if react-hook-form && msw
@@ -49,8 +49,8 @@ export async function sendMessage(message: Message): Promise<Greeting> {
 // @elif react-hook-form
 
 /** Sends the form's values, as an API would take them: make it post to yours. */
-export async function sendMessage(message: Message): Promise<Greeting> {
-  return { message: `Thanks, ${message.name}: your message was sent.` }
+export function sendMessage(message: Message): Promise<Greeting> {
+  return Promise.resolve({ message: `Thanks, ${message.name}: your message was sent.` })
 }
 // @endif
 // @if sample-data && msw && (tanstack-query || swr)
@@ -71,15 +71,14 @@ export async function fetchItem(id: string): Promise<Item> {
 // @elif sample-data && (tanstack-query || swr)
 
 /** The items, as an API would answer: make it fetch from yours. */
-export async function fetchItems() {
-  return items.map(({ id, title, status }) => ({ id, title, status }))
+export function fetchItems() {
+  return Promise.resolve(items.map(({ id, title, status }) => ({ id, title, status })))
 }
 
 /** One item, as an API would answer: make it fetch from yours. */
-export async function fetchItem(id: string) {
+export function fetchItem(id: string) {
   const item = items.find((candidate) => candidate.id === id)
-  if (!item) throw new Error(`There is no item ${id}.`)
-  return item
+  return item ? Promise.resolve(item) : Promise.reject(new Error(`There is no item ${id}.`))
 }
 // @endif
 // @endif

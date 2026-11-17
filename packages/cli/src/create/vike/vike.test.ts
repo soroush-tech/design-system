@@ -250,11 +250,13 @@ describe('the Vike starter', () => {
       'queryFn: () => fetchItem(initialItem.id),'
     )
     const withoutMocks = createFiles({ libraries: ['tanstack-query'], isTypeScript: false })
-    expect(withoutMocks.get('src/data/api.js')).toContain('return items.map(')
+    expect(withoutMocks.get('src/data/api.js')).toContain('return Promise.resolve(items.map(')
     // With no sample items, the API still greets.
     const noItems = createFiles({ libraries: ['tanstack-query'], hasSampleData: false })
     expect(noItems.get('src/data/api.ts')).not.toContain('fetchItems')
-    expect(noItems.get('src/data/api.ts')).toContain('export async function fetchGreeting()')
+    expect(noItems.get('src/data/api.ts')).toContain(
+      'export function fetchGreeting(): Promise<Greeting>'
+    )
     expect(createFiles({ libraries: ['zustand'] }).has('src/data/api.ts')).toBe(false)
   })
 
