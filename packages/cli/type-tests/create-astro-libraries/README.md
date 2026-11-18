@@ -1,10 +1,13 @@
 # My App
 
 An [Astro](https://astro.build) app on the [@soroush.tech design system](https://docs.soroush.tech):
-every page is HTML from the build, with its styles, and its parts are React islands
-that hydrate in the browser. Astro's client router moves between pages with no reload.
+every page is rendered on the server, on each request, with its styles, and its parts are
+React islands that hydrate in the browser. Astro's client router moves between pages with no
+reload: it fetches the next page's HTML from the server and swaps it in.
 
 - `npm run dev` starts it, `npm run build` builds it, and `npm run preview` serves the build.
+- `npm start` runs the server the build wrote, on `HOST` and `PORT` (4321 by default), on any
+  Node host.
 - `src/pages/` holds the pages: an `.astro` file per route, which renders a component of
   `src/components/` in `src/layouts/Layout.astro`.
 - `src/components/Header.tsx` draws the header, inside the app's providers, which draw the base
@@ -18,7 +21,7 @@ that hydrate in the browser. Astro's client router moves between pages with no r
   between pages.
 - `src/theme/themes.ts` holds the light and the dark theme: make them your own.
 - `src/pages/items/` lists the sample items of `src/data/items.ts`, with a page for each,
-  read at build time: make them fetch your own.
+  read on each request: make them fetch your own.
 - [TanStack Query](https://tanstack.com/query): every island's `Island` provides one query client,
   `src/data/queryClient.ts`. The home page's `Greeting` reads `src/data/api.ts` with a query,
   and the form sends its values with a mutation.

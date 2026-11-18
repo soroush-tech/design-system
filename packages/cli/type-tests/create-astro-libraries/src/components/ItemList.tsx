@@ -7,7 +7,7 @@ import type { Item } from '../data/items'
 import { withIsland } from '../theme/Island'
 import { StatusChip } from './StatusChip'
 
-/** The list of items, as src/pages/items/index.astro reads it at build time. */
+/** The list of items, as src/pages/items/index.astro reads it on each request. */
 function ItemList({
   items: initialItems,
 }: {
@@ -23,7 +23,7 @@ function ItemList({
     <Flex gap={2} px={3} py={4}>
       <Typography variant="h2">Items</Typography>
       <Typography color="secondary">
-        Sample data from src/data/items.ts, which this page reads at build time.
+        Sample data from src/data/items.ts, which this page reads on each request.
       </Typography>
       <Flex gap={1}>
         {items.map((item) => (

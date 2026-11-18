@@ -101,7 +101,7 @@ renders it inside the theme - and the query client and the Redux store, one of e
 browser for every island - so its hooks find them; the header's
 `<Providers>` draws the base styles once a page, and the scheme is a small shared store
 (`useSyncExternalStore`, with the default as the server snapshot, so an island hydrates on the
-HTML it got). With islands (isomorphic and SSR), the layout has Astro's `<ClientRouter />` and a
+HTML it got). With islands (SSR), the layout has Astro's `<ClientRouter />` and a
 script on `astro:before-swap` that keeps Emotion's style tags in the head, which the router would
 otherwise replace, and moves the next page's inline styles there, except its base styles, which
 the header draws. SSR adds `output: 'server'` with `@astrojs/node` standalone, and an item route
@@ -110,9 +110,11 @@ The home page's counter and greeting are islands of their own with `client:only`
 the `Home` island: what they show lives in memory (a store, the query cache), so an island that
 hydrates again after the router moves back cannot meet a stale copy in the HTML. msw's switch is
 `PUBLIC_MSW` (Astro hands the browser only `PUBLIC_` variables), and `src/data/api` waits for the
-worker before each request. `Starter.renderings` lists `isomorphic`, `ssr` and `ssg`. Its
-fixtures are `type-tests/create-astro`, `-ssr` and `-ssg`, and `-libraries` (TanStack Query, msw,
-zustand, React Hook Form) and `-more` (SSR, SWR, Redux Toolkit): `test:types`
+worker before each request. `Starter.renderings` lists `ssr` and `ssg`, not
+`isomorphic`: an `.astro` page never renders in the browser, so the client router fetches each
+next page's HTML, which is not what isomorphic means here. Its fixtures are
+`type-tests/create-astro-ssr` and `-ssg`, and `-libraries` (SSR, TanStack Query, msw, zustand,
+React Hook Form) and `-more` (SSR, SWR, Redux Toolkit): `test:types`
 checks their TypeScript, and the smoke test runs `astro check` on a whole app. `astro check` takes
 TypeScript 6 at most, so the starter's TypeScript is this package's `typescript-astro` alias.
 

@@ -10,11 +10,8 @@ function About() {
         {/* @if ssr */}
         A second page: the server renders it, with its styles, and the app moves to it without a
         reload.
-        {/* @elif ssg */}
-        A second page: it is HTML with its styles from the build, and a link loads it as a new page.
         {/* @else */}
-        A second page: it is HTML with its styles from the build, and the app moves to it without a
-        reload.
+        A second page: it is HTML with its styles from the build, and a link loads it as a new page.
         {/* @endif */}
       </Typography>
     </Flex>

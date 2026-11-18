@@ -7,11 +7,13 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "start": "node dist/server/entry.mjs",
     "typecheck": "astro check",
     "test": "vitest run"
   },
   "dependencies": {
     "@soroush.tech/design-system": "^2.3.0",
+    "@astrojs/node": "^11.1.13",
     "@astrojs/react": "^7.1.9",
     "@tanstack/react-query": "^5.107.1",
     "zustand": "^5.1.0",

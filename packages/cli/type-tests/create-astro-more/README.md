@@ -3,7 +3,7 @@
 An [Astro](https://astro.build) app on the [@soroush.tech design system](https://docs.soroush.tech):
 every page is rendered on the server, on each request, with its styles, and its parts are
 React islands that hydrate in the browser. Astro's client router moves between pages with no
-reload.
+reload: it fetches the next page's HTML from the server and swaps it in.
 
 - `npm run dev` starts it, `npm run build` builds it, and `npm run preview` serves the build.
 - `npm start` runs the server the build wrote, on `HOST` and `PORT` (4321 by default), on any

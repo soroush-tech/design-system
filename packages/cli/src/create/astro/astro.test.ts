@@ -10,7 +10,7 @@ const FACTS: StarterFacts = {
   packageName: 'my-app',
   title: 'My App',
   isTypeScript: true,
-  rendering: 'isomorphic',
+  rendering: 'ssr',
   libraries: [],
   scheme: 'light',
   hasSampleData: true,
@@ -53,14 +53,13 @@ const PATHS = [
 
 describe('the Astro starter', () => {
   it('offers the renderings it writes, and the libraries', () => {
-    expect(astroStarter.renderings).toEqual(['isomorphic', 'ssr', 'ssg'])
+    expect(astroStarter.renderings).toEqual(['ssr', 'ssg'])
     expect(astroStarter.hasLibraries).toBe(true)
   })
 
   // `pnpm test:types` typechecks the components and the theme of these apps; the smoke test runs
   // `astro check` on a whole app. After a template change, update them with `vitest run -u`.
   it.each([
-    ['isomorphic', FIXTURE],
     ['ssr', `${FIXTURE}-ssr`],
     ['ssg', `${FIXTURE}-ssg`],
   ] as const)('writes the %s TypeScript app its fixture holds', async (rendering, fixture) => {
@@ -87,6 +86,7 @@ describe('the Astro starter', () => {
       },
     })
     expect(packageJson.dependencies).toEqual({
+      '@astrojs/node': devDependencies['@astrojs/node'],
       '@astrojs/react': devDependencies['@astrojs/react'],
       '@soroush.tech/design-system': '^2.3.0',
       astro: devDependencies.astro,
@@ -101,7 +101,7 @@ describe('the Astro starter', () => {
 
   it('writes a JavaScript app with no type in it', () => {
     for (const [rendering, libraries] of [
-      ['isomorphic', ['tanstack-query', 'msw', 'jotai', 'react-hook-form']],
+      ['ssr', ['tanstack-query', 'msw', 'jotai', 'react-hook-form']],
       ['ssr', ['swr', 'redux-toolkit']],
       ['ssr', ['msw', 'zustand', 'react-hook-form']],
       ['ssg', []],
@@ -130,7 +130,7 @@ describe('the Astro starter', () => {
     }
   })
 
-  it('hydrates the islands, routes in the browser and keeps the styles, when isomorphic', () => {
+  it('hydrates the islands, routes in the browser and keeps the styles, when SSR', () => {
     const files = createFiles()
     const layout = files.get('src/layouts/Layout.astro')!
     expect(layout).toContain("import { ClientRouter } from 'astro:transitions'")
@@ -158,14 +158,12 @@ describe('the Astro starter', () => {
     expect(item).toContain('const item = items.find(({ id }) => id === Astro.params.id)')
     expect(item).toContain("if (!item) return Astro.rewrite('/404')")
     expect(item).not.toContain('getStaticPaths')
-    // The islands hydrate, and the router moves between pages, as in an isomorphic app.
-    expect(files.get('src/layouts/Layout.astro')).toContain('<ClientRouter />')
-    expect(files.get('src/pages/index.astro')).toContain('<Home client:load>')
     expect(files.get('README.md')).toContain('`npm start` runs the server the build wrote')
+    expect(files.get('README.md')).toContain("it fetches the next page's HTML from the server")
     expect(files.get('src/data/items.ts')).toContain('read it\n * on each request.')
-    const isomorphic = JSON.parse(createFiles().get('package.json')!)
-    expect(isomorphic.scripts).not.toHaveProperty('start')
-    expect(isomorphic.dependencies).not.toHaveProperty('@astrojs/node')
+    const ssg = JSON.parse(createFiles({ rendering: 'ssg' }).get('package.json')!)
+    expect(ssg.scripts).not.toHaveProperty('start')
+    expect(ssg.dependencies).not.toHaveProperty('@astrojs/node')
   })
 
   it('writes HTML with no script and no switch, when SSG', () => {
@@ -197,7 +195,7 @@ describe('the Astro starter', () => {
     expect(files.get('src/theme/scheme.ts')).toContain("let current: Scheme = 'dark'")
   })
 
-  // The libraries' fixtures: create-astro-libraries (isomorphic, sample data, TanStack Query, msw,
+  // The libraries' fixtures: create-astro-libraries (SSR, sample data, TanStack Query, msw,
   // zustand, React Hook Form) and create-astro-more (SSR, sample data, SWR, Redux Toolkit).
   it.each([
     [

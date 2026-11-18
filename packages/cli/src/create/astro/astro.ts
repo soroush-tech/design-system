@@ -77,7 +77,7 @@ function createFiles(facts: StarterFacts): StarterFile[] {
 export const astroStarter: Starter = {
   title: 'Astro',
   label: 'Astro: HTML pages, with React islands',
-  renderings: ['isomorphic', 'ssr', 'ssg'],
+  renderings: ['ssr', 'ssg'],
   hasLibraries: true,
   createFiles,
 }

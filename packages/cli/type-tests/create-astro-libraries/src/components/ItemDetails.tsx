@@ -7,7 +7,7 @@ import type { Item } from '../data/items'
 import { withIsland } from '../theme/Island'
 import { StatusChip } from './StatusChip'
 
-/** One item, as src/pages/items/[id].astro reads it at build time. */
+/** One item, as src/pages/items/[id].astro reads it on each request. */
 function ItemDetails({ item: initialItem }: { readonly item: Item }) {
   const { data: item } = useQuery({
     queryKey: ['items', initialItem.id],

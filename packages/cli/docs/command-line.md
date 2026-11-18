@@ -92,8 +92,10 @@ testApp/
   the next page. It has no light and dark switch, since that needs JavaScript.
 
 Isomorphic, SPA and SSG build to static files that any static host serves - an SPA's, once the host
-answers every path with `index.html`; SSR needs a Node host. Vike and Astro render isomorphic,
-SSR or SSG, and React Router renders an SPA.
+answers every path with `index.html`; SSR needs a Node host. Vike renders isomorphic, SSR or
+SSG, Astro SSR (its default) or SSG, and React Router an SPA. Astro has no isomorphic rendering:
+its pages render on the server or at build time only, so moving between them always fetches the
+next page's HTML. For pages that render in the browser after the first, pick Vike.
 
 ### Framework
 
@@ -171,11 +173,13 @@ With sample data pages, it also shows how data gets onto a page, with no data li
   - the header renders `<Providers>`, which draws the base styles once a page, and holds the light
     and dark switch;
   - the islands share the scheme through `src/theme/scheme`.
-- Isomorphic, the islands hydrate in the browser and Astro's client router moves between pages
-  with no reload. The layout keeps the design system's styles as it does.
+- SSR (the default), the server renders each page on each request, and the islands hydrate in
+  the browser. Astro's client router moves between pages with no reload: it fetches the next
+  page's HTML and swaps it in, keeping the header, the scheme and the state. The layout keeps the
+  design system's styles as it does. `npm start` runs the server, on any Node host.
 - SSG, the React parts render at build time only, and a page ships no JavaScript.
-- With sample data pages, `/items` and `/items/<id>` read `src/data/items` at build time, with one
-  page written per item.
+- With sample data pages, `/items` and `/items/<id>` read `src/data/items`: on each request
+  with SSR, or at build time with SSG, with one page written per item.
 - The home page's counter and greeting are islands of their own, which render in the browser
   only (`client:only`): what they show is in memory - a count in the state library, a greeting in
   the query cache - not in the HTML, so moving back to the page cannot hydrate on a stale copy.

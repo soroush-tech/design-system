@@ -1,13 +1,10 @@
 # __TITLE__
 
 An [Astro](https://astro.build) app on the [@soroush.tech design system](https://docs.soroush.tech):
-<!-- @if isomorphic -->
-every page is HTML from the build, with its styles, and its parts are React islands
-that hydrate in the browser. Astro's client router moves between pages with no reload.
-<!-- @elif ssr -->
+<!-- @if ssr -->
 every page is rendered on the server, on each request, with its styles, and its parts are
 React islands that hydrate in the browser. Astro's client router moves between pages with no
-reload.
+reload: it fetches the next page's HTML from the server and swaps it in.
 <!-- @else -->
 every page is HTML from the build, with its styles, and no JavaScript in the browser: its
 React parts render at build time only.

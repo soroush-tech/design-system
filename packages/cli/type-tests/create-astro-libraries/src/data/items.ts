@@ -8,7 +8,7 @@ export interface Item {
 
 /**
  * Sample data, so the items pages have something to show: the pages in src/pages/items read it
- * at build time. Make them fetch your own data instead, and remove this file.
+ * on each request. Make them fetch your own data instead, and remove this file.
  */
 export const items: readonly Item[] = [
   {
@@ -32,19 +32,19 @@ export const items: readonly Item[] = [
   {
     id: 'data',
     title: 'Read your own data',
-    summary: 'The items pages read this file at build time. Make them fetch from your API.',
+    summary: 'The items pages read this file on each request. Make them fetch from your API.',
     status: 'todo',
   },
   {
     id: 'build',
     title: 'Build it',
-    summary: 'The build writes every page, these items among them, as HTML with its styles.',
+    summary: 'The server renders every page, these items among them, as HTML with its styles.',
     status: 'done',
   },
   {
     id: 'deploy',
     title: 'Deploy it',
-    summary: 'The build is static files in dist, which any static host serves.',
+    summary: 'npm start runs the server the build wrote, on any Node host.',
     status: 'todo',
   },
 ]

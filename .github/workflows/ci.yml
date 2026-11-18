@@ -324,7 +324,7 @@ jobs:
             flags: --framework astro --layout workspace --render ssr --sample-data --with swr,msw,redux-toolkit
           - lang: ts
             pm: pnpm
-            flags: --framework astro --layout workspace --sample-data --with tanstack-query,msw,zustand,react-hook-form
+            flags: --framework astro --layout workspace --render ssr --sample-data --with tanstack-query,msw,zustand,react-hook-form
           - lang: js
             pm: npm
             flags: --framework astro --render ssg --sample-data
