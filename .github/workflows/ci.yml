@@ -199,15 +199,21 @@ jobs:
 
       # On a cache hit the binaries are restored, but Linux system libs live outside the cache.
       # A stalled package mirror once held this step for ten minutes and failed the job: each
-      # attempt stops after three minutes, and the third failure fails the step.
+      # attempt stops after three minutes, and the third failure fails the step. timeout stops
+      # pnpm, not the apt-get it started as root, which keeps apt's lock and failed every attempt
+      # after the first: a failed attempt stops it too, lets dpkg finish what it began, and the next
+      # apt waits for a lock still held rather than failing at once.
       - name: Install Playwright system deps
         if: matrix.browsers && steps.playwright-cache.outputs.cache-hit == 'true'
         env:
           FILTER: ${{ matrix.filter }}
         run: |
+          echo 'DPkg::Lock::Timeout "120";' | sudo tee /etc/apt/apt.conf.d/90-lock-timeout > /dev/null
           for attempt in 1 2 3; do
             timeout 180 pnpm --filter "$FILTER" exec playwright install-deps chromium && exit 0
             echo "::warning::Playwright system deps, attempt $attempt of 3 failed"
+            sudo pkill -x apt-get || true
+            sudo dpkg --configure -a || true
           done
           exit 1
 
@@ -393,9 +399,12 @@ jobs:
       - name: Install Playwright system deps
         if: steps.playwright-cache.outputs.cache-hit == 'true'
         run: |
+          echo 'DPkg::Lock::Timeout "120";' | sudo tee /etc/apt/apt.conf.d/90-lock-timeout > /dev/null
           for attempt in 1 2 3; do
             timeout 180 pnpm --filter @soroush.tech/docs exec playwright install-deps chromium && exit 0
             echo "::warning::Playwright system deps, attempt $attempt of 3 failed"
+            sudo pkill -x apt-get || true
+            sudo dpkg --configure -a || true
           done
           exit 1
 
