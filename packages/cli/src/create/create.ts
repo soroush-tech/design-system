@@ -238,10 +238,15 @@ async function askSampleData(io: Io): Promise<boolean> {
 
 /** Every choice the app is made from, asked or given. */
 interface Choices {
+  name: string
+  packageName: string
+  /** The app's folder, and whether create makes it. */
+  target: string
+  wasMissing: boolean
   title: string
   starter: Starter
   isTypeScript: boolean
-  packageManager: PackageManagerName
+  packageManager: PackageManager
   layout: Layout
   rendering: Rendering
   libraries: readonly Library[]
@@ -259,7 +264,7 @@ function formatChoices(choices: Choices): string {
     ['Title', [choices.title]],
     ['Framework', [toPicked(choices.starter.label)]],
     ['Language', [choices.isTypeScript ? 'TypeScript' : 'JavaScript']],
-    ['Package manager', [choices.packageManager]],
+    ['Package manager', [choices.packageManager.name]],
     ['Repository', [toPicked(LAYOUT_LABELS[choices.layout])]],
     ['Rendering', [toPicked(RENDERING_LABELS[choices.rendering])]],
     ['Libraries', libraries.length ? libraries.map(({ label }) => label) : ['none']],
@@ -349,6 +354,165 @@ function writeAndInstall(
   return 0
 }
 
+/** The answer given on the command line, else the person's when `isAsked`, else `fallback`. */
+async function choose<T>(
+  given: T | undefined,
+  isAsked: boolean,
+  ask: () => Promise<T>,
+  fallback: T
+): Promise<T> {
+  if (given !== undefined) return given
+  return isAsked ? ask() : fallback
+}
+
+/** Refuses a --framework create has no starter for, or a create with no starter at all. */
+function findStarterRefusal(
+  starters: Readonly<Record<string, Starter>>,
+  given: string | undefined
+): string | undefined {
+  const frameworks = Object.keys(starters)
+  if (frameworks.length > 0 && (given === undefined || Object.hasOwn(starters, given))) {
+    return undefined
+  }
+  const names = frameworks.join(', ') || 'none yet'
+  return `create has no starter for ${given ?? 'any framework'}. It has: ${names}.`
+}
+
+/** The app's folder, new or empty, and its title: asked for, or given. */
+async function readFolder(
+  options: CreateOptions,
+  io: Io,
+  canAsk: boolean
+): Promise<Pick<Choices, 'name' | 'target' | 'wasMissing' | 'title'> | { refusal: string }> {
+  const name = await choose(options.name, canAsk, () => askName(io), DEFAULT_NAME)
+  const nameRefusal = findNameRefusal(name)
+  if (nameRefusal) return { refusal: nameRefusal }
+  const target = join(realpathSync(io.cwd), name)
+  const folder = getFolderState(target, name)
+  if (typeof folder === 'object') return folder
+  const title = (await choose(options.title, canAsk, () => askTitle(io, name), name)).trim() || name
+  if (isRefusedTitle(title)) {
+    return { refusal: `${title} is not a title create can use: it cannot hold \` $ { } < > or \\.` }
+  }
+  return { name, target, wasMissing: folder === 'missing', title }
+}
+
+/** Refuses a --render none of the starters in `pool` renders, naming the ones that do. */
+function findRenderingRefusal(
+  rendering: Rendering | undefined,
+  offered: readonly Rendering[],
+  pool: readonly string[],
+  starters: Readonly<Record<string, Starter>>
+): string | undefined {
+  if (rendering === undefined || offered.includes(rendering)) return undefined
+  const titles = pool.map((framework) => starters[framework].title).join(' or ')
+  // The starters that do render it, which --framework would pick.
+  const others = Object.keys(starters).filter((framework) =>
+    starters[framework].renderings.includes(rendering)
+  )
+  const pointer = others.map((framework) => ` --framework ${framework} does.`).join('')
+  return `${titles} does not render ${rendering}: it renders ${offered.join(' or ')}.${pointer}`
+}
+
+/** Refuses --with for an app that takes no library, or libraries that do not go together. */
+function findLibraryRefusal(
+  libraries: readonly Library[] | undefined,
+  rendering: Rendering,
+  starter: Starter
+): string | undefined {
+  if (!libraries?.length) return undefined
+  // An SSG page has no JavaScript in the browser, where every library works.
+  if (rendering === 'ssg') {
+    return 'An SSG app has no JavaScript in the browser, so it takes no library: leave out --with.'
+  }
+  if (!starter.hasLibraries) return `${starter.title} takes no library yet: leave out --with.`
+  return findLibraryConflict(libraries)
+}
+
+/** Every choice the app is made from: given, asked for when `canAsk`, or the default. */
+async function readChoices(
+  options: CreateOptions,
+  io: Io,
+  starters: Readonly<Record<string, Starter>>,
+  userAgent: string | undefined,
+  canAsk: boolean
+): Promise<Choices | { refusal: string }> {
+  const given = options.framework
+  const starterRefusal = findStarterRefusal(starters, given)
+  if (starterRefusal) return { refusal: starterRefusal }
+  // The frameworks the app may be on: the one --framework names, else each one create has.
+  const pool = given === undefined ? Object.keys(starters) : [given]
+  const folder = await readFolder(options, io, canAsk)
+  if ('refusal' in folder) return folder
+  const isTypeScript = await choose(options.isTypeScript, canAsk, () => askLanguage(io), true)
+  const detected = readPackageManager(userAgent)
+  const packageManagerName = await choose(
+    options.packageManager,
+    canAsk,
+    () => askPackageManager(io, detected.name),
+    detected.name
+  )
+  const packageManager = resolvePackageManager(packageManagerName, detected, io)
+  if ('refusal' in packageManager) return packageManager
+  const layout = await choose(options.layout, canAsk, () => askLayout(io), LAYOUTS[0])
+  const offered = RENDERINGS.filter((rendering) =>
+    pool.some((framework) => starters[framework].renderings.includes(rendering))
+  )
+  const renderingRefusal = findRenderingRefusal(options.rendering, offered, pool, starters)
+  if (renderingRefusal) return { refusal: renderingRefusal }
+  const rendering = await choose(
+    options.rendering,
+    canAsk && offered.length > 1,
+    () => askRendering(io, offered),
+    offered[0]
+  )
+  // The framework comes after the rendering: the question offers the ones that render it.
+  const candidates = pool.filter((framework) => starters[framework].renderings.includes(rendering))
+  const framework =
+    canAsk && candidates.length > 1 ? await askFramework(io, starters, candidates) : candidates[0]
+  const starter = starters[framework]
+  const libraryRefusal = findLibraryRefusal(options.libraries, rendering, starter)
+  if (libraryRefusal) return { refusal: libraryRefusal }
+  const takesLibraries = starter.hasLibraries && rendering !== 'ssg'
+  const libraries = await choose(
+    options.libraries,
+    canAsk && takesLibraries,
+    () => askLibraries(io),
+    []
+  )
+  const scheme = await choose(options.scheme, canAsk, () => askScheme(io), 'light')
+  const hasSampleData = await choose(options.hasSampleData, canAsk, () => askSampleData(io), false)
+  return {
+    ...folder,
+    packageName: toPackageName(folder.name),
+    starter,
+    isTypeScript,
+    packageManager,
+    layout,
+    rendering,
+    libraries,
+    scheme,
+    hasSampleData,
+  }
+}
+
+/** The line that says what create will make, and where. */
+function formatHeadline({
+  name,
+  packageName,
+  starter,
+  isTypeScript,
+  rendering,
+  layout,
+}: Choices): string {
+  const article = /^[AEIOU]/.test(starter.title) ? 'an' : 'a'
+  const language = isTypeScript ? 'TypeScript' : 'JavaScript'
+  const packageNote = packageName === name ? '' : ` (package ${packageName})`
+  const renderingName = rendering === 'isomorphic' ? rendering : rendering.toUpperCase()
+  const workspaceNote = layout === 'workspace' ? 'in a workspace, ' : ''
+  return `create will make ${name}${packageNote}, ${article} ${starter.title} app in ${language} (${renderingName}), ${workspaceNote}in ./${name}:`
+}
+
 /**
  * Starts a new app on the design system, in a new or empty folder in `io.cwd`: asks what it is
  * not told, plans with the starter, shows the plan, and writes and installs only after a yes.
@@ -366,94 +530,22 @@ export async function runCreate(
 ): Promise<number> {
   const isPreviewOnly = options.isDryRun || (!io.isInteractive && !options.isConfirmed)
   const canAsk = !isPreviewOnly && !options.isConfirmed
-
-  const frameworks = Object.keys(starters)
-  const given = options.framework
-  if (frameworks.length === 0 || (given !== undefined && !Object.hasOwn(starters, given))) {
-    const names = frameworks.join(', ') || 'none yet'
-    io.write(`create has no starter for ${given ?? 'any framework'}. It has: ${names}.\n`)
+  const choices = await readChoices(options, io, starters, userAgent, canAsk)
+  if ('refusal' in choices) {
+    io.write(`${choices.refusal}\n`)
     return 1
   }
-  // The frameworks the app may be on: the one --framework names, else each one create has.
-  const pool = given === undefined ? frameworks : [given]
-  const name = options.name ?? (canAsk ? await askName(io) : DEFAULT_NAME)
-  const nameRefusal = findNameRefusal(name)
-  if (nameRefusal) {
-    io.write(`${nameRefusal}\n`)
-    return 1
-  }
-  const target = join(realpathSync(io.cwd), name)
-  const folder = getFolderState(target, name)
-  if (typeof folder === 'object') {
-    io.write(`${folder.refusal}\n`)
-    return 1
-  }
-  const title = (options.title ?? (canAsk ? await askTitle(io, name) : name)).trim() || name
-  if (isRefusedTitle(title)) {
-    io.write(`${title} is not a title create can use: it cannot hold \` $ { } < > or \\.\n`)
-    return 1
-  }
-  const packageName = toPackageName(name)
-  const isTypeScript = options.isTypeScript ?? (canAsk ? await askLanguage(io) : true)
-  const detected = readPackageManager(userAgent)
-  const packageManagerName =
-    options.packageManager ?? (canAsk ? await askPackageManager(io, detected.name) : detected.name)
-  const packageManager = resolvePackageManager(packageManagerName, detected, io)
-  if ('refusal' in packageManager) {
-    io.write(`${packageManager.refusal}\n`)
-    return 1
-  }
-  const layout = options.layout ?? (canAsk ? await askLayout(io) : LAYOUTS[0])
+  const { name, packageName, title, layout, packageManager } = choices
   const isWorkspace = layout === 'workspace'
-  const offered = RENDERINGS.filter((rendering) =>
-    pool.some((framework) => starters[framework].renderings.includes(rendering))
-  )
-  if (options.rendering !== undefined && !offered.includes(options.rendering)) {
-    const titles = pool.map((framework) => starters[framework].title).join(' or ')
-    // The starters that do render it, which --framework would pick.
-    const others = frameworks.filter((framework) =>
-      starters[framework].renderings.includes(options.rendering!)
-    )
-    const pointer = others.map((framework) => ` --framework ${framework} does.`).join('')
-    io.write(
-      `${titles} does not render ${options.rendering}: it renders ${offered.join(' or ')}.${pointer}\n`
-    )
-    return 1
-  }
-  const rendering =
-    options.rendering ??
-    (canAsk && offered.length > 1 ? await askRendering(io, offered) : offered[0])
-  // The framework comes after the rendering: the question offers the ones that render it.
-  const candidates = pool.filter((framework) => starters[framework].renderings.includes(rendering))
-  const framework =
-    canAsk && candidates.length > 1 ? await askFramework(io, starters, candidates) : candidates[0]
-  const starter = starters[framework]
-  const libraryRefusal = !options.libraries?.length
-    ? undefined
-    : rendering === 'ssg'
-      ? // An SSG page has no JavaScript in the browser, where every library works.
-        'An SSG app has no JavaScript in the browser, so it takes no library: leave out --with.'
-      : starter.hasLibraries
-        ? findLibraryConflict(options.libraries)
-        : `${starter.title} takes no library yet: leave out --with.`
-  if (libraryRefusal) {
-    io.write(`${libraryRefusal}\n`)
-    return 1
-  }
-  const takesLibraries = starter.hasLibraries && rendering !== 'ssg'
-  const libraries = options.libraries ?? (canAsk && takesLibraries ? await askLibraries(io) : [])
-  const scheme = options.scheme ?? (canAsk ? await askScheme(io) : 'light')
-  const hasSampleData = options.hasSampleData ?? (canAsk ? await askSampleData(io) : false)
-
-  const appFiles = starter.createFiles({
+  const appFiles = choices.starter.createFiles({
     name,
     packageName: isWorkspace ? toAppPackageName(packageName) : packageName,
     title,
-    isTypeScript,
-    rendering,
-    libraries,
-    scheme,
-    hasSampleData,
+    isTypeScript: choices.isTypeScript,
+    rendering: choices.rendering,
+    libraries: choices.libraries,
+    scheme: choices.scheme,
+    hasSampleData: choices.hasSampleData,
     version: designSystem.version!,
   })
   const plan: Plan = {
@@ -465,19 +557,12 @@ export async function runCreate(
     manual: [],
     install: createAppInstallCommand(packageManager),
   }
-  const language = isTypeScript ? 'TypeScript' : 'JavaScript'
-  const packageNote = packageName === name ? '' : ` (package ${packageName})`
-  const renderingName = rendering === 'isomorphic' ? rendering : rendering.toUpperCase()
-  io.write(
-    `create will make ${name}${packageNote}, ${/^[AEIOU]/.test(starter.title) ? 'an' : 'a'} ${starter.title} app in ${language} (${renderingName}), ${isWorkspace ? 'in a workspace, ' : ''}in ./${name}:\n\n`
-  )
-  io.write(
-    `${formatChoices({ title, starter, isTypeScript, packageManager: packageManager.name, layout, rendering, libraries, scheme, hasSampleData })}\n\n`
-  )
+  io.write(`${formatHeadline(choices)}\n\n`)
+  io.write(`${formatChoices(choices)}\n\n`)
   io.write(`${formatPlan(plan)}\n`)
   if (!(await isApproved(options, isPreviewOnly, io))) return 0
   return writeAndInstall(
-    { name, target, wasMissing: folder === 'missing', plan, packageManager },
+    { name, target: choices.target, wasMissing: choices.wasMissing, plan, packageManager },
     options,
     io,
     fileSystem

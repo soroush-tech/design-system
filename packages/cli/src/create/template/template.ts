@@ -78,6 +78,37 @@ export function isConditionMet(expression: string, flags: Flags): boolean {
   return value
 }
 
+/** An open @if: whether its lines are kept, and whether one of its branches already was. */
+interface Block {
+  isKept: boolean
+  isTaken: boolean
+}
+
+/** Opens a block on an @if, switches its branch on an @elif or @else, and closes it on @endif. */
+function applyMarker(
+  open: Block[],
+  { word, expression }: { word: string; expression: string },
+  flags: Flags,
+  name: string
+): void {
+  if (word === 'if') {
+    const holds = isConditionMet(expression, flags)
+    open.push({ isKept: holds, isTaken: holds })
+    return
+  }
+  const block = open.at(-1)
+  if (!block) throw new Error(`${name} has an @${word} with no @if.`)
+  if (word === 'elif') {
+    block.isKept = !block.isTaken && isConditionMet(expression, flags)
+    block.isTaken ||= block.isKept
+  } else if (word === 'else') {
+    block.isKept = !block.isTaken
+    block.isTaken = true
+  } else {
+    open.pop()
+  }
+}
+
 /**
  * A template's text for an app: the lines whose conditions hold, with each placeholder replaced by
  * its value. Returns `undefined` when nothing is left, so the file is not written.
@@ -88,32 +119,13 @@ export function renderTemplate(
   values: Readonly<Record<string, string>>,
   name = 'the template'
 ): string | undefined {
-  // Each open @if: whether its lines are kept, and whether one of its branches already was.
-  const open: { isKept: boolean; isTaken: boolean }[] = []
+  const open: Block[] = []
   const isKept = () => open.every((block) => block.isKept)
   const lines: string[] = []
   for (const line of source.split('\n')) {
     const marker = readMarker(line)
-    if (!marker) {
-      if (isKept()) lines.push(line)
-      continue
-    }
-    const { word, expression } = marker
-    const block = open.at(-1)
-    if (word === 'if') {
-      const holds = isConditionMet(expression, flags)
-      open.push({ isKept: holds, isTaken: holds })
-    } else if (!block) {
-      throw new Error(`${name} has an @${word} with no @if.`)
-    } else if (word === 'elif') {
-      block.isKept = !block.isTaken && isConditionMet(expression, flags)
-      block.isTaken ||= block.isKept
-    } else if (word === 'else') {
-      block.isKept = !block.isTaken
-      block.isTaken = true
-    } else {
-      open.pop()
-    }
+    if (marker) applyMarker(open, marker, flags, name)
+    else if (isKept()) lines.push(line)
   }
   if (open.length > 0) throw new Error(`${name} leaves an @if open.`)
   let text = lines.join('\n')

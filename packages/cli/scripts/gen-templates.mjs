@@ -89,24 +89,36 @@ function toJavaScript(path, source) {
   return { path, content: renamePaths(source) }
 }
 
+/** Each framework that has TypeScript templates: its name, and the folder they are in. */
+const listSourceFolders = () =>
+  readdirSync(templatesRoot, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map(({ name }) => ({ name, source: join(templatesRoot, name, 'ts') }))
+    .filter(({ source }) => existsSync(source))
+
+/**
+ * Writes one JavaScript template at `target`. Returns a script's draft and where it goes, as it is
+ * formatted first.
+ */
+function writeTemplate(file, target) {
+  mkdirSync(dirname(target), { recursive: true })
+  // JavaScript is formatted under its TypeScript name: the parser then allows what a template
+  // holds in its branches, such as a default export each, and the rules are the same.
+  const isScript = /\.jsx?$/.test(file.path)
+  const draft = isScript ? target.replace(/\.js(x?)$/, '.ts$1') : target
+  writeFileSync(draft, file.content)
+  return isScript ? { draft, target } : undefined
+}
+
 /** Writes the JavaScript templates of every framework under `outputRoot`, formatted. */
 function generate(outputRoot) {
   const written = []
-  for (const framework of readdirSync(templatesRoot, { withFileTypes: true })) {
-    if (!framework.isDirectory()) continue
-    const source = join(templatesRoot, framework.name, 'ts')
-    if (!existsSync(source)) continue
+  for (const { name, source } of listSourceFolders()) {
     for (const path of listFiles(source)) {
       const file = toJavaScript(path, readFileSync(join(source, path), 'utf8'))
       if (!file) continue
-      const target = join(outputRoot, framework.name, 'js', file.path)
-      mkdirSync(dirname(target), { recursive: true })
-      // JavaScript is formatted under its TypeScript name: the parser then allows what a template
-      // holds in its branches, such as a default export each, and the rules are the same.
-      const isScript = /\.jsx?$/.test(file.path)
-      const draft = isScript ? target.replace(/\.js(x?)$/, '.ts$1') : target
-      writeFileSync(draft, file.content)
-      if (isScript) written.push({ draft, target })
+      const script = writeTemplate(file, join(outputRoot, name, 'js', file.path))
+      if (script) written.push(script)
     }
   }
   // The repository's own formatter settings, from its root.

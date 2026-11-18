@@ -72,7 +72,7 @@ function createRootFiles(facts: WorkspaceFacts, scripts: readonly string[]): Sta
       ? [
           {
             path: 'pnpm-workspace.yaml',
-            content: `packages:\n${WORKSPACES.map((glob) => `  - ${glob}\n`).join('')}`,
+            content: ['packages:', ...WORKSPACES.map((glob) => `  - ${glob}`), ''].join('\n'),
           },
         ]
       : []),

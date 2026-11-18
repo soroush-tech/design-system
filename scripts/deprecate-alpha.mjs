@@ -46,8 +46,10 @@ const fetchPackument = async (name) => {
 
 const toDeprecate = []
 const waiting = []
-for (const name of publishableNames()) {
-  const packument = await fetchPackument(name)
+const names = publishableNames()
+const packuments = await Promise.all(names.map(fetchPackument))
+for (const [index, name] of names.entries()) {
+  const packument = packuments[index]
   for (const [version, meta] of Object.entries(packument?.versions ?? {})) {
     const release = ALPHA.exec(version)?.[1]
     if (!release || meta.deprecated) continue
@@ -92,20 +94,27 @@ const askCode = async (question) => {
   return askCode('That is not a one-time code. Try again (Enter to stop): ')
 }
 
-let otp = await askCode(
-  `\nnpm one-time code to deprecate these ${toDeprecate.length} (Enter to stop): `
-)
-let done = 0
-for (const item of toDeprecate) {
-  while (otp && !deprecate(item, otp)) {
-    otp = await askCode(
+/**
+ * Deprecates `items` one after another with `otp`, asking for a new code each time npm refuses
+ * one. Stops at an empty code. Returns how many it deprecated.
+ */
+const deprecateAll = async (items, otp, done = 0) => {
+  const [item, ...rest] = items
+  if (!item || !otp) return done
+  if (!deprecate(item, otp)) {
+    const next = await askCode(
       `npm refused ${item.spec}; the code may have expired. New code (Enter to stop): `
     )
+    return deprecateAll(items, next, done)
   }
-  if (!otp) break
   console.log(`  done  ${item.spec}`)
-  done += 1
+  return deprecateAll(rest, otp, done + 1)
 }
+
+const done = await deprecateAll(
+  toDeprecate,
+  await askCode(`\nnpm one-time code to deprecate these ${toDeprecate.length} (Enter to stop): `)
+)
 prompt.close()
 
 if (done < toDeprecate.length) {

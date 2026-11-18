@@ -48,13 +48,16 @@ const mergeHeadShas = () => {
     .filter(Boolean)
 }
 
+/** Runs `command` in the repository's root, as `execFileSync` does. */
+const runInRepo = (command, args, options) =>
+  execFileSync(command, args, { cwd: repoRoot, ...options })
+
 /**
  * Staged file paths differing from `base` - HEAD when omitted.
  * Empty when nothing is staged (e.g. in CI).
  */
 const stagedFiles = (base) =>
-  execFileSync('git', ['diff', '--cached', '--name-only', ...(base ? [base] : [])], {
-    cwd: repoRoot,
+  runInRepo('git', ['diff', '--cached', '--name-only', ...(base ? [base] : [])], {
     encoding: 'utf8',
   }).split('\n')
 
@@ -92,10 +95,10 @@ const compareVersions = (a, b) => {
  */
 const matchesRelease = (dir, name, version) => {
   try {
-    execFileSync(
+    runInRepo(
       'git',
       ['diff', '--cached', '--quiet', `${name}@${version}`, '--', `packages/${dir}`],
-      { cwd: repoRoot, stdio: 'ignore' }
+      { stdio: 'ignore' }
     )
     return true
   } catch {

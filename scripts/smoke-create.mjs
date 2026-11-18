@@ -130,7 +130,7 @@ function pack(names, packages, destination) {
   for (const name of names) {
     const before = new Set(readdirSync(destination))
     run('pnpm', ['pack', '--pack-destination', destination], packages.get(name).dir)
-    const [file] = readdirSync(destination).filter((entry) => !before.has(entry))
+    const file = readdirSync(destination).find((entry) => !before.has(entry))
     tarballs[name] = join(destination, file)
   }
   return tarballs
@@ -179,7 +179,8 @@ async function checkSampleDataPages(appDir, fetchPage) {
     ? [...readSampleData(appDir).matchAll(/^ {4}id: '([^']+)',$/gm)].map(([, id]) => id)
     : [...list.html.matchAll(/href="\/items\/([^"]+)"/g)].map(([, id]) => id)
   check(ids.length > 0, `/items lists the sample items: ${ids.join(', ')}`)
-  for (const id of ids) {
+  const items = await Promise.all(ids.map((id) => fetchPage(`/items/${id}`)))
+  for (const [index, id] of ids.entries()) {
     // A server renders each item as it is asked for, and an SPA in the browser; a build writes
     // them all.
     if (!isServer && !isSpa) {
@@ -188,7 +189,7 @@ async function checkSampleDataPages(appDir, fetchPage) {
         `the build prerendered items/${id}/index.html`
       )
     }
-    const item = await fetchPage(`/items/${id}`)
+    const item = items[index]
     check(
       item.status === 200 && (isSpa || item.html.includes('>All items</a>')),
       `/items/${id} answers with its page`
@@ -221,18 +222,20 @@ async function startBuiltServer(appDir) {
     stdio: 'inherit',
   })
   const base = `http://localhost:${port}/`
-  for (let attempt = 0; ; attempt += 1) {
+  // Asks every half second, up to 60 times, until the server answers or exits.
+  const waitForAnswer = async (attempt) => {
     try {
       await fetch(base)
-      break
     } catch (error) {
       if (attempt === 60 || server.exitCode !== null) {
         server.kill()
         throw new Error(`The server at ${SERVER_ENTRY} did not answer: ${error}`)
       }
       await new Promise((resolve) => setTimeout(resolve, 500))
+      await waitForAnswer(attempt + 1)
     }
   }
+  await waitForAnswer(0)
   const stop = () =>
     new Promise((resolve) => {
       server.once('exit', resolve)
@@ -262,7 +265,8 @@ function checkHome(home) {
   if (isAstro) {
     // Astro's counter and greeting are islands that render in the browser only: the HTML holds
     // where each one goes.
-    const island = (name) => new RegExp(`<astro-island[^>]*component-url="[^"]*/${name}\\.`)
+    const island = (name) =>
+      new RegExp(String.raw`<astro-island[^>]*component-url="[^"]*/${name}\.`)
     if (render !== 'ssg') {
       check(home.html.includes('<astro-island'), "/ hydrates its parts as Astro's islands")
       check(island('Counter').test(home.html), '/ has the island of its counter')

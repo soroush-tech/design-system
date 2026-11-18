@@ -2,7 +2,7 @@ import { maskSource } from './maskSource'
 
 /** Whether `code` declares `name` at all: a function, class, or binding of that name. */
 const declares = (masked: string, name: string): boolean =>
-  new RegExp(`\\b(?:function|class|const|let|var)\\s+${name}\\b`).test(masked)
+  new RegExp(String.raw`\b(?:function|class|const|let|var)\s+${name}\b`).test(masked)
 
 /**
  * The name of the component a demo is wrapped in: `Demo`, unless the code it wraps declares

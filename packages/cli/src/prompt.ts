@@ -70,7 +70,8 @@ export function formatChoice(
   const hint = picked ? 'space to pick, enter when done' : 'arrows to move, enter to pick'
   const lines = choices.map(({ value, label }, index) => {
     const pointer = index === cursor ? '>' : ' '
-    const box = picked ? (picked.includes(value) ? '[x] ' : '[ ] ') : ''
+    let box = ''
+    if (picked) box = picked.includes(value) ? '[x] ' : '[ ] '
     return `${pointer} ${box}${label}`
   })
   return `? ${question}  (${hint})\n${lines.join('\n')}\n`

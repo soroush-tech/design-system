@@ -8,6 +8,7 @@ import type { PackageJson } from './detect/detect'
 import { runInit } from './init'
 import type { Io } from './io'
 import type { PackageManagerName } from './plan/planInit'
+import type { Scheme } from './templates/templates'
 import { CancelledError } from './prompt'
 
 const BIN = 'npx @soroush.design/cli'
@@ -124,6 +125,48 @@ function findMisuse(command: string, extra: string[], used: string[]): string | 
     : undefined
 }
 
+/** `--with`'s libraries, named by comma; `--with ''` adds none. */
+const readLibraries = (names: string | undefined) =>
+  names
+    ?.split(',')
+    .map((name) => name.trim())
+    .filter(Boolean)
+
+/** The options whose values are checked. */
+interface OptionValues {
+  scheme?: string
+  ts?: boolean
+  js?: boolean
+  render?: string
+  layout?: string
+  pm?: string
+}
+
+/** Why an option's value is wrong, or `undefined` when every one is right. */
+function findValueRefusal(
+  { scheme, ts, js, render, layout, pm }: OptionValues,
+  libraries: readonly string[] | undefined
+): string | undefined {
+  if (scheme !== undefined && scheme !== 'light' && scheme !== 'dark') {
+    return `--scheme is light or dark, not ${scheme}.`
+  }
+  if (ts && js) return '--ts and --js do not go together: give one.'
+  const unknownLibrary = libraries?.find((name) => !LIBRARY_NAMES.includes(name as Library))
+  if (unknownLibrary !== undefined) {
+    return `--with takes ${LIBRARY_NAMES.join(', ')}, not ${unknownLibrary}.`
+  }
+  if (render !== undefined && !RENDERINGS.includes(render as Rendering)) {
+    return `--render is ${RENDERINGS.join(', ')}, not ${render}.`
+  }
+  if (layout !== undefined && !LAYOUTS.includes(layout as Layout)) {
+    return `--layout is ${LAYOUTS.join(', ')}, not ${layout}.`
+  }
+  if (pm !== undefined && !PACKAGE_MANAGERS.includes(pm as PackageManagerName)) {
+    return `--pm is ${PACKAGE_MANAGERS.join(', ')}, not ${pm}.`
+  }
+  return undefined
+}
+
 /**
  * Reads the command line and runs the command, for `designSystem`: the package of
  * `@soroush.tech/design-system` the command installs. Returns the exit code: 130 when the person
@@ -173,41 +216,14 @@ async function runCommandLine(
     io.write(`${misuse}\n\n${getHelp(command)}`)
     return 1
   }
-  const { scheme } = values
-  if (scheme !== undefined && scheme !== 'light' && scheme !== 'dark') {
-    io.write(`--scheme is light or dark, not ${scheme}.\n`)
+  const libraries = readLibraries(values.with)
+  const refusal = findValueRefusal(values, libraries)
+  if (refusal) {
+    io.write(`${refusal}\n`)
     return 1
   }
-  if (values.ts && values.js) {
-    io.write('--ts and --js do not go together: give one.\n')
-    return 1
-  }
-  // `--with` names the libraries by comma; `--with ''` adds none.
-  const libraries = values.with
-    ?.split(',')
-    .map((name) => name.trim())
-    .filter(Boolean)
-  const unknownLibrary = libraries?.find((name) => !LIBRARY_NAMES.includes(name as Library))
-  if (unknownLibrary !== undefined) {
-    io.write(`--with takes ${LIBRARY_NAMES.join(', ')}, not ${unknownLibrary}.\n`)
-    return 1
-  }
-  const { render } = values
-  if (render !== undefined && !RENDERINGS.includes(render as Rendering)) {
-    io.write(`--render is ${RENDERINGS.join(', ')}, not ${render}.\n`)
-    return 1
-  }
-  const { layout } = values
-  if (layout !== undefined && !LAYOUTS.includes(layout as Layout)) {
-    io.write(`--layout is ${LAYOUTS.join(', ')}, not ${layout}.
-`)
-    return 1
-  }
-  const { pm } = values
-  if (pm !== undefined && !PACKAGE_MANAGERS.includes(pm as PackageManagerName)) {
-    io.write(`--pm is ${PACKAGE_MANAGERS.join(', ')}, not ${pm}.\n`)
-    return 1
-  }
+  const { pm, layout, render } = values
+  const scheme = values.scheme as Scheme | undefined
   const isConfirmed = Boolean(values.yes)
   const isDryRun = Boolean(values['dry-run'])
   if (command === 'create') {
