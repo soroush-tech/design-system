@@ -1,8 +1,6 @@
 // @vitest-environment node
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import designSystem from '../../design-system/package.json'
-import cli from '../package.json'
-import { getDesignSystemVersion } from './designSystemVersion'
 import { main } from './main'
 
 vi.mock('./main', () => ({ main: vi.fn(async () => 3) }))
@@ -25,7 +23,7 @@ describe('bin', () => {
       expect.objectContaining({ cwd: process.cwd() }),
       {
         name: '@soroush.tech/design-system',
-        version: getDesignSystemVersion(designSystem.version, cli.version),
+        version: designSystem.version,
         peerDependencies: designSystem.peerDependencies,
       }
     )

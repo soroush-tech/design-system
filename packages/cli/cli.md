@@ -7,10 +7,10 @@ renders; [`README.md`](./README.md) is npm's short page, which points there.
 
 ## Two ways in, one command line
 
-| Run as                                 | Bin                                 | The design system it installs                                                            |
-| -------------------------------------- | ----------------------------------- | ---------------------------------------------------------------------------------------- |
-| `npx @soroush.tech/design-system init` | `packages/design-system/src/bin.ts` | That package itself, found by its `package.json`                                         |
-| `npx @soroush.design/cli init`         | `packages/cli/src/bin.ts`           | The workspace's version, read at build time; a prerelease cli asks for its own channel's |
+| Run as                                 | Bin                                 | The design system it installs                                                       |
+| -------------------------------------- | ----------------------------------- | ----------------------------------------------------------------------------------- |
+| `npx @soroush.tech/design-system init` | `packages/design-system/src/bin.ts` | That package itself, found by its `package.json`                                    |
+| `npx @soroush.design/cli init`         | `packages/cli/src/bin.ts`           | The workspace's version, read at build time: a released one, even from an alpha cli |
 
 `@soroush.tech/design-system` depends on this package at an exact version, and its bin is a
 shim: it calls this package's default export, `main(argv, io, designSystem)`, with its own
