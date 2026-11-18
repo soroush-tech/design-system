@@ -234,7 +234,9 @@ async function runCommandLine(
         title: values.title,
         framework: values.framework,
         isTypeScript,
-        packageManager: pm as PackageManagerName | undefined,
+        // The package manager create runs: the one of its own list that --pm names, never the text
+        // as typed.
+        packageManager: PACKAGE_MANAGERS.find((name) => name === pm),
         layout: layout as Layout | undefined,
         rendering: render as Rendering | undefined,
         libraries: libraries as Library[] | undefined,
