@@ -67,7 +67,10 @@ describe('the Astro starter', () => {
     for (const [path, content] of files) {
       await expect(content).toMatchFileSnapshot(`${fixture}/${path}`)
     }
-    const islands = rendering === 'ssg' ? [] : ['src/theme/scheme.ts', 'src/components/Counter.tsx']
+    const islands =
+      rendering === 'ssg'
+        ? []
+        : ['src/theme/scheme.ts', 'src/components/Counter.tsx', 'src/components/SchemeSwitch.tsx']
     expect([...files.keys()].sort()).toEqual([...PATHS, ...islands, ...SAMPLE_DATA_PATHS].sort())
   })
 
@@ -140,9 +143,10 @@ describe('the Astro starter', () => {
     expect(files.get('src/pages/index.astro')).toContain(
       '<Home client:load>\n    <Counter client:only="react" />\n  </Home>'
     )
-    expect(files.get('src/components/Header.tsx')).toContain(
-      'onClick={() => setScheme(otherScheme)}'
-    )
+    const header = files.get('src/components/Header.tsx')!
+    expect(header).toContain('<AppBar\n      position="sticky"')
+    expect(header).toContain('<SchemeSwitch scheme={scheme} onSchemeChange={setScheme} />')
+    expect(files.get('src/components/SchemeSwitch.tsx')).toContain('aria-label="Toggle theme"')
     expect(files.get('src/theme/Island.tsx')).toContain('theme={themes[useScheme()]}')
   })
 
@@ -174,7 +178,8 @@ describe('the Astro starter', () => {
     for (const [path, content] of files) {
       if (path.endsWith('.astro')) expect(content, path).not.toContain('client:load')
     }
-    expect(files.get('src/components/Header.tsx')).not.toMatch(/Button|setScheme/)
+    expect(files.get('src/components/Header.tsx')).not.toMatch(/SchemeSwitch|setScheme/)
+    expect(files.has('src/components/SchemeSwitch.tsx')).toBe(false)
     expect(files.get('src/theme/Island.tsx')).toContain('theme={themes.dark}')
     expect(files.get('src/pages/index.astro')).toContain('  <Home />\n')
     expect(files.get('src/components/Home.test.tsx')).not.toContain('Count')
@@ -270,7 +275,7 @@ describe('the Astro starter', () => {
   it('names the app by its title', () => {
     const files = createFiles({ title: 'Shop' })
     expect(files.get('src/layouts/Layout.astro')).toContain('<title>Shop</title>')
-    expect(files.get('src/components/Header.tsx')).toContain('          Shop\n')
+    expect(files.get('src/components/Header.tsx')).toContain('        Shop\n')
     expect(files.get('README.md')!.startsWith('# Shop\n')).toBe(true)
   })
 })

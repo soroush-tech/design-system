@@ -173,6 +173,11 @@ Create:
   Color scheme       dark, by default
   Sample data pages  yes: /items and /items/<id>, from src/data/items
 `)
+    // What was picked, with no "(recommended)": that is the question's, not the answer's.
+    const recommended = { ...BARE, label: 'Bare (recommended): the bare starter' }
+    const bare = setUp({ dependencies: { starters: { bare: recommended } } })
+    expect(await bare.create(YES)).toBe(0)
+    expect(bare.getOutput()).toContain('  Framework          Bare: the bare starter\n')
   })
 
   it('installs with the package manager that ran it', async () => {

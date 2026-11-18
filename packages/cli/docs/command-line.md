@@ -146,8 +146,9 @@ and a test checks the greeting it gives.
 
 - `src/pages/` holds the pages - a home page, a second page and a 404 page - built from the design
   system's components and theme tokens only.
-- `src/pages/+Layout` is the frame every page renders in. It renders `<Providers>`, and holds a
-  light and dark switch.
+- `src/pages/+Layout` is the frame every page renders in. It renders `<Providers>` and
+  `src/components/Header`, an app bar that sticks to the top: the title, the links, and the light
+  and dark switch (`src/components/SchemeSwitch`). On a phone, the links take a row of their own.
 - `src/theme/themes` holds a `light` and a `dark` theme, as `init` writes them: make them your own.
 - `src/pages/+onRenderHtml` and `+onRenderClient` render the pages with the design system's
   Emotion cache. There is no renderer package to install.
@@ -170,8 +171,8 @@ With sample data pages, it also shows how data gets onto a page, with no data li
   to another:
   - each island is exported inside `withIsland` (`src/theme/Island`), which renders it inside
     the theme, and the query client and the Redux store when the app has them;
-  - the header renders `<Providers>`, which draws the base styles once a page, and holds the light
-    and dark switch;
+  - the header, an app bar that sticks to the top, renders `<Providers>`, which draws the base
+    styles once a page, and holds the light and dark switch (`src/components/SchemeSwitch`);
   - the islands share the scheme through `src/theme/scheme`.
 - SSR (the default), the server renders each page on each request, and the islands hydrate in
   the browser. Astro's client router moves between pages with no reload: it fetches the next
@@ -191,7 +192,8 @@ With sample data pages, it also shows how data gets onto a page, with no data li
 ### The React Router app
 
 - `src/routes` lists the pages by path, each inside `src/pages/Layout`, which renders
-  `<Providers>`, holds the light and dark switch, and draws the page in its `<Outlet />`. A path
+  `<Providers>` and `src/components/Header` - an app bar with the title, the links, and the light
+  and dark switch - and draws the page in its `<Outlet />`. A path
   with no page, and a page that fails, show `src/pages/ErrorPage` in the layout.
 - `src/main` creates the router with `createBrowserRouter` and renders it in `index.html`'s
   `#root`. With msw, it starts the mock API first.

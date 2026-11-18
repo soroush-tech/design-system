@@ -45,6 +45,8 @@ const PATHS = [
   'src/main.tsx',
   'src/routes.tsx',
   'src/components/RouterLink.tsx',
+  'src/components/Header.tsx',
+  'src/components/SchemeSwitch.tsx',
   'src/pages/Layout.tsx',
   'src/pages/ErrorPage.tsx',
   'src/pages/index/Page.tsx',
@@ -126,7 +128,13 @@ describe('the React Router starter', () => {
     expect(routes).toContain("{ path: '*', element: <ErrorPage /> },")
     const layout = files.get('src/pages/Layout.tsx')!
     expect(layout).toContain('<Outlet />')
-    expect(layout).toContain('<RouterLink to="/about" underline="hover">')
+    expect(layout).toContain(
+      '<Header>\n        <SchemeSwitch scheme={scheme} onSchemeChange={setScheme} />\n      </Header>'
+    )
+    const header = files.get('src/components/Header.tsx')!
+    expect(header).toContain('<AppBar\n      position="sticky"')
+    expect(header).toContain('<RouterLink to="/about" underline="hover">')
+    expect(files.get('src/components/SchemeSwitch.tsx')).toContain('aria-label="Toggle theme"')
     expect(files.get('src/components/RouterLink.tsx')).toContain('useLinkClickHandler(to)')
   })
 
@@ -196,7 +204,9 @@ describe('the React Router starter', () => {
     const files = createFiles({ libraries: ['react-hook-form'] })
     expect(files.get('src/pages/form/Page.tsx')).toContain('resolver: zodResolver(schema)')
     expect(files.get('src/routes.tsx')).toContain("{ path: 'form', element: <FormPage /> },")
-    expect(files.get('src/pages/Layout.tsx')).toContain('<RouterLink to="/form" underline="hover">')
+    expect(files.get('src/components/Header.tsx')).toContain(
+      '<RouterLink to="/form" underline="hover">'
+    )
     expect(createFiles().get('src/routes.tsx')).not.toContain('form')
   })
 

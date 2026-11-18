@@ -3,12 +3,6 @@ import { useState, type ReactNode } from 'react'
 // @else
 import type { ReactNode } from 'react'
 // @endif
-// @if !ssg
-import { Button } from '@soroush.tech/design-system/Button'
-// @endif
-import { Flex } from '@soroush.tech/design-system/Flex'
-import { Link } from '@soroush.tech/design-system/Link'
-import { Typography } from '@soroush.tech/design-system/Typography'
 import { View } from '@soroush.tech/design-system/View'
 // @if tanstack-query
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -21,6 +15,10 @@ import { schemeAtom } from '../state/scheme'
 // @elif redux-toolkit
 import { useDispatch, useSelector } from 'react-redux'
 import { schemeChanged, type RootState } from '../state/store'
+// @endif
+import { Header } from '../components/Header'
+// @if !ssg
+import { SchemeSwitch } from '../components/SchemeSwitch'
 // @endif
 import { Providers } from '../theme/Providers'
 
@@ -54,39 +52,10 @@ export default function Layout({ children }: { readonly children: ReactNode }) {
   // @elif !ssg
   const [scheme, setScheme] = useState<'light' | 'dark'>('__SCHEME__')
   // @endif
-  // @if !ssg
-  const otherScheme = scheme === 'light' ? 'dark' : 'light'
-  // @endif
   // @if ssg
   return (
     <Providers>
-      <Flex
-        as="header"
-        flexDirection="row"
-        alignItems="center"
-        justifyContent="space-between"
-        gap={2}
-        px={3}
-        py={2}
-        bg="paper"
-      >
-        <Typography variant="h6" as="span">
-          __TITLE__
-        </Typography>
-        <Flex as="nav" flexDirection="row" alignItems="center" gap={2}>
-          <Link href="/" underline="hover">
-            Home
-          </Link>
-          <Link href="/about" underline="hover">
-            About
-          </Link>
-          {/* @if sample-data */}
-          <Link href="/items" underline="hover">
-            Items
-          </Link>
-          {/* @endif */}
-        </Flex>
-      </Flex>
+      <Header />
       <View as="main" px={3} py={4}>
         {children}
       </View>
@@ -96,41 +65,9 @@ export default function Layout({ children }: { readonly children: ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
       <Providers scheme={scheme}>
-        <Flex
-          as="header"
-          flexDirection="row"
-          alignItems="center"
-          justifyContent="space-between"
-          gap={2}
-          px={3}
-          py={2}
-          bg="paper"
-        >
-          <Typography variant="h6" as="span">
-            __TITLE__
-          </Typography>
-          <Flex as="nav" flexDirection="row" alignItems="center" gap={2}>
-            <Link href="/" underline="hover">
-              Home
-            </Link>
-            <Link href="/about" underline="hover">
-              About
-            </Link>
-            {/* @if sample-data */}
-            <Link href="/items" underline="hover">
-              Items
-            </Link>
-            {/* @endif */}
-            {/* @if react-hook-form */}
-            <Link href="/form" underline="hover">
-              Form
-            </Link>
-            {/* @endif */}
-            <Button size="sm" variant="outlined" onClick={() => setScheme(otherScheme)}>
-              {otherScheme}
-            </Button>
-          </Flex>
-        </Flex>
+        <Header>
+          <SchemeSwitch scheme={scheme} onSchemeChange={setScheme} />
+        </Header>
         <View as="main" px={3} py={4}>
           {children}
         </View>
@@ -140,41 +77,9 @@ export default function Layout({ children }: { readonly children: ReactNode }) {
   // @else
   return (
     <Providers scheme={scheme}>
-      <Flex
-        as="header"
-        flexDirection="row"
-        alignItems="center"
-        justifyContent="space-between"
-        gap={2}
-        px={3}
-        py={2}
-        bg="paper"
-      >
-        <Typography variant="h6" as="span">
-          __TITLE__
-        </Typography>
-        <Flex as="nav" flexDirection="row" alignItems="center" gap={2}>
-          <Link href="/" underline="hover">
-            Home
-          </Link>
-          <Link href="/about" underline="hover">
-            About
-          </Link>
-          {/* @if sample-data */}
-          <Link href="/items" underline="hover">
-            Items
-          </Link>
-          {/* @endif */}
-          {/* @if react-hook-form */}
-          <Link href="/form" underline="hover">
-            Form
-          </Link>
-          {/* @endif */}
-          <Button size="sm" variant="outlined" onClick={() => setScheme(otherScheme)}>
-            {otherScheme}
-          </Button>
-        </Flex>
-      </Flex>
+      <Header>
+        <SchemeSwitch scheme={scheme} onSchemeChange={setScheme} />
+      </Header>
       <View as="main" px={3} py={4}>
         {children}
       </View>

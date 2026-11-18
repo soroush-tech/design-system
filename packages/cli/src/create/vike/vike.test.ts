@@ -43,6 +43,7 @@ const SHARED_PATHS = [
   'src/pages/+onRenderHtml',
   'src/pages/+onRenderClient',
   'src/pages/+Layout',
+  'src/components/Header',
   'src/pages/index/+Page',
   'src/pages/about/+Page',
   'src/pages/_error/+Page',
@@ -66,11 +67,14 @@ describe('the Vike starter', () => {
     for (const [path, content] of files) {
       await expect(content).toMatchFileSnapshot(`${fixture}/${path}`)
     }
-    // An SSG page renders nothing in the browser, and has no counter.
-    const shared = [...SHARED_PATHS, 'src/pages/index/Counter'].filter(
-      (path) =>
-        rendering !== 'ssg' ||
-        (path !== 'src/pages/+onRenderClient' && path !== 'src/pages/index/Counter')
+    // An SSG page renders nothing in the browser, and has no counter and no scheme switch.
+    const inBrowser = [
+      'src/pages/+onRenderClient',
+      'src/pages/index/Counter',
+      'src/components/SchemeSwitch',
+    ]
+    const shared = [...SHARED_PATHS, ...inBrowser.slice(1)].filter(
+      (path) => rendering !== 'ssg' || !inBrowser.includes(path)
     )
     expect([...files.keys()].sort()).toEqual(
       [
@@ -92,6 +96,21 @@ describe('the Vike starter', () => {
         ),
       ].sort()
     )
+  })
+
+  it('draws an app bar on every page, with the switch between the schemes', () => {
+    const files = createFiles()
+    const header = files.get('src/components/Header.tsx')!
+    expect(header).toContain('<AppBar\n      position="sticky"')
+    expect(header).toContain('<Link href="/about" underline="hover">')
+    expect(files.get('src/pages/+Layout.tsx')).toContain(
+      '<Header>\n        <SchemeSwitch scheme={scheme} onSchemeChange={setScheme} />\n      </Header>'
+    )
+    const schemeSwitch = files.get('src/components/SchemeSwitch.tsx')!
+    expect(schemeSwitch).toContain('checked={isDark}')
+    expect(schemeSwitch).toContain('variant="inside"')
+    expect(schemeSwitch).toContain('aria-label="Toggle theme"')
+    expect(schemeSwitch).toContain("name={isDark ? 'dark_mode' : 'light_mode'}")
   })
 
   it('renders each page on its own server, on each request, when SSR', () => {
@@ -171,7 +190,7 @@ describe('the Vike starter', () => {
 
   it('adds a validated form page and its link, and a test every app runs', () => {
     const files = createFiles({ libraries: ['react-hook-form'], title: "Shop's" })
-    expect(files.get('src/pages/+Layout.tsx')).toContain('<Link href="/form"')
+    expect(files.get('src/components/Header.tsx')).toContain('<Link href="/form"')
     expect(files.get('src/pages/form/+Page.tsx')).toContain('resolver: zodResolver(schema),')
     expect(files.get('src/pages/index/Page.test.tsx')).toContain(
       String.raw`screen.getByRole('heading', { name: 'Shop\'s' })`
@@ -359,19 +378,20 @@ describe('the Vike starter', () => {
     )
     expect(files.get('src/pages/+config.ts')).not.toContain('clientRouting')
     expect(files.has('src/pages/+onRenderClient.tsx')).toBe(false)
-    expect(files.get('src/pages/+Layout.tsx')).not.toMatch(/useState|Button|scheme=/)
-    expect(files.get('src/pages/+Layout.tsx')).toContain('<Providers>')
+    expect(files.get('src/pages/+Layout.tsx')).not.toMatch(/useState|SchemeSwitch|scheme=/)
+    expect(files.get('src/pages/+Layout.tsx')).toContain('<Providers>\n      <Header />')
+    expect(files.has('src/components/SchemeSwitch.tsx')).toBe(false)
     expect(files.get('src/pages/about/+Page.tsx')).toContain('a link loads it as a new')
     expect(JSON.parse(files.get('package.json')!).dependencies['@emotion/server']).toBeDefined()
     expect(
       createFiles({ rendering: 'ssg', isTypeScript: false }).get('src/pages/+Layout.jsx')
-    ).toMatch(/^import \{ Flex \}/)
+    ).toMatch(/^import \{ View \}/)
   })
 
   it('calls the app by its title in its pages and README, and by its package name in package.json', () => {
     const files = createFiles({ title: 'Shop & Co' })
     expect(files.get('src/pages/+onRenderHtml.tsx')).toContain('<title>Shop & Co</title>')
-    expect(files.get('src/pages/+Layout.tsx')).toContain('          Shop & Co\n')
+    expect(files.get('src/components/Header.tsx')).toContain('        Shop & Co\n')
     expect(files.get('src/pages/index/+Page.tsx')).toContain(
       '<Typography variant="h2">Shop & Co</Typography>'
     )
@@ -383,9 +403,9 @@ describe('the Vike starter', () => {
     const files = createFiles({ hasSampleData: false })
     const paths = [...files.keys()]
     expect(paths.filter((path) => /items/.test(path))).toEqual([])
-    expect(files.get('src/pages/+Layout.tsx')).not.toContain('/items')
+    expect(files.get('src/components/Header.tsx')).not.toContain('/items')
     expect(files.get('README.md')).not.toContain('src/pages/items/')
-    expect(createFiles().get('src/pages/+Layout.tsx')).toContain('<Link href="/items"')
+    expect(createFiles().get('src/components/Header.tsx')).toContain('<Link href="/items"')
     expect(createFiles().get('README.md')).toContain('src/pages/items/')
     expect(createFiles({ isTypeScript: false }).get('src/data/items.js')).toContain(
       'src/theme/themes.js'

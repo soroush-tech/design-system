@@ -257,7 +257,7 @@ function formatChoices(choices: Choices): string {
   const libraries = LIBRARIES.filter(({ name }) => choices.libraries.includes(name))
   const rows: [string, string[]][] = [
     ['Title', [choices.title]],
-    ['Framework', [choices.starter.label]],
+    ['Framework', [toPicked(choices.starter.label)]],
     ['Language', [choices.isTypeScript ? 'TypeScript' : 'JavaScript']],
     ['Package manager', [choices.packageManager]],
     ['Repository', [toPicked(LAYOUT_LABELS[choices.layout])]],
