@@ -39,10 +39,10 @@ arrow keys:
 7. The default color scheme: light or dark.
 8. Whether to add the sample data pages.
 
-Then it shows every file and the install, and writes nothing before a yes. It installs with no
-scripts, and runs `git init` with no commit, unless the folder is already in a repository. When a
-write or the install fails, it takes the new app away. Ctrl+C at a question stops it with nothing
-written.
+Then it shows every choice, one a line - the ones you picked and the defaults - then every file
+and the install, and writes nothing before a yes. It installs with no scripts, and runs `git init`
+with no commit, unless the folder is already in a repository. When a write or the install fails,
+it takes the new app away. Ctrl+C at a question stops it with nothing written.
 
 | Option               | What it does                                                      |
 | -------------------- | ----------------------------------------------------------------- |

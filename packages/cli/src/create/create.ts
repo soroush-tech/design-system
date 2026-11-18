@@ -38,7 +38,7 @@ export interface CreateOptions {
   packageManager: PackageManagerName | undefined
   /** How the repository holds the app: asked for, or a workspace, when missing. */
   layout: Layout | undefined
-  /** How the pages are rendered: asked for, or isomorphic, when missing. */
+  /** How the pages are rendered: asked for, or the first the framework renders, when missing. */
   rendering: Rendering | undefined
   /** The libraries to add: asked for, or none, when missing. */
   libraries: readonly Library[] | undefined
@@ -236,6 +236,47 @@ async function askSampleData(io: Io): Promise<boolean> {
   return (await io.select('Add sample data pages?', YES_OR_NO, 1)) === 'yes'
 }
 
+/** Every choice the app is made from, asked or given. */
+interface Choices {
+  title: string
+  starter: Starter
+  isTypeScript: boolean
+  packageManager: PackageManagerName
+  layout: Layout
+  rendering: Rendering
+  libraries: readonly Library[]
+  scheme: Scheme
+  hasSampleData: boolean
+}
+
+/** A question's label, as the summary says what was picked: with no "(recommended)". */
+const toPicked = (label: string) => label.replace(' (recommended)', '')
+
+/** The summary of every choice, one a line, which create shows before the files it writes. */
+function formatChoices(choices: Choices): string {
+  const libraries = LIBRARIES.filter(({ name }) => choices.libraries.includes(name))
+  const rows: [string, string[]][] = [
+    ['Title', [choices.title]],
+    ['Framework', [choices.starter.label]],
+    ['Language', [choices.isTypeScript ? 'TypeScript' : 'JavaScript']],
+    ['Package manager', [choices.packageManager]],
+    ['Repository', [toPicked(LAYOUT_LABELS[choices.layout])]],
+    ['Rendering', [toPicked(RENDERING_LABELS[choices.rendering])]],
+    ['Libraries', libraries.length ? libraries.map(({ label }) => label) : ['none']],
+    ['Color scheme', [`${choices.scheme}, by default`]],
+    [
+      'Sample data pages',
+      [choices.hasSampleData ? 'yes: /items and /items/<id>, from src/data/items' : 'no'],
+    ],
+  ]
+  const width = Math.max(...rows.map(([key]) => key.length)) + 2
+  return rows
+    .flatMap(([key, values]) =>
+      values.map((value, index) => `  ${(index === 0 ? key : '').padEnd(width)}${value}`)
+    )
+    .join('\n')
+}
+
 /** Whether to create the app: never on a dry run or with no terminal, else on --yes or a yes. */
 async function isApproved(options: CreateOptions, isPreviewOnly: boolean, io: Io) {
   if (options.isDryRun) {
@@ -429,6 +470,9 @@ export async function runCreate(
   const renderingName = rendering === 'isomorphic' ? rendering : rendering.toUpperCase()
   io.write(
     `create will make ${name}${packageNote}, ${/^[AEIOU]/.test(starter.title) ? 'an' : 'a'} ${starter.title} app in ${language} (${renderingName}), ${isWorkspace ? 'in a workspace, ' : ''}in ./${name}:\n\n`
+  )
+  io.write(
+    `${formatChoices({ title, starter, isTypeScript, packageManager: packageManager.name, layout, rendering, libraries, scheme, hasSampleData })}\n\n`
   )
   io.write(`${formatPlan(plan)}\n`)
   if (!(await isApproved(options, isPreviewOnly, io))) return 0

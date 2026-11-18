@@ -134,6 +134,47 @@ describe('runCreate', () => {
     expect(output).toContain('https://mcp.soroush.design/mcp')
   })
 
+  it('says every choice before the files, one a line, the defaults among them', async () => {
+    const defaults = setUp()
+    expect(await defaults.create(YES)).toBe(0)
+    expect(defaults.getOutput()).toContain(`in ./my-app:
+
+  Title              my-app
+  Framework          Test: the test starter
+  Language           TypeScript
+  Package manager    npm
+  Repository         Standalone: the app alone
+  Rendering          Isomorphic: HTML from the build, then no reload
+  Libraries          none
+  Color scheme       light, by default
+  Sample data pages  no
+
+Create:
+`)
+    const picked = setUp()
+    const options: CreateOptions = {
+      ...YES,
+      title: 'Shop',
+      isTypeScript: false,
+      layout: 'workspace',
+      rendering: 'spa',
+      libraries: ['msw', 'tanstack-query'],
+      scheme: 'dark',
+      hasSampleData: true,
+    }
+    expect(await picked.create(options)).toBe(0)
+    expect(picked.getOutput()).toContain(`
+  Language           JavaScript
+  Package manager    npm
+  Repository         Workspace: the app in apps/web, with room for more apps and services
+  Rendering          SPA: rendered in the browser
+  Libraries          TanStack Query: fetching and caching data
+                     msw: a mock API in the browser
+  Color scheme       dark, by default
+  Sample data pages  yes: /items and /items/<id>, from src/data/items
+`)
+  })
+
   it('installs with the package manager that ran it', async () => {
     const { create, listCommands, getOutput } = setUp({
       dependencies: { userAgent: 'pnpm/10.4.1 npm/? node/v24.1.0 linux x64' },
