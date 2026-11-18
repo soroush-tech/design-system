@@ -31,8 +31,9 @@ arrow keys:
 2. The package manager: npm, pnpm, yarn or bun, starting on the one you ran it with (`npx`,
    `pnpm dlx`, `yarn dlx`, `bunx`). One you pick must be installed.
 3. The repository: a workspace (recommended) or the app alone - see below.
-4. The rendering: isomorphic, SPA or SSG - see below.
-5. The framework: Vike (recommended) or Astro, of the ones that render as picked - see below.
+4. The rendering: isomorphic, SSR, SSG or SPA - see below.
+5. The framework: Vike (recommended) or Astro, of the ones that render as picked; an SPA is
+   React Router's, so it asks nothing - see below.
 6. The libraries, by job - see below: one for data fetching, one for state management (each, or
    none), then the rest, toggled with space. An SSG app is offered none.
 7. The default color scheme: light or dark.
@@ -48,7 +49,7 @@ written.
 | `-y`, `--yes`        | Create without asking: TypeScript, a workspace, isomorphic, light |
 | `--dry-run`          | Show the files and exit                                           |
 | `--title <text>`     | What the app's pages call it: the name when not given             |
-| `--framework <name>` | The app's framework: `vike` (the default) or `astro`              |
+| `--framework <name>` | `vike` (the default), `astro` or `react-router`                   |
 | `--ts`, `--js`       | TypeScript (the default) or JavaScript                            |
 | `--pm <name>`        | `npm`, `pnpm`, `yarn` or `bun`: the one that ran it, if not given |
 | `--layout <name>`    | `workspace` (the default) or `standalone`                         |
@@ -85,18 +86,21 @@ testApp/
   build writes a Node server, which `npm start` runs on `PORT`: Vike's own server
   (`node dist/server/index.mjs`, port 3000 by default) or Astro's Node adapter, standalone
   (`node dist/server/entry.mjs`, `HOST` and `PORT`, port 4321 by default).
-- **SPA**: every page is an empty HTML shell from the build, and the browser renders it, with its
-  styles. It moves between pages without a reload.
+- **SPA**: a React Router app. The build is one empty HTML shell, and the browser renders every
+  page in it, with its styles, and moves between them without a reload.
 - **SSG**: every page is prerendered to HTML with its styles, and ships no JavaScript: a link loads
   the next page. It has no light and dark switch, since that needs JavaScript.
 
-Isomorphic, SPA and SSG build to static files that any static host serves; SSR needs a Node host.
-An Astro app renders isomorphic, SSR or SSG.
+Isomorphic, SPA and SSG build to static files that any static host serves - an SPA's, once the host
+answers every path with `index.html`; SSR needs a Node host. Vike and Astro render isomorphic,
+SSR or SSG, and React Router renders an SPA.
 
 ### Framework
 
 - **Vike** (the default): React pages, rendered as you pick - see the Vike app below.
 - **Astro**: HTML pages whose React parts are islands - see the Astro app below.
+- **React Router**: a single-page app, in React Router's data mode on Vite - see the React Router
+  app below.
 
 ### Libraries
 
@@ -113,10 +117,11 @@ installed, wired in, and with an example of its use - and each choice shows in t
 
 - **A counter** on the home page, in any app with JavaScript in the browser: its count lives in
   the component's own state, or in the state library picked.
-- **TanStack Query** (`tanstack-query`): the query client lives in `+Layout`. The home page's
+- **TanStack Query** (`tanstack-query`): the query client lives in the layout. The home page's
   `Greeting` reads `src/data/api` with a query, and the form, if there is one, sends its values
   with a mutation. With the sample data pages, each page starts on its build-time data, then its
-  query fetches it again in the browser and keeps it in the cache.
+  query fetches it again in the browser and keeps it in the cache; in a React Router app, the
+  items pages read them with queries alone.
 - **SWR** (`swr`): the same examples, with `useSWR` and `useSWRMutation`.
 - **msw** (`msw`): a mock API in the browser. `src/mocks/handlers` answers each call
   `src/data/api` makes - the greeting, the form's values, the sample items - while `VITE_MSW` in
@@ -125,7 +130,7 @@ installed, wired in, and with an example of its use - and each choice shows in t
 - **zustand** (`zustand`), **Jotai** (`jotai`) or **Redux Toolkit** (`redux-toolkit`): the color
   scheme and the count move into stores or atoms any component can read - `src/state/scheme` and
   `src/state/counter`, or with Redux Toolkit two slices of `src/state/store`, whose provider wraps
-  every page in `PageShell`.
+  every page - in `PageShell` in a Vike app, in `src/main` in a React Router one.
 - **React Hook Form + Zod** (`react-hook-form`): a `/form` page, linked from the header, whose two
   fields - the design system's `TextInput` - a Zod schema checks. Once they pass, it sends them
   through the data library, or to `src/data/api` with msw alone, and shows what came back.
@@ -178,6 +183,21 @@ With sample data pages, it also shows how data gets onto a page, with no data li
   query client and one store, and the scheme stays in `src/theme/scheme`. With msw, the mock
   API's switch is `PUBLIC_MSW` in `.env`, as Astro hands the browser only `PUBLIC_` variables,
   and each request waits for it to start. The form is an island on its own `/form` page.
+
+### The React Router app
+
+- `src/routes` lists the pages by path, each inside `src/pages/Layout`, which renders
+  `<Providers>`, holds the light and dark switch, and draws the page in its `<Outlet />`. A path
+  with no page, and a page that fails, show `src/pages/ErrorPage` in the layout.
+- `src/main` creates the router with `createBrowserRouter` and renders it in `index.html`'s
+  `#root`. With msw, it starts the mock API first.
+- `src/components/RouterLink` is the design system's `Link` for a page of the app: a click moves
+  to it with no reload, and a click that opens a new tab still does.
+- With sample data pages, `/items` and `/items/<id>` read `src/data/items` in their route's
+  `loader`, which the router runs before it shows the page - an unknown id shows the error page.
+  With a data library, they read `src/data/api` with queries instead.
+- `npm run dev` starts it, `npm run build` writes it to `dist/`, and `npm run preview` serves the
+  build. A host serves `dist/` once it answers every path with `index.html`.
 
 The switch does not remember the scheme across a reload, and the theme's fonts are not loaded: see
 the [fonts guide](https://docs.soroush.tech/design-system/getting-started/installation/#fonts).

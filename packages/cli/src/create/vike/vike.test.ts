@@ -49,18 +49,17 @@ const SHARED_PATHS = [
 ]
 
 describe('the Vike starter', () => {
-  it('offers every rendering, and the libraries', () => {
-    expect(vikeStarter.renderings).toEqual(['isomorphic', 'ssr', 'spa', 'ssg'])
+  it("offers the renderings it writes, and the libraries: an SPA is React Router's", () => {
+    expect(vikeStarter.renderings).toEqual(['isomorphic', 'ssr', 'ssg'])
     expect(vikeStarter.hasLibraries).toBe(true)
   })
 
   // `pnpm test:types` typechecks these files as the app's own tsconfig.json sets it; this keeps
   // them what create writes. After a template change, update them with `vitest run -u`.
-  // One fixture per rendering: create-vike (isomorphic), create-vike-ssr, -spa and -ssg.
+  // One fixture per rendering: create-vike (isomorphic), create-vike-ssr and -ssg.
   it.each([
     ['isomorphic', FIXTURE],
     ['ssr', `${FIXTURE}-ssr`],
-    ['spa', `${FIXTURE}-spa`],
     ['ssg', `${FIXTURE}-ssg`],
   ] as const)('writes the %s TypeScript app its fixture holds', async (rendering, fixture) => {
     const files = createFiles({ rendering })
@@ -111,22 +110,8 @@ describe('the Vike starter', () => {
     expect(JSON.parse(createFiles().get('package.json')!).scripts).not.toHaveProperty('start')
   })
 
-  it('renders an SPA in the browser only, from an empty shell', () => {
-    const files = createFiles({ rendering: 'spa' })
-    expect(files.get('src/pages/+config.ts')).toContain(
-      'Page: { env: { server: false, client: true } }'
-    )
-    expect(files.get('src/pages/+onRenderHtml.tsx')).toContain('<div id="root"></div>')
-    expect(files.get('src/pages/+onRenderHtml.tsx')).not.toContain('renderToString')
-    expect(files.get('src/pages/+onRenderClient.tsx')).not.toContain('hydrateRoot')
-    expect(files.get('src/pages/+Layout.tsx')).toContain('setScheme')
-    const packageJson = JSON.parse(files.get('package.json')!)
-    expect(packageJson.dependencies['@emotion/server']).toBeUndefined()
-    expect(files.get('README.md')).toContain('a single-page app')
-  })
-
   // The libraries' fixtures: create-vike-libraries (isomorphic, sample data, TanStack Query, msw,
-  // zustand) and create-vike-jotai (SPA, TanStack Query, Jotai).
+  // zustand) and create-vike-jotai (TanStack Query, Jotai).
   it.each([
     [
       `${FIXTURE}-libraries`,
@@ -135,7 +120,7 @@ describe('the Vike starter', () => {
     ],
     [
       `${FIXTURE}-jotai`,
-      { rendering: 'spa', hasSampleData: false, libraries: ['jotai', 'tanstack-query'] },
+      { hasSampleData: false, libraries: ['jotai', 'tanstack-query'] },
       ['src/state/scheme.ts'],
     ],
     [
@@ -211,7 +196,7 @@ describe('the Vike starter', () => {
   })
 
   it('starts the mock API before the first page, in the browser, while VITE_MSW is true', () => {
-    for (const rendering of ['isomorphic', 'spa'] as const) {
+    for (const rendering of ['isomorphic', 'ssr'] as const) {
       const files = createFiles({ rendering, libraries: ['msw'] })
       const onRenderClient = files.get('src/pages/+onRenderClient.tsx')!
       expect(onRenderClient).toContain("import { startMocks } from '../mocks/start'")
@@ -422,7 +407,7 @@ describe('the Vike starter', () => {
       ['redux-toolkit'],
     ] as const
     for (const [rendering, libraries] of [
-      ...(['isomorphic', 'spa', 'ssg'] as const).map((value) => [value, []] as const),
+      ...(['isomorphic', 'ssr', 'ssg'] as const).map((value) => [value, []] as const),
       ...librarySets.map((set) => ['isomorphic', set] as const),
     ]) {
       for (const [path, content] of createFiles({ isTypeScript: false, rendering, libraries })) {

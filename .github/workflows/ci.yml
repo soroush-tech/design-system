@@ -309,7 +309,10 @@ jobs:
             flags: --layout workspace --sample-data --with tanstack-query,msw,zustand
           - lang: js
             pm: pnpm
-            flags: --render spa --sample-data --with jotai,tanstack-query
+            flags: --framework react-router --render spa --sample-data --with jotai,tanstack-query
+          - lang: ts
+            pm: pnpm
+            flags: --framework react-router --layout workspace --render spa --sample-data --with swr,msw,redux-toolkit,react-hook-form
           - lang: js
             pm: npm
             flags: --render ssg

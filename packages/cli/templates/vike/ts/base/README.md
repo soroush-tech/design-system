@@ -5,8 +5,6 @@ A [Vike](https://vike.dev) app on the [@soroush.tech design system](https://docs
 prerendered at build time with its styles in the HTML, then moving between pages with no reload.
 <!-- @elif ssr -->
 every page rendered on the server, on each request, with its styles in the HTML, then moving between pages with no reload.
-<!-- @elif spa -->
-a single-page app: each page is an HTML shell from the build, rendered in the browser, which moves between pages with no reload.
 <!-- @else -->
 every page prerendered to HTML at build time, with its styles, and no JavaScript in the browser.
 <!-- @endif -->
@@ -22,8 +20,6 @@ every page prerendered to HTML at build time, with its styles, and no JavaScript
 - In `src/pages/`, `+onRenderHtml` and `+onRenderClient` render the pages, with the styles each page uses in its HTML.
 <!-- @elif ssr -->
 - In `src/pages/`, `+onRenderHtml` renders each page on the server and `+onRenderClient` takes it over in the browser, with the styles each page uses in its HTML.
-<!-- @elif spa -->
-- In `src/pages/`, `+onRenderHtml` writes the HTML shell of each page, and `+onRenderClient` renders the page in it.
 <!-- @else -->
 - In `src/pages/`, `+onRenderHtml` renders the pages to HTML, with the styles each page uses.
 <!-- @endif -->

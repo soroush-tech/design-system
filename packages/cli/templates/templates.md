@@ -55,7 +55,8 @@ quotes) and `__SCHEME__` (`light` or `dark`). A path a text names is written as 
 
 ## The JavaScript templates
 
-`pnpm gen:templates` makes `<framework>/js/` from `<framework>/ts/`: it takes the types out of each
+The package's build, and its tests' setup, make `<framework>/js/` from `<framework>/ts/`
+(`scripts/gen-templates.mjs`): it takes the types out of each
 `.ts` and `.tsx` file and of an `.astro` file's frontmatter (`ts-blank-space`), drops a line that
 held only types, turns the paths a text names and the file names to `.js` and `.jsx`, leaves out
 `tsconfig.json` and `.d.ts` files, and formats the result. `pnpm build` runs it before the code is

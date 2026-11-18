@@ -7,9 +7,10 @@
 // 3. typechecks (TypeScript) and builds the app, checks that the build prerendered its pages,
 //    serves the build, and checks the HTML: the design system's styles and the starter's content
 //    on `/` and `/about`, and the 404 page. With `--sample-data`, the list of sample items and the
-//    page of each, too.
+//    page of each, too. An SPA's HTML is the same shell on every path: its pages render in the
+//    browser.
 //
-//   node scripts/smoke-create.mjs [--lang ts|js] [--pm npm|pnpm] [--framework vike|astro]
+//   node scripts/smoke-create.mjs [--lang ts|js] [--pm npm|pnpm] [--framework vike|astro|react-router]
 //     [--layout standalone|workspace] [--render isomorphic|spa|ssg] [--with <libraries>]
 //     [--sample-data]
 //
@@ -53,12 +54,12 @@ const hasSampleData = values['sample-data']
 if (
   !['ts', 'js'].includes(lang) ||
   !['npm', 'pnpm'].includes(pm) ||
-  !['vike', 'astro'].includes(framework) ||
+  !['vike', 'astro', 'react-router'].includes(framework) ||
   !['standalone', 'workspace'].includes(layout) ||
   !['isomorphic', 'ssr', 'spa', 'ssg'].includes(render)
 ) {
   console.error(
-    '--lang is ts or js, --pm is npm or pnpm, --framework is vike or astro, --layout is standalone or workspace, and --render is isomorphic, ssr, spa or ssg.'
+    '--lang is ts or js, --pm is npm or pnpm, --framework is vike, astro or react-router, --layout is standalone or workspace, and --render is isomorphic, ssr, spa or ssg.'
   )
   process.exit(1)
 }
@@ -68,9 +69,9 @@ const isAstro = framework === 'astro'
 // An SSR app renders each page on its own server, which the build writes.
 const isServer = render === 'ssr'
 const SERVER_ENTRY = isAstro ? 'dist/server/entry.mjs' : 'dist/server/index.mjs'
-// Where the build writes the pages and their files: Vike's client build, or Astro's dist - its
-// client folder, for a server.
-const PAGES_DIR = isAstro && !isServer ? 'dist' : 'dist/client'
+// Where the build writes the pages and their files: Vike's client build, Astro's dist - its
+// client folder, for a server - or Vite's dist, for an SPA.
+const PAGES_DIR = (isAstro && !isServer) || isSpa ? 'dist' : 'dist/client'
 // The key of the Emotion cache that draws the styles: the design system's, which Vike's renderer
 // gives the page, or Emotion's own, which each Astro island makes as it renders.
 const STYLE_KEY = isAstro ? 'css' : 'soroush'
@@ -173,15 +174,15 @@ async function checkSampleDataPages(appDir, fetchPage) {
   } else {
     check(list.status === 200 && list.html.includes('>Items</h2>'), '/items answers with its page')
   }
+  // An SPA's HTML holds no link: its items are the ones its sample data holds.
   const ids = isSpa
-    ? readdirSync(join(appDir, PAGES_DIR, 'items'), { withFileTypes: true })
-        .filter((entry) => entry.isDirectory())
-        .map((entry) => entry.name)
+    ? [...readSampleData(appDir).matchAll(/^ {4}id: '([^']+)',$/gm)].map(([, id]) => id)
     : [...list.html.matchAll(/href="\/items\/([^"]+)"/g)].map(([, id]) => id)
   check(ids.length > 0, `/items lists the sample items: ${ids.join(', ')}`)
   for (const id of ids) {
-    // A server renders each item as it is asked for; a build writes them all.
-    if (!isServer) {
+    // A server renders each item as it is asked for, and an SPA in the browser; a build writes
+    // them all.
+    if (!isServer && !isSpa) {
       check(
         existsSync(join(appDir, PAGES_DIR, 'items', id, 'index.html')),
         `the build prerendered items/${id}/index.html`
@@ -200,6 +201,12 @@ async function checkSampleDataPages(appDir, fetchPage) {
       '/items/no-such-item answers 404, with the 404 page'
     )
   }
+}
+
+/** The source of the app's sample data, in TypeScript or JavaScript. */
+function readSampleData(appDir) {
+  const path = join(appDir, `src/data/items.${lang}`)
+  return readFileSync(path, 'utf8')
 }
 
 /**
@@ -316,8 +323,16 @@ async function checkServedPages(appDir) {
       '/about answers with its page'
     )
     const missing = await fetchPage('/no-such-page')
-    check(missing.status === 404, '/no-such-page answers 404')
-    if (!isSpa) check(missing.html.includes('Page not found'), '/no-such-page shows the 404 page')
+    if (isSpa) {
+      // Every path answers with the shell, where the router shows the error page.
+      check(
+        missing.status === 200 && missing.html.includes('<div id="root"></div>'),
+        "/no-such-page answers with the SPA's shell"
+      )
+    } else {
+      check(missing.status === 404, '/no-such-page answers 404')
+      check(missing.html.includes('Page not found'), '/no-such-page shows the 404 page')
+    }
     if (hasSampleData) await checkSampleDataPages(appDir, fetchPage)
   } finally {
     await stop()
@@ -386,6 +401,8 @@ try {
       !existsSync(join(appDir, PAGES_DIR, 'index.html')),
       'the build prerendered no page: the server renders each one'
     )
+  } else if (isSpa) {
+    check(existsSync(join(appDir, PAGES_DIR, 'index.html')), "the build wrote the SPA's shell")
   } else {
     const pages = ['index.html', 'about/index.html', '404.html']
     if (hasSampleData) pages.push('items/index.html')

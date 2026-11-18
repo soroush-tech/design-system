@@ -369,8 +369,13 @@ export async function runCreate(
   )
   if (options.rendering !== undefined && !offered.includes(options.rendering)) {
     const titles = pool.map((framework) => starters[framework].title).join(' or ')
+    // The starters that do render it, which --framework would pick.
+    const others = frameworks.filter((framework) =>
+      starters[framework].renderings.includes(options.rendering!)
+    )
+    const pointer = others.map((framework) => ` --framework ${framework} does.`).join('')
     io.write(
-      `${titles} does not render ${options.rendering}: it renders ${offered.join(' or ')}.\n`
+      `${titles} does not render ${options.rendering}: it renders ${offered.join(' or ')}.${pointer}\n`
     )
     return 1
   }

@@ -1,11 +1,17 @@
-import { createRoot, type Root } from 'react-dom/client'
+import { createRoot, hydrateRoot, type Root } from 'react-dom/client'
 import type { OnRenderClientSync } from 'vike/types'
 import { PageShell } from './PageShell'
 
 let root: Root | undefined
 
-/** Draws the page in the browser, and each page the app moves to. */
+/** Takes over the page the server drew, then draws each page the app moves to. */
 export const onRenderClient: OnRenderClientSync = (pageContext) => {
-  root ??= createRoot(document.getElementById('root')!)
-  root.render(<PageShell pageContext={pageContext} />)
+  const page = <PageShell pageContext={pageContext} />
+  const container = document.getElementById('root')!
+  if (pageContext.isHydration) {
+    root = hydrateRoot(container, page)
+  } else {
+    root ??= createRoot(container)
+    root.render(page)
+  }
 }

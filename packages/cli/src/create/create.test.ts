@@ -531,7 +531,10 @@ describe('runCreate', () => {
     expect(getOutput()).toContain('a Bare app in TypeScript (SSG)')
 
     expect(await create({ ...YES, name: 'spa', framework: 'bare', rendering: 'spa' })).toBe(1)
-    expect(getOutput()).toContain('Bare does not render spa: it renders isomorphic or ssg.')
+    // It names the starter that does.
+    expect(getOutput()).toContain(
+      'Bare does not render spa: it renders isomorphic or ssg. --framework test does.'
+    )
     expect(await create({ ...YES, name: 'mocked', framework: 'bare', libraries: ['msw'] })).toBe(1)
     expect(getOutput()).toContain('Bare takes no library yet: leave out --with.')
     expect(await create({ ...YES, name: 'none', framework: 'bare', libraries: [] })).toBe(0)
@@ -548,6 +551,8 @@ describe('runCreate', () => {
     expect(await runCreate(YES, io, DESIGN_SYSTEM, { starters: {} })).toBe(1)
     expect(getOutput()).toBe('create has no starter for any framework. It has: none yet.\n')
     expect(await runCreate({ ...YES, framework: 'next' }, io, DESIGN_SYSTEM)).toBe(1)
-    expect(getOutput()).toContain('create has no starter for next. It has: vike, astro.')
+    expect(getOutput()).toContain(
+      'create has no starter for next. It has: vike, astro, react-router.'
+    )
   })
 })

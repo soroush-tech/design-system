@@ -124,8 +124,6 @@ TypeScript 6 at most, so the starter's TypeScript is this package's `typescript-
 - `ssr/`: `server: true`, Vike's built-in server, renders each page on request, with client
   routing after; `+data` runs on the server, and there is no `+onBeforePrerenderStart`.
   `npm start` runs `node dist/server/index.mjs`.
-- `spa/`: `Page` and `Layout` load in the browser only; `+onRenderHtml` writes an empty shell and
-  `+onRenderClient` renders into it, with no `@emotion/server`.
 - `ssg/`: `Page` and `Layout` load at build time only, and there is no `+onRenderClient`, so a
   page ships no script; the layout has no scheme switch.
 
@@ -137,10 +135,26 @@ the app, so the scheme it holds can switch the theme.
 The libraries are asked by job (`src/create/libraries.ts`: a library's `group` is its question),
 and every choice shows in the app: the home page's `Counter` keeps its count in the state library
 or its own state, its `Greeting` reads `src/data/api` through the data library, the form sends
-through it, and msw answers each of those calls. The fixtures: `type-tests/create-vike`, `-ssr`,
-`-spa` and `-ssg` for the renderings, `-libraries` (TanStack Query, msw, zustand), `-jotai` and
+through it, and msw answers each of those calls. The fixtures: `type-tests/create-vike`, `-ssr`
+and `-ssg` for the renderings, `-libraries` (TanStack Query, msw, zustand), `-jotai` and
 `-more` (SWR, msw, Redux Toolkit, React Hook Form) for the libraries. Vitest is in every app,
 in the base layer; with msw, `with/msw/` adds msw's Node server and the tests' setup.
+
+### The React Router starter
+
+`templates/react-router/` writes the SPA, the only rendering it has and the only starter for it:
+React Router's data mode on Vite, with `index.html` loading `src/main`, which creates the router
+from `src/routes` with `createBrowserRouter`. Every page is a child of a pathless route with an
+`errorElement`, inside `src/pages/Layout`, so a path with no page (`*`), a loader's 404 and a
+render error all show `ErrorPage` in the layout. The layout renders `<Providers>` and the query
+client, as Vike's `+Layout` does; the Redux store is provided in `src/main`, above the router.
+The design system's `Link` always renders an `<a>`, so `src/components/RouterLink` gives it
+`useHref` and `useLinkClickHandler` to move with no reload. With the sample data and no data
+library, `items/loader` and `item/loader` read `src/data/items` (`data(..., { status: 404 })` for
+an unknown id); with TanStack Query or SWR there is no loader, the pages query `src/data/api`,
+and msw answers `/api/items`. msw starts with a top-level `await` in `src/main`, before the
+router. Its fixtures are `type-tests/create-react-router`, `-libraries` (TanStack Query, msw,
+zustand, React Hook Form), `-more` (SWR, Redux Toolkit, React Hook Form) and `-jotai`.
 
 ## The rules each change keeps
 

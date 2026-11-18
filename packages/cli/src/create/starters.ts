@@ -1,6 +1,7 @@
 import type { Scheme } from '../templates/templates'
 import type { Library } from './libraries'
 import { astroStarter } from './astro/astro'
+import { reactRouterStarter } from './react-router/react-router'
 import { vikeStarter } from './vike/vike'
 
 /**
@@ -58,4 +59,5 @@ export interface Starter {
 export const STARTERS: Readonly<Record<string, Starter>> = {
   vike: vikeStarter,
   astro: astroStarter,
+  'react-router': reactRouterStarter,
 }

@@ -14,8 +14,6 @@ function createPackageJson({
   libraries,
   version,
 }: StarterFacts): string {
-  // An SPA's server draws no page, so it extracts no styles.
-  const renderer = rendering === 'spa' ? ([] as const) : (['@emotion/server'] as const)
   const { dependencies: libraryPackages, devDependencies: libraryDevPackages } =
     getLibraryPackages(libraries)
   const packageJson = {
@@ -34,7 +32,7 @@ function createPackageJson({
     },
     dependencies: {
       '@soroush.tech/design-system': toRange(version),
-      ...pickVersions([...renderer, ...libraryPackages, 'react', 'react-dom', 'vike']),
+      ...pickVersions(['@emotion/server', ...libraryPackages, 'react', 'react-dom', 'vike']),
     },
     devDependencies: pickVersions([
       '@vitejs/plugin-react',
@@ -67,7 +65,7 @@ function createFiles(facts: StarterFacts): StarterFile[] {
 export const vikeStarter: Starter = {
   title: 'Vike',
   label: 'Vike (recommended): React pages, rendered as you pick',
-  renderings: ['isomorphic', 'ssr', 'spa', 'ssg'],
+  renderings: ['isomorphic', 'ssr', 'ssg'],
   hasLibraries: true,
   createFiles,
 }
