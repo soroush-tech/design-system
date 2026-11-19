@@ -62,6 +62,27 @@ export function createTestIo(
       output.push(question)
       return answers.shift() ?? ''
     },
+    // A choice's answer is its value, or '' for where it starts; a test giving a value the choice
+    // does not offer fails.
+    select: async (question, choices, initial = 0) => {
+      output.push(`? ${question}\n`)
+      const answer = answers.shift() || choices[initial].value
+      if (!choices.some(({ value }) => value === answer)) {
+        throw new Error(`${question} offers no ${answer}`)
+      }
+      return answer
+    },
+    selectMany: async (question, choices, initial = []) => {
+      output.push(`? ${question}\n`)
+      const answer = answers.shift()
+      const values = answer ? answer.split(',') : [...initial]
+      for (const value of values) {
+        if (!choices.some((choice) => choice.value === value)) {
+          throw new Error(`${question} offers no ${value}`)
+        }
+      }
+      return values
+    },
     run: (command, args, options) => {
       commands.push({ command, args, options })
       return run ? run(command, args, options) : { status: 0, stdout: '' }

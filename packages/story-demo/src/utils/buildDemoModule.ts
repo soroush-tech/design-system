@@ -1,6 +1,7 @@
 import { indent } from './indentation'
 import type { ParsedImport, ParsedStoriesSource, ParsedStory } from './parseStoriesSource'
 import { serializeArgsLiteral, serializeJsxProps } from './serializeJsxProps'
+import { pickWrapperName } from './wrapperName'
 
 export interface DemoModule {
   /** The essential example - what the collapsed code panel shows. */
@@ -161,13 +162,17 @@ const collectImports = (
   return importsBySpecifier
 }
 
-/** The `export default function Demo()` wrapper - a block body carries its own return. */
+/**
+ * The `export default function Demo()` wrapper, under a name the helpers leave free - a block
+ * body carries its own return.
+ */
 const demoWrapper = (
+  name: string,
   body: string,
   argsConst: string | undefined,
   isBlockBody: boolean
 ): string[] => {
-  const head = ['export default function Demo() {', ...(argsConst ? [indent(argsConst, 2)] : [])]
+  const head = [`export default function ${name}() {`, ...(argsConst ? [indent(argsConst, 2)] : [])]
   return isBlockBody
     ? [...head, indent(body, 2), '}']
     : [...head, '  return (', indent(body, 4), '  )', '}']
@@ -204,9 +209,10 @@ export const buildDemoModule = (options: BuildDemoModuleOptions): DemoModule => 
   const importLines = [...importsBySpecifier].map(([specifier, used]) =>
     printImport(specifier, used)
   )
-  const wrapperLines = demoWrapper(body, argsConst, story.isBlockBody)
   const importsText = importLines.join('\n')
   const helpersText = orderedHelpers.join('\n\n')
+  const wrapperName = pickWrapperName(`${helpersText}\n${body}`)
+  const wrapperLines = demoWrapper(wrapperName, body, argsConst, story.isBlockBody)
   const sections = [importsText, ...orderedHelpers, wrapperLines.join('\n')].filter(
     (section) => section !== ''
   )

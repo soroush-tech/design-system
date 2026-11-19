@@ -35,7 +35,7 @@ describe('runInit', () => {
     expect(await runInit(YES, io, DESIGN_SYSTEM)).toBe(0)
 
     expect(read(root, 'src/theme/themes.ts').startsWith(MARKER)).toBe(true)
-    expect(read(root, 'src/theme/Providers.ts')).toContain('{ theme: themes.light }')
+    expect(read(root, 'src/theme/Providers.ts')).toContain("scheme = 'light',")
     expect(read(root, 'src/main.tsx')).toContain("import { Providers } from './theme/Providers.ts'")
     expect(commands.map(({ command, args, options }) => [command, args, options])).toEqual([
       ['git', ['status', '--porcelain'], { cwd: root }],
@@ -120,9 +120,9 @@ describe('runInit', () => {
     const root = createViteApp()
     const { io, getOutput } = createTestIo(root, { isInteractive: true, answers: ['dark', 'y'] })
     expect(await runInit(ASK, io, DESIGN_SYSTEM)).toBe(0)
-    expect(getOutput()).toContain('Default color scheme, light or dark? (light) ')
+    expect(getOutput()).toContain('? Default color scheme\n')
     expect(getOutput()).toContain('Apply these changes? (y/N) ')
-    expect(read(root, 'src/theme/Providers.ts')).toContain('{ theme: themes.dark }')
+    expect(read(root, 'src/theme/Providers.ts')).toContain("scheme = 'dark',")
   })
 
   it('writes nothing without a yes', async () => {
@@ -140,7 +140,7 @@ describe('runInit', () => {
     const { io, getOutput } = createTestIo(root, { isInteractive: true, answers: ['yes'] })
     expect(await runInit({ ...ASK, scheme: 'dark' }, io, DESIGN_SYSTEM)).toBe(0)
     expect(getOutput()).not.toContain('Default color scheme')
-    expect(read(root, 'src/theme/Providers.ts')).toContain('{ theme: themes.dark }')
+    expect(read(root, 'src/theme/Providers.ts')).toContain("scheme = 'dark',")
   })
 
   it('refuses a tree with uncommitted changes, or outside git, unless --force', async () => {

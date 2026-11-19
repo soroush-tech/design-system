@@ -307,4 +307,24 @@ test.describe('design-system section', () => {
     await expect(page).toHaveURL(/\/design-system\/api\/button-group\//)
     await expect(page.getByRole('heading', { level: 1, name: 'ButtonGroup' })).toBeVisible()
   })
+
+  // Each example runs live once its page has loaded: a name its code uses and the demo scope
+  // lacks shows an error in its place, and a demo that renders itself freezes the page, which
+  // this test then times out on.
+  test('every component page runs its live examples with no error', async ({ page }) => {
+    test.setTimeout(300_000)
+    await page.goto('/design-system/components/')
+    const paths = await page
+      .locator('main a[href^="/design-system/components/"]')
+      .evaluateAll((links) => links.map((link) => link.getAttribute('href')!))
+    const componentPaths = [...new Set(paths)].filter((path) =>
+      /^\/design-system\/components\/[^/]+\/$/.test(path)
+    )
+    expect(componentPaths.length).toBeGreaterThan(40)
+    for (const path of componentPaths) {
+      await page.goto(path)
+      await page.waitForLoadState('networkidle')
+      await expect.soft(page.getByText(/(Reference|Type|Syntax)Error:/), path).toHaveCount(0)
+    }
+  })
 })

@@ -1,3 +1,4 @@
+import cliPkg from 'packages/cli/package.json'
 import designSystemPkg from 'packages/design-system/package.json'
 import markdownPkg from 'packages/markdown/package.json'
 import mcpPkg from 'packages/mcp/package.json'
@@ -12,4 +13,5 @@ export const PACKAGE_VERSIONS: Record<DocsSection, string> = {
   'styled-system': styledSystemPkg.version,
   mcp: mcpPkg.version,
   'ui-spec': uiSpecPkg.version,
+  cli: cliPkg.version,
 }

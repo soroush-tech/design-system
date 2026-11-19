@@ -1,0 +1,42 @@
+---
+import { ClientRouter } from 'astro:transitions'
+import Header from '../components/Header'
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My App</title>
+    <ClientRouter />
+  </head>
+  <body>
+    <Header client:load transition:persist />
+    <main>
+      <slot />
+    </main>
+    <script>
+      // Astro's client router replaces the head on each move between pages, and with it the
+      // styles the design system keeps there. Each of them gets an id the router keeps. The next
+      // page's own styles, which its HTML holds next to each island, move into its head, where
+      // the islands expect them as they hydrate - but not its base styles: the header, which
+      // the router keeps, draws those in the scheme picked.
+      document.addEventListener('astro:before-swap', ({ newDocument }) => {
+        const kept = new Set()
+        document.head.querySelectorAll('style[data-emotion]').forEach((style, index) => {
+          const id = `soroush-styles-${index}`
+          style.setAttribute('data-astro-transition-persist', id)
+          const placeholder = newDocument.createElement('style')
+          placeholder.setAttribute('data-astro-transition-persist', id)
+          newDocument.head.append(placeholder)
+          kept.add(style.getAttribute('data-emotion'))
+        })
+        newDocument.body.querySelectorAll('style[data-emotion]').forEach((style) => {
+          const name = style.getAttribute('data-emotion') ?? ''
+          if (kept.has(name) || name.includes('-global')) style.remove()
+          else newDocument.head.append(style)
+        })
+      })
+    </script>
+  </body>
+</html>

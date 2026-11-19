@@ -1,6 +1,17 @@
 import { spawnSync } from 'node:child_process'
+import { emitKeypressEvents } from 'node:readline'
 import { createInterface } from 'node:readline/promises'
 import type { Readable, Writable } from 'node:stream'
+import {
+  CancelledError,
+  formatAnswer,
+  formatChoice,
+  getAnswer,
+  readChoiceKey,
+  updateChoice,
+  type Choice,
+  type ChoiceState,
+} from './prompt'
 
 export interface RunOptions {
   cwd: string
@@ -22,6 +33,17 @@ export interface Io {
   isInteractive: boolean
   write: (text: string) => void
   ask: (question: string) => Promise<string>
+  /**
+   * Asks for one of `choices`, picked with the arrow keys, starting on `initial`. Rejects with a
+   * `CancelledError` on Ctrl+C or Escape.
+   */
+  select: (question: string, choices: readonly Choice[], initial?: number) => Promise<string>
+  /** Asks for any of `choices`, toggled with space, starting with `initial` picked. */
+  selectMany: (
+    question: string,
+    choices: readonly Choice[],
+    initial?: readonly string[]
+  ) => Promise<string[]>
   run: (command: string, args: readonly string[], options: RunOptions) => RunResult
 }
 
@@ -40,8 +62,69 @@ export function toWindowsCommandLine(command: string, args: readonly string[]): 
   return [command, ...args.map((arg) => `"${arg}"`)].join(' ')
 }
 
+type Terminal = Readable & {
+  isTTY?: boolean
+  isRaw?: boolean
+  setRawMode?: (mode: boolean) => unknown
+}
+
+// The ANSI sequences a choice is drawn with: hide and show the cursor, and take back lines drawn.
+const HIDE_CURSOR = '\u001B[?25l'
+const SHOW_CURSOR = '\u001B[?25h'
+const eraseLines = (count: number) => (count > 0 ? `\u001B[${count}A\r\u001B[J` : '')
+
+/**
+ * Draws a choice on the terminal and redraws it on each key, until Enter answers it or Ctrl+C or
+ * Escape stops it. The terminal is in raw mode only while the choice is open.
+ */
+function runChoice(
+  stdin: Terminal,
+  stdout: Writable,
+  question: string,
+  choices: readonly Choice[],
+  start: ChoiceState
+): Promise<string[]> {
+  return new Promise((resolve, reject) => {
+    let state = start
+    let drawnLines = 0
+    const draw = (text: string) => {
+      stdout.write(eraseLines(drawnLines) + text)
+      drawnLines = text.split('\n').length - 1
+    }
+    const wasRaw = Boolean(stdin.isRaw)
+    const close = (text: string) => {
+      stdin.off('keypress', onKeypress)
+      stdin.setRawMode?.(wasRaw)
+      stdin.pause()
+      draw(text)
+      stdout.write(SHOW_CURSOR)
+    }
+    function onKeypress(_text: string | undefined, key: { name?: string; ctrl?: boolean }) {
+      const action = readChoiceKey(key)
+      if (action === 'none') return
+      if (action === 'cancel') {
+        close(`? ${question}\n`)
+        reject(new CancelledError())
+      } else if (action === 'submit') {
+        const answer = getAnswer(state, choices)
+        close(formatAnswer(question, answer, choices))
+        resolve(answer)
+      } else {
+        state = updateChoice(state, action, choices)
+        draw(formatChoice(question, state, choices))
+      }
+    }
+    emitKeypressEvents(stdin)
+    stdin.setRawMode?.(true)
+    stdin.on('keypress', onKeypress)
+    stdin.resume()
+    stdout.write(HIDE_CURSOR)
+    draw(formatChoice(question, state, choices))
+  })
+}
+
 interface NodeIoOptions {
-  stdin?: Readable & { isTTY?: boolean }
+  stdin?: Terminal
   stdout?: Writable & { isTTY?: boolean }
   platform?: NodeJS.Platform
   cwd?: string
@@ -67,6 +150,13 @@ export function createNodeIo({
         prompt.close()
       }
     },
+    select: async (question, choices, initial = 0) => {
+      const start = { cursor: initial, picked: undefined }
+      const [value] = await runChoice(stdin, stdout, question, choices, start)
+      return value
+    },
+    selectMany: (question, choices, initial = []) =>
+      runChoice(stdin, stdout, question, choices, { cursor: 0, picked: initial }),
     run: (command, args, { cwd: directory, env = {}, showOutput = false }) => {
       const options = {
         cwd: directory,

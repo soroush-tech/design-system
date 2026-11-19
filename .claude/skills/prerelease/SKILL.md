@@ -76,6 +76,8 @@ nobody edits it.
    commit needed.
 2. `npm view @soroush.tech/<pkg> dist-tags`: `latest` is `X.Y.Z`.
 3. Consumers move from the tag to `^X.Y.Z`. The next change needs a new target.
+4. `pnpm deprecate-alpha`: deprecates every alpha whose release is now on npm, in every
+   package, pointing each at `^X.Y.Z` (it asks for npm's one-time code; `--dry-run` only lists).
 
 ## Once per repo
 

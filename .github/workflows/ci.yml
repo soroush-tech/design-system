@@ -7,6 +7,10 @@ on:
     branches:
       - 'main'
   pull_request:
+  # Weekly on main too: create-smoke installs a new app's libraries fresh from npm, within the
+  # ranges the starter writes, so a new release of one of them can break it with no push here.
+  schedule:
+    - cron: '0 6 * * 1'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -195,15 +199,21 @@ jobs:
 
       # On a cache hit the binaries are restored, but Linux system libs live outside the cache.
       # A stalled package mirror once held this step for ten minutes and failed the job: each
-      # attempt stops after three minutes, and the third failure fails the step.
+      # attempt stops after three minutes, and the third failure fails the step. timeout stops
+      # pnpm, not the apt-get it started as root, which keeps apt's lock and failed every attempt
+      # after the first: a failed attempt stops it too, lets dpkg finish what it began, and the next
+      # apt waits for a lock still held rather than failing at once.
       - name: Install Playwright system deps
         if: matrix.browsers && steps.playwright-cache.outputs.cache-hit == 'true'
         env:
           FILTER: ${{ matrix.filter }}
         run: |
+          echo 'DPkg::Lock::Timeout "120";' | sudo tee /etc/apt/apt.conf.d/90-lock-timeout > /dev/null
           for attempt in 1 2 3; do
             timeout 180 pnpm --filter "$FILTER" exec playwright install-deps chromium && exit 0
             echo "::warning::Playwright system deps, attempt $attempt of 3 failed"
+            sudo pkill -x apt-get || true
+            sudo dpkg --configure -a || true
           done
           exit 1
 
@@ -286,6 +296,68 @@ jobs:
           pnpm --filter @soroush.tech/design-system exec vitest run --project=unit
           pnpm --filter @soroush.tech/markdown test
 
+  # The apps `create` starts (packages/cli): the design system and the cli are packed from this
+  # checkout, an app is created on them, then typechecked, built and served, and its server HTML
+  # checked for the design system's styles. One row per language, each with another package
+  # manager.
+  create-smoke:
+    needs: [prepare, lint]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - lang: ts
+            pm: npm
+            flags: --layout workspace --sample-data --with tanstack-query,msw,zustand
+          - lang: js
+            pm: pnpm
+            flags: --framework react-router --render spa --sample-data --with jotai,tanstack-query
+          - lang: ts
+            pm: pnpm
+            flags: --framework react-router --layout workspace --render spa --sample-data --with swr,msw,redux-toolkit,react-hook-form
+          - lang: js
+            pm: npm
+            flags: --render ssg
+          - lang: ts
+            pm: npm
+            flags: --render ssr --sample-data --with tanstack-query,msw
+          - lang: ts
+            pm: pnpm
+            flags: --framework astro --layout workspace --render ssr --sample-data --with swr,msw,redux-toolkit
+          - lang: ts
+            pm: pnpm
+            flags: --framework astro --layout workspace --render ssr --sample-data --with tanstack-query,msw,zustand,react-hook-form
+          - lang: js
+            pm: npm
+            flags: --framework astro --render ssg --sample-data
+          - lang: ts
+            pm: pnpm
+            flags: --layout workspace --sample-data --with swr,msw,redux-toolkit,react-hook-form
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Setup pnpm, Node and dependencies
+        uses: ./.github/actions/setup
+        with:
+          node_version: ${{ needs.prepare.outputs.node_version }}
+          manager: ${{ needs.prepare.outputs.manager }}
+          command: ${{ needs.prepare.outputs.command }}
+
+      - name: Create, build and serve a ${{ matrix.lang }} app with ${{ matrix.pm }} ${{ matrix.flags }}
+        env:
+          SMOKE_LANG: ${{ matrix.lang }}
+          SMOKE_PM: ${{ matrix.pm }}
+          SMOKE_FLAGS: ${{ matrix.flags }}
+        # SMOKE_FLAGS is unquoted on purpose: it is this matrix's own flags, or none.
+        run: node scripts/smoke-create.mjs --lang "$SMOKE_LANG" --pm "$SMOKE_PM" $SMOKE_FLAGS
+
   # The docs app (apps/docs): unit coverage, the prerender build (which itself gates
   # every page), and the Playwright e2e suite against the built output.
   docs:
@@ -327,9 +399,12 @@ jobs:
       - name: Install Playwright system deps
         if: steps.playwright-cache.outputs.cache-hit == 'true'
         run: |
+          echo 'DPkg::Lock::Timeout "120";' | sudo tee /etc/apt/apt.conf.d/90-lock-timeout > /dev/null
           for attempt in 1 2 3; do
             timeout 180 pnpm --filter @soroush.tech/docs exec playwright install-deps chromium && exit 0
             echo "::warning::Playwright system deps, attempt $attempt of 3 failed"
+            sudo pkill -x apt-get || true
+            sudo dpkg --configure -a || true
           done
           exit 1
 
@@ -421,7 +496,7 @@ jobs:
   ci-ok:
     name: ci-ok
     if: always()
-    needs: [prepare, lint, packages, docs, bench, react-range]
+    needs: [prepare, lint, packages, docs, bench, react-range, create-smoke]
     runs-on: ubuntu-latest
     permissions: {}
     timeout-minutes: 5

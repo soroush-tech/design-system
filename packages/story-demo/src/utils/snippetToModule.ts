@@ -1,5 +1,6 @@
 import { indent } from './indentation'
 import { maskSource } from './maskSource'
+import { pickWrapperName } from './wrapperName'
 
 export interface SnippetContext {
   /** Import lines to prepend - empty for evaluation (imports are inert there). */
@@ -21,18 +22,19 @@ export const snippetToModule = (visible: string, context: SnippetContext): strin
   if (/^[ \t]*export[ \t]+default\b/m.test(maskSource(visible))) return visible
   const normalized = visible.replaceAll('\r\n', '\n')
   const lines = normalized.split('\n')
+  const name = pickWrapperName(`${context.helpersText}\n${normalized}`)
   const jsxStart = lines.findIndex((line) => line.startsWith('<'))
   let wrapper: string
   if (jsxStart === -1) {
     // No top-level JSX statement - the buffer is a complete function body (block-body
     // stories carry their own `return`), or empty.
     const body = normalized.trim() === '' ? 'return null' : normalized
-    wrapper = ['export default function Demo() {', indent(body, 2), '}'].join('\n')
+    wrapper = [`export default function ${name}() {`, indent(body, 2), '}'].join('\n')
   } else {
     const setup = lines.slice(0, jsxStart).join('\n').trim()
     const jsx = lines.slice(jsxStart).join('\n').trim()
     wrapper = [
-      'export default function Demo() {',
+      `export default function ${name}() {`,
       ...(setup === '' ? [] : [indent(setup, 2)]),
       '  return (',
       indent(jsx, 4),

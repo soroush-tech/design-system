@@ -194,6 +194,7 @@ jobs:
                   echo "::error::$name latest is now $latest - move it back with npm dist-tag"; exit 1
                 fi
                 echo "::notice::$name has no stable release yet, so latest stays on $latest until one ships." ;;
+              *) ;; # a release on `latest`: as it should be
               esac
               echo "### 📦 Published \`$name@$version\` (\`$tag\`)" >> "$GITHUB_STEP_SUMMARY"
               echo "https://www.npmjs.com/package/$name/v/$version" >> "$GITHUB_STEP_SUMMARY"

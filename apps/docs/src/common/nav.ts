@@ -22,7 +22,7 @@ export * from '@soroush.tech/docs-content'
  * A part of the site that documents a package. Every section is versioned: the live docs, and
  * a frozen snapshot per release.
  */
-export type DocsSection = DocsPackage | 'mcp' | 'ui-spec'
+export type DocsSection = DocsPackage | 'mcp' | 'ui-spec' | 'cli'
 
 export interface NavItem {
   label: string
@@ -263,7 +263,7 @@ const styledSystemRail: RailItem[] = [
 ]
 
 // A package with an overview and its releases, and nothing else yet.
-const overviewRail = (pkg: 'mcp' | 'ui-spec'): RailItem[] => [
+const overviewRail = (pkg: 'mcp' | 'ui-spec' | 'cli'): RailItem[] => [
   HOME,
   PACKAGES_ITEM,
   {
@@ -291,6 +291,7 @@ const SECTIONS: SectionNav[] = (
     { pkg: 'styled-system', label: 'Styled-system documentation', rail: styledSystemRail },
     { pkg: 'mcp', label: 'MCP server documentation', rail: overviewRail('mcp') },
     { pkg: 'ui-spec', label: 'UI spec documentation', rail: overviewRail('ui-spec') },
+    { pkg: 'cli', label: 'Command line documentation', rail: overviewRail('cli') },
   ] satisfies Omit<SectionNav, 'groups'>[]
 ).map((section) => ({
   ...section,

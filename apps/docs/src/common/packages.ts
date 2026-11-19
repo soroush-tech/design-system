@@ -1,3 +1,4 @@
+import cliPkg from 'packages/cli/package.json'
 import mcpPkg from 'packages/mcp/package.json'
 import uiSpecPkg from 'packages/ui-spec/package.json'
 import type { ComponentNavItem } from '@soroush.tech/docs-content'
@@ -19,9 +20,10 @@ export interface PackageInfo {
   docs: DocsSection
 }
 
-// The MCP server is published under its own scope, `@soroush.design`.
+// The MCP server and the command line are published under their own scope, `@soroush.design`.
+const DESIGN_SCOPED = new Set(['mcp', 'cli'])
 const npmOf = (id: string) =>
-  `https://www.npmjs.com/package/@soroush.${id === 'mcp' ? 'design' : 'tech'}/${id}`
+  `https://www.npmjs.com/package/@soroush.${DESIGN_SCOPED.has(id) ? 'design' : 'tech'}/${id}`
 const githubOf = (id: string) => `${GITHUB_TREE}/packages/${id}`
 
 /** The packages the docs are about, the ones with a docs section first. */
@@ -75,6 +77,16 @@ export const PACKAGES: PackageInfo[] = [
     npm: npmOf('ui-spec'),
     github: githubOf('ui-spec'),
     docs: 'ui-spec',
+  },
+  {
+    id: 'cli',
+    name: 'Command line',
+    description:
+      'Sets the design system up in an existing React app with one command, showing every change first.',
+    version: cliPkg.version,
+    npm: npmOf('cli'),
+    github: githubOf('cli'),
+    docs: 'cli',
   },
 ]
 

@@ -33,6 +33,7 @@ test.describe('packages', () => {
     )
     await expect(nav.getByRole('link', { name: /MCP server/ })).toHaveAttribute('href', '/mcp/')
     await expect(nav.getByRole('link', { name: /UI spec/ })).toHaveAttribute('href', '/ui-spec/')
+    await expect(nav.getByRole('link', { name: /Command line/ })).toHaveAttribute('href', '/cli/')
   })
 
   test("a component's head links its source on GitHub", async ({ page }) => {

@@ -6,10 +6,17 @@ import { ThemeProvider } from '@soroush.tech/design-system/theme'
 import themes from './themes.ts'
 
 /** Gives every component its theme, and draws the page's base styles. */
-export function Providers({ children }: { readonly children?: ReactNode }) {
+export function Providers({
+  children,
+  scheme = 'light',
+}: {
+  readonly children?: ReactNode
+  /** The theme to draw with, by its name in themes. */
+  readonly scheme?: keyof typeof themes
+}) {
   return createElement(
     ThemeProvider,
-    { theme: themes.light },
+    { theme: themes[scheme] },
     createElement(Global, { styles: globalStyles }),
     children
   )

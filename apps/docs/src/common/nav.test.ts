@@ -37,7 +37,7 @@ describe('section navigation', () => {
   })
 
   it('opens each section with home, then the packages, then the get started item', () => {
-    for (const pkg of ['design-system', 'markdown', 'styled-system', 'mcp', 'ui-spec']) {
+    for (const pkg of ['design-system', 'markdown', 'styled-system', 'mcp', 'ui-spec', 'cli']) {
       const rail = sectionFor(`/${pkg}/`).rail
       expect(rail[0].id).toBe('home')
       expect(rail[0].groups).toEqual([])
@@ -84,14 +84,16 @@ describe('the packages in the rail', () => {
       ['Styled System', '/styled-system/'],
       ['MCP server', '/mcp/'],
       ['UI spec', '/ui-spec/'],
+      ['Command line', '/cli/'],
     ])
     for (const entry of docs) expect(entry.note).toMatch(/^v\d+\.\d+\.\d+$/)
   })
 
-  it('has a section of its own for the MCP server and the UI spec', () => {
+  it('has a section of its own for the MCP server, the UI spec and the command line', () => {
     for (const [pkg, label] of [
       ['mcp', 'MCP server documentation'],
       ['ui-spec', 'UI spec documentation'],
+      ['cli', 'Command line documentation'],
     ]) {
       const section = sectionFor(`/${pkg}/`)
       expect(section.pkg).toBe(pkg)

@@ -85,6 +85,7 @@ describe('DocsNav', () => {
       ['Markdown', '/markdown/'],
       ['MCP server', '/mcp/'],
       ['UI spec', '/ui-spec/'],
+      ['Command line', '/cli/'],
     ]) {
       const link = screen.getByRole('link', { name: new RegExp(`^${name}\\s*v\\d`) })
       expect(link).toHaveAttribute('href', href)
@@ -106,6 +107,7 @@ describe('DocsNav', () => {
       'Styled System',
       'MCP server',
       'UI spec',
+      'Command line',
     ])
     expect(options[0]).toHaveAttribute('aria-selected', 'true')
     expect(options[1]).toHaveAttribute('aria-selected', 'false')

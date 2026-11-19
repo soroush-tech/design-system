@@ -36,6 +36,35 @@ describe('buildDemoModule', () => {
     )
   })
 
+  it("wraps a story that renders a helper of its own named Demo in a wrapper that isn't", () => {
+    // The Snackbar stories' shape: wrapped in a second Demo, the helper was shadowed and the
+    // wrapper rendered itself, without end.
+    const source = [
+      "import type { Meta, StoryObj } from '@storybook/react-vite'",
+      "import { Sample, type SampleProps } from './Sample'",
+      'const meta: Meta<typeof Sample> = { component: Sample }',
+      'export default meta',
+      'type Story = StoryObj<typeof Sample>',
+      'function Demo(args: SampleProps) {',
+      '  return <Sample {...args} />',
+      '}',
+      'export const Default: Story = {',
+      "  args: { size: 'sm' },",
+      '  render: (args) => <Demo {...args} />,',
+      '}',
+    ].join('\n')
+    const demo = buildDemoModule({
+      parsed: parseStoriesSource(source),
+      storyName: 'Default',
+      args: { size: 'sm' },
+      include: ['size'],
+      packageName: PKG,
+    })
+    expect(demo.full).toContain('function Demo(args: SampleProps) {')
+    expect(demo.full).toContain('export default function Example() {')
+    expect(demo.full.match(/function Demo\b/g)).toHaveLength(1)
+  })
+
   it('keeps the render body and pulls the transitive helper closure', () => {
     const demo = buildDemoModule({ parsed, storyName: 'Sizes', args: {}, packageName: PKG })
     expect(demo.full).toBe(

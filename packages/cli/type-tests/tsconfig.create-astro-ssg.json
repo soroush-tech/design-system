@@ -1,0 +1,16 @@
+{
+  // The TypeScript of the Astro app create writes, under the app's own tsconfig.json: create-astro-ssg/ is
+  // the starter's output, kept in sync by src/create/astro/astro.test.ts. Its .astro files are
+  // checked by `astro check` in the smoke test, which installs the app. It reads the design
+  // system's built types next to this package, as an app reads the published ones.
+  "extends": "./create-astro-ssg/tsconfig.json",
+  "include": ["./create-astro-ssg/src/**/*.ts", "./create-astro-ssg/src/**/*.tsx"],
+  "compilerOptions": {
+    // What astro sync writes into an app, as astro check runs: import.meta.env and the like.
+    "types": ["astro/client"],
+    "paths": {
+      "@soroush.tech/design-system": ["../../design-system/dist/index.d.mts"],
+      "@soroush.tech/design-system/*": ["../../design-system/dist/*.d.mts"]
+    }
+  }
+}

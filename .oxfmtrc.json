@@ -6,5 +6,9 @@
   "printWidth": 100,
   "endOfLine": "lf",
   "sortPackageJson": false,
-  "ignorePatterns": ["packages/ui-spec/vendor"]
+  "ignorePatterns": [
+    "packages/ui-spec/vendor",
+    "packages/cli/templates/*/js/**",
+    "packages/cli/templates/**/README.md"
+  ]
 }

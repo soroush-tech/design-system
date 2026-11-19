@@ -1,7 +1,7 @@
 {
   "name": "@soroush.design/cli",
-  "version": "0.1.0",
-  "description": "The command line of the @soroush.tech design system: init sets it up in an existing React app, showing every change first.",
+  "version": "0.2.0",
+  "description": "The command line of the @soroush.tech design system: init sets it up in an existing React app, and create starts a new one, each showing every change first.",
   "keywords": [
     "cli",
     "init",
@@ -23,7 +23,8 @@
   "type": "module",
   "sideEffects": false,
   "files": [
-    "dist"
+    "dist",
+    "templates"
   ],
   "bin": {
     "soroush-design": "./dist/bin.mjs"
@@ -47,23 +48,50 @@
     "types": "./dist/index.d.mts"
   },
   "scripts": {
-    "build": "tsdown",
-    "lint": "oxlint --deny-warnings",
+    "build": "node scripts/gen-templates.mjs && tsdown",
+    "lint": "oxlint --deny-warnings --ignore-pattern=templates/**",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "test:types": "pnpm --filter @soroush.tech/design-system build && tsc -p type-tests/init/tsconfig.json",
-    "prepublishOnly": "pnpm build"
+    "test:types": "pnpm --filter @soroush.tech/design-system build && tsc -p type-tests/init/tsconfig.json && tsc -p type-tests/tsconfig.create-vike.json && tsc -p type-tests/tsconfig.create-vike-ssg.json && tsc -p type-tests/tsconfig.create-vike-ssr.json && tsc -p type-tests/tsconfig.create-vike-libraries.json && tsc -p type-tests/tsconfig.create-vike-jotai.json && tsc -p type-tests/tsconfig.create-vike-more.json && tsc -p type-tests/tsconfig.create-astro-ssg.json && tsc -p type-tests/tsconfig.create-astro-ssr.json && tsc -p type-tests/tsconfig.create-astro-libraries.json && tsc -p type-tests/tsconfig.create-astro-more.json && tsc -p type-tests/tsconfig.create-react-router.json && tsc -p type-tests/tsconfig.create-react-router-libraries.json && tsc -p type-tests/tsconfig.create-react-router-more.json && tsc -p type-tests/tsconfig.create-react-router-jotai.json",
+    "prepublishOnly": "pnpm build",
+    "gen:templates": "node scripts/gen-templates.mjs"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "@astrojs/node": "^11.1.13",
+    "@astrojs/react": "^7.1.9",
+    "@emotion/server": "^11.11.0",
+    "@hookform/resolvers": "^7.0.6",
+    "@reduxjs/toolkit": "^2.14.0",
     "@soroush.tech/eslint-config": "workspace:*",
+    "@tanstack/react-query": "^5.107.1",
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/react": "^16.3.3",
     "@types/node": "^26.6.6",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.3.0",
     "@vitest/coverage-v8": "^5.1.0",
+    "astro": "^7.4.12",
+    "jotai": "^3.0.2",
+    "jsdom": "^31.0.1",
+    "msw": "^3.0.5",
     "oxlint": "^1.93.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-hook-form": "^7.92.0",
+    "react-redux": "^9.3.1",
+    "react-router": "^8.5.1",
+    "swr": "^2.5.1",
+    "ts-blank-space": "^0.9.0",
     "tsdown": "^0.23.7",
     "typescript": "~7.0.2",
-    "vitest": "^5.1.0"
+    "typescript-astro": "npm:typescript@^6.0.3",
+    "vike": "0.4.270",
+    "vite": "~8.3.8",
+    "vitest": "^5.1.0",
+    "zod": "^4.6.7",
+    "zustand": "^5.1.0"
   }
 }
