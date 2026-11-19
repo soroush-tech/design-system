@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://docs.soroush.tech/</loc></url>
+  <url><loc>https://docs.soroush.tech/cli/</loc></url>
+  <url><loc>https://docs.soroush.tech/cli/releases/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/api/</loc></url>
   <url><loc>https://docs.soroush.tech/design-system/api/accordion-actions/</loc></url>
