@@ -44,9 +44,10 @@ This set-up is tested on Next.js 16.4 with React 19.2, in development and in a p
 build, with a page that streams through `Suspense`. Keep styled parts in client components:
 the registry collects what client components render.
 
-One known fault in the engine's 0.2.0: on a page that streams, a theme given to the outermost
-`ThemeProvider` after the page has loaded (a light and dark switch in the browser) can be
-overridden by rules that arrived with a later chunk.
+One known fault in the engine's 0.2.0: a theme given to the outermost `ThemeProvider` while the
+page is still streaming (a light and dark switch made before the last chunk arrives) goes back
+to the earlier theme when that chunk arrives, until the next switch. A switch made after the
+page has finished streaming works.
 
 Then in `app/layout.tsx`:
 
