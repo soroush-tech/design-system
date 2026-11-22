@@ -4,6 +4,7 @@ import type { ReactNode } from 'react'
 import { ThemeProvider } from '../theme'
 import { baseTheme, createTheme, type Theme } from '../theme/themes'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
+import { getStyleRulesFor } from '../utils/test/getStyleRulesFor'
 import { Badge, type BadgeProps } from './Badge'
 
 const withTheme = (theme: Theme) =>
@@ -104,11 +105,10 @@ describe('Badge', () => {
     it('turns the pull round right to left', () => {
       render(<div dir="rtl">{view()}</div>, { wrapper: ThemeProvider })
       // The rule for right to left sits in the stylesheet under [dir="rtl"].
-      const rule = [...document.querySelectorAll('style')]
-        .map((style) => style.textContent ?? '')
-        .join('')
-      expect(rule).toContain('[dir="rtl"]')
-      expect(rule).toContain('translate(-50%, -50%)')
+      const rtl = getStyleRulesFor(mark(), '[dir="rtl"]')
+      expect(rtl.map((rule) => rule.style.getPropertyValue('transform'))).toContain(
+        'translate(-50%, -50%)'
+      )
     })
   })
 

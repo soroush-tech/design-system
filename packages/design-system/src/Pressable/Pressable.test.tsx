@@ -6,23 +6,13 @@ import { ThemeProvider, baseTheme, createTheme } from '@soroush.tech/design-syst
 import { Pressable } from './Pressable'
 import { toPx } from '../utils/test/toPx'
 import { getCssVariable } from '../utils/test/getCssVariable'
+import { getStyleRulesFor } from '../utils/test/getStyleRulesFor'
 
-/**
- * Emitted CSS rules that target one of the element's classes and contain the given
- * selector fragment (`''` matches them all). jsdom never enters `:active` or
- * `:focus-visible`, and it resolves keywords like `inherit` away in
- * `getComputedStyle`, so the generated stylesheet is the only place those
- * declarations can be observed.
- */
-const rulesFor = (element: HTMLElement, pseudo: string) => {
-  const css = Array.from(document.querySelectorAll('style'))
-    .map((style) => style.textContent ?? '')
-    .join('')
-  const classes = Array.from(element.classList)
-  return (css.match(/[^{}]+\{[^{}]*\}/g) ?? [])
-    .filter((rule) => rule.includes(pseudo) && classes.some((name) => rule.includes(`.${name}`)))
-    .join('')
-}
+/** What the rules that target the element and contain the selector fragment declare for a property. */
+const declared = (element: HTMLElement, suffix: string, property: string) =>
+  getStyleRulesFor(element, suffix)
+    .map((rule) => rule.style.getPropertyValue(property))
+    .filter(Boolean)
 
 /**
  * The held surface is a translucent mix of the palette color's variable, about one eighth of it
@@ -30,8 +20,11 @@ const rulesFor = (element: HTMLElement, pseudo: string) => {
  */
 const expectTint = (element: HTMLElement, color: 'primary' | 'secondary' | 'error') => {
   const variable = `--soroush-palette-${color}-main`
-  const prefix = `background-color:color-mix(in srgb, var(${variable}) `
-  const percent = rulesFor(element, ':active').split(prefix)[1]?.split('%, transparent)')[0]
+  const prefix = `color-mix(in srgb, var(${variable}) `
+  const percent = declared(element, ':active', 'background-color')
+    .find((value) => value.startsWith(prefix))
+    ?.slice(prefix.length)
+    .split('%, transparent)')[0]
   expect(Number(percent)).toBeCloseTo(12.5, 0)
   expect(getCssVariable(variable)).toBe(baseTheme.palette[color].main)
 }
@@ -83,22 +76,22 @@ describe('Pressable', () => {
     renderWithTheme(<Pressable>Bare</Pressable>)
     const pressable = screen.getByRole('button')
     expect(pressable).toHaveStyle({ margin: '0px', padding: '0px', cursor: 'pointer' })
-    const css = rulesFor(pressable, '')
-    expect(css).toContain('border:none')
-    expect(css).toContain('border-radius:0')
-    expect(css).toContain('background-color:transparent')
-    expect(css).toContain('color:inherit')
-    expect(css).toContain('font:inherit')
-    expect(css).toContain('text-align:inherit')
+    // jsdom reads `border: none` as the shorthand's initial width and a style of none.
+    expect(declared(pressable, '', 'border-style')).toContain('none')
+    expect(declared(pressable, '', 'border-radius')).toContain('0px')
+    expect(declared(pressable, '', 'background-color')).toContain('transparent')
+    expect(declared(pressable, '', 'color')).toContain('inherit')
+    expect(declared(pressable, '', 'font')).toContain('inherit')
+    expect(declared(pressable, '', 'text-align')).toContain('inherit')
   })
 
   it('is not text-selectable, the way a native button is not', () => {
     // Without this a shimmed div would select its label on double-click or drag.
     renderWithTheme(<Pressable>Bare</Pressable>)
-    const css = rulesFor(screen.getByRole('button'), '')
-    expect(css).toContain('user-select:none')
+    const pressable = screen.getByRole('button')
+    expect(declared(pressable, '', 'user-select')).toContain('none')
     // The engine writes the WebKit form for Safari.
-    expect(css).toContain('-webkit-user-select:none')
+    expect(declared(pressable, '', '-webkit-user-select')).toContain('none')
   })
 
   it('fires onClick when pressed', () => {
@@ -196,7 +189,7 @@ describe('Pressable', () => {
           Go
         </Pressable>
       )
-      expect(rulesFor(screen.getByRole('button'), ':active')).toBe('')
+      expect(getStyleRulesFor(screen.getByRole('button'), ':active')).toEqual([])
     })
   })
 
@@ -238,8 +231,8 @@ describe('Pressable', () => {
     renderWithTheme(<Pressable>Focus</Pressable>)
     const pressable = screen.getByRole('button')
     expect(pressable).toHaveStyle({ outlineStyle: 'none' })
-    expect(rulesFor(pressable, ':focus-visible')).toContain(
-      'outline:2px solid var(--soroush-palette-primary-main)'
+    expect(declared(pressable, ':focus-visible', 'outline')).toContain(
+      '2px solid var(--soroush-palette-primary-main)'
     )
     expect(getCssVariable('--soroush-palette-primary-main')).toBe(baseTheme.palette.primary.main)
   })
@@ -272,12 +265,12 @@ describe('Pressable', () => {
   describe('feedback', () => {
     it('emits no press rule by default', () => {
       renderWithTheme(<Pressable>Plain</Pressable>)
-      expect(rulesFor(screen.getByRole('button'), ':active')).toBe('')
+      expect(getStyleRulesFor(screen.getByRole('button'), ':active')).toEqual([])
     })
 
     it('dims the content while held under the opacity feedback', () => {
       renderWithTheme(<Pressable feedback="opacity">Dim</Pressable>)
-      expect(rulesFor(screen.getByRole('button'), ':active')).toContain('opacity:0.7')
+      expect(declared(screen.getByRole('button'), ':active', 'opacity')).toContain('0.7')
     })
 
     it('honors a custom activeOpacity', () => {
@@ -286,7 +279,7 @@ describe('Pressable', () => {
           Dim
         </Pressable>
       )
-      expect(rulesFor(screen.getByRole('button'), ':active')).toContain('opacity:0.3')
+      expect(declared(screen.getByRole('button'), ':active', 'opacity')).toContain('0.3')
     })
 
     it('tints the surface while held under the highlight feedback', () => {
@@ -332,7 +325,7 @@ describe('Pressable', () => {
           </Pressable>
         </ThemeProvider>
       )
-      expect(rulesFor(screen.getByRole('button'), ':active')).toContain('opacity:0.9')
+      expect(declared(screen.getByRole('button'), ':active', 'opacity')).toContain('0.9')
     })
   })
 })

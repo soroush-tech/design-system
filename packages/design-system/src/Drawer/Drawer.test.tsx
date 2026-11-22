@@ -4,6 +4,7 @@ import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { baseTheme } from '../theme/themes'
 import { installPopover } from '../testing'
 import { getCssVariable } from '../utils/test/getCssVariable'
+import { getStyleRulesFor } from '../utils/test/getStyleRulesFor'
 import { Drawer, DrawerToggle } from './'
 
 // jsdom has no popover API: the published stand-in fires `toggle` the way a real popover does.
@@ -21,7 +22,10 @@ afterEach(() => {
 })
 
 const getPanel = () => document.getElementById('nav') as HTMLElement
-const styles = () => [...document.querySelectorAll('style')].map((el) => el.textContent).join('')
+const backdropColors = () =>
+  getStyleRulesFor(getPanel(), '::backdrop').map((rule) =>
+    rule.style.getPropertyValue('background-color')
+  )
 
 const renderDrawer = (props: Partial<React.ComponentProps<typeof Drawer>> = {}) =>
   renderWithTheme(
@@ -77,11 +81,11 @@ describe('Drawer', () => {
 
     it('dims the page with the backdrop token, or not at all', () => {
       renderDrawer()
-      expect(styles()).toContain('::backdrop{background-color:var(--soroush-background-backdrop);}')
+      expect(backdropColors()).toEqual(['var(--soroush-background-backdrop)'])
       expect(getCssVariable('--soroush-background-backdrop')).toBe(baseTheme.background.backdrop)
       cleanup()
       renderDrawer({ hasBackdrop: false })
-      expect(styles()).toContain('::backdrop{background-color:transparent;}')
+      expect(backdropColors()).toEqual(['transparent'])
     })
   })
 
@@ -160,10 +164,14 @@ describe('Drawer', () => {
 
     it('hides the panel where the browser cannot, instead of covering the page', () => {
       renderDrawer()
-      // The engine writes the at-rule minified; the browser applies it only without `:popover-open`.
-      expect(styles()).toMatch(
-        /@supports not selector\(:popover-open\)\{\.[\w-]+\{display:none;\}\}/
+      // The browser applies the at-rule only without `:popover-open`.
+      const hidden = getStyleRulesFor(getPanel()).filter(
+        (rule) => rule.parentRule instanceof CSSSupportsRule
       )
+      expect(hidden.map((rule) => (rule.parentRule as CSSSupportsRule).conditionText)).toEqual([
+        'not selector(:popover-open)',
+      ])
+      expect(hidden.map((rule) => rule.style.getPropertyValue('display'))).toEqual(['none'])
     })
   })
 })

@@ -5,6 +5,7 @@ import { ThemeProvider } from '../theme'
 import { baseTheme, createTheme, type Theme } from '../theme/themes'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { getCssVariable } from '../utils/test/getCssVariable'
+import { getStyleRulesFor } from '../utils/test/getStyleRulesFor'
 import { Menu } from '../Menu'
 import { MenuItem } from '../MenuItem'
 import { Fab, type FabProps } from './Fab'
@@ -152,9 +153,12 @@ describe('Fab', () => {
     it('rises on hover and is no higher pressed than at rest', () => {
       // The rules are on the stylesheet: the rest, hover and pressed shadows are theme shadows.
       renderWithTheme(view())
-      const css = [...document.querySelectorAll('style')].map((node) => node.textContent).join('')
-      expect(css).toContain(':hover:not(:disabled){box-shadow:var(--soroush-shadows-8);}')
-      expect(css).toContain(':active:not(:disabled){box-shadow:var(--soroush-shadows-6);}')
+      const shadowOf = (suffix: string) =>
+        getStyleRulesFor(fab(), suffix)
+          .map((rule) => rule.style.getPropertyValue('box-shadow'))
+          .filter(Boolean)
+      expect(shadowOf(':hover:not(:disabled)')).toEqual(['var(--soroush-shadows-8)'])
+      expect(shadowOf(':active:not(:disabled)')).toEqual(['var(--soroush-shadows-6)'])
       expect(getCssVariable('--soroush-shadows-8')).toBe(baseTheme.shadows[8])
       expect(getCssVariable('--soroush-shadows-6')).toBe(baseTheme.shadows[6])
     })
