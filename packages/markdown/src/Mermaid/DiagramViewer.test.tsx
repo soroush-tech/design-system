@@ -7,9 +7,10 @@ const SVG = '<svg data-testid="svg"></svg>'
 // jsdom writes a translate with a zero y as `translate(48px)`, as CSS allows; spell the y out so
 // every assertion reads the pan on both axes.
 const transform = () =>
-  screen
-    .getByTestId('diagram-transform')
-    .style.transform.replace(/translate\(([^,)]+)\)/, 'translate($1, 0px)')
+  getComputedStyle(screen.getByTestId('diagram-transform')).transform.replace(
+    /translate\(([^,)]+)\)/,
+    'translate($1, 0px)'
+  )
 const surface = () => screen.getByTestId('diagram-transform').parentElement as HTMLElement
 
 describe('DiagramViewer', () => {

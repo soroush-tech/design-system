@@ -160,7 +160,7 @@ describe('buildDemoModule', () => {
 
   it('rewrites utils and nested relative specifiers, keeping externals', () => {
     const module = [
-      "import { css } from '@emotion/css'",
+      "import { css } from '@umber-style/css'",
       "import { m } from '../utils/test/storiesArgs'",
       "import { baseTheme } from '../theme/themes'",
       "import { Chip } from './Chip'",
@@ -175,7 +175,7 @@ describe('buildDemoModule', () => {
       args: {},
       packageName: PKG,
     })
-    expect(demo.full).toContain("import { css } from '@emotion/css'")
+    expect(demo.full).toContain("import { css } from '@umber-style/css'")
     expect(demo.full).toContain(
       "import { m } from '@soroush.tech/design-system/utils/test/storiesArgs'"
     )
