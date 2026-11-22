@@ -17,7 +17,6 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
-    "@emotion/css": "^11.13.5",
     "@fontsource-variable/jetbrains-mono": "^5.3.0",
     "@fontsource-variable/space-grotesk": "^5.3.0",
     "@mdx-js/react": "^3.1.1",
@@ -27,6 +26,7 @@
     "@soroush.tech/lab": "workspace:*",
     "@soroush.tech/markdown": "workspace:*",
     "@soroush.tech/story-demo": "workspace:*",
+    "@umber-style/css": "^0.1.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "rehype-highlight": "^7.0.2",
@@ -36,7 +36,6 @@
     "vike-react": "0.6.32"
   },
   "devDependencies": {
-    "@emotion/server": "^11.11.0",
     "@mdx-js/rollup": "^3.1.1",
     "@playwright/test": "^1.65.0",
     "@soroush.tech/eslint-config": "workspace:*",
@@ -47,6 +46,7 @@
     "@types/node": "^26.6.6",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
+    "@umber-style/server": "^0.1.0",
     "@vitejs/plugin-react": "^6.3.0",
     "@vitest/coverage-v8": "^5.1.0",
     "jsdom": "^31.0.0",

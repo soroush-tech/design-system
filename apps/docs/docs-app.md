@@ -1,7 +1,7 @@
 # Docs app conventions (apps/docs)
 
 The Vike SSG app served at docs.soroush.tech. Architecture mirrors the soroush.tech web
-app's renderer (Emotion critical CSS, managed head tags) with the data layer removed:
+app's renderer (critical CSS from the styling engine's cache, managed head tags) with the data layer removed:
 every input is an in-repo glob over `packages/` and `content/` - no remote fetches, no MSW.
 
 ## Sections
@@ -12,7 +12,7 @@ pages, and the drift tests; `sectionFor(pathname)` picks the active section.
 
 ## Structure
 
-- `src/renderer/` - Vike renderer: SSR + Emotion critical CSS, managed head tags + CSP
+- `src/renderer/` - Vike renderer: SSR + critical CSS from the styling engine's cache, managed head tags + CSP
   (`form-action` allows only the sandbox define endpoint), snapshot-aware robots default.
 - `src/pages/<section>/...` - one folder per route. Pages are **e2e-only**: excluded from
   unit coverage; co-located `*.e2e.ts` cover them against the built output. Every section

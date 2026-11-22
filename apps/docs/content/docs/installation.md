@@ -48,8 +48,7 @@ Install the design system and its peer dependencies:
 npm i @soroush.tech/design-system react react-dom
 ```
 
-It works with React 18 and React 19: `react` and `react-dom` `^18.0.0 || ^19.0.0`. Both are tested
-in CI, on 18.0.0 and on 19.
+React 19.2 or later is required.
 
 ### Set up the ThemeProvider
 
