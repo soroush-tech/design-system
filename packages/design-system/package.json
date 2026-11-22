@@ -829,9 +829,9 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@umber-style/cache": "^0.1.0",
-    "@umber-style/react": "^0.1.0",
-    "@umber-style/styled": "^0.1.0",
+    "@umber-style/cache": "^0.2.0",
+    "@umber-style/react": "^0.2.0",
+    "@umber-style/styled": "^0.2.0",
     "@soroush.design/cli": "workspace:*",
     "@soroush.tech/styled-system": "workspace:^"
   },
@@ -840,7 +840,7 @@
     "react-dom": "^19.2.8"
   },
   "devDependencies": {
-    "@umber-style/css": "^0.1.0",
+    "@umber-style/css": "^0.2.0",
     "@soroush.tech/docs-content": "workspace:*",
     "@soroush.tech/eslint-config": "workspace:*",
     "@storybook/addon-a11y": "^10.6.7",

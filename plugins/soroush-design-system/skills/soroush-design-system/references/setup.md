@@ -36,9 +36,17 @@ Copy `providers.tsx` to `app/providers.tsx`. Two things it does:
 - **Global reset** - `border-box` everywhere, zero body margin,
   `background.primary` / `text.initial` / `fonts.body` on `<body>`.
 
-Keep the cache key `soroush`: it is the prefix the design system's styles use, and the
-registry's cache must match it. The registry writes one `<style data-umber="soroush ...">`
-element per flush into the stream.
+The cache key is the prefix of the class names and the CSS variables under the registry. The
+file uses `soroush`, the design system's own; an app that already has a key of its own may keep
+it. The registry writes one `<style data-umber="<key> ...">` element per flush into the stream.
+
+This set-up is tested on Next.js 16.4 with React 19.2, in development and in a production
+build, with a page that streams through `Suspense`. Keep styled parts in client components:
+the registry collects what client components render.
+
+One known fault in the engine's 0.2.0: on a page that streams, a theme given to the outermost
+`ThemeProvider` after the page has loaded (a light and dark switch in the browser) can be
+overridden by rules that arrived with a later chunk.
 
 Then in `app/layout.tsx`:
 
