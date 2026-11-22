@@ -135,7 +135,7 @@ const TableCellBase = styled('td', {
   name: 'TableCell',
   label: 'TableCell',
   shouldForwardProp,
-  systemProps: [space, colorSystem, typography, border],
+  systemProps: [space, typography, border, colorSystem],
 })<TableCellBaseProps>(sizeStyle, dividerStyle, stickyStyle, ellipsisStyle, alignStyle)
 
 export function TableCell({

@@ -275,7 +275,7 @@ describe('Snackbar', () => {
 
     it('grows in by default', () => {
       mount(view({ defaultOpen: true }))
-      expect(status().style.transition).toContain('transform')
+      expect(getComputedStyle(status()).transition).toContain('transform')
     })
   })
 

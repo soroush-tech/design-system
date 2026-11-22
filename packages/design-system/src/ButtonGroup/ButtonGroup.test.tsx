@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { screen } from '@testing-library/react'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { baseTheme } from '../theme/themes'
+import { getStyleRules } from '../utils/test/getStyleRules'
 import { Button } from '../Button'
 import { ButtonGroup } from './ButtonGroup'
 
@@ -112,8 +113,7 @@ describe('ButtonGroup', () => {
   // applies to the buttons, on their computed style.
   const groupRule = (testid: string, selectorFragment: string) => {
     const groupClasses = Array.from(screen.getByTestId(testid).classList)
-    const allRules = Array.from(document.styleSheets).flatMap((sheet) => Array.from(sheet.cssRules))
-    return allRules.find(
+    return getStyleRules().find(
       (rule) =>
         groupClasses.some((cls) => rule.cssText.includes(cls)) &&
         rule.cssText.includes(selectorFragment)
@@ -152,7 +152,7 @@ describe('ButtonGroup', () => {
       </ButtonGroup>
     )
     const only = groupRule('group', ':only-child')
-    expect(only).toContain(`border-radius: ${baseTheme.radii.lg}`)
+    expect(only).toContain('border-radius: var(--soroush-radii-lg)')
   })
 
   it('rounds the top/bottom outer corners when vertical', () => {
@@ -188,8 +188,8 @@ describe('ButtonGroup', () => {
     // trailing buttons get a leading-edge divider in the color's dark shade (opaque)
     const divider = groupRule('group', 'border-left-color')
     expect(divider).toContain(':not(:first-of-type)')
-    expect(divider).toMatch(/border-left-color: rgb\(/)
-    expect(divider).not.toContain('rgba')
+    expect(divider).toContain('border-left-color: var(--soroush-palette-primary-dark)')
+    expect(divider).not.toContain('color-mix')
   })
 
   it('draws a translucent divider between text buttons', () => {
@@ -201,7 +201,10 @@ describe('ButtonGroup', () => {
     )
     const divider = groupRule('group', 'border-left-color')
     expect(divider).toContain(':not(:first-of-type)')
-    expect(divider).toMatch(/border-left-color: rgba\([^)]*, 0\.5\)/)
+    // The engine writes a translucent token as a color-mix of the variable, about half opaque.
+    expect(divider).toMatch(
+      /border-left-color: color-mix\(in srgb, var\(--soroush-palette-primary-main\) 50(\.\d+)?%, transparent\)/
+    )
   })
 
   it('collapses the outlined seam to a single border by hiding the trailing leading edge', () => {
@@ -231,7 +234,7 @@ describe('ButtonGroup', () => {
     )
     const divider = groupRule('group', 'border-top-color')
     expect(divider).toContain(':not(:first-of-type)')
-    expect(divider).toMatch(/border-top-color: rgb\(/)
+    expect(divider).toContain('border-top-color: var(--soroush-palette-primary-dark)')
   })
 
   it('stretches to full width with children sharing it', () => {

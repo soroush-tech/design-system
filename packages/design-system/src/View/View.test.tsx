@@ -136,7 +136,7 @@ describe('View', () => {
 
     it('takes the whole row with span="full"', () => {
       renderWithTheme(<View span="full">row</View>)
-      // Emotion minifies `1 / -1` to `1/-1` - the same value.
+      // The engine writes `1 / -1` as `1/-1` - the same value.
       expect(screen.getByText('row')).toHaveStyle({ gridColumn: '1/-1' })
     })
   })

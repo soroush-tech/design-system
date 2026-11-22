@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import type { ReactNode } from 'react'
-import { EmotionThemeProvider } from './emotion'
+import { EngineThemeProvider } from './engine'
 import { baseTheme, type Theme, type ThemeLayout } from './themes'
 import { createTheme, deepMerge } from './utils/createTheme'
 
@@ -39,12 +39,12 @@ const pageLayout = (theme: Theme, layout: ThemeLayout): ThemeLayout => {
 export function LayoutProvider({ layout, children }: Readonly<LayoutProviderProps>) {
   const derive = useCallback(
     (outer: Theme) => {
-      // Without a ThemeProvider, Emotion's theme is `{}` - build on the base theme, as
+      // Without a ThemeProvider, the engine's theme is `{}` - build on the base theme, as
       // ThemeProvider does by default.
       const theme = 'breakpoints' in outer ? outer : baseTheme
       return createTheme(theme, { layout: pageLayout(theme, layout) })
     },
     [layout]
   )
-  return <EmotionThemeProvider theme={derive}>{children}</EmotionThemeProvider>
+  return <EngineThemeProvider theme={derive}>{children}</EngineThemeProvider>
 }

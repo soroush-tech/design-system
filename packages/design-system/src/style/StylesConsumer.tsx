@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { EmotionThemeContext } from '../theme/emotion'
+import { EngineThemeContext } from '../theme/engine'
 import type { CSSObject, Theme } from '../theme/themes'
 import type { StyleFactory } from './hooks/useStyle'
 
@@ -10,8 +10,8 @@ type StylesConsumerProps = {
 
 export function StylesConsumer({ style, children }: Readonly<StylesConsumerProps>) {
   return (
-    <EmotionThemeContext.Consumer>
+    <EngineThemeContext.Consumer>
       {(theme) => children(style.getStyles(theme as Theme))}
-    </EmotionThemeContext.Consumer>
+    </EngineThemeContext.Consumer>
   )
 }

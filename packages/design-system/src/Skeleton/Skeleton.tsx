@@ -74,7 +74,7 @@ const baseStyle = ({ theme }: SkeletonProps & { theme: Theme }) => ({
   backgroundColor: theme.background.default,
 })
 
-// Number → px (emotion default); string → raw. Empty text skeletons get a line's height via the nbsp trick.
+// Number → px (the engine's default); string → raw. Empty text skeletons get a line's height via the nbsp trick.
 const dimensionStyle = ({ width, height, variant }: SkeletonProps) => ({
   width,
   height: height ?? (variant === 'text' ? 'auto' : undefined),

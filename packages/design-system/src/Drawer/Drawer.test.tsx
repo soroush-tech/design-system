@@ -3,6 +3,7 @@ import { act, cleanup, fireEvent, screen } from '@testing-library/react'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { baseTheme } from '../theme/themes'
 import { installPopover } from '../testing'
+import { getCssVariable } from '../utils/test/getCssVariable'
 import { Drawer, DrawerToggle } from './'
 
 // jsdom has no popover API: the published stand-in fires `toggle` the way a real popover does.
@@ -76,7 +77,8 @@ describe('Drawer', () => {
 
     it('dims the page with the backdrop token, or not at all', () => {
       renderDrawer()
-      expect(styles()).toContain(`::backdrop{background-color:${baseTheme.background.backdrop};}`)
+      expect(styles()).toContain('::backdrop{background-color:var(--soroush-background-backdrop);}')
+      expect(getCssVariable('--soroush-background-backdrop')).toBe(baseTheme.background.backdrop)
       cleanup()
       renderDrawer({ hasBackdrop: false })
       expect(styles()).toContain('::backdrop{background-color:transparent;}')
@@ -158,7 +160,7 @@ describe('Drawer', () => {
 
     it('hides the panel where the browser cannot, instead of covering the page', () => {
       renderDrawer()
-      // Emotion minifies the at-rule; the browser applies it only without `:popover-open`.
+      // The engine writes the at-rule minified; the browser applies it only without `:popover-open`.
       expect(styles()).toMatch(
         /@supports not selector\(:popover-open\)\{\.[\w-]+\{display:none;\}\}/
       )

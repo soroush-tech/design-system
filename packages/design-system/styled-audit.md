@@ -14,8 +14,8 @@ None.
 
 | Location                      | Variable             | Base   | Reason                                                   |
 | ----------------------------- | -------------------- | ------ | -------------------------------------------------------- |
-| `src/Tooltip/Tooltip.tsx:186` | `TooltipDescription` | `span` | hidden text, nothing of it to restyle                    |
-| `src/Tooltip/Tooltip.tsx:200` | `TooltipTarget`      | `span` | a layout shim around the child, nothing of it to restyle |
+| `src/Tooltip/Tooltip.tsx:189` | `TooltipDescription` | `span` | hidden text, nothing of it to restyle                    |
+| `src/Tooltip/Tooltip.tsx:203` | `TooltipTarget`      | `span` | a layout shim around the child, nothing of it to restyle |
 
 ## Named slots (135)
 
@@ -48,9 +48,9 @@ None.
 | `src/Breadcrumbs/Breadcrumbs.tsx:67`                     | `BreadcrumbsSeparator`       | `li`                 | `Breadcrumbs`      | `separator`       | `BreadcrumbsSeparator`       |
 | `src/Breadcrumbs/Breadcrumbs.tsx:79`                     | `BreadcrumbsCollapsed`       | `button`             | `Breadcrumbs`      | `collapsed`       | `BreadcrumbsCollapsed`       |
 | `src/Breadcrumbs/Breadcrumbs.tsx:105`                    | `BreadcrumbsCollapsedIcon`   | `span`               | `Breadcrumbs`      | `collapsedIcon`   | `BreadcrumbsCollapsedIcon`   |
-| `src/Button/Button.tsx:92`                               | `ButtonLabel`                | `span`               | `Button`           | `label`           | -                            |
-| `src/Button/Button.tsx:105`                              | `LoadingCenter`              | `span`               | `Button`           | `loader`          | `ButtonLoader`               |
-| `src/Button/Button.tsx:114`                              | `ButtonIcon`                 | `span`               | `Button`           | `icon`            | -                            |
+| `src/Button/Button.tsx:98`                               | `ButtonLabel`                | `span`               | `Button`           | `label`           | -                            |
+| `src/Button/Button.tsx:111`                              | `LoadingCenter`              | `span`               | `Button`           | `loader`          | `ButtonLoader`               |
+| `src/Button/Button.tsx:120`                              | `ButtonIcon`                 | `span`               | `Button`           | `icon`            | -                            |
 | `src/Card/Card.tsx:42`                                   | `CardTitle`                  | `Typography`         | `Card`             | `title`           | -                            |
 | `src/Card/Card.tsx:43`                                   | `CardCaption`                | `Typography`         | `Card`             | `caption`         | -                            |
 | `src/Card/Card.tsx:44`                                   | `CardIcon`                   | `Icon`               | `Card`             | `icon`            | -                            |
@@ -121,8 +121,8 @@ None.
 | `src/Select/Select.tsx:227`                              | `ValueGhost`                 | `span`               | `Select`           | `valueGhost`      | `SelectValueGhost`           |
 | `src/Select/Select.tsx:242`                              | `TriggerValue`               | `span`               | `Select`           | `value`           | `SelectValue`                |
 | `src/Select/Select.tsx:251`                              | `ListBox`                    | `ul`                 | `Select`           | `listbox`         | `SelectListbox`              |
-| `src/Sidebar/Sidebar/Sidebar.tsx:83`                     | `SidebarRail`                | `Flex`               | `Sidebar`          | `rail`            | `SidebarRail`                |
-| `src/Sidebar/Sidebar/Sidebar.tsx:109`                    | `SidebarPanelRoot`           | `Flex`               | `Sidebar`          | `panel`           | `SidebarPanel`               |
+| `src/Sidebar/Sidebar/Sidebar.tsx:84`                     | `SidebarRail`                | `Flex`               | `Sidebar`          | `rail`            | `SidebarRail`                |
+| `src/Sidebar/Sidebar/Sidebar.tsx:110`                    | `SidebarPanelRoot`           | `Flex`               | `Sidebar`          | `panel`           | `SidebarPanel`               |
 | `src/Sidebar/SidebarItem/SidebarItem.tsx:196`            | `SidebarItemPill`            | `span`               | `SidebarItem`      | `pill`            | `SidebarItemPill`            |
 | `src/Skeleton/Skeleton.tsx:125`                          | `HiddenContent`              | `span`               | `Skeleton`         | `content`         | `SkeletonContent`            |
 | `src/Snackbar/Snackbar.tsx:99`                           | `SnackbarContent`            | `div`                | `Snackbar`         | `content`         | `SnackbarContent`            |
@@ -147,7 +147,7 @@ None.
 | `src/TextInput/TextInput.tsx:262`                        | `StyledInput`                | `InputBase`          | `TextInput`        | `input`           | `TextInputInput`             |
 | `src/TextInput/TextInput.tsx:271`                        | `StyledTextarea`             | `textarea`           | `TextInput`        | `input`           | `TextInputTextarea`          |
 | `src/TextInput/TextInput.tsx:279`                        | `StyledAutoResizeTextarea`   | `TextAreaAutoResize` | `TextInput`        | `input`           | `TextInputTextarea`          |
-| `src/Tooltip/Tooltip.tsx:204`                            | `TooltipArrow`               | `span`               | `Tooltip`          | `arrow`           | `TooltipArrow`               |
+| `src/Tooltip/Tooltip.tsx:207`                            | `TooltipArrow`               | `span`               | `Tooltip`          | `arrow`           | `TooltipArrow`               |
 | `src/TransferList/TransferList.tsx:87`                   | `TransferListList`           | `Paper`              | `TransferList`     | `list`            | `TransferListList`           |
 | `src/TransferList/TransferList.tsx:99`                   | `TransferListHeader`         | `div`                | `TransferList`     | `header`          | `TransferListHeader`         |
 | `src/TransferList/TransferList.tsx:111`                  | `TransferListTitle`          | `span`               | `TransferList`     | `title`           | `TransferListTitle`          |
@@ -174,7 +174,7 @@ None.
 | `src/Backdrop/Backdrop.tsx:9`                                    | `BackdropRoot`          | `View`                                                          | `Backdrop`               | `root` | `Backdrop`               |
 | `src/Badge/Badge.tsx:43`                                         | `BadgeRoot`             | `span`                                                          | `Badge`                  | `root` | `Badge`                  |
 | `src/Breadcrumbs/Breadcrumbs.tsx:39`                             | `BreadcrumbsRoot`       | `Typography as ComponentType<TypographyProps>`                  | `Breadcrumbs`            | `root` | `Breadcrumbs`            |
-| `src/Button/Button.tsx:217`                                      | `ButtonRoot`            | `button`                                                        | `Button`                 | `root` | -                        |
+| `src/Button/Button.tsx:223`                                      | `ButtonRoot`            | `button`                                                        | `Button`                 | `root` | -                        |
 | `src/ButtonGroup/ButtonGroup.tsx:121`                            | `GroupRoot`             | `div`                                                           | `ButtonGroup`            | `root` | `ButtonGroup`            |
 | `src/Card/Card.tsx:36`                                           | `CardSurface`           | `Paper`                                                         | `Card`                   | `root` | `CardSurface`            |
 | `src/Checkbox/Checkbox.tsx:183`                                  | `CheckboxRoot`          | `label`                                                         | `Checkbox`               | `root` | `Checkbox`               |
@@ -196,7 +196,7 @@ None.
 | `src/LinearProgress/LinearProgress.tsx:219`                      | `LinearProgressRoot`    | `span`                                                          | `LinearProgress`         | `root` | `LinearProgress`         |
 | `src/Link/Link.tsx:42`                                           | `LinkBase`              | `Typography as ComponentType<LinkProps & { as?: ElementType }>` | `Link`                   | `root` | `Link`                   |
 | `src/Menu/ContextMenu/ContextMenu.tsx:86`                        | `ContextMenuRoot`       | `div`                                                           | `ContextMenu`            | `root` | `ContextMenu`            |
-| `src/Menu/Menu/Menu.tsx:95`                                      | `MenuRoot`              | `div`                                                           | `Menu`                   | `root` | `Menu`                   |
+| `src/Menu/Menu/Menu.tsx:96`                                      | `MenuRoot`              | `div`                                                           | `Menu`                   | `root` | `Menu`                   |
 | `src/Menu/MenuDivider/MenuDivider.tsx:8`                         | `MenuDividerRoot`       | `li`                                                            | `MenuDivider`            | `root` | `MenuDivider`            |
 | `src/Menu/MenuList/MenuList.tsx:80`                              | `MenuListRoot`          | `ul`                                                            | `MenuList`               | `root` | `MenuList`               |
 | `src/MenuItem/MenuItem.tsx:215`                                  | `MenuItemRoot`          | `li`                                                            | `MenuItem`               | `root` | `MenuItem`               |
@@ -211,14 +211,14 @@ None.
 | `src/Pagination/PaginationItem/PaginationItem.tsx:142`           | `ItemRoot`              | `button`                                                        | `PaginationItem`         | `root` | `PaginationItem`         |
 | `src/Paper/Paper.tsx:67`                                         | `PaperRoot`             | `Flex`                                                          | `Paper`                  | `root` | `paper`                  |
 | `src/Popover/Popover.tsx:91`                                     | `Surface`               | `Paper`                                                         | `Popover`                | `root` | `Popover`                |
-| `src/Pressable/Pressable.tsx:144`                                | `PressableRoot`         | `div`                                                           | `Pressable`              | `root` | `Pressable`              |
+| `src/Pressable/Pressable.tsx:146`                                | `PressableRoot`         | `div`                                                           | `Pressable`              | `root` | `Pressable`              |
 | `src/Quote/Quote.tsx:7`                                          | `Quote`                 | `View`                                                          | `Quote`                  | `root` | `Quote`                  |
 | `src/Radio/Radio.tsx:145`                                        | `RadioRoot`             | `label`                                                         | `Radio`                  | `root` | `Radio`                  |
 | `src/RangeInput/RangeInput.tsx:103`                              | `RangeInputRoot`        | `span`                                                          | `RangeInput`             | `root` | `RangeInput`             |
 | `src/Rating/Rating.tsx:83`                                       | `RatingRoot`            | `span`                                                          | `Rating`                 | `root` | `Rating`                 |
 | `src/ScrollArea/ScrollArea.tsx:46`                               | `ScrollAreaRoot`        | `div`                                                           | `ScrollArea`             | `root` | `ScrollArea`             |
 | `src/Select/Select.tsx:195`                                      | `Trigger`               | `div`                                                           | `Select`                 | `root` | `Select`                 |
-| `src/Sidebar/Sidebar/Sidebar.tsx:75`                             | `SidebarRoot`           | `Flex`                                                          | `Sidebar`                | `root` | `Sidebar`                |
+| `src/Sidebar/Sidebar/Sidebar.tsx:76`                             | `SidebarRoot`           | `Flex`                                                          | `Sidebar`                | `root` | `Sidebar`                |
 | `src/Sidebar/SidebarItem/SidebarItem.tsx:178`                    | `SidebarItemRoot`       | `Pressable`                                                     | `SidebarItem`            | `root` | `SidebarItem`            |
 | `src/Skeleton/Skeleton.tsx:109`                                  | `SkeletonRoot`          | `span`                                                          | `Skeleton`               | `root` | `skeleton`               |
 | `src/Snackbar/Snackbar.tsx:78`                                   | `SnackbarRoot`          | `div`                                                           | `Snackbar`               | `root` | `Snackbar`               |
@@ -239,7 +239,7 @@ None.
 | `src/TextInput/TextInput.tsx:246`                                | `TextInputRoot`         | `div`                                                           | `TextInput`              | `root` | `TextInput`              |
 | `src/ToggleButton/ToggleButton/ToggleButton.tsx:50`              | `ToggleButtonRoot`      | `Button`                                                        | `ToggleButton`           | `root` | `ToggleButton`           |
 | `src/ToggleButton/ToggleButtonGroup/ToggleButtonGroup.tsx:39`    | `ToggleButtonGroupRoot` | `ButtonGroup`                                                   | `ToggleButtonGroup`      | `root` | `ToggleButtonGroup`      |
-| `src/Tooltip/Tooltip.tsx:146`                                    | `TooltipSurface`        | `div`                                                           | `Tooltip`                | `root` | `Tooltip`                |
+| `src/Tooltip/Tooltip.tsx:149`                                    | `TooltipSurface`        | `div`                                                           | `Tooltip`                | `root` | `Tooltip`                |
 | `src/TransferList/TransferList.tsx:69`                           | `TransferListRoot`      | `div`                                                           | `TransferList`           | `root` | `TransferList`           |
 | `src/Typography/Typography.tsx:89`                               | `TypographyBase`        | `p`                                                             | `Typography`             | `root` | `Typography`             |
 | `src/View/View.tsx:78`                                           | `View`                  | `div`                                                           | `View`                   | `root` | `View`                   |

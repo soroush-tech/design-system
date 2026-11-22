@@ -123,5 +123,5 @@ Your widget now honors `theme.components.MyWidget.styleOverrides` / `.variants` 
 
 ## Runtime cost
 
-- **Unused** (`theme.components` absent): one no-op function call and a property lookup per named root per render; anonymous roots are raw Emotion. Bundle cost of the wrapper: well under a kilobyte.
-- **Used**: each overridden component behaves as if it shipped one more style function - the same cost class as its existing `sizeVariants`/`colorStyle` functions. Emotion caches by serialized output, so unchanged overrides reuse their class after the first render.
+- **Unused** (`theme.components` absent): one no-op function call and a property lookup per named root per render; anonymous roots are plain `styled` roots. Bundle cost of the wrapper: well under a kilobyte.
+- **Used**: each overridden component behaves as if it shipped one more style function - the same cost class as its existing `sizeVariants`/`colorStyle` functions. The engine names a class by a hash of its compiled rules, so the same style always gives the same class.

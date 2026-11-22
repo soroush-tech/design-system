@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import type { ReactNode } from 'react'
-import { EmotionThemeProvider as DefaultThemeProvider } from './emotion'
+import { EngineThemeProvider as DefaultThemeProvider } from './engine'
 import { baseTheme, type Theme, type ThemeDefaults } from './themes'
 import { createTheme, withHelpers } from './utils/createTheme'
 

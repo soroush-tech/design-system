@@ -8,7 +8,7 @@ How the theme is built, how components are structured, and the conventions every
 
 | Concern                   | Library                                                                                                                |
 | ------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| CSS-in-JS                 | `@emotion/styled` + `@emotion/react` (internal only - see `src/theme/emotion.ts`)                                      |
+| CSS-in-JS                 | UmberStyle: `@umber-style/styled` + `@umber-style/react` (internal only - see `src/theme/engine.ts`)                   |
 | Theme tokens              | `styled-system` (space, layout, typography, flexbox, border, position)                                                 |
 | Custom prop→scale mapping | `styled-system` `system()`                                                                                             |
 | Prop filtering            | `@styled-system/should-forward-prop`                                                                                   |
@@ -51,7 +51,7 @@ Each scale is a named, consumer-extensible interface (declared in `src/theme/the
 
 ### Theme augmentation
 
-The entire type layer is declared natively - as plain exported interfaces owned by this package - in `src/theme/themes.ts`. `Theme` is this package's own type, not Emotion's: Emotion is an internal implementation detail (see `src/theme/emotion.ts`) and is never part of the public type surface. `declare module '@soroush.tech/design-system/theme'` is the augmentation surface consumers use to extend scales by declaration merging; it survives tsdown's chunked d.ts output the same way augmenting an external module used to (verified by `type-tests/augmentation.ts`).
+The entire type layer is declared natively - as plain exported interfaces owned by this package - in `src/theme/themes.ts`. `Theme` is this package's own type, not the engine's: the styling engine is an internal implementation detail (see `src/theme/engine.ts`) and is never part of the public type surface. `declare module '@soroush.tech/design-system/theme'` is the augmentation surface consumers use to extend scales by declaration merging; it survives tsdown's chunked d.ts output the same way augmenting an external module used to (verified by `type-tests/augmentation.ts`).
 
 ```ts
 import { type Theme } from '@soroush.tech/design-system/theme'
@@ -89,13 +89,13 @@ Rules when converting a component:
 
 **Every component lives in its own folder** `packages/design-system/src/ComponentName/` with: `index.ts` (`export * from './ComponentName'`) · `ComponentName.tsx` · `README.md` · `ComponentName.mdx` · `ComponentName.stories.tsx` · `ComponentName.test.tsx`
 
-**Prop types** - derive from `Theme` (this package's own type, owned by `src/theme/themes.ts` - Emotion is internal-only), never write manual unions:
+**Prop types** - derive from `Theme` (this package's own type, owned by `src/theme/themes.ts` - the styling engine is internal-only), never write manual unions:
 
 - `color?: keyof Theme['text']`
 - `bg?: keyof Theme['background']`
 - Font/space scales → `keyof Theme['fontWeights']` etc.
 
-**Custom props → theme scales** - wire through `system()` in `@emotion/styled`. Key mappings:
+**Custom props → theme scales** - wire through `system()` (from `@soroush.tech/styled-system`, re-exported by the package root) on a `styled` component. Key mappings:
 
 - `color` → `scale: 'text'`
 - `bg` → `scale: 'background'`
@@ -334,9 +334,9 @@ export const backgroundTokens = [...] satisfies BackgroundToken[]
 
 ---
 
-## Emotion Babel Plugin
+## Class names
 
-The Babel plugin is configured with key `soroush`. In development, generated class names follow the pattern `soroush-[local]--[filename]`. This is expected - do not mistake it for a naming collision.
+There is no compiler plugin. The engine names every class `soroush-<labels>-<hash>`: `soroush` is the style cache key, and the labels come from a styled root's `name` and `slot` options. A prefix shared by every class is expected - do not mistake it for a naming collision.
 
 ---
 

@@ -1,3 +1,4 @@
+import { ThemeScope } from '@umber-style/react'
 import { type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 
@@ -24,5 +25,8 @@ export function Portal({ children, container }: Readonly<PortalProps>) {
   if (typeof document === 'undefined') {
     return null
   }
-  return createPortal(children, resolveContainer(container) ?? document.body)
+  return createPortal(
+    <ThemeScope>{children}</ThemeScope>,
+    resolveContainer(container) ?? document.body
+  )
 }

@@ -119,7 +119,7 @@ const TableBase = styled(TableElement, {
   name: 'Table',
   label: 'Table',
   shouldForwardProp,
-  systemProps: [space, layout, colorSystem, border],
+  systemProps: [space, layout, border, colorSystem],
 })<TableBaseProps>({ width: '100%' }, collapseStyle, defaultBorder, alignStyle)
 
 export function Table({

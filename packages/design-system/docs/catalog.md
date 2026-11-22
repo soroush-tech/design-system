@@ -14,7 +14,7 @@ catalog.components.Select.options.color // { scale: 'palette', default: 'primary
 catalog.styleScales.p // 'space'
 ```
 
-It is pure data. It loads in plain Node - no DOM, no React, no Emotion - and survives
+It is pure data. It loads in plain Node - no DOM, no React, no styling engine - and survives
 `JSON.stringify` unchanged.
 
 ## What it holds

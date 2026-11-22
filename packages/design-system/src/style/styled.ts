@@ -1,21 +1,25 @@
-import emotionStyled from '@emotion/styled'
+import engineStyled from '@umber-style/styled'
 import type {
-  CreateStyled as EmotionCreateStyled,
+  CreateStyled as EngineCreateStyled,
   CreateStyledComponent,
   FilteringStyledOptions,
   Interpolation,
   StyledOptions,
-} from '@emotion/styled'
-import type { PropsOf } from '@emotion/react'
+} from '@umber-style/styled'
+import type { PropsOf } from '@umber-style/react'
 import type { Theme } from '../theme/themes'
 import type { ComponentClass, ComponentProps, ComponentType, JSX, Ref } from 'react'
+import { configureEngine } from './engine'
+
+// Before the first `styled` call below and in every component file that imports this one.
+configureEngine()
 
 /**
- * Design-system additions to Emotion's styled options. A styled root that passes
+ * Design-system additions to the engine's styled options. A styled root that passes
  * `name` becomes theme-customizable: `theme.components[name]` may contribute
  * `styleOverrides` (per `slot`) and `variants`, appended after the component's
  * own styles so the theme wins the cascade. Roots without `name` are plain
- * Emotion - zero behavior change, zero cost.
+ * `styled` - zero behavior change, zero cost.
  */
 export interface ThemeCustomizationOptions {
   /** `theme.components` key enabling styleOverrides/variants for this root. */
@@ -50,8 +54,8 @@ const matchesProps = (props: Record<string, unknown>, matcher: Record<string, un
   Object.entries(matcher).every(([key, value]) => props[key] === value)
 
 /**
- * The `styled.div`, `styled.span`, ... tag shorthands - mirrors Emotion's own
- * `StyledTags`, retyped against this package's `Theme` instead of Emotion's
+ * The `styled.div`, `styled.span`, ... tag shorthands - mirrors the engine's own
+ * `StyledTags`, retyped against this package's `Theme` instead of the engine's
  * (otherwise-empty) one, so `${({ theme }) => theme.space[2]}` template
  * interpolations resolve to the real theme shape.
  */
@@ -62,7 +66,7 @@ type StyledTags = {
   >
 }
 
-/** Overloads mirroring Emotion's, with the theme-customization options added. */
+/** Overloads mirroring the engine's, with the theme-customization options added. */
 interface CreateThemedStyled extends StyledTags {
   <
     C extends ComponentClass<ComponentProps<C>>,
@@ -72,7 +76,7 @@ interface CreateThemedStyled extends StyledTags {
     options: FilteringStyledOptions<ComponentProps<C>, ForwardedProps> & ThemeCustomizationOptions
   ): CreateStyledComponent<
     Pick<PropsOf<C>, ForwardedProps> & { theme?: Theme },
-    // eslint-disable-next-line @typescript-eslint/no-empty-object-type -- mirrors Emotion's own overload shape
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type -- mirrors the engine's own overload shape
     {},
     { ref?: Ref<InstanceType<C>> }
   >
@@ -84,7 +88,7 @@ interface CreateThemedStyled extends StyledTags {
     options: FilteringStyledOptions<ComponentProps<C>, ForwardedProps> & ThemeCustomizationOptions
   ): CreateStyledComponent<Pick<PropsOf<C>, ForwardedProps> & { theme?: Theme }>
   // Component + plain options - `shouldForwardProp` may be a boolean predicate
-  // (no type-predicate narrowing), mirroring Emotion's non-filtering overload.
+  // (no type-predicate narrowing), mirroring the engine's non-filtering overload.
   <C extends ComponentType<ComponentProps<C>>>(
     component: C,
     options?: StyledOptions<ComponentProps<C>> & ThemeCustomizationOptions
@@ -111,8 +115,8 @@ const createThemedStyled = (
   tag: never,
   options: (StyledOptions & ThemeCustomizationOptions) | undefined = {}
 ) => {
-  const { name, slot = 'root', systemProps = [], overridesResolver, ...emotionOptions } = options
-  const create = emotionStyled(tag, emotionOptions)
+  const { name, slot = 'root', systemProps = [], overridesResolver, ...engineOptions } = options
+  const create = engineStyled(tag, engineOptions)
   if (name === undefined) {
     return create
   }
@@ -150,10 +154,10 @@ const createThemedStyled = (
 }
 
 /**
- * The design system's `styled` - Emotion's styled plus theme-level component
+ * The design system's `styled` - the engine's styled plus theme-level component
  * customization (`theme.components[name].styleOverrides` / `.variants`).
  */
 export const styled = Object.assign(
-  createThemedStyled as unknown as EmotionCreateStyled,
-  emotionStyled
+  createThemedStyled as unknown as EngineCreateStyled,
+  engineStyled
 ) as unknown as CreateThemedStyled

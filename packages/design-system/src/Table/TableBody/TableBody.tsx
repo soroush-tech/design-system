@@ -46,7 +46,7 @@ const TableBodyBase = styled('tbody', {
   name: 'TableBody',
   label: 'TableBody',
   shouldForwardProp,
-  systemProps: [space, colorSystem, border],
+  systemProps: [space, border, colorSystem],
 })<TableBodyProps>()
 
 export function TableBody({ as, children, ...rest }: Readonly<TableBodyProps>) {

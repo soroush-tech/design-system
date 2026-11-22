@@ -1,4 +1,4 @@
-import { css } from '@emotion/react'
+import { css } from '@umber-style/react'
 import type { Theme } from '../theme/themes'
 
 /**

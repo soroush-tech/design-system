@@ -1,6 +1,7 @@
 import { screen } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
+import { getStyleRules } from '../utils/test/getStyleRules'
 import { Grid } from '../Grid'
 
 describe('Grid', () => {
@@ -134,11 +135,12 @@ describe('Grid', () => {
       )
       const grid = screen.getByText('content')
       const className = [...grid.classList].at(-1)!
-      const baseRule = [...document.styleSheets]
-        .flatMap((sheet) => [...sheet.cssRules])
-        .find((rule) => rule instanceof CSSStyleRule && rule.selectorText === `.${className}`)
+      const baseRule = getStyleRules().find(
+        (rule) => rule instanceof CSSStyleRule && rule.selectorText === `.${className}`
+      )
       expect(baseRule?.cssText).toContain('grid-template-columns: 1fr 1fr')
-      expect(baseRule?.cssText).toContain('padding-left: 8px')
+      // The theme's space step 1, as the variable the rule reads.
+      expect(baseRule?.cssText).toContain('padding-left: var(--soroush-space-1)')
       // At the md window the layout's tracks and margin win.
       expect(getComputedStyle(grid).gridTemplateColumns).toBe('repeat(12, minmax(0px, 1fr))')
       expect(grid).toHaveStyle({ paddingLeft: '24px' })
@@ -153,24 +155,22 @@ describe('Grid', () => {
       const grid = screen.getByText('gapped')
       expect(grid).toHaveStyle({ columnGap: '8px', rowGap: '8px' })
       const className = [...grid.classList].at(-1)!
-      const css = [...document.styleSheets]
-        .flatMap((sheet) => [...sheet.cssRules])
+      const css = getStyleRules()
         .map((rule) => rule.cssText)
         .filter((text) => text.includes(className))
         .join('\n')
-      // No breakpoint brings the theme's 16px / 24px gutter back. The base rule writes its row and
-      // column gaps together as `gap`.
+      // No breakpoint brings the theme's 16px / 24px gutter back: every rule reads space step 1.
+      // The base rule writes its row and column gaps together as `gap`.
       expect(css.match(/(?:column-)?gap: [^;]+/g)).toEqual([
-        'gap: 8px',
-        ...Array(4).fill('column-gap: 8px'),
+        'gap: var(--soroush-space-1)',
+        ...Array(4).fill('column-gap: var(--soroush-space-1)'),
       ])
     })
 
     it('writes the frame once: View draws it, Grid adds only the columns', () => {
       renderWithTheme(<Grid layout>framed</Grid>)
       const className = [...screen.getByText('framed').classList].at(-1)!
-      const css = [...document.styleSheets]
-        .flatMap((sheet) => [...sheet.cssRules])
+      const css = getStyleRules()
         .map((rule) => rule.cssText)
         .filter((text) => text.includes(className))
         .join('\n')

@@ -7,7 +7,7 @@ import { toPx } from '../utils/test/toPx'
 
 // A consumer-style component registered under a custom theme.components key -
 // exercises the wrapper directly, independent of any design-system component.
-declare module '@emotion/react' {
+declare module '@umber-style/react' {
   interface ThemeComponents {
     TestBox?: ComponentConfig<{ tone?: string }>
   }
@@ -21,7 +21,7 @@ const renderWith = (
 ) => render(<ThemeProvider theme={createTheme(baseTheme, { components })}>{ui}</ThemeProvider>)
 
 describe('styled (theme customization wrapper)', () => {
-  it('falls through to plain Emotion when no name is given', () => {
+  it('falls through to the plain engine when no name is given', () => {
     const Plain = styled('span')({ padding: '2px' })
     renderWith(
       { TestBox: { styleOverrides: { root: { padding: '9px' } } } },
@@ -96,7 +96,7 @@ describe('styled (theme customization wrapper)', () => {
     expect(screen.getByTestId('label')).not.toHaveStyle({ letterSpacing: toPx('1em') })
   })
 
-  it('keeps Emotion tag shortcuts working', () => {
+  it('keeps the tag shortcuts working', () => {
     const Plain = styled.div({ padding: '3px' })
     render(<Plain data-testid="plain" />)
     expect(screen.getByTestId('plain')).toHaveStyle({ padding: '3px' })

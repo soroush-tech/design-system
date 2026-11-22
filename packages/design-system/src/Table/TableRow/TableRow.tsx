@@ -74,7 +74,7 @@ const TableRowBase = styled('tr', {
   name: 'TableRow',
   label: 'TableRow',
   shouldForwardProp,
-  systemProps: [space, colorSystem, border],
+  systemProps: [space, border, colorSystem],
 })<TableRowProps>(selectedStyle, hoverStyle)
 
 export function TableRow({ color, ...rest }: Readonly<TableRowProps>) {

@@ -938,7 +938,7 @@ describe('Tooltip', () => {
     ] as const)('sticks out of the edge that faces the child: %s', (placement, edge) => {
       lay()
       renderWithTheme(view({ defaultOpen: true, hasArrow: true, placement }))
-      expect((arrow() as HTMLElement).style[edge]).toBe('-4px')
+      expect(getComputedStyle(arrow() as HTMLElement)[edge]).toBe('-4px')
     })
 
     it('points at the middle of the child, kept inside the tooltip', () => {
@@ -946,7 +946,7 @@ describe('Tooltip', () => {
       renderWithTheme(view({ defaultOpen: true, hasArrow: true, placement: 'top-start' }))
       // The child's middle is 125 and the tooltip, lined up with the child's own edge, starts at 100:
       // the middle is 25 along it, less half the arrow.
-      expect((arrow() as HTMLElement).style.left).toBe('21px')
+      expect(getComputedStyle(arrow() as HTMLElement).left).toBe('21px')
     })
   })
 

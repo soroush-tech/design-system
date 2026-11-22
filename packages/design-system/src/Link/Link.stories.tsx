@@ -134,9 +134,11 @@ export const Variants: Story = {
 export const InlineProse: Story = {
   render: () => (
     <Typography variant="body1" maxWidth="480px">
-      The design system is built with <Link href="#">Emotion</Link> and{' '}
-      <Link href="#">styled-system</Link>. All components resolve color, spacing, and typography
-      from theme tokens - see the{' '}
+      The design system is built on UmberStyle and{' '}
+      <Link href="https://github.com/soroush-tech/design-system/tree/main/packages/styled-system">
+        styled-system
+      </Link>
+      . All components resolve color, spacing, and typography from theme tokens - see the{' '}
       <Link href="#" underline="hover" color="secondary">
         design-system docs
       </Link>{' '}

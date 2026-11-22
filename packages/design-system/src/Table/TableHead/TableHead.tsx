@@ -46,7 +46,7 @@ const TableHeadBase = styled('thead', {
   name: 'TableHead',
   label: 'TableHead',
   shouldForwardProp,
-  systemProps: [space, colorSystem, border],
+  systemProps: [space, border, colorSystem],
 })<TableHeadProps>()
 
 export function TableHead({ as, children, ...rest }: Readonly<TableHeadProps>) {

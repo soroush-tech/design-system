@@ -45,6 +45,6 @@ describe('ScrollArea in a browser', () => {
     // A press at the bottom of the track, below the thumb, pages down.
     await userEvent.click(track, { position: { x: 2, y: bounds.height - 4 } })
     await vi.waitFor(() => expect(viewport().scrollTop).toBeGreaterThan(before))
-    await vi.waitFor(() => expect(parseFloat(thumb().style.top)).toBeGreaterThan(0))
+    await vi.waitFor(() => expect(parseFloat(getComputedStyle(thumb()).top)).toBeGreaterThan(0))
   })
 })

@@ -1,16 +1,16 @@
 import type { ElementType, ReactNode } from 'react'
 import type { PaperElevation } from '../Paper/Paper'
-import type { CSSObject as EmotionCSSObject } from '@emotion/react'
+import type { CSSObject as EngineCSSObject } from '@umber-style/react'
 import { alpha, generateBoxShadow } from '../utils'
 import { spacing } from './utils/spacing'
 import { withBreakpointHelpers, type BreakpointHelpers } from './breakpoints'
 
-/** Design-system's own style-object shape - Emotion stays an internal implementation detail. */
-export type CSSObject = EmotionCSSObject
+/** Design-system's own style-object shape - the engine stays an internal implementation detail. */
+export type CSSObject = EngineCSSObject
 
 // ---------------------------------------------------------------------------
 // Theme type layer - this package OWNS `Theme` and every scale interface below
-// (Emotion is not the augmentation surface; it is only the CSS-in-JS engine
+// (the engine is not the augmentation surface; it is only the CSS-in-JS engine
 // used internally). Consumers extend every scale by declaration merging
 // against THIS module:
 //

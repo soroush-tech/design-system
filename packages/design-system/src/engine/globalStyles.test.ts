@@ -5,8 +5,8 @@ import { globalStyles } from './globalStyles'
 describe('globalStyles', () => {
   it('includes the box-sizing and table resets', () => {
     const { styles } = globalStyles(baseTheme)
-    expect(styles).toContain('box-sizing: border-box')
-    expect(styles).toContain('border-collapse: collapse')
+    expect(styles).toContain('box-sizing:border-box;')
+    expect(styles).toContain('border-collapse:collapse;')
   })
 
   it('resolves body colors and color-scheme from the theme', () => {

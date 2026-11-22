@@ -1,9 +1,9 @@
 // =============================================================================
 // Engine abstraction - import all styling primitives from here.
-// To swap the CSS-in-JS engine, update only this section (and ./theme/emotion.ts).
+// To swap the CSS-in-JS engine, update only this section (and ./theme/engine.ts).
 // =============================================================================
 export { styled, type ThemeCustomizationOptions } from './style/styled'
-export { css, keyframes } from '@emotion/react'
+export { css, keyframes } from '@umber-style/react'
 // `ThemeProvider`, `useTheme`, and theme hooks live at the `./theme` subpath.
 // `Global`, `globalStyles`, and `CacheProvider`/`styleCache` live at the `./engine`
 // subpath - raw engine primitives for building your own global styles, not barrel exports.

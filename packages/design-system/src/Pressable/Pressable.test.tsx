@@ -3,9 +3,9 @@ import { describe, it, expect, vi } from 'vitest'
 import { render, fireEvent, screen } from '@testing-library/react'
 import { renderWithTheme } from '@soroush.tech/design-system/utils/test/renderWithTheme'
 import { ThemeProvider, baseTheme, createTheme } from '@soroush.tech/design-system/theme'
-import { alpha } from '@soroush.tech/design-system/utils'
 import { Pressable } from './Pressable'
 import { toPx } from '../utils/test/toPx'
+import { getCssVariable } from '../utils/test/getCssVariable'
 
 /**
  * Emitted CSS rules that target one of the element's classes and contain the given
@@ -22,6 +22,18 @@ const rulesFor = (element: HTMLElement, pseudo: string) => {
   return (css.match(/[^{}]+\{[^{}]*\}/g) ?? [])
     .filter((rule) => rule.includes(pseudo) && classes.some((name) => rule.includes(`.${name}`)))
     .join('')
+}
+
+/**
+ * The held surface is a translucent mix of the palette color's variable, about one eighth of it
+ * (`20` in hex is 32/255), and that variable is declared with the theme's color.
+ */
+const expectTint = (element: HTMLElement, color: 'primary' | 'secondary' | 'error') => {
+  const variable = `--soroush-palette-${color}-main`
+  const prefix = `background-color:color-mix(in srgb, var(${variable}) `
+  const percent = rulesFor(element, ':active').split(prefix)[1]?.split('%, transparent)')[0]
+  expect(Number(percent)).toBeCloseTo(12.5, 0)
+  expect(getCssVariable(variable)).toBe(baseTheme.palette[color].main)
 }
 
 describe('Pressable', () => {
@@ -85,7 +97,7 @@ describe('Pressable', () => {
     renderWithTheme(<Pressable>Bare</Pressable>)
     const css = rulesFor(screen.getByRole('button'), '')
     expect(css).toContain('user-select:none')
-    // Emotion's prefixer has to emit the WebKit form for Safari.
+    // The engine writes the WebKit form for Safari.
     expect(css).toContain('-webkit-user-select:none')
   })
 
@@ -227,8 +239,9 @@ describe('Pressable', () => {
     const pressable = screen.getByRole('button')
     expect(pressable).toHaveStyle({ outlineStyle: 'none' })
     expect(rulesFor(pressable, ':focus-visible')).toContain(
-      `outline:2px solid ${baseTheme.palette.primary.main}`
+      'outline:2px solid var(--soroush-palette-primary-main)'
     )
+    expect(getCssVariable('--soroush-palette-primary-main')).toBe(baseTheme.palette.primary.main)
   })
 
   describe('a new tab', () => {
@@ -278,9 +291,7 @@ describe('Pressable', () => {
 
     it('tints the surface while held under the highlight feedback', () => {
       renderWithTheme(<Pressable feedback="highlight">Tint</Pressable>)
-      expect(rulesFor(screen.getByRole('button'), ':active')).toContain(
-        `background-color:${alpha(baseTheme.palette.primary.main, 0.125)}`
-      )
+      expectTint(screen.getByRole('button'), 'primary')
     })
 
     it('derives the highlight tint from the requested palette color', () => {
@@ -289,9 +300,7 @@ describe('Pressable', () => {
           Tint
         </Pressable>
       )
-      expect(rulesFor(screen.getByRole('button'), ':active')).toContain(
-        `background-color:${alpha(baseTheme.palette.secondary.main, 0.125)}`
-      )
+      expectTint(screen.getByRole('button'), 'secondary')
     })
   })
 
@@ -309,9 +318,7 @@ describe('Pressable', () => {
           <Pressable>Themed</Pressable>
         </ThemeProvider>
       )
-      expect(rulesFor(screen.getByRole('button'), ':active')).toContain(
-        `background-color:${alpha(baseTheme.palette.error.main, 0.125)}`
-      )
+      expectTint(screen.getByRole('button'), 'error')
     })
 
     it('lets an explicit prop beat the theme default', () => {

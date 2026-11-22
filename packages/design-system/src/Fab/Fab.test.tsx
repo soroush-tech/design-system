@@ -4,6 +4,7 @@ import type { ReactNode } from 'react'
 import { ThemeProvider } from '../theme'
 import { baseTheme, createTheme, type Theme } from '../theme/themes'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
+import { getCssVariable } from '../utils/test/getCssVariable'
 import { Menu } from '../Menu'
 import { MenuItem } from '../MenuItem'
 import { Fab, type FabProps } from './Fab'
@@ -152,8 +153,10 @@ describe('Fab', () => {
       // The rules are on the stylesheet: the rest, hover and pressed shadows are theme shadows.
       renderWithTheme(view())
       const css = [...document.querySelectorAll('style')].map((node) => node.textContent).join('')
-      expect(css).toContain(`:hover:not(:disabled){box-shadow:${baseTheme.shadows[8]}`)
-      expect(css).toContain(`:active:not(:disabled){box-shadow:${baseTheme.shadows[6]}`)
+      expect(css).toContain(':hover:not(:disabled){box-shadow:var(--soroush-shadows-8);}')
+      expect(css).toContain(':active:not(:disabled){box-shadow:var(--soroush-shadows-6);}')
+      expect(getCssVariable('--soroush-shadows-8')).toBe(baseTheme.shadows[8])
+      expect(getCssVariable('--soroush-shadows-6')).toBe(baseTheme.shadows[6])
     })
 
     it('takes its transition from a theme of its own', () => {

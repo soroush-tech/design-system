@@ -1,4 +1,4 @@
-import { css, keyframes } from '@emotion/css'
+import { css, keyframes } from '@umber-style/css'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { fn } from 'storybook/test'
 import { m, p } from '../utils/test/storiesArgs'

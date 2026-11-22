@@ -55,7 +55,7 @@ The full key table lives in the [README's Theming section](../README.md#componen
 
 ## Extending the type system
 
-Every scale is an open interface owned by `@soroush.tech/design-system/theme` - that module (not Emotion, an internal implementation detail) is the augmentation surface, and it merges reliably across tsdown's chunked d.ts for every consumer:
+Every scale is an open interface owned by `@soroush.tech/design-system/theme` - that module (not the styling engine, an internal implementation detail) is the augmentation surface, and it merges reliably across tsdown's chunked d.ts for every consumer:
 
 ```ts
 import type { PaletteEntry, SizeEntry } from '@soroush.tech/design-system/theme'

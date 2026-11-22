@@ -253,7 +253,7 @@ jobs:
           name: ${{ matrix.flag }}
 
   # The React versions the published packages declare in `peerDependencies`: their unit tests
-  # on the lowest (18.0.0) and on 19.0.0, so a change that needs a newer React fails here and
+  # on the lowest (19.2.8) and on 19.3.1, so a change that needs a newer React fails here and
   # not in an app. The workspace installs with React pinned by a pnpm override, never committed.
   react-range:
     needs: [prepare, lint]
@@ -264,7 +264,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        react: ['18.0.0', '19.0.0']
+        react: ['19.2.8', '19.3.1']
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v7

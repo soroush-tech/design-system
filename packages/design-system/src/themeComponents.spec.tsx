@@ -86,15 +86,16 @@ afterEach(() => {
 const MARKER = { textIndent: '7px' }
 
 /**
- * Finds the rendered element whose emotion class carries the given styled
- * `label` - works across portals since it scans the whole document.
+ * Finds the rendered element whose class ends its chain of labels with the given styled
+ * `label` (`soroush-Typography-Link-<hash>` is a `Link`) - works across portals since it scans
+ * the whole document.
  */
 function byLabel(label: string): HTMLElement {
-  const matcher = new RegExp(`(^|\\s)css-[^ ]+-${label}(\\s|$)`)
+  const matcher = new RegExp(`(^|\\s)soroush-(?:\\S+-)?${label}-[^-\\s]+(\\s|$)`)
   const match = Array.from(document.body.querySelectorAll<HTMLElement>('*')).find((element) =>
     matcher.test(element.getAttribute('class') ?? '')
   )
-  if (!match) throw new Error(`no element rendered with emotion label "${label}"`)
+  if (!match) throw new Error(`no element rendered with the label "${label}"`)
   return match
 }
 
@@ -111,7 +112,7 @@ interface Case {
   name: keyof ThemeComponents
   /** The `styleOverrides` slot under test. */
   slot: string
-  /** Emotion `label` of the styled element the override must land on. */
+  /** Engine `label` of the styled element the override must land on. */
   label: string
   ui: ReactNode
   /** Post-render interaction that mounts the slot's element (e.g. opening a menu). */

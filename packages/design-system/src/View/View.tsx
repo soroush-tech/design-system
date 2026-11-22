@@ -81,5 +81,5 @@ export const View = styled('div', {
   shouldForwardProp,
   // layoutFrame last: `layout` owns the inline padding and max width it writes. Grid and Flex
   // add the columns on top of this frame.
-  systemProps: [space, layout, colorSystem, typography, border, position, span, layoutFrame],
+  systemProps: [space, layout, typography, border, colorSystem, position, span, layoutFrame],
 })<ViewProps>()

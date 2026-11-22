@@ -1,11 +1,11 @@
 {
   "name": "@soroush.tech/design-system",
-  "version": "2.2.0",
-  "description": "Emotion + @soroush.tech/styled-system React component library - token-driven light/dark themes, layout primitives, forms, and overlays.",
+  "version": "3.0.0",
+  "description": "UmberStyle + @soroush.tech/styled-system React component library - token-driven light/dark themes, layout primitives, forms, and overlays.",
   "keywords": [
     "design-system",
     "react",
-    "emotion",
+    "umberstyle",
     "styled-system",
     "components",
     "theme",
@@ -829,18 +829,18 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@emotion/cache": "^11.14.0",
-    "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.1",
+    "@umber-style/cache": "^0.1.0",
+    "@umber-style/react": "^0.1.0",
+    "@umber-style/styled": "^0.1.0",
     "@soroush.design/cli": "workspace:*",
     "@soroush.tech/styled-system": "workspace:^"
   },
   "peerDependencies": {
-    "react": "^18.0.0 || ^19.0.0",
-    "react-dom": "^18.0.0 || ^19.0.0"
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
   },
   "devDependencies": {
-    "@emotion/css": "^11.13.5",
+    "@umber-style/css": "^0.1.0",
     "@soroush.tech/docs-content": "workspace:*",
     "@soroush.tech/eslint-config": "workspace:*",
     "@storybook/addon-a11y": "^10.6.7",

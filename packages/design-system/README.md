@@ -18,7 +18,7 @@ Tired of forking a component library just to change a color? Every token here is
 npm i @soroush.tech/design-system
 ```
 
-`react` and `react-dom` are peer dependencies, React 18 or 19 (`^18.0.0 || ^19.0.0`). Emotion is an internal implementation detail - it ships as a regular dependency, not a peer, so you never install it yourself.
+`react` and `react-dom` are peer dependencies, and React 19.2 or later is required. The styling engine (UmberStyle, the `@umber-style/*` packages) is an internal implementation detail - it ships as a regular dependency, not a peer, so you never install it yourself.
 
 ---
 
@@ -98,11 +98,11 @@ design tool's palette, a source writer) - lives at its own subpath and loads in 
 import { catalog } from '@soroush.tech/design-system/catalog'
 ```
 
-SSR critical-CSS extraction (e.g. with `@emotion/server`) is a separate, opt-in concern most apps never need - that's what `CacheProvider` and its paired `styleCache` instance are for.
+Server rendering with critical CSS (a Vike or other static or server renderer) is a separate, opt-in concern - that's what `CacheProvider` and its paired `styleCache` instance are for. Give `CacheProvider` the `styleCache`, render, then read the CSS of the page from the same cache with `createInstance` from `@umber-style/server/create-instance` (`pnpm add @umber-style/server`): `extractCriticalToChunks(html)` and `constructStyleTagsFromChunks(chunks)` give the `<style data-umber>` tags to put in the head. Next.js App Router apps collect the styles with a registry instead - see `docs/consumer/setup.md`.
 
-Under a strict Content Security Policy, bring your own cache with the response's nonce - `createCache({ key: 'app', nonce })` from `@emotion/cache`, given to `CacheProvider` above `ThemeProvider` - and every style tag the engine inserts carries it. The shipped `styleCache` has no nonce.
+The cache key and class prefix is `soroush`. Server-rendered style elements carry `data-umber="soroush ..."`, and the live element in the browser is `<style data-style="soroush">`.
 
-The Emotion packages are regular dependencies of this package, not peers, on purpose: nothing of Emotion is on the public surface, so an app installs nothing extra and has no version to keep in step. An app that brings its own `@emotion/react` of another major gets two copies - the components keep working, as they style through their own copy and `ThemeProvider` - at the cost of the duplicate in the bundle and Emotion's one-time development warning.
+The engine packages are regular dependencies of this package, not peers, on purpose: an app installs nothing extra to render the components, and has no version to keep in step. The one package an app adds itself is `@umber-style/server`, and only to extract critical CSS.
 
 ---
 
