@@ -1,6 +1,6 @@
 {
   "name": "@soroush.tech/styled-system",
-  "version": "6.0.1",
+  "version": "6.0.2",
   "description": "Maintained, first-class-TypeScript rewrite of styled-system - responsive, theme-aware style props for CSS-in-JS. Drop-in replacement for styled-system v5.",
   "keywords": [
     "styled-system",
@@ -303,22 +303,18 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "csstype": "^3.2.3"
+    "csstype": "^3.2.3",
+    "@emotion/is-prop-valid": "^1.4.0"
   },
   "peerDependencies": {
-    "@emotion/is-prop-valid": "^1.4.0",
     "prop-types": "^15.8.1"
   },
   "peerDependenciesMeta": {
-    "@emotion/is-prop-valid": {
-      "optional": true
-    },
     "prop-types": {
       "optional": true
     }
   },
   "devDependencies": {
-    "@emotion/is-prop-valid": "^1.4.0",
     "@soroush.tech/bench": "^2.2.3",
     "@soroush.tech/eslint-config": "workspace:*",
     "@types/prop-types": "^15.7.15",
