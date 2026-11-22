@@ -1,4 +1,4 @@
-import isPropValid from '@emotion/is-prop-valid'
+import isPropValid from '@umber-style/is-prop-valid/react'
 import { all } from '#presets'
 
 // Tiny memoize, replacing the @emotion/memoize dependency.

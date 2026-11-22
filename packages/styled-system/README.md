@@ -38,9 +38,9 @@ pnpm add @soroush.tech/styled-system
 yarn add @soroush.tech/styled-system
 ```
 
-`@emotion/is-prop-valid` (`^1.4.0`, peer) and `prop-types` (`^15.8.1`, optional peer) are
-each used by a single [subpath](#subpath-imports) - `should-forward-prop` and `prop-types`
-respectively. Install one only if you import that subpath. You bring your own CSS-in-JS
+`prop-types` (`^15.8.1`, optional peer) is used by a single [subpath](#subpath-imports),
+`prop-types`. Install it only if you import that subpath. The `should-forward-prop` subpath
+needs nothing installed: its check for a valid attribute is a dependency of this package. You bring your own CSS-in-JS
 library (Emotion, styled-components, ...); the core carries neither at runtime.
 
 ## Usage
