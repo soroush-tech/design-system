@@ -53,7 +53,7 @@ When a prop maps one-to-one to a CSS property + theme scale, always use `system(
 
 `variant()` is for one prop → **multiple** CSS properties across **multiple** theme scales. However, `variant()` calls `css(styles)(props)` internally, which only resolves theme scale indices correctly when a ThemeProvider is present - it silently falls back to raw pixel values without one.
 
-For one prop → multiple CSS properties → multiple theme scales, use a **raw theme function** instead. It receives `props.theme` directly from Emotion and always resolves correctly:
+For one prop → multiple CSS properties → multiple theme scales, use a **raw theme function** instead. It receives `props.theme` directly from the styling engine and always resolves correctly:
 
 ```ts
 // ✗ - variant(): theme scale resolution breaks without ThemeProvider
@@ -272,7 +272,7 @@ const SIZES = '(min-width: 832px) min(40vw, 520px), 100vw'
 
 **Never request widths above the source's intrinsic size** - imagetools does not upscale, so larger entries just clamp to the source and waste descriptors. Check the source dimensions first; a 512px source can't serve a 2× retina slot - that's an asset problem, flag it rather than padding the width list.
 
-**LCP images get `fetchPriority="high"`.** But `theme/Image` filters props through `@styled-system/should-forward-prop`, which pins an old `@emotion/is-prop-valid` that strips `fetchPriority`. It is already allow-listed in `Image.tsx`'s `shouldForwardProp` - keep it there; if a similar valid attribute is dropped, extend that allow-list rather than working around it.
+**LCP images get `fetchPriority="high"`.** But `theme/Image` filters props through `@styled-system/should-forward-prop`, which pins an old valid-attribute list that strips `fetchPriority`. It is already allow-listed in `Image.tsx`'s `shouldForwardProp` - keep it there; if a similar valid attribute is dropped, extend that allow-list rather than working around it.
 
 **A `<picture>` is `display: inline` and static**, so an absolutely-positioned `<img>` inside it still resolves against the nearest positioned ancestor (the layout box), not the `<picture>`. Put `position`/`top`/`left` on the `<Image>` as before - the `<picture>` wrapper changes nothing about positioning.
 

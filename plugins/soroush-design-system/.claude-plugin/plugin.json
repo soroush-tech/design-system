@@ -9,5 +9,5 @@
   "homepage": "https://docs.soroush.tech",
   "repository": "https://github.com/soroush-tech/design-system",
   "license": "MIT",
-  "keywords": ["design-system", "react", "emotion", "ui", "mcp"]
+  "keywords": ["design-system", "react", "umberstyle", "ui", "mcp"]
 }

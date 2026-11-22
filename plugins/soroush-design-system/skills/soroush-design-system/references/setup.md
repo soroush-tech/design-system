@@ -7,16 +7,15 @@ Reference wiring: a Next.js App Router app on React 19.
 ```jsonc
 // package.json
 "dependencies": {
-  "@soroush.tech/design-system": "^2.2.0",
-  "@emotion/cache": "^11.14.0",
+  "@soroush.tech/design-system": "^3.0.0",
   "react": "^19.2.8",
   "react-dom": "^19.2.8"
 }
 ```
 
-`@emotion/react` and `@emotion/styled` come in as transitive deps of the design
-system - don't add them directly. `@emotion/cache` is direct, only because the
-Next.js SSR registry needs `createCache`.
+The styling engine (UmberStyle, the `@umber-style/*` packages) comes in as a dependency
+of the design system - don't add it directly. The registry in `providers.tsx` takes
+`createCache` from `@soroush.tech/design-system/engine`. React 19.2 or later is required.
 
 ## 2. Theme
 
@@ -31,15 +30,15 @@ the app needs to, never the ramp values.
 
 Copy `providers.tsx` to `app/providers.tsx`. Two things it does:
 
-- **Emotion SSR registry** - collects styles inserted during the server render and
+- **Style registry** - collects the styles written during the server render and
   re-injects them via `useServerInsertedHTML`, so server markup arrives styled.
   Without it you get an unstyled flash on every hard navigation.
 - **Global reset** - `border-box` everywhere, zero body margin,
   `background.primary` / `text.initial` / `fonts.body` on `<body>`.
 
-Change the cache key (`createCache({ key: "dc" })`) to a short app-specific prefix. Under a
-strict Content Security Policy, give the cache the response's nonce too
-(`createCache({ key: "dc", nonce })`) - every style tag Emotion inserts then carries it.
+Keep the cache key `soroush`: it is the prefix the design system's styles use, and the
+registry's cache must match it. The registry writes one `<style data-umber="soroush ...">`
+element per flush into the stream.
 
 Then in `app/layout.tsx`:
 

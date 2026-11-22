@@ -21,18 +21,20 @@ Inside `@soroush.tech/design-system/`, every styling primitive must be imported 
 
 ```ts
 // ✗
-import styled from '@emotion/styled'
-import { css, Global, keyframes, ThemeContext } from '@emotion/react'
+import styled from '@umber-style/styled'
+import { css, keyframes } from '@umber-style/react'
 import { system, variant, compose, layout, color } from 'styled-system'
 import shouldForwardProp from '@styled-system/should-forward-prop'
 
 // ✓
-import { styled, css, Global, keyframes, ThemeContext } from '@soroush.tech/design-system'
+import { styled, css, keyframes } from '@soroush.tech/design-system'
 import { system, variant, compose, layout, color } from '@soroush.tech/design-system'
 import { createShouldForwardProp } from '@soroush.tech/design-system'
+import { Global } from '@soroush.tech/design-system/engine'
+import { useTheme } from '@soroush.tech/design-system/theme'
 ```
 
-This applies to every file in `@soroush.tech/design-system/` and `src/common/`. The barrel (`@soroush.tech/design-system/index.ts`) is the single choke-point for the styling engine; swapping engines means editing one file.
+This applies to every file in `@soroush.tech/design-system/` and `src/common/`. `src/style/`, `src/theme/engine.ts` and `src/engine/` are the seam to the styling engine.
 
 ---
 

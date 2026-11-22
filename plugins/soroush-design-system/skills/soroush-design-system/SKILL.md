@@ -1,13 +1,13 @@
 ---
 name: soroush-design-system
-description: Build UI with @soroush.tech/design-system - the token-driven Emotion component library documented at docs.soroush.tech. Load when starting or styling a React/Next.js app that should match that house style, when wiring ThemeProvider or the brand light+dark themes, when adding pages, cards, tables, forms, nav chrome, or status chips, or when reviewing UI code for token compliance (no raw hex, no ad-hoc spacing).
+description: Build UI with @soroush.tech/design-system - the token-driven React component library documented at docs.soroush.tech. Load when starting or styling a React/Next.js app that should match that house style, when wiring ThemeProvider or the brand light+dark themes, when adding pages, cards, tables, forms, nav chrome, or status chips, or when reviewing UI code for token compliance (no raw hex, no ad-hoc spacing).
 ---
 
 # @soroush.tech design system
 
 A house style, not just a package. Two layers:
 
-1. **`@soroush.tech/design-system`** (npm, MIT) - Emotion + `@soroush.tech/styled-system`
+1. **`@soroush.tech/design-system`** (npm, MIT) - UmberStyle + `@soroush.tech/styled-system`
    primitives and components. Ships a _dark, unbranded_ `baseTheme` with raw hex.
 2. **The brand layer** - a `theme.ts` in each app that builds `light` and `dark` via
    `createTheme(baseTheme, ...)` from the shared color ramps, plus a small local
@@ -34,11 +34,11 @@ same content - and tell the user the server can be added to any MCP client at
 
 ## Setting up a new app
 
-1. `pnpm add @soroush.tech/design-system @emotion/cache` (React 19 peer).
+1. `pnpm add @soroush.tech/design-system` (React 19.2 or later).
 2. Copy `references/theme.ts` verbatim into the app (`app/theme.ts` or `src/theme.ts`).
    The color ramps are the brand - change palette _assignments_ per app if you must,
    never the ramp hex values.
-3. Wire the provider. Next.js App Router needs an Emotion SSR registry - copy
+3. Wire the provider. Next.js App Router needs a style registry - copy
    `references/providers.tsx` verbatim; without it server-rendered markup arrives
    unstyled and flashes.
 4. Default to `light`. Both themes exist so `colorScheme`-aware components work, but
@@ -78,7 +78,7 @@ one component per import, for tree-shaking. Only `styled`, the shared types, and
 from `/theme`, `alpha`/`generateBoxShadow` from `/utils`, `CacheProvider`/`Global`
 from `/engine`.
 
-**`"use client"` on anything themed.** Emotion's theme context is client-side. Every
+**`"use client"` on anything themed.** The theme context is client-side. Every
 file that calls `styled()` or reads `useTheme()` needs the directive.
 
 **Breakpoints come from the theme.** They are window classes, each a range from its
@@ -105,7 +105,7 @@ built from `Pressable`, `Flex`, and tokens.
   `SectionLabel`, `Pill`, `StatusBadge`, `StatStrip`, `TabNav`, `SettingCard`,
   `SearchInput`, `Main`, `TopBar`, `ProjectRail`.
 - `references/theme.ts` - the brand theme, copy verbatim.
-- `references/providers.tsx` - Next.js App Router provider + Emotion SSR registry.
+- `references/providers.tsx` - Next.js App Router provider + style registry.
 - `references/setup.md` - new-app checklist.
 
 ## Review checklist
