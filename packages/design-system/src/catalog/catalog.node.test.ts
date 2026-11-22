@@ -18,8 +18,9 @@ vi.mock('@umber-style/styled', () => {
 })
 
 describe('catalog in plain Node', () => {
-  // A first import of every entry, under coverage instrumentation, takes a few seconds.
-  it('loads with no DOM, React or the styling engine', { timeout: 30_000 }, async () => {
+  // A first import of every entry takes a second alone, and twenty to thirty while the browser
+  // tiers build beside it in a full run, so the limit leaves room for a busy machine.
+  it('loads with no DOM, React or the styling engine', { timeout: 120_000 }, async () => {
     expect(typeof document).toBe('undefined')
     const { catalog } = await import('./index')
     expect(Object.keys(catalog.components).length).toBeGreaterThan(0)
