@@ -382,7 +382,7 @@ describe('the Vike starter', () => {
     expect(files.get('src/pages/+Layout.tsx')).toContain('<Providers>\n      <Header />')
     expect(files.has('src/components/SchemeSwitch.tsx')).toBe(false)
     expect(files.get('src/pages/about/+Page.tsx')).toContain('a link loads it as a new')
-    expect(JSON.parse(files.get('package.json')!).dependencies['@emotion/server']).toBeDefined()
+    expect(JSON.parse(files.get('package.json')!).dependencies['@umber-style/server']).toBeDefined()
     expect(
       createFiles({ rendering: 'ssg', isTypeScript: false }).get('src/pages/+Layout.jsx')
     ).toMatch(/^import \{ View \}/)
@@ -450,7 +450,7 @@ describe('the Vike starter', () => {
     expect(packageJson.name).toBe('my-app')
     expect(packageJson.dependencies).toEqual({
       '@soroush.tech/design-system': '^2.3.0',
-      '@emotion/server': devDependencies['@emotion/server'],
+      '@umber-style/server': `^${devDependencies['@umber-style/server']}`,
       react: devDependencies.react,
       'react-dom': devDependencies['react-dom'],
       vike: `^${devDependencies.vike}`,

@@ -95,15 +95,15 @@ package's own `devDependencies`), and the themes and `Providers`, which are `ini
 
 `templates/astro/` writes an Astro app whose React parts are islands. Astro renders an island
 with plain `react-dom/server`, not as a server component, so the design system needs no
-`'use client'`, and Emotion writes each island's styles into its HTML with no extraction. Each
-island is its own React root: each is exported inside `withIsland` (`src/theme/Island`), which
+`'use client'`, and the styling engine writes each island's styles into its HTML with no
+extraction. Each island is its own React root: each is exported inside `withIsland` (`src/theme/Island`), which
 renders it inside the theme - and the query client and the Redux store, one of each in the
 browser for every island - so its hooks find them; the header's
 `<Providers>` draws the base styles once a page, and the scheme is a small shared store
 (`useSyncExternalStore`, with the default as the server snapshot, so an island hydrates on the
 HTML it got). With islands (SSR), the layout has Astro's `<ClientRouter />` and a
-script on `astro:before-swap` that keeps Emotion's style tags in the head, which the router would
-otherwise replace, and moves the next page's inline styles there, except its base styles, which
+script on `astro:before-swap` that keeps the engine's style elements and markers (the very ones its
+cache writes into) in the head, which the router would otherwise replace, and moves the next page's inline styles there, except its base styles, which
 the header draws. SSR adds `output: 'server'` with `@astrojs/node` standalone, and an item route
 that reads its id on each request (`Astro.rewrite('/404')` for an unknown one).
 The home page's counter and greeting are islands of their own with `client:only`, children of
@@ -129,7 +129,7 @@ TypeScript 6 at most, so the starter's TypeScript is this package's `typescript-
 - `ssg/`: `Page` and `Layout` load at build time only, and there is no `+onRenderClient`, so a
   page ships no script; the layout has no scheme switch.
 
-`+onRenderHtml` renders the page with `@emotion/server` on the design system's `styleCache`, and
+`+onRenderHtml` renders the page with `@umber-style/server` on the design system's `styleCache`, and
 puts the styles it used in the head; `+onRenderClient` hydrates it with the same cache. Both
 render `PageShell`, the page inside `+Layout`, which renders `<Providers>`: the providers live in
 the app, so the scheme it holds can switch the theme.

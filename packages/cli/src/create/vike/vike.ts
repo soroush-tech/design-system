@@ -32,7 +32,7 @@ function createPackageJson({
     },
     dependencies: {
       '@soroush.tech/design-system': toRange(version),
-      ...pickVersions(['@emotion/server', ...libraryPackages, 'react', 'react-dom', 'vike']),
+      ...pickVersions(['@umber-style/server', ...libraryPackages, 'react', 'react-dom', 'vike']),
     },
     devDependencies: pickVersions([
       '@vitejs/plugin-react',

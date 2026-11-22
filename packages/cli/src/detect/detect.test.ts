@@ -125,7 +125,7 @@ describe('satisfiesRange', () => {
 
   it("reads the design system's peer range, and throws on a shape it does not read", () => {
     const { peerDependencies } = readDesignSystemPackage(DESIGN_SYSTEM_FILE)
-    expect(satisfiesRange('19.0.0', peerDependencies!.react)).toBe(true)
+    expect(satisfiesRange('19.2.8', peerDependencies!.react)).toBe(true)
     expect(() => satisfiesRange('19.0.0', '>=18')).toThrow('init cannot read the range >=18')
   })
 })

@@ -72,9 +72,20 @@ const SERVER_ENTRY = isAstro ? 'dist/server/entry.mjs' : 'dist/server/index.mjs'
 // Where the build writes the pages and their files: Vike's client build, Astro's dist - its
 // client folder, for a server - or Vite's dist, for an SPA.
 const PAGES_DIR = (isAstro && !isServer) || isSpa ? 'dist' : 'dist/client'
-// The key of the Emotion cache that draws the styles: the design system's, which Vike's renderer
-// gives the page, or Emotion's own, which each Astro island makes as it renders.
-const STYLE_KEY = isAstro ? 'css' : 'soroush'
+// The design system's styles are drawn with the cache key `soroush` in every starter. Vike's
+// renderer writes them as `<style data-umber>` elements, one for the base styles and one for the
+// classes. An Astro island is rendered by React alone, which writes one
+// `<style data-precedence data-href>` element in front of it: its `data-href` lists the base styles
+// (the root theme and the global rules) and the classes.
+const STYLE_KEY = 'soroush'
+const BASE_STYLES = isAstro
+  ? new RegExp(`<style data-precedence="${STYLE_KEY}" data-href="[^"]*${STYLE_KEY}-global-`)
+  : new RegExp(`<style data-umber="${STYLE_KEY}-global `)
+const COMPONENT_STYLES = isAstro
+  ? new RegExp(
+      `<style data-precedence="${STYLE_KEY}" data-href="[^"]*${STYLE_KEY}-(?!root-|global-)[^" ]`
+    )
+  : new RegExp(`<style data-umber="${STYLE_KEY} [^"]`)
 
 /** Runs a command, showing its output, and throws when it fails. */
 function run(command, args, cwd) {
@@ -252,14 +263,8 @@ function checkHome(home) {
     check(/<script[^>]* type="module"/.test(home.html), '/ loads the script that renders it')
     return
   }
-  check(
-    home.html.includes(`<style data-emotion="${STYLE_KEY}-global`),
-    "/ carries the page's base styles"
-  )
-  check(
-    new RegExp(`<style data-emotion="${STYLE_KEY} [^"]`).test(home.html),
-    "/ carries its components' styles"
-  )
+  check(BASE_STYLES.test(home.html), "/ carries the page's base styles")
+  check(COMPONENT_STYLES.test(home.html), "/ carries its components' styles")
   check(home.html.includes(`>${APP}</h2>`), "/ has the starter's heading")
   const hasGreeting = /tanstack-query|swr|msw/.test(libraries)
   if (isAstro) {

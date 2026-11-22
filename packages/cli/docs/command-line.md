@@ -151,7 +151,7 @@ and a test checks the greeting it gives.
   and dark switch (`src/components/SchemeSwitch`). On a phone, the links take a row of their own.
 - `src/theme/themes` holds a `light` and a `dark` theme, as `init` writes them: make them your own.
 - `src/pages/+onRenderHtml` and `+onRenderClient` render the pages with the design system's
-  Emotion cache. There is no renderer package to install.
+  style cache. There is no renderer package to install.
 - `npm run dev` starts it, `npm run build` builds it, and `npm run preview` serves the build.
 
 With sample data pages, it also shows how data gets onto a page, with no data library:

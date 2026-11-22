@@ -4,7 +4,7 @@ import type { PageContext } from 'vike/types'
 import { PageContextProvider } from './usePageContext'
 
 /**
- * The page inside its +Layout. The Emotion cache is the design system's, so the styles the page
+ * The page inside its +Layout. The style cache is the design system's, so the styles the page
  * uses are found where it is drawn, and every component of the page can read its pageContext.
  */
 export function PageShell({ pageContext }: { readonly pageContext: PageContext }) {
