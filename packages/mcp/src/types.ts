@@ -5,9 +5,9 @@
 export interface ComponentRecord {
   /** PascalCase component name, as exported. */
   name: string
-  /** URL segment on docs.soroush.design. */
+  /** The component's name in kebab case, which a client may look it up by. */
   slug: string
-  /** Workspace package the component ships from. */
+  /** The package the component ships from: `design-system` or `markdown`, as the tools take it. */
   pkg: string
   /** The npm package a consumer installs. */
   packageName: string

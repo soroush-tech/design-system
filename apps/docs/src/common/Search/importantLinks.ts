@@ -3,11 +3,11 @@ import { searchEntriesFor, type SearchEntry, type SectionNav } from 'src/common/
 // The pages a reader most often wants first, by section - the ones the search offers before a
 // word is typed. Each is named by its label, as the sidebar lists it.
 const IMPORTANT: Record<SectionNav['pkg'], string[]> = {
-  'design-system': [
+  react: [
     'Installation',
     'Usage',
     'All components',
-    'Theming',
+    'Theme',
     'How to customize',
     'Button',
     'TextInput',

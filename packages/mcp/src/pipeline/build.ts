@@ -6,7 +6,7 @@ import { buildTokens } from './tokens'
 
 /** The design-system version the bundle describes. */
 export const designSystemVersion = (): string =>
-  (JSON.parse(loadPackageFile('design-system', 'package.json')) as { version: string }).version
+  (JSON.parse(loadPackageFile('react', 'package.json')) as { version: string }).version
 
 /** Assembles the whole content bundle from the repo's own sources. */
 export const buildContent = async (): Promise<ContentBundle> => ({

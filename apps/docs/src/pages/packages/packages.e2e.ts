@@ -4,7 +4,7 @@ test.describe('packages', () => {
   test('the rail has Packages, and its page lists every package with its links', async ({
     page,
   }) => {
-    await page.goto('/design-system/')
+    await page.goto('/react/')
     await page
       .getByRole('navigation', { name: 'Primary' })
       .getByRole('link', { name: 'Packages' })
@@ -29,7 +29,7 @@ test.describe('packages', () => {
     )
     await expect(nav.getByRole('link', { name: /^Markdown\s*v\d/ })).toHaveAttribute(
       'href',
-      '/markdown/'
+      '/react/markdown/'
     )
     await expect(nav.getByRole('link', { name: /MCP server/ })).toHaveAttribute('href', '/mcp/')
     await expect(nav.getByRole('link', { name: /UI spec/ })).toHaveAttribute('href', '/ui-spec/')
@@ -37,7 +37,7 @@ test.describe('packages', () => {
   })
 
   test("a component's head links its source on GitHub", async ({ page }) => {
-    await page.goto('/design-system/components/button/')
+    await page.goto('/react/Button/')
     await expect(page.locator('main header').getByRole('link', { name: 'Source' })).toHaveAttribute(
       'href',
       'https://github.com/soroush-tech/design-system/tree/main/packages/react-components/src/Button'

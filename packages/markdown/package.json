@@ -14,7 +14,7 @@
   ],
   "author": "Masoud Soroush <masoud@soroush.tech>",
   "license": "MIT",
-  "homepage": "https://docs.soroush.design/markdown/",
+  "homepage": "https://docs.soroush.design/react/markdown/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/soroush-tech/design-system.git",

@@ -48,9 +48,7 @@ describe('runInit', () => {
     expect(output).toContain('init will set up @soroush.design/react in test-app:')
     expect(output).toContain('npx skills add soroush-tech/design-system')
     expect(output).toContain('https://mcp.soroush.design/mcp')
-    expect(output).toContain(
-      'https://docs.soroush.design/design-system/getting-started/installation/#fonts'
-    )
+    expect(output).toContain('https://docs.soroush.design/react/installation/#fonts')
     expect(output).toContain('Make the themes your own in src/theme/themes.ts.')
     expect(output).not.toContain('Still left to you')
   })

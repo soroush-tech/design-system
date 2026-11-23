@@ -15,10 +15,7 @@ const button = allComponents.find((item) => item.name === 'Button')!
 describe('ComponentCard', () => {
   it('links to the component page and names it', () => {
     renderWithTheme(<ComponentCard item={button} />)
-    expect(screen.getByRole('link', { name: 'Button' })).toHaveAttribute(
-      'href',
-      '/design-system/components/button/'
-    )
+    expect(screen.getByRole('link', { name: 'Button' })).toHaveAttribute('href', '/react/Button/')
   })
 
   it('writes the name in the theme initial text color, white in the dark mode', () => {

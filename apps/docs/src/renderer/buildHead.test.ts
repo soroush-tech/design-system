@@ -186,7 +186,7 @@ describe('buildHead', () => {
     })
 
     it('defaults to noindex inside a section snapshot build', () => {
-      vi.stubEnv('PUBLIC_ENV__DOCS_SECTION', 'design-system')
+      vi.stubEnv('PUBLIC_ENV__DOCS_SECTION', 'react')
       expect(buildHead(ctx())).toContain('content="noindex,follow"')
     })
   })

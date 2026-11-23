@@ -2,7 +2,7 @@ import { MenuItem } from '@soroush.design/react/MenuItem'
 import { NavGroup, NavLink, NavTree } from '@soroush.design/react/NavTree'
 import { Select } from '@soroush.design/react/Select'
 import { View } from '@soroush.design/react/View'
-import { railItemFor, sectionFor, type NavGroup as DocsNavGroup } from 'src/common/nav'
+import { railItemFor, sectionFor, sitePath, type NavGroup as DocsNavGroup } from 'src/common/nav'
 import { PACKAGES as PACKAGE_LIST } from 'src/common/packages'
 import { usePageContext } from 'src/hooks/usePageContext'
 
@@ -12,7 +12,7 @@ const normalize = (path: string): string => (path.endsWith('/') ? path : `${path
 const PACKAGES = PACKAGE_LIST.map((entry) => ({
   pkg: entry.docs,
   label: entry.name,
-  href: `/${entry.docs}/`,
+  href: sitePath(entry.docs, '/'),
 }))
 
 function DocsGroup({ group, current }: Readonly<{ group: DocsNavGroup; current: string }>) {

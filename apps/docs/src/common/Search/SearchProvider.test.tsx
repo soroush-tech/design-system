@@ -17,7 +17,7 @@ function OpenButton() {
   )
 }
 
-const renderSearch = (urlPathname = '/design-system/') =>
+const renderSearch = (urlPathname = '/react/') =>
   render(
     <ThemeProvider theme={dark}>
       <PageContext.Provider value={{ urlPathname } as VikePageContext}>
@@ -67,7 +67,7 @@ describe('SearchProvider', () => {
     await user.type(input(), 'button specs')
     const link = screen
       .getAllByRole('link')
-      .find((item) => item.getAttribute('href') === '/design-system/api/button/')
+      .find((item) => item.getAttribute('href') === '/react/Button/specs/')
     expect(link).toHaveTextContent('Button specs')
     expect(link).toHaveTextContent('Specs')
   })
@@ -87,8 +87,8 @@ describe('SearchProvider', () => {
     expect(screen.queryByText(/Nothing matches/)).not.toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Most important links' })).toBeInTheDocument()
     const links = screen.getAllByRole('link')
-    expect(links[0]).toHaveAttribute('href', '/design-system/getting-started/installation/')
-    expect(links.map((link) => link.getAttribute('href'))).toContain('/design-system/components/')
+    expect(links[0]).toHaveAttribute('href', '/react/installation/')
+    expect(links.map((link) => link.getAttribute('href'))).toContain('/react/components/')
   })
 
   it('has no recent searches until one has been made', async () => {
@@ -105,7 +105,7 @@ describe('SearchProvider', () => {
     await user.type(input(), 'tabs')
     const link = screen
       .getAllByRole('link')
-      .find((item) => item.getAttribute('href') === '/design-system/components/tabs/')!
+      .find((item) => item.getAttribute('href') === '/react/Tabs/')!
     // The navigation itself is the browser's; the click is what is kept.
     link.addEventListener('click', (event) => event.preventDefault())
     await user.click(link)
@@ -174,12 +174,12 @@ describe('SearchProvider', () => {
 
   it('searches the section the page is in', async () => {
     const user = userEvent.setup()
-    renderSearch('/markdown/')
+    renderSearch('/react/markdown/')
     await user.click(screen.getByRole('button', { name: 'open search' }))
     await user.type(input(), 'preview')
     expect(screen.getByRole('link', { name: /Preview/ })).toHaveAttribute(
       'href',
-      '/markdown/components/preview/'
+      '/react/markdown/Preview/'
     )
   })
 

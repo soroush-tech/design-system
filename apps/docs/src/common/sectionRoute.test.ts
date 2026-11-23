@@ -11,9 +11,7 @@ describe('in the browser', () => {
   // both helpers must fall back to the live layout instead of crashing hydration.
   it('falls back to the live layout without a process global', () => {
     vi.stubGlobal('process', undefined)
-    expect(sectionRoute('design-system', '/components/@name')).toBe(
-      '/design-system/components/@name'
-    )
+    expect(sectionRoute('react', '/@name')).toBe('/react/@name')
     expect(sectionPrerender('markdown')).toBe(true)
   })
 })
@@ -21,29 +19,28 @@ describe('in the browser', () => {
 describe('sectionRoute', () => {
   it('prefixes the section on the live site', () => {
     vi.stubEnv('DOCS_SECTION', '')
-    expect(sectionRoute('design-system', '/components/@name')).toBe(
-      '/design-system/components/@name'
-    )
-    expect(sectionRoute('markdown', '/')).toBe('/markdown')
+    expect(sectionRoute('react', '/@name')).toBe('/react/@name')
+    expect(sectionRoute('markdown', '/')).toBe('/react/markdown')
+    expect(sectionRoute('markdown', '/@name')).toBe('/react/markdown/@name')
   })
 
   it('drops the prefix inside the section snapshot build', () => {
-    vi.stubEnv('DOCS_SECTION', 'design-system')
-    expect(sectionRoute('design-system', '/components/@name')).toBe('/components/@name')
-    expect(sectionRoute('markdown', '/')).toBe('/markdown')
+    vi.stubEnv('DOCS_SECTION', 'react')
+    expect(sectionRoute('react', '/@name')).toBe('/@name')
+    expect(sectionRoute('markdown', '/')).toBe('/react/markdown')
   })
 })
 
 describe('sectionPrerender', () => {
   it('prerenders everything on the live site', () => {
     vi.stubEnv('DOCS_SECTION', '')
-    expect(sectionPrerender('design-system')).toBe(true)
+    expect(sectionPrerender('react')).toBe(true)
     expect(sectionPrerender('markdown')).toBe(true)
   })
 
   it('prerenders only the snapshot section', () => {
     vi.stubEnv('DOCS_SECTION', 'markdown')
     expect(sectionPrerender('markdown')).toBe(true)
-    expect(sectionPrerender('design-system')).toBe(false)
+    expect(sectionPrerender('react')).toBe(false)
   })
 })

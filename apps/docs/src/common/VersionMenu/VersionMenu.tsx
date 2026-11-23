@@ -3,6 +3,7 @@ import { styled } from '@soroush.design/react'
 import { Button } from '@soroush.design/react/Button'
 import { Menu } from '@soroush.design/react/Menu'
 import { MenuItem } from '@soroush.design/react/MenuItem'
+import { sections } from '@soroush.tech/docs-content'
 import type { DocsSection } from 'src/common/nav'
 import { PACKAGE_VERSIONS } from 'src/common/packageVersions'
 import { newestVersion } from './utils/newestVersion'
@@ -67,7 +68,8 @@ export function VersionMenu({ pkg, pathname }: Readonly<VersionMenuProps>) {
     <Menu
       aria-label="Documentation version"
       onSelect={(value) => {
-        window.location.assign(value === 'latest' ? `/${pkg}/` : `/${pkg}/${value}/`)
+        const route = `/${sections[pkg].route}/`
+        window.location.assign(value === 'latest' ? route : `${route}${value}/`)
       }}
       trigger={
         <TriggerButton variant="outlined" size="sm" aria-label={`Documentation version, v${shown}`}>

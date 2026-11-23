@@ -50,7 +50,7 @@ export const renderTokensReference = (bundle: ContentBundle): string =>
     '',
     '# Token contract',
     '',
-    `Every scale on \`theme\`, serialized from \`baseTheme\` (${sections['design-system'].npm} ${bundle.version}).`,
+    `Every scale on \`theme\`, serialized from \`baseTheme\` (${sections.react.npm} ${bundle.version}).`,
     'Reference tokens through the theme; a literal value in a component is a bug.',
     '',
     ...bundle.tokens.flatMap((scale) => [
@@ -72,7 +72,7 @@ const pluginFiles = (bundle: ContentBundle): Array<{ name: string; body: string 
   { name: 'tokens.md', body: renderTokensReference(bundle) },
   ...COPIED.map((name) => ({
     name,
-    body: loadPackageFile('design-system', `docs/consumer/${name}`),
+    body: loadPackageFile('react', `docs/consumer/${name}`),
   })),
 ]
 

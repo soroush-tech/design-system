@@ -41,18 +41,29 @@ describe('component pipeline', () => {
     expect(components.find((c) => c.name === 'Preview')!.category).toBeUndefined()
   })
 
+  it("keeps the package value clients send, 'design-system', for the component library", () => {
+    expect(components.find((c) => c.name === 'Button')!.pkg).toBe('design-system')
+    expect(components.find((c) => c.name === 'Preview')!.pkg).toBe('markdown')
+    expect(components.find((c) => c.name === 'Button')!.url).toBe(
+      'https://docs.soroush.design/react/Button/'
+    )
+    expect(components.find((c) => c.name === 'Preview')!.url).toBe(
+      'https://docs.soroush.design/react/markdown/Preview/'
+    )
+  })
+
   it('builds the subpath import for a component', () => {
     expect(importPathFor(allDocComponents.find((item) => item.name === 'Card')!)).toBe(
       "import { Card } from '@soroush.design/react/Card'"
     )
   })
 
-  it("imports a family member from its family's subpath, and points at its API page", () => {
+  it("imports a family member from its family's subpath, and points at its page under the entry it is imported from", () => {
     const menuList = components.find((c) => c.name === 'MenuList')!
     expect(menuList.importPath).toBe("import { MenuList } from '@soroush.design/react/Menu'")
     expect(menuList.family).toBe('Menu')
     expect(menuList.category).toBe(components.find((c) => c.name === 'Menu')!.category)
-    expect(menuList.url).toBe('https://docs.soroush.design/design-system/api/menu-list/')
+    expect(menuList.url).toBe('https://docs.soroush.design/react/Menu/MenuList/')
     expect(menuList.api).toContain('|')
   })
 })
@@ -142,6 +153,16 @@ describe('doc pipeline', () => {
   it('includes the styled-system docs and guides under a prefix', () => {
     expect(docs.some((doc) => doc.id === 'styled-system/api')).toBe(true)
     expect(docs.some((doc) => doc.id === 'styled-system/guides/spacing')).toBe(true)
+  })
+
+  it('serves the url of each page at the route that is its import path', () => {
+    const url = (id: string) => docs.find((doc) => doc.id === id)!.url
+    expect(url('installation')).toBe('https://docs.soroush.design/react/installation/')
+    expect(url('theming')).toBe('https://docs.soroush.design/react/theme/')
+    expect(url('customization')).toBe('https://docs.soroush.design/react/customization/')
+    expect(url('design-system-overview')).toBe('https://docs.soroush.design/react/')
+    expect(url('markdown-overview')).toBe('https://docs.soroush.design/react/markdown/')
+    expect(url('styled-system/api')).toBe('https://docs.soroush.design/styled-system/docs/api/')
   })
 
   it('omits the url for references that have no page on the site', () => {

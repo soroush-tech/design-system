@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { render, screen, within } from '@testing-library/react'
 import { ThemeProvider } from '@soroush.design/react/theme'
 import { PACKAGES } from 'src/common/packages'
+import { sectionPath } from 'src/common/sectionPath'
 import { dark } from 'src/theme/themes'
 import { Footer } from './Footer'
 
@@ -27,7 +28,7 @@ describe('Footer', () => {
     expect(docs.getByRole('link', { name: 'All packages' })).toHaveAttribute('href', '/packages/')
     for (const entry of PACKAGES) {
       const link = docs.getByRole('link', { name: entry.name })
-      expect(link).toHaveAttribute('href', `/${entry.docs}/`)
+      expect(link).toHaveAttribute('href', sectionPath(entry.docs, '/'))
       expect(link).not.toHaveAttribute('target')
     }
   })

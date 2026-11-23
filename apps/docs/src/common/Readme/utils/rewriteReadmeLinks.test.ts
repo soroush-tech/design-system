@@ -3,36 +3,36 @@ import { rewriteReadmeLink, rewriteReadmeLinks } from './rewriteReadmeLinks'
 
 describe('rewriteReadmeLink', () => {
   it('maps package docs links to customization routes', () => {
-    expect(rewriteReadmeLink('../../docs/customization.md')).toBe(
-      '/design-system/customization/how-to/'
-    )
-    expect(rewriteReadmeLink('../../docs/theming.md')).toBe('/design-system/customization/theming/')
+    expect(rewriteReadmeLink('../../docs/customization.md')).toBe('/react/customization/')
+    expect(rewriteReadmeLink('../../docs/theming.md')).toBe('/react/theme/')
   })
 
   it('maps sibling component READMEs to component routes at any depth', () => {
-    expect(rewriteReadmeLink('../Pressable/README.md')).toBe('/design-system/components/pressable/')
-    expect(rewriteReadmeLink('../../Pressable/README.md')).toBe(
-      '/design-system/components/pressable/'
-    )
-    expect(rewriteReadmeLink('../TextInput/README.md')).toBe(
-      '/design-system/components/text-input/'
-    )
+    expect(rewriteReadmeLink('../Pressable/README.md')).toBe('/react/Pressable/')
+    expect(rewriteReadmeLink('../../Pressable/README.md')).toBe('/react/Pressable/')
+    expect(rewriteReadmeLink('../TextInput/README.md')).toBe('/react/TextInput/')
   })
 
   it("resolves a family member to its API page, and keeps a link's section", () => {
-    expect(rewriteReadmeLink('../MenuList/README.md')).toBe('/design-system/api/menu-list/')
-    expect(rewriteReadmeLink('../Menu/MenuItems/README.md')).toBe('/design-system/api/menu-items/')
+    expect(rewriteReadmeLink('../MenuList/README.md')).toBe('/react/Menu/MenuList/')
+    expect(rewriteReadmeLink('../Menu/MenuItems/README.md')).toBe('/react/Menu/MenuItems/')
     expect(rewriteReadmeLink('../../MenuItem/README.md#submenus')).toBe(
-      '/design-system/api/menu-item/#submenus'
+      '/react/MenuItem/specs/#submenus'
     )
-    expect(rewriteReadmeLink('../Menu/')).toBe('/design-system/components/menu/')
+    expect(rewriteReadmeLink('../Menu/')).toBe('/react/Menu/')
     expect(rewriteReadmeLink('../../docs/customization.md#slot-props')).toBe(
-      '/design-system/customization/how-to/#slot-props'
+      '/react/customization/#slot-props'
     )
   })
 
+  it('maps the links between the library docs, and to its README', () => {
+    expect(rewriteReadmeLink('./customization.md')).toBe('/react/customization/')
+    expect(rewriteReadmeLink('./catalog.md')).toBe('/react/catalog/')
+    expect(rewriteReadmeLink('../README.md#component-defaults')).toBe('/react/#component-defaults')
+  })
+
   it('resolves a linked component to its own package section', () => {
-    expect(rewriteReadmeLink('../Mermaid/README.md')).toBe('/markdown/components/mermaid/')
+    expect(rewriteReadmeLink('../Mermaid/README.md')).toBe('/react/markdown/Mermaid/')
   })
 
   it('passes through absolute URLs, anchors, and unknown targets', () => {
@@ -48,7 +48,7 @@ describe('rewriteReadmeLinks', () => {
   it('rewrites every link target in a source string', () => {
     const source = 'See [Sidebar](../Sidebar/README.md) and [theming](../../docs/theming.md).'
     expect(rewriteReadmeLinks(source)).toBe(
-      'See [Sidebar](/design-system/components/sidebar/) and [theming](/design-system/customization/theming/).'
+      'See [Sidebar](/react/Sidebar/) and [theming](/react/theme/).'
     )
   })
 

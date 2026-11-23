@@ -13,4 +13,4 @@ prerendered at build time with its styles in the HTML, then moving between pages
 - [Vitest](https://vitest.dev) and [Testing Library](https://testing-library.com): `npm run test` runs `src/pages/index/Page.test.tsx`, which checks the title and the counter.
 
 Fonts: the theme names Space Grotesk and JetBrains Mono, and does not load them. See
-https://docs.soroush.design/design-system/getting-started/installation/#fonts
+https://docs.soroush.design/react/installation/#fonts

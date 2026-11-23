@@ -17,7 +17,7 @@ export function isSetUpByInit(content: string): boolean {
 
 export type Scheme = 'light' | 'dark'
 
-const THEMING_DOCS = 'https://docs.soroush.design/design-system/customization/theming/'
+const THEMING_DOCS = 'https://docs.soroush.design/react/theme/'
 
 // The augmentation stub stays a comment: an empty interface is an error under some lint rules,
 // and the app's lint is the app's own.

@@ -16,7 +16,7 @@ describe('Navbar', () => {
   it('shows the wordmark and the current design-system version', () => {
     renderNavbar()
     expect(screen.getByRole('link', { name: 'SOROUSH.DESIGN' })).toHaveAttribute('href', '/')
-    expect(screen.getByText(`v${PACKAGE_VERSIONS['design-system']}`)).toBeInTheDocument()
+    expect(screen.getByText(`v${PACKAGE_VERSIONS.react}`)).toBeInTheDocument()
   })
 
   it('lays the bar out in one row: the wordmark and version, then the links and the toggle', () => {

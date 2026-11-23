@@ -7,7 +7,7 @@ import { ThemeModeProvider } from 'src/theme/ThemeModeProvider'
 import { DocPage } from './DocPage'
 
 const renderDocPage = (props: Parameters<typeof DocPage>[0]) => {
-  const pageContext = { urlPathname: '/design-system/' } as VikePageContext
+  const pageContext = { urlPathname: '/react/' } as VikePageContext
   const wrapper = ({ children }: { children: ReactNode }) => (
     <ThemeModeProvider>
       <PageContext.Provider value={pageContext}>{children}</PageContext.Provider>

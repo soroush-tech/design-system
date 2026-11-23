@@ -11,7 +11,7 @@
   ],
   "author": "Masoud Soroush <masoud@soroush.tech>",
   "license": "MIT",
-  "homepage": "https://docs.soroush.design/design-system/",
+  "homepage": "https://docs.soroush.design/react/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/soroush-tech/design-system.git",

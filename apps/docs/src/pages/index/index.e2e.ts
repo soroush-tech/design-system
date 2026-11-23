@@ -15,11 +15,11 @@ test.describe('landing page', () => {
     const main = page.locator('main')
     await expect(main.getByRole('link', { name: 'Get started' })).toHaveAttribute(
       'href',
-      '/design-system/getting-started/installation/'
+      '/react/installation/'
     )
     await expect(main.getByRole('link', { name: 'Browse components' })).toHaveAttribute(
       'href',
-      '/design-system/components/'
+      '/react/components/'
     )
     for (const name of ['Design System', 'Markdown', 'Styled System']) {
       await expect(page.getByRole('link', { name: `${name} documentation` })).toBeVisible()

@@ -50,13 +50,10 @@ describe('ComponentHero', () => {
 
   it('has an Overview tab and a Specs tab, linked to the component pages', () => {
     renderHero()
-    expect(tabs().getByRole('link', { name: 'Overview' })).toHaveAttribute(
-      'href',
-      '/design-system/components/button/'
-    )
+    expect(tabs().getByRole('link', { name: 'Overview' })).toHaveAttribute('href', '/react/Button/')
     expect(tabs().getByRole('link', { name: 'Specs' })).toHaveAttribute(
       'href',
-      '/design-system/api/button/'
+      '/react/Button/specs/'
     )
   })
 
@@ -67,7 +64,7 @@ describe('ComponentHero', () => {
     renderHero({ hasAccessibility: true })
     expect(tabs().getByRole('link', { name: 'Accessibility' })).toHaveAttribute(
       'href',
-      '/design-system/components/button/accessibility/'
+      '/react/Button/accessibility/'
     )
   })
 

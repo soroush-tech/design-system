@@ -5,7 +5,7 @@ import { PACKAGES, sourceUrlOf } from './packages'
 
 // The MCP server and the command line are published under their own scope.
 const NPM_NAMES = {
-  'design-system': '@soroush.design/react-components',
+  react: '@soroush.design/react-components',
   markdown: '@soroush.tech/markdown',
   'styled-system': '@soroush.design/styled-system',
   mcp: '@soroush.design/mcp',
@@ -16,7 +16,7 @@ const NPM_NAMES = {
 describe('PACKAGES', () => {
   it('lists every package, each with a docs section of its own', () => {
     expect(PACKAGES.map((entry) => entry.id)).toEqual([
-      'design-system',
+      'react',
       'markdown',
       'styled-system',
       'mcp',

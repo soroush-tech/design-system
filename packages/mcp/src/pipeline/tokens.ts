@@ -27,7 +27,7 @@ export const flatten = (node: ThemeNode, prefix = ''): TokenScale['tokens'] => {
  * component library.
  */
 export const buildTokens = async (): Promise<TokenScale[]> => {
-  const themesPath = join(packageDir('design-system'), 'src', 'theme', 'themes.ts')
+  const themesPath = join(packageDir('react'), 'src', 'theme', 'themes.ts')
   const { baseTheme } = (await import(pathToFileURL(themesPath).href)) as {
     baseTheme: Record<string, ThemeNode>
   }
@@ -38,7 +38,7 @@ export const buildTokens = async (): Promise<TokenScale[]> => {
 
 /** Every top-level key of the theme, so a test can assert nothing was dropped. */
 export const themeScaleNames = async (): Promise<string[]> => {
-  const themesPath = join(packageDir('design-system'), 'src', 'theme', 'themes.ts')
+  const themesPath = join(packageDir('react'), 'src', 'theme', 'themes.ts')
   const { baseTheme } = (await import(pathToFileURL(themesPath).href)) as {
     baseTheme: Record<string, ThemeNode>
   }

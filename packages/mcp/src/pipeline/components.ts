@@ -6,6 +6,7 @@ import {
   componentPagePath,
   importPackageOf,
   importSubpathOf,
+  sitePath,
   splitReadme,
   stripReadmeChrome,
   type ComponentNavItem,
@@ -14,6 +15,13 @@ import { loadReadme } from '@soroush.tech/docs-content/node'
 import type { ComponentRecord } from '../types'
 
 export { DOCS_URL }
+
+/**
+ * The `package` a tool takes and a record shows. The docs section of the component library is
+ * `react` now, where its route is the import path; the tools keep the value clients already send.
+ */
+export const packageIdOf = (item: ComponentNavItem): string =>
+  item.pkg === 'react' ? 'design-system' : item.pkg
 
 /** The subpath import a consumer writes for a component. */
 export const importPathFor = (item: ComponentNavItem): string =>
@@ -87,7 +95,7 @@ export const buildComponents = (): ComponentRecord[] =>
     return {
       name: item.name,
       slug: item.slug,
-      pkg: item.pkg,
+      pkg: packageIdOf(item),
       packageName: importPackageOf(item),
       category: categoryOf(item),
       family: item.family,
@@ -96,6 +104,6 @@ export const buildComponents = (): ComponentRecord[] =>
       intro: stripReadmeChrome(intro),
       api,
       examples,
-      url: `${DOCS_URL}/${item.pkg}${componentPagePath(item)}`,
+      url: `${DOCS_URL}${sitePath(item.pkg, componentPagePath(item))}`,
     }
   })

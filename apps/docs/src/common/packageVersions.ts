@@ -18,7 +18,7 @@ export const APP_PACKAGE_VERSION = reactPkg.version
 
 /** The version of each package this build documents, as it is in its package.json. */
 export const PACKAGE_VERSIONS: Record<DocsSection, string> = {
-  'design-system': designSystemPkg.version,
+  react: designSystemPkg.version,
   markdown: markdownPkg.version,
   'styled-system': styledSystemPkg.version,
   mcp: mcpPkg.version,

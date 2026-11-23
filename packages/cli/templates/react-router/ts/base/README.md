@@ -64,4 +64,4 @@ between them with no reload.
 <!-- @endif -->
 
 Fonts: the theme names Space Grotesk and JetBrains Mono, and does not load them. See
-https://docs.soroush.design/design-system/getting-started/installation/#fonts
+https://docs.soroush.design/react/installation/#fonts

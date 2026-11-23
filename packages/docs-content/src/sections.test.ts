@@ -9,18 +9,24 @@ const manifestOf = (dir: string): { name: string } =>
 
 describe('sections', () => {
   it('describes the six sections of the site, in its order', () => {
-    expect(sectionIds).toEqual([
-      'design-system',
-      'markdown',
-      'styled-system',
-      'mcp',
-      'ui-spec',
-      'cli',
-    ])
+    expect(sectionIds).toEqual(['react', 'markdown', 'styled-system', 'mcp', 'ui-spec', 'cli'])
   })
 
   it('keys each description by its id', () => {
     for (const id of sectionIds) expect(sections[id].id).toBe(id)
+  })
+
+  it('puts each section at the route its package is imported from', () => {
+    expect(Object.fromEntries(Object.values(sections).map(({ id, route }) => [id, route]))).toEqual(
+      {
+        react: 'react',
+        markdown: 'react/markdown',
+        'styled-system': 'styled-system',
+        mcp: 'mcp',
+        'ui-spec': 'ui-spec',
+        cli: 'cli',
+      }
+    )
   })
 
   it('names the folder and the npm package that are on disk', () => {

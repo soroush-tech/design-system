@@ -1,24 +1,20 @@
+import { DOC_LINK, docPagePath } from '@soroush.tech/docs-content'
 import { allDocComponents, componentLinkPath } from 'src/common/nav'
 import { sectionPath } from 'src/common/sectionPath'
-
-const DOCS_TARGETS: Record<string, string> = {
-  'theming.md': '/customization/theming/',
-  'customization.md': '/customization/how-to/',
-}
 
 /**
  * Rewrites a single relative README link target to its in-site route. READMEs link
  * siblings as `../Other/README.md` (a family member as `../Menu/MenuItems/README.md` from outside
- * its family) and package docs as `../../docs/customization.md`;
- * lifted into the site those files live at section routes instead. A linked component
- * resolves to its own package's section - a family member to its API page - keeping a
+ * its family) and package docs as `../../docs/customization.md` (`./customization.md` from one of
+ * the docs); lifted into the site those files live at section routes instead. A linked component
+ * resolves to its own package's section - a family member to its page under its entry - keeping a
  * `#section` the link ends in. Absolute URLs, anchors, and unrecognized targets pass
  * through unchanged.
  */
 export const rewriteReadmeLink = (href: string): string => {
-  const docsMatch = /(?:\.\.\/)+docs\/([\w-]+\.md)(#[\w-]+)?$/.exec(href)
-  if (docsMatch && DOCS_TARGETS[docsMatch[1]])
-    return sectionPath('design-system', DOCS_TARGETS[docsMatch[1]]) + (docsMatch[2] ?? '')
+  const docsMatch = DOC_LINK.exec(href)
+  const docPath = docsMatch && docPagePath(docsMatch[1])
+  if (docPath) return sectionPath('react', docPath) + (docsMatch[2] ?? '')
 
   const componentMatch =
     /(?:\.\.\/)+(?:[A-Z][A-Za-z0-9]*\/)?([A-Z][A-Za-z0-9]*)\/(?:README\.md)?(#[\w-]+)?$/.exec(href)

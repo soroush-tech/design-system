@@ -51,7 +51,7 @@ export interface InitFacts {
   readFile: (path: string) => string | undefined
 }
 
-const SETUP_DOCS = 'https://docs.soroush.design/design-system/getting-started/installation/'
+const SETUP_DOCS = 'https://docs.soroush.design/react/installation/'
 
 /** The command that adds the design system with the app's own package manager, running no scripts. */
 export function createInstallCommand(

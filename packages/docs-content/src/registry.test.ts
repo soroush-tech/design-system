@@ -3,10 +3,13 @@ import {
   allComponents,
   allDocComponents,
   categoryOf,
+  componentAccessibilityPath,
   componentBySlug,
+  sitePath,
   componentCategories,
   componentLinkPath,
   componentPagePath,
+  componentSpecsPath,
   importPackageOf,
   importSubpathOf,
   markdownComponents,
@@ -22,7 +25,7 @@ import { join } from 'node:path'
 
 // The registry is only useful if it matches what is actually on disk - these are the
 // guards the docs app used to carry in nav.test.ts, now next to the registry itself.
-const designSystemReadmes = new Set(listComponentReadmes('design-system'))
+const designSystemReadmes = new Set(listComponentReadmes('react'))
 const markdownReadmes = new Set(listComponentReadmes('markdown'))
 
 const isPascalCase = (segment: string): boolean => /^[A-Z][A-Za-z0-9]*$/.test(segment)
@@ -77,10 +80,7 @@ describe('component registry', () => {
     // so a missing page fails the prerender. Catch it here instead.
     for (const item of allComponents) {
       const mdxPath = item.readmePath.replace(/README\.md$/, `${item.name}.mdx`)
-      expect(
-        existsSync(join(packageDir('design-system'), 'src', mdxPath)),
-        `${mdxPath} missing`
-      ).toBe(true)
+      expect(existsSync(join(packageDir('react'), 'src', mdxPath)), `${mdxPath} missing`).toBe(true)
     }
   })
 
@@ -115,8 +115,10 @@ describe('component registry', () => {
     expect(categoryOf(menuList)).toBe(categoryOf(menu))
     expect(importSubpathOf(menuList)).toBe('Menu')
     expect(importSubpathOf(menu)).toBe('Menu')
-    expect(componentPagePath(menuList)).toBe('/api/menu-list/')
-    expect(componentPagePath(menu)).toBe('/components/menu/')
+    expect(componentPagePath(menuList)).toBe('/Menu/MenuList/')
+    expect(componentPagePath(menu)).toBe('/Menu/')
+    expect(componentSpecsPath(menuList)).toBe('/Menu/MenuList/')
+    expect(componentSpecsPath(menu)).toBe('/Menu/specs/')
   })
 
   it('imports a component from the umbrella, and a markdown component from its own package', () => {
@@ -128,9 +130,20 @@ describe('component registry', () => {
   it("sends a link to a README's section to the page that shows it", () => {
     const menuItem = componentBySlug.get('menu-item')!
     const preview = componentBySlug.get('preview')!
-    expect(componentLinkPath(menuItem)).toBe('/components/menu-item/')
-    expect(componentLinkPath(menuItem, '#submenus')).toBe('/api/menu-item/#submenus')
-    expect(componentLinkPath(preview, '#props')).toBe('/components/preview/#props')
+    expect(componentLinkPath(menuItem)).toBe('/MenuItem/')
+    expect(componentLinkPath(menuItem, '#submenus')).toBe('/MenuItem/specs/#submenus')
+    expect(componentLinkPath(componentBySlug.get('menu-list')!, '#props')).toBe(
+      '/Menu/MenuList/#props'
+    )
+    expect(componentLinkPath(preview, '#props')).toBe('/Preview/#props')
+  })
+
+  it('puts a page at its section route, and the accessibility page under its component', () => {
+    expect(sitePath('react', '/')).toBe('/react/')
+    expect(sitePath('markdown', '/Editor/')).toBe('/react/markdown/Editor/')
+    expect(componentAccessibilityPath(componentBySlug.get('button')!)).toBe(
+      '/Button/accessibility/'
+    )
   })
 
   it('maps styled-system doc files to URL segments', () => {

@@ -23,14 +23,14 @@ const githubOf = (id: DocsSection) => `${GITHUB_TREE}/packages/${sections[id].di
 /** The packages the docs are about, the ones with a docs section first. */
 export const PACKAGES: PackageInfo[] = [
   {
-    id: 'design-system',
+    id: 'react',
     name: 'Design System',
     description:
       'The components: layout, inputs, feedback, navigation and overlays, with a theme to match your brand.',
-    version: PACKAGE_VERSIONS['design-system'],
-    npm: npmOf('design-system'),
-    github: githubOf('design-system'),
-    docs: 'design-system',
+    version: PACKAGE_VERSIONS.react,
+    npm: npmOf('react'),
+    github: githubOf('react'),
+    docs: 'react',
   },
   {
     id: 'markdown',

@@ -31,4 +31,4 @@ reload: it fetches the next page's HTML from the server and swaps it in.
   runs `src/components/Home.test.tsx`, which checks the title and the counter.
 
 Fonts: the theme names Space Grotesk and JetBrains Mono, and does not load them. See
-https://docs.soroush.design/design-system/getting-started/installation/#fonts
+https://docs.soroush.design/react/installation/#fonts

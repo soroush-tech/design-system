@@ -50,15 +50,15 @@ export function Navbar({ menuDrawer, onSearch, versionMenu }: Readonly<NavbarPro
               SOROUSH.DESIGN
             </Typography>
           </Link>
-          {versionMenu ?? <Chip>v{PACKAGE_VERSIONS['design-system']}</Chip>}
+          {versionMenu ?? <Chip>v{PACKAGE_VERSIONS.react}</Chip>}
         </Flex>
         <Flex flexDirection="row" alignItems="center" gap={3}>
           <View display={{ xs: 'none', lg: 'inline-flex' }}>
             <Flex flexDirection="row" gap={3}>
-              <Link href="/design-system/" color="secondary">
+              <Link href="/react/" color="secondary">
                 Design System
               </Link>
-              <Link href="/markdown/" color="secondary">
+              <Link href="/react/markdown/" color="secondary">
                 Markdown
               </Link>
               <Link href="/styled-system/" color="secondary">

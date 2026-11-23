@@ -96,6 +96,7 @@ Shown for React. React Native and Vue repeat the pattern (`@soroush.design/react
 - A library uses a lowercase name: `/markdown`, `/charts`, `/theme`, `/hooks`.
 - A library's own components go under it: `/markdown/Editor`.
 - A library is never named after a component of the main library, so two paths never differ only by case.
+- **The docs route of a thing is its import path**: `soroush.design/react/Button` is documented at `/react/Button/`, and `soroush.design/react/markdown/Editor` at `/react/markdown/Editor/`. A new subpath needs its page, and a test fails naming the one that is missing - see the Routes section of `apps/docs/docs-app.md`.
 
 ```ts
 // ✗ a scope has one level - this is not a package

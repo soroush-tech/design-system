@@ -1,5 +1,5 @@
 {
-  "design-system": {
+  "react": {
     "dir": "react-components",
     "npm": "@soroush.design/react-components"
   },

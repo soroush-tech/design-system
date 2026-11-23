@@ -23,20 +23,27 @@ const rail = () => screen.getByRole('navigation', { name: 'Primary' })
 
 describe('NavRail', () => {
   it('lists home and the parts of the design-system docs, each with its name', () => {
-    renderRail('/design-system/')
+    renderRail('/react/')
     const names = within(rail())
       .getAllByRole('link')
       .map((link) => link.textContent)
-    expect(names).toEqual(['Home', 'Packages', 'Get started', 'Components', 'Styles'])
+    expect(names).toEqual([
+      'Home',
+      'Packages',
+      'Get started',
+      'Components',
+      'Styles',
+      'Entry points',
+    ])
   })
 
   it('has no API item', () => {
-    renderRail('/design-system/')
+    renderRail('/react/')
     expect(within(rail()).queryByRole('link', { name: 'API' })).not.toBeInTheDocument()
   })
 
   it('marks the part the page belongs to as current', () => {
-    renderRail('/design-system/components/button/')
+    renderRail('/react/Button/')
     expect(within(rail()).getByRole('link', { name: 'Components' })).toHaveAttribute(
       'aria-current',
       'page'
@@ -45,7 +52,7 @@ describe('NavRail', () => {
   })
 
   it("keeps a component's specs under Components", () => {
-    renderRail('/design-system/api/button/')
+    renderRail('/react/Button/specs/')
     expect(within(rail()).getByRole('link', { name: 'Components' })).toHaveAttribute(
       'aria-current',
       'page'
@@ -53,7 +60,7 @@ describe('NavRail', () => {
   })
 
   it('reads a path without its trailing slash, and an empty one as the root', () => {
-    const { unmount } = renderRail('/design-system/components')
+    const { unmount } = renderRail('/react/components')
     expect(within(rail()).getByRole('link', { name: 'Components' })).toHaveAttribute(
       'aria-current',
       'page'
@@ -75,12 +82,12 @@ describe('NavRail', () => {
   })
 
   it('links each part to where it starts', () => {
-    renderRail('/design-system/')
+    renderRail('/react/')
     const link = (name: string) => within(rail()).getByRole('link', { name })
     expect(link('Home')).toHaveAttribute('href', '/')
-    expect(link('Get started')).toHaveAttribute('href', '/design-system/')
-    expect(link('Components')).toHaveAttribute('href', '/design-system/components/')
-    expect(link('Styles')).toHaveAttribute('href', '/design-system/customization/theming/')
+    expect(link('Get started')).toHaveAttribute('href', '/react/')
+    expect(link('Components')).toHaveAttribute('href', '/react/components/')
+    expect(link('Styles')).toHaveAttribute('href', '/react/theme/')
   })
 
   it("shows the other sections' own parts", () => {
@@ -92,14 +99,13 @@ describe('NavRail', () => {
   })
 
   it('opens a component of the markdown docs from Components, which has no page of its own', () => {
-    renderRail('/markdown/components/preview/')
+    renderRail('/react/markdown/Preview/')
     const href = within(rail()).getByRole('link', { name: 'Components' }).getAttribute('href')
-    expect(href).toMatch(/^\/markdown\/components\/[a-z-]+\/$/)
-    expect(href).not.toBe('/markdown/components/')
+    expect(href).toMatch(/^\/react\/markdown\/[A-Z]\w+\/$/)
   })
 
   it('puts the version of the docs under the search, to choose another', () => {
-    renderRail('/design-system/')
+    renderRail('/react/')
     const buttons = within(rail()).getAllByRole('button')
     expect(buttons[0]).toHaveAccessibleName('Search')
     expect(buttons[1]).toHaveAccessibleName(/Documentation version, v\d+\.\d+\.\d+/)
@@ -107,14 +113,14 @@ describe('NavRail', () => {
 
   it('opens the search from its button', async () => {
     const user = userEvent.setup()
-    renderRail('/design-system/')
+    renderRail('/react/')
     await user.click(screen.getByRole('button', { name: 'Search' }))
     expect(screen.getByRole('dialog', { name: 'Search the documentation' })).toBeInTheDocument()
   })
 
   it('toggles the color scheme', async () => {
     const user = userEvent.setup()
-    renderRail('/design-system/')
+    renderRail('/react/')
     const toggle = screen.getByRole('button', { name: 'Toggle color scheme' })
     const before = toggle.innerHTML
     await user.click(toggle)

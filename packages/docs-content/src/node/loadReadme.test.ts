@@ -10,7 +10,7 @@ import {
 
 describe('packageDir', () => {
   it('points at the workspace package', () => {
-    expect(packageDir('design-system').replace(/\\/g, '/')).toMatch(/packages\/react-components$/)
+    expect(packageDir('react').replace(/\\/g, '/')).toMatch(/packages\/react-components$/)
     expect(packageDir('cli').replace(/\\/g, '/')).toMatch(/packages\/cli$/)
   })
 })
@@ -43,7 +43,7 @@ describe('loadRepoFile', () => {
 
 describe('listComponentReadmes', () => {
   it('finds both glob levels, sorted', () => {
-    const found = listComponentReadmes('design-system')
+    const found = listComponentReadmes('react')
     expect(found).toContain('Button/README.md')
     expect(found).toContain('Table/Table/README.md')
     expect([...found].sort()).toEqual(found)

@@ -1,4 +1,5 @@
 import {
+  sitePath,
   styledSystemDocSlug,
   styledSystemDocs,
   styledSystemGuides,
@@ -27,41 +28,41 @@ const GUIDES: DocSource[] = [
     title: 'Installation',
     summary: 'Install the packages and their peer dependencies.',
     read: () => loadRepoFile('apps/docs/content/docs/installation.md'),
-    url: `${DOCS_URL}/design-system/getting-started/installation/`,
+    url: `${DOCS_URL}${sitePath('react', '/installation/')}`,
   },
   {
     id: 'usage',
     title: 'Usage',
     summary: 'Wrap the app in ThemeProvider and render the first component.',
     read: () => loadRepoFile('apps/docs/content/docs/usage.md'),
-    url: `${DOCS_URL}/design-system/getting-started/usage/`,
+    url: `${DOCS_URL}${sitePath('react', '/usage/')}`,
   },
   {
     id: 'theming',
     title: 'Theming',
     summary: 'The Theme type, the scales it carries, and how createTheme composes one.',
-    read: () => loadPackageFile('design-system', 'docs/theming.md'),
-    url: `${DOCS_URL}/design-system/customization/theming/`,
+    read: () => loadPackageFile('react', 'docs/theming.md'),
+    url: `${DOCS_URL}${sitePath('react', '/theme/')}`,
   },
   {
     id: 'customization',
     title: 'How to customize',
     summary: 'Override component styles through theme.components and style props.',
-    read: () => loadPackageFile('design-system', 'docs/customization.md'),
-    url: `${DOCS_URL}/design-system/customization/how-to/`,
+    read: () => loadPackageFile('react', 'docs/customization.md'),
+    url: `${DOCS_URL}${sitePath('react', '/customization/')}`,
   },
   {
     id: 'setup',
     title: 'New app setup',
     summary: 'End-to-end checklist for a new app: fonts, global reset, providers, theme.',
-    read: () => loadPackageFile('design-system', 'docs/consumer/setup.md'),
+    read: () => loadPackageFile('react', 'docs/consumer/setup.md'),
   },
   {
     id: 'layout-kit',
     title: 'App layout kit',
     summary:
       'App-level components to copy verbatim - PageCard, PageHeader, Pill, StatusBadge, TabNav and friends.',
-    read: () => loadPackageFile('design-system', 'docs/consumer/layout-kit.md'),
+    read: () => loadPackageFile('react', 'docs/consumer/layout-kit.md'),
   },
   {
     id: 'brand-theme',
@@ -69,7 +70,7 @@ const GUIDES: DocSource[] = [
     summary: 'The brand light and dark theme, ready to drop into an app as theme.ts.',
     read: () =>
       asCode(
-        loadPackageFile('design-system', 'docs/consumer/theme.ts'),
+        loadPackageFile('react', 'docs/consumer/theme.ts'),
         'ts',
         'Copy this verbatim into your app as `theme.ts`.'
       ),
@@ -80,7 +81,7 @@ const GUIDES: DocSource[] = [
     summary: 'ThemeProvider plus the style registry for the Next.js App Router.',
     read: () =>
       asCode(
-        loadPackageFile('design-system', 'docs/consumer/providers.tsx'),
+        loadPackageFile('react', 'docs/consumer/providers.tsx'),
         'tsx',
         'Copy this verbatim into your app as `providers.tsx`.'
       ),
@@ -89,22 +90,22 @@ const GUIDES: DocSource[] = [
     id: 'design-system-overview',
     title: 'Design system overview',
     summary: 'The package README: what ships, the import contract, and the component inventory.',
-    read: () => stripReadmeChrome(loadPackageFile('design-system', 'README.md')),
-    url: `${DOCS_URL}/design-system/`,
+    read: () => stripReadmeChrome(loadPackageFile('react', 'README.md')),
+    url: `${DOCS_URL}${sitePath('react', '/')}`,
   },
   {
     id: 'markdown-overview',
     title: 'Markdown package overview',
     summary: 'The headless markdown editor and renderer built on the design system.',
     read: () => stripReadmeChrome(loadPackageFile('markdown', 'README.md')),
-    url: `${DOCS_URL}/markdown/`,
+    url: `${DOCS_URL}${sitePath('markdown', '/')}`,
   },
   {
     id: 'styled-system-overview',
     title: 'Styled-system overview',
     summary: 'The style-prop engine underneath the design system.',
     read: () => stripReadmeChrome(loadPackageFile('styled-system', 'README.md')),
-    url: `${DOCS_URL}/styled-system/`,
+    url: `${DOCS_URL}${sitePath('styled-system', '/')}`,
   },
 ]
 
@@ -116,7 +117,7 @@ const styledSystemSources = (): DocSource[] =>
     title: `styled-system: ${label}`,
     summary: `The styled-system package's "${label}" documentation.`,
     read: () => loadPackageFile('styled-system', `docs/${file}`),
-    url: `${DOCS_URL}/styled-system/docs/${styledSystemDocSlug(file)}/`,
+    url: `${DOCS_URL}${sitePath('styled-system', `/docs/${styledSystemDocSlug(file)}/`)}`,
   }))
 
 /** Every guide and reference document the server serves, read from disk. */

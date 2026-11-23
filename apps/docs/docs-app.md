@@ -6,15 +6,69 @@ every input is an in-repo glob over `packages/` and `content/` - no remote fetch
 
 ## Sections
 
-Six per-package sections, independently versioned: `/design-system/`, `/markdown/`,
-`/styled-system/`, `/mcp/`, `/ui-spec/` and `/cli/`. The registry in `src/common/nav.ts` drives the sidebars, the component
-pages, and the drift tests; `sectionFor(pathname)` picks the active section.
+Six per-package sections, independently versioned: `/react/`, `/react/markdown/`,
+`/styled-system/`, `/mcp/`, `/ui-spec/` and `/cli/`. A section has an id (`react`, `markdown`, ...: its route
+folder, `DOCS_SECTION` and its key in `versions.json`) and a route, where it is on the site
+(`sectionRoutes.ts` in `@soroush.tech/docs-content`). The registry in `src/common/nav.ts` drives the
+sidebars, the component pages, and the drift tests; `sectionFor(pathname)` picks the active section -
+the one with the longest route that holds the path, so `/react/markdown/Editor/` is the markdown
+section's and not React's.
+
+## Routes
+
+**A page's route is the import path.** The route of a thing is the path an app imports it from in the
+`soroush.design` umbrella, and the page's content is that thing's own markdown file. The URLs are
+frozen from the first publish of the site, so no route is renamed after it.
+
+| An app imports                                    | The docs page             | Content                             |
+| ------------------------------------------------- | ------------------------- | ----------------------------------- |
+| `@soroush.design/react/Button`                    | `/react/Button/`          | the component's README and MDX page |
+| `@soroush.design/react/Table` and its `TableCell` | `/react/Table/TableCell/` | the member's README                 |
+| `@soroush.design/react/theme`                     | `/react/theme/`           | `docs/theming.md` of the library    |
+| `@soroush.design/react/engine`                    | `/react/engine/`          | `docs/engine.md` of the library     |
+| later `@soroush.design/react/markdown/Editor`     | `/react/markdown/Editor/` | the markdown package's README       |
+| later `@soroush.design/react-native/Button`       | `/react-native/Button/`   |                                     |
+| a package of no platform: `@soroush.design/cli`   | `/cli/`                   | its README and release notes        |
+
+- **The platform is the first segment.** A package that is not part of a platform umbrella keeps its
+  own name: `/styled-system/...`, `/cli/...`, `/mcp/...`, `/ui-spec/...`, later `/core/...`.
+- **A capitalised segment is a component, exactly as exported**: `/react/Button/`. A lowercase one is
+  an entry point that is not a component (`/react/theme/`), a library mounted under the platform
+  (`/react/markdown/`), or a page that is not an entry point at all: the guides
+  (`/react/installation/`, `/react/usage/`, `/react/customization/`), `/react/components/` (the
+  index of the components) and `/react/releases/`. A guide is never named like an entry point.
+- **A component's pages are under its page**: `/react/Button/specs/` (props, tokens, defaults) and
+  `/react/Button/accessibility/`, the tabs of its page. `specs` and `accessibility` are lowercase, so
+  no export takes their path.
+- **A member of a family is under the entry it is imported from**: `TableCell` is exported by
+  `@soroush.design/react/Table`, so its page is `/react/Table/TableCell/`. If the library later
+  exports a nested entry point, the path is that import path and nothing else changes.
+- **A lowercase form of a component path redirects to the capitalised page**, because Cloudflare Pages
+  tells paths apart by case: `/react/button/` goes to `/react/Button/`. `emitRedirects.ts` writes
+  the `_redirects` file of the build from the same list of pages as the sitemap (the slash and the
+  no-slash form of every rule: about 400 of the 2000 static rules the host takes). Two pages that
+  differ only by case are an error.
+- **A path ends in a slash**, as the prerendered `<path>/index.html` does; the host sends the path
+  without it to the one with it.
+- **The list of pages is derived, not kept twice.** `docsPages()` in `@soroush.tech/docs-content`
+  builds it from the registry; its test holds it to the umbrella's entry points
+  (`packages/react/package.json`): every entry point has exactly one page at its path, and every
+  capitalised page is an entry point or an export of one. The built output is held to the same list by
+  `routes.e2e.ts` (exact names, the sitemap, no broken link, no link to a path of the former site).
+- **Adding a thing**: a new component is registered in `registry.ts` and has its README and MDX page; a
+  new entry point that is not a component needs a page - add it to `entryGuides` with the file of the
+  library's `docs/` that is its page; a library mounted under the platform (`markdown`, #134) is a
+  section with a route of `react/<name>` in `sectionRoutes.ts`. The route test names the entry or the
+  page that is missing.
+- **Vike routes**: `/react/@name`, `/react/@name/specs`, `/react/@name/accessibility` and
+  `/react/@name/@member` are Route Strings; the static ones (`/react/releases`, `/react/markdown/@name`)
+  rank above the parameterised ones. Every page is prerendered from `+onBeforePrerenderStart`.
 
 ## Structure
 
 - `src/renderer/` - Vike renderer: SSR + critical CSS from the styling engine's cache, managed head tags + CSP
   (`form-action` allows only the sandbox define endpoint), snapshot-aware robots default.
-- `src/pages/<section>/...` - one folder per route. Pages are **e2e-only**: excluded from
+- `src/pages/<section>/...` - one folder per route (`react/@name/specs` is `/react/Button/specs/`). Pages are **e2e-only**: excluded from
   unit coverage; co-located `*.e2e.ts` cover them against the built output. Every section
   page's `+route.ts` goes through `sectionRoute()` and its `+config.ts` through
   `sectionPrerender()` (both read `process.env.DOCS_SECTION` at Vike config time - the
@@ -44,7 +98,7 @@ only builds this app, in the `docs` job of `ci.yml`). The former site, docs.soro
 the former package and is frozen: nothing here refers to it.
 
 `DOCS_BASE` (vite base) + `DOCS_SECTION` are the build hooks of a section snapshot
-(`DOCS_SECTION=<pkg> DOCS_BASE=/<pkg>/<version>/` prerenders that section alone, noindex). The
+(`DOCS_SECTION=<id> DOCS_BASE=/<route>/<version>/` prerenders that section alone, noindex). The
 `VersionMenu` reads `/versions.json` at the domain root (`{ "<section>": ["<version>", ...] }`,
 newest first); with none, or an empty list, it shows the live version alone.
 
@@ -59,7 +113,7 @@ from the section's release tag (`<npm name>@<version>`, found per section from `
 - Design-system imports use per-component subpaths (`@soroush.design/react/Button`).
 - All prose content - MDX included - must use ASCII punctuation (the repo-wide `aiwg`
   guard scans it).
-- Never hardcode a section URL - build links with `sectionPath()` so snapshots stay
+- Never hardcode a section URL - build links with `sectionPath()` (and the path of a component with `componentPagePath()` and its kin) so snapshots stay
   self-contained.
 
 ## Verify
@@ -69,5 +123,5 @@ pnpm --filter @soroush.tech/docs test:coverage   # unit, 100% thresholds
 pnpm --filter @soroush.tech/docs build           # SSG prerender - gates every page
 pnpm --filter @soroush.tech/docs test:e2e        # Playwright against build/client
 # Snapshot smoke (PowerShell: set env vars accordingly):
-DOCS_SECTION=design-system DOCS_BASE=/design-system/9.9.9/ pnpm --filter @soroush.tech/docs build
+DOCS_SECTION=react DOCS_BASE=/react/9.9.9/ pnpm --filter @soroush.tech/docs build
 ```

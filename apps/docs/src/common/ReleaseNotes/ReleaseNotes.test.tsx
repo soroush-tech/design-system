@@ -7,9 +7,9 @@ import { releaseNotesFor } from './utils/releaseNotesFor'
 
 describe('releaseNotesFor', () => {
   it('lists the design-system notes: the first release of the package under its name', () => {
-    const notes = releaseNotesFor('design-system')
+    const notes = releaseNotesFor('react')
     expect(notes.map((note) => note.version)).toEqual(['0.1.0'])
-    expect(notes[0].version).toBe(PACKAGE_VERSIONS['design-system'])
+    expect(notes[0].version).toBe(PACKAGE_VERSIONS.react)
     expect(notes[0].body.startsWith('## @soroush.design/react-components@0.1.0')).toBe(true)
   })
 
@@ -48,7 +48,7 @@ describe('ReleaseNotes', () => {
   })
 
   it('trims the package name of the component library, under the soroush.design scope', () => {
-    renderWithTheme(<ReleaseNotes pkg="design-system" />)
+    renderWithTheme(<ReleaseNotes pkg="react" />)
     expect(screen.getByRole('heading', { name: 'v0.1.0' })).toBeInTheDocument()
     expect(
       screen.queryByRole('heading', { name: /@soroush\.design\/react-components@/ })

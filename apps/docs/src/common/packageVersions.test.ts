@@ -8,6 +8,6 @@ describe('packageVersions', () => {
   })
 
   it('keeps the component library as the version of the design-system section', () => {
-    expect(PACKAGE_VERSIONS['design-system']).toMatch(/^\d+\.\d+\.\d+/)
+    expect(PACKAGE_VERSIONS.react).toMatch(/^\d+\.\d+\.\d+/)
   })
 })

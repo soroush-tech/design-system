@@ -9,7 +9,12 @@ import { ComponentIllustration } from 'src/common/ComponentCard/ComponentIllustr
 import { CONTENT_MAX_WIDTH, PANEL_RADIUS } from 'src/common/layoutSizes'
 import { RailGlyph } from 'src/common/NavRail/RailGlyph'
 import { sourceUrlOf } from 'src/common/packages'
-import type { ComponentNavItem } from 'src/common/nav'
+import {
+  componentAccessibilityPath,
+  componentPagePath,
+  componentSpecsPath,
+  type ComponentNavItem,
+} from 'src/common/nav'
 import { sectionPath } from 'src/common/sectionPath'
 
 /** The pages of a component: what it is and does, its props, how it serves everyone. */
@@ -167,14 +172,14 @@ export function ComponentHero({
   }, [active])
 
   const tabs = [
-    { id: 'overview', label: 'Overview', path: `/components/${item.slug}/` },
-    { id: 'specs', label: 'Specs', path: `/api/${item.slug}/` },
+    { id: 'overview', label: 'Overview', path: componentPagePath(item) },
+    { id: 'specs', label: 'Specs', path: componentSpecsPath(item) },
     ...(hasAccessibility
       ? [
           {
             id: 'accessibility',
             label: 'Accessibility',
-            path: `/components/${item.slug}/accessibility/`,
+            path: componentAccessibilityPath(item),
           },
         ]
       : []),
@@ -225,7 +230,7 @@ export function ComponentHero({
                 key={tab.id}
                 value={tab.id}
                 label={tab.label}
-                href={sectionPath('design-system', tab.path)}
+                href={sectionPath(item.pkg, tab.path)}
                 onClick={(event) => {
                   if (isPlainClick(event)) tabSwitch = isStuck ? 'stuck' : 'in-place'
                 }}

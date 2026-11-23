@@ -11,7 +11,7 @@
   ],
   "author": "Masoud Soroush <masoud@soroush.tech>",
   "license": "MIT",
-  "homepage": "https://docs.soroush.design",
+  "homepage": "https://docs.soroush.design/cli/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/soroush-tech/design-system.git",

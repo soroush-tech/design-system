@@ -12,6 +12,7 @@ import {
   absoluteReadmeLinks,
   allComponents,
   componentPagePath,
+  sitePath,
   importPackageOf,
   importSubpathOf,
   markdownComponents,
@@ -28,7 +29,7 @@ import { loadPackageFile, loadReadme } from '@soroush.tech/docs-content/node'
 const SITE_URL = process.env.VITE_SITE_URL ?? 'https://docs.soroush.design'
 
 const componentUrl = (item: ComponentNavItem): string =>
-  `${SITE_URL}/${item.pkg}${componentPagePath(item)}`
+  `${SITE_URL}${sitePath(item.pkg, componentPagePath(item))}`
 
 // A family's members follow it, each linked to its API page.
 const designSystemComponents = allComponents.flatMap((item) => [item, ...membersOf(item)])
@@ -57,10 +58,10 @@ export const renderIndex = (): string =>
     '',
     '## Getting started',
     '',
-    `- [Installation](${SITE_URL}/design-system/getting-started/installation/): install the packages and their peers.`,
-    `- [Usage](${SITE_URL}/design-system/getting-started/usage/): wrap the app in ThemeProvider and render a component.`,
-    `- [Theming](${SITE_URL}/design-system/customization/theming/): the Theme type and how createTheme composes one.`,
-    `- [Customization](${SITE_URL}/design-system/customization/how-to/): override styles through theme.components.`,
+    `- [Installation](${SITE_URL}/react/installation/): install the packages and their peers.`,
+    `- [Usage](${SITE_URL}/react/usage/): wrap the app in ThemeProvider and render a component.`,
+    `- [Theming](${SITE_URL}/react/theme/): the Theme type and how createTheme composes one.`,
+    `- [Customization](${SITE_URL}/react/customization/): override styles through theme.components.`,
     '',
     '## Components',
     '',
@@ -105,11 +106,11 @@ export const renderFull = (): string =>
     '',
     '# Guides',
     '',
-    loadPackageFile('design-system', 'docs/theming.md'),
+    absoluteReadmeLinks(loadPackageFile('react', 'docs/theming.md')),
     '',
-    loadPackageFile('design-system', 'docs/customization.md'),
+    absoluteReadmeLinks(loadPackageFile('react', 'docs/customization.md')),
     '',
-    loadPackageFile('design-system', 'docs/consumer/setup.md'),
+    absoluteReadmeLinks(loadPackageFile('react', 'docs/consumer/setup.md')),
     '',
   ].join('\n')
 

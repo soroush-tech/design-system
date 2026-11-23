@@ -67,7 +67,7 @@ export function App() {
 ```
 
 `baseTheme` is a complete dark-schemed default, so an empty override object is a valid start.
-See [Theming](/design-system/customization/theming/) for building light and dark brand themes.
+See [Theming](/react/theme/) for building light and dark brand themes.
 
 ## Fonts
 

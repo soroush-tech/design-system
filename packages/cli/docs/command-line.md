@@ -206,7 +206,7 @@ With sample data pages, it also shows how data gets onto a page, with no data li
   build. A host serves `dist/` once it answers every path with `index.html`.
 
 The switch does not remember the scheme across a reload, and the theme's fonts are not loaded: see
-the [fonts guide](https://docs.soroush.design/design-system/getting-started/installation/#fonts).
+the [fonts guide](https://docs.soroush.design/react/installation/#fonts).
 
 ## Set up an existing app: `init`
 
@@ -252,4 +252,4 @@ It is careful with your app:
 - It reaches no network but the install.
 
 Next.js, Vike and React Router apps are refused for now, with a pointer to the
-[setup guide](https://docs.soroush.design/design-system/getting-started/installation/).
+[setup guide](https://docs.soroush.design/react/installation/).

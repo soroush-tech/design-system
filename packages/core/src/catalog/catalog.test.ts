@@ -5,7 +5,7 @@ import { catalogSources } from './sources'
 
 const listed = componentCategories
   .flatMap((category) => category.items)
-  .filter((item) => item.pkg === 'design-system')
+  .filter((item) => item.pkg === 'react')
   .map((item) => item.name)
 
 const entries = Object.values(catalog.components)

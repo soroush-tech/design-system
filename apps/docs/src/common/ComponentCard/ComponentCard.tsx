@@ -4,16 +4,13 @@ import { Link } from '@soroush.design/react/Link'
 import { Typography } from '@soroush.design/react/Typography'
 import { View } from '@soroush.design/react/View'
 import { sectionPath } from 'src/common/sectionPath'
-import type { ComponentNavItem } from 'src/common/nav'
+import { componentPagePath, type ComponentNavItem } from 'src/common/nav'
 import { ComponentIllustration } from './ComponentIllustration'
 
 /** One component of the components page: its drawing on a tile, its name under it, a link to its page. */
 export function ComponentCard({ item }: Readonly<{ item: ComponentNavItem }>) {
   return (
-    <Link
-      href={sectionPath('design-system', `/components/${item.slug}/`)}
-      style={{ textDecoration: 'none' }}
-    >
+    <Link href={sectionPath(item.pkg, componentPagePath(item))} style={{ textDecoration: 'none' }}>
       <Card p={0} borderRadius="lg" style={{ overflow: 'hidden' }}>
         <Flex bg="secondary" alignItems="center" justifyContent="center" height="184px" p={1}>
           <ComponentIllustration name={item.name} />

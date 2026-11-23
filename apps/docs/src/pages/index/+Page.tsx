@@ -32,7 +32,7 @@ const FEATURES = [
 
 const PACKAGES = [
   {
-    pkg: 'design-system',
+    pkg: 'react',
     name: 'Design System',
     text: 'The components: layout, inputs, feedback, navigation and overlays, with a theme to match your brand.',
   },
@@ -69,13 +69,10 @@ export default function Page() {
               for every published version.
             </Typography>
             <Flex flexDirection="row" flexWrap="wrap" gap={2}>
-              <Button
-                href={sectionPath('design-system', '/getting-started/installation/')}
-                variant="contained"
-              >
+              <Button href={sectionPath('react', '/installation/')} variant="contained">
                 Get started
               </Button>
-              <Button href={sectionPath('design-system', '/components/')} variant="outlined">
+              <Button href={sectionPath('react', '/components/')} variant="outlined">
                 Browse components
               </Button>
             </Flex>
