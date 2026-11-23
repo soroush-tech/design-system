@@ -44,10 +44,12 @@ This set-up is tested on Next.js 16.4 with React 19.2, in development and in a p
 build, with a page that streams through `Suspense`. Keep styled parts in client components:
 the registry collects what client components render.
 
-One known fault in the engine's 0.2.0: a theme given to the outermost `ThemeProvider` while the
-page is still streaming (a light and dark switch made before the last chunk arrives) goes back
-to the earlier theme when that chunk arrives, until the next switch. A switch made after the
-page has finished streaming works.
+Under a strict Content Security Policy (a `style-src` with a nonce and no `unsafe-inline`), give
+the cache the response's nonce, `createCache({ key: 'soroush', nonce })`, and put the same nonce
+on the `<style>` element the registry returns, `nonce={cache.nonce}`: that element is the app's
+own. Every style element the engine makes then carries it. Give React the same nonce for its
+render; it keeps the rules of a style element only when the element's nonce is its own. This
+registry has not been run under such a policy end to end, so test it in your app.
 
 Then in `app/layout.tsx`:
 

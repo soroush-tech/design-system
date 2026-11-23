@@ -9,11 +9,6 @@ let isConfigured = false
  *
  * `rawKeys` are the theme keys a style function reads as real values, not as CSS variables: the
  * ones that hold names, steps of another scale, or numbers used in JavaScript.
- *
- * Rules are inserted directly, in development as in production, because writing them as text makes
- * the document parse the whole sheet again on every rule (seconds in a test run, and noticeable in
- * a browser once an app has a few thousand rules). The rules are still read through the style
- * sheet's rule list.
  */
 export function configureEngine(): void {
   if (isConfigured) return
@@ -21,7 +16,6 @@ export function configureEngine(): void {
   configure({
     prefix: 'soroush',
     hasValueRepair: true,
-    hasRuleText: false,
     rawKeys: [
       'breakpoints',
       'components',
