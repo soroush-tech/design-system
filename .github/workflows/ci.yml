@@ -146,6 +146,11 @@ jobs:
       - name: Check release notes
         run: ${{ needs.prepare.outputs.runner }} run check:release-notes
 
+      # Fail the build if the platform umbrella no longer matches the libraries it points at: its
+      # entry points are generated, so a library that changed its exports leaves it stale.
+      - name: Check umbrella entry points
+        run: ${{ needs.prepare.outputs.runner }} run gen:react --check
+
       # Fail the build if `npx skills add soroush-tech/design-system` would offer anything but the
       # public skill: every skill in .claude/skills marked internal, the plugin's skills/ only ours.
       - name: Check skills

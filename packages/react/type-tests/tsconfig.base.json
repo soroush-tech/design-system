@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2023", "DOM"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "jsx": "react-jsx",
+    "types": [],
+    "paths": {
+      "@soroush.design/react": ["../dist/index.d.mts"],
+      "@soroush.design/react/*": ["../dist/*.d.mts"],
+      "@soroush.design/react-components": ["../../react-components/dist/index.d.mts"],
+      "@soroush.design/react-components/*": ["../../react-components/dist/*.d.mts"]
+    }
+  }
+}

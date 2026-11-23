@@ -30,6 +30,7 @@ on:
           - cli
           - markdown
           - mcp
+          - react
           - react-components
           - styled-system
           - ui-spec

@@ -1,0 +1,10 @@
+{
+  "extends": ["../eslint-config/.oxlintrc.json"],
+  "ignorePatterns": ["dist", "coverage"],
+  "overrides": [
+    {
+      "files": ["*.config.ts", "scripts/**", "libraries.ts", "src/**/*.test.ts"],
+      "env": { "node": true }
+    }
+  ]
+}

@@ -8,6 +8,7 @@ Monorepo for the `@soroush.tech` UI libraries, extracted from [`soroush-tech/cor
 | --------------------------------------------------------------- | ----------------------------------------------------------------------------- |
 | [`@soroush.tech/styled-system`](packages/styled-system)         | Style-prop system: responsive style functions, `system()`, theme-aware scales |
 | [`@soroush.design/react-components`](packages/react-components) | Token-driven React component library built on styled-system                   |
+| [`@soroush.design/react`](packages/react)                       | The React platform: every library of it under one name, generated, no code    |
 | [`@soroush.tech/markdown`](packages/markdown)                   | Markdown companion component library for the design system                    |
 | [`@soroush.design/cli`](packages/cli)                           | The command line: `init` sets the design system up in an existing React app   |
 | [`@soroush.design/mcp`](packages/mcp)                           | MCP server exposing the components, READMEs, and tokens to AI coding tools    |
