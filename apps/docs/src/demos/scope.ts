@@ -18,11 +18,12 @@ const componentModules = requireMatches(
   }) as Record<string, Record<string, unknown>>
 )
 
-// Every component's catalog: the stories read their option values from it (`chipVariantValues`,
-// `snackbarVerticalValues`), so a demo that lists them needs them in scope too.
+// Every component's catalog entry, in `@soroush.design/core`: the stories read their option values
+// from it (`chipVariantValues`, `snackbarVerticalValues`), so a demo that lists them needs them in
+// scope too.
 const catalogModules = requireMatches(
-  'packages/react-components/src/**/*.catalog.ts',
-  import.meta.glob('packages/react-components/src/**/*.catalog.ts', {
+  'packages/core/src/catalog/entries/[A-Z]*.ts',
+  import.meta.glob('packages/core/src/catalog/entries/[A-Z]*.ts', {
     eager: true,
   }) as Record<string, Record<string, unknown>>
 )

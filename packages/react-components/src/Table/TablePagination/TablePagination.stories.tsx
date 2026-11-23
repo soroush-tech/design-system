@@ -22,7 +22,7 @@ import { TableControl } from '../TableControl'
 import { useTablePagination } from '../hooks/useTablePagination'
 import { exampleArgs } from '../../utils/test/renderExample'
 import { TablePagination } from './TablePagination'
-import { tablePaginationCatalog } from './TablePagination.catalog'
+import { tablePaginationCatalog } from '@soroush.design/core/catalog/entries'
 
 const meta: Meta<typeof TablePagination> = {
   title: 'Theme/Table/TablePagination',

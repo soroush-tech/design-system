@@ -823,8 +823,9 @@
     "test": "vitest run",
     "test:storybook": "vitest run --project=storybook",
     "test:coverage": "vitest run --coverage",
-    "test:types": "pnpm build && node scripts/check-dts.mjs && tsc -p type-tests/tsconfig.json",
+    "test:types": "pnpm build && node scripts/check-dts.mjs && node scripts/check-catalog-dist.mjs && tsc -p type-tests/tsconfig.json",
     "check:dts": "node scripts/check-dts.mjs",
+    "check:catalog-dist": "node scripts/check-catalog-dist.mjs",
     "audit:styled": "node scripts/audit-styled.mjs",
     "prepublishOnly": "pnpm build"
   },
@@ -833,6 +834,7 @@
     "@umber-style/react": "^0.3.0",
     "@umber-style/styled": "^0.3.0",
     "@soroush.design/cli": "workspace:*",
+    "@soroush.design/core": "workspace:^",
     "@soroush.tech/styled-system": "workspace:^"
   },
   "peerDependencies": {
@@ -841,7 +843,6 @@
   },
   "devDependencies": {
     "@umber-style/css": "^0.3.0",
-    "@soroush.tech/docs-content": "workspace:*",
     "@soroush.tech/eslint-config": "workspace:*",
     "@storybook/addon-a11y": "^10.6.7",
     "@storybook/addon-docs": "^10.6.7",

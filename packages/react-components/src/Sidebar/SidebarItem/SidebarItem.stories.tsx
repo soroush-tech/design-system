@@ -4,7 +4,7 @@ import { buttonColorTokens, textInputSizeTokens } from '../../utils/test/stories
 import { Sidebar } from '../Sidebar'
 import { exampleArgs } from '../../utils/test/renderExample'
 import { SidebarItem } from './SidebarItem'
-import { sidebarItemCatalog } from './SidebarItem.catalog'
+import { sidebarItemCatalog } from '@soroush.design/core/catalog/entries'
 
 const iconNames = Object.keys(icons)
 

@@ -9,7 +9,7 @@ import { Flex } from '../Flex'
 import { Button } from '../Button'
 import { exampleArgs } from '../utils/test/renderExample'
 import { ButtonGroup } from './ButtonGroup'
-import { buttonGroupCatalog } from './ButtonGroup.catalog'
+import { buttonGroupCatalog } from '@soroush.design/core/catalog/entries'
 
 const meta: Meta<typeof ButtonGroup> = {
   title: 'Theme/ButtonGroup',

@@ -6,7 +6,7 @@ import { TabContext } from '../TabContext'
 import { Typography } from '../../Typography'
 import { exampleArgs } from '../../utils/test/renderExample'
 import { backgroundTokens, borderRadiiTokens } from '../../utils/test/storiesOptions'
-import { tabPanelCatalog } from './TabPanel.catalog'
+import { tabPanelCatalog } from '@soroush.design/core/catalog/entries'
 import { TabPanel } from './TabPanel'
 
 const meta: Meta<typeof TabPanel> = {

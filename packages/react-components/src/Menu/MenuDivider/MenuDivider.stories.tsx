@@ -3,7 +3,7 @@ import { MenuItem } from '../../MenuItem'
 import { MenuList } from '../MenuList'
 import { Paper } from '../../Paper'
 import { exampleArgs } from '../../utils/test/renderExample'
-import { menuDividerCatalog } from './MenuDivider.catalog'
+import { menuDividerCatalog } from '@soroush.design/core/catalog/entries'
 import { MenuDivider } from './MenuDivider'
 
 const meta: Meta<typeof MenuDivider> = {

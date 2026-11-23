@@ -1,0 +1,88 @@
+{
+  "name": "@soroush.design/core",
+  "version": "0.1.0",
+  "description": "What every platform of the soroush.design family shares and that needs no framework - first, the catalog: every component as data, for tools that place and write components.",
+  "keywords": [
+    "design-system",
+    "catalog",
+    "components",
+    "tooling",
+    "typescript"
+  ],
+  "author": "Masoud Soroush <masoud@soroush.tech>",
+  "license": "MIT",
+  "homepage": "https://docs.soroush.tech/design-system/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/soroush-tech/design-system.git",
+    "directory": "packages/core"
+  },
+  "bugs": {
+    "url": "https://github.com/soroush-tech/design-system/issues"
+  },
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    "./catalog": "./src/catalog/index.ts",
+    "./catalog/entries": "./src/catalog/entries/index.ts"
+  },
+  "publishConfig": {
+    "access": "public",
+    "exports": {
+      "./catalog": {
+        "import": {
+          "types": "./dist/catalog.d.mts",
+          "default": "./dist/catalog.mjs"
+        },
+        "require": {
+          "types": "./dist/catalog.d.cts",
+          "default": "./dist/catalog.cjs"
+        }
+      },
+      "./catalog/entries": {
+        "import": {
+          "types": "./dist/catalog/entries.d.mts",
+          "default": "./dist/catalog/entries.mjs"
+        },
+        "require": {
+          "types": "./dist/catalog/entries.d.cts",
+          "default": "./dist/catalog/entries.cjs"
+        }
+      }
+    },
+    "main": "./dist/catalog.cjs",
+    "module": "./dist/catalog.mjs",
+    "types": "./dist/catalog.d.mts",
+    "typesVersions": {
+      "*": {
+        "catalog": [
+          "./dist/catalog.d.cts"
+        ],
+        "catalog/entries": [
+          "./dist/catalog/entries.d.cts"
+        ]
+      }
+    }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "lint": "oxlint --deny-warnings",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "prepublishOnly": "pnpm build"
+  },
+  "devDependencies": {
+    "@soroush.tech/docs-content": "workspace:*",
+    "@soroush.tech/eslint-config": "workspace:*",
+    "@types/node": "^26.6.6",
+    "@vitest/coverage-v8": "^5.1.0",
+    "oxlint": "^1.93.0",
+    "tsdown": "^0.23.7",
+    "typescript": "~7.0.2",
+    "vitest": "^5.1.0"
+  }
+}

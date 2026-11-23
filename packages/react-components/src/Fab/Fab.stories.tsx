@@ -8,7 +8,7 @@ import { MenuItem } from '../MenuItem'
 import { View } from '../View'
 import { exampleArgs } from '../utils/test/renderExample'
 import { buttonColorTokens, textInputSizeTokens } from '../utils/test/storiesOptions'
-import { fabCatalog, fabVariantValues } from './Fab.catalog'
+import { fabCatalog, fabVariantValues } from '@soroush.design/core/catalog/entries'
 import { Fab, type FabProps } from './Fab'
 
 const meta: Meta<typeof Fab> = {

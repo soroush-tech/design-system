@@ -10,7 +10,7 @@ import { AccordionActions } from '../AccordionActions'
 import { AccordionDetails } from '../AccordionDetails'
 import { AccordionGroup } from '../AccordionGroup'
 import { AccordionSummary } from '../AccordionSummary'
-import { accordionCatalog } from './Accordion.catalog'
+import { accordionCatalog } from '@soroush.design/core/catalog/entries'
 import { Accordion } from './Accordion'
 
 const meta: Meta<typeof Accordion> = {

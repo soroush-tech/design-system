@@ -9,7 +9,7 @@ import { Flex } from '@soroush.design/react-components/Flex'
 import { Typography } from '@soroush.design/react-components/Typography'
 import { exampleArgs } from '../../utils/test/renderExample'
 import { TablePaginationActions } from './TablePaginationActions'
-import { tablePaginationActionsCatalog } from './TablePaginationActions.catalog'
+import { tablePaginationActionsCatalog } from '@soroush.design/core/catalog/entries'
 
 const meta: Meta<typeof TablePaginationActions> = {
   title: 'Theme/Table/TablePaginationActions',

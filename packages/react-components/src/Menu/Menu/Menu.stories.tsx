@@ -16,7 +16,7 @@ import { MenuItem } from '../../MenuItem'
 import { Typography } from '../../Typography'
 import { View } from '../../View'
 import { exampleArgs } from '../../utils/test/renderExample'
-import { menuCatalog } from './Menu.catalog'
+import { menuCatalog } from '@soroush.design/core/catalog/entries'
 import { Menu, type MenuProps, type MenuStep } from './Menu'
 
 const meta: Meta<typeof Menu> = {

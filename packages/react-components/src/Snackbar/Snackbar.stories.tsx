@@ -10,7 +10,7 @@ import {
   snackbarCatalog,
   snackbarHorizontalValues,
   snackbarVerticalValues,
-} from './Snackbar.catalog'
+} from '@soroush.design/core/catalog/entries'
 import { Snackbar, type SnackbarProps } from './Snackbar'
 
 const meta: Meta<typeof Snackbar> = {

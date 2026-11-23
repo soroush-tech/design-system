@@ -7,7 +7,7 @@ import {
 import { Icon } from '@soroush.design/react-components/Icon'
 import { exampleArgs } from '../../utils/test/renderExample'
 import { ToggleButton } from './ToggleButton'
-import { toggleButtonCatalog } from './ToggleButton.catalog'
+import { toggleButtonCatalog } from '@soroush.design/core/catalog/entries'
 
 const meta: Meta<typeof ToggleButton> = {
   title: 'Theme/ToggleButton/ToggleButton',

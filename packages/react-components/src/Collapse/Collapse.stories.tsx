@@ -8,7 +8,7 @@ import {
   transitionArgTypes,
   transitionControls,
 } from '../utils/test/storiesTransition'
-import { collapseCatalog } from './Collapse.catalog'
+import { collapseCatalog } from '@soroush.design/core/catalog/entries'
 import { Collapse } from './Collapse'
 
 const meta: Meta<typeof Collapse> = {

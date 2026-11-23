@@ -1,0 +1,26 @@
+import { defineCatalogEntry, node } from '../defineCatalogEntry'
+
+export const accordionGroupCatalog = defineCatalogEntry({
+  summary: 'A column of accordions that move by the keys, and may keep one open at a time.',
+  isPlaceable: true,
+  example: {
+    component: 'AccordionGroup',
+    props: {},
+    children: [
+      node('Accordion', {}, [
+        node('AccordionSummary', {}, ['First']),
+        node('AccordionDetails', {}, ['The first content.']),
+      ]),
+      node('Accordion', {}, [
+        node('AccordionSummary', {}, ['Second']),
+        node('AccordionDetails', {}, ['The second content.']),
+      ]),
+    ],
+  },
+  variants: [],
+  options: {
+    isExclusive: { values: [true, false], default: false },
+    variant: { values: ['separated', 'attached'], default: 'separated' },
+  },
+  content: { children: 'children' },
+})

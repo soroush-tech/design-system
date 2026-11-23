@@ -19,24 +19,6 @@ export type FixedTooltipPlacement =
 /** A fixed placement, or `auto` - the side with the most room, chosen as it is placed. */
 export type TooltipPlacement = FixedTooltipPlacement | 'auto' | 'auto-start' | 'auto-end'
 
-export const tooltipPlacementValues = [
-  'top',
-  'top-start',
-  'top-end',
-  'bottom',
-  'bottom-start',
-  'bottom-end',
-  'left',
-  'left-start',
-  'left-end',
-  'right',
-  'right-start',
-  'right-end',
-  'auto',
-  'auto-start',
-  'auto-end',
-] satisfies TooltipPlacement[]
-
 interface TooltipOrigins {
   anchorOrigin: PopoverOrigin
   transformOrigin: PopoverOrigin

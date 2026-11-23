@@ -12,6 +12,9 @@ import {
 } from '@soroush.tech/styled-system'
 import { baseTheme } from '../theme/themes'
 
+// Reads the scales from the parsers; the catalog holds the same table as data in
+// `@soroush.design/core`, and catalog.test.ts holds the two equal. Not shipped.
+
 // The design system's own props over styled-system's: a component's `color` and `bg` read
 // `theme.text` and `theme.background` (View's `system()`), not `theme.colors`.
 export const DESIGN_SYSTEM_SCALES: Record<string, string> = {

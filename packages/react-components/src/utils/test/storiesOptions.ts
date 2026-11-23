@@ -29,83 +29,83 @@ export {
   buttonVariantValues as buttonVariantTokens,
   buttonShapeValues as buttonShapeTokens,
   buttonLoadingPositionValues as buttonLoadingPositionTokens,
-} from '../../Button/Button.catalog'
-export { cardVariantValues as cardVariantTokens } from '../../Card/Card.catalog'
-export { selectVariantValues as selectVariantTokens } from '../../Select/Select.catalog'
+} from '@soroush.design/core/catalog/entries'
+export { cardVariantValues as cardVariantTokens } from '@soroush.design/core/catalog/entries'
+export { selectVariantValues as selectVariantTokens } from '@soroush.design/core/catalog/entries'
 export {
   tableSizeValues as tableSizeTokens,
   tableCellPaddingValues as tableCellPaddingTokens,
-} from '../../Table/Table/Table.catalog'
+} from '@soroush.design/core/catalog/entries'
 export {
   tableCellVariantValues as tableCellVariantTokens,
   tableCellAlignValues as tableCellAlignTokens,
-} from '../../Table/TableCell/TableCell.catalog'
-export { appBarPositionValues as positionTokens } from '../../AppBar/AppBar.catalog'
-export { avatarVariantValues as avatarVariantTokens } from '../../Avatar/Avatar.catalog'
+} from '@soroush.design/core/catalog/entries'
+export { appBarPositionValues as positionTokens } from '@soroush.design/core/catalog/entries'
+export { avatarVariantValues as avatarVariantTokens } from '@soroush.design/core/catalog/entries'
 export {
   flexDirectionValues as flexDirectionTokens,
   flexJustifyContentValues as flexJustifyContentTokens,
   flexAlignItemsValues as flexAlignItemsTokens,
   flexAlignContentValues as flexAlignContentTokens,
   flexWrapValues as flexWrapTokens,
-} from '../../Flex/Flex.catalog'
+} from '@soroush.design/core/catalog/entries'
 export {
   gridAutoFlowValues as gridAutoFlowTokens,
   gridJustifyContentValues as gridJustifyContentTokens,
   gridAlignItemsValues as gridAlignItemsTokens,
   gridAlignContentValues as gridAlignContentTokens,
   gridJustifyItemsValues as gridJustifyItemsTokens,
-} from '../../Grid/Grid.catalog'
-export { imageObjectFitValues as objectFitTokens } from '../../Image/Image.catalog'
+} from '@soroush.design/core/catalog/entries'
+export { imageObjectFitValues as objectFitTokens } from '@soroush.design/core/catalog/entries'
 export {
   linkUnderlineValues as linkUnderlineTokens,
   linkTargetValues as linkTargetTokens,
-} from '../../Link/Link.catalog'
-export { typographyAlignValues as alignTokens } from '../../Typography/Typography.catalog'
+} from '@soroush.design/core/catalog/entries'
+export { typographyAlignValues as alignTokens } from '@soroush.design/core/catalog/entries'
 export {
   skeletonVariantValues as skeletonVariantTokens,
   skeletonAnimationValues as skeletonAnimationTokens,
-} from '../../Skeleton/Skeleton.catalog'
+} from '@soroush.design/core/catalog/entries'
 export {
   circularProgressVariantValues as circularProgressVariantTokens,
   circularProgressEasingValues as circularProgressEasingTokens,
-} from '../../CircularProgress/CircularProgress.catalog'
+} from '@soroush.design/core/catalog/entries'
 export {
   linearProgressVariantValues as linearProgressVariantTokens,
   linearProgressEasingValues as linearProgressEasingTokens,
-} from '../../LinearProgress/LinearProgress.catalog'
-export { drawerAnchorValues as anchorTokens } from '../../Drawer/Drawer.catalog'
-export { modalScrollValues as modalScrollTokens } from '../../Modal/Modal.catalog'
-export { breadcrumbsSeparatorValues as breadcrumbsSeparatorTokens } from '../../Breadcrumbs/Breadcrumbs.catalog'
+} from '@soroush.design/core/catalog/entries'
+export { drawerAnchorValues as anchorTokens } from '@soroush.design/core/catalog/entries'
+export { modalScrollValues as modalScrollTokens } from '@soroush.design/core/catalog/entries'
+export { breadcrumbsSeparatorValues as breadcrumbsSeparatorTokens } from '@soroush.design/core/catalog/entries'
 export {
   numberInputSpinButtonsValues as numberInputSpinButtonsTokens,
   numberInputVariantValues as numberInputVariantTokens,
-} from '../../NumberInput/NumberInput.catalog'
+} from '@soroush.design/core/catalog/entries'
 export {
   rangeInputOrientationValues as rangeInputOrientationTokens,
   rangeInputTrackValues as rangeInputTrackTokens,
   rangeInputValueLabelValues as rangeInputValueLabelTokens,
-} from '../../RangeInput/RangeInput.catalog'
-export { ratingPrecisionValues as ratingPrecisionTokens } from '../../Rating/Rating.catalog'
-export { transitionEasingValues as transitionEasingTokens } from '../transitionCatalog'
-export { collapseOrientationValues as collapseOrientationTokens } from '../../Collapse/Collapse.catalog'
-export { slideDirectionValues as slideDirectionTokens } from '../../Slide/Slide.catalog'
-export { menuItemRoleValues as menuItemRoleTokens } from '../../MenuItem/MenuItem.catalog'
-export { menuAlignValues as menuAlignTokens } from '../../Menu/Menu/Menu.catalog'
+} from '@soroush.design/core/catalog/entries'
+export { ratingPrecisionValues as ratingPrecisionTokens } from '@soroush.design/core/catalog/entries'
+export { transitionEasingValues as transitionEasingTokens } from '@soroush.design/core/catalog/entries'
+export { collapseOrientationValues as collapseOrientationTokens } from '@soroush.design/core/catalog/entries'
+export { slideDirectionValues as slideDirectionTokens } from '@soroush.design/core/catalog/entries'
+export { menuItemRoleValues as menuItemRoleTokens } from '@soroush.design/core/catalog/entries'
+export { menuAlignValues as menuAlignTokens } from '@soroush.design/core/catalog/entries'
 export {
   tabsVariantValues as tabsVariantTokens,
   tabsOrientationValues as tabsOrientationTokens,
   tabsOverflowBehaviorValues as tabsOverflowBehaviorTokens,
   tabsScrollButtonsValues as tabsScrollButtonsTokens,
-} from '../../Tabs/Tabs/Tabs.catalog'
-export { tabIconPositionValues as tabIconPositionTokens } from '../../Tabs/Tab/Tab.catalog'
-export { tabScrollDirectionValues as tabScrollDirectionTokens } from '../../Tabs/TabScrollButton/TabScrollButton.catalog'
-export { pressableFeedbackValues as pressableFeedbackTokens } from '../../Pressable/Pressable.catalog'
+} from '@soroush.design/core/catalog/entries'
+export { tabIconPositionValues as tabIconPositionTokens } from '@soroush.design/core/catalog/entries'
+export { tabScrollDirectionValues as tabScrollDirectionTokens } from '@soroush.design/core/catalog/entries'
+export { pressableFeedbackValues as pressableFeedbackTokens } from '@soroush.design/core/catalog/entries'
 export {
   switchVariantValues as switchVariantTokens,
   switchEdgeValues as switchEdgeTokens,
-} from '../../Switch/Switch.catalog'
-export { textInputVariantValues as textInputVariantTokens } from '../../TextInput/TextInput.catalog'
+} from '@soroush.design/core/catalog/entries'
+export { textInputVariantValues as textInputVariantTokens } from '@soroush.design/core/catalog/entries'
 
 const objectKeys = <T extends object>(obj: T) => Object.keys(obj) as Array<keyof T>
 

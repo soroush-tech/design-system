@@ -18,7 +18,7 @@ import {
   textInputSizeTokens,
 } from '../utils/test/storiesOptions'
 import { exampleArgs } from '../utils/test/renderExample'
-import { rangeInputCatalog } from './RangeInput.catalog'
+import { rangeInputCatalog } from '@soroush.design/core/catalog/entries'
 import { RangeInput, type RangeInputProps } from './RangeInput'
 
 const meta: Meta<typeof RangeInput> = {

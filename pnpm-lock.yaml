@@ -247,6 +247,33 @@ importers:
         specifier: ^5.1.0
         version: 5.1.0(@types/react@19.3.0)(immer@11.2.10)(react@19.3.1)(use-sync-external-store@1.7.0(react@19.3.1))
 
+  packages/core:
+    devDependencies:
+      '@soroush.tech/docs-content':
+        specifier: workspace:*
+        version: link:../docs-content
+      '@soroush.tech/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@types/node':
+        specifier: ^26.6.6
+        version: 26.6.6
+      '@vitest/coverage-v8':
+        specifier: ^5.1.0
+        version: 5.1.0(@vitest/browser@5.1.0)(vitest@5.1.0)
+      oxlint:
+        specifier: ^1.93.0
+        version: 1.93.0
+      tsdown:
+        specifier: ^0.23.7
+        version: 0.23.7(@volar/typescript@2.4.31(typescript@7.0.2))(oxc-resolver@11.21.2)(tsx@4.23.15)(typescript@7.0.2)
+      typescript:
+        specifier: ~7.0.2
+        version: 7.0.2
+      vitest:
+        specifier: ^5.1.0
+        version: 5.1.0(@types/node@26.6.6)(@vitest/browser-playwright@5.1.0)(@vitest/coverage-v8@5.1.0)(@vitest/ui@5.1.0)(jsdom@31.0.1)(msw@3.0.5(@types/node@26.6.6)(typescript@7.0.2)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1)))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))
+
   packages/docs-content:
     devDependencies:
       '@soroush.tech/eslint-config':
@@ -541,6 +568,9 @@ importers:
       '@soroush.design/cli':
         specifier: workspace:*
         version: link:../cli
+      '@soroush.design/core':
+        specifier: workspace:^
+        version: link:../core
       '@soroush.tech/styled-system':
         specifier: workspace:^
         version: link:../styled-system
@@ -554,9 +584,6 @@ importers:
         specifier: ^0.3.0
         version: 0.3.0(react@19.3.1)
     devDependencies:
-      '@soroush.tech/docs-content':
-        specifier: workspace:*
-        version: link:../docs-content
       '@soroush.tech/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config

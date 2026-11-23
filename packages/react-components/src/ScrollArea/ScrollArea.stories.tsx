@@ -4,7 +4,7 @@ import { Paper } from '../Paper'
 import { Typography } from '../Typography'
 import { View } from '../View'
 import { exampleArgs } from '../utils/test/renderExample'
-import { scrollAreaAxesValues, scrollAreaCatalog } from './ScrollArea.catalog'
+import { scrollAreaAxesValues, scrollAreaCatalog } from '@soroush.design/core/catalog/entries'
 import { ScrollArea } from './ScrollArea'
 
 const meta: Meta<typeof ScrollArea> = {

@@ -15,7 +15,7 @@ import { Flex } from '../Flex'
 import { Typography } from '../Typography'
 import { exampleArgs } from '../utils/test/renderExample'
 import { Button } from './Button'
-import { buttonCatalog } from './Button.catalog'
+import { buttonCatalog } from '@soroush.design/core/catalog/entries'
 
 const meta: Meta<typeof Button> = {
   title: 'Theme/Button',

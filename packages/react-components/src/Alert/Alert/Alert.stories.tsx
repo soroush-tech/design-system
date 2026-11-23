@@ -5,7 +5,11 @@ import { Flex } from '../../Flex'
 import { m } from '../../utils/test/storiesArgs'
 import { exampleArgs } from '../../utils/test/renderExample'
 import { AlertTitle } from '../AlertTitle'
-import { alertCatalog, alertSeverityValues, alertVariantValues } from './Alert.catalog'
+import {
+  alertCatalog,
+  alertSeverityValues,
+  alertVariantValues,
+} from '@soroush.design/core/catalog/entries'
 import { Alert } from './Alert'
 
 const meta: Meta<typeof Alert> = {

@@ -6,7 +6,11 @@ import { View } from '../../View'
 import { exampleArgs } from '../../utils/test/renderExample'
 import { buttonColorTokens, textInputSizeTokens } from '../../utils/test/storiesOptions'
 import { FabMenuItem } from '../FabMenuItem'
-import { fabMenuAlignValues, fabMenuCatalog, fabMenuDirectionValues } from './FabMenu.catalog'
+import {
+  fabMenuAlignValues,
+  fabMenuCatalog,
+  fabMenuDirectionValues,
+} from '@soroush.design/core/catalog/entries'
 import { FabMenu, type FabMenuProps } from './FabMenu'
 
 const meta: Meta<typeof FabMenu> = {

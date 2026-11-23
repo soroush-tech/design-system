@@ -3,7 +3,7 @@ import { bg, p, m, borderRadius } from '../utils/test/storiesArgs'
 import { Typography } from '../Typography'
 import { exampleArgs } from '../utils/test/renderExample'
 import { Quote } from './Quote'
-import { quoteCatalog } from './Quote.catalog'
+import { quoteCatalog } from '@soroush.design/core/catalog/entries'
 
 const meta: Meta<typeof Quote> = {
   title: 'Theme/Quote',

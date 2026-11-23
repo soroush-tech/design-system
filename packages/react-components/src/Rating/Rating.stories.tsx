@@ -15,7 +15,7 @@ import {
   textInputSizeTokens,
 } from '../utils/test/storiesOptions'
 import { exampleArgs } from '../utils/test/renderExample'
-import { ratingCatalog } from './Rating.catalog'
+import { ratingCatalog } from '@soroush.design/core/catalog/entries'
 import { Rating, type RatingProps } from './Rating'
 
 const meta: Meta<typeof Rating> = {

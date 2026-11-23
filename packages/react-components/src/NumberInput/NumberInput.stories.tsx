@@ -18,7 +18,7 @@ import {
   textInputSizeTokens,
 } from '../utils/test/storiesOptions'
 import { exampleArgs } from '../utils/test/renderExample'
-import { numberInputCatalog } from './NumberInput.catalog'
+import { numberInputCatalog } from '@soroush.design/core/catalog/entries'
 import { NumberInput, type NumberInputProps } from './NumberInput'
 
 const meta: Meta<typeof NumberInput> = {

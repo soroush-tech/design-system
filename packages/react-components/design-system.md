@@ -211,7 +211,6 @@ Every component lives in its own folder under `@soroush.design/react-components/
     ComponentName.mdx      ← the docs-site page for this component
     ComponentName.stories.tsx ← Storybook stories
     ComponentName.test.tsx ← unit tests
-    ComponentName.catalog.ts ← the component as data, for tools
 ```
 
 The `index.ts` barrel means all existing imports (`import { X } from '@soroush.design/react-components/ComponentName'`) continue to work without changes - Node/TypeScript resolves the folder to its `index.ts` automatically.
@@ -276,14 +275,14 @@ Rules:
 - Do **not** use top-level `name:` in an argType - it renames the arg key and breaks `controls.include` matching
 - `table.name` inside the `table:` object is safe - only affects autodocs display
 
-### `ComponentName.catalog.ts`
+### The component's catalog entry
 
 The component's entry in `@soroush.design/react-components/catalog` - what a tool needs to place and
 write it: what a fresh one is, its looks, the props a picker offers and their theme scales, how its
-node props are written. Typed against the component's props with `defineCatalogEntry<Props>()`,
-props imported with `import type` only, registered in `src/catalog/sources.ts`. The stories read
-their `args` from its `example` and their option lists from its `*Values` arrays. See
-[`docs/catalog.md`](./docs/catalog.md).
+node props are written. It is platform-neutral data, so it lives in `@soroush.design/core`
+(`packages/core/src/catalog/entries/ComponentName.ts`, registered in `sources.ts` there), not beside
+the component. The stories read their `args` from its `example` and their option lists from its
+`*Values` arrays. See [`docs/catalog.md`](./docs/catalog.md).
 
 ### `ComponentName.test.tsx`
 
@@ -353,5 +352,5 @@ Use `/new_theme_component ComponentName` to scaffold all files automatically.
 - [ ] `ComponentName/ComponentName.stories.tsx` - imports from `storiesArgs` (shared props) or `storiesOptions` (component-specific), `controls.include` whitelist, argType categories
 - [ ] New token arrays added to `@soroush.design/react-components/utils/test/storiesOptions.ts` with `satisfies`
 - [ ] `ComponentName/ComponentName.test.tsx` - prop→CSS, element mapping, HTML passthrough
-- [ ] `ComponentName/ComponentName.catalog.ts` - the entry, registered in `src/catalog/sources.ts`; the stories' `args` read from it
+- [ ] `packages/core/src/catalog/entries/ComponentName.ts` - the catalog entry, registered in `sources.ts` there; the stories' `args` read from it
 - [ ] No hardcoded hex values in the component - colors read theme tokens only

@@ -7,7 +7,7 @@ import {
   transitionArgTypes,
   transitionControls,
 } from '../utils/test/storiesTransition'
-import { growCatalog } from './Grow.catalog'
+import { growCatalog } from '@soroush.design/core/catalog/entries'
 import { Grow } from './Grow'
 
 const meta: Meta<typeof Grow> = {

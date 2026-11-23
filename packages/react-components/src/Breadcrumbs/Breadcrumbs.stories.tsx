@@ -17,7 +17,7 @@ import {
   typographyVariantTokens,
 } from '../utils/test/storiesOptions'
 import { exampleArgs } from '../utils/test/renderExample'
-import { breadcrumbsCatalog } from './Breadcrumbs.catalog'
+import { breadcrumbsCatalog } from '@soroush.design/core/catalog/entries'
 import { Breadcrumbs, type BreadcrumbsProps } from './Breadcrumbs'
 
 // The separator control picks a character, or the chevron icon.

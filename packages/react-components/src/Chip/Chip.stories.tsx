@@ -6,7 +6,7 @@ import { Icon } from '../Icon'
 import { m } from '../utils/test/storiesArgs'
 import { exampleArgs } from '../utils/test/renderExample'
 import { buttonColorTokens, textInputSizeTokens } from '../utils/test/storiesOptions'
-import { chipCatalog, chipVariantValues } from './Chip.catalog'
+import { chipCatalog, chipVariantValues } from '@soroush.design/core/catalog/entries'
 import { Chip, type ChipProps } from './Chip'
 
 const meta: Meta<typeof Chip> = {

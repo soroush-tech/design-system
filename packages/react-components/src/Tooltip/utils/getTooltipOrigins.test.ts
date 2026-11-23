@@ -2,9 +2,9 @@ import { describe, it, expect } from 'vitest'
 import {
   getTooltipOrigins,
   resolveTooltipPlacement,
-  tooltipPlacementValues,
   type FixedTooltipPlacement,
 } from './getTooltipOrigins'
+import { tooltipPlacementValues } from '@soroush.design/core/catalog/entries'
 
 describe('getTooltipOrigins', () => {
   it('puts a tooltip above, centred, by default of its side', () => {

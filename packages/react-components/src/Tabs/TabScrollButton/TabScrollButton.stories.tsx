@@ -6,7 +6,7 @@ import {
   tabsOrientationTokens,
   textColorTokens,
 } from '../../utils/test/storiesOptions'
-import { tabScrollButtonCatalog } from './TabScrollButton.catalog'
+import { tabScrollButtonCatalog } from '@soroush.design/core/catalog/entries'
 import { TabScrollButton } from './TabScrollButton'
 
 const meta: Meta<typeof TabScrollButton> = {

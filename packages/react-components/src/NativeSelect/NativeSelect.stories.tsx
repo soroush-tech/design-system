@@ -12,7 +12,7 @@ import { Flex } from '../Flex'
 import { Typography } from '../Typography'
 import { exampleArgs } from '../utils/test/renderExample'
 import { NativeSelect, type NativeSelectProps } from './NativeSelect'
-import { nativeSelectCatalog } from './NativeSelect.catalog'
+import { nativeSelectCatalog } from '@soroush.design/core/catalog/entries'
 
 const platformOptions = [
   { label: 'Web', value: 'web' },

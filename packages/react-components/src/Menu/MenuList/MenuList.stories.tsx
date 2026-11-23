@@ -14,7 +14,7 @@ import { MenuItem } from '../../MenuItem'
 import { Paper } from '../../Paper'
 import { Typography } from '../../Typography'
 import { exampleArgs } from '../../utils/test/renderExample'
-import { menuListCatalog } from './MenuList.catalog'
+import { menuListCatalog } from '@soroush.design/core/catalog/entries'
 import { MenuList, type MenuListProps } from './MenuList'
 
 const meta: Meta<typeof MenuList> = {

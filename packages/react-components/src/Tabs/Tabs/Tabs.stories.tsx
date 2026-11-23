@@ -37,7 +37,7 @@ import { TabScrollButton, type TabScrollButtonProps } from '../TabScrollButton'
 import { baseTheme, createTheme } from '../../theme/themes'
 import { ThemeProvider } from '../../theme'
 import { exampleArgs } from '../../utils/test/renderExample'
-import { tabsCatalog } from './Tabs.catalog'
+import { tabsCatalog } from '@soroush.design/core/catalog/entries'
 import { Tabs, type TabsProps } from './Tabs'
 
 const meta: Meta<typeof Tabs> = {

@@ -8,7 +8,7 @@ import {
 import { Flex } from '@soroush.design/react-components/Flex'
 import { exampleArgs } from '../../utils/test/renderExample'
 import { PaginationItem } from './PaginationItem'
-import { paginationItemCatalog } from './PaginationItem.catalog'
+import { paginationItemCatalog } from '@soroush.design/core/catalog/entries'
 
 const meta: Meta<typeof PaginationItem> = {
   title: 'Theme/Pagination/PaginationItem',

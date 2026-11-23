@@ -12,7 +12,7 @@ import { MenuList } from '../Menu'
 import { Paper } from '../Paper'
 import { exampleArgs } from '../utils/test/renderExample'
 import { MenuItem } from './MenuItem'
-import { menuItemCatalog } from './MenuItem.catalog'
+import { menuItemCatalog } from '@soroush.design/core/catalog/entries'
 
 // A menu row's controls pick by name: an icon, and a submenu of rows, an empty one, or none.
 const iconMapping = {

@@ -8,7 +8,7 @@ import {
   transitionArgTypes,
   transitionControls,
 } from '../utils/test/storiesTransition'
-import { slideCatalog } from './Slide.catalog'
+import { slideCatalog } from '@soroush.design/core/catalog/entries'
 import { Slide } from './Slide'
 
 const meta: Meta<typeof Slide> = {

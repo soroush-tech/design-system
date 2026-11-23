@@ -11,7 +11,7 @@ import { Typography } from '../Typography'
 import { View } from '../View'
 import { exampleArgs } from '../utils/test/renderExample'
 import { Skeleton, type SkeletonProps } from './Skeleton'
-import { skeletonCatalog } from './Skeleton.catalog'
+import { skeletonCatalog } from '@soroush.design/core/catalog/entries'
 const MEDIA_SIZES = '(min-width: 640px) min(30vw, 400px), 100vw'
 
 // Story-local stand-in for the app's imagetools `?as=picture` import - the package

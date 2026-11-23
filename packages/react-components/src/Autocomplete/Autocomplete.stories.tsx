@@ -5,7 +5,10 @@ import { FormLabel } from '../FormLabel'
 import { FormHelperText } from '../FormHelperText'
 import { View } from '../View'
 import { exampleArgs } from '../utils/test/renderExample'
-import { autocompleteCatalog, autocompleteVariantValues } from './Autocomplete.catalog'
+import {
+  autocompleteCatalog,
+  autocompleteVariantValues,
+} from '@soroush.design/core/catalog/entries'
 import { Autocomplete } from './Autocomplete'
 
 const CITIES = ['Berlin', 'Lisbon', 'Oslo', 'Rome', 'Vienna', 'Zurich']

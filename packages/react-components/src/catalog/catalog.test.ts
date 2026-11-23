@@ -1,47 +1,32 @@
 import { describe, it, expect } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { componentCategories } from '@soroush.tech/docs-content'
+import { catalog as core } from '@soroush.design/core/catalog'
 import { baseTheme } from '../theme/themes'
-import { catalog, type ExampleNode } from './index'
-import { catalogSources } from './sources'
-import { DESIGN_SYSTEM_SCALES } from './styleScales'
+import { catalog } from './index'
+import { DESIGN_SYSTEM_SCALES, readStyleScales } from './styleScales'
 
 const pkg = JSON.parse(readFileSync(join(process.cwd(), 'package.json'), 'utf8'))
-const listed = componentCategories
-  .flatMap((category) => category.items)
-  .filter((item) => item.pkg === 'design-system')
-  .map((item) => item.name)
 
 const entries = Object.values(catalog.components)
 
-// Every node of an example, the root included.
-const nodesOf = (example: ExampleNode): ExampleNode[] => [
-  example,
-  ...example.children.flatMap((child) => (typeof child === 'string' ? [] : nodesOf(child))),
-]
-const examplesOf = (entry: (typeof entries)[number]) => [
-  entry.example,
-  ...entry.variants.map((variant) => variant.example),
-]
-
 describe('catalog', () => {
-  it("lists the docs' categories, in order, with the design system's components", () => {
-    expect(catalog.categories.map((category) => category.label)).toEqual(
-      componentCategories.map((category) => category.label)
-    )
-    expect(catalog.categories.flatMap((category) => category.components)).toEqual(listed)
+  it("is the core's catalog, each entry with the module this library serves it from", () => {
+    expect(catalog.categories).toBe(core.categories)
+    expect(catalog.styleScales).toBe(core.styleScales)
+    expect(Object.keys(catalog.components)).toEqual(Object.keys(core.components))
+    for (const entry of entries) {
+      const { subpath, ...neutral } = core.components[entry.name]
+      const { module, ...rest } = entry
+      expect(module).toBe(`@soroush.design/react-components/${subpath}`)
+      expect(rest).toEqual(neutral)
+    }
   })
 
-  it('has an entry for every component the docs list', () => {
-    expect(listed.filter((name) => !(name in catalog.components))).toEqual([])
-  })
-
-  it('has no entry the docs list neither as a component nor as a family', () => {
-    const unlisted = Object.entries(catalogSources).filter(
-      ([name, source]) => !listed.includes(source.family ?? name)
-    )
-    expect(unlisted.map(([name]) => name)).toEqual([])
+  it('writes the keys of an entry in the order a consumer has always read them', () => {
+    for (const entry of entries) {
+      expect(Object.keys(entry).slice(-3)).toEqual(['name', 'module', 'category'])
+    }
   })
 
   it.each(entries)("names $name's module, which the package exports, and its category", (entry) => {
@@ -56,28 +41,13 @@ describe('catalog', () => {
     }
   })
 
-  it.each(entries)("builds $name's examples from components the catalog has", (entry) => {
-    const names = examplesOf(entry)
-      .flatMap(nodesOf)
-      .map((node) => node.component)
-    expect(names.filter((name) => !(name in catalog.components))).toEqual([])
-    expect(entry.example.component).toBe(entry.name)
-  })
-
   it('is pure data - it survives JSON unchanged', () => {
     expect(JSON.parse(JSON.stringify(catalog))).toEqual(catalog)
   })
 
-  it("maps styled-system props to the theme's scales, the design system's own props first", () => {
-    expect(catalog.styleScales).toMatchObject({
-      p: 'space',
-      m: 'space',
-      gap: 'space',
-      width: 'sizes',
-      borderRadius: 'radii',
-      fontSize: 'fontSizes',
-      ...DESIGN_SYSTEM_SCALES,
-    })
+  it("maps styled-system props to the theme's scales, as the parsers read them", () => {
+    expect(catalog.styleScales).toEqual(readStyleScales())
+    expect(catalog.styleScales).toMatchObject(DESIGN_SYSTEM_SCALES)
     for (const scale of Object.values(catalog.styleScales)) {
       expect(baseTheme).toHaveProperty(scale)
     }

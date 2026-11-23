@@ -26,7 +26,7 @@ import { exampleArgs } from '../../utils/test/renderExample'
 import { Tab } from '../Tab'
 import { TabContext } from '../TabContext'
 import { TabPanel } from '../TabPanel'
-import { tabListCatalog } from './TabList.catalog'
+import { tabListCatalog } from '@soroush.design/core/catalog/entries'
 import { TabList } from './TabList'
 
 // A TabList takes every Tabs prop but the value, which its TabContext holds - the same controls.

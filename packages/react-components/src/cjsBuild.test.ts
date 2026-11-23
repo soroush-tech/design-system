@@ -12,18 +12,22 @@ const published = Object.entries(manifest.publishConfig.exports) as [
   { import: { default: string }; require: { default: string } },
 ][]
 
-// The workspace serves @soroush.tech/styled-system as source; the built package requires its build.
+// The workspace serves @soroush.tech/styled-system and @soroush.design/core as source; the built
+// package requires their builds.
 const Module = require('node:module')
 const resolveFilename = Module._resolveFilename
 const styledSystemDist = join(root, '..', 'styled-system', 'dist')
+const coreDist = join(root, '..', 'core', 'dist')
 
 beforeAll(() => {
   Module._resolveFilename = (request: string, ...rest: unknown[]) =>
     resolveFilename.call(
       Module,
-      request.replace(/^@soroush\.tech\/styled-system\/?(.*)$/, (_, path) =>
-        join(styledSystemDist, `${path || 'index'}.cjs`)
-      ),
+      request
+        .replace(/^@soroush\.tech\/styled-system\/?(.*)$/, (_, path) =>
+          join(styledSystemDist, `${path || 'index'}.cjs`)
+        )
+        .replace(/^@soroush\.design\/core\/(.*)$/, (_, path) => join(coreDist, `${path}.cjs`)),
       ...rest
     )
 })

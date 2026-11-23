@@ -17,7 +17,7 @@ import {
   textInputSizeTokens,
 } from '../../utils/test/storiesOptions'
 import { Tabs } from '../Tabs'
-import { tabCatalog } from './Tab.catalog'
+import { tabCatalog } from '@soroush.design/core/catalog/entries'
 import { Tab } from './Tab'
 
 // The icon control picks one by name; the tab is given that icon, at the small size.

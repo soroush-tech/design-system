@@ -9,7 +9,7 @@ import { TableControl } from '../TableControl'
 import { useTableSort } from '../hooks/useTableSort'
 import { exampleArgs } from '../../utils/test/renderExample'
 import { TableSortLabel } from './TableSortLabel'
-import { tableSortLabelCatalog } from './TableSortLabel.catalog'
+import { tableSortLabelCatalog } from '@soroush.design/core/catalog/entries'
 
 const meta: Meta<typeof TableSortLabel> = {
   title: 'Theme/Table/TableSortLabel',

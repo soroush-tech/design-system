@@ -12,7 +12,7 @@ import { Flex } from '../Flex'
 import { Typography } from '../Typography'
 import { exampleArgs } from '../utils/test/renderExample'
 import { Pagination } from './Pagination'
-import { paginationCatalog } from './Pagination.catalog'
+import { paginationCatalog } from '@soroush.design/core/catalog/entries'
 
 const meta: Meta<typeof Pagination> = {
   title: 'Theme/Pagination/Pagination',

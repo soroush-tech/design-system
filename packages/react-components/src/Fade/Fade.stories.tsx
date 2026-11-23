@@ -7,7 +7,7 @@ import {
   transitionArgTypes,
   transitionControls,
 } from '../utils/test/storiesTransition'
-import { fadeCatalog } from './Fade.catalog'
+import { fadeCatalog } from '@soroush.design/core/catalog/entries'
 import { Fade } from './Fade'
 
 const meta: Meta<typeof Fade> = {

@@ -46,7 +46,7 @@ Keep the **public API in `index.ts`** (the single entry); extract internal helpe
 
 ## Naming & scope
 
-- Every package is scoped **`@soroush.tech/*`**, except the MCP server, the command-line tool, the component library and its platform umbrella, which are **`@soroush.design/mcp`**, **`@soroush.design/cli`**, **`@soroush.design/react-components`** and **`@soroush.design/react`** (apps are not - `apps/web` stays `@soroush/web`).
+- Every package is scoped **`@soroush.tech/*`**, except the MCP server, the command-line tool, the component library, its platform umbrella and the shared core, which are **`@soroush.design/mcp`**, **`@soroush.design/cli`**, **`@soroush.design/react-components`**, **`@soroush.design/react`** and **`@soroush.design/core`** (apps are not - `apps/web` stays `@soroush/web`).
 - A Vite plugin's internal `name` field **must equal its package name minus the scope** (`vite-plugin-watch`), so build logs read `[vite-plugin-watch]`. Keep the directory, package name, and plugin `name` in sync.
 
 ---
@@ -81,6 +81,14 @@ Shown for React. React Native and Vue repeat the pattern (`@soroush.design/react
 | `react-charts`     | `/charts`                       | Charts                                                                                                                                           |
 
 **A new library is justified by what it depends on**, not by size: `markdown` brings an editor and a diagram library, `charts` a charting library, and an app that wants buttons should not install either. Components are **not** split into a package each - subpath imports already load only what is used. A split by group (data tables, date pickers) is decided case by case.
+
+### The core
+
+`@soroush.design/core` holds what every platform shares and that needs **no framework**: the catalog today, and later the theme, the tokens, `createTheme` and the behaviour logic. The platform libraries (React, React Native, Vue) depend on it as a real dependency - `workspace:^`, never bundled - and import it by its subpaths (`@soroush.design/core/catalog`), one per area.
+
+- **The rule: no framework import; a test enforces it.** The core has no `dependencies` and no `peerDependencies`, its `tsconfig` has no DOM library, and a test loads it in plain Node with `react`, `react-native`, `vue` and `@umber-style/*` mocked to throw, then reads the built files and fails on any import that is not one of its own chunks. A platform-neutral thing that needs a framework type or a DOM read does not move here until that is split from it.
+- **The core describes; a platform names.** Data is platform-neutral: a catalog entry holds the `subpath` a component is served from, not the package. A platform library re-exports the core's data and adds the facts that are its own - the React component library's `/catalog` adds `module` (`@soroush.design/react-components/<subpath>`) to each entry and keeps every other field as the core wrote it. A library's test holds its result to the core's data, and its built output imports the core instead of copying it.
+- **Publish the core before the libraries.** A library depends on it, and `scripts/prerelease-versions.mjs` orders a run dependencies-first.
 
 ### Subpath names
 

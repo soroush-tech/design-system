@@ -8,7 +8,7 @@ import { Icon } from '@soroush.design/react-components/Icon'
 import { Typography } from '@soroush.design/react-components/Typography'
 import { exampleArgs } from '../utils/test/renderExample'
 import { Pressable } from './Pressable'
-import { pressableCatalog } from './Pressable.catalog'
+import { pressableCatalog } from '@soroush.design/core/catalog/entries'
 
 const meta: Meta<typeof Pressable> = {
   title: 'Theme/Pressable',

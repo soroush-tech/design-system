@@ -14,7 +14,8 @@ catalog.components.Select.options.color // { scale: 'palette', default: 'primary
 catalog.styleScales.p // 'space'
 ```
 
-It is pure data. It loads in plain Node - no DOM, no React, no styling engine - and survives
+The data is `@soroush.design/core`'s - it needs no framework - and this library's `/catalog` adds the
+`module` each component is imported from. It is pure data. It loads in plain Node - no DOM, no React, no styling engine - and survives
 `JSON.stringify` unchanged.
 
 ## What it holds
@@ -30,7 +31,7 @@ An entry:
 | Field         | What it is                                                                                                                                                                               |
 | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `name`        | The export name.                                                                                                                                                                         |
-| `module`      | The subpath to import it from. Family members (`TableRow`, `SidebarItem`) name their family's.                                                                                           |
+| `module`      | The subpath to import it from, which this library adds to the core's `subpath`. Family members (`TableRow`, `SidebarItem`) name their family's.                                          |
 | `category`    | Its category in the docs.                                                                                                                                                                |
 | `summary`     | What it is for, in a sentence.                                                                                                                                                           |
 | `isPlaceable` | Whether a palette offers it. `Portal`, `TableCell` and the like aren't placed by hand, but still have entries - a tool editing a page that uses them needs their `module` and `content`. |
@@ -48,15 +49,14 @@ writes into source: `{ component: 'MenuItem', props: { value: 'web' }, children:
 
 ## Adding a component's entry
 
-Each component's entry lives beside it, in `ComponentName.catalog.ts`:
+Each component's entry lives in `@soroush.design/core`, in `packages/core/src/catalog/entries/ComponentName.ts`:
 
 ```ts
-import { defineCatalogEntry } from '../catalog/defineCatalogEntry'
-import type { SwitchProps, SwitchVariant } from './Switch'
+import { defineCatalogEntry } from '../defineCatalogEntry'
 
-export const switchVariantValues = ['outside', 'inside'] satisfies SwitchVariant[]
+export const switchVariantValues = ['outside', 'inside'] as const
 
-export const switchCatalog = defineCatalogEntry<SwitchProps>()({
+export const switchCatalog = defineCatalogEntry({
   summary: 'An on/off control.',
   isPlaceable: true,
   example: { component: 'Switch', props: { defaultChecked: true }, children: [] },
@@ -67,17 +67,20 @@ export const switchCatalog = defineCatalogEntry<SwitchProps>()({
 })
 ```
 
-- `defineCatalogEntry<Props>()` checks the entry against the component's own props: an option,
-  a content prop or an example prop the component doesn't have fails to compile, and so does a
-  value the prop can't take.
-- Import the props with `import type` only - the file must stay free of runtime imports, so the
-  catalog stays pure data.
-- Register it in `src/catalog/sources.ts` with the folder it is imported from (and, for a family
-  member, its family). The catalog fills in its name, module and category.
+- The file imports nothing from this library or from any framework: a test in the core holds it
+  to that, and the catalog stays pure data. It is not checked against the component's props, so
+  the component's own tests and stories are what keep an option, a content prop or a value the
+  component does not have from reaching it.
+- Register it in `packages/core/src/catalog/sources.ts` with the subpath it is imported from (and,
+  for a family member, its family). The catalog fills in its name and category, and this
+  library adds its module.
 - Its stories read their `args` from the example - `args: exampleArgs(switchCatalog.example)`
   (`src/utils/test/renderExample.tsx`) - and their option lists from the `*Values` arrays
-  (`utils/test/storiesOptions.ts` re-exports them), so a story and the catalog can't disagree.
+  (`@soroush.design/core/catalog/entries`, which `utils/test/storiesOptions.ts` re-exports
+  under the stories' names), so a story and the catalog can't disagree.
 
-`src/catalog/catalog.test.ts` holds the catalog to the docs: every component the docs list has an
-entry and every entry is listed (or in a listed family), every module is exported, every scale is
-a theme scale, every example names components the catalog has and renders.
+The core's `catalog.test.ts` holds the catalog to the docs: every component the docs list has an
+entry and every entry is listed (or in a listed family), every example names components the
+catalog has. This library's `src/catalog/catalog.test.ts` holds what is its own: every module is
+exported, every scale is a theme scale, and the style scales equal what the styled-system parsers
+read.

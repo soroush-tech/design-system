@@ -11,7 +11,7 @@ import { baseTheme, createTheme } from '../theme/themes'
 import { m, p } from '../utils/test/storiesArgs'
 import { buttonColorTokens, textInputSizeTokens } from '../utils/test/storiesOptions'
 import { exampleArgs } from '../utils/test/renderExample'
-import { transferListCatalog } from './TransferList.catalog'
+import { transferListCatalog } from '@soroush.design/core/catalog/entries'
 import { TransferList, type TransferListProps, type TransferListValue } from './TransferList'
 
 const meta: Meta<typeof TransferList> = {

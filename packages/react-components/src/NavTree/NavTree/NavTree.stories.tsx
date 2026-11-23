@@ -5,7 +5,7 @@ import { buttonColorTokens } from '../../utils/test/storiesOptions'
 import { NavGroup } from '../NavGroup'
 import { NavLink } from '../NavLink'
 import { NavTree } from './NavTree'
-import { navTreeCatalog } from './NavTree.catalog'
+import { navTreeCatalog } from '@soroush.design/core/catalog/entries'
 
 const meta: Meta<typeof NavTree> = {
   title: 'Theme/NavTree',
