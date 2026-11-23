@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import designSystemPkg from 'packages/design-system/package.json'
+import { PACKAGE_VERSIONS } from 'src/common/packageVersions'
 import { ThemeModeProvider } from 'src/theme/ThemeModeProvider'
 import { Navbar } from './Navbar'
 
@@ -16,7 +16,7 @@ describe('Navbar', () => {
   it('shows the wordmark and the current design-system version', () => {
     renderNavbar()
     expect(screen.getByRole('link', { name: 'SOROUSH.DESIGN' })).toHaveAttribute('href', '/')
-    expect(screen.getByText(`v${designSystemPkg.version}`)).toBeInTheDocument()
+    expect(screen.getByText(`v${PACKAGE_VERSIONS['design-system']}`)).toBeInTheDocument()
   })
 
   it('lays the bar out in one row: the wordmark and version, then the links and the toggle', () => {

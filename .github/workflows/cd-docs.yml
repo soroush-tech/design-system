@@ -136,23 +136,22 @@ jobs:
             echo "skip=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          # The MCP server and the command line are published under their own scope.
-          SCOPE=@soroush.tech
-          case "$PKG" in mcp | cli) SCOPE=@soroush.design ;; *) ;; esac
-          # Stable releases only: an rc is never archived, and `sort -V` ranks 2.0.0-rc.1
-          # above 2.0.0.
+          # A section's tag prefixes - the current one, and those of earlier names of its package -
+          # are listed in packages/docs-content/src/sections.json, which the script reads. The
+          # newest release is the highest version under the current prefix only. Stable releases
+          # only: an rc is never archived, and a version sort ranks 2.0.0-rc.1 above 2.0.0.
           if [ -n "$DISPATCH_VERSION" ]; then
             if ! [[ "$DISPATCH_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
               echo "::error::$DISPATCH_VERSION is not a stable version."
               exit 1
             fi
-            TAG="$SCOPE/$PKG@$DISPATCH_VERSION"
-            if ! git rev-parse -q --verify "refs/tags/$TAG" >/dev/null; then
-              echo "::error::No release tag $TAG."
+            TAG=$(node scripts/docs-release-tag.mjs "$PKG" "$DISPATCH_VERSION")
+            if [ -z "$TAG" ]; then
+              echo "::error::No release tag for $PKG@$DISPATCH_VERSION."
               exit 1
             fi
           else
-            TAG=$(git tag --list "$SCOPE/$PKG@*" | grep -E '@[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -1)
+            TAG=$(node scripts/docs-release-tag.mjs "$PKG")
           fi
           if [ -z "$TAG" ]; then
             echo "No release tag for $PKG."

@@ -1,18 +1,20 @@
 import { readFileSync, readdirSync } from 'node:fs'
 import { join } from 'node:path'
-import type { ComponentNavItem, DocsPackage } from '../registry'
+import type { ComponentNavItem } from '../registry'
+import { sections, type DocsSection } from '../sections'
 import { repoRoot } from './repoRoot'
 
-/** Absolute path to a workspace package's directory. */
-export const packageDir = (pkg: DocsPackage): string => join(repoRoot(), 'packages', pkg)
+/** Absolute path to the workspace package a docs section describes. */
+export const packageDir = (section: DocsSection): string =>
+  join(repoRoot(), 'packages', sections[section].dir)
 
 /** The raw README source for a registered component. */
 export const loadReadme = (item: ComponentNavItem): string =>
   readFileSync(join(packageDir(item.pkg), 'src', item.readmePath), 'utf8')
 
 /** Reads any file inside a package, by path relative to the package directory. */
-export const loadPackageFile = (pkg: DocsPackage, relativePath: string): string =>
-  readFileSync(join(packageDir(pkg), relativePath), 'utf8')
+export const loadPackageFile = (section: DocsSection, relativePath: string): string =>
+  readFileSync(join(packageDir(section), relativePath), 'utf8')
 
 /** Reads any file in the workspace, by path relative to the repo root. */
 export const loadRepoFile = (relativePath: string): string =>
@@ -23,8 +25,8 @@ export const loadRepoFile = (relativePath: string): string =>
  * (`Button/README.md`, `Table/Table/README.md`). Only the two levels the docs routes
  * serve are scanned; deeper sub-component READMEs render inside their container's page.
  */
-export const listComponentReadmes = (pkg: DocsPackage): string[] => {
-  const root = join(packageDir(pkg), 'src')
+export const listComponentReadmes = (section: DocsSection): string[] => {
+  const root = join(packageDir(section), 'src')
   const found: string[] = []
   for (const top of readdirSync(root, { withFileTypes: true })) {
     if (!top.isDirectory()) continue

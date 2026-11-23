@@ -7,13 +7,12 @@ import { sectionPath } from 'src/common/sectionPath'
 import { DocsNav } from 'src/common/DocsNav/DocsNav'
 import { Layout } from 'src/common/Layout'
 import { Readme } from 'src/common/Readme/Readme'
-import { splitReadme } from '@soroush.tech/docs-content'
+import { sections, splitReadme } from '@soroush.tech/docs-content'
 import { componentPageParts } from 'src/common/componentPage'
 import { ComponentHero } from 'src/common/ComponentHero/ComponentHero'
 import { usePageContext } from 'src/hooks/usePageContext'
 
-const REPO_SRC =
-  'https://github.com/soroush-tech/design-system/tree/main/packages/design-system/src'
+const REPO_SRC = `https://github.com/soroush-tech/design-system/tree/main/packages/${sections['design-system'].dir}/src`
 
 export default function Page() {
   const { routeParams } = usePageContext()
@@ -24,7 +23,7 @@ export default function Page() {
   // A family member has no tabs of its own, so its README stays whole; a component's accessibility
   // notes are on their own tab.
   const { intro, api } = splitReadme(item?.family ? parts.source : parts.rest)
-  const importSnippet = `import { ${name} } from '@soroush.tech/design-system/${item ? importSubpathOf(item) : name}'`
+  const importSnippet = `import { ${name} } from '${sections['design-system'].npm}/${item ? importSubpathOf(item) : name}'`
   // A family member's demos are under its own heading on its family's page - a PascalCase
   // name's heading id is the name in lower case.
   const demosPath = item?.family

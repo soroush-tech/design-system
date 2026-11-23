@@ -43,8 +43,9 @@ pages, and the drift tests; `sectionFor(pathname)` picks the active section.
 section-relative routes, links ride the base via `sectionPath()`, cross-section links
 escape to the live site, and every page defaults to noindex. `cd-docs.yml` builds the
 live tree on CI-passed main pushes and freezes a section from its release tag when
-`CD · Packages (npm)` completes (tags are `@soroush.tech/<pkg>@x`, the MCP server's and
-the command line's `@soroush.design/<pkg>@x`; a tag cut before its section had pages is skipped); `scripts/compose-docs-dist.mjs` composes the `docs-dist`
+`CD · Packages (npm)` completes (the tag prefix of each section is in `packages/docs-content/src/sections.json`, read by
+`scripts/docs-release-tag.mjs`: the newest release is the highest version under the current prefix, former
+prefixes only supply archived versions; a tag cut before its section had pages is skipped); `scripts/compose-docs-dist.mjs` composes the `docs-dist`
 orphan branch (live root + `<pkg>/<version>/` snapshots + `versions.json`). GitHub Pages
 serves that branch at docs.soroush.tech, so pushing it _is_ the deploy - there is no
 publish step. `public/CNAME` carries the domain and `public/.nojekyll` keeps Pages from

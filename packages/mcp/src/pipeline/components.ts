@@ -5,6 +5,7 @@ import {
   categoryOf,
   componentPagePath,
   importSubpathOf,
+  sections,
   splitReadme,
   stripReadmeChrome,
   type ComponentNavItem,
@@ -14,7 +15,7 @@ import type { ComponentRecord } from '../types'
 
 export { DOCS_URL }
 
-const packageNameFor = (pkg: string): string => `@soroush.tech/${pkg}`
+const packageNameFor = (pkg: ComponentNavItem['pkg']): string => sections[pkg].npm
 
 /** The subpath import a consumer writes for a component. */
 export const importPathFor = (item: ComponentNavItem): string =>

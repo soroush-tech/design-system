@@ -1,5 +1,7 @@
+import { DESIGN_SYSTEM_PACKAGE } from '../designSystemPackage'
+
 /** The first line of every file init writes: a second run finds its own files by it. */
-export const MARKER = '// Set up by @soroush.tech/design-system init.'
+export const MARKER = `// Set up by ${DESIGN_SYSTEM_PACKAGE} init.`
 
 export type Scheme = 'light' | 'dark'
 
@@ -10,9 +12,9 @@ const THEMING_DOCS = 'https://docs.soroush.tech/design-system/customization/them
 const AUGMENTATION_STUB = `
 // To add tokens of your own, declare them here, then give them values in each theme:
 //
-// import type { PaletteEntry } from '@soroush.tech/design-system/theme'
+// import type { PaletteEntry } from '${DESIGN_SYSTEM_PACKAGE}/theme'
 //
-// declare module '@soroush.tech/design-system/theme' {
+// declare module '${DESIGN_SYSTEM_PACKAGE}/theme' {
 //   interface ThemePalette {
 //     brand: PaletteEntry
 //   }
@@ -26,7 +28,7 @@ const AUGMENTATION_STUB = `
 export function createThemesSource({ isTypeScript }: { isTypeScript: boolean }): string {
   return `${MARKER} Your themes: change any value, or add a theme.
 // Every token is listed at ${THEMING_DOCS}
-import { baseTheme, createTheme } from '@soroush.tech/design-system/theme'
+import { baseTheme, createTheme } from '${DESIGN_SYSTEM_PACKAGE}/theme'
 ${isTypeScript ? AUGMENTATION_STUB : ''}
 const themes = {
   light: createTheme(baseTheme, {
@@ -120,8 +122,8 @@ export function createProvidersSource({
     : `{ children, scheme = '${scheme}' }`
   return `${MARKER} The app's root renders inside Providers.
 import { createElement } from 'react'
-${typeImport}import { Global, globalStyles } from '@soroush.tech/design-system/engine'
-import { ThemeProvider } from '@soroush.tech/design-system/theme'
+${typeImport}import { Global, globalStyles } from '${DESIGN_SYSTEM_PACKAGE}/engine'
+import { ThemeProvider } from '${DESIGN_SYSTEM_PACKAGE}/theme'
 import themes from '${themesImport}'
 
 /** Gives every component its theme, and draws the page's base styles. */

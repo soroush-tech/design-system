@@ -1,3 +1,4 @@
+import { DESIGN_SYSTEM_PACKAGE } from './designSystemPackage'
 import { existsSync, realpathSync } from 'node:fs'
 import { join } from 'node:path'
 import { applyPlan, type ApplyError } from './apply/applyPlan'
@@ -41,7 +42,7 @@ function formatClosing({ creates, manual }: Plan): string {
   return `Done: the design system is set up.
 ${leftToYou}
 Next:
-  - Use a component: import { Button } from '@soroush.tech/design-system/Button'${themesStep}
+  - Use a component: import { Button } from '${DESIGN_SYSTEM_PACKAGE}/Button'${themesStep}
 ${FONTS_STEP}
 
 ${AGENT_STEPS}`
@@ -136,7 +137,7 @@ function collectFacts(app: App, scheme: Scheme | undefined, designSystem: Packag
     hasSrcFolder: existsSync(join(root, 'src')),
     root: rootPath ? { path: rootPath, source: readText(join(root, rootPath))! } : undefined,
     rootCandidates,
-    hasDesignSystem: Boolean(getDependency(packageJson, '@soroush.tech/design-system')),
+    hasDesignSystem: Boolean(getDependency(packageJson, DESIGN_SYSTEM_PACKAGE)),
     needsParcelPackageExports: needsParcelPackageExports(packageJson),
     packageManager: detectPackageManager(root, packageJson),
     version: designSystem.version!,
@@ -235,7 +236,7 @@ export async function runInit(
     return 0
   }
   const appName = packageJson.name ?? 'this app'
-  io.write(`init will set up @soroush.tech/design-system in ${appName}:\n\n${formatPlan(plan)}\n`)
+  io.write(`init will set up ${DESIGN_SYSTEM_PACKAGE} in ${appName}:\n\n${formatPlan(plan)}\n`)
   if (!(await isApproved(options, isPreviewOnly, io))) return 0
   return applyAndInstall(plan, root, io, fileSystem)
 }

@@ -1,5 +1,6 @@
 import { listStoryNames, type StoriesModule } from '@soroush.tech/story-demo'
-import designSystemPkg from 'packages/design-system/package.json'
+import { sections } from '@soroush.tech/docs-content'
+import { COMPONENT_LIBRARY_REACT_RANGE, PACKAGE_VERSIONS } from 'src/common/packageVersions'
 
 // Every design-system stories module, resolved at build time - once as a namespace
 // (rendered via portable stories) and once as raw text (parsed into the shown code),
@@ -65,8 +66,8 @@ export const demoByPath = new Map(
 
 /** Published versions for our own packages in sandbox exports; anything else rides at latest. */
 export const demoVersions: Record<string, string> = {
-  '@soroush.tech/design-system': `^${designSystemPkg.version}`,
+  [sections['design-system'].npm]: `^${PACKAGE_VERSIONS['design-system']}`,
 }
 
 /** The react / react-dom pin for sandbox exports. */
-export const demoReactVersion = designSystemPkg.peerDependencies.react
+export const demoReactVersion = COMPONENT_LIBRARY_REACT_RANGE

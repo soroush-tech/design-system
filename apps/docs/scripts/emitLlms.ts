@@ -15,6 +15,7 @@ import {
   importSubpathOf,
   markdownComponents,
   membersOf,
+  sections,
   splitReadme,
   stripReadmeChrome,
   styledSystemDocSlug,
@@ -92,7 +93,7 @@ export const renderFull = (): string =>
       return [
         `## ${item.name}`,
         '',
-        `Import: \`import { ${item.name} } from '@soroush.tech/${item.pkg}/${importSubpathOf(item)}'\``,
+        `Import: \`import { ${item.name} } from '${sections[item.pkg].npm}/${importSubpathOf(item)}'\``,
         '',
         stripReadmeChrome(intro),
         api,

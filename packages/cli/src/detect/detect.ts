@@ -1,3 +1,4 @@
+import { DESIGN_SYSTEM_PACKAGE } from '../designSystemPackage'
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { dirname, join, posix } from 'node:path'
 import type { Io } from '../io'
@@ -157,9 +158,9 @@ export function findPackageFolder(root: string, path: string): string {
 export function readDesignSystemPackage(fromFile: string): PackageJson {
   for (let directory = dirname(fromFile); ; directory = dirname(directory)) {
     const packageJson = readPackageJson(directory)
-    if (packageJson?.name === '@soroush.tech/design-system') return packageJson
+    if (packageJson?.name === DESIGN_SYSTEM_PACKAGE) return packageJson
     if (dirname(directory) === directory)
-      throw new Error('init cannot find the package.json of @soroush.tech/design-system')
+      throw new Error(`init cannot find the package.json of ${DESIGN_SYSTEM_PACKAGE}`)
   }
 }
 

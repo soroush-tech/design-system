@@ -42,12 +42,14 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'lcov'],
-      // The docs-dist script the deploy runs, and the skills check, live at the repository root,
+      // The docs-dist script the deploy runs, the release-tag lookup and the skills check live at
+      // the repository root,
       // with their tests here.
       allowExternal: true,
       include: [
         'src/**/*.{ts,tsx}',
         '../../scripts/canonicalize-docs-dist.mjs',
+        '../../scripts/docs-release-tag.mjs',
         '../../scripts/check-skills.mjs',
       ],
       exclude: [

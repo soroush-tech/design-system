@@ -1,0 +1,38 @@
+{
+  "design-system": {
+    "dir": "design-system",
+    "npm": "@soroush.tech/design-system",
+    "tagPrefix": "@soroush.tech/design-system@",
+    "formerTagPrefixes": []
+  },
+  "markdown": {
+    "dir": "markdown",
+    "npm": "@soroush.tech/markdown",
+    "tagPrefix": "@soroush.tech/markdown@",
+    "formerTagPrefixes": []
+  },
+  "styled-system": {
+    "dir": "styled-system",
+    "npm": "@soroush.tech/styled-system",
+    "tagPrefix": "@soroush.tech/styled-system@",
+    "formerTagPrefixes": []
+  },
+  "mcp": {
+    "dir": "mcp",
+    "npm": "@soroush.design/mcp",
+    "tagPrefix": "@soroush.design/mcp@",
+    "formerTagPrefixes": []
+  },
+  "ui-spec": {
+    "dir": "ui-spec",
+    "npm": "@soroush.tech/ui-spec",
+    "tagPrefix": "@soroush.tech/ui-spec@",
+    "formerTagPrefixes": []
+  },
+  "cli": {
+    "dir": "cli",
+    "npm": "@soroush.design/cli",
+    "tagPrefix": "@soroush.design/cli@",
+    "formerTagPrefixes": []
+  }
+}

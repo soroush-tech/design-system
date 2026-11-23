@@ -6,6 +6,9 @@ import styledSystemPkg from 'packages/styled-system/package.json'
 import uiSpecPkg from 'packages/ui-spec/package.json'
 import type { DocsSection } from 'src/common/nav'
 
+/** The React range the component library supports: its peer dependency. */
+export const COMPONENT_LIBRARY_REACT_RANGE = designSystemPkg.peerDependencies.react
+
 /** The version of each package this build documents, as it is in its package.json. */
 export const PACKAGE_VERSIONS: Record<DocsSection, string> = {
   'design-system': designSystemPkg.version,

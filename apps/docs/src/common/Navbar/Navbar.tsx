@@ -9,7 +9,7 @@ import { Typography } from '@soroush.tech/design-system/Typography'
 import { View } from '@soroush.tech/design-system/View'
 import { Chip } from '@soroush.tech/lab/Chip'
 import { RailGlyph } from 'src/common/NavRail/RailGlyph'
-import designSystemPkg from 'packages/design-system/package.json'
+import { PACKAGE_VERSIONS } from 'src/common/packageVersions'
 import { useThemeMode } from 'src/theme/useThemeMode'
 
 export interface NavbarProps {
@@ -50,7 +50,7 @@ export function Navbar({ menuDrawer, onSearch, versionMenu }: Readonly<NavbarPro
               SOROUSH.DESIGN
             </Typography>
           </Link>
-          {versionMenu ?? <Chip>v{designSystemPkg.version}</Chip>}
+          {versionMenu ?? <Chip>v{PACKAGE_VERSIONS['design-system']}</Chip>}
         </Flex>
         <Flex flexDirection="row" alignItems="center" gap={3}>
           <View display={{ xs: 'none', lg: 'inline-flex' }}>

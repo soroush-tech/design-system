@@ -1,3 +1,4 @@
+import { DESIGN_SYSTEM_PACKAGE } from '../designSystemPackage'
 import { posix } from 'node:path'
 import {
   createProvidersSource,
@@ -58,7 +59,7 @@ export function createInstallCommand(
   version: string
 ): InstallCommand {
   const range = version.includes('-') ? version : `^${version}`
-  const spec = `@soroush.tech/design-system@${range}`
+  const spec = `${DESIGN_SYSTEM_PACKAGE}@${range}`
   if (name === 'yarn' && isYarnBerry) {
     return { command: 'yarn', args: ['add', spec], env: { YARN_ENABLE_SCRIPTS: 'false' } }
   }
@@ -92,7 +93,7 @@ export function planInit(facts: InitFacts): Plan {
   }
   if (facts.needsParcelPackageExports) {
     plan.manual.push(
-      'Parcel finds @soroush.tech/design-system/theme and the other subpaths only once it reads package exports. Add to package.json: "@parcel/resolver-default": { "packageExports": true }'
+      `Parcel finds ${DESIGN_SYSTEM_PACKAGE}/theme and the other subpaths only once it reads package exports. Add to package.json: "@parcel/resolver-default": { "packageExports": true }`
     )
   }
   if (!facts.hasDesignSystem)

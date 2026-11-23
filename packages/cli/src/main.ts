@@ -1,3 +1,4 @@
+import { DESIGN_SYSTEM_PACKAGE } from './designSystemPackage'
 import { parseArgs } from 'node:util'
 import { runCreate } from './create/create'
 import { LIBRARY_NAMES, type Library } from './create/libraries'
@@ -17,7 +18,7 @@ const BIN = 'npx @soroush.design/cli'
 export const USAGE = `Usage: ${BIN} <command> [options]
 
 Commands:
-  init            set up @soroush.tech/design-system in the React app in this folder
+  init            set up ${DESIGN_SYSTEM_PACKAGE} in the React app in this folder
   create [name]   start a new app on the design system, in a new folder
 
 Each shows every change first, and writes nothing until you say yes.

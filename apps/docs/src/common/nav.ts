@@ -6,7 +6,7 @@ import {
   styledSystemDocs,
   styledSystemGuides,
   type ComponentNavItem,
-  type DocsPackage,
+  type DocsSection,
 } from '@soroush.tech/docs-content'
 import { PACKAGES } from 'src/common/packages'
 import { sectionPath } from 'src/common/sectionPath'
@@ -17,12 +17,6 @@ import { sectionPath } from 'src/common/sectionPath'
 // guarded against the files on disk by that package's own tests. What stays below is
 // app-specific: turning the registry into the rail, the sidebar groups and the hrefs.
 export * from '@soroush.tech/docs-content'
-
-/**
- * A part of the site that documents a package. Every section is versioned: the live docs, and
- * a frozen snapshot per release.
- */
-export type DocsSection = DocsPackage | 'mcp' | 'ui-spec' | 'cli'
 
 export interface NavItem {
   label: string

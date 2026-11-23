@@ -1,3 +1,4 @@
+import { sections, type DocsPackage } from '@soroush.tech/docs-content'
 import { allDocComponents } from 'src/common/nav'
 
 // Every component README as a raw string, resolved at build time: design-system
@@ -20,8 +21,10 @@ const markdown = import.meta.glob('packages/markdown/src/*/README.md', {
 
 const sources = { ...designSystemTop, ...designSystemNested, ...markdown }
 
-const findSource = (pkg: string, readmePath: string): string | undefined =>
-  Object.entries(sources).find(([key]) => key.endsWith(`/${pkg}/src/${readmePath}`))?.[1]
+const findSource = (pkg: DocsPackage, readmePath: string): string | undefined =>
+  Object.entries(sources).find(([key]) =>
+    key.endsWith(`/${sections[pkg].dir}/src/${readmePath}`)
+  )?.[1]
 
 /** The raw README source for a component slug; throws on a slug the registry doesn't know. */
 export const readmeForSlug = (slug: string): string => {

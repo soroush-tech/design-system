@@ -11,6 +11,7 @@ import {
 describe('packageDir', () => {
   it('points at the workspace package', () => {
     expect(packageDir('design-system').replace(/\\/g, '/')).toMatch(/packages\/design-system$/)
+    expect(packageDir('cli').replace(/\\/g, '/')).toMatch(/packages\/cli$/)
   })
 })
 

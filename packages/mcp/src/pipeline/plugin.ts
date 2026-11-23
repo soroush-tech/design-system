@@ -1,5 +1,6 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
+import { sections } from '@soroush.tech/docs-content'
 import { loadPackageFile, repoRoot } from '@soroush.tech/docs-content/node'
 import { tokenPath } from '../tokenPath'
 import type { ContentBundle } from '../types'
@@ -49,7 +50,7 @@ export const renderTokensReference = (bundle: ContentBundle): string =>
     '',
     '# Token contract',
     '',
-    `Every scale on \`theme\`, serialized from \`baseTheme\` (@soroush.tech/design-system ${bundle.version}).`,
+    `Every scale on \`theme\`, serialized from \`baseTheme\` (${sections['design-system'].npm} ${bundle.version}).`,
     'Reference tokens through the theme; a literal value in a component is a bug.',
     '',
     ...bundle.tokens.flatMap((scale) => [
