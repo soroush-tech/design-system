@@ -1,11 +1,11 @@
 import { useContext, useEffect, type MouseEvent, type ReactNode } from 'react'
-import { styled, type Theme, get } from '@soroush.tech/design-system'
-import { Flex } from '@soroush.tech/design-system/Flex'
-import { Icon, type IconName } from '@soroush.tech/design-system/Icon'
-import { Portal } from '@soroush.tech/design-system/Portal'
-import { Pressable, type PressableProps } from '@soroush.tech/design-system/Pressable'
-import { Typography } from '@soroush.tech/design-system/Typography'
-import { alpha } from '@soroush.tech/design-system/utils'
+import { styled, type Theme, get } from '@soroush.design/react-components'
+import { Flex } from '@soroush.design/react-components/Flex'
+import { Icon, type IconName } from '@soroush.design/react-components/Icon'
+import { Portal } from '@soroush.design/react-components/Portal'
+import { Pressable, type PressableProps } from '@soroush.design/react-components/Pressable'
+import { Typography } from '@soroush.design/react-components/Typography'
+import { alpha } from '@soroush.design/react-components/utils'
 import {
   SidebarContext,
   type SidebarAnchor,

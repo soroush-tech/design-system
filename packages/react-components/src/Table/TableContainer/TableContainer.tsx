@@ -1,5 +1,5 @@
-import { styled } from '@soroush.tech/design-system'
-import { View, type ViewProps } from '@soroush.tech/design-system/View'
+import { styled } from '@soroush.design/react-components'
+import { View, type ViewProps } from '@soroush.design/react-components/View'
 
 export type TableContainerProps = ViewProps
 

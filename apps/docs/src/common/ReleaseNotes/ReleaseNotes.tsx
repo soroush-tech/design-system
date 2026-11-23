@@ -1,4 +1,4 @@
-import { View } from '@soroush.tech/design-system/View'
+import { View } from '@soroush.design/react-components/View'
 import { Preview } from '@soroush.tech/markdown/Preview'
 import type { DocsSection } from 'src/common/nav'
 import { releaseNotesFor } from './utils/releaseNotesFor'
@@ -8,7 +8,7 @@ export interface ReleaseNotesProps {
 }
 
 // A release's heading names the package and its version, as the file is the version's own:
-// `@soroush.tech/design-system@2.0.0` - under any scope. The page is the package's, so the
+// `@soroush.design/react-components@0.1.0` - under any scope. The page is the package's, so the
 // version alone is shown.
 const titleByVersion = (body: string): string =>
   body.replace(/^## @[\w.-]+\/[\w-]+@(\S+)/, '## v$1')

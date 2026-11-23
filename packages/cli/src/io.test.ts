@@ -120,10 +120,10 @@ describe('toWindowsCommandLine', () => {
     expect(
       toWindowsCommandLine('pnpm', [
         'add',
-        '@soroush.tech/design-system@^2.2.0',
+        '@soroush.design/react-components@^0.1.0',
         '--ignore-scripts',
       ])
-    ).toBe('pnpm "add" "@soroush.tech/design-system@^2.2.0" "--ignore-scripts"')
+    ).toBe('pnpm "add" "@soroush.design/react-components@^0.1.0" "--ignore-scripts"')
   })
 
   it('refuses anything cmd.exe could read as syntax', () => {

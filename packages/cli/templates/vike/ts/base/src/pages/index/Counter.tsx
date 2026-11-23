@@ -1,8 +1,8 @@
 // @if !ssg
 import { useState } from 'react'
-import { Button } from '@soroush.tech/design-system/Button'
-import { Flex } from '@soroush.tech/design-system/Flex'
-import { Typography } from '@soroush.tech/design-system/Typography'
+import { Button } from '@soroush.design/react-components/Button'
+import { Flex } from '@soroush.design/react-components/Flex'
+import { Typography } from '@soroush.design/react-components/Typography'
 
 /** A count, held in the component's own state, and the button that adds to it. */
 export function Counter() {

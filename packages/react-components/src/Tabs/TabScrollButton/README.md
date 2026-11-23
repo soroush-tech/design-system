@@ -10,7 +10,7 @@ import {
   Tabs,
   TabScrollButton,
   type TabScrollButtonProps,
-} from '@soroush.tech/design-system/Tabs'
+} from '@soroush.design/react-components/Tabs'
 
 // A button of your own, in place of the default one.
 function Arrow(props: TabScrollButtonProps) {

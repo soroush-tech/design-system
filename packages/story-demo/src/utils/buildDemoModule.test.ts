@@ -3,7 +3,7 @@ import sampleRaw from './__fixtures__/Sample.stories.tsx?raw'
 import { buildDemoModule } from './buildDemoModule'
 import { parseStoriesSource } from './parseStoriesSource'
 
-const PKG = '@soroush.tech/design-system'
+const PKG = '@soroush.design/react-components'
 const parsed = parseStoriesSource(sampleRaw)
 
 describe('buildDemoModule', () => {
@@ -24,7 +24,7 @@ describe('buildDemoModule', () => {
     expect(demo.preview).toBe('<Sample size="md" aria-label="A sample">Sample</Sample>')
     expect(demo.full).toBe(
       [
-        "import { Sample } from '@soroush.tech/design-system/Sample'",
+        "import { Sample } from '@soroush.design/react-components/Sample'",
         '',
         'export default function Demo() {',
         '  return (',
@@ -69,8 +69,8 @@ describe('buildDemoModule', () => {
     const demo = buildDemoModule({ parsed, storyName: 'Sizes', args: {}, packageName: PKG })
     expect(demo.full).toBe(
       [
-        "import { Stack } from '@soroush.tech/design-system/Stack'",
-        "import { Sample } from '@soroush.tech/design-system/Sample'",
+        "import { Stack } from '@soroush.design/react-components/Stack'",
+        "import { Sample } from '@soroush.design/react-components/Sample'",
         '',
         "const noun = 'group'",
         '',
@@ -113,8 +113,8 @@ describe('buildDemoModule', () => {
     ])
     expect(demo.full).toBe(
       [
-        "import { Stack } from '@soroush.tech/design-system/Stack'",
-        "import { Sample, type SampleProps } from '@soroush.tech/design-system/Sample'",
+        "import { Stack } from '@soroush.design/react-components/Stack'",
+        "import { Sample, type SampleProps } from '@soroush.design/react-components/Sample'",
         '',
         '// Shared children - kept top-level so stories stay terse.',
         'const items = [<Stack key="one">One</Stack>, <Stack key="two">Two</Stack>]',
@@ -147,7 +147,7 @@ describe('buildDemoModule', () => {
     const demo = buildDemoModule({ parsed, storyName: 'Block', args: {}, packageName: PKG })
     expect(demo.full).toBe(
       [
-        "import { Sample } from '@soroush.tech/design-system/Sample'",
+        "import { Sample } from '@soroush.design/react-components/Sample'",
         '',
         'export default function Demo() {',
         "  const heading = 'block'",
@@ -177,10 +177,12 @@ describe('buildDemoModule', () => {
     })
     expect(demo.full).toContain("import { css } from '@umber-style/css'")
     expect(demo.full).toContain(
-      "import { m } from '@soroush.tech/design-system/utils/test/storiesArgs'"
+      "import { m } from '@soroush.design/react-components/utils/test/storiesArgs'"
     )
-    expect(demo.full).toContain("import { baseTheme } from '@soroush.tech/design-system/theme'")
-    expect(demo.full).toContain("import { Chip } from '@soroush.tech/design-system/Chip'")
+    expect(demo.full).toContain(
+      "import { baseTheme } from '@soroush.design/react-components/theme'"
+    )
+    expect(demo.full).toContain("import { Chip } from '@soroush.design/react-components/Chip'")
   })
 
   it('merges imports that rewrite to the same specifier', () => {
@@ -200,9 +202,11 @@ describe('buildDemoModule', () => {
       packageName: PKG,
     })
     expect(demo.full).toContain(
-      "import TableRow, * as tokens from '@soroush.tech/design-system/Table'"
+      "import TableRow, * as tokens from '@soroush.design/react-components/Table'"
     )
-    expect(demo.full).toContain("import { TableCell } from '@soroush.tech/design-system/TableCell'")
+    expect(demo.full).toContain(
+      "import { TableCell } from '@soroush.design/react-components/TableCell'"
+    )
   })
 
   it('prints renamed imports and args consts inside block bodies', () => {
@@ -224,7 +228,7 @@ describe('buildDemoModule', () => {
     })
     expect(demo.full).toBe(
       [
-        "import { Chip as Tag } from '@soroush.tech/design-system/Chip'",
+        "import { Chip as Tag } from '@soroush.design/react-components/Chip'",
         '',
         'export default function Demo() {',
         "  const args = { size: 'sm' }",

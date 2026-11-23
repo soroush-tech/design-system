@@ -3,9 +3,9 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import {
   buttonColorTokens,
   tableSizeTokens,
-} from '@soroush.tech/design-system/utils/test/storiesOptions'
-import { borderRadius } from '@soroush.tech/design-system/utils/test/storiesArgs'
-import { Flex } from '@soroush.tech/design-system/Flex'
+} from '@soroush.design/react-components/utils/test/storiesOptions'
+import { borderRadius } from '@soroush.design/react-components/utils/test/storiesArgs'
+import { Flex } from '@soroush.design/react-components/Flex'
 import { ToggleButton } from '../ToggleButton'
 import { ToggleButtonGroup, type ToggleButtonGroupProps } from './ToggleButtonGroup'
 import { type ToggleButtonValue } from '../ToggleButtonGroupContext'

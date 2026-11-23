@@ -10,9 +10,9 @@ const bundle: ContentBundle = {
       name: 'Button',
       slug: 'button',
       pkg: 'design-system',
-      packageName: '@soroush.tech/design-system',
+      packageName: '@soroush.design/react-components',
       category: 'Inputs & forms',
-      importPath: "import { Button } from '@soroush.tech/design-system/Button'",
+      importPath: "import { Button } from '@soroush.design/react-components/Button'",
       summary: 'Renders as a button.',
       intro:
         'A pressable control used across forms, toolbars, dialogs, cards and page headers, appearing just about everywhere in the app.',

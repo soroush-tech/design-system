@@ -1,7 +1,7 @@
-import { Flex } from '@soroush.tech/design-system/Flex'
-import { Icon } from '@soroush.tech/design-system/Icon'
-import { Switch } from '@soroush.tech/design-system/Switch'
-import { Typography } from '@soroush.tech/design-system/Typography'
+import { Flex } from '@soroush.design/react-components/Flex'
+import { Icon } from '@soroush.design/react-components/Icon'
+import { Switch } from '@soroush.design/react-components/Switch'
+import { Typography } from '@soroush.design/react-components/Typography'
 
 type Scheme = 'light' | 'dark'
 

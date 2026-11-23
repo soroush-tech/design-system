@@ -1,5 +1,5 @@
-import { Flex } from '@soroush.tech/design-system/Flex'
-import { Typography } from '@soroush.tech/design-system/Typography'
+import { Flex } from '@soroush.design/react-components/Flex'
+import { Typography } from '@soroush.design/react-components/Typography'
 import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router'
 import { RouterLink } from '../../components/RouterLink'

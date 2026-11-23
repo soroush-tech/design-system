@@ -3,7 +3,7 @@
 Renders a themeable SVG icon from the central registry. Consumers pass a `name`; `Icon` owns every `?react` import and maps the name to its component.
 
 ```tsx
-import { Icon } from '@soroush.tech/design-system/Icon'
+import { Icon } from '@soroush.design/react-components/Icon'
 ;<Icon name="hub" color="primary" size="2rem" />
 ```
 

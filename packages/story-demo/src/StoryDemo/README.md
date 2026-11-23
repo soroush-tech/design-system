@@ -57,7 +57,7 @@ The `react` / `react-dom` pin for the sandbox `package.json`. Default: `` `lates
 ### `packageName`
 
 The npm package that the stories' relative imports are rewritten to. Default:
-`` `@soroush.tech/design-system` ``.
+`` `@soroush.design/react-components` ``.
 
 ## Controls
 
@@ -79,7 +79,7 @@ import buttonSource from 'packages/react-components/src/Button/Button.stories.ts
   storyName="Variants"
   title="Variants"
   scope={() => import('./scope').then((module) => module.demoScope)}
-  versions={{ '@soroush.tech/design-system': '^1.3.3' }}
+  versions={{ '@soroush.design/react-components': '^1.3.3' }}
   reactVersion="^19.2.8"
 />
 ```

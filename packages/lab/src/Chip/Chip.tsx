@@ -1,5 +1,5 @@
-import { styled } from '@soroush.tech/design-system'
-import { Typography, type TypographyProps } from '@soroush.tech/design-system/Typography'
+import { styled } from '@soroush.design/react-components'
+import { Typography, type TypographyProps } from '@soroush.design/react-components/Typography'
 
 export type ChipProps = TypographyProps
 

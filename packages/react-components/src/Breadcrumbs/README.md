@@ -10,9 +10,9 @@ marked `aria-current="page"`. The trail lays them out, separates and collapses t
 none of them, so a router's link drops in as a crumb.
 
 ```tsx
-import { Breadcrumbs } from '@soroush.tech/design-system/Breadcrumbs'
-import { Link } from '@soroush.tech/design-system/Link'
-import { Typography } from '@soroush.tech/design-system/Typography'
+import { Breadcrumbs } from '@soroush.design/react-components/Breadcrumbs'
+import { Link } from '@soroush.design/react-components/Link'
+import { Typography } from '@soroush.design/react-components/Typography'
 
 ;<Breadcrumbs aria-label="Breadcrumb" expandLabel="Show path">
   <Link href="/" underline="hover" color="inherit">

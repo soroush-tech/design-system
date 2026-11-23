@@ -56,7 +56,7 @@ export interface CatalogVariant {
 /** One component, as a tool needs it. */
 export interface CatalogEntry {
   name: string
-  /** Where it is imported from: `'@soroush.tech/design-system/Select'`. */
+  /** Where it is imported from: `'@soroush.design/react-components/Select'`. */
   module: string
   /** Its category in the docs' taxonomy. */
   category: string

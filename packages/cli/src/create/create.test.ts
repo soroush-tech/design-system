@@ -17,7 +17,7 @@ import { createTestIo } from '../testApp'
 import { runCreate, toPackageName, type CreateDependencies, type CreateOptions } from './create'
 import type { Starter, StarterFacts } from './starters'
 
-const DESIGN_SYSTEM = { name: '@soroush.tech/design-system', version: '2.3.0' }
+const DESIGN_SYSTEM = { name: '@soroush.design/react-components', version: '0.1.0' }
 
 const YES: CreateOptions = {
   name: 'my-app',
@@ -111,7 +111,7 @@ describe('runCreate', () => {
       libraries: [],
       scheme: 'light',
       hasSampleData: false,
-      version: '2.3.0',
+      version: '0.1.0',
     })
     expect(listCommands()).toEqual([
       'npm install --ignore-scripts',

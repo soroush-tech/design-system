@@ -1,6 +1,6 @@
 # Packages
 
-Conventions for everything under `packages/` - the workspace's shared code. Most packages are framework-agnostic tooling; `design-system` is the React component library, and `markdown` is a companion React library that builds on it (a headless markdown editor/renderer). Both React packages follow [`design-system/design-system.md`](./react-components/design-system.md) for component conventions - the `markdown` package's specifics are in [`markdown/markdown.md`](./markdown/markdown.md). Each folder is its own pnpm package, globbed by `packages/*` in `pnpm-workspace.yaml` and consumed by apps (and by each other) via `workspace:*`.
+Conventions for everything under `packages/` - the workspace's shared code. Most packages are framework-agnostic tooling; `react-components` (`@soroush.design/react-components`) is the React component library, and `markdown` is a companion React library that builds on it (a headless markdown editor/renderer). Both React packages follow [`design-system/design-system.md`](./react-components/design-system.md) for component conventions - the `markdown` package's specifics are in [`markdown/markdown.md`](./markdown/markdown.md). Each folder is its own pnpm package, globbed by `packages/*` in `pnpm-workspace.yaml` and consumed by apps (and by each other) via `workspace:*`.
 
 For a plain-English overview of what currently lives here, see [`README.md`](./README.md).
 
@@ -10,12 +10,12 @@ For a plain-English overview of what currently lives here, see [`README.md`](./R
 
 `packages/` is for **shared, app-agnostic code** - framework-agnostic tooling (lint config, Vite plugins), shared schemas, generic utilities.
 
-| Belongs in `packages/`                           | Belongs elsewhere                                             |
-| ------------------------------------------------ | ------------------------------------------------------------- |
-| A Vite plugin reusable across builds             | App-specific sections/pages/hooks → `apps/web/src/`           |
-| The shared oxlint base                           | App-specific composed UI → `apps/web/src/common\|section`     |
-| UI primitives (`Flex`, `View`) → `design-system` | A single-consumer, app-coupled component → keep it in the app |
-| A schema/util shared by two members or published | A single-consumer, app-coupled helper → keep it in the app    |
+| Belongs in `packages/`                              | Belongs elsewhere                                             |
+| --------------------------------------------------- | ------------------------------------------------------------- |
+| A Vite plugin reusable across builds                | App-specific sections/pages/hooks → `apps/web/src/`           |
+| The shared oxlint base                              | App-specific composed UI → `apps/web/src/common\|section`     |
+| UI primitives (`Flex`, `View`) → `react-components` | A single-consumer, app-coupled component → keep it in the app |
+| A schema/util shared by two members or published    | A single-consumer, app-coupled helper → keep it in the app    |
 
 **A package is justified only when** it is (a) reused by more than one member, or (b) intended to be published on its own. Until then, keep the code in the app - don't pre-extract.
 
@@ -46,14 +46,14 @@ Keep the **public API in `index.ts`** (the single entry); extract internal helpe
 
 ## Naming & scope
 
-- Every package is scoped **`@soroush.tech/*`**, except the MCP server, which is **`@soroush.design/mcp`** (apps are not - `apps/web` stays `@soroush/web`).
+- Every package is scoped **`@soroush.tech/*`**, except the MCP server, the command-line tool and the component library, which are **`@soroush.design/mcp`**, **`@soroush.design/cli`** and **`@soroush.design/react-components`** (apps are not - `apps/web` stays `@soroush/web`).
 - A Vite plugin's internal `name` field **must equal its package name minus the scope** (`vite-plugin-watch`), so build logs read `[vite-plugin-watch]`. Keep the directory, package name, and plugin `name` in sync.
 
 ---
 
 ## The `soroush.design` family
 
-The layout the UI packages move to ([#114](https://github.com/soroush-tech/design-system/issues/114)). Until that work starts, the packages keep the names they have today; a new UI package follows these rules from the start.
+The layout the UI packages move to ([#114](https://github.com/soroush-tech/design-system/issues/114)). The component library has the new name, `@soroush.design/react-components`; the other UI packages keep the names they have today until their step of the plan, and a new UI package follows these rules from the start.
 
 ### Three levels
 
@@ -175,10 +175,11 @@ Internal-only packages stay `"private": true` and consume source directly. To ma
   ```
 
 - Declare the host framework as a **`peerDependency`** (e.g. `vite`); never bundle the peer.
-- A peer on a **sibling package** (markdown on design-system) is an explicit range covering every
-  major it supports - `"^1.3.3 || ^2.0.0"` - widened deliberately when a new major lands,
+- A peer on a **sibling package** (markdown on react-components) is an explicit range covering every
+  version line it supports - `"^0.1.0"` (below 1.0.0 a caret covers one minor, so list each
+  minor: `"^0.1.0 || ^0.2.0"`) - widened deliberately when a new line lands,
   never `workspace:^`. pnpm freezes `workspace:^` to `^<the sibling's version at publish time>`,
-  so the published peer would exclude the next major until the package is republished. The
+  so the published peer would exclude the next line until the package is republished. The
   `devDependency` stays `workspace:*`, so the monorepo still builds against the local sibling.
 - `prepublishOnly: pnpm build`; verify the tarball with `pnpm pack` before publishing.
 
@@ -235,5 +236,5 @@ npm deprecate '@soroush.tech/<name>@<badrange>' 'Broken exports; use >=<fixed>.'
 
 ## Linting & types
 
-- Each package gets a minimal `.oxlintrc.json` extending one of the three configs in `packages/eslint-config/` - `.oxlintrc.json` (base), `.oxlintrc.react.json`, or `.oxlintrc.storybook.json` - plus its own `env` (node, browser, serviceworker). Tooling packages stay React-free and extend the base; React-shipping packages (`design-system`, `markdown`) extend the storybook layer. The React and Storybook plugins are declared once in `eslint-config`, not per package.
+- Each package gets a minimal `.oxlintrc.json` extending one of the three configs in `packages/eslint-config/` - `.oxlintrc.json` (base), `.oxlintrc.react.json`, or `.oxlintrc.storybook.json` - plus its own `env` (node, browser, serviceworker). Tooling packages stay React-free and extend the base; React-shipping packages (`react-components`, `markdown`) extend the storybook layer. The React and Storybook plugins are declared once in `eslint-config`, not per package.
 - `tsconfig.json` uses bundler resolution and `noEmit`. It is **not** referenced by the root solution `tsconfig.json`: packages are typechecked in isolation via `pnpm -r typecheck` and never pulled into the app's TS graph (so a backend/tooling package's types can't leak into the React/DOM build).

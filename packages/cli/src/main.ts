@@ -170,7 +170,7 @@ function findValueRefusal(
 
 /**
  * Reads the command line and runs the command, for `designSystem`: the package of
- * `@soroush.tech/design-system` the command installs. Returns the exit code: 130 when the person
+ * `@soroush.design/react-components` the command installs. Returns the exit code: 130 when the person
  * stops it at a question, which is before anything is written.
  */
 export async function main(

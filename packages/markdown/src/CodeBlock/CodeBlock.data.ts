@@ -1,7 +1,7 @@
 /**
  * Syntax-highlighting tokens for `CodeBlock` - mapped onto highlight.js token classes.
  * Not part of design-system's own scales; `../index.ts` augments
- * `@soroush.tech/design-system/theme` so `theme.syntax` is available wherever this
+ * `@soroush.design/react-components/theme` so `theme.syntax` is available wherever this
  * package is imported. Merge one of the presets below into your theme via
  * `createTheme(baseTheme, { syntax: syntaxDark })`, or supply your own.
  */

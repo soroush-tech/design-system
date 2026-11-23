@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest'
 import { buildSandboxProject } from './buildSandboxProject'
 
-const SOURCE = "import { Button } from '@soroush.tech/design-system/Button'\n<Button />"
+const SOURCE = "import { Button } from '@soroush.design/react-components/Button'\n<Button />"
 const OPTIONS = {
-  versions: { '@soroush.tech/design-system': '^1.2.3' },
+  versions: { '@soroush.design/react-components': '^1.2.3' },
   reactVersion: '^19.2.8',
 }
 
@@ -22,7 +22,7 @@ describe('buildSandboxProject', () => {
     }
     expect(manifest.name).toBe('basic-button-group-demo')
     expect(manifest.main).toBe('src/index.tsx')
-    expect(manifest.dependencies['@soroush.tech/design-system']).toBe('^1.2.3')
+    expect(manifest.dependencies['@soroush.design/react-components']).toBe('^1.2.3')
     expect(manifest.dependencies.react).toBe('^19.2.8')
     expect(manifest.dependencies['react-dom']).toBe('^19.2.8')
     expect(manifest.devDependencies.typescript).toBe('latest')

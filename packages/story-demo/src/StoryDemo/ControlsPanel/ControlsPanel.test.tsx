@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
-import { ThemeProvider, createTheme, baseTheme } from '@soroush.tech/design-system/theme'
+import { ThemeProvider, createTheme, baseTheme } from '@soroush.design/react-components/theme'
 import { syntaxDark } from '@soroush.tech/markdown/CodeBlock'
 import type { ControlModel } from '../../utils/controlsFor'
 import { ControlsPanel } from './ControlsPanel'

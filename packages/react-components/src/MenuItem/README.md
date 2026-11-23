@@ -11,8 +11,8 @@ A row of a list, in one of two roles:
   click, Enter or Space.
 
 ```tsx
-import { Select } from '@soroush.tech/design-system/Select'
-import { MenuItem } from '@soroush.tech/design-system/MenuItem'
+import { Select } from '@soroush.design/react-components/Select'
+import { MenuItem } from '@soroush.design/react-components/MenuItem'
 
 ;<Select placeholder="Pick a platform">
   <MenuItem value="web">Web</MenuItem>
@@ -22,8 +22,8 @@ import { MenuItem } from '@soroush.tech/design-system/MenuItem'
 ```
 
 ```tsx
-import { MenuList } from '@soroush.tech/design-system/Menu'
-import { MenuItem } from '@soroush.tech/design-system/MenuItem'
+import { MenuList } from '@soroush.design/react-components/Menu'
+import { MenuItem } from '@soroush.design/react-components/MenuItem'
 
 ;<MenuList aria-label="File" onSelect={run}>
   <MenuItem value="open" startIcon={<Icon name="folder" size="sm" />} shortcut="Control+O">

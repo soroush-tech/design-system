@@ -89,7 +89,7 @@ extract siblings (with co-located tests) only when it grows unwieldy. Required f
 
 ## Imports
 
-- Components ship on subpaths: `@soroush.tech/design-system/Button`; the barrel carries
+- Components ship on subpaths: `@soroush.design/react-components/Button`; the barrel carries
   `styled`, `css`, `Theme`. Never deep-import another package's internals.
 - App code uses the `src/`, `content/`, and `packages/` aliases - never relative `../../`.
   The one exception: Vike `+route.ts`/`+config.ts` run at config time without aliases and

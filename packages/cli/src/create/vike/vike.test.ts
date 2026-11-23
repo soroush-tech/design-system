@@ -14,7 +14,7 @@ const FACTS: StarterFacts = {
   libraries: [],
   scheme: 'light',
   hasSampleData: true,
-  version: '2.3.0',
+  version: '0.1.0',
 }
 const FIXTURE = '../../../type-tests/create-vike'
 
@@ -449,7 +449,7 @@ describe('the Vike starter', () => {
     const packageJson = JSON.parse(createFiles().get('package.json')!)
     expect(packageJson.name).toBe('my-app')
     expect(packageJson.dependencies).toEqual({
-      '@soroush.tech/design-system': '^2.3.0',
+      '@soroush.design/react-components': '^0.1.0',
       '@umber-style/server': `^${devDependencies['@umber-style/server']}`,
       react: devDependencies.react,
       'react-dom': devDependencies['react-dom'],
@@ -464,8 +464,8 @@ describe('the Vike starter', () => {
       test: 'vitest run',
     })
     expect(packageJson.devDependencies.vitest).toBe(devDependencies.vitest)
-    const prerelease = JSON.parse(createFiles({ version: '2.3.0-alpha.1' }).get('package.json')!)
-    expect(prerelease.dependencies['@soroush.tech/design-system']).toBe('^2.3.0-alpha.1')
+    const prerelease = JSON.parse(createFiles({ version: '0.1.0-alpha.1' }).get('package.json')!)
+    expect(prerelease.dependencies['@soroush.design/react-components']).toBe('^0.1.0-alpha.1')
   })
 
   it('renders <Providers> in +Layout only, starting on the scheme it was given', () => {

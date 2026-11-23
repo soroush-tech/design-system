@@ -1,5 +1,5 @@
-import { Flex } from '@soroush.tech/design-system/Flex'
-import { Typography } from '@soroush.tech/design-system/Typography'
+import { Flex } from '@soroush.design/react-components/Flex'
+import { Typography } from '@soroush.design/react-components/Typography'
 import { RouterLink } from '../components/RouterLink'
 
 /** Shown for a path with no page, and when a page fails to load or to render. */

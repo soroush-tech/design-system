@@ -9,7 +9,7 @@ Every label is yours - an item's name (`getLabelText`) and the "no rating" radio
 so the rating carries no language of its own.
 
 ```tsx
-import { Rating } from '@soroush.tech/design-system/Rating'
+import { Rating } from '@soroush.design/react-components/Rating'
 
 ;<Rating
   aria-label="Quality"

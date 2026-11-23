@@ -12,7 +12,7 @@ import {
   border,
   system,
   get,
-} from '@soroush.tech/design-system'
+} from '@soroush.design/react-components'
 
 /** Valid values for the bg prop - derived from theme.background keys. */
 export type TableBackgroundToken = keyof Theme['background']

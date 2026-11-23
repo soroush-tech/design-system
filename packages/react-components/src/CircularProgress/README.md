@@ -55,7 +55,7 @@ Default: `3.6`.
 
 ### `value` / `min` / `max`
 
-Used by the `"determinate"` variant. `value` is clamped to `[min, max]` via `@soroush.tech/design-system/utils/clamp` before rendering.
+Used by the `"determinate"` variant. `value` is clamped to `[min, max]` via `@soroush.design/react-components/utils/clamp` before rendering.
 
 | Prop    | Default                     |
 | ------- | --------------------------- |

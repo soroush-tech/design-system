@@ -6,8 +6,8 @@
   "extends": "./create-react-router/tsconfig.json",
   "compilerOptions": {
     "paths": {
-      "@soroush.tech/design-system": ["../../react-components/dist/index.d.mts"],
-      "@soroush.tech/design-system/*": ["../../react-components/dist/*.d.mts"]
+      "@soroush.design/react-components": ["../../react-components/dist/index.d.mts"],
+      "@soroush.design/react-components/*": ["../../react-components/dist/*.d.mts"]
     }
   }
 }

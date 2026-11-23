@@ -5,7 +5,7 @@ with a label. It is a `Button`, with its focus ring, press state and disabled be
 theme shadow. Where it floats is the page's: no position is built in.
 
 ```tsx
-import { Fab } from '@soroush.tech/design-system/Fab'
+import { Fab } from '@soroush.design/react-components/Fab'
 
 ;<Fab aria-label="Add" onClick={add}>
   <Icon name="add" color="inherit" />

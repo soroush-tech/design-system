@@ -54,7 +54,7 @@ describe('MCP protocol surface', () => {
   it('serves a component README, sliced by part', async () => {
     const client = await connect()
     const all = await call(client, 'get_component', { name: 'Button' })
-    expect(all).toContain("import { Button } from '@soroush.tech/design-system/Button'")
+    expect(all).toContain("import { Button } from '@soroush.design/react-components/Button'")
 
     const api = await call(client, 'get_component', { name: 'button', part: 'api' })
     expect(api).toContain('variant')
@@ -98,7 +98,9 @@ describe('renderers', () => {
 
   it("lists a family's members after it, each marked as part of it", () => {
     const inventory = renderInventory(content, 'design-system')
-    expect(inventory).toContain('- **MenuList** (@soroush.tech/design-system, part of Menu) - ')
+    expect(inventory).toContain(
+      '- **MenuList** (@soroush.design/react-components, part of Menu) - '
+    )
     expect(inventory.indexOf('**MenuList**')).toBeGreaterThan(inventory.indexOf('**Menu**'))
   })
 

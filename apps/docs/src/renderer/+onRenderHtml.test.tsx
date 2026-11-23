@@ -14,7 +14,7 @@ vi.mock('vike/server', () => ({
   dangerouslySkipEscape: (s: string) => s,
 }))
 vi.mock('../common/Bootstrap', () => ({ Bootstrap: () => null }))
-vi.mock('@soroush.tech/design-system/engine', () => ({ styleCache: { key: 'soroush' } }))
+vi.mock('@soroush.design/react-components/engine', () => ({ styleCache: { key: 'soroush' } }))
 
 import { onRenderHtml } from './+onRenderHtml'
 import createStyleServer from '@umber-style/server/create-instance'

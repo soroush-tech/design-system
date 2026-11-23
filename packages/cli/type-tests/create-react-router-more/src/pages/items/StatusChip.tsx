@@ -1,4 +1,4 @@
-import { Chip } from '@soroush.tech/design-system/Chip'
+import { Chip } from '@soroush.design/react-components/Chip'
 import type { Item } from '../../data/items'
 
 const COLORS = { todo: 'default', doing: 'primary', done: 'success' } as const

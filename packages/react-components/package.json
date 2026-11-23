@@ -1,7 +1,7 @@
 {
-  "name": "@soroush.tech/design-system",
-  "version": "3.0.0",
-  "description": "UmberStyle + @soroush.tech/styled-system React component library - token-driven light/dark themes, layout primitives, forms, and overlays.",
+  "name": "@soroush.design/react-components",
+  "version": "0.1.0",
+  "description": "The React component library of the soroush.design family, on the UmberStyle engine - token-driven light/dark themes, layout primitives, forms, and overlays.",
   "keywords": [
     "design-system",
     "react",

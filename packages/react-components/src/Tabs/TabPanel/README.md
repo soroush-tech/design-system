@@ -6,7 +6,7 @@ It is shown only while its tab is selected, and sits in a
 the two, wherever they are in the tree.
 
 ```tsx
-import { Tab, TabContext, TabList, TabPanel } from '@soroush.tech/design-system/Tabs'
+import { Tab, TabContext, TabList, TabPanel } from '@soroush.design/react-components/Tabs'
 
 ;<TabContext defaultValue="layers">
   <TabList aria-label="Left panel">

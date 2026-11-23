@@ -293,7 +293,7 @@ jobs:
 
       - name: Run Unit Tests
         run: |
-          pnpm --filter @soroush.tech/design-system exec vitest run --project=unit
+          pnpm --filter @soroush.design/react-components exec vitest run --project=unit
           pnpm --filter @soroush.tech/markdown test
 
   # The apps `create` starts (packages/cli): the design system and the cli are packed from this

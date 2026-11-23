@@ -7,12 +7,12 @@ renders; [`README.md`](./README.md) is npm's short page, which points there.
 
 ## Two ways in, one command line
 
-| Run as                                 | Bin                                    | The design system it installs                                                       |
-| -------------------------------------- | -------------------------------------- | ----------------------------------------------------------------------------------- |
-| `npx @soroush.tech/design-system init` | `packages/react-components/src/bin.ts` | That package itself, found by its `package.json`                                    |
-| `npx @soroush.design/cli init`         | `packages/cli/src/bin.ts`              | The workspace's version, read at build time: a released one, even from an alpha cli |
+| Run as                                      | Bin                                    | The design system it installs                                                       |
+| ------------------------------------------- | -------------------------------------- | ----------------------------------------------------------------------------------- |
+| `npx @soroush.design/react-components init` | `packages/react-components/src/bin.ts` | That package itself, found by its `package.json`                                    |
+| `npx @soroush.design/cli init`              | `packages/cli/src/bin.ts`              | The workspace's version, read at build time: a released one, even from an alpha cli |
 
-`@soroush.tech/design-system` depends on this package at an exact version, and its bin is a
+`@soroush.design/react-components` depends on this package at an exact version, and its bin is a
 shim: it calls this package's default export, `main(argv, io, designSystem)`, with its own
 `package.json`. So the version `init` installs and the React range it checks always come from
 the design system that ran it. This package never depends on the design system, so there is no

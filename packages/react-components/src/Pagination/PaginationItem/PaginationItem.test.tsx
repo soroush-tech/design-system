@@ -5,8 +5,8 @@ import {
   createTheme,
   baseTheme,
   type Theme,
-} from '@soroush.tech/design-system/theme'
-import { renderWithTheme } from '@soroush.tech/design-system/utils/test/renderWithTheme'
+} from '@soroush.design/react-components/theme'
+import { renderWithTheme } from '@soroush.design/react-components/utils/test/renderWithTheme'
 import { PaginationItem, type PaginationItemProps } from './PaginationItem'
 import { toPx } from '../../utils/test/toPx'
 

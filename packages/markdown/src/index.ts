@@ -35,24 +35,24 @@ export interface MermaidThemeVariables {
 // This package renders through design-system's `styled` engine, so its named roots
 // (`MarkdownEditor`, `MarkdownPreview`, `MarkdownToolbar`, `CodeBlock`) resolve
 // `theme.components` at runtime. Registering the slots here - on
-// `@soroush.tech/design-system/theme`, the module that owns `Theme`/`ThemeComponents`
+// `@soroush.design/react-components/theme`, the module that owns `Theme`/`ThemeComponents`
 // and merges reliably across tsdown's d.ts chunks - lets consumers type
 // `theme.components.MarkdownPreview = { ... }`. `ComponentConfig` is pulled in via an
 // inline `import(...)` type (no top-level import) so nothing reads as unused under the
 // app's `noUnusedLocals`, which ignores usage inside `declare module`.
-declare module '@soroush.tech/design-system/theme' {
+declare module '@soroush.design/react-components/theme' {
   interface ThemeComponents {
-    MarkdownEditor?: import('@soroush.tech/design-system/theme').ComponentConfig
-    MarkdownLiveEdit?: import('@soroush.tech/design-system/theme').ComponentConfig<
+    MarkdownEditor?: import('@soroush.design/react-components/theme').ComponentConfig
+    MarkdownLiveEdit?: import('@soroush.design/react-components/theme').ComponentConfig<
       Record<string, unknown>,
       'root' | 'block'
     >
-    MarkdownPreview?: import('@soroush.tech/design-system/theme').ComponentConfig
-    MarkdownToolbar?: import('@soroush.tech/design-system/theme').ComponentConfig<
+    MarkdownPreview?: import('@soroush.design/react-components/theme').ComponentConfig
+    MarkdownToolbar?: import('@soroush.design/react-components/theme').ComponentConfig<
       Record<string, unknown>,
       'root' | 'strike' | 'tablePickerCell'
     >
-    CodeBlock?: import('@soroush.tech/design-system/theme').ComponentConfig<
+    CodeBlock?: import('@soroush.design/react-components/theme').ComponentConfig<
       Record<string, unknown>,
       'root' | 'surface'
     >

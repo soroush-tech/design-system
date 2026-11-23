@@ -3,7 +3,7 @@
 Slides one child in from an edge of the window and back out. The child holds a `ref` and takes a `style` - a `ref`-holding component, or a DOM element - and the transition draws its position on it. Out, the child is hidden, so it takes no click or focus. A user who asked for less motion (`prefers-reduced-motion: reduce`) sees it change at once, and the callbacks still fire.
 
 ```tsx
-import { Slide } from '@soroush.tech/design-system/Slide'
+import { Slide } from '@soroush.design/react-components/Slide'
 
 ;<Slide isShown={isOpen}>
   <Paper p={3}>Content</Paper>

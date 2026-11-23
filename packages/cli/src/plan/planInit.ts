@@ -3,7 +3,7 @@ import { posix } from 'node:path'
 import {
   createProvidersSource,
   createThemesSource,
-  MARKER,
+  isSetUpByInit,
   type Scheme,
 } from '../templates/templates'
 import { readExtensionStyle, toImportSpecifier, type ExtensionStyle } from './importPath'
@@ -111,7 +111,7 @@ interface ThemePaths {
 function getOwnership(facts: InitFacts, path: string): 'missing' | 'ours' | 'theirs' {
   const content = facts.readFile(path)
   if (content === undefined) return 'missing'
-  return content.startsWith(MARKER) ? 'ours' : 'theirs'
+  return isSetUpByInit(content) ? 'ours' : 'theirs'
 }
 
 /**

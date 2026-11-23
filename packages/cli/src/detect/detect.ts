@@ -152,7 +152,7 @@ export function findPackageFolder(root: string, path: string): string {
 }
 
 /**
- * The `package.json` of `@soroush.tech/design-system`: the nearest one above `fromFile` that is named
+ * The `package.json` of `@soroush.design/react-components`: the nearest one above `fromFile` that is named
  * for it. Its bin finds itself this way.
  */
 export function readDesignSystemPackage(fromFile: string): PackageJson {

@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { css, keyframes } from '@umber-style/css'
-import * as theme from '@soroush.tech/design-system/theme'
-import * as storiesOptions from '@soroush.tech/design-system/utils/test/storiesOptions'
+import * as theme from '@soroush.design/react-components/theme'
+import * as storiesOptions from '@soroush.design/react-components/utils/test/storiesOptions'
 // The stories' shared toggle helpers (`ColorSwatchRows`) render inside their demos.
-import * as storiesToggle from '@soroush.tech/design-system/utils/test/storiesToggle'
+import * as storiesToggle from '@soroush.design/react-components/utils/test/storiesToggle'
 // ...and the transitions' `TransitionToggle`. The package does not export it, so it is read
 // from its source, as the stories modules are.
 import * as storiesTransition from 'packages/react-components/src/utils/test/storiesTransition'

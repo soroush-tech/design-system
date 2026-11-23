@@ -1,13 +1,13 @@
-import type { ButtonColor, ButtonSize } from '@soroush.tech/design-system/Button'
-import type { CircularProgressColor } from '@soroush.tech/design-system/CircularProgress'
-import type { LinearProgressColor } from '@soroush.tech/design-system/LinearProgress'
-import type { CheckboxColor, CheckboxSize } from '@soroush.tech/design-system/Checkbox'
-import type { RadioColor, RadioSize } from '@soroush.tech/design-system/Radio'
-import type { SwitchColor, SwitchSize } from '@soroush.tech/design-system/Switch'
-import type { TextInputColor, TextInputSize } from '@soroush.tech/design-system/TextInput'
-import type { SelectColor, SelectSize } from '@soroush.tech/design-system/Select'
-import type { FormControlProps } from '@soroush.tech/design-system/FormControl'
-import type { AppBarSize } from '@soroush.tech/design-system/AppBar'
+import type { ButtonColor, ButtonSize } from '@soroush.design/react-components/Button'
+import type { CircularProgressColor } from '@soroush.design/react-components/CircularProgress'
+import type { LinearProgressColor } from '@soroush.design/react-components/LinearProgress'
+import type { CheckboxColor, CheckboxSize } from '@soroush.design/react-components/Checkbox'
+import type { RadioColor, RadioSize } from '@soroush.design/react-components/Radio'
+import type { SwitchColor, SwitchSize } from '@soroush.design/react-components/Switch'
+import type { TextInputColor, TextInputSize } from '@soroush.design/react-components/TextInput'
+import type { SelectColor, SelectSize } from '@soroush.design/react-components/Select'
+import type { FormControlProps } from '@soroush.design/react-components/FormControl'
+import type { AppBarSize } from '@soroush.design/react-components/AppBar'
 import {
   baseTheme,
   radii,
@@ -22,7 +22,7 @@ import {
   space,
   typography,
   type CSSObject,
-} from '@soroush.tech/design-system/theme'
+} from '@soroush.design/react-components/theme'
 
 // Value lists owned by the components' catalogs (`X/X.catalog.ts`), under their story names.
 export {

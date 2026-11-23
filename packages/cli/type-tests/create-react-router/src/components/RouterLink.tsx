@@ -1,4 +1,4 @@
-import { Link, type LinkProps } from '@soroush.tech/design-system/Link'
+import { Link, type LinkProps } from '@soroush.design/react-components/Link'
 import { useHref, useLinkClickHandler } from 'react-router'
 
 /**

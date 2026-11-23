@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react'
-import { View } from '@soroush.tech/design-system/View'
+import { View } from '@soroush.design/react-components/View'
 import { Header } from '../components/Header'
 import { SchemeSwitch } from '../components/SchemeSwitch'
 import { Providers } from '../theme/Providers'

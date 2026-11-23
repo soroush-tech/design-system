@@ -6,7 +6,7 @@ as that element's description. A count past `max` shows as `max+`, and a count o
 shows no badge, unless `shouldShowZero`.
 
 ```tsx
-import { Badge } from '@soroush.tech/design-system/Badge'
+import { Badge } from '@soroush.design/react-components/Badge'
 
 ;<Badge badgeContent={4} badgeLabel="4 unread">
   <Button>Inbox</Button>

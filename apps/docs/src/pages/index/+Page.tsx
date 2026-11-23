@@ -1,10 +1,10 @@
-import { Button } from '@soroush.tech/design-system/Button'
-import { Card } from '@soroush.tech/design-system/Card'
-import { Flex } from '@soroush.tech/design-system/Flex'
-import { Grid } from '@soroush.tech/design-system/Grid'
-import { Link } from '@soroush.tech/design-system/Link'
-import { Typography } from '@soroush.tech/design-system/Typography'
-import { View } from '@soroush.tech/design-system/View'
+import { Button } from '@soroush.design/react-components/Button'
+import { Card } from '@soroush.design/react-components/Card'
+import { Flex } from '@soroush.design/react-components/Flex'
+import { Grid } from '@soroush.design/react-components/Grid'
+import { Link } from '@soroush.design/react-components/Link'
+import { Typography } from '@soroush.design/react-components/Typography'
+import { View } from '@soroush.design/react-components/View'
 import { ComponentIllustration } from 'src/common/ComponentCard/ComponentIllustration'
 import { Layout } from 'src/common/Layout'
 import { PACKAGE_VERSIONS } from 'src/common/packageVersions'
@@ -80,7 +80,7 @@ export default function Page() {
               </Button>
             </Flex>
             <Typography as="code" variant="body2" fontFamily="mono">
-              npm i @soroush.tech/design-system
+              npm i @soroush.design/react-components
             </Typography>
           </Flex>
           <Grid

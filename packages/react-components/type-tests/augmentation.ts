@@ -1,6 +1,6 @@
 // Type-level test: consumer-style theme augmentation against the PUBLISHED d.ts.
 // Runs via `pnpm test:types` (builds dist first, then typechecks this isolated
-// program). Guards two things: the `declare module '@soroush.tech/design-system/theme'`
+// program). Guards two things: the `declare module '@soroush.design/react-components/theme'`
 // block survives tsdown's d.ts chunking, and consumer augmentations widen the
 // scale unions that component props derive from.
 import type {
@@ -10,14 +10,14 @@ import type {
   PaletteEntry,
   SizeEntry,
   ThemeOverride,
-} from '@soroush.tech/design-system/theme'
-import { baseTheme, createTheme } from '@soroush.tech/design-system/theme'
-import type { ButtonColor, ButtonVariant } from '@soroush.tech/design-system/Button'
-import type { CheckboxSize } from '@soroush.tech/design-system/Checkbox'
-import type { GridProps } from '@soroush.tech/design-system/Grid'
-import type { ViewBackgroundToken, ViewProps } from '@soroush.tech/design-system/View'
+} from '@soroush.design/react-components/theme'
+import { baseTheme, createTheme } from '@soroush.design/react-components/theme'
+import type { ButtonColor, ButtonVariant } from '@soroush.design/react-components/Button'
+import type { CheckboxSize } from '@soroush.design/react-components/Checkbox'
+import type { GridProps } from '@soroush.design/react-components/Grid'
+import type { ViewBackgroundToken, ViewProps } from '@soroush.design/react-components/View'
 
-declare module '@soroush.tech/design-system/theme' {
+declare module '@soroush.design/react-components/theme' {
   interface ThemePalette {
     brand: PaletteEntry
   }

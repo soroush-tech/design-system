@@ -1,5 +1,5 @@
 import { type ButtonHTMLAttributes, type ElementType, type ReactNode } from 'react'
-import { Icon, type IconName } from '@soroush.tech/design-system/Icon'
+import { Icon, type IconName } from '@soroush.design/react-components/Icon'
 import { type PaginationItemType } from '../hooks/usePagination'
 import type { SpaceProps } from '@soroush.tech/styled-system'
 import {
@@ -10,9 +10,9 @@ import {
   props,
   space,
   get,
-} from '@soroush.tech/design-system'
-import { alpha } from '@soroush.tech/design-system/utils'
-import { themeDefault } from '@soroush.tech/design-system/theme'
+} from '@soroush.design/react-components'
+import { alpha } from '@soroush.design/react-components/utils'
+import { themeDefault } from '@soroush.design/react-components/theme'
 
 export type PaginationItemColor = PaletteColor
 export type PaginationItemVariant = 'text' | 'outlined'

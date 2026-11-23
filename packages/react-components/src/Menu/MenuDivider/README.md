@@ -4,8 +4,8 @@ A line between groups of rows in a [`MenuList`](../MenuList/README.md), rendered
 `<li role="separator">`. The arrow keys pass over it.
 
 ```tsx
-import { MenuDivider, MenuList } from '@soroush.tech/design-system/Menu'
-import { MenuItem } from '@soroush.tech/design-system/MenuItem'
+import { MenuDivider, MenuList } from '@soroush.design/react-components/Menu'
+import { MenuItem } from '@soroush.design/react-components/MenuItem'
 
 ;<MenuList aria-label="Edit">
   <MenuItem>Cut</MenuItem>

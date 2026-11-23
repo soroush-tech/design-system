@@ -1,7 +1,7 @@
 import type { Preview } from '@storybook/react-vite'
-import { ThemeProvider, baseTheme, type Theme } from '@soroush.tech/design-system/theme'
-import { Global, globalStyles } from '@soroush.tech/design-system/engine'
-import { css } from '@soroush.tech/design-system'
+import { ThemeProvider, baseTheme, type Theme } from '@soroush.design/react-components/theme'
+import { Global, globalStyles } from '@soroush.design/react-components/engine'
+import { css } from '@soroush.design/react-components'
 
 // Font-family is consumer policy, not part of the package's reset - the site loads the
 // webfonts itself. Here only the family is applied, so text falls back to the generic

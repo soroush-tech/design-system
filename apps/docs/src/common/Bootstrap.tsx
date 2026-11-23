@@ -1,5 +1,5 @@
 import { StrictMode } from 'react'
-import { CacheProvider, styleCache } from '@soroush.tech/design-system/engine'
+import { CacheProvider, styleCache } from '@soroush.design/react-components/engine'
 import type { PageContext } from 'vike/types'
 import { Routes } from 'src/common/Routes'
 import { Providers } from 'src/common/Providers'

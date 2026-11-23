@@ -4,13 +4,13 @@ import { inferDependencies } from './inferDependencies'
 describe('inferDependencies', () => {
   it('resolves scoped and unscoped subpath imports to their package roots', () => {
     const source = [
-      "import { Button } from '@soroush.tech/design-system/Button'",
+      "import { Button } from '@soroush.design/react-components/Button'",
       "import { css } from '@umber-style/css'",
       "import lzString from 'lz-string/libs/lz-string'",
       "import Demo from './Demo'",
     ].join('\n')
-    expect(inferDependencies(source, { '@soroush.tech/design-system': '^1.2.3' })).toEqual({
-      '@soroush.tech/design-system': '^1.2.3',
+    expect(inferDependencies(source, { '@soroush.design/react-components': '^1.2.3' })).toEqual({
+      '@soroush.design/react-components': '^1.2.3',
       '@umber-style/css': 'latest',
       'lz-string': 'latest',
     })

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { fireEvent, screen, within } from '@testing-library/react'
-import { renderWithTheme } from '@soroush.tech/design-system/utils/test/renderWithTheme'
+import { renderWithTheme } from '@soroush.design/react-components/utils/test/renderWithTheme'
 import { NavLink } from '../NavLink'
 import { NavGroup } from './NavGroup'
 

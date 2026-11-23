@@ -34,7 +34,7 @@ import { dirname, join } from 'node:path'
 import { parseArgs } from 'node:util'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 
-const DESIGN_SYSTEM = '@soroush.tech/design-system'
+const DESIGN_SYSTEM = '@soroush.design/react-components'
 const APP = 'smokeApp'
 
 const repoRoot = join(dirname(fileURLToPath(import.meta.url)), '..')

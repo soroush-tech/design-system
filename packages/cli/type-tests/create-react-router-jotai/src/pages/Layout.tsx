@@ -1,4 +1,4 @@
-import { View } from '@soroush.tech/design-system/View'
+import { View } from '@soroush.design/react-components/View'
 import { Outlet } from 'react-router'
 import { useAtom } from 'jotai'
 import { schemeAtom } from '../state/scheme'

@@ -1,9 +1,9 @@
 {
   "design-system": {
     "dir": "react-components",
-    "npm": "@soroush.tech/design-system",
-    "tagPrefix": "@soroush.tech/design-system@",
-    "formerTagPrefixes": []
+    "npm": "@soroush.design/react-components",
+    "tagPrefix": "@soroush.design/react-components@",
+    "formerTagPrefixes": ["@soroush.tech/design-system@"]
   },
   "markdown": {
     "dir": "markdown",

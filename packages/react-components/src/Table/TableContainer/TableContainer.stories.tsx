@@ -18,7 +18,7 @@ import {
   borderStyle,
   borderColor,
   borderRadius,
-} from '@soroush.tech/design-system/utils/test/storiesArgs'
+} from '@soroush.design/react-components/utils/test/storiesArgs'
 import { Table } from '../Table'
 import { TableHead } from '../TableHead'
 import { TableBody } from '../TableBody'

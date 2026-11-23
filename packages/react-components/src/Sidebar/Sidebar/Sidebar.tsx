@@ -1,6 +1,6 @@
 import { useId, useMemo, useState, type ElementType, type ReactNode } from 'react'
-import { styled } from '@soroush.tech/design-system'
-import { Flex, type FlexProps } from '@soroush.tech/design-system/Flex'
+import { styled } from '@soroush.design/react-components'
+import { Flex, type FlexProps } from '@soroush.design/react-components/Flex'
 import {
   SidebarContext,
   type SidebarAnchor,

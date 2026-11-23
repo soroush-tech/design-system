@@ -8,7 +8,7 @@ Pages are **1-based** - unlike `TablePagination` (0-based, table footer, rows-pe
 Prefer `Pagination` where SEO/URLs matter.
 
 ```tsx
-import { Pagination } from '@soroush.tech/design-system/Pagination'
+import { Pagination } from '@soroush.design/react-components/Pagination'
 
 ;<Pagination count={10} page={page} onChange={setPage} />
 ```
@@ -38,7 +38,7 @@ import { Pagination } from '@soroush.tech/design-system/Pagination'
 The headless model is exported for custom renderings:
 
 ```tsx
-import { usePagination } from '@soroush.tech/design-system/Pagination'
+import { usePagination } from '@soroush.design/react-components/Pagination'
 
 const { items } = usePagination({ count: 10, onChange })
 // items: [{ type: 'previous', page, isSelected, isDisabled, onClick }, { type: 'page', ... }, ...]

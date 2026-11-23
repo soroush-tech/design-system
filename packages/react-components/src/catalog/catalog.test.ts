@@ -45,7 +45,7 @@ describe('catalog', () => {
   })
 
   it.each(entries)("names $name's module, which the package exports, and its category", (entry) => {
-    const subpath = entry.module.replace('@soroush.tech/design-system', '.')
+    const subpath = entry.module.replace('@soroush.design/react-components', '.')
     expect(pkg.exports[subpath]).toBeDefined()
     expect(catalog.categories.map((category) => category.label)).toContain(entry.category)
   })

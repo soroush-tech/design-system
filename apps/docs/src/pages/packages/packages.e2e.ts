@@ -16,7 +16,7 @@ test.describe('packages', () => {
     }
     await expect(page.locator('main').getByRole('link', { name: 'npm' }).first()).toHaveAttribute(
       'href',
-      /npmjs\.com\/package\/@soroush\.tech\//
+      /npmjs\.com\/package\/@soroush\.design\/react-components/
     )
   })
 

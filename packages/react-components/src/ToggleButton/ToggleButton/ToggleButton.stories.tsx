@@ -3,8 +3,8 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import {
   buttonColorTokens,
   tableSizeTokens,
-} from '@soroush.tech/design-system/utils/test/storiesOptions'
-import { Icon } from '@soroush.tech/design-system/Icon'
+} from '@soroush.design/react-components/utils/test/storiesOptions'
+import { Icon } from '@soroush.design/react-components/Icon'
 import { exampleArgs } from '../../utils/test/renderExample'
 import { ToggleButton } from './ToggleButton'
 import { toggleButtonCatalog } from './ToggleButton.catalog'

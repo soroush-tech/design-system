@@ -5,5 +5,5 @@ export default {
   prerender: sectionPrerender('cli'),
   title: 'Command line',
   description:
-    'npx @soroush.tech/design-system init sets the design system up in an existing React app, showing every change first.',
+    'npx @soroush.design/react-components init sets the design system up in an existing React app, showing every change first.',
 } satisfies Config

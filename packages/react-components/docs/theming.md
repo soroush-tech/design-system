@@ -17,8 +17,8 @@ The theme belongs to you - the package ships defaults, every part is replaceable
 `ThemeProvider` provides exactly one theme. The package ships a single complete default - `baseTheme` - and you derive every mode from it; switching (dark/light, or ten brand modes) is your state:
 
 ```tsx
-import { ThemeProvider } from '@soroush.tech/design-system/theme'
-import { baseTheme, createTheme } from '@soroush.tech/design-system/theme'
+import { ThemeProvider } from '@soroush.design/react-components/theme'
+import { baseTheme, createTheme } from '@soroush.design/react-components/theme'
 
 const dark = createTheme(baseTheme, { name: 'dark' /* your palettes */ })
 const light = createTheme(baseTheme, { name: 'light', colorScheme: 'light' /* your palettes */ })
@@ -32,7 +32,7 @@ const [isDark, setIsDark] = useState(true)
 `createTheme(base, overrides)` deep-merges sparse patches onto a base theme:
 
 ```ts
-import { baseTheme, createTheme } from '@soroush.tech/design-system/theme'
+import { baseTheme, createTheme } from '@soroush.design/react-components/theme'
 
 export const brandDark = createTheme(baseTheme, {
   palette: { primary: { main: '#00ff88' } }, // sibling fields (light/dark/contrastText) survive
@@ -55,12 +55,12 @@ The full key table lives in the [README's Theming section](../README.md#componen
 
 ## Extending the type system
 
-Every scale is an open interface owned by `@soroush.tech/design-system/theme` - that module (not the styling engine, an internal implementation detail) is the augmentation surface, and it merges reliably across tsdown's chunked d.ts for every consumer:
+Every scale is an open interface owned by `@soroush.design/react-components/theme` - that module (not the styling engine, an internal implementation detail) is the augmentation surface, and it merges reliably across tsdown's chunked d.ts for every consumer:
 
 ```ts
-import type { PaletteEntry, SizeEntry } from '@soroush.tech/design-system/theme'
+import type { PaletteEntry, SizeEntry } from '@soroush.design/react-components/theme'
 
-declare module '@soroush.tech/design-system/theme' {
+declare module '@soroush.design/react-components/theme' {
   interface ThemePalette {
     brand: PaletteEntry // new palette color
   }
@@ -249,7 +249,7 @@ one. To use your own names, declare them by augmenting `BreakpointOverrides` (`t
 `false` removes a default) and replace the scale and the layout on the base:
 
 ```ts
-declare module '@soroush.tech/design-system/theme' {
+declare module '@soroush.design/react-components/theme' {
   interface BreakpointOverrides {
     mobile: true
     tablet: true

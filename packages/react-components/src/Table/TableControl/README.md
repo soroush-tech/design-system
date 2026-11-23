@@ -41,7 +41,7 @@ const pagination = useTablePagination({ defaultRowsPerPage: 10 })
 ## The hooks
 
 `useTableSort`, `useTablePagination`, and `useTableSelection` live in
-[`@soroush.tech/design-system/Table/hooks/`](https://github.com/soroush-tech/design-system/blob/main/packages/react-components/src/Table/hooks/README.md) - see that README for their full APIs. In short:
+[`@soroush.design/react-components/Table/hooks/`](https://github.com/soroush-tech/design-system/blob/main/packages/react-components/src/Table/hooks/README.md) - see that README for their full APIs. In short:
 
 - **`useTableSort(keys, onChange?)`** - column-keyed entries that spread onto `TableSortLabel`;
   per-column direction memory, always-flip toggle (first click sorts `'desc'`)

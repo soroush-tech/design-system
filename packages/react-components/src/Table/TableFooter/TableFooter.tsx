@@ -9,7 +9,7 @@ import {
   space,
   border,
   system,
-} from '@soroush.tech/design-system'
+} from '@soroush.design/react-components'
 
 /** Valid values for the color prop - derived from theme.text keys. */
 export type TableFooterColorToken = keyof Theme['text']

@@ -7,7 +7,7 @@ who asked for less motion (`prefers-reduced-motion: reduce`) sees it change at o
 callbacks still fire.
 
 ```tsx
-import { Collapse } from '@soroush.tech/design-system/Collapse'
+import { Collapse } from '@soroush.design/react-components/Collapse'
 
 ;<Collapse isShown={isOpen}>
   <p>Content that opens and closes.</p>

@@ -8,8 +8,8 @@ import { MARKER } from './templates/templates'
 import { createTestApp, createTestIo, VITE_ROOT } from './testApp'
 
 const DESIGN_SYSTEM = {
-  name: '@soroush.tech/design-system',
-  version: '2.2.0',
+  name: '@soroush.design/react-components',
+  version: '0.1.0',
   peerDependencies: { react: '^18.0.0 || ^19.0.0' },
 }
 
@@ -41,12 +41,12 @@ describe('runInit', () => {
       ['git', ['status', '--porcelain'], { cwd: root }],
       [
         'pnpm',
-        ['add', '@soroush.tech/design-system@^2.2.0', '--ignore-scripts'],
+        ['add', '@soroush.design/react-components@^0.1.0', '--ignore-scripts'],
         { cwd: root, env: {}, showOutput: true },
       ],
     ])
     const output = getOutput()
-    expect(output).toContain('init will set up @soroush.tech/design-system in test-app:')
+    expect(output).toContain('init will set up @soroush.design/react-components in test-app:')
     expect(output).toContain('npx skills add soroush-tech/design-system')
     expect(output).toContain('https://mcp.soroush.design/mcp')
     expect(output).toContain(
@@ -71,7 +71,7 @@ describe('runInit', () => {
     const root = createViteApp()
     await runInit(YES, createTestIo(root).io, DESIGN_SYSTEM)
     // A real install lists the package in package.json; the test's install ran nothing.
-    const dependencies = { react: '19.0.0', '@soroush.tech/design-system': '^2.2.0' }
+    const dependencies = { react: '19.0.0', '@soroush.design/react-components': '^0.1.0' }
     writeFileSync(join(root, 'package.json'), JSON.stringify({ dependencies }))
     const { io, commands, getOutput } = createTestIo(root)
     expect(await runInit(YES, io, DESIGN_SYSTEM)).toBe(0)
@@ -84,7 +84,7 @@ describe('runInit', () => {
   it('reports what it skipped even when there is nothing left to change', async () => {
     const root = createViteApp({
       'package.json': JSON.stringify({
-        dependencies: { react: '19.0.0', '@soroush.tech/design-system': '2.2.0' },
+        dependencies: { react: '19.0.0', '@soroush.design/react-components': '0.1.0' },
       }),
       'src/theme/themes.ts': 'export default {}',
     })
@@ -243,7 +243,7 @@ describe('runInit', () => {
     })
     expect(await runInit(YES, io, DESIGN_SYSTEM)).toBe(1)
     expect(getOutput()).toContain(
-      'The install failed. The files are written; install the package yourself:\n  pnpm add @soroush.tech/design-system@^2.2.0 --ignore-scripts'
+      'The install failed. The files are written; install the package yourself:\n  pnpm add @soroush.design/react-components@^0.1.0 --ignore-scripts'
     )
     expect(existsSync(join(root, 'src/theme/themes.ts'))).toBe(true)
   })
@@ -251,7 +251,7 @@ describe('runInit', () => {
   it('names what is left to do in the closing message, for an app with no root it can edit', async () => {
     const root = createTestApp({
       'package.json': JSON.stringify({
-        dependencies: { react: '19.0.0', '@soroush.tech/design-system': '2.2.0' },
+        dependencies: { react: '19.0.0', '@soroush.design/react-components': '0.1.0' },
       }),
       'tsconfig.json': '{}',
     })
@@ -261,7 +261,7 @@ describe('runInit', () => {
     expect(getOutput()).toContain(
       'Still left to you:\n  - init found no file that calls createRoot'
     )
-    expect(getOutput()).toContain('init will set up @soroush.tech/design-system in this app:')
+    expect(getOutput()).toContain('init will set up @soroush.design/react-components in this app:')
     // Already a dependency: no install.
     expect(commands.map(({ command }) => command)).toEqual(['git'])
   })
@@ -316,7 +316,7 @@ describe('runInit in a workspace', () => {
     expect(await runInit(YES, io, DESIGN_SYSTEM)).toBe(0)
 
     expect(getOutput()).toMatch(
-      /^This is a workspace's root: init sets up the app in apps\/web\.\n\ninit will set up @soroush\.tech\/design-system in @acme\/web:/
+      /^This is a workspace's root: init sets up the app in apps\/web\.\n\ninit will set up @soroush\.design\/react-components in @acme\/web:/
     )
     expect(read(app, 'src/theme/themes.ts').startsWith(MARKER)).toBe(true)
     expect(read(app, 'src/main.tsx')).toContain("import { Providers } from './theme/Providers.ts'")
@@ -324,7 +324,7 @@ describe('runInit in a workspace', () => {
     // pnpm adds the package to the app it runs in, not to the workspace's root.
     expect(commands.at(-1)).toEqual({
       command: 'pnpm',
-      args: ['add', '@soroush.tech/design-system@^2.2.0', '--ignore-scripts'],
+      args: ['add', '@soroush.design/react-components@^0.1.0', '--ignore-scripts'],
       options: { cwd: app, env: {}, showOutput: true },
     })
   })
@@ -357,7 +357,7 @@ describe('runInit in a workspace', () => {
     })
     const { io, getOutput } = createTestIo(root)
     expect(await runInit(YES, io, DESIGN_SYSTEM)).toBe(0)
-    expect(getOutput()).toMatch(/^init will set up @soroush\.tech\/design-system in acme:/)
+    expect(getOutput()).toMatch(/^init will set up @soroush\.design\/react-components in acme:/)
     expect(existsSync(join(root, 'src/theme/themes.ts'))).toBe(true)
   })
 

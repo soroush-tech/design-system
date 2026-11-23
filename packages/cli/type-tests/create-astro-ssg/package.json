@@ -11,7 +11,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@soroush.tech/design-system": "^2.3.0",
+    "@soroush.design/react-components": "^0.1.0",
     "@astrojs/react": "^7.1.9",
     "astro": "^7.4.12",
     "react": "^19.3.1",

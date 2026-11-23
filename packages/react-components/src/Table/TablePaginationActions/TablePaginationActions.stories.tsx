@@ -4,9 +4,9 @@ import {
   paginationCount,
   shouldShowFirstButton,
   shouldShowLastButton,
-} from '@soroush.tech/design-system/utils/test/storiesArgs'
-import { Flex } from '@soroush.tech/design-system/Flex'
-import { Typography } from '@soroush.tech/design-system/Typography'
+} from '@soroush.design/react-components/utils/test/storiesArgs'
+import { Flex } from '@soroush.design/react-components/Flex'
+import { Typography } from '@soroush.design/react-components/Typography'
 import { exampleArgs } from '../../utils/test/renderExample'
 import { TablePaginationActions } from './TablePaginationActions'
 import { tablePaginationActionsCatalog } from './TablePaginationActions.catalog'

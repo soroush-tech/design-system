@@ -8,7 +8,7 @@ it is a button of its own, not a child of the chip's, so pressing it never click
 Every text is yours: the label, and the delete control's name (`deleteLabel`) - no built-in English.
 
 ```tsx
-import { Chip } from '@soroush.tech/design-system/Chip'
+import { Chip } from '@soroush.design/react-components/Chip'
 
 ;<Chip label="Design" color="primary" />
 ;<Chip label="Design" onClick={open} />

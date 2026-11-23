@@ -3,6 +3,14 @@ import { DESIGN_SYSTEM_PACKAGE } from '../designSystemPackage'
 /** The first line of every file init writes: a second run finds its own files by it. */
 export const MARKER = `// Set up by ${DESIGN_SYSTEM_PACKAGE} init.`
 
+// What init wrote before the package was renamed: an app set up then still owns such files.
+const FORMER_MARKER = '// Set up by @soroush.tech/design-system init.'
+
+/** Whether a file starts with the line init writes, under the current name or the former one. */
+export function isSetUpByInit(content: string): boolean {
+  return content.startsWith(MARKER) || content.startsWith(FORMER_MARKER)
+}
+
 export type Scheme = 'light' | 'dark'
 
 const THEMING_DOCS = 'https://docs.soroush.tech/design-system/customization/theming/'

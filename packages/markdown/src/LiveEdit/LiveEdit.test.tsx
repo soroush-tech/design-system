@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { describe, expect, it, vi } from 'vitest'
 import { fireEvent, render, screen } from '@testing-library/react'
-import { ThemeProvider, createTheme, baseTheme } from '@soroush.tech/design-system/theme'
+import { ThemeProvider, createTheme, baseTheme } from '@soroush.design/react-components/theme'
 import { syntaxDark } from '../CodeBlock/CodeBlock.data'
 import { Control } from '../Control'
 import { LiveEdit } from './LiveEdit'

@@ -1,4 +1,4 @@
-import { useTheme, type CSSObject, type Theme } from '@soroush.tech/design-system/theme'
+import { useTheme, type CSSObject, type Theme } from '@soroush.design/react-components/theme'
 
 export type StyleFactory = { getStyles: (theme: Theme) => CSSObject }
 export type StyleInput = CSSObject | StyleFactory

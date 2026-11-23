@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render as renderRTL, screen, waitFor } from '@testing-library/react'
-import { ThemeProvider, createTheme, baseTheme } from '@soroush.tech/design-system/theme'
+import { ThemeProvider, createTheme, baseTheme } from '@soroush.design/react-components/theme'
 import mermaid from 'mermaid'
 import { syntaxDark } from '../CodeBlock/CodeBlock.data'
 import { Mermaid } from './Mermaid'

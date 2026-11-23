@@ -17,7 +17,7 @@ export interface SandboxOptions {
 const INDEX_HTML = '<div id="root"></div>'
 
 const INDEX_TSX = `import { createRoot } from 'react-dom/client'
-import { ThemeProvider, baseTheme, createTheme } from '@soroush.tech/design-system/theme'
+import { ThemeProvider, baseTheme, createTheme } from '@soroush.design/react-components/theme'
 import Demo from './Demo'
 
 const theme = createTheme(baseTheme, {})

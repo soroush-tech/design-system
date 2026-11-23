@@ -32,7 +32,7 @@ importers:
       '@mdx-js/react':
         specifier: ^3.1.1
         version: 3.1.1(@types/react@19.3.0)(react@19.3.1)
-      '@soroush.tech/design-system':
+      '@soroush.design/react-components':
         specifier: workspace:*
         version: link:../../packages/react-components
       '@soroush.tech/docs-content':
@@ -322,7 +322,7 @@ importers:
 
   packages/lab:
     devDependencies:
-      '@soroush.tech/design-system':
+      '@soroush.design/react-components':
         specifier: workspace:*
         version: link:../react-components
       '@soroush.tech/eslint-config':
@@ -389,7 +389,7 @@ importers:
         specifier: ^11.0.5
         version: 11.0.5
     devDependencies:
-      '@soroush.tech/design-system':
+      '@soroush.design/react-components':
         specifier: workspace:*
         version: link:../react-components
       '@soroush.tech/eslint-config':
@@ -596,7 +596,7 @@ importers:
         specifier: ^3.35.1
         version: 3.35.1
     devDependencies:
-      '@soroush.tech/design-system':
+      '@soroush.design/react-components':
         specifier: workspace:*
         version: link:../react-components
       '@soroush.tech/eslint-config':

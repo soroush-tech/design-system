@@ -7,7 +7,7 @@ read and selected), closes on Escape, and never takes or traps the focus. The te
 built-in English.
 
 ```tsx
-import { Tooltip } from '@soroush.tech/design-system/Tooltip'
+import { Tooltip } from '@soroush.design/react-components/Tooltip'
 
 ;<Tooltip title="Save the page" placement="bottom" hasArrow>
   <IconButton aria-label="Save">...</IconButton>

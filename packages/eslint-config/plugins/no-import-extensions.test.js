@@ -26,12 +26,15 @@ describe('local/no-import-extensions', () => {
     }
   )
 
-  it.each(['./y', 'react', '@soroush.tech/design-system/Button', './styles.css', './data.json'])(
-    'allows %s',
-    (value) => {
-      expect(visit(value).report).not.toHaveBeenCalled()
-    }
-  )
+  it.each([
+    './y',
+    'react',
+    '@soroush.design/react-components/Button',
+    './styles.css',
+    './data.json',
+  ])('allows %s', (value) => {
+    expect(visit(value).report).not.toHaveBeenCalled()
+  })
 
   // A dependency's own exports map decides its layout, and some published ESM
   // packages resolve only with the extension spelled out.

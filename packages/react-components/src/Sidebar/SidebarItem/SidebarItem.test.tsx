@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { fireEvent, screen } from '@testing-library/react'
-import { renderWithTheme } from '@soroush.tech/design-system/utils/test/renderWithTheme'
-import { baseTheme } from '@soroush.tech/design-system/theme'
+import { renderWithTheme } from '@soroush.design/react-components/utils/test/renderWithTheme'
+import { baseTheme } from '@soroush.design/react-components/theme'
 import { Sidebar } from '../Sidebar'
 import { SidebarItem } from './SidebarItem'
 

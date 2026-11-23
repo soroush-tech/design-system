@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { Preview } from '@soroush.tech/markdown/Preview'
-import { View } from '@soroush.tech/design-system/View'
+import { View } from '@soroush.design/react-components/View'
 import { rewriteReadmeLinks } from './utils/rewriteReadmeLinks'
 import { stripReadmeChrome } from '@soroush.tech/docs-content'
 

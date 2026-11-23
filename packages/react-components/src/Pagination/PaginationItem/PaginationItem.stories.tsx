@@ -4,8 +4,8 @@ import {
   paginationVariant,
   paginationShape,
   paginationSize,
-} from '@soroush.tech/design-system/utils/test/storiesArgs'
-import { Flex } from '@soroush.tech/design-system/Flex'
+} from '@soroush.design/react-components/utils/test/storiesArgs'
+import { Flex } from '@soroush.design/react-components/Flex'
 import { exampleArgs } from '../../utils/test/renderExample'
 import { PaginationItem } from './PaginationItem'
 import { paginationItemCatalog } from './PaginationItem.catalog'

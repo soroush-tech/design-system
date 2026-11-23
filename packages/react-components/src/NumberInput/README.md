@@ -9,7 +9,7 @@ Every label is yours - the buttons' (`incrementLabel`, `decrementLabel`) - so th
 language of its own.
 
 ```tsx
-import { NumberInput } from '@soroush.tech/design-system/NumberInput'
+import { NumberInput } from '@soroush.design/react-components/NumberInput'
 
 ;<NumberInput
   aria-label="Quantity"

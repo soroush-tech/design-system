@@ -23,7 +23,7 @@ describe('bin', () => {
     expect(main).toHaveBeenCalledWith(
       ['init', '--yes'],
       expect.objectContaining({ cwd: process.cwd() }),
-      expect.objectContaining({ name: '@soroush.tech/design-system' })
+      expect.objectContaining({ name: '@soroush.design/react-components' })
     )
     expect(process.exitCode).toBe(3)
   })

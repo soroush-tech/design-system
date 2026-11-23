@@ -29,7 +29,7 @@ describe('the strict fixture app', () => {
       hasDesignSystem: true,
       needsParcelPackageExports: false,
       packageManager: { name: 'npm', isYarnBerry: false },
-      version: '2.2.0',
+      version: '0.1.0',
       scheme: 'light',
       readFile: () => undefined,
     })

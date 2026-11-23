@@ -19,7 +19,7 @@ const LANDING = [
   'soroush design system - MCP server',
   '',
   `Serving ${content.components.length} components and ${content.docs.length} guides`,
-  `from @soroush.tech/design-system ${content.version}.`,
+  `from @soroush.design/react-components ${content.version}.`,
   '',
   'Connect (Claude Code):',
   '  claude mcp add --transport http soroush https://mcp.soroush.design/mcp',

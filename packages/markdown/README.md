@@ -33,27 +33,27 @@ Most markdown editors hand you a fixed widget - a bordered box with a toolbar bo
 
 ```sh
 # npm
-npm install @soroush.tech/markdown @soroush.tech/design-system
+npm install @soroush.tech/markdown @soroush.design/react-components
 ```
 
 ```sh
 # pnpm
-pnpm add @soroush.tech/markdown @soroush.tech/design-system
+pnpm add @soroush.tech/markdown @soroush.design/react-components
 ```
 
 ```sh
 # yarn
-yarn add @soroush.tech/markdown @soroush.tech/design-system
+yarn add @soroush.tech/markdown @soroush.design/react-components
 ```
 
-> **Requires the design system.** This package renders through `@soroush.tech/design-system`, so its components must live inside that library's `ThemeProvider`. If you aren't already using the design system, [start there first](https://www.npmjs.com/package/@soroush.tech/design-system).
+> **Requires the design system.** This package renders through `@soroush.design/react-components`, so its components must live inside that library's `ThemeProvider`. If you aren't already using the design system, [start there first](https://www.npmjs.com/package/@soroush.design/react-components).
 
 ## Quick start
 
 Wrap your app in the design system's `ThemeProvider` once, then render markdown anywhere inside it:
 
 ```tsx
-import { ThemeProvider } from '@soroush.tech/design-system/theme'
+import { ThemeProvider } from '@soroush.design/react-components/theme'
 import { Preview } from '@soroush.tech/markdown'
 
 export function App() {
@@ -78,7 +78,7 @@ The `Editor` works standalone via `value`/`onChange` - no `Control` needed:
 ```tsx
 import { useState } from 'react'
 import { Editor } from '@soroush.tech/markdown'
-import { ThemeProvider } from '@soroush.tech/design-system/theme'
+import { ThemeProvider } from '@soroush.design/react-components/theme'
 
 function MarkdownField() {
   const [value, setValue] = useState('# Start writing\n\nJust the source editor - no preview.')
@@ -98,7 +98,7 @@ Everything inside `Control` shares one value and selection, so you arrange the p
 ```tsx
 import { useState } from 'react'
 import { Control, Toolbar, Editor, Preview } from '@soroush.tech/markdown'
-import { Flex } from '@soroush.tech/design-system/Flex'
+import { Flex } from '@soroush.design/react-components/Flex'
 
 function MarkdownField() {
   const [value, setValue] = useState(
@@ -136,10 +136,10 @@ Everything is styled through the design system's theme, and there are two levels
 
 ### Customize the theme - restyle everything
 
-`Preview` renders design-system components that read theme tokens, so your theme already governs how markdown looks. Build one with `createTheme` - palette, spacing, type scale, radii - and pass it to `ThemeProvider`; the markdown output changes along with the rest of your UI, no markdown-specific setup. See the [design system's theming guide](https://www.npmjs.com/package/@soroush.tech/design-system) for the full token set.
+`Preview` renders design-system components that read theme tokens, so your theme already governs how markdown looks. Build one with `createTheme` - palette, spacing, type scale, radii - and pass it to `ThemeProvider`; the markdown output changes along with the rest of your UI, no markdown-specific setup. See the [design system's theming guide](https://www.npmjs.com/package/@soroush.design/react-components) for the full token set.
 
 ```tsx
-import { ThemeProvider, createTheme, baseTheme } from '@soroush.tech/design-system/theme'
+import { ThemeProvider, createTheme, baseTheme } from '@soroush.design/react-components/theme'
 
 const theme = createTheme(baseTheme, {
   palette: {

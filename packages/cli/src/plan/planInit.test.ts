@@ -16,7 +16,7 @@ function createFacts(
     hasDesignSystem: false,
     needsParcelPackageExports: false,
     packageManager: { name: 'pnpm', isYarnBerry: false },
-    version: '2.2.0',
+    version: '0.1.0',
     scheme: 'light',
     readFile: (path) => files[path],
     ...overrides,
@@ -38,7 +38,7 @@ describe('planInit', () => {
     expect(plan.edits[0].after).toContain("import { Providers } from './theme/Providers.ts'")
     expect(plan.install).toEqual({
       command: 'pnpm',
-      args: ['add', '@soroush.tech/design-system@^2.2.0', '--ignore-scripts'],
+      args: ['add', '@soroush.design/react-components@^0.1.0', '--ignore-scripts'],
       env: {},
     })
     expect(plan.skips).toEqual([])
@@ -82,6 +82,20 @@ describe('planInit', () => {
       )
     )
     expect(plan).toEqual({ creates: [], edits: [], skips: [], manual: [], install: undefined })
+    expect(isPlanEmpty(plan)).toBe(true)
+  })
+
+  it('still finds the files an earlier release wrote, under the former package name', () => {
+    const wrapped = planInit(createFacts()).edits[0].after
+    const plan = planInit(
+      createFacts(
+        { root: { path: 'src/main.tsx', source: wrapped }, hasDesignSystem: true },
+        {
+          'src/theme/themes.ts': '// Set up by @soroush.tech/design-system init. Your themes',
+          'src/theme/Providers.ts': '// Set up by @soroush.tech/design-system init. The app',
+        }
+      )
+    )
     expect(isPlanEmpty(plan)).toBe(true)
   })
 
@@ -153,37 +167,37 @@ describe('planInit', () => {
 it('asks a Parcel app to read package exports, and edits no bundler config', () => {
   const plan = planInit(createFacts({ needsParcelPackageExports: true }))
   expect(plan.manual).toEqual([
-    'Parcel finds @soroush.tech/design-system/theme and the other subpaths only once it reads package exports. Add to package.json: "@parcel/resolver-default": { "packageExports": true }',
+    'Parcel finds @soroush.design/react-components/theme and the other subpaths only once it reads package exports. Add to package.json: "@parcel/resolver-default": { "packageExports": true }',
   ])
   expect(plan.edits.map((edit) => edit.path)).toEqual(['src/main.tsx'])
 })
 
 describe('createInstallCommand', () => {
   it("uses the app's package manager and runs no scripts", () => {
-    expect(createInstallCommand({ name: 'npm', isYarnBerry: false }, '2.2.0')).toEqual({
+    expect(createInstallCommand({ name: 'npm', isYarnBerry: false }, '0.1.0')).toEqual({
       command: 'npm',
-      args: ['install', '@soroush.tech/design-system@^2.2.0', '--ignore-scripts'],
+      args: ['install', '@soroush.design/react-components@^0.1.0', '--ignore-scripts'],
       env: {},
     })
-    expect(createInstallCommand({ name: 'yarn', isYarnBerry: false }, '2.2.0').args).toEqual([
+    expect(createInstallCommand({ name: 'yarn', isYarnBerry: false }, '0.1.0').args).toEqual([
       'add',
-      '@soroush.tech/design-system@^2.2.0',
+      '@soroush.design/react-components@^0.1.0',
       '--ignore-scripts',
     ])
-    expect(createInstallCommand({ name: 'bun', isYarnBerry: false }, '2.2.0').command).toBe('bun')
+    expect(createInstallCommand({ name: 'bun', isYarnBerry: false }, '0.1.0').command).toBe('bun')
   })
 
   it('turns scripts off for Yarn 2 and later through its setting, which takes no flag', () => {
-    expect(createInstallCommand({ name: 'yarn', isYarnBerry: true }, '2.2.0')).toEqual({
+    expect(createInstallCommand({ name: 'yarn', isYarnBerry: true }, '0.1.0')).toEqual({
       command: 'yarn',
-      args: ['add', '@soroush.tech/design-system@^2.2.0'],
+      args: ['add', '@soroush.design/react-components@^0.1.0'],
       env: { YARN_ENABLE_SCRIPTS: 'false' },
     })
   })
 
   it('pins a prerelease exactly', () => {
-    expect(createInstallCommand({ name: 'npm', isYarnBerry: false }, '2.3.0-alpha.1').args[1]).toBe(
-      '@soroush.tech/design-system@2.3.0-alpha.1'
+    expect(createInstallCommand({ name: 'npm', isYarnBerry: false }, '0.1.0-alpha.1').args[1]).toBe(
+      '@soroush.design/react-components@0.1.0-alpha.1'
     )
   })
 })

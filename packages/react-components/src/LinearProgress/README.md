@@ -48,7 +48,7 @@ Default: `4`.
 
 ### `value` / `min` / `max`
 
-`value` drives the primary bar for the `"determinate"` variant. It is clamped to `[min, max]` via `@soroush.tech/design-system/utils/clamp` before rendering.
+`value` drives the primary bar for the `"determinate"` variant. It is clamped to `[min, max]` via `@soroush.design/react-components/utils/clamp` before rendering.
 
 | Prop    | Default                     |
 | ------- | --------------------------- |

@@ -1,5 +1,5 @@
 import { StrictMode } from 'react'
-import { CacheProvider, styleCache } from '@soroush.tech/design-system/engine'
+import { CacheProvider, styleCache } from '@soroush.design/react-components/engine'
 import { Provider as StoreProvider } from 'react-redux'
 import type { PageContext } from 'vike/types'
 import { store } from '../state/store'

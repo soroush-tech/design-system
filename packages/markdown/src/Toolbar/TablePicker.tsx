@@ -1,11 +1,11 @@
 import { useState, type MouseEvent } from 'react'
-import { styled, type Theme } from '@soroush.tech/design-system'
-import { themeDefault } from '@soroush.tech/design-system/theme'
-import { Button } from '@soroush.tech/design-system/Button'
-import { Flex } from '@soroush.tech/design-system/Flex'
-import { Icon } from '@soroush.tech/design-system/Icon'
-import { Popover } from '@soroush.tech/design-system/Popover'
-import { Typography } from '@soroush.tech/design-system/Typography'
+import { styled, type Theme } from '@soroush.design/react-components'
+import { themeDefault } from '@soroush.design/react-components/theme'
+import { Button } from '@soroush.design/react-components/Button'
+import { Flex } from '@soroush.design/react-components/Flex'
+import { Icon } from '@soroush.design/react-components/Icon'
+import { Popover } from '@soroush.design/react-components/Popover'
+import { Typography } from '@soroush.design/react-components/Typography'
 
 /** Smallest grid shown, and the hard cap it grows to as the hover nears the edge. */
 const MIN_EXTENT = 8

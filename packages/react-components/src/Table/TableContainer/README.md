@@ -13,4 +13,4 @@ horizontally inside it instead of breaking the page layout. Give it a bounded `m
 ## Props
 
 Accepts every `View` prop - `bg`, `borderColor`, `borderWidth`, `borderRadius`, spacing, layout,
-position, and `as` (default `'div'`). See `@soroush.tech/design-system/View/README.md`.
+position, and `as` (default `'div'`). See `@soroush.design/react-components/View/README.md`.

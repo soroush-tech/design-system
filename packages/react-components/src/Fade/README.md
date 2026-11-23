@@ -3,7 +3,7 @@
 Fades one child in and out by its opacity. The child holds a `ref` and takes a `style` - a `ref`-holding component, or a DOM element - and the transition draws its opacity on it. Out, the child is hidden, so it takes no click or focus. A user who asked for less motion (`prefers-reduced-motion: reduce`) sees it change at once, and the callbacks still fire.
 
 ```tsx
-import { Fade } from '@soroush.tech/design-system/Fade'
+import { Fade } from '@soroush.design/react-components/Fade'
 
 ;<Fade isShown={isOpen}>
   <Paper p={3}>Content</Paper>

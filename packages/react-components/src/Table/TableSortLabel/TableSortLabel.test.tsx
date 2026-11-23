@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { fireEvent, screen } from '@testing-library/react'
-import { renderWithTheme } from '@soroush.tech/design-system/utils/test/renderWithTheme'
+import { renderWithTheme } from '@soroush.design/react-components/utils/test/renderWithTheme'
 import { Table } from '../Table'
 import { TableHead } from '../TableHead'
 import { TableCell } from '../TableCell'

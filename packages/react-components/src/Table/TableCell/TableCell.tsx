@@ -16,8 +16,8 @@ import {
   border,
   system,
   get,
-} from '@soroush.tech/design-system'
-import { themeDefault } from '@soroush.tech/design-system/theme'
+} from '@soroush.design/react-components'
+import { themeDefault } from '@soroush.design/react-components/theme'
 
 /** Cell type - inherited from the enclosing section, overridable per cell. */
 export type TableCellVariant = TableSection

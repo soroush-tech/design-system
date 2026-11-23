@@ -7,7 +7,7 @@ Reference wiring: a Next.js App Router app on React 19.
 ```jsonc
 // package.json
 "dependencies": {
-  "@soroush.tech/design-system": "^3.0.0",
+  "@soroush.design/react-components": "^0.1.0",
   "react": "^19.2.8",
   "react-dom": "^19.2.8"
 }
@@ -15,7 +15,7 @@ Reference wiring: a Next.js App Router app on React 19.
 
 The styling engine (UmberStyle, the `@umber-style/*` packages) comes in as a dependency
 of the design system - don't add it directly. The registry in `providers.tsx` takes
-`createCache` from `@soroush.tech/design-system/engine`. React 19.2 or later is required.
+`createCache` from `@soroush.design/react-components/engine`. React 19.2 or later is required.
 
 ## 2. Theme
 

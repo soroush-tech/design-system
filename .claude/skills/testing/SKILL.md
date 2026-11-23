@@ -22,7 +22,7 @@ Only **design-system** splits into projects (`packages/react-components/vitest.c
 - `storybook` - runs `*.stories.tsx` via the Storybook addon
 
 Scope a run with `--project=unit` (etc.) and pass path filters:
-`pnpm --filter @soroush.tech/design-system exec vitest run --project=unit src/Button`.
+`pnpm --filter @soroush.design/react-components exec vitest run --project=unit src/Button`.
 The other packages have a single flat vitest config.
 
 ## Commands

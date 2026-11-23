@@ -7,7 +7,7 @@ test.describe('landing page', () => {
     await expect(
       page.getByRole('heading', { level: 1, name: 'A design system made of tokens, not guesses' })
     ).toBeVisible()
-    await expect(page.getByText('npm i @soroush.tech/design-system')).toBeVisible()
+    await expect(page.getByText('npm i @soroush.design/react-components')).toBeVisible()
   })
 
   test('opens the docs from its buttons and lists the three packages', async ({ page }) => {

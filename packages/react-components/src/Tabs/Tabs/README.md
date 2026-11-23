@@ -6,7 +6,7 @@ is a navigation of buttons or links, the current one marked `aria-current="page"
 carry content of its own before and after the tabs - an icon, a toolbar, a "+" button.
 
 ```tsx
-import { Tab, Tabs } from '@soroush.tech/design-system/Tabs'
+import { Tab, Tabs } from '@soroush.design/react-components/Tabs'
 
 ;<Tabs value={value} onChange={setValue} textColor="secondary" color="secondary" aria-label="Items">
   <Tab value="one" label="Item One" />
@@ -19,7 +19,7 @@ import { Tab, Tabs } from '@soroush.tech/design-system/Tabs'
 each tab, put the tabs in a `TabContext` as a `TabList` - it links each tab to its `TabPanel`:
 
 ```tsx
-import { Tab, TabContext, TabList, TabPanel } from '@soroush.tech/design-system/Tabs'
+import { Tab, TabContext, TabList, TabPanel } from '@soroush.design/react-components/Tabs'
 
 ;<TabContext value={value}>
   <TabList onChange={setValue} aria-label="Items">

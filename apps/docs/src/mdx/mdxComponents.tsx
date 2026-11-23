@@ -1,8 +1,8 @@
 import type { MDXComponents } from 'mdx/types'
-import { Checkbox } from '@soroush.tech/design-system/Checkbox'
-import { Image } from '@soroush.tech/design-system/Image'
-import { Link } from '@soroush.tech/design-system/Link'
-import { Quote } from '@soroush.tech/design-system/Quote'
+import { Checkbox } from '@soroush.design/react-components/Checkbox'
+import { Image } from '@soroush.design/react-components/Image'
+import { Link } from '@soroush.design/react-components/Link'
+import { Quote } from '@soroush.design/react-components/Quote'
 import {
   Table,
   TableBody,
@@ -10,9 +10,9 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-} from '@soroush.tech/design-system/Table'
-import { Typography } from '@soroush.tech/design-system/Typography'
-import { View } from '@soroush.tech/design-system/View'
+} from '@soroush.design/react-components/Table'
+import { Typography } from '@soroush.design/react-components/Typography'
+import { View } from '@soroush.design/react-components/View'
 import { CodeBlock } from '@soroush.tech/markdown/CodeBlock'
 import { MdxReadme } from './MdxReadme'
 

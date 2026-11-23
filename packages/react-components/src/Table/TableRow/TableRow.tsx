@@ -10,8 +10,8 @@ import {
   space,
   border,
   system,
-} from '@soroush.tech/design-system'
-import { themeDefault } from '@soroush.tech/design-system/theme'
+} from '@soroush.design/react-components'
+import { themeDefault } from '@soroush.design/react-components/theme'
 
 /** Palette color driving the hover/selected shading - a `theme.palette` key. */
 export type TableRowColor = PaletteColor

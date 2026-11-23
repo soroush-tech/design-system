@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest'
-import { createProvidersSource, createThemesSource, MARKER } from './templates'
+import { createProvidersSource, createThemesSource, isSetUpByInit, MARKER } from './templates'
 
 describe('createThemesSource', () => {
   it('default-exports an object of named themes, each createTheme(base, {...literal})', () => {
@@ -19,7 +19,7 @@ describe('createThemesSource', () => {
 
   it('gives a TypeScript app the augmentation stub, as a comment, and a JavaScript app none', () => {
     expect(createThemesSource({ isTypeScript: true })).toContain(
-      "// declare module '@soroush.tech/design-system/theme' {"
+      "// declare module '@soroush.design/react-components/theme' {"
     )
     expect(createThemesSource({ isTypeScript: false })).not.toContain('declare module')
   })
@@ -51,5 +51,27 @@ describe('createProvidersSource', () => {
     expect(source).toContain('{ theme: themes[scheme] }')
     expect(source).toContain("import themes from './themes.js'")
     expect(source).toContain("scheme = 'light'")
+  })
+})
+
+describe('isSetUpByInit', () => {
+  it('writes the current name of the library', () => {
+    expect(MARKER).toBe('// Set up by @soroush.design/react-components init.')
+  })
+
+  it('recognises a file that starts with the current marker', () => {
+    expect(isSetUpByInit('// Set up by @soroush.design/react-components init. Your themes')).toBe(
+      true
+    )
+  })
+
+  it('recognises a file that starts with the marker of the former name', () => {
+    expect(isSetUpByInit('// Set up by @soroush.tech/design-system init. Your themes')).toBe(true)
+  })
+
+  it("treats a file with neither marker as the developer's own", () => {
+    expect(isSetUpByInit('export const light = {}')).toBe(false)
+    expect(isSetUpByInit('// Set up by another-package init.')).toBe(false)
+    expect(isSetUpByInit('')).toBe(false)
   })
 })

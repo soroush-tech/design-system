@@ -5,7 +5,7 @@ close control. `role="alert"` is announced at once; `"status"`, politely. Every 
 message, and the close control's name (`closeLabel`) - no built-in English.
 
 ```tsx
-import { Alert, AlertTitle } from '@soroush.tech/design-system/Alert'
+import { Alert, AlertTitle } from '@soroush.design/react-components/Alert'
 
 ;<Alert severity="success" onClose={dismiss} closeLabel="Dismiss">
   <AlertTitle>Saved</AlertTitle>

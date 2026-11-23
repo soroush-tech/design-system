@@ -5,16 +5,16 @@
 Every component ships on its own subpath, so bundlers tree-shake by construction:
 
 ```tsx
-import { Button } from '@soroush.tech/design-system/Button'
-import { Flex } from '@soroush.tech/design-system/Flex'
-import { Typography } from '@soroush.tech/design-system/Typography'
+import { Button } from '@soroush.design/react-components/Button'
+import { Flex } from '@soroush.design/react-components/Flex'
+import { Typography } from '@soroush.design/react-components/Typography'
 ```
 
 The barrel export carries the styling engine and theme helpers:
 
 ```tsx
-import { styled, css } from '@soroush.tech/design-system'
-import { createTheme, type Theme } from '@soroush.tech/design-system/theme'
+import { styled, css } from '@soroush.design/react-components'
+import { createTheme, type Theme } from '@soroush.design/react-components/theme'
 ```
 
 ## Style props

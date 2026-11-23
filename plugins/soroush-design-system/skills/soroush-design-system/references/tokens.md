@@ -2,7 +2,7 @@
 
 # Token contract
 
-Every scale on `theme`, serialized from `baseTheme` (@soroush.tech/design-system 3.0.0).
+Every scale on `theme`, serialized from `baseTheme` (@soroush.design/react-components 0.1.0).
 Reference tokens through the theme; a literal value in a component is a bug.
 
 ## switch

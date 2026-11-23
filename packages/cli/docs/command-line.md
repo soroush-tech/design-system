@@ -217,7 +217,7 @@ npx @soroush.design/cli init
 ```
 
 It installs the design system version the command line was released next to.
-`npx @soroush.tech/design-system init` does the same with the design system version you ask for.
+`npx @soroush.design/react-components init` does the same with the design system version you ask for.
 
 | Option            | What it does                                 |
 | ----------------- | -------------------------------------------- |
@@ -235,7 +235,7 @@ App), in TypeScript or JavaScript:
 - It writes `src/theme/themes` (a `light` and a `dark` theme, each a `createTheme(baseTheme,
   {...})` call you edit) and `src/theme/Providers` (`ThemeProvider` with the base page styles).
 - It wraps what your root renders in `<Providers>`.
-- It installs `@soroush.tech/design-system` with your own package manager.
+- It installs `@soroush.design/react-components` with your own package manager.
 
 It is careful with your app:
 

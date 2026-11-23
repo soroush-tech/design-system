@@ -20,10 +20,10 @@ Check whether `packages/react-components/src/<Name>/` already exists.
 
 Read these files in order before doing anything else:
 
-1. `@soroush.tech/design-system/Typography/Typography.tsx` - canonical component implementation
-2. `@soroush.tech/design-system/Typography/README.md` - canonical documentation format
-3. `@soroush.tech/design-system/Typography/Typography.stories.tsx` - canonical story structure
-4. `@soroush.tech/design-system/storybookOptions.ts` - existing token arrays and import patterns
+1. `@soroush.design/react-components/Typography/Typography.tsx` - canonical component implementation
+2. `@soroush.design/react-components/Typography/README.md` - canonical documentation format
+3. `@soroush.design/react-components/Typography/Typography.stories.tsx` - canonical story structure
+4. `@soroush.design/react-components/storybookOptions.ts` - existing token arrays and import patterns
 5. `packages/react-components/design-system.md` - full architecture rules (authoritative source of truth)
 
 If reworking an existing component, also read its current files:
@@ -78,11 +78,11 @@ export * from './<Name>'
 
 - Document every prop: type, default, description
 - Color/bg tables use palette constant names only - `kineticGreen[500]`, never hex
-- Mirror the section structure of `@soroush.tech/design-system/Typography/README.md`
+- Mirror the section structure of `@soroush.design/react-components/Typography/README.md`
 
 **`<Name>.stories.tsx`**
 
-- Import all option arrays from `@soroush.tech/design-system/storybookOptions.ts` - never hardcode inline
+- Import all option arrays from `@soroush.design/react-components/storybookOptions.ts` - never hardcode inline
 - `controls.include` whitelist - no autodiscovery
 - Every prop in `controls.include` must have a matching `argType` with `control`, `description`, and `table.category`
 - Category names: Content · Typography · Layout · Color · Spacing
@@ -93,7 +93,7 @@ export * from './<Name>'
 - Cover: CSS output for each prop, HTML attribute passthrough, element mapping if a variant prop exists
 - Wrap renders in `ThemeProvider`
 
-Update `@soroush.tech/design-system/storybookOptions.ts` only if new token arrays are needed - never duplicate existing ones.
+Update `@soroush.design/react-components/storybookOptions.ts` only if new token arrays are needed - never duplicate existing ones.
 
 ### Rework (existing component)
 

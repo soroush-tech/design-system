@@ -1,5 +1,5 @@
 import type { ComponentType } from 'react'
-import type { CSSObject } from '@soroush.tech/design-system/theme'
+import type { CSSObject } from '@soroush.design/react-components/theme'
 import type { StyleFactory, StyleInput } from '../hooks/useStyle'
 import { StylesConsumer } from '../StylesConsumer'
 

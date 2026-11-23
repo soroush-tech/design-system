@@ -6,8 +6,8 @@ closes as [`Menu`](../Menu/README.md) does, and gives focus back to where it was
 context menu is held back only when this one opens.
 
 ```tsx
-import { ContextMenu } from '@soroush.tech/design-system/Menu'
-import { MenuItem } from '@soroush.tech/design-system/MenuItem'
+import { ContextMenu } from '@soroush.design/react-components/Menu'
+import { MenuItem } from '@soroush.design/react-components/MenuItem'
 
 ;<ContextMenu target={<Canvas />} aria-label="Canvas" onSelect={run}>
   <MenuItem value="paste" shortcut="Control+V">

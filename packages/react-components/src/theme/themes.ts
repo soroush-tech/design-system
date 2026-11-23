@@ -14,7 +14,7 @@ export type CSSObject = EngineCSSObject
 // used internally). Consumers extend every scale by declaration merging
 // against THIS module:
 //
-//   declare module '@soroush.tech/design-system/theme' {
+//   declare module '@soroush.design/react-components/theme' {
 //     interface ThemePalette { brand: PaletteEntry }   // new palette color
 //     interface ThemeBackground { tertiary: string }   // new background token
 //     interface Theme { elevations: Record<string, string> }  // whole new scale
@@ -235,7 +235,7 @@ export interface DefaultBreakpoints {
  * Add, rename or remove breakpoints by augmenting this interface: `true` adds a name, `false`
  * removes a default one.
  *
- *   declare module '@soroush.tech/design-system/theme' {
+ *   declare module '@soroush.design/react-components/theme' {
  *     interface BreakpointOverrides { mobile: true; tablet: true; xs: false; sm: false }
  *   }
  */

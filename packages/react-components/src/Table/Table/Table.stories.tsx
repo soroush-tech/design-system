@@ -15,12 +15,12 @@ import {
   borderStyle,
   borderColor,
   borderRadius,
-} from '@soroush.tech/design-system/utils/test/storiesArgs'
+} from '@soroush.design/react-components/utils/test/storiesArgs'
 import {
   tableSizeTokens,
   tableCellPaddingTokens,
   buttonColorTokens,
-} from '@soroush.tech/design-system/utils/test/storiesOptions'
+} from '@soroush.design/react-components/utils/test/storiesOptions'
 import { TableContainer } from '../TableContainer'
 import { TableHead } from '../TableHead'
 import { TableBody } from '../TableBody'
@@ -33,8 +33,8 @@ import { useTablePagination } from '../hooks/useTablePagination'
 import { useTableSelection } from '../hooks/useTableSelection'
 import { useTableSort, type TableSortMap } from '../hooks/useTableSort'
 import { TablePagination } from '../TablePagination'
-import { Checkbox } from '@soroush.tech/design-system/Checkbox'
-import { Typography } from '@soroush.tech/design-system/Typography'
+import { Checkbox } from '@soroush.design/react-components/Checkbox'
+import { Typography } from '@soroush.design/react-components/Typography'
 import { Table, type TableProps } from './Table'
 
 const deployments = [

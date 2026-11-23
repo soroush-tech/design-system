@@ -1,5 +1,5 @@
 import useSWR from 'swr'
-import { Typography } from '@soroush.tech/design-system/Typography'
+import { Typography } from '@soroush.design/react-components/Typography'
 import { fetchGreeting } from '../../data/api'
 
 /** What the API says, read with SWR. */

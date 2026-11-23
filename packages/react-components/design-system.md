@@ -6,14 +6,14 @@ How the theme is built, how components are structured, and the conventions every
 
 ## Stack
 
-| Concern                   | Library                                                                                                                |
-| ------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| CSS-in-JS                 | UmberStyle: `@umber-style/styled` + `@umber-style/react` (internal only - see `src/theme/engine.ts`)                   |
-| Theme tokens              | `styled-system` (space, layout, typography, flexbox, border, position)                                                 |
-| Custom prop→scale mapping | `styled-system` `system()`                                                                                             |
-| Prop filtering            | `@styled-system/should-forward-prop`                                                                                   |
-| Component stories         | Storybook v10 (`@storybook/react-vite`)                                                                                |
-| Theme augmentation        | native interfaces owned by `src/theme/themes.ts`, augmentable via `declare module '@soroush.tech/design-system/theme'` |
+| Concern                   | Library                                                                                                                     |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| CSS-in-JS                 | UmberStyle: `@umber-style/styled` + `@umber-style/react` (internal only - see `src/theme/engine.ts`)                        |
+| Theme tokens              | `styled-system` (space, layout, typography, flexbox, border, position)                                                      |
+| Custom prop→scale mapping | `styled-system` `system()`                                                                                                  |
+| Prop filtering            | `@styled-system/should-forward-prop`                                                                                        |
+| Component stories         | Storybook v10 (`@storybook/react-vite`)                                                                                     |
+| Theme augmentation        | native interfaces owned by `src/theme/themes.ts`, augmentable via `declare module '@soroush.design/react-components/theme'` |
 
 ---
 
@@ -51,16 +51,16 @@ Each scale is a named, consumer-extensible interface (declared in `src/theme/the
 
 ### Theme augmentation
 
-The entire type layer is declared natively - as plain exported interfaces owned by this package - in `src/theme/themes.ts`. `Theme` is this package's own type, not the engine's: the styling engine is an internal implementation detail (see `src/theme/engine.ts`) and is never part of the public type surface. `declare module '@soroush.tech/design-system/theme'` is the augmentation surface consumers use to extend scales by declaration merging; it survives tsdown's chunked d.ts output the same way augmenting an external module used to (verified by `type-tests/augmentation.ts`).
+The entire type layer is declared natively - as plain exported interfaces owned by this package - in `src/theme/themes.ts`. `Theme` is this package's own type, not the engine's: the styling engine is an internal implementation detail (see `src/theme/engine.ts`) and is never part of the public type surface. `declare module '@soroush.design/react-components/theme'` is the augmentation surface consumers use to extend scales by declaration merging; it survives tsdown's chunked d.ts output the same way augmenting an external module used to (verified by `type-tests/augmentation.ts`).
 
 ```ts
-import { type Theme } from '@soroush.tech/design-system/theme'
+import { type Theme } from '@soroush.design/react-components/theme'
 
 type MyColorProp = keyof Theme['text'] // 'inherit' | 'initial' | 'primary' | ...
 type MyBgProp = keyof Theme['background'] // 'backdrop' | 'modal' | 'primary' | ...
 ```
 
-**Consumers of the published package** extend scales by augmenting `@soroush.tech/design-system/theme` (see the README's "Theming" section), build the values with `createTheme(base, overrides)`, and pass the finished theme to `ThemeProvider`'s `theme` prop. `type-tests/augmentation.ts` (run by `pnpm test:types`) verifies this recipe against the real dist d.ts.
+**Consumers of the published package** extend scales by augmenting `@soroush.design/react-components/theme` (see the README's "Theming" section), build the values with `createTheme(base, overrides)`, and pass the finished theme to `ThemeProvider`'s `theme` prop. `type-tests/augmentation.ts` (run by `pnpm test:types`) verifies this recipe against the real dist d.ts.
 
 **The in-repo app must NOT augment scale interfaces with new keys** - the monorepo consumes package _source_, so a merged required key would fail the `light: Theme` completeness check inside `src/theme/themes.ts`. The app only overrides values (`apps/web/src/theme/themes.ts` via `createTheme`).
 
@@ -100,7 +100,7 @@ Rules when converting a component:
 - `color` → `scale: 'text'`
 - `bg` → `scale: 'background'`
 
-**Storybook options** - all option arrays live in `@soroush.tech/design-system/utils/test/storiesOptions.ts` with `satisfies` constraints against `Theme`. Import from there in every story, never hardcode inline. When adding a new component, add its token arrays to `storiesOptions.ts`.
+**Storybook options** - all option arrays live in `@soroush.design/react-components/utils/test/storiesOptions.ts` with `satisfies` constraints against `Theme`. Import from there in every story, never hardcode inline. When adding a new component, add its token arrays to `storiesOptions.ts`.
 
 **Storybook argType rules:**
 
@@ -126,7 +126,7 @@ This reads the current Typography files and `design-system.md` before generating
 Extend the styled-system prop groups and declare custom props. Derive types from `Theme` - never write manual unions.
 
 ```ts
-import { type Theme } from '@soroush.tech/design-system/theme'
+import { type Theme } from '@soroush.design/react-components/theme'
 
 // Derive from Theme - stays in sync automatically
 export type TextColorToken  = keyof Theme['text']
@@ -200,10 +200,10 @@ export function MyComponent({ as, ...rest }: MyComponentProps) {
 
 ## Files per Component
 
-Every component lives in its own folder under `@soroush.tech/design-system/`. The folder contains six files plus a barrel index:
+Every component lives in its own folder under `@soroush.design/react-components/`. The folder contains six files plus a barrel index:
 
 ```
-@soroush.tech/design-system/
+@soroush.design/react-components/
   ComponentName/
     index.ts               ← export * from './ComponentName'
     ComponentName.tsx      ← component + exported prop types
@@ -214,7 +214,7 @@ Every component lives in its own folder under `@soroush.tech/design-system/`. Th
     ComponentName.catalog.ts ← the component as data, for tools
 ```
 
-The `index.ts` barrel means all existing imports (`import { X } from '@soroush.tech/design-system/ComponentName'`) continue to work without changes - Node/TypeScript resolves the folder to its `index.ts` automatically.
+The `index.ts` barrel means all existing imports (`import { X } from '@soroush.design/react-components/ComponentName'`) continue to work without changes - Node/TypeScript resolves the folder to its `index.ts` automatically.
 
 ### `README.md`
 
@@ -244,7 +244,7 @@ without one fails `nav.test.ts` and the docs prerender.
 
 ### `ComponentName.stories.tsx`
 
-Import all option arrays from `@soroush.tech/design-system/test/utils/storiesOptions.ts`. Never hardcode arrays inline in a story file.
+Import all option arrays from `@soroush.design/react-components/test/utils/storiesOptions.ts`. Never hardcode arrays inline in a story file.
 
 ```ts
 import {
@@ -253,7 +253,7 @@ import {
   spaceTokens,
   fontWeightTokens,
   // ... others as needed
-} from '@soroush.tech/design-system/utils/test/storiesOptions'
+} from '@soroush.design/react-components/utils/test/storiesOptions'
 ```
 
 ArgType categories - use exactly these names for consistency across all components:
@@ -278,7 +278,7 @@ Rules:
 
 ### `ComponentName.catalog.ts`
 
-The component's entry in `@soroush.tech/design-system/catalog` - what a tool needs to place and
+The component's entry in `@soroush.design/react-components/catalog` - what a tool needs to place and
 write it: what a fresh one is, its looks, the props a picker offers and their theme scales, how its
 node props are written. Typed against the component's props with `defineCatalogEntry<Props>()`,
 props imported with `import type` only, registered in `src/catalog/sources.ts`. The stories read
@@ -313,9 +313,9 @@ Story play functions and a11y checks run in both: `pnpm test:storybook` here (th
 
 ---
 
-## Storybook Options (`@soroush.tech/design-system/utils/test/storiesOptions.ts`)
+## Storybook Options (`@soroush.design/react-components/utils/test/storiesOptions.ts`)
 
-For props shared across components (`bg`, `opacity`, `p`, `m`, all border props, etc.), `@soroush.tech/design-system/utils/test/storiesArgs.ts` exports pre-built argType objects - import and spread directly into `argTypes` instead of composing from option arrays.
+For props shared across components (`bg`, `opacity`, `p`, `m`, all border props, etc.), `@soroush.design/react-components/utils/test/storiesArgs.ts` exports pre-built argType objects - import and spread directly into `argTypes` instead of composing from option arrays.
 
 Single source of truth for all option arrays used in Storybook stories. Add new arrays here when building new components. Each array uses `satisfies` to stay in sync with the Theme type - TypeScript will error if a key is missing or misspelled.
 
@@ -327,7 +327,7 @@ export const radiiTokens = ['sm', 'md', 'lg'] satisfies (keyof Theme['radii'])[]
 Import the relevant prop types from the component file to constrain component-specific arrays:
 
 ```ts
-import type { BackgroundToken, TextColorToken } from '@soroush.tech/design-system/Typography'
+import type { BackgroundToken, TextColorToken } from '@soroush.design/react-components/Typography'
 
 export const backgroundTokens = [...] satisfies BackgroundToken[]
 ```
@@ -351,7 +351,7 @@ Use `/new_theme_component ComponentName` to scaffold all files automatically.
 - [ ] `ComponentName/README.md` - all props documented, no hex codes
 - [ ] `ComponentName/ComponentName.mdx` - the docs-site page (heading + `<Readme part="intro" />` + demos or examples)
 - [ ] `ComponentName/ComponentName.stories.tsx` - imports from `storiesArgs` (shared props) or `storiesOptions` (component-specific), `controls.include` whitelist, argType categories
-- [ ] New token arrays added to `@soroush.tech/design-system/utils/test/storiesOptions.ts` with `satisfies`
+- [ ] New token arrays added to `@soroush.design/react-components/utils/test/storiesOptions.ts` with `satisfies`
 - [ ] `ComponentName/ComponentName.test.tsx` - prop→CSS, element mapping, HTML passthrough
 - [ ] `ComponentName/ComponentName.catalog.ts` - the entry, registered in `src/catalog/sources.ts`; the stories' `args` read from it
 - [ ] No hardcoded hex values in the component - colors read theme tokens only

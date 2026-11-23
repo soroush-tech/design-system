@@ -11,7 +11,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@soroush.tech/design-system": "^2.3.0",
+    "@soroush.design/react-components": "^0.1.0",
     "swr": "^2.5.1",
     "@reduxjs/toolkit": "^2.14.0",
     "react-redux": "^9.3.1",

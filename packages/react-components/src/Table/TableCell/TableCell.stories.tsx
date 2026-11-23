@@ -7,7 +7,7 @@ import {
   borderWidth,
   borderStyle,
   borderColor,
-} from '@soroush.tech/design-system/utils/test/storiesArgs'
+} from '@soroush.design/react-components/utils/test/storiesArgs'
 import {
   tableCellVariantTokens,
   tableCellAlignTokens,
@@ -19,7 +19,7 @@ import {
   fontWeightTokens,
   lineHeightTokens,
   letterSpacingTokens,
-} from '@soroush.tech/design-system/utils/test/storiesOptions'
+} from '@soroush.design/react-components/utils/test/storiesOptions'
 import { Table } from '../Table'
 import { TableHead } from '../TableHead'
 import { TableBody } from '../TableBody'

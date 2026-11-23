@@ -3,7 +3,7 @@ import { useState, type ReactNode } from 'react'
 // @else
 import type { ReactNode } from 'react'
 // @endif
-import { View } from '@soroush.tech/design-system/View'
+import { View } from '@soroush.design/react-components/View'
 // @if tanstack-query
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 // @endif

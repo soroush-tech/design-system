@@ -189,12 +189,14 @@ describe('findRootFiles', () => {
 
 describe('readDesignSystemPackage', () => {
   it("finds the design system's package.json above a file in it", () => {
-    expect(readDesignSystemPackage(DESIGN_SYSTEM_FILE).name).toBe('@soroush.tech/design-system')
+    expect(readDesignSystemPackage(DESIGN_SYSTEM_FILE).name).toBe(
+      '@soroush.design/react-components'
+    )
   })
 
   it('throws when there is none', () => {
     expect(() => readDesignSystemPackage(join(createTestApp(), 'bin.mjs'))).toThrow(
-      'init cannot find the package.json of @soroush.tech/design-system'
+      'init cannot find the package.json of @soroush.design/react-components'
     )
   })
 })

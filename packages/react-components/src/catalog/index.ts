@@ -26,7 +26,7 @@ const components: Record<string, CatalogEntry> = Object.fromEntries(
     {
       ...entry,
       name,
-      module: `@soroush.tech/design-system/${folder}`,
+      module: `@soroush.design/react-components/${folder}`,
       category: categoryOf(family ?? name),
     },
   ])
