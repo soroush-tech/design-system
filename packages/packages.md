@@ -128,7 +128,7 @@ import { useMergedRefs, useEventCallback } from 'soroush.design/react/hooks'
 - **The theme library exists once in an app.** The other libraries depend on it by a version range and never bundle it; two copies are two contexts, and components that do not see the app's theme.
 - **The styling engine is configured in the theme library**, by a function the library calls - not by a module imported for its effect, which a bundler drops from a package marked `"sideEffects": false`.
 - **An app can take the lean route.** Every library works installed alone, without an umbrella.
-- **New packages start at `1.0.0`.**
+- **New packages start at `0.1.0`**, with release notes written for that version: what the package is and how to move to it, not a list of changes against a package it replaces.
 
 ---
 
