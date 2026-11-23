@@ -1,5 +1,5 @@
 // Regenerates the package-derived config that would otherwise be edited by hand:
-//   - the workflow_dispatch `package` choice list in cd-packages.yml (non-private packages)
+//   - the workflow_dispatch `package` choice list in cd-packages.yml (non-private @soroush.tech packages)
 //   - the .codecov.yml flag + component entries for each package (all packages)
 //   - the "Affected area" dropdown options in every .github/ISSUE_TEMPLATE form (all packages)
 // Run `pnpm gen:publish-options` to update them; the pre-commit hook runs it with --check
@@ -18,10 +18,11 @@ const allPackages = readdirSync(packagesDir, { withFileTypes: true })
   .filter((name) => existsSync(join(packagesDir, name, 'package.json')))
   .sort()
 
-const publishable = allPackages.filter(
-  (name) =>
-    JSON.parse(readFileSync(join(packagesDir, name, 'package.json'), 'utf8')).private !== true
-)
+// The @soroush.design family is published from `main`, never from this branch.
+const publishable = allPackages.filter((name) => {
+  const manifest = JSON.parse(readFileSync(join(packagesDir, name, 'package.json'), 'utf8'))
+  return manifest.private !== true && !manifest.name.startsWith('@soroush.design/')
+})
 
 if (publishable.length === 0) {
   console.error(

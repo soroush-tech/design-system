@@ -19,8 +19,8 @@ checkout:
 | channel  | Published as    | npm dist-tag | Run from                        | GitHub Release |
 | -------- | --------------- | ------------ | ------------------------------- | -------------- |
 | `alpha`  | `X.Y.Z-alpha.N` | `alpha`      | any branch whose `ci-ok` passed | none           |
-| `rc`     | `X.Y.Z-rc.N`    | `rc`         | `main`                          | pre-release    |
-| `stable` | `X.Y.Z`         | `latest`     | `main`                          | release        |
+| `rc`     | `X.Y.Z-rc.N`    | `rc`         | `legacy`                        | pre-release    |
+| `stable` | `X.Y.Z`         | `latest`     | `legacy`                        | release        |
 
 `N` is one above the highest `X.Y.Z-<channel>.N` already on npm, `0` when there is none -
 nobody edits it.
@@ -66,13 +66,13 @@ nobody edits it.
 
 ## Publish a release candidate
 
-1. Merge the PR (the target and `release-notes/X.Y.Z.md` in it).
-2. Dispatch from `main` with `channel: rc`, dependencies first.
-3. Consumers: `pnpm add @soroush.tech/<pkg>@rc`. A fix is a PR to `main`, then another `rc`.
+1. Merge the PR into `legacy` (the target and `release-notes/X.Y.Z.md` in it).
+2. Dispatch from `legacy` with `channel: rc`, dependencies first.
+3. Consumers: `pnpm add @soroush.tech/<pkg>@rc`. A fix is a PR to `legacy`, then another `rc`.
 
 ## Promote to stable
 
-1. Dispatch from `main` with `channel: stable`, dependencies first - same `package.json`, no
+1. Dispatch from `legacy` with `channel: stable`, dependencies first - same `package.json`, no
    commit needed.
 2. `npm view @soroush.tech/<pkg> dist-tags`: `latest` is `X.Y.Z`.
 3. Consumers move from the tag to `^X.Y.Z`. The next change needs a new target.
@@ -82,5 +82,5 @@ nobody edits it.
 ## Once per repo
 
 The `cd-packages` environment (repo Settings -> Environments -> Deployment branches) must allow
-the branches alphas come from (e.g. `feat/*`, `fix/*`, `chore/*`); `main` alone blocks every
+the branches alphas come from (e.g. `feat/*`, `fix/*`, `chore/*`); `legacy` alone blocks every
 branch alpha before it starts.

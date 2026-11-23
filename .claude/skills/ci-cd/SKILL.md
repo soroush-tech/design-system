@@ -10,11 +10,19 @@ metadata:
 
 ## Workflow files
 
-| File              | Name                  | Trigger                              |
-| ----------------- | --------------------- | ------------------------------------ |
-| `ci.yml`          | `CI`                  | `push` to `main`, all `pull_request` |
-| `cd-packages.yml` | `CD · Packages (npm)` | manual `workflow_dispatch` only      |
-| `label-area.yml`  | `Label Affected Area` | `issues: opened`                     |
+| File              | Name                  | Trigger                                                             |
+| ----------------- | --------------------- | ------------------------------------------------------------------- |
+| `ci.yml`          | `CI`                  | `push` to `legacy`, all `pull_request`                              |
+| `cd-packages.yml` | `CD · Packages (npm)` | manual `workflow_dispatch` only                                     |
+| `cd-docs.yml`     | `CD · Docs`           | reusable: called by `ci.yml` and `cd-packages.yml`; manual snapshot |
+| `label-area.yml`  | `Label Affected Area` | `issues: opened`                                                    |
+
+This is the `legacy` branch: the `@soroush.tech` packages and docs.soroush.tech are built, released and
+deployed from here, never from `main` (the `@soroush.design` family). `workflow_run` and `schedule`
+only fire from the default branch, so neither is used: `cd-docs.yml` is a reusable workflow
+(`workflow_call`), called as the last job of `ci.yml` (`needs: [ci-ok]`, push to `legacy` only) for the
+live site and after a stable publish in `cd-packages.yml` for the snapshots. Each deploying job refuses
+any ref but `legacy` before it can push `docs-dist`.
 
 One CI entry workflow holding every job; CD is separate and **manual only** - a release is a
 deliberate act with required, human-written notes, never triggered by a push or merge.
@@ -84,7 +92,8 @@ run `pnpm gen:publish-options` and commit the result.
 
 Manual dispatch with a `package` and a `channel` input (`alpha` | `rc` | `stable` - see the
 `prerelease` skill): `alpha` runs from any branch whose `ci-ok` passed and publishes
-`<target>-alpha.N` under the `alpha` dist-tag; `rc` and `stable` run from `main` only.
+`<target>-alpha.N` under the `alpha` dist-tag; `rc` and `stable` run from `legacy` only. A `@soroush.design/*` package (cli, mcp) is not
+publishable from here: the generator leaves it out of the choice list and the run refuses it.
 `scripts/prerelease-versions.mjs` computes the versions in the checkout. npm **Trusted Publishing** (OIDC id-token per run, no
 NPM_TOKEN; `NODE_AUTH_TOKEN` must stay unset). Requires the `cd-packages` environment and the
 npm trusted-publisher config for this repo. Notes come from

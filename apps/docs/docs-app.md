@@ -41,9 +41,10 @@ pages, and the drift tests; `sectionFor(pathname)` picks the active section.
 `DOCS_BASE` (vite base) + `DOCS_SECTION` are the only build hooks. A snapshot build
 (`DOCS_SECTION=<pkg> DOCS_BASE=/<pkg>/<version>/`) prerenders that section alone at
 section-relative routes, links ride the base via `sectionPath()`, cross-section links
-escape to the live site, and every page defaults to noindex. `cd-docs.yml` builds the
-live tree on CI-passed main pushes and freezes a section from its release tag when
-`CD · Packages (npm)` completes (tags are `@soroush.tech/<pkg>@x`, the MCP server's and
+escape to the live site, and every page defaults to noindex. `cd-docs.yml` is a reusable workflow
+(`workflow_run` only fires from the default branch): `ci.yml` calls it for the live tree after `ci-ok` on a
+`legacy` push, and `cd-packages.yml` calls it to freeze a section from its release tag after a stable publish;
+it refuses any ref but `legacy` (tags are `@soroush.tech/<pkg>@x`, the MCP server's and
 the command line's `@soroush.design/<pkg>@x`; a tag cut before its section had pages is skipped); `scripts/compose-docs-dist.mjs` composes the `docs-dist`
 orphan branch (live root + `<pkg>/<version>/` snapshots + `versions.json`). GitHub Pages
 serves that branch at docs.soroush.tech, so pushing it _is_ the deploy - there is no

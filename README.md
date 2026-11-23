@@ -1,5 +1,7 @@
 # design-system
 
+This branch (`legacy`) maintains the `@soroush.tech` packages: their npm releases and the documentation site at docs.soroush.tech are built and deployed from here. New work happens on `main`, under the `@soroush.design` family.
+
 Monorepo for the `@soroush.tech` UI libraries, extracted from [`soroush-tech/core`](https://github.com/soroush-tech/core) with full git history.
 
 ## Packages

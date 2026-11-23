@@ -9,7 +9,7 @@ reviews:
   auto_review:
     enabled: true
     drafts: false
-    base_branches: [main]
+    base_branches: [legacy]
   path_filters:
     - '!pnpm-lock.yaml'
     - '!**/coverage/**'

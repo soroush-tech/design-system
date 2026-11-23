@@ -3,16 +3,41 @@
 name: CD · Docs
 
 # Deploys docs.soroush.tech from the composed docs-dist branch: the live site rebuilds
-# on every CI-passed main push; a package publish freezes that package's section under
+# on every CI-passed legacy push; a package publish freezes that package's section under
 # /<pkg>/<version>/, built once from the release's git tag and stored forever. Manual
 # dispatch backfills or repairs a single snapshot. A tag from before the docs app (the
 # releases cut in soroush-tech/core) is built by scripts/legacy-docs-snapshot.sh.
+#
+# A reusable workflow, not a workflow_run one: workflow_run fires only from the default
+# branch's copy of a workflow, and the default branch is not the one that deploys. ci.yml
+# calls it (deploy: live) once its ci-ok passed on a legacy push, and cd-packages.yml calls
+# it (deploy: snapshot, after_publish: true) after a stable publish. Both callers pass the
+# commit through github.sha, which a called workflow shares with its caller.
+# Every deploying job refuses to run from any ref but legacy: a copy of this file that
+# reaches another branch can never push docs-dist.
 
 on:
-  workflow_run:
-    workflows: ['CI', 'CD · Packages (npm)']
-    types: [completed]
-    branches: [main]
+  workflow_call:
+    inputs:
+      deploy:
+        description: live (rebuild the live tree) or snapshot (freeze release sections)
+        required: true
+        type: string
+      after_publish:
+        description: Called after a publish - leave an archived snapshot alone
+        required: false
+        type: boolean
+        default: false
+      package:
+        description: Package section to snapshot (empty = every package)
+        required: false
+        type: string
+        default: ''
+      version:
+        description: Stable version to snapshot (empty = the latest release)
+        required: false
+        type: string
+        default: ''
   workflow_dispatch:
     inputs:
       package:
@@ -36,18 +61,19 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # Rebuild the live tree on every successful CI run on main.
+  # Rebuild the live tree on every successful CI run on legacy.
   live:
-    if: >-
-      github.event_name == 'workflow_run' &&
-      github.event.workflow_run.name == 'CI' &&
-      github.event.workflow_run.conclusion == 'success'
+    if: inputs.deploy == 'live'
     runs-on: ubuntu-latest
     environment: cd-docs
     timeout-minutes: 30
     permissions:
       contents: write # commits to the docs-dist branch
     steps:
+      - name: Refuse to deploy from any ref but legacy
+        run: |
+          [ "$GITHUB_REF" = "refs/heads/legacy" ]             || { echo "::error::docs-dist is deployed from legacy only, not $GITHUB_REF"; exit 1; }
+
       - name: Checkout Repository
         uses: actions/checkout@v7
 
@@ -86,7 +112,7 @@ jobs:
             echo "No live-tree changes."
           else
             git -c user.name=github-actions -c user.email=github-actions@github.com \
-              commit -m "live: ${{ github.event.workflow_run.head_sha }}"
+              commit -m "live: ${{ github.sha }}"
             git push origin docs-dist
           fi
 
@@ -104,10 +130,7 @@ jobs:
   # Freeze the published packages' sections after a release (or on manual dispatch).
   # One leg per public package; serialized so docs-dist pushes never race.
   snapshot:
-    if: >-
-      github.event_name == 'workflow_dispatch' ||
-      (github.event.workflow_run.name == 'CD · Packages (npm)' &&
-       github.event.workflow_run.conclusion == 'success')
+    if: inputs.deploy != 'live'
     runs-on: ubuntu-latest
     environment: cd-docs
     timeout-minutes: 30
@@ -119,12 +142,17 @@ jobs:
       matrix:
         package: [design-system, markdown, styled-system, mcp, ui-spec, cli]
     steps:
+      - name: Refuse to deploy from any ref but legacy
+        run: |
+          [ "$GITHUB_REF" = "refs/heads/legacy" ]             || { echo "::error::docs-dist is deployed from legacy only, not $GITHUB_REF"; exit 1; }
+
       - name: Checkout Repository (full history for release tags)
         uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
-      # Manual dispatch targets a single package; the matrix legs for the others no-op.
+      # A manual dispatch (or a caller passing `package`) targets a single package; the matrix
+      # legs for the others no-op.
       - name: Resolve the package's latest release tag
         id: resolve
         env:
@@ -187,15 +215,15 @@ jobs:
             git worktree add --orphan -b docs-dist docs-dist
           }
 
-      # A publish never rebuilds an archived snapshot; a manual dispatch always does - that is the
-      # repair path.
+      # A publish never rebuilds an archived snapshot (after_publish); a manual dispatch always
+      # does - that is the repair path.
       - name: Skip when the snapshot is already archived
         if: steps.resolve.outputs.skip == 'false'
         id: archived
         env:
-          EVENT: ${{ github.event_name }}
+          AFTER_PUBLISH: ${{ inputs.after_publish }}
         run: |
-          if [ "$EVENT" != "workflow_dispatch" ] && node scripts/compose-docs-dist.mjs has "${{ matrix.package }}" "${{ steps.resolve.outputs.version }}" docs-dist; then
+          if [ "$AFTER_PUBLISH" = "true" ] && node scripts/compose-docs-dist.mjs has "${{ matrix.package }}" "${{ steps.resolve.outputs.version }}" docs-dist; then
             echo "done=true" >> "$GITHUB_OUTPUT"
           else
             echo "done=false" >> "$GITHUB_OUTPUT"
