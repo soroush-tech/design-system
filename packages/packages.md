@@ -51,6 +51,87 @@ Keep the **public API in `index.ts`** (the single entry); extract internal helpe
 
 ---
 
+## The `soroush.design` family
+
+The layout the UI packages move to ([#114](https://github.com/soroush-tech/design-system/issues/114)). Until that work starts, the packages keep the names they have today; a new UI package follows these rules from the start.
+
+### Three levels
+
+The code lives in **library** packages. A **platform umbrella** points at the libraries of one platform. The **family umbrella** points at the platforms. An umbrella holds no code of its own.
+
+| Level    | Package                                                                        | An app writes                                       |
+| -------- | ------------------------------------------------------------------------------ | --------------------------------------------------- |
+| Family   | `soroush.design`                                                               | `soroush.design/react/Button`                       |
+| Platform | `@soroush.design/react`, `@soroush.design/react-native`, `@soroush.design/vue` | `@soroush.design/react/Button`                      |
+| Library  | `@soroush.design/<platform>-<library>`                                         | `@soroush.design/react-components` - the lean route |
+| Shared   | `@soroush.design/core`                                                         | no framework: tokens, `createTheme`, the catalog    |
+
+A scope on npm has one level, so a library is named `@soroush.design/react-markdown`, never `@soroush.design/react/markdown`. The nesting an app sees comes from subpaths on the umbrellas.
+
+### The libraries of a platform
+
+Shown for React. React Native and Vue repeat the pattern (`@soroush.design/react-native-theme`, `@soroush.design/vue-hooks`, ...). A library depends only on the ones above it in this table, and on `core`.
+
+| Library            | Subpath on the platform         | Holds                                                                                                                                            |
+| ------------------ | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `react-hooks`      | `/hooks`                        | Hooks tied to no component and no theme                                                                                                          |
+| `react-theme`      | `/theme`                        | `ThemeProvider`, the hooks that read the theme, the theme's types, and the configured `styled`, `css`, `keyframes`, `Global` with the base reset |
+| `react-components` | `/Button`, `/TextInput`, ...    | The components                                                                                                                                   |
+| `react-markdown`   | `/markdown`, `/markdown/Editor` | The markdown editor and renderer                                                                                                                 |
+| `react-charts`     | `/charts`                       | Charts                                                                                                                                           |
+
+**A new library is justified by what it depends on**, not by size: `markdown` brings an editor and a diagram library, `charts` a charting library, and an app that wants buttons should not install either. Components are **not** split into a package each - subpath imports already load only what is used. A split by group (data tables, date pickers) is decided case by case.
+
+### Subpath names
+
+- A component of the main library sits directly under the platform and keeps its own name, capitalised: `/Button`, `/TextInput`.
+- A library uses a lowercase name: `/markdown`, `/charts`, `/theme`, `/hooks`.
+- A library's own components go under it: `/markdown/Editor`.
+- A library is never named after a component of the main library, so two paths never differ only by case.
+
+```ts
+// ✗ a scope has one level - this is not a package
+import { Editor } from '@soroush.design/react/markdown-editor'
+// ✗ a library's component at the top of the platform
+import { Editor } from '@soroush.design/react/Editor'
+// ✓
+import { Editor } from '@soroush.design/react/markdown/Editor'
+```
+
+### Where a hook lives
+
+Ask what the hook is about:
+
+| The hook...            | It lives in             | An app imports it from      |
+| ---------------------- | ----------------------- | --------------------------- |
+| belongs to a component | that component's folder | the component's entry point |
+| reads the theme        | the theme library       | `/theme`                    |
+| is tied to nothing     | the hooks library       | `/hooks`                    |
+
+```ts
+// ✓ a component's behaviour, exported with the component
+import { NumberInput, useHoldRepeat } from 'soroush.design/react/NumberInput'
+// ✓ needs the theme
+import { useTheme } from 'soroush.design/react/theme'
+// ✓ useful in an app with none of our components
+import { useMergedRefs, useEventCallback } from 'soroush.design/react/hooks'
+```
+
+- The test for the hooks library: **would someone want it without the component?** A hook that sits in one component's folder and is imported by others belongs there.
+- A hook exported from a component is public API: its signature is reviewed before it is exported, and it has its own tests and docs, not only its component's.
+- A hook in the hooks library says whether it needs a browser; one that does not is shared with the React Native library, not written again.
+
+### Packaging rules
+
+- **Aliases are generated.** Every subpath on both umbrella levels comes from the library packages by a script, and CI fails when they drift. Nobody writes an umbrella's `exports` by hand.
+- **Frameworks are optional peers** of the umbrellas (`react`, `react-native`, `vue`), and so is any dependency with native code: installing an umbrella must not download a framework the app does not use, nor make a native build link a module it does not need.
+- **The theme library exists once in an app.** The other libraries depend on it by a version range and never bundle it; two copies are two contexts, and components that do not see the app's theme.
+- **The styling engine is configured in the theme library**, by a function the library calls - not by a module imported for its effect, which a bundler drops from a package marked `"sideEffects": false`.
+- **An app can take the lean route.** Every library works installed alone, without an umbrella.
+- **New packages start at `1.0.0`.**
+
+---
+
 ## Exports
 
 - **Default-export the primary entity** (the plugin factory / main function); export supporting **types as named** exports. This matches the Vite-plugin ecosystem (`import react from '@vitejs/plugin-react'`).
