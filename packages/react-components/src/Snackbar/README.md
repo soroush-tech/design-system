@@ -46,6 +46,35 @@ Controlled, it never closes on its own: it asks - `onClose` is told `'timeout'`,
 Escape, but not on a click away. An owner that does not want a click away to close it ignores that
 reason.
 
+## Hooks
+
+`useAutoHide` is the clock of a message that hides itself, for a message of your own: it runs while the
+message is open, stops while the pointer or the focus is on it, and starts again once they leave.
+
+```ts
+useAutoHide(params: UseAutoHideParams): { pause: () => void; resume: () => void }
+```
+
+| Param            | Type         | Default            | Description                                               |
+| ---------------- | ------------ | ------------------ | --------------------------------------------------------- |
+| `isOpen`         | `boolean`    |                    | The clock runs only while it is open.                     |
+| `duration`       | `number`     | none               | How long it stays, in ms - without one, nothing hides it. |
+| `resumeDuration` | `number`     | half of `duration` | How long it stays once the pointer or focus has left.     |
+| `onHide`         | `() => void` |                    | Called when the time is up.                               |
+
+```tsx
+import { useAutoHide } from '@soroush.design/react/Snackbar'
+
+function Toast({ isOpen, close }: { isOpen: boolean; close: () => void }) {
+  const { pause, resume } = useAutoHide({ isOpen, duration: 4000, onHide: close })
+  return (
+    <div onPointerEnter={pause} onPointerLeave={resume} onFocus={pause} onBlur={resume}>
+      Saved
+    </div>
+  )
+}
+```
+
 ## Customization
 
 `theme.components.Snackbar` styles the `root` (the fixed place), the `content` (the bar), the `message`

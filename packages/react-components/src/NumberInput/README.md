@@ -100,6 +100,36 @@ a pasted CSS length is a number. Put the unit where it is shown in `endContent`.
 the three steps, `shouldSnapOnStep`, `shouldScrubOnWheel` - and the two button labels, which give
 every field the app's language.
 
+## Hooks
+
+`useHoldRepeat` is the press-and-hold of the spin buttons, for a control of your own: it runs an action
+at once on a press, then again and again while it is held, after a pause so a tap is one step.
+
+```ts
+useHoldRepeat(action: () => void, options?: UseHoldRepeatOptions): { start: () => void; stop: () => void }
+```
+
+| Option     | Type     | Default | Description                                                 |
+| ---------- | -------- | ------- | ----------------------------------------------------------- |
+| `delay`    | `number` | `400`   | How long a press is held before it starts to repeat, in ms. |
+| `interval` | `number` | `60`    | The time between repeats once it has started, in ms.        |
+
+`start` begins the run and `stop` ends it; it ends by itself when the component goes. The latest
+`action` is the one called, so it needs no memoizing.
+
+```tsx
+import { useHoldRepeat } from '@soroush.design/react/NumberInput'
+
+function More({ onStep }: { onStep: () => void }) {
+  const { start, stop } = useHoldRepeat(onStep, { delay: 300 })
+  return (
+    <button onPointerDown={start} onPointerUp={stop} onPointerLeave={stop}>
+      More
+    </button>
+  )
+}
+```
+
 ## Accessibility
 
 - A `role="spinbutton"` text input with `aria-valuenow`, `aria-valuemin` and `aria-valuemax`: the
