@@ -37,7 +37,11 @@ export const iconCatalog = defineCatalogEntry({
   variants: pictured.map((color) => ({
     name: color,
     label: colorLabels[color],
-    example: { component: 'Icon', props: { name: 'hub', color, size: '3rem' }, children: [] },
+    example: {
+      component: 'Icon',
+      props: { name: 'hub' as const, color, size: '3rem' },
+      children: [],
+    },
   })),
   options: {
     name: { values: iconNameValues },

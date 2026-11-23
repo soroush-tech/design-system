@@ -15,11 +15,11 @@ const variantLabels: Record<string, string> = {
   query: 'Query',
 }
 
-const variantProps: Record<string, { variant: string; value?: number }> = {
+const variantProps = {
   indeterminate: { variant: 'indeterminate' },
   determinate: { variant: 'determinate', value: 70 },
   query: { variant: 'query' },
-}
+} as const
 
 export const linearProgressCatalog = defineCatalogEntry({
   summary: 'A horizontal loading bar - looping, driven by a `value`, or with a buffer behind it.',
@@ -34,7 +34,7 @@ export const linearProgressCatalog = defineCatalogEntry({
     label: variantLabels[variant],
     example: {
       component: 'LinearProgress',
-      props: { ...variantProps[variant], color: 'primary' },
+      props: { ...variantProps[variant], color: 'primary' as const },
       children: [],
     },
   })),

@@ -1,6 +1,6 @@
 import { defineCatalogEntry } from '../defineCatalogEntry'
 
-const colorLabels: Record<string, string> = {
+const colorLabels = {
   default: 'Default',
   primary: 'Primary',
   secondary: 'Secondary',
@@ -10,7 +10,7 @@ const colorLabels: Record<string, string> = {
   warning: 'Warning',
 }
 
-const colors = Object.keys(colorLabels)
+const colors = Object.keys(colorLabels) as (keyof typeof colorLabels)[]
 
 export const radioCatalog = defineCatalogEntry({
   summary: 'One choice of a set - radios that share a `name` allow only one to be selected.',

@@ -21,7 +21,7 @@ export interface CatalogEntrySource {
 }
 
 /** Checks an entry against the shape of an entry and keeps its own, narrower type. */
-export const defineCatalogEntry = <E extends CatalogEntrySource>(entry: E): E => entry
+export const defineCatalogEntry = <const E extends CatalogEntrySource>(entry: E): E => entry
 
 /** A nested node, for brevity: `node('MenuItem', { value: 'web' }, ['Web'])`. */
 export const node = (

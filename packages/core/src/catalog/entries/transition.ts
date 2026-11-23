@@ -1,7 +1,7 @@
 import type { CatalogOption, ExampleNode } from '../types'
 
 /** The easings a transition names - the keys of `theme.transitions.easing`. */
-export const transitionEasingValues = ['standard', 'enter', 'exit'] satisfies string[]
+export const transitionEasingValues = ['standard', 'enter', 'exit'] as const
 
 /** What every transition around one child offers a picker. */
 export const transitionOptions = {

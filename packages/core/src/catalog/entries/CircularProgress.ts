@@ -14,10 +14,10 @@ const variantLabels: Record<string, string> = {
   determinate: 'Determinate',
 }
 
-const variantProps: Record<string, { variant: string; value?: number }> = {
+const variantProps = {
   indeterminate: { variant: 'indeterminate' },
   determinate: { variant: 'determinate', value: 70 },
-}
+} as const
 
 export const circularProgressCatalog = defineCatalogEntry({
   summary: 'A circular loading indicator - a looping spinner, or an arc that shows a `value`.',
@@ -32,7 +32,7 @@ export const circularProgressCatalog = defineCatalogEntry({
     label: variantLabels[variant],
     example: {
       component: 'CircularProgress',
-      props: { ...variantProps[variant], color: 'primary', size: 40 },
+      props: { ...variantProps[variant], color: 'primary' as const, size: 40 },
       children: [],
     },
   })),

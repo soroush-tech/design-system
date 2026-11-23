@@ -2,7 +2,7 @@ import { defineCatalogEntry, node } from '../defineCatalogEntry'
 
 export const toggleButtonGroupOrientationValues = ['horizontal', 'vertical'] as const
 
-const colorLabels: Record<string, string> = {
+const colorLabels = {
   default: 'Default',
   primary: 'Primary',
   secondary: 'Secondary',
@@ -12,7 +12,7 @@ const colorLabels: Record<string, string> = {
   warning: 'Warning',
 }
 
-const colors = Object.keys(colorLabels)
+const colors = Object.keys(colorLabels) as (keyof typeof colorLabels)[]
 
 const platforms = [
   node('ToggleButton', { value: 'web' }, ['Web']),

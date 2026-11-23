@@ -28,7 +28,7 @@ export const numberInputCatalog = defineCatalogEntry({
     label: spinLabels[spinButtons],
     example: {
       component: 'NumberInput',
-      props: { ...example, variant: 'outlined', spinButtons },
+      props: { ...example, variant: 'outlined' as const, spinButtons },
       children: [],
     },
   })),
