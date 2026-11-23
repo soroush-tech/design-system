@@ -38,47 +38,18 @@ pages, and the drift tests; `sectionFor(pathname)` picks the active section.
 
 ## Versioning
 
-`DOCS_BASE` (vite base) + `DOCS_SECTION` are the only build hooks. A snapshot build
-(`DOCS_SECTION=<pkg> DOCS_BASE=/<pkg>/<version>/`) prerenders that section alone at
-section-relative routes, links ride the base via `sectionPath()`, cross-section links
-escape to the live site, and every page defaults to noindex. `cd-docs.yml` builds the
-live tree on CI-passed main pushes and freezes a section from its release tag when
-`CD · Packages (npm)` completes (the tag prefix of each section is in `packages/docs-content/src/sections.json`, read by
-`scripts/docs-release-tag.mjs`: the newest release is the highest version under the current prefix, former
-prefixes only supply archived versions; a tag cut before its section had pages is skipped); `scripts/compose-docs-dist.mjs` composes the `docs-dist`
-orphan branch (live root + `<pkg>/<version>/` snapshots + `versions.json`). GitHub Pages
-serves that branch at docs.soroush.tech, so pushing it _is_ the deploy - there is no
-publish step. `public/CNAME` carries the domain and `public/.nojekyll` keeps Pages from
-running Jekyll over the build; both ride along in every build's output. The
-`VersionMenu` reads `/versions.json` from the domain root (revalidated, not cached), so old
-snapshots list newer releases. Its "Latest" row is the current package's version, never the
-highest number: the build's own version on the live site, and the newest version of the current
-package in that manifest from a snapshot. Which package a version was published as comes from
-`formerVersions` in `sections.json` (the versions released under each former tag prefix), not
-from its number: those are listed apart, in a group named for the former package, after the
-current package's. The manifest keeps one flat list per section; a snapshot is frozen, so only
-the live site and snapshots built after this change use the grouping.
+**docs.soroush.tech is frozen.** It documents the former package and is served by GitHub Pages
+from the `docs-dist` branch, which no workflow writes to any more: no deploy, no new version, no
+URL change. The `soroush.design` family is a new project whose docs will be a separate site on
+Cloudflare Pages; its deploy comes with #147. Until then CI only builds this app (the `docs` job
+of `ci.yml`) and deploys nothing.
 
-What search engines are told about the archived pages is settled when the tree is composed, not
-when a snapshot is built - a snapshot is frozen and cannot know what later releases add or drop.
-`scripts/compose-docs-dist.mjs` ends `live` and `snapshot` by running
-`scripts/canonicalize-docs-dist.mjs` over `docs-dist`. For each archived page
-`<pkg>/<version>/<path>` the live page is `<pkg>/<path>`: where it exists, the archived page's
-canonical and `og:url` are that page and it is `noindex,follow`; where it does not, the archived page
-has no canonical, its own `og:url` and is `index,follow`, and a stub (`data-stub`, `noindex`, a zero
-delay refresh and a canonical to the archived page) is written at the live URL so the removed page
-does not 404 on GitHub Pages. Stubs are rebuilt every run and are never counted as live pages. The run
-ends by checking the tree and fails the deploy on a canonical or stub that leads to no page, or a live
-page that is `noindex`. Its tests are in `scripts/canonicalizeDocsDist.test.js`.
-
-Only stable tags are archived, and a manual dispatch takes an optional `version` to backfill
-one. Releases up to design-system 1.3.3 / styled-system 5.8.3 / markdown 1.2.2 were cut in
-soroush-tech/core and their tags hold only `packages/` - no docs app. For those,
-`scripts/legacy-docs-snapshot.sh` builds on the docs app of this repo as of a pinned commit
-(the script's `LEGACY_SETUP`), so those snapshots have the current layout, with the tag's own
-`.md` prose (READMEs, docs, release notes) laid over the setup's. Code, demos and props tables
-are the setup's, since the layout needs components the old packages lack. A component the
-release did not have yet is dropped from the registry.
+`DOCS_BASE` (vite base) + `DOCS_SECTION` are the build hooks that made a section snapshot
+(`DOCS_SECTION=<pkg> DOCS_BASE=/<pkg>/<version>/` prerenders that section alone, noindex).
+`public/CNAME` and `public/.nojekyll` bind the old site to GitHub Pages and ride along in every
+build; they mean nothing to the new site. The `VersionMenu`, `sections.json`,
+`scripts/docs-release-tag.mjs` and `scripts/canonicalize-docs-dist.mjs` (with its tests) served
+that deploy and are used by no workflow now; they go or change with #148.
 
 ## Rules
 

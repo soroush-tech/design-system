@@ -1,4 +1,4 @@
-// Finds the release tag cd-docs.yml freezes a docs section from. A section's tags are
+// Finds the release tag the removed cd-docs.yml froze a docs section from. A section's tags are
 // `<prefix><version>`, and the prefixes are listed in `sections.json` of docs-content, with the
 // package's name. The current prefix is where the newest release is looked for; a former
 // prefix (a package renamed) only supplies archived versions, so an old name's higher

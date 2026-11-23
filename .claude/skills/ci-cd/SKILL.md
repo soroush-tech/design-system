@@ -19,6 +19,11 @@ metadata:
 One CI entry workflow holding every job; CD is separate and **manual only** - a release is a
 deliberate act with required, human-written notes, never triggered by a push or merge.
 
+**No workflow deploys docs.** `docs.soroush.tech` is frozen: it documents the former package and
+is served by GitHub Pages from the `docs-dist` branch, which nothing may write to - no deploy, no
+URL change, no new version. `ci.yml` only builds the docs app. The new `soroush.design` docs site
+(Cloudflare Pages) gets its deploy with #147.
+
 ## Action pinning convention - the load-bearing rule
 
 Pin every `uses:` by the action's **origin**:

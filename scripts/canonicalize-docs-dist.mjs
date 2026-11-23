@@ -3,8 +3,8 @@
 //   node scripts/canonicalize-docs-dist.mjs <distDir>
 //
 // A snapshot is frozen when its release is cut and cannot know what later releases add or drop,
-// so this runs wherever the tree changes (compose-docs-dist.mjs calls it after a live compose and
-// after a snapshot install) and looks at the live pages as they are now. For every archived page
+// so it ran wherever the tree changed (the removed compose-docs-dist.mjs called it) and looks at
+// the live pages as they are now. For every archived page
 // <pkg>/<version>/<path>, the live page is <pkg>/<path>:
 //
 //   the live page exists    -> canonical (and og:url) to it, `noindex,follow`
