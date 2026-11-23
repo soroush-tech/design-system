@@ -44,12 +44,23 @@ This set-up is tested on Next.js 16.4 with React 19.2, in development and in a p
 build, with a page that streams through `Suspense`. Keep styled parts in client components:
 the registry collects what client components render.
 
-Under a strict Content Security Policy (a `style-src` with a nonce and no `unsafe-inline`), give
-the cache the response's nonce, `createCache({ key: 'soroush', nonce })`, and put the same nonce
-on the `<style>` element the registry returns, `nonce={cache.nonce}`: that element is the app's
-own. Every style element the engine makes then carries it. Give React the same nonce for its
-render; it keeps the rules of a style element only when the element's nonce is its own. This
-registry has not been run under such a policy end to end, so test it in your app.
+Under a strict Content Security Policy (a `style-src` with a nonce and no `unsafe-inline`), the
+nonce must reach four places. It is the same in all four for one response and new for each
+request.
+
+1. **The response and the request headers**, set in the app's `proxy.ts` (Next.js 16 renamed the
+   `middleware` file to `proxy`). Put the nonce in the response's `Content-Security-Policy`
+   header, and set the request headers `Content-Security-Policy` and `x-nonce`, so the framework
+   puts the nonce on its own scripts and gives it to React.
+2. **The root layout** reads `x-nonce` with `headers()` and passes it to `Providers` as `nonce`.
+3. **`Providers`** calls `createCache({ key: 'soroush', nonce })` and puts `nonce={cache.nonce}`
+   on the `<style data-umber>` element it returns. That element is the app's own.
+4. **The engine's own style element.** The library handles it: it reads the nonce from the
+   page's scripts. The app does nothing for it.
+
+This is tested in Chromium on Next.js 16.4. On the development server, the framework's own
+development tools write style elements with no nonce, so a strict style policy shows refusals
+in development that are not the library's.
 
 Then in `app/layout.tsx`:
 

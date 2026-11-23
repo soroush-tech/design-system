@@ -8,9 +8,9 @@ import { light } from '@/theme'
 
 /** Collects the styles rendered on the server and re-injects them into the
  *  HTML stream, so server-rendered markup arrives already styled. */
-function useStyleRegistry() {
+function useStyleRegistry(nonce?: string) {
   const [{ cache, flush }] = useState(() => {
-    const cache = createCache({ key: 'soroush' })
+    const cache = createCache({ key: 'soroush', nonce })
     cache.compat = true
     const prevInsert = cache.insert
     let inserted: string[] = []
@@ -35,6 +35,7 @@ function useStyleRegistry() {
     return (
       <style
         key={cache.key}
+        nonce={cache.nonce}
         data-umber={`${cache.key} ${names.join(' ')}`}
         dangerouslySetInnerHTML={{ __html: styles }}
       />
@@ -44,8 +45,11 @@ function useStyleRegistry() {
   return cache
 }
 
-export default function Providers({ children }: Readonly<{ children: React.ReactNode }>) {
-  const cache = useStyleRegistry()
+export default function Providers({
+  children,
+  nonce,
+}: Readonly<{ children: React.ReactNode; nonce?: string }>) {
+  const cache = useStyleRegistry(nonce)
   return (
     <CacheProvider value={cache}>
       <ThemeProvider theme={light}>

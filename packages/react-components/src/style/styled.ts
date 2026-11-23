@@ -1,4 +1,4 @@
-import engineStyled from '@umber-style/styled'
+import engineStyledDefault from '@umber-style/styled'
 import type {
   CreateStyled as EngineCreateStyled,
   CreateStyledComponent,
@@ -10,9 +10,13 @@ import type { PropsOf } from '@umber-style/react'
 import type { Theme } from '../theme/themes'
 import type { ComponentClass, ComponentProps, ComponentType, JSX, Ref } from 'react'
 import { configureEngine } from './engine'
+import { defaultExport } from '../engine/defaultExport'
 
 // Before the first `styled` call below and in every component file that imports this one.
 configureEngine()
+
+// Named import when the engine has one (#144).
+const engineStyled = defaultExport(engineStyledDefault)
 
 /**
  * Design-system additions to the engine's styled options. A styled root that passes

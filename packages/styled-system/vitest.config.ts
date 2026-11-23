@@ -18,6 +18,7 @@ export default defineConfig({
     ],
   },
   test: {
+    globalSetup: ['./vitest.global.ts'],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'lcov'],
