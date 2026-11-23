@@ -1,6 +1,6 @@
 import { useContext, type ElementType, type HTMLAttributes } from 'react'
 import { TableContext } from '../TableContext'
-import type { SpaceProps, BorderProps } from '@soroush.tech/styled-system'
+import type { SpaceProps, BorderProps } from '@soroush.design/styled-system'
 import {
   styled,
   type Theme,

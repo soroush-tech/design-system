@@ -1,5 +1,5 @@
 import type { MouseEvent, ReactNode } from 'react'
-import type { SpaceProps } from '@soroush.tech/styled-system'
+import type { SpaceProps } from '@soroush.design/styled-system'
 import { createShouldForwardProp, get, props, space, styled, type Theme } from '../../index'
 import { useDefaultProps } from '../../theme'
 import { getSurfaceRadius } from '../../utils/getSurfaceRadius'

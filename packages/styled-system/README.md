@@ -1,15 +1,13 @@
-# @soroush.tech/styled-system
+# @soroush.design/styled-system
 
-[![npm version](https://img.shields.io/npm/v/@soroush.tech/styled-system.svg?cacheSeconds=86400)](https://www.npmjs.com/package/@soroush.tech/styled-system)
-[![npm downloads](https://img.shields.io/npm/dm/@soroush.tech/styled-system.svg?cacheSeconds=86400)](https://www.npmjs.com/package/@soroush.tech/styled-system)
+[![npm version](https://img.shields.io/npm/v/@soroush.design/styled-system.svg?cacheSeconds=86400)](https://www.npmjs.com/package/@soroush.design/styled-system)
+[![npm downloads](https://img.shields.io/npm/dm/@soroush.design/styled-system.svg?cacheSeconds=86400)](https://www.npmjs.com/package/@soroush.design/styled-system)
 [![coverage](https://codecov.io/gh/soroush-tech/design-system/branch/main/graph/badge.svg?flag=styled-system)](https://app.codecov.io/gh/soroush-tech/design-system?flags%5B0%5D=styled-system)
-[![unpacked size](https://img.shields.io/npm/unpacked-size/@soroush.tech/styled-system.svg?cacheSeconds=86400)](https://www.npmjs.com/package/@soroush.tech/styled-system)
-[![types included](https://img.shields.io/npm/types/@soroush.tech/styled-system.svg?cacheSeconds=86400)](https://www.npmjs.com/package/@soroush.tech/styled-system)
-[![license](https://img.shields.io/npm/l/@soroush.tech/styled-system.svg?cacheSeconds=86400)](./LICENSE)
+[![unpacked size](https://img.shields.io/npm/unpacked-size/@soroush.design/styled-system.svg?cacheSeconds=86400)](https://www.npmjs.com/package/@soroush.design/styled-system)
+[![types included](https://img.shields.io/npm/types/@soroush.design/styled-system.svg?cacheSeconds=86400)](https://www.npmjs.com/package/@soroush.design/styled-system)
+[![license](https://img.shields.io/npm/l/@soroush.design/styled-system.svg?cacheSeconds=86400)](./LICENSE)
 
-A maintained, first-class-TypeScript rewrite of [styled-system](https://github.com/jxnblk/styled-system) v5 - responsive, theme-aware style props for CSS-in-JS.
-
-It is a **drop-in replacement** for the `styled-system` runtime: the root export surface matches upstream verbatim, and the package ships its own types (replacing `@types/styled-system`).
+Responsive, theme-aware style props for CSS-in-JS, written in TypeScript. The package ships its own types.
 
 ## Features
 
@@ -19,23 +17,23 @@ It is a **drop-in replacement** for the `styled-system` runtime: the root export
 - Typographic scale, and a spacing scale for `margin`, `padding` and `gap`
 - Works with any color palette
 - Works with most CSS-in-JS libraries, including [Emotion](https://emotion.sh) and [styled-components](https://styled-components.com)
-- First-class TypeScript types - theme-scale-aware props, replacing `@types/styled-system`
+- First-class TypeScript types - theme-scale-aware props
 
 ## Install
 
 ```sh
 # npm
-npm install @soroush.tech/styled-system
+npm install @soroush.design/styled-system
 ```
 
 ```sh
 # pnpm
-pnpm add @soroush.tech/styled-system
+pnpm add @soroush.design/styled-system
 ```
 
 ```sh
 # yarn
-yarn add @soroush.tech/styled-system
+yarn add @soroush.design/styled-system
 ```
 
 `prop-types` (`^15.8.1`, optional peer) is used by a single [subpath](#subpath-imports),
@@ -48,7 +46,7 @@ library (Emotion, styled-components, ...); the core carries neither at runtime.
 ```ts
 // Example uses Emotion, but styled-system works with most other CSS-in-JS libraries as well
 import styled from '@emotion/styled'
-import { space, layout, typography, color } from '@soroush.tech/styled-system'
+import { space, layout, typography, color } from '@soroush.design/styled-system'
 
 // Add styled-system functions to your component
 const Box = styled.div`
@@ -104,38 +102,17 @@ Set responsive `width`, `margin`, `padding`, `font-size`, and other properties w
 
 ### Subpath imports
 
-Subpaths mirror the original `@styled-system/*` packages:
+Subpaths:
 
 ```ts
-import { css } from '@soroush.tech/styled-system/css'
-import { themeGet } from '@soroush.tech/styled-system/theme-get'
-import { pick, omit } from '@soroush.tech/styled-system/props'
-import propTypes, { createPropTypes } from '@soroush.tech/styled-system/prop-types'
+import { css } from '@soroush.design/styled-system/css'
+import { themeGet } from '@soroush.design/styled-system/theme-get'
+import { pick, omit } from '@soroush.design/styled-system/props'
+import propTypes, { createPropTypes } from '@soroush.design/styled-system/prop-types'
 import shouldForwardProp, {
   createShouldForwardProp,
   props,
-} from '@soroush.tech/styled-system/should-forward-prop'
-```
-
-## Drop-in via alias
-
-Existing `styled-system` users can swap with a package-manager alias - no code changes:
-
-```jsonc
-"dependencies": {
-  "styled-system": "npm:@soroush.tech/styled-system@^5"
-}
-```
-
-The satellite `@styled-system/*` packages don't need separate aliases - import them as
-subpaths off the aliased `styled-system` name, and they resolve through this package's
-`exports`:
-
-```ts
-import themeGet from 'styled-system/theme-get'
-import propTypes from 'styled-system/prop-types'
-import { css } from 'styled-system/css'
-import shouldForwardProp from 'styled-system/should-forward-prop'
+} from '@soroush.design/styled-system/should-forward-prop'
 ```
 
 Types resolve under both modern module resolution (`node16`/`nodenext`/`bundler`, via

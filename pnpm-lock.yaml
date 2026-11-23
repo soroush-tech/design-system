@@ -571,7 +571,7 @@ importers:
       '@soroush.design/core':
         specifier: workspace:^
         version: link:../core
-      '@soroush.tech/styled-system':
+      '@soroush.design/styled-system':
         specifier: workspace:^
         version: link:../styled-system
       '@umber-style/cache':

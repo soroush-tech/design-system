@@ -1,6 +1,6 @@
 import { useMemo, type ElementType, type TableHTMLAttributes } from 'react'
 import { TableContext, type TableCellPadding } from '../TableContext'
-import type { SpaceProps, LayoutProps, BorderProps } from '@soroush.tech/styled-system'
+import type { SpaceProps, LayoutProps, BorderProps } from '@soroush.design/styled-system'
 import {
   styled,
   type Theme,

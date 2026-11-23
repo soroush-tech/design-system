@@ -10,7 +10,7 @@ wrapper component (React 19 removed the older `defaultProps` approach for functi
 ```js
 // example
 import styled from 'styled-components'
-import { space, color } from '@soroush.tech/styled-system'
+import { space, color } from '@soroush.design/styled-system'
 
 const CardBase = styled.div(
   {

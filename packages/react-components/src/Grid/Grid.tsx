@@ -2,7 +2,7 @@ import type {
   GridProps as SystemGridProps,
   FlexboxProps,
   LayoutGridProps,
-} from '@soroush.tech/styled-system'
+} from '@soroush.design/styled-system'
 import {
   styled,
   type Theme,
@@ -19,7 +19,7 @@ import { View, type ViewProps } from '../View'
 export type GapToken = keyof Theme['space']
 
 // gap / columnGap / rowGap need no declaration or wiring here since
-// @soroush.tech/styled-system 5.8.0 - they arrive through View's `space` parser
+// @soroush.design/styled-system 5.8.0 - they arrive through View's `space` parser
 // and `SpaceProps`.
 /**
  * `layout` lays the grid out from `theme.layout` - the theme's columns, gutter and margin per

@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import type { SpaceProps } from '@soroush.tech/styled-system'
+import type { SpaceProps } from '@soroush.design/styled-system'
 import { styled, type Theme, createShouldForwardProp, props, space } from '../../index'
 import { useDefaultProps } from '../../theme'
 import { surfaceSystem } from '../utils/surfaceSystem'

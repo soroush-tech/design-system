@@ -1,5 +1,5 @@
 import { useMemo, useState, type KeyboardEvent, type ReactNode } from 'react'
-import type { SpaceProps } from '@soroush.tech/styled-system'
+import type { SpaceProps } from '@soroush.design/styled-system'
 import { createShouldForwardProp, props, space, styled, type Theme } from '../../index'
 import { useDefaultProps } from '../../theme'
 import { AccordionGroupContext } from '../AccordionContext'

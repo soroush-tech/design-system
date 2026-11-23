@@ -1,4 +1,4 @@
-import { get, system, type SystemConfig, type Transform } from '@soroush.tech/styled-system/core'
+import { get, system, type SystemConfig, type Transform } from '@soroush.design/styled-system/core'
 
 const isNumber = (n: unknown): n is number => typeof n === 'number' && !Number.isNaN(n)
 

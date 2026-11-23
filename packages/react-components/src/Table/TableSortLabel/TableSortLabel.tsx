@@ -1,7 +1,7 @@
 import { useContext, type ButtonHTMLAttributes } from 'react'
 import { TableContext } from '../TableContext'
 import { Icon, type IconName, type IconProps } from '@soroush.design/react-components/Icon'
-import type { SpaceProps } from '@soroush.tech/styled-system'
+import type { SpaceProps } from '@soroush.design/styled-system'
 import {
   styled,
   type Theme,

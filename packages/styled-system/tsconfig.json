@@ -11,8 +11,8 @@
     "skipLibCheck": true,
     "types": [],
     "paths": {
-      "@soroush.tech/styled-system": ["./src/index.ts"],
-      "@soroush.tech/styled-system/*": ["./src/*/index.ts"]
+      "@soroush.design/styled-system": ["./src/index.ts"],
+      "@soroush.design/styled-system/*": ["./src/*/index.ts"]
     }
   },
   "include": ["src"],

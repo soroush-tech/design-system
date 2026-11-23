@@ -9,7 +9,7 @@
   },
   "styled-system": {
     "dir": "styled-system",
-    "npm": "@soroush.tech/styled-system"
+    "npm": "@soroush.design/styled-system"
   },
   "mcp": {
     "dir": "mcp",

@@ -8,7 +8,7 @@ with typographic scales, colors, and layout properties.
 To use Styled System, install a CSS-in-JS library such as [Styled Components][] or [Emotion][].
 
 ```sh
-npm i @soroush.tech/styled-system styled-components
+npm i @soroush.design/styled-system styled-components
 ```
 
 ## Create a Component
@@ -18,7 +18,7 @@ To start with, add the `color` function to the component's styles argument.
 
 ```javascript
 import styled from 'styled-components'
-import { color } from '@soroush.tech/styled-system'
+import { color } from '@soroush.design/styled-system'
 
 const Box = styled.div`
   ${color}
@@ -88,7 +88,7 @@ to handle layout styles.
 
 ```jsx
 import styled from 'styled-components'
-import { space, layout, color } from '@soroush.tech/styled-system'
+import { space, layout, color } from '@soroush.design/styled-system'
 
 const Box = styled.div`
   ${space}

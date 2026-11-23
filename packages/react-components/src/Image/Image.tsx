@@ -4,7 +4,7 @@ import type {
   SpaceProps,
   BackgroundProps,
   PositionProps,
-} from '@soroush.tech/styled-system'
+} from '@soroush.design/styled-system'
 import {
   styled,
   createShouldForwardProp,

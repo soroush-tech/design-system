@@ -835,7 +835,7 @@
     "@umber-style/styled": "^0.3.0",
     "@soroush.design/cli": "workspace:*",
     "@soroush.design/core": "workspace:^",
-    "@soroush.tech/styled-system": "workspace:^"
+    "@soroush.design/styled-system": "workspace:^"
   },
   "peerDependencies": {
     "react": "^19.2.8",

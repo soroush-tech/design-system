@@ -7,7 +7,7 @@ import { PACKAGES, sourceUrlOf } from './packages'
 const NPM_NAMES = {
   'design-system': '@soroush.design/react-components',
   markdown: '@soroush.tech/markdown',
-  'styled-system': '@soroush.tech/styled-system',
+  'styled-system': '@soroush.design/styled-system',
   mcp: '@soroush.design/mcp',
   'ui-spec': '@soroush.tech/ui-spec',
   cli: '@soroush.design/cli',

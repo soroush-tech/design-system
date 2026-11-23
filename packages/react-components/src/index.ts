@@ -8,5 +8,5 @@ export { css, keyframes } from '@umber-style/react'
 // `Global`, `globalStyles`, and `CacheProvider`/`styleCache` live at the `./engine`
 // subpath - raw engine primitives for building your own global styles, not barrel exports.
 export type { Theme, CSSObject, PaletteColor } from './theme/themes'
-export * from '@soroush.tech/styled-system'
-export { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
+export * from '@soroush.design/styled-system'
+export { createShouldForwardProp, props } from '@soroush.design/styled-system/should-forward-prop'

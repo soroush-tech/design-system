@@ -15,7 +15,7 @@ import {
   type ReactNode,
   type Ref,
 } from 'react'
-import type { SpaceProps } from '@soroush.tech/styled-system'
+import type { SpaceProps } from '@soroush.design/styled-system'
 import { styled, type Theme, createShouldForwardProp, props, space, get } from '../../index'
 import { useDefaultProps, useTheme, type TabsVariants } from '../../theme'
 import { themeDefault } from '../../theme/utils/themeDefault'

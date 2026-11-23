@@ -1,5 +1,5 @@
-import { createParser, get, type Parser, type StyleFn } from '@soroush.tech/styled-system/core'
-import { css } from '@soroush.tech/styled-system/css'
+import { createParser, get, type Parser, type StyleFn } from '@soroush.design/styled-system/core'
+import { css } from '@soroush.design/styled-system/css'
 
 export interface VariantOptions {
   scale?: string

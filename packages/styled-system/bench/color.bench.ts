@@ -15,9 +15,10 @@ const props = {
 type ColorFn = (props: typeof props) => unknown
 
 /**
- * CI performance gate: the local build vs the last published release of this
- * same package, installed inside the sandbox via npm's `latest` dist-tag (so
- * "previous version" never needs a lookup step) and read off `ctx.modules`.
+ * CI performance gate: the local build vs the last published release, installed inside the
+ * sandbox via npm's `latest` dist-tag (so "previous version" never needs a lookup step) and
+ * read off `ctx.modules`. Until `@soroush.design/styled-system` has a release, `previous` is the
+ * last release of `@soroush.tech/styled-system`; switch it to the new name after the first publish.
  * The bench-action job compares every local case against `previous` and fails
  * the PR when one drops below the configured minimum speed ratio.
  *

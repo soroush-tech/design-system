@@ -4,7 +4,7 @@ import {
   system,
   type SystemConfig,
   type Transform,
-} from '@soroush.tech/styled-system/core'
+} from '@soroush.design/styled-system/core'
 
 const spaceScale = [0, 4, 8, 16, 32, 64, 128, 256, 512]
 

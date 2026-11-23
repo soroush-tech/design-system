@@ -5,7 +5,7 @@ import type {
   SpaceProps,
   TypographyProps as SystemTypographyProps,
   BorderProps,
-} from '@soroush.tech/styled-system'
+} from '@soroush.design/styled-system'
 import {
   styled,
   type Theme,

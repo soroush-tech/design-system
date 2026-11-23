@@ -6,7 +6,7 @@ Each function provides the following props and maps to scales defined in a theme
 ## Space
 
 ```js
-import { space } from '@soroush.tech/styled-system'
+import { space } from '@soroush.design/styled-system'
 `
 
 <Box m={2}>
@@ -39,7 +39,7 @@ Styled System provides subsets of `space` category: `margin`, `padding` and `gap
 ## Color
 
 ```js
-import { color } from '@soroush.tech/styled-system'
+import { color } from '@soroush.design/styled-system'
 ;<Text color="white" bg="black">
   Header
 </Text>
@@ -54,7 +54,7 @@ import { color } from '@soroush.tech/styled-system'
 ## Typography
 
 ```js
-import { typography } from '@soroush.tech/styled-system'
+import { typography } from '@soroush.design/styled-system'
 ;<Header fontFamily="Helvetica" fontSize={2}>
   Hello!
 </Header>
@@ -82,7 +82,7 @@ import { typography } from '@soroush.tech/styled-system'
 ## Layout
 
 ```js
-import { layout } from '@soroush.tech/styled-system'
+import { layout } from '@soroush.design/styled-system'
 ;<Box width="100%" height={32} overflow="hidden" />
 ```
 
@@ -105,7 +105,7 @@ import { layout } from '@soroush.tech/styled-system'
 ## Flexbox
 
 ```js
-import { flexbox } from '@soroush.tech/styled-system'
+import { flexbox } from '@soroush.design/styled-system'
 ;<Flex alignItems="center" justifyContent="space-between">
   Blog
 </Flex>
@@ -130,7 +130,7 @@ import { flexbox } from '@soroush.tech/styled-system'
 ## Grid Layout
 
 ```js
-import { grid } from '@soroush.tech/styled-system'
+import { grid } from '@soroush.design/styled-system'
 ;<Grid gridGap={2} gridAutoFlow="row dense">
   Grid
 </Grid>
@@ -154,7 +154,7 @@ import { grid } from '@soroush.tech/styled-system'
 ## Background
 
 ```js
-import { background } from '@soroush.tech/styled-system'
+import { background } from '@soroush.design/styled-system'
 ;<Image
   backgroundImage="url('/images/dog.png')"
   backgroundPosition="center"
@@ -173,7 +173,7 @@ import { background } from '@soroush.tech/styled-system'
 ## Border
 
 ```js
-import { border } from '@soroush.tech/styled-system'
+import { border } from '@soroush.design/styled-system'
 ;<Box border={1} borderRadius={2}>
   Card
 </Box>
@@ -212,7 +212,7 @@ import { border } from '@soroush.tech/styled-system'
 ## Position
 
 ```js
-import { position } from '@soroush.tech/styled-system'
+import { position } from '@soroush.design/styled-system'
 ;<Box position="absolute" top={0} left={0} right={0} bottom={0}>
   Cover
 </Box>
@@ -230,7 +230,7 @@ import { position } from '@soroush.tech/styled-system'
 ## Shadow
 
 ```js
-import { shadow } from '@soroush.tech/styled-system'
+import { shadow } from '@soroush.design/styled-system'
 ;<Text textShadow="2px 2px #ff0000" boxShadow="5px 10px #888888">
   Text with shadows
 </Text>
@@ -246,7 +246,7 @@ import { shadow } from '@soroush.tech/styled-system'
 **Note**: The prefered API for [variants](./variants.md) has changed. The following is a reference for legacy variant APIs.
 
 ```js
-import { textStyle, colorStyle, buttonStyle } from '@soroush.tech/styled-system'
+import { textStyle, colorStyle, buttonStyle } from '@soroush.design/styled-system'
 
 <Button variant="primary">Primary</Button>
 <Button variant="secondary">Secondary</Button>

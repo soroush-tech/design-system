@@ -7,7 +7,7 @@ import type {
   FlexboxProps,
   BorderProps,
   PositionProps,
-} from '@soroush.tech/styled-system'
+} from '@soroush.design/styled-system'
 import {
   styled,
   type Theme,

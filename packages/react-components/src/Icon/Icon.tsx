@@ -1,5 +1,5 @@
 import { type ComponentType, type ElementType, type SVGProps } from 'react'
-import type { LayoutProps, SpaceProps } from '@soroush.tech/styled-system'
+import type { LayoutProps, SpaceProps } from '@soroush.design/styled-system'
 import { styled, createShouldForwardProp, props, layout, space, system } from '../index'
 import { useTheme } from '../theme'
 import { type TextColorToken } from '../Typography'

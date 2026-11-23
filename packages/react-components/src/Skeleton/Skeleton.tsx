@@ -1,5 +1,5 @@
 import { type HTMLAttributes } from 'react'
-import type { SpaceProps, PaddingProps } from '@soroush.tech/styled-system'
+import type { SpaceProps, PaddingProps } from '@soroush.design/styled-system'
 import {
   styled,
   type Theme,

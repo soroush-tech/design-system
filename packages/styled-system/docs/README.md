@@ -1,6 +1,6 @@
 # Documentation
 
-Full documentation for [`@soroush.tech/styled-system`](../README.md) - a maintained,
+Full documentation for [`@soroush.design/styled-system`](../README.md) - a maintained,
 first-class-TypeScript rewrite of [styled-system](https://github.com/jxnblk/styled-system)
 v5. It is a drop-in replacement for the `styled-system` runtime and ships its own types
 (replacing `@types/styled-system`).
@@ -49,13 +49,13 @@ Ported and adapted from the original styled-system documentation.
 This single package replaces the original family of `@styled-system/*` packages via
 subpath exports:
 
-| Import                                            | Original package                     |
-| ------------------------------------------------- | ------------------------------------ |
-| `@soroush.tech/styled-system`                     | `styled-system`                      |
-| `@soroush.tech/styled-system/css`                 | `@styled-system/css`                 |
-| `@soroush.tech/styled-system/theme-get`           | `@styled-system/theme-get`           |
-| `@soroush.tech/styled-system/props`               | `@styled-system/props`               |
-| `@soroush.tech/styled-system/should-forward-prop` | `@styled-system/should-forward-prop` |
+| Import                                              | Original package                     |
+| --------------------------------------------------- | ------------------------------------ |
+| `@soroush.design/styled-system`                     | `styled-system`                      |
+| `@soroush.design/styled-system/css`                 | `@styled-system/css`                 |
+| `@soroush.design/styled-system/theme-get`           | `@styled-system/theme-get`           |
+| `@soroush.design/styled-system/props`               | `@styled-system/props`               |
+| `@soroush.design/styled-system/should-forward-prop` | `@styled-system/should-forward-prop` |
 
 ## Examples
 

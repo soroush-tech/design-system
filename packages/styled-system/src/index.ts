@@ -1,12 +1,12 @@
-import { background } from '@soroush.tech/styled-system/background'
-import { border } from '@soroush.tech/styled-system/border'
-import { color } from '@soroush.tech/styled-system/color'
-import type { Parser } from '@soroush.tech/styled-system/core'
-import { flexbox } from '@soroush.tech/styled-system/flexbox'
-import { grid } from '@soroush.tech/styled-system/grid'
-import { layout } from '@soroush.tech/styled-system/layout'
-import { position } from '@soroush.tech/styled-system/position'
-import { typography } from '@soroush.tech/styled-system/typography'
+import { background } from '@soroush.design/styled-system/background'
+import { border } from '@soroush.design/styled-system/border'
+import { color } from '@soroush.design/styled-system/color'
+import type { Parser } from '@soroush.design/styled-system/core'
+import { flexbox } from '@soroush.design/styled-system/flexbox'
+import { grid } from '@soroush.design/styled-system/grid'
+import { layout } from '@soroush.design/styled-system/layout'
+import { position } from '@soroush.design/styled-system/position'
+import { typography } from '@soroush.design/styled-system/typography'
 
 export {
   get,
@@ -36,17 +36,17 @@ export {
   type styleFn,
   type Config,
   type ConfigFunction,
-} from '@soroush.tech/styled-system/core'
+} from '@soroush.design/styled-system/core'
 // Note: the public `Theme` type is re-exported from ./types (below), not ./core.
 
-export { margin, padding, gap, space } from '@soroush.tech/styled-system/space'
-export { color } from '@soroush.tech/styled-system/color'
-export { layout } from '@soroush.tech/styled-system/layout'
-export { typography } from '@soroush.tech/styled-system/typography'
-export { flexbox } from '@soroush.tech/styled-system/flexbox'
-export { border, border as borders } from '@soroush.tech/styled-system/border'
-export { background } from '@soroush.tech/styled-system/background'
-export { position } from '@soroush.tech/styled-system/position'
+export { margin, padding, gap, space } from '@soroush.design/styled-system/space'
+export { color } from '@soroush.design/styled-system/color'
+export { layout } from '@soroush.design/styled-system/layout'
+export { typography } from '@soroush.design/styled-system/typography'
+export { flexbox } from '@soroush.design/styled-system/flexbox'
+export { border, border as borders } from '@soroush.design/styled-system/border'
+export { background } from '@soroush.design/styled-system/background'
+export { position } from '@soroush.design/styled-system/position'
 export {
   grid,
   layoutFrame,
@@ -56,12 +56,12 @@ export {
   type LayoutGridEntry,
   type LayoutGridValue,
   type LayoutGridGap,
-} from '@soroush.tech/styled-system/grid'
+} from '@soroush.design/styled-system/grid'
 export {
   shadow,
   shadow as boxShadow,
   shadow as textShadow,
-} from '@soroush.tech/styled-system/shadow'
+} from '@soroush.design/styled-system/shadow'
 export {
   variant,
   buttonStyle,
@@ -69,7 +69,7 @@ export {
   colorStyle,
   type VariantArgs,
   type VariantOptions,
-} from '@soroush.tech/styled-system/variant'
+} from '@soroush.design/styled-system/variant'
 export { style, type LowLevelStyleFunctionArguments, type StyleOptions } from './style'
 export * from './types'
 

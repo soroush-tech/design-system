@@ -1,7 +1,7 @@
 # css
 
 ```js
-import { css } from '@soroush.tech/styled-system/css'
+import { css } from '@soroush.design/styled-system/css'
 ```
 
 The `css` utility converts a theme-aware style object into a plain CSS-in-JS style
@@ -15,7 +15,7 @@ CSS-in-JS library:
 
 ```jsx
 import styled from '@emotion/styled'
-import { css } from '@soroush.tech/styled-system/css'
+import { css } from '@soroush.design/styled-system/css'
 
 const Box = styled('div')(
   css({
@@ -43,7 +43,7 @@ This is the engine behind the inline [`variant`](./variants.md) API.
 ## theme-get
 
 ```js
-import { themeGet } from '@soroush.tech/styled-system/theme-get'
+import { themeGet } from '@soroush.design/styled-system/theme-get'
 ```
 
 `themeGet` reads a single value from the theme by dot-path, with an optional
@@ -51,7 +51,7 @@ fallback. Handy inside template literals:
 
 ```jsx
 import styled from '@emotion/styled'
-import { themeGet } from '@soroush.tech/styled-system/theme-get'
+import { themeGet } from '@soroush.design/styled-system/theme-get'
 
 const Button = styled('button')`
   color: ${themeGet('colors.primary', '#0077cc')};
@@ -62,10 +62,10 @@ const Button = styled('button')`
 ## props
 
 ```js
-import { pick, omit } from '@soroush.tech/styled-system/props'
+import { pick, omit } from '@soroush.design/styled-system/props'
 ```
 
 `pick` and `omit` split a props object by whether each key is a known style prop -
 useful for forwarding only valid HTML attributes to the DOM. See also
 [Removing props from HTML](./guides/removing-props-from-html.md) and
-`@soroush.tech/styled-system/should-forward-prop`.
+`@soroush.design/styled-system/should-forward-prop`.

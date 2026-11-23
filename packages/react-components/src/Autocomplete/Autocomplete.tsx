@@ -9,7 +9,7 @@ import {
   type ReactNode,
   type RefObject,
 } from 'react'
-import type { LayoutProps, SpaceProps } from '@soroush.tech/styled-system'
+import type { LayoutProps, SpaceProps } from '@soroush.design/styled-system'
 import { createShouldForwardProp, get, props, space, styled, system, type Theme } from '../index'
 import { useDefaultProps, useTheme } from '../theme'
 import { getSurfaceRadius } from '../utils/getSurfaceRadius'

@@ -7,7 +7,7 @@ import {
   type KeyboardEvent,
   type ReactNode,
 } from 'react'
-import type { LayoutProps, SpaceProps } from '@soroush.tech/styled-system'
+import type { LayoutProps, SpaceProps } from '@soroush.design/styled-system'
 import { styled, type Theme, createShouldForwardProp, props, space, layout } from '../../index'
 import { useDefaultProps } from '../../theme'
 import { themeDefault } from '../../theme/utils/themeDefault'

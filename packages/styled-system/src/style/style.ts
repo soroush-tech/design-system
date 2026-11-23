@@ -4,7 +4,7 @@ import {
   type ParserConfig,
   type Parser,
   type Transform,
-} from '@soroush.tech/styled-system/core'
+} from '@soroush.design/styled-system/core'
 
 export interface StyleOptions {
   prop: string

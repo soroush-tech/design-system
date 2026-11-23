@@ -46,7 +46,7 @@ export interface PaperProps extends FlexProps {
   as?: ElementType
 }
 
-// aspectRatio needs no manual wiring since @soroush.tech/styled-system 5.8.0 - it
+// aspectRatio needs no manual wiring since @soroush.design/styled-system 5.8.0 - it
 // arrives through View's `layout` parser and `LayoutProps`.
 const shouldForwardProp = createShouldForwardProp([
   'elevation',

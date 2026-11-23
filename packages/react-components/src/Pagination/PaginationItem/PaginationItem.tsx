@@ -1,7 +1,7 @@
 import { type ButtonHTMLAttributes, type ElementType, type ReactNode } from 'react'
 import { Icon, type IconName } from '@soroush.design/react-components/Icon'
 import { type PaginationItemType } from '../hooks/usePagination'
-import type { SpaceProps } from '@soroush.tech/styled-system'
+import type { SpaceProps } from '@soroush.design/styled-system'
 import {
   styled,
   type Theme,

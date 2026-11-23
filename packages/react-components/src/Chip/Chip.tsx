@@ -1,5 +1,5 @@
 import type { KeyboardEvent, MouseEvent, ReactNode, SyntheticEvent } from 'react'
-import type { SpaceProps } from '@soroush.tech/styled-system'
+import type { SpaceProps } from '@soroush.design/styled-system'
 import { createShouldForwardProp, get, props, space, styled, type Theme } from '../index'
 import { useDefaultProps } from '../theme'
 import { Icon } from '../Icon'

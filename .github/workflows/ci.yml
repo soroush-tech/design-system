@@ -471,7 +471,7 @@ jobs:
       # The bench file imports this package's built dist so the comparison
       # against the npm release's prebuilt dist is like-for-like.
       - name: Build styled-system
-        run: ${{ needs.prepare.outputs.runner }} --filter @soroush.tech/styled-system build
+        run: ${{ needs.prepare.outputs.runner }} --filter @soroush.design/styled-system build
 
       # Mint a token from the org's GitHub App so the results comment is posted
       # under the brand bot identity instead of github-actions[bot]. Skipped (and

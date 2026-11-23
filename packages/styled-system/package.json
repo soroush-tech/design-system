@@ -1,7 +1,7 @@
 {
-  "name": "@soroush.tech/styled-system",
-  "version": "6.0.2",
-  "description": "Maintained, first-class-TypeScript rewrite of styled-system - responsive, theme-aware style props for CSS-in-JS. Drop-in replacement for styled-system v5.",
+  "name": "@soroush.design/styled-system",
+  "version": "0.1.0",
+  "description": "Responsive, theme-aware style props for CSS-in-JS: style-prop parsers, breakpoints and container queries, and a system() builder, in TypeScript.",
   "keywords": [
     "styled-system",
     "css-in-js",

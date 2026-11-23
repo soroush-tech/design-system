@@ -14,7 +14,7 @@ To group these shared Styled System props together, create a new module that wil
 
 ```js
 // custom styled-system groupings
-import { compose, space, color, display, width, maxWidth } from '@soroush.tech/styled-system'
+import { compose, space, color, display, width, maxWidth } from '@soroush.design/styled-system'
 
 export const layout = compose(space, display, width, maxWidth, color)
 ```

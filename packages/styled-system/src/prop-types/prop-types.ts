@@ -3,17 +3,17 @@
 // spread the props a styled-system function accepts:
 //   Box.propTypes = { ...propTypes.space, ...propTypes.color }
 import PropTypes from 'prop-types'
-import { background } from '@soroush.tech/styled-system/background'
-import { border } from '@soroush.tech/styled-system/border'
-import { color } from '@soroush.tech/styled-system/color'
-import { flexbox } from '@soroush.tech/styled-system/flexbox'
-import { grid } from '@soroush.tech/styled-system/grid'
-import { layout } from '@soroush.tech/styled-system/layout'
-import { position } from '@soroush.tech/styled-system/position'
-import { shadow } from '@soroush.tech/styled-system/shadow'
-import { space } from '@soroush.tech/styled-system/space'
-import { typography } from '@soroush.tech/styled-system/typography'
-import { buttonStyle, colorStyle, textStyle } from '@soroush.tech/styled-system/variant'
+import { background } from '@soroush.design/styled-system/background'
+import { border } from '@soroush.design/styled-system/border'
+import { color } from '@soroush.design/styled-system/color'
+import { flexbox } from '@soroush.design/styled-system/flexbox'
+import { grid } from '@soroush.design/styled-system/grid'
+import { layout } from '@soroush.design/styled-system/layout'
+import { position } from '@soroush.design/styled-system/position'
+import { shadow } from '@soroush.design/styled-system/shadow'
+import { space } from '@soroush.design/styled-system/space'
+import { typography } from '@soroush.design/styled-system/typography'
+import { buttonStyle, colorStyle, textStyle } from '@soroush.design/styled-system/variant'
 
 // A React prop-types validator. Declared structurally so our public `.d.ts` does not
 // leak `@types/prop-types` onto consumers.

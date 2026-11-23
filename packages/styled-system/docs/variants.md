@@ -6,12 +6,12 @@ This can be a handy way to support slight stylistic variations in button or typo
 Import the variant function and pass variant style objects in your component definition.
 When defining variants inline, you can use Styled System like syntax to pick up values from your theme.
 
-Note: Inline variants is a new feature in `v5.1.0`, which uses [@soroush.tech/styled-system/css][].
+Note: Inline variants is a new feature in `v5.1.0`, which uses [@soroush.design/styled-system/css][].
 
 ```js
 // example Button with variants
 import styled from 'styled-components'
-import { variant } from '@soroush.tech/styled-system'
+import { variant } from '@soroush.design/styled-system'
 
 const Button = styled('button')(
   {
@@ -152,4 +152,4 @@ The built-in variants use the following props and theme keys:
 | `colorStyle`  | `colors`    | `colorStyles` |
 | `buttonStyle` | `variant`   | `buttons`     |
 
-[@soroush.tech/styled-system/css]: ./css.md
+[@soroush.design/styled-system/css]: ./css.md

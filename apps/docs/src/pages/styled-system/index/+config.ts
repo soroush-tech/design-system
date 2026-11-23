@@ -5,5 +5,5 @@ export default {
   prerender: sectionPrerender('styled-system'),
   title: 'Styled System',
   description:
-    'Overview of @soroush.tech/styled-system: responsive style props, theme scales, and the system() builder.',
+    'Overview of @soroush.design/styled-system: responsive style props, theme scales, and the system() builder.',
 } satisfies Config

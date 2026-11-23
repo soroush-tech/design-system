@@ -3,7 +3,7 @@
 ## Space
 
 ```js
-import { space } from '@soroush.tech/styled-system'
+import { space } from '@soroush.design/styled-system'
 ```
 
 The space utility converts shorthand margin, padding and gap props to margin, padding and gap CSS declarations.
@@ -60,7 +60,7 @@ As of v4.0.0, verbose margin and padding props (e.g. `margin`, `marginTop`) can 
 ## Color
 
 ```js
-import { color } from '@soroush.tech/styled-system'
+import { color } from '@soroush.design/styled-system'
 ```
 
 The color utility parses a component's `color` and `bg` props and converts them into CSS declarations.
@@ -95,7 +95,7 @@ Color palettes can be configured with the [ThemeProvider][theming] to use keys a
 ## Typography
 
 ```js
-import { typography } from '@soroush.tech/styled-system'
+import { typography } from '@soroush.design/styled-system'
 ```
 
 The typography utility includes the following style props.
@@ -153,7 +153,7 @@ The typography utility includes the following style props.
 ## Layout
 
 ```js
-import { layout } from '@soroush.tech/styled-system'
+import { layout } from '@soroush.design/styled-system'
 ```
 
 The layout utility includes the following style props.
@@ -241,7 +241,7 @@ The `width` prop is transformed based on the following:
 ## Flexbox
 
 ```js
-import { flexbox } from '@soroush.tech/styled-system'
+import { flexbox } from '@soroush.design/styled-system'
 ```
 
 The `flexbox` utility includes the following style props.
@@ -297,7 +297,7 @@ The `flexbox` utility includes the following style props.
 ## Grid Layout
 
 ```js
-import { grid } from '@soroush.tech/styled-system'
+import { grid } from '@soroush.design/styled-system'
 ```
 
 The `grid` utility includes the following style props.
@@ -361,7 +361,7 @@ The `grid` utility includes the following style props.
 ## Background
 
 ```js
-import { background } from '@soroush.tech/styled-system'
+import { background } from '@soroush.design/styled-system'
 ```
 
 The `background` utility includes the following style props.
@@ -387,7 +387,7 @@ The `background` utility includes the following style props.
 ## Border
 
 ```js
-import { border } from '@soroush.tech/styled-system'
+import { border } from '@soroush.design/styled-system'
 ```
 
 The `border` utility includes the following style props.
@@ -445,7 +445,7 @@ The `border` utility includes the following style props.
 ## Position
 
 ```js
-import { position } from '@soroush.tech/styled-system'
+import { position } from '@soroush.design/styled-system'
 ```
 
 The `position` utility includes the following style props.
@@ -478,7 +478,7 @@ The `position` utility includes the following style props.
 ## Shadow
 
 ```js
-import { shadow } from '@soroush.tech/styled-system'
+import { shadow } from '@soroush.design/styled-system'
 ```
 
 The `shadow` utility includes the following style props.
@@ -501,7 +501,7 @@ This utility can help improve performance when using multiple style props functi
 
 ```js
 import styled from 'styled-components'
-import { compose, typography, space, color } from '@soroush.tech/styled-system'
+import { compose, typography, space, color } from '@soroush.design/styled-system'
 
 export const Text = styled('div')(compose(typography, space, color))
 ```
@@ -525,7 +525,7 @@ literal should look like this:
 
 ```js
 import styled from 'styled-components'
-import { themeGet } from '@soroush.tech/styled-system/theme-get'
+import { themeGet } from '@soroush.design/styled-system/theme-get'
 
 const Box = styled.div`
   border-radius: ${themeGet('radii.small', '4px')};
@@ -537,7 +537,7 @@ function call and have `props` passed to it:
 
 ```js
 import styled from 'styled-components'
-import { themeGet } from '@soroush.tech/styled-system/theme-get'
+import { themeGet } from '@soroush.design/styled-system/theme-get'
 
 const Box = styled('div')(props => ({
   borderRadius: themeGet('radii.small', '4px')(props),
@@ -554,7 +554,7 @@ Each value in `propTypes` is an object which should be assigned (or spread) to t
 
 ```jsx
 import styled from 'styled-components'
-import { width } from '@soroush.tech/styled-system'
+import { width } from '@soroush.design/styled-system'
 
 const Box = styled.div`
   ${width}
@@ -583,7 +583,7 @@ Each key in the configuration object can define the following:
 ```js
 // example
 import styled from 'styled-components'
-import { system } from '@soroush.tech/styled-system'
+import { system } from '@soroush.design/styled-system'
 
 const Text = styled('div')(
   system({
@@ -612,7 +612,7 @@ Creates a custom style utility to apply complex styles based on a single prop.
 
 ```js
 import styled from 'styled-components'
-import { variant } from '@soroush.tech/styled-system'
+import { variant } from '@soroush.design/styled-system'
 
 const Card = styled.div`
   ${variant({
@@ -638,10 +638,10 @@ Card.defaultProps = {
 
 ## Legacy Variants
 
-The legacy variants require styles to be defined in the theme object and do _not_ use `@soroush.tech/styled-system/css` for transformation.
+The legacy variants require styles to be defined in the theme object and do _not_ use `@soroush.design/styled-system/css` for transformation.
 
 ```js
-import { textStyle, colorStyle, buttonStyle } from '@soroush.tech/styled-system'
+import { textStyle, colorStyle, buttonStyle } from '@soroush.design/styled-system'
 ```
 
 ```jsx

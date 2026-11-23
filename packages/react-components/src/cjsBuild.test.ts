@@ -12,7 +12,7 @@ const published = Object.entries(manifest.publishConfig.exports) as [
   { import: { default: string }; require: { default: string } },
 ][]
 
-// The workspace serves @soroush.tech/styled-system and @soroush.design/core as source; the built
+// The workspace serves @soroush.design/styled-system and @soroush.design/core as source; the built
 // package requires their builds.
 const Module = require('node:module')
 const resolveFilename = Module._resolveFilename
@@ -24,7 +24,7 @@ beforeAll(() => {
     resolveFilename.call(
       Module,
       request
-        .replace(/^@soroush\.tech\/styled-system\/?(.*)$/, (_, path) =>
+        .replace(/^@soroush\.design\/styled-system\/?(.*)$/, (_, path) =>
           join(styledSystemDist, `${path || 'index'}.cjs`)
         )
         .replace(/^@soroush\.design\/core\/(.*)$/, (_, path) => join(coreDist, `${path}.cjs`)),

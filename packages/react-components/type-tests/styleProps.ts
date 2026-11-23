@@ -2,7 +2,7 @@
 // subpaths. Runs via `pnpm test:types` (builds dist first, then typechecks this
 // isolated program).
 //
-// The prop groups come from @soroush.tech/styled-system, and components import them
+// The prop groups come from @soroush.design/styled-system, and components import them
 // straight from there - importing them through the barrel instead puts them inside
 // the `declare namespace` tsdown synthesizes for it, which cannot hold the barrel's
 // `export *`, so the names go missing from the build. Under `skipLibCheck` (what

@@ -136,7 +136,7 @@ For hand-written styles, build the query helpers from the same scale instead of 
 `mediaQueries` scale - they stay in step with the breakpoints:
 
 ```js
-import { createMediaHelpers } from '@soroush.tech/styled-system'
+import { createMediaHelpers } from '@soroush.design/styled-system'
 
 const { up, down, only } = createMediaHelpers({ xs: 0, sm: '600px', md: '840px' })
 up('sm') // '@media (width >= 600px)'

@@ -6,7 +6,7 @@ import {
   type PointerEvent,
   type ReactNode,
 } from 'react'
-import type { LayoutProps, SpaceProps } from '@soroush.tech/styled-system'
+import type { LayoutProps, SpaceProps } from '@soroush.design/styled-system'
 import { createShouldForwardProp, get, props, space, styled, system, type Theme } from '../index'
 import { useDefaultProps, useTheme } from '../theme'
 import { useFormControl } from '../FormControl'

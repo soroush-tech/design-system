@@ -8,11 +8,11 @@ export default defineConfig({
   resolve: {
     alias: [
       {
-        find: /^@soroush\.tech\/styled-system$/,
+        find: /^@soroush\.design\/styled-system$/,
         replacement: resolve(__dirname, 'src/index.ts'),
       },
       {
-        find: /^@soroush\.tech\/styled-system\/(.+)$/,
+        find: /^@soroush\.design\/styled-system\/(.+)$/,
         replacement: resolve(__dirname, 'src/$1/index.ts'),
       },
     ],

@@ -3,7 +3,7 @@ import {
   createMediaHelpers,
   type ContainerQueries,
   type QueryHelpers,
-} from '@soroush.tech/styled-system'
+} from '@soroush.design/styled-system'
 
 /**
  * The query helpers a theme's breakpoint scale carries: `up` / `down` / `only` / `between` /

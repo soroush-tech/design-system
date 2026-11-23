@@ -1,4 +1,4 @@
-import { get } from '@soroush.tech/styled-system/core'
+import { get } from '@soroush.design/styled-system/core'
 
 // Signature mirrors @types/styled-system__theme-get verbatim:
 //   themeGet(path: string | Array<string | number>, fallback?: any): (props: any) => any

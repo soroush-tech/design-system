@@ -1,4 +1,4 @@
-import { system, type SystemConfig } from '@soroush.tech/styled-system/core'
+import { system, type SystemConfig } from '@soroush.design/styled-system/core'
 
 const config: SystemConfig = {
   color: { property: 'color', scale: 'colors' },

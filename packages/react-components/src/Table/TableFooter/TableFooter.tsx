@@ -1,6 +1,6 @@
 import { type ElementType, type HTMLAttributes } from 'react'
 import { TableSectionContext } from '../TableSectionContext'
-import type { SpaceProps, BorderProps } from '@soroush.tech/styled-system'
+import type { SpaceProps, BorderProps } from '@soroush.design/styled-system'
 import {
   styled,
   type Theme,

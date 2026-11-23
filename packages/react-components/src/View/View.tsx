@@ -8,7 +8,7 @@ import type {
   FlexboxProps,
   SpanProps,
   LayoutFrameProps,
-} from '@soroush.tech/styled-system'
+} from '@soroush.design/styled-system'
 import {
   styled,
   type Theme,
@@ -62,7 +62,7 @@ export interface ViewProps
   order?: FlexboxProps<Theme>['order']
 }
 
-// aspectRatio needs no manual wiring since @soroush.tech/styled-system 5.8.0 - it
+// aspectRatio needs no manual wiring since @soroush.design/styled-system 5.8.0 - it
 // arrives through the `layout` parser and `LayoutProps`.
 const shouldForwardProp = createShouldForwardProp([...props, 'cursor', 'order', 'layout'])
 

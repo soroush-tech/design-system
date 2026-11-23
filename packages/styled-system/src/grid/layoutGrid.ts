@@ -4,7 +4,7 @@ import {
   type Parser,
   type Props,
   type StyleObject,
-} from '@soroush.tech/styled-system/core'
+} from '@soroush.design/styled-system/core'
 import { responsiveQueries, type Breakpoints } from '../core/media'
 
 /** The layout grid at one breakpoint - the `content` part of a `theme.layout` entry. */

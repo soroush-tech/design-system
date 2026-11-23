@@ -14,15 +14,15 @@ Styled System has a optional utility that can be passed directly to this API.
 Install the following utility to make sure your Emotion styled components do not render style props as HTML.
 
 ```sh
-npm i @soroush.tech/styled-system
+npm i @soroush.design/styled-system
 ```
 
 In your styled component definition, pass this utility function as an option to the `styled` HOC.
 
 ```js
 import styled from '@emotion/styled'
-import shouldForwardProp from '@soroush.tech/styled-system/should-forward-prop'
-import { space, color } from '@soroush.tech/styled-system'
+import shouldForwardProp from '@soroush.design/styled-system/should-forward-prop'
+import { space, color } from '@soroush.design/styled-system'
 
 const Box = styled('div', {
   shouldForwardProp,
@@ -45,7 +45,7 @@ If you're a fan of using the [`css` prop][], you can easily control which props 
 ```js
 // example using Emotion's css prop
 import React from 'react'
-import { color } from '@soroush.tech/styled-system'
+import { color } from '@soroush.design/styled-system'
 
 export default ({ color, bg, ...props }) => (
   <div {...props} css={(theme) => color({ theme, color, bg })} />

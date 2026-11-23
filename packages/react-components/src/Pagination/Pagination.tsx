@@ -11,7 +11,7 @@ import {
   type PaginationItemSize,
   type PaginationItemVariant,
 } from './PaginationItem'
-import type { SpaceProps } from '@soroush.tech/styled-system'
+import type { SpaceProps } from '@soroush.design/styled-system'
 import { styled, type Theme, createShouldForwardProp, props, space } from '../index'
 
 export type PaginationColor = PaginationItemColor

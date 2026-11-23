@@ -1,5 +1,5 @@
 import { type ChangeEvent, type KeyboardEvent, type ReactNode } from 'react'
-import type { SpaceProps } from '@soroush.tech/styled-system'
+import type { SpaceProps } from '@soroush.design/styled-system'
 import { get, styled, type Theme, createShouldForwardProp, props, space } from '../index'
 import { useTheme } from '../theme'
 import { useFormControl } from '../FormControl'

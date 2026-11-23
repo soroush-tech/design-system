@@ -1,4 +1,4 @@
-import { system } from '@soroush.tech/styled-system/core'
+import { system } from '@soroush.design/styled-system/core'
 
 export const shadow = system({
   boxShadow: { property: 'boxShadow', scale: 'shadows' },

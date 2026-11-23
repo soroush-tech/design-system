@@ -6,7 +6,7 @@ Monorepo for the `@soroush.tech` UI libraries, extracted from [`soroush-tech/cor
 
 | Package                                                         | Description                                                                   |
 | --------------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| [`@soroush.tech/styled-system`](packages/styled-system)         | Style-prop system: responsive style functions, `system()`, theme-aware scales |
+| [`@soroush.design/styled-system`](packages/styled-system)       | Style-prop system: responsive style functions, `system()`, theme-aware scales |
 | [`@soroush.design/react-components`](packages/react-components) | Token-driven React component library built on styled-system                   |
 | [`@soroush.design/core`](packages/core)                         | What the platforms share and that needs no framework: the component catalog   |
 | [`@soroush.design/react`](packages/react)                       | The React platform: what an app installs and imports from, generated, no code |

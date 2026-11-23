@@ -9,7 +9,7 @@ but most of the v4 APIs should work as expected.
 
 The following has been removed from v5 and you should make these changes to migrate:
 
-- The `themeGet` utility has been removed from the core package. Install and use the `@soroush.tech/styled-system/theme-get` package instead.
+- The `themeGet` utility has been removed from the core package. Install and use the `@soroush.design/styled-system/theme-get` package instead.
 - The following internal utilities and modules have been removed:
   - `isObject`
   - `is`
@@ -33,7 +33,7 @@ The following has been removed from v5 and you should make these changes to migr
 
 ## Prop types
 
-`@soroush.tech/styled-system` does not ship a `prop-types` package - the old
+`@soroush.design/styled-system` does not ship a `prop-types` package - the old
 `@styled-system/prop-types` is out of scope for this rewrite, and React 19 removed
 `propTypes` for function components entirely. Use TypeScript for prop typing instead
 (see [TypeScript](../typescript.md)): every style function carries its own typed prop

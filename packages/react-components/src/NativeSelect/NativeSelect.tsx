@@ -1,7 +1,7 @@
 import { type ChangeEvent, type SelectHTMLAttributes } from 'react'
 import { useFormControl } from '../FormControl'
 import { Icon, type IconName, type IconProps } from '../Icon'
-import type { SpaceProps, LayoutProps } from '@soroush.tech/styled-system'
+import type { SpaceProps, LayoutProps } from '@soroush.design/styled-system'
 import { styled, type Theme, createShouldForwardProp, props, space, get, system } from '../index'
 import { useTheme } from '../theme'
 import { inputVariantStyles } from '../utils/inputVariantStyles'

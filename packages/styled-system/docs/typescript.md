@@ -1,6 +1,6 @@
 # TypeScript
 
-`@soroush.tech/styled-system` ships its own first-class types - it **replaces
+`@soroush.design/styled-system` ships its own first-class types - it **replaces
 `@types/styled-system`**, and the public type surface matches `@types/styled-system@5.1.25`
 so existing typed code keeps compiling.
 
@@ -20,7 +20,7 @@ import {
   type ColorProps,
   type TypographyProps,
   type Theme,
-} from '@soroush.tech/styled-system'
+} from '@soroush.design/styled-system'
 
 const theme = {
   space: [0, 4, 8, 16, 32, 64],
@@ -72,7 +72,7 @@ Swap via a package-manager alias - no code or type changes:
 
 ```jsonc
 "dependencies": {
-  "styled-system": "npm:@soroush.tech/styled-system@^5"
+  "styled-system": "npm:@soroush.design/styled-system@^5"
 }
 ```
 
