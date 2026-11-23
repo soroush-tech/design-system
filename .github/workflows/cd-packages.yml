@@ -28,9 +28,9 @@ on:
         options:
           - all
           - cli
-          - design-system
           - markdown
           - mcp
+          - react-components
           - styled-system
           - ui-spec
         # gen:publish-options end

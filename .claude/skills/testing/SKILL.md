@@ -15,7 +15,7 @@ metadata:
 
 ## Vitest projects
 
-Only **design-system** splits into projects (`packages/design-system/vitest.config.ts`):
+Only **design-system** splits into projects (`packages/react-components/vitest.config.ts`):
 
 - `unit` - jsdom, runs `**/*.{test,spec}.*` (excludes `*.browser.test.*`)
 - `browser` - headless Chromium (Playwright provider), runs only `*.browser.test.*`

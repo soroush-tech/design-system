@@ -1,18 +1,25 @@
 import { listStoryNames, type StoriesModule } from '@soroush.tech/story-demo'
 import { sections } from '@soroush.tech/docs-content'
 import { COMPONENT_LIBRARY_REACT_RANGE, PACKAGE_VERSIONS } from 'src/common/packageVersions'
+import { requireMatches } from './requireMatches'
 
 // Every design-system stories module, resolved at build time - once as a namespace
 // (rendered via portable stories) and once as raw text (parsed into the shown code),
 // so the code shown is the code run.
-const modules = import.meta.glob('packages/design-system/src/**/*.stories.tsx', {
-  eager: true,
-}) as Record<string, StoriesModule>
-const sources = import.meta.glob('packages/design-system/src/**/*.stories.tsx', {
-  query: '?raw',
-  import: 'default',
-  eager: true,
-}) as Record<string, string>
+const modules = requireMatches(
+  'packages/react-components/src/**/*.stories.tsx',
+  import.meta.glob('packages/react-components/src/**/*.stories.tsx', {
+    eager: true,
+  }) as Record<string, StoriesModule>
+)
+const sources = requireMatches(
+  'packages/react-components/src/**/*.stories.tsx (?raw)',
+  import.meta.glob('packages/react-components/src/**/*.stories.tsx', {
+    query: '?raw',
+    import: 'default',
+    eager: true,
+  }) as Record<string, string>
+)
 
 export interface DemoEntry {
   /** Registry path: `<Component>/<StoryExport>`. */

@@ -40,7 +40,7 @@ test.describe('packages', () => {
     await page.goto('/design-system/components/button/')
     await expect(page.locator('main header').getByRole('link', { name: 'Source' })).toHaveAttribute(
       'href',
-      'https://github.com/soroush-tech/design-system/tree/main/packages/design-system/src/Button'
+      'https://github.com/soroush-tech/design-system/tree/main/packages/react-components/src/Button'
     )
   })
 })

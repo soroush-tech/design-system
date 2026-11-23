@@ -289,7 +289,7 @@ jobs:
             echo "  react-dom: $REACT"
           } >> pnpm-workspace.yaml
           pnpm install --no-frozen-lockfile --ignore-scripts
-          node -e "const v=require('./packages/design-system/node_modules/react/package.json').version; if (v !== process.env.REACT) { console.error('react is ' + v); process.exit(1) }"
+          node -e "const v=require('./packages/react-components/node_modules/react/package.json').version; if (v !== process.env.REACT) { console.error('react is ' + v); process.exit(1) }"
 
       - name: Run Unit Tests
         run: |

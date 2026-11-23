@@ -1,8 +1,8 @@
 # Markdown package conventions
 
 `@soroush.tech/markdown` is a companion component library to
-[`@soroush.tech/design-system`](../design-system). **Its components follow the design system's
-conventions verbatim** - read [`../design-system/design-system.md`](../design-system/design-system.md)
+[`@soroush.tech/design-system`](../react-components). **Its components follow the design system's
+conventions verbatim** - read [`../react-components/design-system.md`](../react-components/design-system.md)
 before working here. That doc is the law for: per-component folder structure, prop types derived
 from `Theme` (never manual unions), `styled(...)` naming + `system()` wiring, `shouldForwardProp`,
 the Storybook argType rules (`controls.include` whitelist, an `argType` per included prop,

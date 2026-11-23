@@ -9,7 +9,7 @@ If the first word is not a valid PascalCase name, stop and say:
 
 ## Step 0 - Detect mode
 
-Check whether `packages/design-system/src/<Name>/` already exists.
+Check whether `packages/react-components/src/<Name>/` already exists.
 
 - **Exists** → this is a **rework** of an existing component. Skip Step 2. Go straight to Step 1, then Step 3 (rework rules apply).
 - **Does not exist** → this is a **new component**. Follow all steps in order.
@@ -24,14 +24,14 @@ Read these files in order before doing anything else:
 2. `@soroush.tech/design-system/Typography/README.md` - canonical documentation format
 3. `@soroush.tech/design-system/Typography/Typography.stories.tsx` - canonical story structure
 4. `@soroush.tech/design-system/storybookOptions.ts` - existing token arrays and import patterns
-5. `packages/design-system/design-system.md` - full architecture rules (authoritative source of truth)
+5. `packages/react-components/design-system.md` - full architecture rules (authoritative source of truth)
 
 If reworking an existing component, also read its current files:
 
-- `packages/design-system/src/<Name>/<Name>.tsx`
-- `packages/design-system/src/<Name>/README.md`
-- `packages/design-system/src/<Name>/<Name>.stories.tsx`
-- `packages/design-system/src/<Name>/<Name>.test.tsx`
+- `packages/react-components/src/<Name>/<Name>.tsx`
+- `packages/react-components/src/<Name>/README.md`
+- `packages/react-components/src/<Name>/<Name>.stories.tsx`
+- `packages/react-components/src/<Name>/<Name>.test.tsx`
 
 ---
 
@@ -58,7 +58,7 @@ Do not generate any files until confirmed.
 
 ### New component
 
-Create the folder `packages/design-system/src/<Name>/` with these five files:
+Create the folder `packages/react-components/src/<Name>/` with these five files:
 
 **`index.ts`** - re-export only:
 

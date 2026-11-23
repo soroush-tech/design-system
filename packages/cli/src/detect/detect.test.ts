@@ -20,7 +20,7 @@ import {
 } from './detect'
 
 // A file inside the design system's own folder in this workspace.
-const DESIGN_SYSTEM_FILE = join(process.cwd(), '../design-system/src/index.ts')
+const DESIGN_SYSTEM_FILE = join(process.cwd(), '../react-components/src/index.ts')
 
 describe('readText and readPackageJson', () => {
   it('reads a file, and gives undefined when there is none', () => {

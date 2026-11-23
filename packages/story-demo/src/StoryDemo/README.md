@@ -70,8 +70,8 @@ selects and inputs show the argType's `table.defaultValue.summary`.
 
 ```tsx
 import { StoryDemo } from '@soroush.tech/story-demo/StoryDemo'
-import * as buttonStories from 'packages/design-system/src/Button/Button.stories'
-import buttonSource from 'packages/design-system/src/Button/Button.stories.tsx?raw'
+import * as buttonStories from 'packages/react-components/src/Button/Button.stories'
+import buttonSource from 'packages/react-components/src/Button/Button.stories.tsx?raw'
 
 ;<StoryDemo
   stories={buttonStories}

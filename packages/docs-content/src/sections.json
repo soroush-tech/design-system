@@ -1,6 +1,6 @@
 {
   "design-system": {
-    "dir": "design-system",
+    "dir": "react-components",
     "npm": "@soroush.tech/design-system",
     "tagPrefix": "@soroush.tech/design-system@",
     "formerTagPrefixes": []

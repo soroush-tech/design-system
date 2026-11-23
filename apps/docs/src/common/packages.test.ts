@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest'
+import { sections } from '@soroush.tech/docs-content'
 import { allComponents } from 'src/common/nav'
 import { PACKAGES, sourceUrlOf } from './packages'
 
@@ -30,7 +31,7 @@ describe('PACKAGES', () => {
       expect(entry.version).toMatch(/^\d+\.\d+\.\d+$/)
       expect(entry.npm).toBe(`https://www.npmjs.com/package/${NPM_NAMES[entry.id]}`)
       expect(entry.github).toBe(
-        `https://github.com/soroush-tech/design-system/tree/main/packages/${entry.id}`
+        `https://github.com/soroush-tech/design-system/tree/main/packages/${sections[entry.id].dir}`
       )
       expect(entry.description.length).toBeGreaterThan(20)
     }
@@ -42,13 +43,13 @@ describe('sourceUrlOf', () => {
 
   it("is the component's folder on GitHub", () => {
     expect(sourceUrlOf(find('Button'))).toBe(
-      'https://github.com/soroush-tech/design-system/tree/main/packages/design-system/src/Button'
+      'https://github.com/soroush-tech/design-system/tree/main/packages/react-components/src/Button'
     )
   })
 
   it('is the inner folder of a component that is a family', () => {
     expect(sourceUrlOf(find('Table'))).toBe(
-      'https://github.com/soroush-tech/design-system/tree/main/packages/design-system/src/Table/Table'
+      'https://github.com/soroush-tech/design-system/tree/main/packages/react-components/src/Table/Table'
     )
   })
 })

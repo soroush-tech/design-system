@@ -1,4 +1,4 @@
-import readme from 'packages/design-system/README.md?raw'
+import readme from 'packages/react-components/README.md?raw'
 import { Typography } from '@soroush.tech/design-system/Typography'
 import { DocsNav } from 'src/common/DocsNav/DocsNav'
 import { Layout } from 'src/common/Layout'

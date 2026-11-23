@@ -19,8 +19,8 @@
     "jsx": "react",
     "types": [],
     "paths": {
-      "@soroush.tech/design-system": ["../../../design-system/dist/index.d.mts"],
-      "@soroush.tech/design-system/*": ["../../../design-system/dist/*.d.mts"]
+      "@soroush.tech/design-system": ["../../../react-components/dist/index.d.mts"],
+      "@soroush.tech/design-system/*": ["../../../react-components/dist/*.d.mts"]
     }
   },
   "include": ["src"]

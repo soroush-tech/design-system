@@ -52,12 +52,12 @@ public, move it into the plugin's `skills/` and add its name to `PUBLIC_SKILLS` 
 `packages/mcp/src/generated/content.ts`, which both bundlers inline. Nothing is read
 from disk at runtime.
 
-| Content           | Source of truth                                                                           |
-| ----------------- | ----------------------------------------------------------------------------------------- |
-| Component records | `packages/*/src/*/README.md`, split into `intro` / `api` / `examples`                     |
-| Token contract    | `baseTheme` in `packages/design-system/src/theme/themes.ts`, imported and serialized      |
-| Guides            | `packages/design-system/docs/`, `apps/docs/content/docs/`, `packages/styled-system/docs/` |
-| Consumer refs     | `packages/design-system/docs/consumer/`                                                   |
+| Content           | Source of truth                                                                              |
+| ----------------- | -------------------------------------------------------------------------------------------- |
+| Component records | `packages/*/src/*/README.md`, split into `intro` / `api` / `examples`                        |
+| Token contract    | `baseTheme` in `packages/react-components/src/theme/themes.ts`, imported and serialized      |
+| Guides            | `packages/react-components/docs/`, `apps/docs/content/docs/`, `packages/styled-system/docs/` |
+| Consumer refs     | `packages/react-components/docs/consumer/`                                                   |
 
 Two consequences worth knowing:
 
@@ -84,7 +84,7 @@ Relative links in READMEs (`../View/`) are rewritten to absolute docs URLs by
 The plugin's references are committed because users install the plugin from git and
 never run a build. That makes them driftable, so the check runs in `.husky/pre-commit`
 and in CI's lint job. After changing a component README, a token, or anything under
-`packages/design-system/docs/consumer/`, run:
+`packages/react-components/docs/consumer/`, run:
 
 ```sh
 pnpm gen:plugin-refs

@@ -24,7 +24,7 @@ pages, and the drift tests; `sectionFor(pathname)` picks the active section.
   `sectionPath`, `sectionRoute`.
 - `src/mdx/` - the MDX element map (mirrors the markdown package's Preview),
   `MdxStoryDemo`, `MdxReadme`, and the README sources. Every component owns its page in
-  its own package folder next to its README (`packages/design-system/src/<Name>/<Name>.mdx`)
+  its own package folder next to its README (`packages/react-components/src/<Name>/<Name>.mdx`)
   and the component route renders that page alone - `<StoryDemo of="Component/StoryExport" />`
   and `<Readme of="Name" part="intro" />` need no imports. Pages are mandatory:
   `nav.test.ts` guards the set against disk and a missing one fails the prerender.

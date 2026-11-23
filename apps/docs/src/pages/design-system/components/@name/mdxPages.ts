@@ -3,11 +3,11 @@ import { kebabCase } from '@soroush.tech/docs-content'
 
 // Each component owns its docs page: `<Name>.mdx` lives in the component's folder next
 // to its README (both glob levels - container primaries live at Table/Table/).
-const topLevel = import.meta.glob('packages/design-system/src/*/*.mdx', {
+const topLevel = import.meta.glob('packages/react-components/src/*/*.mdx', {
   eager: true,
   import: 'default',
 }) as Record<string, ComponentType>
-const nested = import.meta.glob('packages/design-system/src/*/*/*.mdx', {
+const nested = import.meta.glob('packages/react-components/src/*/*/*.mdx', {
   eager: true,
   import: 'default',
 }) as Record<string, ComponentType>

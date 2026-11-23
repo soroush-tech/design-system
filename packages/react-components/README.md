@@ -376,4 +376,4 @@ The library takes inspiration from [Material UI](https://mui.com/) - its compone
 ## Release notes
 
 Per-version notes for every published release live in
-[`release-notes/`](https://github.com/soroush-tech/design-system/tree/main/packages/design-system/release-notes).
+[`release-notes/`](https://github.com/soroush-tech/design-system/tree/main/packages/react-components/release-notes).

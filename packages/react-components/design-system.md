@@ -87,7 +87,7 @@ Rules when converting a component:
 
 ## Component Architecture
 
-**Every component lives in its own folder** `packages/design-system/src/ComponentName/` with: `index.ts` (`export * from './ComponentName'`) · `ComponentName.tsx` · `README.md` · `ComponentName.mdx` · `ComponentName.stories.tsx` · `ComponentName.test.tsx`
+**Every component lives in its own folder** `packages/react-components/src/ComponentName/` with: `index.ts` (`export * from './ComponentName'`) · `ComponentName.tsx` · `README.md` · `ComponentName.mdx` · `ComponentName.stories.tsx` · `ComponentName.test.tsx`
 
 **Prop types** - derive from `Theme` (this package's own type, owned by `src/theme/themes.ts` - the styling engine is internal-only), never write manual unions:
 
@@ -300,10 +300,10 @@ Minimum coverage:
 
 Two Storybooks render these same story files, for two different jobs.
 
-|         | Config                              | Themes               | Run                                              |
-| ------- | ----------------------------------- | -------------------- | ------------------------------------------------ |
-| Package | `packages/design-system/.storybook` | `baseTheme` only     | `pnpm storybook` from this directory (port 6007) |
-| Site    | `apps/web/.storybook`               | brand `light`/`dark` | `pnpm storybook` from the repo root (port 6006)  |
+|         | Config                                 | Themes               | Run                                              |
+| ------- | -------------------------------------- | -------------------- | ------------------------------------------------ |
+| Package | `packages/react-components/.storybook` | `baseTheme` only     | `pnpm storybook` from this directory (port 6007) |
+| Site    | `apps/web/.storybook`                  | brand `light`/`dark` | `pnpm storybook` from the repo root (port 6006)  |
 
 The package Storybook is the consumer's-eye view: `baseTheme`, the package's own `globalStyles` reset, and no webfonts - so text falls back to the generic stack in `theme.fonts`, exactly as it does for a consumer who hasn't loaded them. Demo images resolve from `.storybook/public/`. It runs no brand code, so it stays usable if the app is broken or absent.
 

@@ -1,5 +1,5 @@
 import cliPkg from 'packages/cli/package.json'
-import designSystemPkg from 'packages/design-system/package.json'
+import designSystemPkg from 'packages/react-components/package.json'
 import markdownPkg from 'packages/markdown/package.json'
 import mcpPkg from 'packages/mcp/package.json'
 import styledSystemPkg from 'packages/styled-system/package.json'

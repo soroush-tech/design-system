@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import designSystem from '../../design-system/package.json'
+import designSystem from '../../react-components/package.json'
 import { main } from './main'
 
 vi.mock('./main', () => ({ main: vi.fn(async () => 3) }))

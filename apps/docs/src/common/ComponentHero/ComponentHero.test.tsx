@@ -42,7 +42,7 @@ describe('ComponentHero', () => {
     const source = screen.getByRole('link', { name: 'Source' })
     expect(source).toHaveAttribute(
       'href',
-      'https://github.com/soroush-tech/design-system/tree/main/packages/design-system/src/Button'
+      'https://github.com/soroush-tech/design-system/tree/main/packages/react-components/src/Button'
     )
     expect(source).toHaveAttribute('target', '_blank')
     expect(source).toHaveAttribute('rel', 'noopener noreferrer')

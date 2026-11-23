@@ -10,15 +10,15 @@ metadata:
 Three structural regimes exist in this repo. Pick the regime first, then follow its
 contract. The deep-dive docs are authoritative - read the matching one before building:
 
-| Regime                     | Authority                                                                                                                               |
-| -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| Component-library packages | `packages/design-system/design-system.md` (`## Component Architecture`, `## Files per Component`) - markdown and lab follow it verbatim |
-| Utility/tool packages      | `packages/packages.md` (`## Folder structure`, `## Exports`)                                                                            |
-| The docs app (`apps/docs`) | `apps/docs/docs-app.md`                                                                                                                 |
+| Regime                     | Authority                                                                                                                                  |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| Component-library packages | `packages/react-components/design-system.md` (`## Component Architecture`, `## Files per Component`) - markdown and lab follow it verbatim |
+| Utility/tool packages      | `packages/packages.md` (`## Folder structure`, `## Exports`)                                                                               |
+| The docs app (`apps/docs`) | `apps/docs/docs-app.md`                                                                                                                    |
 
 ## Where does a new thing go?
 
-- **Reusable UI component, stable API** -> `packages/design-system/src/<Name>/`.
+- **Reusable UI component, stable API** -> `packages/react-components/src/<Name>/`.
 - **Reusable UI component, API still settling** -> `packages/lab/src/<Name>/` (the
   incubator; promoted into design-system once stable).
 - **Markdown-rendering component** -> `packages/markdown/src/<Name>/`.
