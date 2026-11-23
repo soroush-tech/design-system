@@ -16,15 +16,15 @@ describe('releaseNotesFor', () => {
   it('fails, naming the section and its folder, when a section has no notes', () => {
     const moved = { 'packages/elsewhere/release-notes/1.0.0.md': '## notes' }
     expect(() => releaseNotesFor('markdown', moved)).toThrow(
-      /"markdown" section: nothing in packages\/markdown\/release-notes\//
+      /"markdown" section: nothing in packages\/react-markdown\/release-notes\//
     )
     expect(() => releaseNotesFor('markdown', {})).toThrow(/No release notes/)
   })
 
   it('finds the notes in the folder the description names', () => {
     const files = {
-      '/packages/markdown/release-notes/1.0.0.md': 'one',
-      '/packages/markdown/release-notes/1.1.0.md': 'two',
+      '/packages/react-markdown/release-notes/1.0.0.md': 'one',
+      '/packages/react-markdown/release-notes/1.1.0.md': 'two',
       '/packages/cli/release-notes/9.0.0.md': 'other',
     }
     expect(releaseNotesFor('markdown', files)).toEqual([
@@ -35,16 +35,16 @@ describe('releaseNotesFor', () => {
 
   it('scopes to the requested package', () => {
     for (const note of releaseNotesFor('markdown')) {
-      expect(note.body).toContain('@soroush.tech/markdown@')
+      expect(note.body).toContain('@soroush.design/react-markdown@')
     }
   })
 })
 
 describe('ReleaseNotes', () => {
   it('renders each version body, headed by the version alone', () => {
-    renderWithTheme(<ReleaseNotes pkg="markdown" />)
-    expect(screen.getByRole('heading', { name: 'v1.0.0' })).toBeInTheDocument()
-    expect(screen.queryByRole('heading', { name: /@soroush\.tech\/markdown@/ })).toBeNull()
+    renderWithTheme(<ReleaseNotes pkg="ui-spec" />)
+    expect(screen.getByRole('heading', { name: 'v0.1.0' })).toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: /@soroush\.tech\/ui-spec@/ })).toBeNull()
   })
 
   it('trims the package name of the component library, under the soroush.design scope', () => {
@@ -62,9 +62,9 @@ describe('ReleaseNotes', () => {
   })
 
   it('lists the versions newest first', () => {
-    renderWithTheme(<ReleaseNotes pkg="markdown" />)
+    renderWithTheme(<ReleaseNotes pkg="ui-spec" />)
     const names = screen.getAllByRole('heading', { level: 2 }).map((heading) => heading.textContent)
-    expect(names[0]).toBe(`v${PACKAGE_VERSIONS.markdown}`)
-    expect(names[names.length - 1]).toBe('v1.0.0')
+    expect(names[0]).toBe(`v${PACKAGE_VERSIONS['ui-spec']}`)
+    expect(names[names.length - 1]).toBe('v0.1.0')
   })
 })

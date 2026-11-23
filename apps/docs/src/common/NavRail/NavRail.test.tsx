@@ -34,6 +34,7 @@ describe('NavRail', () => {
       'Components',
       'Styles',
       'Entry points',
+      'Hooks',
     ])
   })
 

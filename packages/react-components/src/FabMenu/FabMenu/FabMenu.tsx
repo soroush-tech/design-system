@@ -20,7 +20,7 @@ import { Fab } from '../../Fab'
 import { Icon } from '../../Icon'
 import { Zoom } from '../../Zoom'
 import { isRtl } from '../../utils/isRtl'
-import { useControlled } from '../../utils/useControlled'
+import { useControlled } from '@soroush.design/react-hooks/useControlled'
 import { FabMenuContext } from '../FabMenuContext'
 import { useFabMenuLayout } from '../hooks/useFabMenuLayout'
 

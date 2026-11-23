@@ -1,6 +1,6 @@
 import { useMemo, useState, type ChangeEvent, type KeyboardEvent } from 'react'
 import { clamp, addExact, snapToStep } from '@soroush.design/core/utils'
-import { useControlled } from '../../utils/useControlled'
+import { useControlled } from '@soroush.design/react-hooks/useControlled'
 import { formatNumber, getNumberSyntax, parseNumber } from '../utils/number'
 
 export interface UseNumberInputParams {

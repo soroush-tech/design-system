@@ -185,10 +185,38 @@ export function run({ root, libraries, check }: RunOptions): {
   summary: string
 } {
   const manifest = readFileSync(join(root, 'package.json'), 'utf8')
-  const { dependencies = {} } = JSON.parse(manifest) as { dependencies?: Record<string, string> }
-  const missing = libraries
-    .filter(({ package: name }) => !dependencies[name])
-    .map(({ package: name }) => `${name} is in libraries.ts but not in "dependencies".`)
+  const {
+    dependencies = {},
+    devDependencies = {},
+    peerDependencies = {},
+    peerDependenciesMeta = {},
+  } = JSON.parse(manifest) as {
+    dependencies?: Record<string, string>
+    devDependencies?: Record<string, string>
+    peerDependencies?: Record<string, string>
+    peerDependenciesMeta?: Record<string, { optional?: boolean }>
+  }
+  const missing = libraries.flatMap((library): string[] => {
+    const name = library.package
+    if (!library.optional) {
+      return dependencies[name] ? [] : [`${name} is in libraries.ts but not in "dependencies".`]
+    }
+    // An optional library is the app's to install: an optional peer, and a dev dependency, which
+    // is how the workspace (the generator, the tests) reads it.
+    if (dependencies[name]) {
+      return [`${name} is optional in libraries.ts, so it is a peer and not in "dependencies".`]
+    }
+    if (!peerDependencies[name] || !peerDependenciesMeta[name]?.optional) {
+      return [
+        `${name} is optional in libraries.ts but not an optional peer ("peerDependencies" and "peerDependenciesMeta").`,
+      ]
+    }
+    return devDependencies[name]
+      ? []
+      : [
+          `${name} is optional in libraries.ts but not in "devDependencies", which is where the workspace reads it.`,
+        ]
+  })
   if (missing.length > 0) return { problems: missing, summary: 'Nothing generated.' }
 
   const entries = planEntries(libraries.map((library) => readLibrary(library, root)))

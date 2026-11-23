@@ -6,7 +6,7 @@ import {
   type SyntheticEvent,
 } from 'react'
 import { isRtl } from '../../utils/isRtl'
-import { useControlled } from '../../utils/useControlled'
+import { useControlled } from '@soroush.design/react-hooks/useControlled'
 import { roundToPrecision } from '@soroush.design/core/utils'
 import { getHoverValue } from '../utils/precision'
 

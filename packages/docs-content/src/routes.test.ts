@@ -2,7 +2,14 @@ import { describe, it, expect } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { repoRoot } from './node/repoRoot'
-import { allComponents, componentByName, entryGuides, membersOf } from './registry'
+import {
+  allComponents,
+  componentByName,
+  entryGuides,
+  markdownComponents,
+  membersOf,
+  reactHooks,
+} from './registry'
 import { REDIRECT_LIMIT, caseRedirects, docsPages, renderRedirects } from './routes'
 
 // The umbrella's entry points, as it publishes them: what an app can import is what the docs
@@ -42,9 +49,16 @@ describe('the docs routes are the import paths', () => {
     }
   })
 
-  it('has a lowercase page only for what an entry point or a guide says', () => {
-    const lowercase = entries.filter((entry) => /^[a-z]/.test(entry))
-    expect(lowercase.sort()).toEqual(Object.keys(entryGuides).sort())
+  it('has a lowercase page only for what an entry point or a library says', () => {
+    const lowercase = entries.filter((entry) => /^[a-z]/.test(entry) && !entry.includes('/'))
+    expect(lowercase.sort()).toEqual([...Object.keys(entryGuides), 'hooks', 'markdown'].sort())
+  })
+
+  it('gives each library mounted under the platform a page for each of its entry points', () => {
+    const under = (library: string) =>
+      entries.filter((entry) => entry.startsWith(`${library}/`)).map((entry) => entry.split('/')[1])
+    expect(under('hooks').sort()).toEqual([...reactHooks].sort())
+    expect(under('markdown').sort()).toEqual(markdownComponents.map(({ name }) => name).sort())
   })
 
   it('never lets a tab take the name of an export', () => {
@@ -67,6 +81,7 @@ describe('the docs routes are the import paths', () => {
     const redirects = caseRedirects(pages)
     expect(redirects).toContainEqual(['/react/button/', '/react/Button/'])
     expect(redirects).toContainEqual(['/react/table/tablecell/', '/react/Table/TableCell/'])
+    expect(redirects).toContainEqual(['/react/hooks/usedebounce/', '/react/hooks/useDebounce/'])
     for (const [from, to] of redirects) {
       expect(paths).toContain(to)
       expect(paths).not.toContain(from)

@@ -1,7 +1,7 @@
 import { Link } from '@soroush.design/react/Link'
 import { Typography } from '@soroush.design/react/Typography'
 import { View } from '@soroush.design/react/View'
-import { CodeBlock } from '@soroush.tech/markdown/CodeBlock'
+import { CodeBlock } from '@soroush.design/react/markdown/CodeBlock'
 import { componentByName, componentPagePath, importSubpathOf } from 'src/common/nav'
 import { APP_PACKAGE } from 'src/common/packageVersions'
 import { sectionPath } from 'src/common/sectionPath'

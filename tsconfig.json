@@ -3,7 +3,7 @@
   "references": [
     { "path": "./packages/styled-system/tsconfig.json" },
     { "path": "./packages/react-components/tsconfig.json" },
-    { "path": "./packages/markdown/tsconfig.json" },
-    { "path": "./packages/hooks/tsconfig.json" }
+    { "path": "./packages/react-markdown/tsconfig.json" },
+    { "path": "./packages/react-hooks/tsconfig.json" }
   ]
 }

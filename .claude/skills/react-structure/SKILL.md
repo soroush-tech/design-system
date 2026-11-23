@@ -21,9 +21,9 @@ contract. The deep-dive docs are authoritative - read the matching one before bu
 - **Reusable UI component, stable API** -> `packages/react-components/src/<Name>/`.
 - **Reusable UI component, API still settling** -> `packages/lab/src/<Name>/` (the
   incubator; promoted into design-system once stable).
-- **Markdown-rendering component** -> `packages/markdown/src/<Name>/`.
+- **Markdown-rendering component** -> `packages/react-markdown/src/<Name>/`.
 - **Docs-site-only component** (chrome, doc rendering) -> `apps/docs/src/common/<Name>/`.
-- **Shared React hook** -> `packages/hooks/src/useX.ts` (flat file + `useX.test.ts`, one
+- **Shared React hook** -> `packages/react-hooks/src/useX.ts` (flat file + `useX.test.ts`, one
   subpath export per hook). App-only hooks -> `apps/docs/src/hooks/useX.ts`, flat.
 - **Non-UI tool** (vite plugin, node util) -> its own `packages/<name>/` per packages.md.
 

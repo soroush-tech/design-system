@@ -1,0 +1,9 @@
+{
+  "extends": ["../eslint-config/.oxlintrc.react.json"],
+  "env": { "browser": true },
+  "ignorePatterns": ["dist", "coverage"],
+  "rules": {
+    "react-refresh/only-export-components": "off"
+  },
+  "overrides": [{ "files": ["*.config.ts"], "env": { "node": true } }]
+}

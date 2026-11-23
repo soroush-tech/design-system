@@ -9,8 +9,8 @@ import {
 } from 'react'
 import { ModalManager, type ManagedModal } from './ModalManager'
 import { ownerDocument } from '../utils/ownerDocument'
-import { useEventCallback } from './hooks/useEventCallback'
-import { useMergedRefs } from './hooks/useMergedRefs'
+import { useEventCallback } from '@soroush.design/react-hooks/useEventCallback'
+import { useMergedRefs } from '@soroush.design/react-hooks/useMergedRefs'
 
 export type ModalCloseReason = 'escapeKey' | 'backdropClick'
 

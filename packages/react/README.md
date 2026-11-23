@@ -15,8 +15,20 @@ npm i @soroush.design/react
 ```
 
 `react` and `react-dom` (19.2.8 or later) are peer dependencies. The component library,
-[`@soroush.design/react-components`](../react-components), is installed with it, once: the
-umbrella imports it and never bundles it, so an app has one theme context.
+[`@soroush.design/react-components`](../react-components), and the hooks library,
+[`@soroush.design/react-hooks`](../react-hooks), are installed with it, once each: the umbrella
+imports them and never bundles them, so an app has one theme context.
+
+The markdown library, [`@soroush.design/react-markdown`](../react-markdown), has heavy dependencies
+(an editor and a diagram library), so it is an optional peer. An app that wants
+`@soroush.design/react/markdown` installs it beside this package:
+
+```sh
+npm i @soroush.design/react @soroush.design/react-markdown
+```
+
+Without it, importing a `markdown` entry point fails with a module-not-found error naming the
+library, and nothing else is affected.
 
 ## Import
 
@@ -27,7 +39,12 @@ the other entry points of the component library keep theirs too.
 import { Button } from '@soroush.design/react/Button'
 import { ThemeProvider, baseTheme } from '@soroush.design/react/theme'
 import { styled } from '@soroush.design/react'
+import { useDebounce } from '@soroush.design/react/hooks/useDebounce'
+import { Editor } from '@soroush.design/react/markdown/Editor'
 ```
+
+The hooks are under `/hooks` and the markdown library under `/markdown`: libraries other than the
+component library are mounted under a lowercase name.
 
 Apps need modern module resolution in TypeScript (`"moduleResolution": "bundler"`, `"node16"` or
 `"nodenext"`) to see subpath entry points.

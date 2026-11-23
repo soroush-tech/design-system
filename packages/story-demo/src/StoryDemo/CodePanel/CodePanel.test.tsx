@@ -2,7 +2,7 @@ import type { ReactNode } from 'react'
 import { render } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
 import { ThemeProvider, createTheme, baseTheme } from '@soroush.design/react-components/theme'
-import { syntaxDark } from '@soroush.tech/markdown/CodeBlock'
+import { syntaxDark } from '@soroush.design/react-markdown/CodeBlock'
 import { CodePanel } from './CodePanel'
 
 const theme = createTheme(baseTheme, { syntax: syntaxDark })

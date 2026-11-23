@@ -23,15 +23,15 @@
   },
   "peerDependencies": {
     "@soroush.design/react-components": "workspace:^",
-    "@soroush.tech/hooks": "workspace:^",
-    "@soroush.tech/markdown": "workspace:^",
+    "@soroush.design/react-hooks": "workspace:^",
+    "@soroush.design/react-markdown": "workspace:^",
     "react": "^19.2.8"
   },
   "devDependencies": {
     "@soroush.design/react-components": "workspace:*",
+    "@soroush.design/react-hooks": "workspace:*",
+    "@soroush.design/react-markdown": "workspace:*",
     "@soroush.tech/eslint-config": "workspace:*",
-    "@soroush.tech/hooks": "workspace:*",
-    "@soroush.tech/markdown": "workspace:*",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.9",

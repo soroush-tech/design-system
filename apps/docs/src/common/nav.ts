@@ -6,6 +6,7 @@ import {
   componentSpecsPath,
   entryGuides,
   markdownComponents,
+  reactHooks,
   sections,
   styledSystemDocSlug,
   styledSystemDocs,
@@ -174,6 +175,25 @@ const reactRail: RailItem[] = [
             label: entry[0].toUpperCase() + entry.slice(1),
             href: sectionPath('react', `/${entry}/`),
           })),
+      },
+    ],
+  },
+  {
+    id: 'hooks',
+    label: 'Hooks',
+    icon: 'book',
+    href: sectionPath('react', '/hooks/'),
+    matches: [],
+    groups: [
+      {
+        label: 'Hooks',
+        items: [
+          { label: 'All hooks', href: sectionPath('react', '/hooks/') },
+          ...reactHooks.map((hook) => ({
+            label: hook,
+            href: sectionPath('react', `/hooks/${hook}/`),
+          })),
+        ],
       },
     ],
   },

@@ -13,7 +13,7 @@ import {
 } from '@soroush.design/react/Table'
 import { Typography } from '@soroush.design/react/Typography'
 import { View } from '@soroush.design/react/View'
-import { CodeBlock } from '@soroush.tech/markdown/CodeBlock'
+import { CodeBlock } from '@soroush.design/react/markdown/CodeBlock'
 import { MdxReadme } from './MdxReadme'
 
 /**

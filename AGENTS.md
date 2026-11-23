@@ -64,7 +64,7 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 
 ## Critical conventions
 
-- **Design-system imports:** Apps (the docs app, the starters, every example) import UI primitives from the umbrella's subpath `@soroush.design/react/X` (barrel `@soroush.design/react` for `styled`, `css`, `Theme`, etc.). Library packages - `@soroush.tech/markdown`, `story-demo` and `lab` included - import the component library by its own name, `@soroush.design/react-components/X`: the umbrella depends on the libraries, never the reverse.
+- **Design-system imports:** Apps (the docs app, the starters, every example) import UI primitives from the umbrella's subpath `@soroush.design/react/X` (barrel `@soroush.design/react` for `styled`, `css`, `Theme`, etc.). Markdown is `@soroush.design/react/markdown/X` there. Library packages - `@soroush.design/react-markdown`, `story-demo` and `lab` included - import the libraries they build on by their own names, `@soroush.design/react-components/X`, `@soroush.design/react-hooks/X`: the umbrella depends on the libraries, never the reverse.
 - **Theme tokens:** The design-system ships a single hex-inlined `baseTheme` - the **only** place hex values are allowed in the package - for its tests, stories, and npm consumers. Everything else styles through theme tokens; consumers build brand themes with `createTheme(baseTheme, ...)`.
 - **SSR guard:** Never import browser-only APIs at module top level - guard with `typeof window !== 'undefined'` or move into effects. These packages are consumed by SSR apps.
 - **Styled-system:** Use `Flex`, `View`, `Typography` over raw `div`/`p` for layout, from `@soroush.design/react` in an app and from `@soroush.design/react-components` in a library package.
@@ -81,7 +81,7 @@ Read the relevant doc before working in that area:
 | Layer                 | Convention doc                               | What it covers                                                                                                           |
 | --------------------- | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | Design system         | `packages/react-components/design-system.md` | Styled components, `system()`, `shouldForwardProp`, Storybook argTypes, token rules                                      |
-| Markdown package      | `packages/markdown/markdown.md`              | Companion component library - **follows design-system.md verbatim** + packages.md; theme-slot augmentation, lazy mermaid |
+| Markdown package      | `packages/react-markdown/markdown.md`        | Companion component library - **follows design-system.md verbatim** + packages.md; theme-slot augmentation, lazy mermaid |
 | Theming/customization | `packages/react-components/docs/`            | `theming.md` (createTheme, defaults, augmentation) · `customization.md` (`theme.components`)                             |
 | Packages              | `packages/packages.md`                       | Workspace packages: structure, default-export, tsdown + `publishConfig` publishing, 100% coverage, licensing             |
 | Docs app              | `apps/docs/docs-app.md`                      | The docs.soroush.design Vike SSG app: content pipeline, demos, versioned sections, e2e-only pages                        |

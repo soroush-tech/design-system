@@ -12,11 +12,13 @@ import {
   absoluteReadmeLinks,
   allComponents,
   componentPagePath,
+  hookSection,
   sitePath,
-  importPackageOf,
+  IMPORT_PACKAGE,
   importSubpathOf,
   markdownComponents,
   membersOf,
+  reactHooks,
   splitReadme,
   stripReadmeChrome,
   styledSystemDocSlug,
@@ -24,7 +26,7 @@ import {
   styledSystemGuides,
   type ComponentNavItem,
 } from '@soroush.tech/docs-content'
-import { loadPackageFile, loadReadme } from '@soroush.tech/docs-content/node'
+import { loadPackageFile, loadReadme, loadRepoFile } from '@soroush.tech/docs-content/node'
 
 const SITE_URL = process.env.VITE_SITE_URL ?? 'https://docs.soroush.design'
 
@@ -43,6 +45,15 @@ const firstLine = (markdown: string): string =>
 
 const link = (item: ComponentNavItem): string =>
   `- [${item.name}](${componentUrl(item)}): ${firstLine(splitReadme(absoluteReadmeLinks(loadReadme(item))).intro)}`
+
+const hooksReadme = (): string => loadRepoFile('packages/react-hooks/README.md')
+
+// A hook's page opens with a paragraph that says what it is, wrapped over several lines.
+const hookSummary = (hook: string): string =>
+  stripReadmeChrome(hookSection(hooksReadme(), hook)).split('\n\n')[0].replace(/\s+/g, ' ').trim()
+
+const hookLink = (hook: string): string =>
+  `- [${hook}](${SITE_URL}/react/hooks/${hook}/): ${hookSummary(hook)}`
 
 /** The spec-shaped index: what this is, then links out to everything. */
 export const renderIndex = (): string =>
@@ -66,6 +77,10 @@ export const renderIndex = (): string =>
     '## Components',
     '',
     ...designSystemComponents.map(link),
+    '',
+    '## Hooks',
+    '',
+    ...reactHooks.map(hookLink),
     '',
     '## Markdown components',
     '',
@@ -94,7 +109,7 @@ export const renderFull = (): string =>
       return [
         `## ${item.name}`,
         '',
-        `Import: \`import { ${item.name} } from '${importPackageOf(item)}/${importSubpathOf(item)}'\``,
+        `Import: \`import { ${item.name} } from '${IMPORT_PACKAGE}/${importSubpathOf(item)}'\``,
         '',
         stripReadmeChrome(intro),
         api,
@@ -102,6 +117,12 @@ export const renderFull = (): string =>
         '',
       ].filter(Boolean)
     }),
+    '---',
+    '',
+    '# Hooks',
+    '',
+    ...reactHooks.map((hook) => hookSection(hooksReadme(), hook)),
+    '',
     '---',
     '',
     '# Guides',

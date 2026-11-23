@@ -4,8 +4,8 @@
     "npm": "@soroush.design/react-components"
   },
   "markdown": {
-    "dir": "markdown",
-    "npm": "@soroush.tech/markdown"
+    "dir": "react-markdown",
+    "npm": "@soroush.design/react-markdown"
   },
   "styled-system": {
     "dir": "styled-system",

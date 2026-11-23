@@ -9,7 +9,7 @@ import {
 } from 'react'
 import { clamp } from '@soroush.design/core/utils'
 import { isRtl } from '../../utils/isRtl'
-import { useControlled } from '../../utils/useControlled'
+import { useControlled } from '@soroush.design/react-hooks/useControlled'
 import {
   areValuesEqual,
   findClosest,

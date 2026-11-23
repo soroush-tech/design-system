@@ -325,6 +325,16 @@ test.describe('react section', () => {
     await expect(page.getByRole('heading', { level: 1, name: 'Theming' })).toBeVisible()
   })
 
+  test('the hooks have a page each, under /react/hooks/, and a list of their own', async ({
+    page,
+  }) => {
+    await page.goto('/react/hooks/')
+    await expect(page.getByRole('heading', { level: 1, name: 'Hooks' })).toBeVisible()
+    await page.goto('/react/hooks/useDebounce/')
+    await expect(page.getByRole('heading', { level: 1, name: 'useDebounce' })).toBeVisible()
+    await expect(page.getByText('Needs a browser: no.')).toBeVisible()
+  })
+
   // Each example runs live once its page has loaded: a name its code uses and the demo scope
   // lacks shows an error in its place, and a demo that renders itself freezes the page, which
   // this test then times out on.

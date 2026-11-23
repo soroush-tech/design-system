@@ -92,6 +92,21 @@
     "./Zoom": "./src/Zoom.ts",
     "./catalog": "./src/catalog.ts",
     "./engine": "./src/engine.ts",
+    "./hooks": "./src/hooks.ts",
+    "./hooks/useControlled": "./src/hooks/useControlled.ts",
+    "./hooks/useCopyToClipboard": "./src/hooks/useCopyToClipboard.ts",
+    "./hooks/useDebounce": "./src/hooks/useDebounce.ts",
+    "./hooks/useDebouncedCallback": "./src/hooks/useDebouncedCallback.ts",
+    "./hooks/useEventCallback": "./src/hooks/useEventCallback.ts",
+    "./hooks/useMergedRefs": "./src/hooks/useMergedRefs.ts",
+    "./markdown": "./src/markdown.ts",
+    "./markdown/CodeBlock": "./src/markdown/CodeBlock.ts",
+    "./markdown/Control": "./src/markdown/Control.ts",
+    "./markdown/Editor": "./src/markdown/Editor.ts",
+    "./markdown/LiveEdit": "./src/markdown/LiveEdit.ts",
+    "./markdown/Mermaid": "./src/markdown/Mermaid.ts",
+    "./markdown/Preview": "./src/markdown/Preview.ts",
+    "./markdown/Toolbar": "./src/markdown/Toolbar.ts",
     "./style": "./src/style.ts",
     "./testing": "./src/testing.ts",
     "./theme": "./src/theme.ts",
@@ -108,13 +123,18 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@soroush.design/react-components": "workspace:^"
+    "@soroush.design/react-components": "workspace:^",
+    "@soroush.design/react-hooks": "workspace:^"
   },
   "peerDependencies": {
+    "@soroush.design/react-markdown": "^0.1.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },
   "peerDependenciesMeta": {
+    "@soroush.design/react-markdown": {
+      "optional": true
+    },
     "react": {
       "optional": true
     },
@@ -123,6 +143,7 @@
     }
   },
   "devDependencies": {
+    "@soroush.design/react-markdown": "workspace:*",
     "@soroush.tech/eslint-config": "workspace:*",
     "@types/node": "^26.6.6",
     "@types/react": "^19.3.0",
@@ -789,6 +810,156 @@
         "require": {
           "types": "./dist/engine.d.cts",
           "default": "./dist/engine.cjs"
+        }
+      },
+      "./hooks": {
+        "import": {
+          "types": "./dist/hooks.d.mts",
+          "default": "./dist/hooks.mjs"
+        },
+        "require": {
+          "types": "./dist/hooks.d.cts",
+          "default": "./dist/hooks.cjs"
+        }
+      },
+      "./hooks/useControlled": {
+        "import": {
+          "types": "./dist/hooks/useControlled.d.mts",
+          "default": "./dist/hooks/useControlled.mjs"
+        },
+        "require": {
+          "types": "./dist/hooks/useControlled.d.cts",
+          "default": "./dist/hooks/useControlled.cjs"
+        }
+      },
+      "./hooks/useCopyToClipboard": {
+        "import": {
+          "types": "./dist/hooks/useCopyToClipboard.d.mts",
+          "default": "./dist/hooks/useCopyToClipboard.mjs"
+        },
+        "require": {
+          "types": "./dist/hooks/useCopyToClipboard.d.cts",
+          "default": "./dist/hooks/useCopyToClipboard.cjs"
+        }
+      },
+      "./hooks/useDebounce": {
+        "import": {
+          "types": "./dist/hooks/useDebounce.d.mts",
+          "default": "./dist/hooks/useDebounce.mjs"
+        },
+        "require": {
+          "types": "./dist/hooks/useDebounce.d.cts",
+          "default": "./dist/hooks/useDebounce.cjs"
+        }
+      },
+      "./hooks/useDebouncedCallback": {
+        "import": {
+          "types": "./dist/hooks/useDebouncedCallback.d.mts",
+          "default": "./dist/hooks/useDebouncedCallback.mjs"
+        },
+        "require": {
+          "types": "./dist/hooks/useDebouncedCallback.d.cts",
+          "default": "./dist/hooks/useDebouncedCallback.cjs"
+        }
+      },
+      "./hooks/useEventCallback": {
+        "import": {
+          "types": "./dist/hooks/useEventCallback.d.mts",
+          "default": "./dist/hooks/useEventCallback.mjs"
+        },
+        "require": {
+          "types": "./dist/hooks/useEventCallback.d.cts",
+          "default": "./dist/hooks/useEventCallback.cjs"
+        }
+      },
+      "./hooks/useMergedRefs": {
+        "import": {
+          "types": "./dist/hooks/useMergedRefs.d.mts",
+          "default": "./dist/hooks/useMergedRefs.mjs"
+        },
+        "require": {
+          "types": "./dist/hooks/useMergedRefs.d.cts",
+          "default": "./dist/hooks/useMergedRefs.cjs"
+        }
+      },
+      "./markdown": {
+        "import": {
+          "types": "./dist/markdown.d.mts",
+          "default": "./dist/markdown.mjs"
+        },
+        "require": {
+          "types": "./dist/markdown.d.cts",
+          "default": "./dist/markdown.cjs"
+        }
+      },
+      "./markdown/CodeBlock": {
+        "import": {
+          "types": "./dist/markdown/CodeBlock.d.mts",
+          "default": "./dist/markdown/CodeBlock.mjs"
+        },
+        "require": {
+          "types": "./dist/markdown/CodeBlock.d.cts",
+          "default": "./dist/markdown/CodeBlock.cjs"
+        }
+      },
+      "./markdown/Control": {
+        "import": {
+          "types": "./dist/markdown/Control.d.mts",
+          "default": "./dist/markdown/Control.mjs"
+        },
+        "require": {
+          "types": "./dist/markdown/Control.d.cts",
+          "default": "./dist/markdown/Control.cjs"
+        }
+      },
+      "./markdown/Editor": {
+        "import": {
+          "types": "./dist/markdown/Editor.d.mts",
+          "default": "./dist/markdown/Editor.mjs"
+        },
+        "require": {
+          "types": "./dist/markdown/Editor.d.cts",
+          "default": "./dist/markdown/Editor.cjs"
+        }
+      },
+      "./markdown/LiveEdit": {
+        "import": {
+          "types": "./dist/markdown/LiveEdit.d.mts",
+          "default": "./dist/markdown/LiveEdit.mjs"
+        },
+        "require": {
+          "types": "./dist/markdown/LiveEdit.d.cts",
+          "default": "./dist/markdown/LiveEdit.cjs"
+        }
+      },
+      "./markdown/Mermaid": {
+        "import": {
+          "types": "./dist/markdown/Mermaid.d.mts",
+          "default": "./dist/markdown/Mermaid.mjs"
+        },
+        "require": {
+          "types": "./dist/markdown/Mermaid.d.cts",
+          "default": "./dist/markdown/Mermaid.cjs"
+        }
+      },
+      "./markdown/Preview": {
+        "import": {
+          "types": "./dist/markdown/Preview.d.mts",
+          "default": "./dist/markdown/Preview.mjs"
+        },
+        "require": {
+          "types": "./dist/markdown/Preview.d.cts",
+          "default": "./dist/markdown/Preview.cjs"
+        }
+      },
+      "./markdown/Toolbar": {
+        "import": {
+          "types": "./dist/markdown/Toolbar.d.mts",
+          "default": "./dist/markdown/Toolbar.mjs"
+        },
+        "require": {
+          "types": "./dist/markdown/Toolbar.d.cts",
+          "default": "./dist/markdown/Toolbar.cjs"
         }
       },
       "./style": {

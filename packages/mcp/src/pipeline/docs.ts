@@ -101,6 +101,14 @@ const GUIDES: DocSource[] = [
     url: `${DOCS_URL}${sitePath('markdown', '/')}`,
   },
   {
+    id: 'hooks',
+    title: 'Hooks',
+    summary:
+      'The React hooks that belong to no component and no theme, and which of them need a browser.',
+    read: () => stripReadmeChrome(loadRepoFile('packages/react-hooks/README.md')),
+    url: `${DOCS_URL}${sitePath('react', '/hooks/')}`,
+  },
+  {
     id: 'styled-system-overview',
     title: 'Styled-system overview',
     summary: 'The style-prop engine underneath the design system.',

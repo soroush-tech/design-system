@@ -20,15 +20,16 @@ section's and not React's.
 `soroush.design` umbrella, and the page's content is that thing's own markdown file. The URLs are
 frozen from the first publish of the site, so no route is renamed after it.
 
-| An app imports                                    | The docs page             | Content                             |
-| ------------------------------------------------- | ------------------------- | ----------------------------------- |
-| `@soroush.design/react/Button`                    | `/react/Button/`          | the component's README and MDX page |
-| `@soroush.design/react/Table` and its `TableCell` | `/react/Table/TableCell/` | the member's README                 |
-| `@soroush.design/react/theme`                     | `/react/theme/`           | `docs/theming.md` of the library    |
-| `@soroush.design/react/engine`                    | `/react/engine/`          | `docs/engine.md` of the library     |
-| later `@soroush.design/react/markdown/Editor`     | `/react/markdown/Editor/` | the markdown package's README       |
-| later `@soroush.design/react-native/Button`       | `/react-native/Button/`   |                                     |
-| a package of no platform: `@soroush.design/cli`   | `/cli/`                   | its README and release notes        |
+| An app imports                                    | The docs page               | Content                             |
+| ------------------------------------------------- | --------------------------- | ----------------------------------- |
+| `@soroush.design/react/Button`                    | `/react/Button/`            | the component's README and MDX page |
+| `@soroush.design/react/Table` and its `TableCell` | `/react/Table/TableCell/`   | the member's README                 |
+| `@soroush.design/react/theme`                     | `/react/theme/`             | `docs/theming.md` of the library    |
+| `@soroush.design/react/engine`                    | `/react/engine/`            | `docs/engine.md` of the library     |
+| `@soroush.design/react/markdown/Editor`           | `/react/markdown/Editor/`   | the markdown package's README       |
+| `@soroush.design/react/hooks/useDebounce`         | `/react/hooks/useDebounce/` | its section of the hooks README     |
+| later `@soroush.design/react-native/Button`       | `/react-native/Button/`     |                                     |
+| a package of no platform: `@soroush.design/cli`   | `/cli/`                     | its README and release notes        |
 
 - **The platform is the first segment.** A package that is not part of a platform umbrella keeps its
   own name: `/styled-system/...`, `/cli/...`, `/mcp/...`, `/ui-spec/...`, later `/core/...`.
@@ -57,9 +58,11 @@ frozen from the first publish of the site, so no route is renamed after it.
   `routes.e2e.ts` (exact names, the sitemap, no broken link, no link to a path of the former site).
 - **Adding a thing**: a new component is registered in `registry.ts` and has its README and MDX page; a
   new entry point that is not a component needs a page - add it to `entryGuides` with the file of the
-  library's `docs/` that is its page; a library mounted under the platform (`markdown`, #134) is a
-  section with a route of `react/<name>` in `sectionRoutes.ts`. The route test names the entry or the
-  page that is missing.
+  library's `docs/` that is its page; a library mounted under the platform is either a section with a
+  route of `react/<name>` in `sectionRoutes.ts` (`markdown`), or, for the hooks, a list in
+  `reactHooks` of `registry.ts`: `/react/hooks/` is the hooks README and `/react/hooks/<useName>/`
+  its `## <useName>` section (`hookSection`). A hook is an entry point of the library, a section of its
+  README and an item of that list together; the route and registry tests name what is missing.
 - **Vike routes**: `/react/@name`, `/react/@name/specs`, `/react/@name/accessibility` and
   `/react/@name/@member` are Route Strings; the static ones (`/react/releases`, `/react/markdown/@name`)
   rank above the parameterised ones. Every page is prerendered from `+onBeforePrerenderStart`.

@@ -20,7 +20,7 @@ import { themeDefault } from '@soroush.design/core/theme'
 import { getSurfaceRadius } from '@soroush.design/core/utils'
 import { Portal } from '../Portal'
 import type { PopoverPosition } from '../Popover/utils/computePopoverPosition'
-import { useMergedRefs } from '../Modal/hooks/useMergedRefs'
+import { useMergedRefs } from '@soroush.design/react-hooks/useMergedRefs'
 import { getElementRef } from '../utils/getElementRef'
 import {
   useAnchoredPlacement,

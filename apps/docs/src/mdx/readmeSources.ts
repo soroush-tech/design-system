@@ -13,7 +13,7 @@ const designSystemNested = import.meta.glob('packages/react-components/src/*/*/R
   import: 'default',
   eager: true,
 }) as Record<string, string>
-const markdown = import.meta.glob('packages/markdown/src/*/README.md', {
+const markdown = import.meta.glob('packages/react-markdown/src/*/README.md', {
   query: '?raw',
   import: 'default',
   eager: true,

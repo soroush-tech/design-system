@@ -13,7 +13,7 @@ import { useDefaultProps } from '../../theme'
 import { themeDefault } from '@soroush.design/core/theme'
 import { getSurfaceRadius } from '@soroush.design/core/utils'
 import { Collapse, type CollapseProps } from '../../Collapse'
-import { useControlled } from '../../utils/useControlled'
+import { useControlled } from '@soroush.design/react-hooks/useControlled'
 import {
   AccordionContext,
   AccordionGroupContext,

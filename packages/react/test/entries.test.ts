@@ -1,13 +1,14 @@
 import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { libraries } from '../libraries'
 
 const root = process.cwd()
 const manifest = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')) as {
   exports: Record<string, string>
 }
-const [{ package: library }] = libraries
+// The library an entry re-exports is named in its own file.
+const targetOf = (file: string): string =>
+  /^export \* from '([^']+)'$/m.exec(readFileSync(join(root, file), 'utf8'))![1]
 
 const filesUnder = (folder: string): string[] =>
   readdirSync(join(root, folder), { withFileTypes: true }).flatMap((item) =>
@@ -24,7 +25,7 @@ describe('entry points', () => {
     '%s exports the same names as its library',
     async (subpath, file) => {
       const umbrella = await import(/* @vite-ignore */ join(root, file))
-      const target = await import(/* @vite-ignore */ `${library}${subpath.slice(1)}`)
+      const target = await import(/* @vite-ignore */ targetOf(file))
       expect(Object.keys(umbrella).sort()).toEqual(Object.keys(target).sort())
       expect(Object.keys(umbrella).length).toBeGreaterThan(0)
       // The same bindings, not copies of them.

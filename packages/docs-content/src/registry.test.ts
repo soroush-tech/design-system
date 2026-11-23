@@ -10,17 +10,19 @@ import {
   componentLinkPath,
   componentPagePath,
   componentSpecsPath,
-  importPackageOf,
+  IMPORT_PACKAGE,
   importSubpathOf,
   markdownComponents,
   memberComponents,
   membersOf,
+  reactHooks,
   styledSystemDocSlug,
   styledSystemDocs,
   styledSystemGuides,
 } from './registry'
 import { listComponentReadmes, packageDir } from './node/loadReadme'
-import { existsSync } from 'node:fs'
+import { repoRoot } from './node/repoRoot'
+import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 
 // The registry is only useful if it matches what is actually on disk - these are the
@@ -90,6 +92,20 @@ describe('component registry', () => {
     }
   })
 
+  it('every hook of the hooks library has an entry point and a README section, and the reverse', () => {
+    const folder = join(repoRoot(), 'packages', 'react-hooks')
+    const { exports } = JSON.parse(readFileSync(join(folder, 'package.json'), 'utf8')) as {
+      exports: Record<string, string>
+    }
+    const entries = Object.keys(exports)
+      .filter((subpath) => subpath !== '.')
+      .map((subpath) => subpath.slice(2))
+    const readme = readFileSync(join(folder, 'README.md'), 'utf8')
+    const sectionsOfReadme = [...readme.matchAll(/^## (.+)$/gm)].map(([, heading]) => heading)
+    expect([...reactHooks].sort()).toEqual(entries.sort())
+    expect([...reactHooks].sort()).toEqual(sectionsOfReadme.sort())
+  })
+
   it('every styled-system doc and guide file exists on disk', () => {
     for (const { file } of [...styledSystemDocs, ...styledSystemGuides]) {
       expect(existsSync(join(packageDir('styled-system'), 'docs', file)), `${file} missing`).toBe(
@@ -121,10 +137,10 @@ describe('component registry', () => {
     expect(componentSpecsPath(menu)).toBe('/Menu/specs/')
   })
 
-  it('imports a component from the umbrella, and a markdown component from its own package', () => {
-    expect(importPackageOf(componentBySlug.get('button')!)).toBe('@soroush.design/react')
-    expect(importPackageOf(componentBySlug.get('menu-list')!)).toBe('@soroush.design/react')
-    expect(importPackageOf(componentBySlug.get('preview')!)).toBe('@soroush.tech/markdown')
+  it('imports every component from the umbrella, a markdown one from under `markdown`', () => {
+    expect(IMPORT_PACKAGE).toBe('@soroush.design/react')
+    expect(importSubpathOf(componentBySlug.get('button')!)).toBe('Button')
+    expect(importSubpathOf(componentBySlug.get('preview')!)).toBe('markdown/Preview')
   })
 
   it("sends a link to a README's section to the page that shows it", () => {

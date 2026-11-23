@@ -5,6 +5,7 @@ import {
   reactNav,
   sitePath,
   railItemFor,
+  reactHooks,
   searchEntriesFor,
   sectionFor,
 } from './nav'
@@ -26,6 +27,17 @@ describe('section navigation', () => {
     expect(sectionFor('/').pkg).toBe('react')
     vi.stubEnv('PUBLIC_ENV__DOCS_SECTION', 'markdown')
     expect(sectionFor('/Preview/').pkg).toBe('markdown')
+  })
+
+  it('has Hooks as its own part: All hooks first, then a page for each hook', () => {
+    const hooks = sectionFor('/react/').rail.find((item) => item.id === 'hooks')!
+    expect(hooks.groups[0].items[0]).toEqual({ label: 'All hooks', href: '/react/hooks/' })
+    expect(hooks.groups[0].items.slice(1).map((item) => item.href)).toEqual(
+      reactHooks.map((hook) => `/react/hooks/${hook}/`)
+    )
+    expect(searchEntriesFor(sectionFor('/react/')).map((entry) => entry.href)).toContain(
+      '/react/hooks/useDebounce/'
+    )
   })
 
   it('has Components as its own group, All components first, then every category', () => {

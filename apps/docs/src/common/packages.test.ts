@@ -6,7 +6,7 @@ import { PACKAGES, sourceUrlOf } from './packages'
 // The MCP server and the command line are published under their own scope.
 const NPM_NAMES = {
   react: '@soroush.design/react-components',
-  markdown: '@soroush.tech/markdown',
+  markdown: '@soroush.design/react-markdown',
   'styled-system': '@soroush.design/styled-system',
   mcp: '@soroush.design/mcp',
   'ui-spec': '@soroush.tech/ui-spec',

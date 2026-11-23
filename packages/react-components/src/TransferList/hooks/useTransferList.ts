@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useControlled } from '../../utils/useControlled'
+import { useControlled } from '@soroush.design/react-hooks/useControlled'
 
 export type TransferListValue = string | number
 

@@ -1,6 +1,6 @@
 # Packages
 
-Conventions for everything under `packages/` - the workspace's shared code. Most packages are framework-agnostic tooling; `react-components` (`@soroush.design/react-components`) is the React component library, and `markdown` is a companion React library that builds on it (a headless markdown editor/renderer). Both React packages follow [`design-system/design-system.md`](./react-components/design-system.md) for component conventions - the `markdown` package's specifics are in [`markdown/markdown.md`](./markdown/markdown.md). Each folder is its own pnpm package, globbed by `packages/*` in `pnpm-workspace.yaml` and consumed by apps (and by each other) via `workspace:*`.
+Conventions for everything under `packages/` - the workspace's shared code. Most packages are framework-agnostic tooling; `react-components` (`@soroush.design/react-components`) is the React component library, `react-hooks` its hooks, and `react-markdown` a companion React library that builds on it (a headless markdown editor/renderer). The component packages follow [`react-components/design-system.md`](./react-components/design-system.md) for component conventions - the `react-markdown` package's specifics are in [`react-markdown/markdown.md`](./react-markdown/markdown.md). Each folder is its own pnpm package, globbed by `packages/*` in `pnpm-workspace.yaml` and consumed by apps (and by each other) via `workspace:*`.
 
 For a plain-English overview of what currently lives here, see [`README.md`](./README.md).
 
@@ -46,14 +46,14 @@ Keep the **public API in `index.ts`** (the single entry); extract internal helpe
 
 ## Naming & scope
 
-- Every package is scoped **`@soroush.tech/*`**, except the MCP server, the command-line tool, the component library, its platform umbrella and the shared core, which are **`@soroush.design/mcp`**, **`@soroush.design/cli`**, **`@soroush.design/react-components`**, **`@soroush.design/react`** and **`@soroush.design/core`** (apps are not - `apps/web` stays `@soroush/web`).
+- Every package is scoped **`@soroush.tech/*`**, except the MCP server, the command-line tool, the component library, its hooks and markdown libraries, its platform umbrella and the shared core, which are **`@soroush.design/mcp`**, **`@soroush.design/cli`**, **`@soroush.design/react-components`**, **`@soroush.design/react-hooks`**, **`@soroush.design/react-markdown`**, **`@soroush.design/react`** and **`@soroush.design/core`** (apps are not - `apps/web` stays `@soroush/web`).
 - A Vite plugin's internal `name` field **must equal its package name minus the scope** (`vite-plugin-watch`), so build logs read `[vite-plugin-watch]`. Keep the directory, package name, and plugin `name` in sync.
 
 ---
 
 ## The `soroush.design` family
 
-The layout the UI packages move to ([#114](https://github.com/soroush-tech/design-system/issues/114)). The component library has the new name, `@soroush.design/react-components`; the other UI packages keep the names they have today until their step of the plan, and a new UI package follows these rules from the start.
+The layout the UI packages move to ([#114](https://github.com/soroush-tech/design-system/issues/114)). The component library, the hooks library and the markdown library have their new names, `@soroush.design/react-components`, `@soroush.design/react-hooks` and `@soroush.design/react-markdown`; the other UI packages keep the names they have today until their step of the plan, and a new UI package follows these rules from the start.
 
 ### Three levels
 
@@ -140,7 +140,7 @@ import { useMergedRefs, useEventCallback } from 'soroush.design/react/hooks'
 - **An app can take the lean route.** Every library works installed alone, without an umbrella.
 - **An app imports from the umbrella; libraries import each other by their real names.** The docs, the starters, `init`, the READMEs and the MCP content all write `@soroush.design/react/...`, so splitting a library later changes no import of an app. A library, private ones such as `story-demo` and `lab` included, imports the library it builds on by its own name and never the umbrella: the umbrella depends on the libraries, so the reverse is a cycle.
 - **An umbrella is generated whole.** `src/` holds one file per entry point, each a line of `export * from '<library>/<subpath>'` (plus `export { default } from` where the target has a default export). The `exports` and `publishConfig.exports` of package.json are written beside them. Both are committed, like the plugin references, and `pnpm gen:react --check` fails in the pre-commit hook and in CI when they drift. The generator reads what each library _publishes_ (`publishConfig.exports`): an entry a library serves only in the workspace never reaches the umbrella.
-- **Registering a library on an umbrella** is one line in the umbrella's `libraries.ts` - `{ package: '@soroush.design/react-components' }` merges it at the top (`/Button`), `{ package: '...', under: 'markdown' }` mounts it under a lowercase name (`/markdown`, `/markdown/Editor`) - plus the library in the umbrella's `dependencies` as `workspace:^`. Run `pnpm gen:<platform>`. Two libraries that claim the same subpath, or two that differ only by case, fail the generator with both package names. The family umbrella (`soroush.design`) repeats this with the platforms as its libraries.
+- **Registering a library on an umbrella** is one line in the umbrella's `libraries.ts` - `{ package: '@soroush.design/react-components' }` merges it at the top (`/Button`), `{ package: '...', under: 'markdown' }` mounts it under a lowercase name (`/markdown`, `/markdown/Editor`) - plus the library in the umbrella's `dependencies` as `workspace:^`. A library with heavy dependencies (`markdown`) is `optional: true` instead: the umbrella lists it in `peerDependencies` with an explicit range and `peerDependenciesMeta` `optional`, and in `devDependencies` as `workspace:*` for the generator and the tests, so an app installs it only when it imports its entry points; without it, those imports fail with a module-not-found error naming the library. Run `pnpm gen:<platform>`. Two libraries that claim the same subpath, or two that differ only by case, fail the generator with both package names. The family umbrella (`soroush.design`) repeats this with the platforms as its libraries.
 - **An umbrella's tests are not in `src/`**, which holds only generated files: they are in `test/` and `scripts/`. v8 reports a file of re-exports as empty, so its coverage is a test that imports every entry point and compares its names with the library's, a test that no file of `src/` is not generated, and a test of the build: each file in `dist/` imports its library and holds none of it. A file with real code in `src/` counts toward the 100% and fails it.
 - **Theme typing goes through an umbrella unchanged.** `/theme` is a plain `export *`, and TypeScript merges `declare module '@soroush.design/react/theme' { interface ThemePalette { ... } }` into the library's own interface, so the line can name the umbrella or the library, and both reach `useTheme`, `styled` and the props of every component. Nothing is declared in the umbrella. Each umbrella has a type test for both forms (`type-tests/`), one program per form, because an augmentation in one program leaks into every file of it. The interfaces are the core's and reach the umbrella through two re-exports (core, library, umbrella); `type-tests/core-name` holds the form that names the core. Re-check it when the theme library is split out.
 - **New packages start at `0.1.0`**, with release notes written for that version: what the package is and how to move to it, not a list of changes against a package it replaces.
@@ -190,7 +190,7 @@ Internal-only packages stay `"private": true` and consume source directly. To ma
   ```
 
 - Declare the host framework as a **`peerDependency`** (e.g. `vite`); never bundle the peer.
-- A peer on a **sibling package** (markdown on react-components) is an explicit range covering every
+- A peer on a **sibling package** (react-markdown on react-components) is an explicit range covering every
   version line it supports - `"^0.1.0"` (below 1.0.0 a caret covers one minor, so list each
   minor: `"^0.1.0 || ^0.2.0"`) - widened deliberately when a new line lands,
   never `workspace:^`. pnpm freezes `workspace:^` to `^<the sibling's version at publish time>`,
@@ -251,5 +251,5 @@ npm deprecate '@soroush.tech/<name>@<badrange>' 'Broken exports; use >=<fixed>.'
 
 ## Linting & types
 
-- Each package gets a minimal `.oxlintrc.json` extending one of the three configs in `packages/eslint-config/` - `.oxlintrc.json` (base), `.oxlintrc.react.json`, or `.oxlintrc.storybook.json` - plus its own `env` (node, browser, serviceworker). Tooling packages stay React-free and extend the base; React-shipping packages (`react-components`, `markdown`) extend the storybook layer. The React and Storybook plugins are declared once in `eslint-config`, not per package.
+- Each package gets a minimal `.oxlintrc.json` extending one of the three configs in `packages/eslint-config/` - `.oxlintrc.json` (base), `.oxlintrc.react.json`, or `.oxlintrc.storybook.json` - plus its own `env` (node, browser, serviceworker). Tooling packages stay React-free and extend the base; React-shipping packages (`react-components`, `react-markdown`) extend the storybook layer. The React and Storybook plugins are declared once in `eslint-config`, not per package.
 - `tsconfig.json` uses bundler resolution and `noEmit`. It is **not** referenced by the root solution `tsconfig.json`: packages are typechecked in isolation via `pnpm -r typecheck` and never pulled into the app's TS graph (so a backend/tooling package's types can't leak into the React/DOM build).

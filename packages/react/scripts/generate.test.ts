@@ -324,4 +324,83 @@ describe('on disk', () => {
       '@fake/react-components is in libraries.ts but not in "dependencies".',
     ])
   })
+
+  describe('an optional library', () => {
+    const peer = { '@fake/react-markdown': '^0.1.0' }
+    const optionalPeer = { '@fake/react-markdown': { optional: true } }
+    const libraries = [
+      { package: '@fake/react-components' },
+      { package: '@fake/react-markdown', under: 'markdown', optional: true },
+    ]
+    const withManifest = (manifest: object, check = true) => {
+      write(
+        'package.json',
+        JSON.stringify({
+          name: '@fake/umbrella',
+          dependencies: { '@fake/react-components': '1' },
+          ...manifest,
+        })
+      )
+      return run({ ...options(check), libraries })
+    }
+
+    beforeEach(() => {
+      fakeLibrary(
+        '@fake/react-markdown',
+        {
+          exports: { '.': './src/index.ts', './Editor': './src/Editor.ts' },
+          publishConfig: { exports: { '.': {}, './Editor': {} } },
+        },
+        { 'src/index.ts': 'export {}', 'src/Editor.ts': 'export {}' }
+      )
+    })
+
+    it('is an optional peer, and a dev dependency the workspace reads it from', () => {
+      const manifest = {
+        peerDependencies: peer,
+        peerDependenciesMeta: optionalPeer,
+        devDependencies: { '@fake/react-markdown': 'workspace:*' },
+      }
+      expect(withManifest(manifest, false)).toEqual({
+        problems: [],
+        summary: 'Wrote 6 files; 5 entry points from 2 library package(s).',
+      })
+      expect(read('src/markdown/Editor.ts')).toBe("export * from '@fake/react-markdown/Editor'\n")
+      expect(JSON.parse(read('package.json')).peerDependenciesMeta).toEqual(optionalPeer)
+      expect(run({ ...options(true), libraries }).summary).toBe(
+        'Up to date: 5 entry points from 2 library package(s).'
+      )
+    })
+
+    it('is not a dependency, which would install it for every app', () => {
+      expect(
+        withManifest({
+          dependencies: { '@fake/react-components': '1', '@fake/react-markdown': '1' },
+        }).problems
+      ).toEqual([
+        '@fake/react-markdown is optional in libraries.ts, so it is a peer and not in "dependencies".',
+      ])
+    })
+
+    it.each([
+      ['no peer at all', { peerDependenciesMeta: optionalPeer }],
+      ['a peer that is not marked optional', { peerDependencies: peer }],
+      [
+        'a peer whose meta says nothing',
+        { peerDependencies: peer, peerDependenciesMeta: { '@fake/react-markdown': {} } },
+      ],
+    ])('is an optional peer, not %s', (_name, manifest) => {
+      expect(withManifest(manifest).problems).toEqual([
+        '@fake/react-markdown is optional in libraries.ts but not an optional peer ("peerDependencies" and "peerDependenciesMeta").',
+      ])
+    })
+
+    it('is a dev dependency too, for the workspace to read it', () => {
+      expect(
+        withManifest({ peerDependencies: peer, peerDependenciesMeta: optionalPeer }).problems
+      ).toEqual([
+        '@fake/react-markdown is optional in libraries.ts but not in "devDependencies", which is where the workspace reads it.',
+      ])
+    })
+  })
 })

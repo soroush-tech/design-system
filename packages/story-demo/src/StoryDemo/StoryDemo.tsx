@@ -2,7 +2,7 @@ import { lazy, Suspense, useEffect, useMemo, useState, type ComponentType } from
 import { composeStory } from '@storybook/react-vite'
 import { Typography } from '@soroush.design/react-components/Typography'
 import { View } from '@soroush.design/react-components/View'
-import { useCopyToClipboard } from '@soroush.tech/hooks/useCopyToClipboard'
+import { useCopyToClipboard } from '@soroush.design/react-hooks/useCopyToClipboard'
 import { buildDemoModule } from '../utils/buildDemoModule'
 import { controlsFor, controlsInclude, type ControlsAnnotations } from '../utils/controlsFor'
 import { openInCodeSandbox } from '../utils/openInCodeSandbox'

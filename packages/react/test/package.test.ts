@@ -19,7 +19,8 @@ describe('the package', () => {
   })
 
   it('holds nothing in src/ but one-line re-exports of a library', () => {
-    const lines = /^export (\*|\{ default \}) from '@soroush\.design\/react-components[\w/]*'$/
+    const names = libraries.map(({ package: name }) => name.replace(/[./]/g, '\\$&')).join('|')
+    const lines = new RegExp(`^export (\\*|\\{ default \\}) from '(${names})[\\w/]*'$`)
     for (const file of filesUnder('src')) {
       const content = read(file).trimEnd().split('\n')
       expect(content.length, file).toBeLessThanOrEqual(2)
@@ -27,9 +28,19 @@ describe('the package', () => {
     }
   })
 
-  it('lists each library it points at as a dependency', () => {
-    for (const { package: name } of libraries) {
-      expect(manifest.dependencies[name]).toBe('workspace:^')
+  it('lists each library it points at as a dependency, or an optional peer when it is optional', () => {
+    for (const { package: name, optional } of libraries) {
+      if (!optional) {
+        expect(manifest.dependencies[name], name).toBe('workspace:^')
+        continue
+      }
+      // An optional library is the app's to install: no dependency of ours pulls it in, the peer
+      // range is an explicit one (never frozen from the workspace), and the workspace has it as a
+      // dev dependency.
+      expect(manifest.dependencies[name], name).toBeUndefined()
+      expect(manifest.peerDependencies[name], name).toMatch(/^\^\d/)
+      expect(manifest.peerDependenciesMeta[name], name).toEqual({ optional: true })
+      expect(manifest.devDependencies[name], name).toBe('workspace:*')
     }
   })
 

@@ -18,12 +18,12 @@ coverage:
           - core
           - docs-content
           - eslint-config
-          - hooks
           - lab
-          - markdown
           - mcp
           - react
           - react-components
+          - react-hooks
+          - react-markdown
           - story-demo
           - styled-system
           - ui-spec
@@ -51,15 +51,9 @@ flag_management:
     - name: eslint-config
       paths:
         - packages/eslint-config/
-    - name: hooks
-      paths:
-        - packages/hooks/
     - name: lab
       paths:
         - packages/lab/
-    - name: markdown
-      paths:
-        - packages/markdown/
     - name: mcp
       paths:
         - packages/mcp/
@@ -69,6 +63,12 @@ flag_management:
     - name: react-components
       paths:
         - packages/react-components/
+    - name: react-hooks
+      paths:
+        - packages/react-hooks/
+    - name: react-markdown
+      paths:
+        - packages/react-markdown/
     - name: story-demo
       paths:
         - packages/story-demo/
@@ -109,18 +109,10 @@ component_management:
       name: eslint-config
       paths:
         - packages/eslint-config/**
-    - component_id: hooks
-      name: hooks
-      paths:
-        - packages/hooks/**
     - component_id: lab
       name: lab
       paths:
         - packages/lab/**
-    - component_id: markdown
-      name: markdown
-      paths:
-        - packages/markdown/**
     - component_id: mcp
       name: mcp
       paths:
@@ -133,6 +125,14 @@ component_management:
       name: react-components
       paths:
         - packages/react-components/**
+    - component_id: react-hooks
+      name: react-hooks
+      paths:
+        - packages/react-hooks/**
+    - component_id: react-markdown
+      name: react-markdown
+      paths:
+        - packages/react-markdown/**
     - component_id: story-demo
       name: story-demo
       paths:

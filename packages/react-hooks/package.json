@@ -1,0 +1,148 @@
+{
+  "name": "@soroush.design/react-hooks",
+  "version": "0.1.0",
+  "description": "The React hooks of the soroush.design family that belong to no component and no theme - copy to the clipboard, a stable event callback, merged refs, a controlled-or-not value, a debounced value.",
+  "keywords": [
+    "react",
+    "hooks",
+    "design-system",
+    "debounce",
+    "clipboard",
+    "typescript"
+  ],
+  "author": "Masoud Soroush <masoud@soroush.tech>",
+  "license": "MIT",
+  "homepage": "https://docs.soroush.design/react/hooks/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/soroush-tech/design-system.git",
+    "directory": "packages/react-hooks"
+  },
+  "bugs": {
+    "url": "https://github.com/soroush-tech/design-system/issues"
+  },
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": "./src/index.ts",
+    "./useControlled": "./src/useControlled.ts",
+    "./useCopyToClipboard": "./src/useCopyToClipboard.ts",
+    "./useDebounce": "./src/useDebounce.ts",
+    "./useDebouncedCallback": "./src/useDebouncedCallback.ts",
+    "./useEventCallback": "./src/useEventCallback.ts",
+    "./useMergedRefs": "./src/useMergedRefs.ts"
+  },
+  "types": "./src/index.ts",
+  "publishConfig": {
+    "access": "public",
+    "exports": {
+      ".": {
+        "import": {
+          "types": "./dist/index.d.mts",
+          "default": "./dist/index.mjs"
+        },
+        "require": {
+          "types": "./dist/index.d.cts",
+          "default": "./dist/index.cjs"
+        }
+      },
+      "./useControlled": {
+        "import": {
+          "types": "./dist/useControlled.d.mts",
+          "default": "./dist/useControlled.mjs"
+        },
+        "require": {
+          "types": "./dist/useControlled.d.cts",
+          "default": "./dist/useControlled.cjs"
+        }
+      },
+      "./useCopyToClipboard": {
+        "import": {
+          "types": "./dist/useCopyToClipboard.d.mts",
+          "default": "./dist/useCopyToClipboard.mjs"
+        },
+        "require": {
+          "types": "./dist/useCopyToClipboard.d.cts",
+          "default": "./dist/useCopyToClipboard.cjs"
+        }
+      },
+      "./useDebounce": {
+        "import": {
+          "types": "./dist/useDebounce.d.mts",
+          "default": "./dist/useDebounce.mjs"
+        },
+        "require": {
+          "types": "./dist/useDebounce.d.cts",
+          "default": "./dist/useDebounce.cjs"
+        }
+      },
+      "./useDebouncedCallback": {
+        "import": {
+          "types": "./dist/useDebouncedCallback.d.mts",
+          "default": "./dist/useDebouncedCallback.mjs"
+        },
+        "require": {
+          "types": "./dist/useDebouncedCallback.d.cts",
+          "default": "./dist/useDebouncedCallback.cjs"
+        }
+      },
+      "./useEventCallback": {
+        "import": {
+          "types": "./dist/useEventCallback.d.mts",
+          "default": "./dist/useEventCallback.mjs"
+        },
+        "require": {
+          "types": "./dist/useEventCallback.d.cts",
+          "default": "./dist/useEventCallback.cjs"
+        }
+      },
+      "./useMergedRefs": {
+        "import": {
+          "types": "./dist/useMergedRefs.d.mts",
+          "default": "./dist/useMergedRefs.mjs"
+        },
+        "require": {
+          "types": "./dist/useMergedRefs.d.cts",
+          "default": "./dist/useMergedRefs.cjs"
+        }
+      }
+    },
+    "main": "./dist/index.cjs",
+    "module": "./dist/index.mjs",
+    "types": "./dist/index.d.mts",
+    "typesVersions": {
+      "*": {
+        "*": [
+          "./dist/*.d.cts"
+        ]
+      }
+    }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "lint": "oxlint --deny-warnings",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "prepublishOnly": "pnpm build"
+  },
+  "peerDependencies": {
+    "react": "^19.2.8"
+  },
+  "devDependencies": {
+    "@soroush.tech/eslint-config": "workspace:*",
+    "@testing-library/react": "^16.3.3",
+    "@types/react": "^19.3.0",
+    "@vitest/coverage-v8": "^5.1.0",
+    "jsdom": "^31.0.0",
+    "oxlint": "^1.93.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "tsdown": "^0.23.7",
+    "typescript": "~7.0.2",
+    "vitest": "^5.1.0"
+  }
+}

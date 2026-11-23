@@ -56,6 +56,12 @@ describe('component pipeline', () => {
     expect(importPathFor(allDocComponents.find((item) => item.name === 'Card')!)).toBe(
       "import { Card } from '@soroush.design/react/Card'"
     )
+    const preview = components.find((c) => c.name === 'Preview')!
+    expect(preview.importPath).toBe(
+      "import { Preview } from '@soroush.design/react/markdown/Preview'"
+    )
+    expect(preview.packageName).toBe('@soroush.design/react/markdown')
+    expect(components.find((c) => c.name === 'Card')!.packageName).toBe('@soroush.design/react')
   })
 
   it("imports a family member from its family's subpath, and points at its page under the entry it is imported from", () => {
@@ -161,6 +167,8 @@ describe('doc pipeline', () => {
     expect(url('theming')).toBe('https://docs.soroush.design/react/theme/')
     expect(url('customization')).toBe('https://docs.soroush.design/react/customization/')
     expect(url('design-system-overview')).toBe('https://docs.soroush.design/react/')
+    expect(url('hooks')).toBe('https://docs.soroush.design/react/hooks/')
+    expect(docs.find((doc) => doc.id === 'hooks')!.body).toContain('useDebounce')
     expect(url('markdown-overview')).toBe('https://docs.soroush.design/react/markdown/')
     expect(url('styled-system/api')).toBe('https://docs.soroush.design/styled-system/docs/api/')
   })

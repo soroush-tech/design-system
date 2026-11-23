@@ -12,7 +12,7 @@ import { themeDefault } from '@soroush.design/core/theme'
 import { getSurfaceRadius, getShapeRadius, type Shape } from '@soroush.design/core/utils'
 import { Grow } from '../Grow'
 import { Portal, type PortalProps } from '../Portal'
-import { useControlled } from '../utils/useControlled'
+import { useControlled } from '@soroush.design/react-hooks/useControlled'
 import type { TransitionProps } from '../utils/useTransition'
 import { useAutoHide } from './hooks/useAutoHide'
 

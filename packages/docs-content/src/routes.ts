@@ -7,6 +7,7 @@ import {
   markdownComponents,
   membersOf,
   reactGuides,
+  reactHooks,
   sitePath,
   styledSystemDocSlug,
   styledSystemDocs,
@@ -23,6 +24,8 @@ export type PageKind =
   | 'releases'
   | 'guide'
   | 'entry'
+  | 'hooks'
+  | 'hook'
   | 'component'
   | 'specs'
   | 'accessibility'
@@ -64,6 +67,8 @@ export const docsPages = (hasAccessibility: (item: ComponentNavItem) => boolean)
     ]),
     ...reactGuides.map((guide) => page(sitePath('react', `/${guide}/`), 'guide')),
     ...Object.keys(entryGuides).map((entry) => page(sitePath('react', `/${entry}/`), 'entry')),
+    page(sitePath('react', '/hooks/'), 'hooks'),
+    ...reactHooks.map((hook) => page(sitePath('react', `/hooks/${hook}/`), 'hook')),
     ...components(allComponents),
     ...components(markdownComponents),
     ...[...styledSystemDocs, ...styledSystemGuides].map(({ file }) =>

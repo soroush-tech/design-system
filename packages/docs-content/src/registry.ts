@@ -213,16 +213,21 @@ export const componentAccessibilityPath = (item: ComponentNavItem): string =>
 export const componentLinkPath = (item: ComponentNavItem, section = ''): string =>
   `${section ? componentSpecsPath(item) : componentPagePath(item)}${section}`
 
-/** The subpath a component is imported from - a member's is its family's. */
-export const importSubpathOf = (item: ComponentNavItem): string => item.family ?? item.name
+/**
+ * The subpath a component is imported from - a member's is its family's, and a markdown component
+ * is under `markdown`, where the umbrella mounts that library.
+ */
+export const importSubpathOf = (item: ComponentNavItem): string => {
+  const entry = item.family ?? item.name
+  return item.pkg === 'markdown' ? `markdown/${entry}` : entry
+}
 
 /**
- * The package an app imports a component from: the React platform umbrella for the component
- * library, the package itself for the others. The library's own name stays in `sections`, which
- * says what a section documents.
+ * The package an app imports every component from, the markdown ones included: the React platform
+ * umbrella. The libraries behind it keep their own names in `sections`, which says what a section
+ * documents.
  */
-export const importPackageOf = (item: ComponentNavItem): string =>
-  item.pkg === 'react' ? '@soroush.design/react' : sections[item.pkg].npm
+export const IMPORT_PACKAGE = '@soroush.design/react'
 
 /** The markdown package's component library - flat, no categories. */
 export const markdownComponents: ComponentNavItem[] = [
@@ -302,6 +307,21 @@ export const entryGuides: Record<string, string> = {
   theme: 'theming.md',
   utils: 'utils.md',
 }
+
+/**
+ * The hooks of the hooks library (`@soroush.design/react-hooks`), which the umbrella mounts under
+ * `hooks`: `@soroush.design/react/hooks/useDebounce` has its page at `/react/hooks/useDebounce/`,
+ * the `## useDebounce` section of the library's README. `registry.test.ts` holds the list to the
+ * library's entry points and README.
+ */
+export const reactHooks = [
+  'useControlled',
+  'useCopyToClipboard',
+  'useDebounce',
+  'useDebouncedCallback',
+  'useEventCallback',
+  'useMergedRefs',
+] as const
 
 /** The React platform's guides that are not an entry point: lowercase, so no entry ever takes their path. */
 export const reactGuides = ['installation', 'usage', 'customization', 'components'] as const

@@ -10,11 +10,11 @@ Monorepo for the `@soroush.tech` UI libraries, extracted from [`soroush-tech/cor
 | [`@soroush.design/react-components`](packages/react-components) | Token-driven React component library built on styled-system                   |
 | [`@soroush.design/core`](packages/core)                         | What the platforms share and that needs no framework: the component catalog   |
 | [`@soroush.design/react`](packages/react)                       | The React platform: what an app installs and imports from, generated, no code |
-| [`@soroush.tech/markdown`](packages/markdown)                   | Markdown companion component library for the design system                    |
+| [`@soroush.design/react-markdown`](packages/react-markdown)     | Markdown editor and renderer for the React platform, an optional library      |
 | [`@soroush.design/cli`](packages/cli)                           | The command line: `init` sets the design system up in an existing React app   |
 | [`@soroush.design/mcp`](packages/mcp)                           | MCP server exposing the components, READMEs, and tokens to AI coding tools    |
 | [`@soroush.tech/ui-spec`](packages/ui-spec)                     | Generative-UI spec on A2UI v1.0: catalogs, a behavior schema, and validators  |
-| [`@soroush.tech/hooks`](packages/hooks)                         | Shared React hooks (private, internal)                                        |
+| [`@soroush.design/react-hooks`](packages/react-hooks)           | React hooks that belong to no component and no theme                          |
 | [`@soroush.tech/lab`](packages/lab)                             | Incubator for components heading into the design system (private, internal)   |
 | [`@soroush.tech/story-demo`](packages/story-demo)               | Renders CSF3 stories as interactive docs demos (private, internal)            |
 | [`@soroush.tech/docs-content`](packages/docs-content)           | Component registry and README parsing shared by the docs app and MCP server   |

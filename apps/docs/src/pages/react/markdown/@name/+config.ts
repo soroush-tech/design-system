@@ -4,5 +4,5 @@ import { sectionPrerender } from '../../../../common/sectionRoute'
 export default {
   prerender: sectionPrerender('markdown'),
   title: 'Markdown component',
-  description: 'Props and usage for a @soroush.tech/markdown component.',
+  description: 'Props and usage for a @soroush.design/react-markdown component.',
 } satisfies Config

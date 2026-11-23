@@ -6,7 +6,7 @@ import {
   type PointerEvent,
   type SyntheticEvent,
 } from 'react'
-import { useControlled } from '../../utils/useControlled'
+import { useControlled } from '@soroush.design/react-hooks/useControlled'
 import { useTheme } from '../../theme'
 import { TooltipGroupContext, getThemeTooltipGroup } from '../TooltipGroupContext'
 

@@ -26,12 +26,12 @@ jobs:
             core
             docs-content
             eslint-config
-            hooks
             lab
-            markdown
             mcp
             react
             react-components
+            react-hooks
+            react-markdown
             story-demo
             styled-system
             ui-spec
