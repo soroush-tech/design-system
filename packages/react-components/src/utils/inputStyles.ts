@@ -1,5 +1,5 @@
 import type { Theme } from '../theme/themes'
-import { themeDefault } from '../theme/utils/themeDefault'
+import { themeDefault } from '@soroush.design/core/theme'
 import { get } from '../index'
 
 /** The least width of a field that does not fill its row: `theme.defaults.inputMinWidth`, else `'12rem'`. */

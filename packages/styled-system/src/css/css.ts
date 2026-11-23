@@ -1,7 +1,11 @@
 // Typed rewrite of @styled-system/css (styled-system v5).
 // Standalone - carries its own get/responsive/scales; from ./core it shares only the
 // media-query helper.
-import { responsiveQueries, type Breakpoints, type ResponsiveQueries } from '../core/media'
+import {
+  responsiveQueries,
+  type Breakpoints,
+  type ResponsiveQueries,
+} from '@soroush.design/core/breakpoints'
 
 export type CSSObject = Record<string, unknown>
 

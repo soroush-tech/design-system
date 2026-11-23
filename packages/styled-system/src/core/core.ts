@@ -1,7 +1,11 @@
 // Typed rewrite of @styled-system/core (styled-system v5).
 // Public surface and observable behavior match upstream; internals are modern TS.
 import type * as CSS from 'csstype'
-import { responsiveQueries, type Breakpoints, type ResponsiveQueries } from './media'
+import {
+  responsiveQueries,
+  type Breakpoints,
+  type ResponsiveQueries,
+} from '@soroush.design/core/breakpoints'
 
 // Internal shape of the objects parsers build up (arbitrary CSS keys → values or
 // nested media-query/selector objects). Kept loose for the implementation.

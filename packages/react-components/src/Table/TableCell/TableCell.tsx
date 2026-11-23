@@ -17,7 +17,7 @@ import {
   system,
   get,
 } from '@soroush.design/react-components'
-import { themeDefault } from '@soroush.design/react-components/theme'
+import { themeDefault } from '@soroush.design/core/theme'
 
 /** Cell type - inherited from the enclosing section, overridable per cell. */
 export type TableCellVariant = TableSection

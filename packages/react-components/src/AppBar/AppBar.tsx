@@ -12,13 +12,13 @@ import {
   borderStyle,
   borderColor,
   flexbox,
-  layout,
   position,
-  space,
   system,
+  layout,
+  space,
 } from '../index'
 import { Flex, type FlexProps } from '../Flex'
-import { themeDefault } from '../theme/utils/themeDefault'
+import { themeDefault } from '@soroush.design/core/theme'
 
 /** Valid values for the color prop - derived from theme.background keys. */
 export type AppBarColor = keyof Theme['background']

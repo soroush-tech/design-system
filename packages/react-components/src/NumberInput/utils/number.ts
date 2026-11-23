@@ -1,4 +1,4 @@
-import { getDecimalPrecision } from '../../utils/precision'
+import { getDecimalPrecision } from '@soroush.design/core/utils'
 
 /** What a number is shown as unless told otherwise: all its digits, ungrouped, so typing round-trips. */
 export const DEFAULT_FORMAT: Intl.NumberFormatOptions = {

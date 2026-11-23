@@ -1,11 +1,10 @@
 import { type ComponentType, type ElementType, type SVGProps } from 'react'
 import type { LayoutProps, SpaceProps } from '@soroush.design/styled-system'
-import { styled, createShouldForwardProp, props, layout, space, system } from '../index'
+import { styled, createShouldForwardProp, props, system, layout, space } from '../index'
 import { useTheme } from '../theme'
 import { type TextColorToken } from '../Typography'
 import { icons, type IconName } from './icons'
-import { themeDefault } from '../theme/utils/themeDefault'
-import type { ThemeIconSizes } from '../theme/themes'
+import { themeDefault, type ThemeIconSizes } from '@soroush.design/core/theme'
 
 export interface IconProps
   extends

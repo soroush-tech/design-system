@@ -10,7 +10,7 @@ import {
 } from 'react'
 import { styled, get } from '../index'
 import { useDefaultProps } from '../theme'
-import { themeDefault } from '../theme/utils/themeDefault'
+import { themeDefault } from '@soroush.design/core/theme'
 import { Icon, type IconProps } from '../Icon'
 import { Typography, type TypographyProps, type TypographyVariant } from '../Typography'
 

@@ -1,9 +1,11 @@
 {
   "name": "@soroush.design/core",
   "version": "0.1.0",
-  "description": "What every platform of the soroush.design family shares and that needs no framework - first, the catalog: every component as data, for tools that place and write components.",
+  "description": "What every platform of the soroush.design family shares and that needs no framework - the theme (tokens, base theme, createTheme), breakpoint and container-query helpers, pure utilities, and the catalog: every component as data.",
   "keywords": [
     "design-system",
+    "theme",
+    "tokens",
     "catalog",
     "components",
     "tooling",
@@ -27,7 +29,10 @@
   ],
   "exports": {
     "./catalog": "./src/catalog/index.ts",
-    "./catalog/entries": "./src/catalog/entries/index.ts"
+    "./catalog/entries": "./src/catalog/entries/index.ts",
+    "./theme": "./src/theme/index.ts",
+    "./breakpoints": "./src/breakpoints/index.ts",
+    "./utils": "./src/utils/index.ts"
   },
   "publishConfig": {
     "access": "public",
@@ -51,6 +56,36 @@
           "types": "./dist/catalog/entries.d.cts",
           "default": "./dist/catalog/entries.cjs"
         }
+      },
+      "./theme": {
+        "import": {
+          "types": "./dist/theme.d.mts",
+          "default": "./dist/theme.mjs"
+        },
+        "require": {
+          "types": "./dist/theme.d.cts",
+          "default": "./dist/theme.cjs"
+        }
+      },
+      "./breakpoints": {
+        "import": {
+          "types": "./dist/breakpoints.d.mts",
+          "default": "./dist/breakpoints.mjs"
+        },
+        "require": {
+          "types": "./dist/breakpoints.d.cts",
+          "default": "./dist/breakpoints.cjs"
+        }
+      },
+      "./utils": {
+        "import": {
+          "types": "./dist/utils.d.mts",
+          "default": "./dist/utils.mjs"
+        },
+        "require": {
+          "types": "./dist/utils.d.cts",
+          "default": "./dist/utils.cjs"
+        }
       }
     },
     "main": "./dist/catalog.cjs",
@@ -63,6 +98,15 @@
         ],
         "catalog/entries": [
           "./dist/catalog/entries.d.cts"
+        ],
+        "theme": [
+          "./dist/theme.d.cts"
+        ],
+        "breakpoints": [
+          "./dist/breakpoints.d.cts"
+        ],
+        "utils": [
+          "./dist/utils.d.cts"
         ]
       }
     }

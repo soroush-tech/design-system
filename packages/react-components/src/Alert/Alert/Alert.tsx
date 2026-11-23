@@ -1,8 +1,8 @@
 import type { MouseEvent, ReactNode } from 'react'
 import type { SpaceProps } from '@soroush.design/styled-system'
-import { createShouldForwardProp, get, props, space, styled, type Theme } from '../../index'
+import { createShouldForwardProp, get, props, styled, type Theme, space } from '../../index'
 import { useDefaultProps } from '../../theme'
-import { getSurfaceRadius } from '../../utils/getSurfaceRadius'
+import { getSurfaceRadius } from '@soroush.design/core/utils'
 import { Icon, type IconName } from '../../Icon'
 import { alpha } from '../../utils'
 

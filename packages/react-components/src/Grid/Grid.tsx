@@ -10,8 +10,8 @@ import {
   props,
   grid,
   flexbox,
-  space,
   layoutGrid,
+  space,
 } from '../index'
 import { View, type ViewProps } from '../View'
 

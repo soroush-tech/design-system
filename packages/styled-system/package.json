@@ -1,6 +1,6 @@
 {
   "name": "@soroush.design/styled-system",
-  "version": "0.1.0",
+  "version": "6.0.2",
   "description": "Responsive, theme-aware style props for CSS-in-JS: style-prop parsers, breakpoints and container queries, and a system() builder, in TypeScript.",
   "keywords": [
     "styled-system",
@@ -296,6 +296,7 @@
   },
   "scripts": {
     "build": "tsdown",
+    "build:bench": "tsdown --config tsdown.bench.config.ts",
     "lint": "oxlint --deny-warnings",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
@@ -303,6 +304,7 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
+    "@soroush.design/core": "workspace:^",
     "csstype": "^3.2.3",
     "@umber-style/is-prop-valid": "^0.3.0"
   },

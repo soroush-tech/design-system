@@ -16,19 +16,17 @@ import type {
 import {
   styled,
   type Theme,
-  type PaletteColor,
   createShouldForwardProp,
   props,
+  border,
   space,
   layout,
-  border,
   typography,
 } from '../index'
 import { alpha } from '../utils'
-import { getAnchorRel } from '../utils/getAnchorRel'
-import { themeDefault } from '../theme/utils/themeDefault'
+import { getAnchorRel } from '@soroush.design/core/utils'
+import { themeDefault, type ButtonVariants, type PaletteColor } from '@soroush.design/core/theme'
 import { useDefaultProps, useTheme } from '../theme'
-import type { ButtonVariants } from '../theme/themes'
 
 /** Augmentable via the `ButtonVariants` interface - style new values through `theme.components.Button.variants`. */
 export type ButtonVariant = keyof ButtonVariants

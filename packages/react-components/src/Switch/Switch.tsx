@@ -4,7 +4,7 @@ import { get, styled, type Theme, createShouldForwardProp, props, space } from '
 import { useTheme } from '../theme'
 import { useFormControl } from '../FormControl'
 import { alpha } from '../utils'
-import { themeDefault } from '../theme/utils/themeDefault'
+import { themeDefault } from '@soroush.design/core/theme'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

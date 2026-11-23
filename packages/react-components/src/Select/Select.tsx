@@ -14,7 +14,7 @@ import { Popover } from '../Popover'
 import { NativeSelect, type NativeSelectOption } from '../NativeSelect'
 import { type MenuItemProps } from '../MenuItem'
 import type { SpaceProps, LayoutProps } from '@soroush.design/styled-system'
-import { styled, type Theme, createShouldForwardProp, props, space, get, system } from '../index'
+import { styled, type Theme, createShouldForwardProp, props, get, system, space } from '../index'
 import { useTheme } from '../theme'
 import { inputVariantStyles } from '../utils/inputVariantStyles'
 import { useSelectPopover } from './hooks/useSelectPopover'
@@ -23,7 +23,7 @@ import { getNextEnabledIndex, getEdgeEnabledIndex } from './utils/getNextEnabled
 import { isOptionSelected, type SelectValue } from './utils/isOptionSelected'
 import { computeNextValue } from './utils/computeNextValue'
 import { resolveDisplayLabel } from './utils/resolveDisplayLabel'
-import { themeDefault } from '../theme/utils/themeDefault'
+import { themeDefault } from '@soroush.design/core/theme'
 import { getFocusRing, getInputMinWidth } from '../utils/inputStyles'
 
 export type { SelectValue }

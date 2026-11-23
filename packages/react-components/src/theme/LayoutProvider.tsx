@@ -1,8 +1,8 @@
 import { useCallback } from 'react'
 import type { ReactNode } from 'react'
 import { EngineThemeProvider } from './engine'
-import { baseTheme, type Theme, type ThemeLayout } from './themes'
-import { createTheme, deepMerge } from './utils/createTheme'
+import { baseTheme, type Theme } from './themes'
+import { createTheme, deepMerge, type ThemeLayout } from '@soroush.design/core/theme'
 
 export interface LayoutProviderProps {
   /**

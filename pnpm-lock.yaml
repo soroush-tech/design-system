@@ -723,6 +723,9 @@ importers:
 
   packages/styled-system:
     dependencies:
+      '@soroush.design/core':
+        specifier: workspace:^
+        version: link:../core
       '@umber-style/is-prop-valid':
         specifier: ^0.3.0
         version: 0.3.0

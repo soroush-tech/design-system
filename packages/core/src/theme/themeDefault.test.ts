@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { baseTheme } from '../themes'
+import { baseTheme } from './baseTheme'
 import { createTheme } from './createTheme'
 import { themeDefault } from './themeDefault'
 

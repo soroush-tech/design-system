@@ -14,14 +14,14 @@ import {
   type Theme,
   createShouldForwardProp,
   props,
-  space,
-  layout,
-  typography,
   border,
   position,
   span,
   layoutFrame,
   system,
+  space,
+  layout,
+  typography,
 } from '../index'
 
 /** Valid values for the color prop - derived from theme.text keys. */

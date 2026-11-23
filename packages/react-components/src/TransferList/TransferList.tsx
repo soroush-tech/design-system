@@ -1,6 +1,6 @@
 import { useId } from 'react'
 import type { SpaceProps } from '@soroush.design/styled-system'
-import { createShouldForwardProp, get, props, space, styled, type Theme } from '../index'
+import { createShouldForwardProp, get, props, styled, type Theme, space } from '../index'
 import { useDefaultProps } from '../theme'
 import { useFormControl } from '../FormControl'
 import { Button } from '../Button'

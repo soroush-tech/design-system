@@ -1,3 +1,5 @@
+import type { Theme } from '../theme/types'
+
 /** A value that survives `JSON.stringify` - all a catalog holds. */
 export type JsonValue =
   | string
@@ -19,7 +21,7 @@ export interface ExampleNode {
 }
 
 /** A theme scale a prop's values come from - `palette` for `color`. The theme's own keys name it. */
-export type ThemeScale = string
+export type ThemeScale = keyof Theme
 
 /** A prop a picker offers, and where its values come from. */
 export interface CatalogOption {

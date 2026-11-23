@@ -1,16 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { withBreakpointHelpers } from './breakpoints'
-import { baseTheme, between, containerQueries, down, not, only, up } from './themes'
-
-describe('withBreakpointHelpers', () => {
-  it('attaches the helpers without adding keys to the scale', () => {
-    const scale = withBreakpointHelpers({ xs: '0px', sm: '600px' })
-    expect(Object.keys(scale)).toEqual(['xs', 'sm'])
-    expect(JSON.stringify(scale)).toBe('{"xs":"0px","sm":"600px"}')
-    expect(scale.up('sm')).toBe('@media (width >= 600px)')
-    expect(scale.containerQueries('aside').down('sm')).toBe('@container aside (width < 600px)')
-  })
-})
+import { baseTheme, between, containerQueries, down, not, only, up } from './baseTheme'
 
 describe("baseTheme's breakpoints", () => {
   it('are the Material window classes, each the start of its range', () => {

@@ -14,7 +14,7 @@ import {
   type SyntheticEvent,
 } from 'react'
 import type { SpaceProps } from '@soroush.design/styled-system'
-import { createShouldForwardProp, props, space, styled, type Theme } from '../../index'
+import { createShouldForwardProp, props, styled, type Theme, space } from '../../index'
 import { useDefaultProps } from '../../theme'
 import { Fab } from '../../Fab'
 import { Icon } from '../../Icon'

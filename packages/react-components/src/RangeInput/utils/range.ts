@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react'
-import { clamp } from '../../utils/clamp'
-import { addExact, snapToStep } from '../../utils/precision'
+import { clamp, addExact, snapToStep } from '@soroush.design/core/utils'
 
 /** A tick on the rail, with a label under it when it has one. */
 export interface Mark {

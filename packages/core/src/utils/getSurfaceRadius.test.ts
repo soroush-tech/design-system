@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import { baseTheme, createTheme } from '../theme/themes'
+import { baseTheme } from '../theme/baseTheme'
+import { createTheme } from '../theme/createTheme'
 import { getSurfaceRadius } from './getSurfaceRadius'
 
 describe('getSurfaceRadius', () => {

@@ -2,10 +2,10 @@ import { type ChangeEvent, type SelectHTMLAttributes } from 'react'
 import { useFormControl } from '../FormControl'
 import { Icon, type IconName, type IconProps } from '../Icon'
 import type { SpaceProps, LayoutProps } from '@soroush.design/styled-system'
-import { styled, type Theme, createShouldForwardProp, props, space, get, system } from '../index'
+import { styled, type Theme, createShouldForwardProp, props, get, system, space } from '../index'
 import { useTheme } from '../theme'
 import { inputVariantStyles } from '../utils/inputVariantStyles'
-import { themeDefault } from '../theme/utils/themeDefault'
+import { themeDefault } from '@soroush.design/core/theme'
 import { getFocusRing, getInputMinWidth } from '../utils/inputStyles'
 
 export type NativeSelectColor = keyof Theme['palette']

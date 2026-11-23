@@ -16,9 +16,9 @@ import {
   type Ref,
 } from 'react'
 import type { SpaceProps } from '@soroush.design/styled-system'
-import { styled, type Theme, createShouldForwardProp, props, space, get } from '../../index'
+import { styled, type Theme, createShouldForwardProp, props, get, space } from '../../index'
 import { useDefaultProps, useTheme, type TabsVariants } from '../../theme'
-import { themeDefault } from '../../theme/utils/themeDefault'
+import { themeDefault } from '@soroush.design/core/theme'
 import { Icon } from '../../Icon'
 import { Tooltip } from '../../Tooltip'
 import { View } from '../../View'

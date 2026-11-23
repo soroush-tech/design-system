@@ -8,10 +8,10 @@ import {
   type SyntheticEvent,
 } from 'react'
 import type { SpaceProps } from '@soroush.design/styled-system'
-import { createShouldForwardProp, get, props, space, styled, type Theme } from '../../index'
+import { createShouldForwardProp, get, props, styled, type Theme, space } from '../../index'
 import { useDefaultProps } from '../../theme'
-import { themeDefault } from '../../theme/utils/themeDefault'
-import { getSurfaceRadius } from '../../utils/getSurfaceRadius'
+import { themeDefault } from '@soroush.design/core/theme'
+import { getSurfaceRadius } from '@soroush.design/core/utils'
 import { Collapse, type CollapseProps } from '../../Collapse'
 import { useControlled } from '../../utils/useControlled'
 import {

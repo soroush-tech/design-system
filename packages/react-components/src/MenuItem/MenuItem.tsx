@@ -14,7 +14,7 @@ import { Icon } from '../Icon'
 import { Tooltip } from '../Tooltip'
 import { styled, type Theme, createShouldForwardProp, get } from '../index'
 import { useDefaultProps, useTheme } from '../theme'
-import { themeDefault } from '../theme/utils/themeDefault'
+import { themeDefault } from '@soroush.design/core/theme'
 import {
   useMenuListContext,
   type MenuItemValue,

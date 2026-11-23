@@ -3,7 +3,7 @@ import { type Theme } from '../theme/themes'
 import { useTheme } from '../theme'
 import { FormContext } from '../Form/FormContext'
 import { FormControlContext } from './FormControlContext'
-import { themeDefault } from '../theme/utils/themeDefault'
+import { themeDefault } from '@soroush.design/core/theme'
 
 /** Explicit props a control passes in - always win over context when defined. */
 export interface FormControlOverrides {

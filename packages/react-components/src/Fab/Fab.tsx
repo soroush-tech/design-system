@@ -1,5 +1,5 @@
 import { forwardRef, type ForwardedRef, type ReactNode, type Ref } from 'react'
-import { get, space, styled } from '../index'
+import { get, styled, space } from '../index'
 import { useDefaultProps } from '../theme'
 import { Button, type ButtonProps } from '../Button'
 

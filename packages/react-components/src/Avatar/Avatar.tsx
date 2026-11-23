@@ -9,7 +9,7 @@ import {
 } from '../index'
 import { useTheme } from '../theme'
 import { Flex, type FlexProps } from '../Flex'
-import { themeDefault } from '../theme/utils/themeDefault'
+import { themeDefault } from '@soroush.design/core/theme'
 
 export type AvatarVariant = 'circular' | 'rounded' | 'square'
 export type AvatarSize = keyof Theme['avatar']

@@ -13,16 +13,15 @@ import {
   type Theme,
   createShouldForwardProp,
   props,
-  space,
-  layout,
-  typography,
   flexbox,
   border,
   position,
   system,
+  space,
+  layout,
+  typography,
 } from '../index'
-
-import type { TypographyVariant } from '../theme/themes'
+import type { TypographyVariant } from '@soroush.design/core/theme'
 
 export type { TypographyVariant }
 
@@ -101,6 +100,7 @@ const TypographyBase = styled('p', {
 
 export function Typography({ variant = 'body1', as, ...rest }: Readonly<TypographyProps>) {
   const theme = useTheme()
-  const element = as ?? theme.typography[variant].element
+  // The theme holds a tag name; `as` takes any element type.
+  const element = as ?? (theme.typography[variant].element as ElementType)
   return <TypographyBase as={element} variant={variant} {...rest} />
 }

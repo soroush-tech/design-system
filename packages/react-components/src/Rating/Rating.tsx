@@ -8,13 +8,13 @@ import {
   type SyntheticEvent,
 } from 'react'
 import type { SpaceProps } from '@soroush.design/styled-system'
-import { createShouldForwardProp, get, props, space, styled, type Theme } from '../index'
+import { createShouldForwardProp, get, props, styled, type Theme, space } from '../index'
 import { useDefaultProps } from '../theme'
 import { useFormControl } from '../FormControl'
 import { FormControlContext } from '../FormControl/FormControlContext'
 import { Icon } from '../Icon'
 import { useRating } from './hooks/useRating'
-import { roundToPrecision } from '../utils/precision'
+import { roundToPrecision } from '@soroush.design/core/utils'
 
 export interface RatingProps extends SpaceProps<Theme> {
   /** The rating - `null` for none. Controlled with `onChange`. */

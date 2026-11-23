@@ -1,6 +1,6 @@
 import { type ReactNode } from 'react'
 import { styled, type Theme, type CSSObject } from '../index'
-import { themeDefault } from '../theme/utils/themeDefault'
+import { themeDefault } from '@soroush.design/core/theme'
 import { useDefaultProps, useTheme } from '../theme'
 import { Paper, type PaperProps } from '../Paper'
 import { Typography, type TypographyProps } from '../Typography'

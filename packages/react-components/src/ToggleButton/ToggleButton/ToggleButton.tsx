@@ -3,8 +3,9 @@ import { ToggleButtonGroupContext, type ToggleButtonValue } from '../ToggleButto
 import { Button, type ButtonProps } from '@soroush.design/react-components/Button'
 import { ButtonGroupContext } from '@soroush.design/react-components/ButtonGroup'
 import { styled, type Theme, get } from '@soroush.design/react-components'
-import { useTheme, themeDefault } from '@soroush.design/react-components/theme'
+import { useTheme } from '@soroush.design/react-components/theme'
 import { alpha } from '@soroush.design/react-components/utils'
+import { themeDefault } from '@soroush.design/core/theme'
 
 export interface ToggleButtonProps extends Omit<
   ButtonProps,

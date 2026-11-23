@@ -1,4 +1,1 @@
-export * from './generateBoxShadow'
-export * from './clamp'
-export * from './luminance'
-export * from './alpha'
+export { generateBoxShadow, clamp, luminance, alpha } from '@soroush.design/core/utils'

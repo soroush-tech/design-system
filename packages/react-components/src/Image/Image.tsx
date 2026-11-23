@@ -9,12 +9,12 @@ import {
   styled,
   createShouldForwardProp,
   props,
-  layout,
-  space,
   background,
   position,
   system,
   type Theme,
+  layout,
+  space,
 } from '../index'
 
 type Phase = 'initial' | 'without-srcset' | 'fallback' | 'failed'

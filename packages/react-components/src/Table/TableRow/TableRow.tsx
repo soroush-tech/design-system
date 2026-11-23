@@ -11,7 +11,7 @@ import {
   border,
   system,
 } from '@soroush.design/react-components'
-import { themeDefault } from '@soroush.design/react-components/theme'
+import { themeDefault } from '@soroush.design/core/theme'
 
 /** Palette color driving the hover/selected shading - a `theme.palette` key. */
 export type TableRowColor = PaletteColor

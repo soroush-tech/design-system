@@ -10,6 +10,11 @@ import type { FormControlProps } from '@soroush.design/react-components/FormCont
 import type { AppBarSize } from '@soroush.design/react-components/AppBar'
 import {
   baseTheme,
+  type CSSObject,
+  space,
+  typography,
+} from '@soroush.design/react-components/theme'
+import {
   radii,
   sizes,
   borderWidths,
@@ -19,10 +24,7 @@ import {
   fonts,
   fontWeights,
   avatar,
-  space,
-  typography,
-  type CSSObject,
-} from '@soroush.design/react-components/theme'
+} from '@soroush.design/core/theme'
 
 // Value lists owned by the components' catalogs (`X/X.catalog.ts`), under their story names.
 export {

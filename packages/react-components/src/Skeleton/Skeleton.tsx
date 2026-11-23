@@ -6,9 +6,9 @@ import {
   keyframes,
   createShouldForwardProp,
   props,
-  space,
   system,
   variant as styledVariant,
+  space,
 } from '../index'
 
 export type SkeletonVariant = 'text' | 'circular' | 'rectangular'

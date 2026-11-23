@@ -12,7 +12,7 @@ import {
   get,
 } from '@soroush.design/react-components'
 import { alpha } from '@soroush.design/react-components/utils'
-import { themeDefault } from '@soroush.design/react-components/theme'
+import { themeDefault } from '@soroush.design/core/theme'
 
 export type PaginationItemColor = PaletteColor
 export type PaginationItemVariant = 'text' | 'outlined'

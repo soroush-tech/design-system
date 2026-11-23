@@ -468,10 +468,11 @@ jobs:
           manager: ${{ needs.prepare.outputs.manager }}
           command: ${{ needs.prepare.outputs.command }}
 
-      # The bench file imports this package's built dist so the comparison
-      # against the npm release's prebuilt dist is like-for-like.
+      # The bench file imports a build of this package so the comparison against the npm
+      # release's prebuilt dist is like-for-like. The bench build inlines the core, which the
+      # workspace holds as TypeScript source that plain Node cannot load.
       - name: Build styled-system
-        run: ${{ needs.prepare.outputs.runner }} --filter @soroush.design/styled-system build
+        run: ${{ needs.prepare.outputs.runner }} --filter @soroush.design/styled-system build:bench
 
       # Mint a token from the org's GitHub App so the results comment is posted
       # under the brand bot identity instead of github-actions[bot]. Skipped (and

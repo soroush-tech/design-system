@@ -4,7 +4,8 @@ import {
   type PaginationItemSize,
 } from '@soroush.design/react-components/Pagination'
 import { styled } from '@soroush.design/react-components'
-import { useTheme, themeDefault } from '@soroush.design/react-components/theme'
+import { useTheme } from '@soroush.design/react-components/theme'
+import { themeDefault } from '@soroush.design/core/theme'
 
 export type TablePaginationActionType = 'first' | 'previous' | 'next' | 'last'
 

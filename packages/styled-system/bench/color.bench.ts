@@ -1,9 +1,10 @@
-// Built dist of this package, both formats, imported directly by file path (a
-// deliberate exception to the no-relative-imports rule: we target the build
-// artifact, not src, so the comparison against the npm release's prebuilt dist
-// is like-for-like). Run `pnpm build` in this package first.
-import { color as colorCjs } from '../dist/color.cjs'
-import { color as colorMjs } from '../dist/color.mjs'
+// A build of this package, both formats, imported directly by file path (a deliberate exception
+// to the no-relative-imports rule: we target the build artifact, not src, so the comparison
+// against the npm release's prebuilt dist is like-for-like). Run `pnpm build:bench` in this
+// package first: it inlines `@soroush.design/core`, which the workspace holds as TypeScript
+// source that plain Node cannot load.
+import { color as colorCjs } from './dist/color.cjs'
+import { color as colorMjs } from './dist/color.mjs'
 import type { BenchConfig } from '@soroush.tech/bench'
 
 const props = {

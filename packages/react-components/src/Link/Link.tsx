@@ -2,8 +2,8 @@ import { type AnchorHTMLAttributes, type ComponentType, type ElementType } from 
 import { styled, type CSSObject, type Theme } from '../index'
 import { useTheme } from '../theme'
 import { Typography, type TypographyProps } from '../Typography'
-import { themeDefault } from '../theme/utils/themeDefault'
-import { getAnchorRel } from '../utils/getAnchorRel'
+import { themeDefault } from '@soroush.design/core/theme'
+import { getAnchorRel } from '@soroush.design/core/utils'
 
 export type LinkUnderline = 'always' | 'hover' | 'none'
 

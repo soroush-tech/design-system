@@ -8,10 +8,10 @@ import {
 import { TextAreaAutoResize } from './TextAreaAutoResize'
 import { useFormControl } from '../FormControl'
 import type { SpaceProps, LayoutProps } from '@soroush.design/styled-system'
-import { styled, type Theme, createShouldForwardProp, props, space, system, get } from '../index'
+import { styled, type Theme, createShouldForwardProp, props, system, get, space } from '../index'
 import { useTheme } from '../theme'
 import { inputVariantStyles } from '../utils/inputVariantStyles'
-import { themeDefault } from '../theme/utils/themeDefault'
+import { themeDefault } from '@soroush.design/core/theme'
 import { getFocusRing, getInputMinWidth } from '../utils/inputStyles'
 
 export type TextInputColor = keyof Theme['palette']

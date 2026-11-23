@@ -1,16 +1,8 @@
 import { useEffect, useRef, type ChangeEvent, type ReactNode } from 'react'
 import { useFormControl } from '../FormControl'
 import type { SpaceProps } from '@soroush.design/styled-system'
-import {
-  get,
-  styled,
-  type Theme,
-  type PaletteColor,
-  createShouldForwardProp,
-  props,
-  space,
-} from '../index'
-import { themeDefault } from '../theme/utils/themeDefault'
+import { get, styled, type Theme, createShouldForwardProp, props, space } from '../index'
+import { themeDefault, type PaletteColor } from '@soroush.design/core/theme'
 
 export type CheckboxColor = PaletteColor
 export type CheckboxSize = keyof Theme['sizes']

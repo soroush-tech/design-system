@@ -5,8 +5,9 @@
 [![license](https://img.shields.io/npm/l/@soroush.design/core.svg?cacheSeconds=86400)](./LICENSE)
 
 What every platform of the soroush.design family shares and that needs no framework. The React,
-React Native and Vue libraries build on it; an app seldom installs it directly. Today it holds the
-component catalog; the theme, the tokens and the behaviour logic that need no framework follow.
+React Native and Vue libraries build on it; an app seldom installs it directly. It holds the theme
+(the tokens, `baseTheme`, `createTheme`), the breakpoint and container-query helpers, the pure
+utilities, and the component catalog.
 
 ```sh
 npm i @soroush.design/core
@@ -14,6 +15,54 @@ npm i @soroush.design/core
 
 It has no dependencies. It imports no React, React Native, Vue, DOM API or styling engine, and a
 test fails when it does.
+
+## The theme
+
+One theme, read by every platform: the token scales (`palette`, `space`, `radii`, `typography`,
+`breakpoints`, `transitions`, ...), `baseTheme`, `createTheme`, the `Theme` types and the component
+defaults. It imports no framework: a platform library composes its own `Theme` on top of this one.
+
+```ts
+import { baseTheme, createTheme } from '@soroush.design/core/theme'
+
+const brand = createTheme(baseTheme, { palette: { primary: { main: '#0a7' } } })
+brand.palette.primary.main // '#0a7'
+brand.breakpoints.up('md') // '@media (width >= 840px)'
+```
+
+`createTheme` deep-merges a sparse override onto a base theme, keeps arrays and functions whole,
+never mutates its arguments, and returns the base's own type, so a platform's extended theme comes
+back as itself. `themeDefault(theme, key, fallback)` reads a component default the theme may
+override, and `spacing(units)` steps the 8px unit.
+
+Every scale is an open interface: declare it again to add a token, and the keys reach each
+platform's components.
+
+```ts
+import type { PaletteEntry } from '@soroush.design/core/theme'
+
+declare module '@soroush.design/core/theme' {
+  interface ThemePalette {
+    brand: PaletteEntry
+  }
+}
+```
+
+A platform's library re-exports these interfaces, so the same line may name the library instead
+(`@soroush.design/react/theme`) and reach the same interface.
+
+## Breakpoints
+
+`@soroush.design/core/breakpoints` holds the helpers behind `theme.breakpoints`:
+`createMediaHelpers` and `createContainerQueries` return `up`, `down`, `only`, `between` and `not`
+as range-syntax `@media` or `@container` rules, and `withBreakpointHelpers` attaches them to a
+scale. They are pure string functions; `@soroush.design/styled-system` re-exports them.
+
+## Utilities
+
+`@soroush.design/core/utils` holds pure helpers: `clamp`, `alpha`, `luminance`,
+`generateBoxShadow`, `getAnchorRel`, `getShapeRadius`, `getSurfaceRadius` and the step arithmetic
+of `precision`.
 
 ## The catalog
 

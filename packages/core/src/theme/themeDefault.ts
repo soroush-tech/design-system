@@ -1,4 +1,4 @@
-import type { Theme, ThemeDefaults } from '../themes'
+import type { Theme, ThemeDefaults } from './types'
 
 /**
  * Resolves a component's default token/variant key: the theme's optional

@@ -1,9 +1,5 @@
-import {
-  createContainerQueries,
-  createMediaHelpers,
-  type ContainerQueries,
-  type QueryHelpers,
-} from '@soroush.design/styled-system'
+import { createContainerQueries, createMediaHelpers } from './media'
+import type { ContainerQueries, QueryHelpers } from './media'
 
 /**
  * The query helpers a theme's breakpoint scale carries: `up` / `down` / `only` / `between` /

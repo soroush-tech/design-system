@@ -3,8 +3,8 @@ import type { ButtonVariant, ButtonColor, ButtonSize } from '../Button'
 import { alpha } from '../utils'
 import { ButtonGroupContext } from './ButtonGroupContext'
 import type { SpaceProps } from '@soroush.design/styled-system'
-import { styled, type Theme, createShouldForwardProp, props, space, get } from '../index'
-import { themeDefault } from '../theme/utils/themeDefault'
+import { styled, type Theme, createShouldForwardProp, props, get, space } from '../index'
+import { themeDefault } from '@soroush.design/core/theme'
 
 export type ButtonGroupOrientation = 'horizontal' | 'vertical'
 

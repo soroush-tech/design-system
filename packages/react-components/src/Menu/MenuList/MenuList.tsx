@@ -10,7 +10,7 @@ import {
 import type { LayoutProps, SpaceProps } from '@soroush.design/styled-system'
 import { styled, type Theme, createShouldForwardProp, props, space, layout } from '../../index'
 import { useDefaultProps } from '../../theme'
-import { themeDefault } from '../../theme/utils/themeDefault'
+import { themeDefault } from '@soroush.design/core/theme'
 import { MenuActivationContext } from '../MenuActivationContext'
 import {
   MenuListContext,

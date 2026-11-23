@@ -7,7 +7,7 @@ import {
 } from 'react'
 import { isRtl } from '../../utils/isRtl'
 import { useControlled } from '../../utils/useControlled'
-import { roundToPrecision } from '../../utils/precision'
+import { roundToPrecision } from '@soroush.design/core/utils'
 import { getHoverValue } from '../utils/precision'
 
 export interface UseRatingParams {

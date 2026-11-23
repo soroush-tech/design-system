@@ -1,5 +1,4 @@
-import { clamp } from '../../utils/clamp'
-import { roundToPrecision } from '../../utils/precision'
+import { clamp, roundToPrecision } from '@soroush.design/core/utils'
 
 export interface HoverValueParams {
   /** How far along the rating's width the pointer is, in pixels - from its start edge. */

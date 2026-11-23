@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
 import type { ReactNode } from 'react'
 import { EngineThemeProvider as DefaultThemeProvider } from './engine'
-import { baseTheme, type Theme, type ThemeDefaults } from './themes'
-import { createTheme, withHelpers } from './utils/createTheme'
+import { baseTheme, type Theme } from './themes'
+import { createTheme, withHelpers, type ThemeDefaults } from '@soroush.design/core/theme'
 
 interface ThemeProviderProps {
   children?: ReactNode

@@ -5,7 +5,7 @@ import {
   type Props,
   type StyleObject,
 } from '@soroush.design/styled-system/core'
-import { responsiveQueries, type Breakpoints } from '../core/media'
+import { responsiveQueries, type Breakpoints } from '@soroush.design/core/breakpoints'
 
 /** The layout grid at one breakpoint - the `content` part of a `theme.layout` entry. */
 export interface LayoutGridEntry {

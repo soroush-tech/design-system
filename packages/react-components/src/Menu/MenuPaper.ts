@@ -1,7 +1,7 @@
 import type { PaperElevation } from '../Paper'
 import { styled, type Theme, get, system } from '../index'
-import { themeDefault } from '../theme/utils/themeDefault'
-import { getSurfaceRadius } from '../utils/getSurfaceRadius'
+import { themeDefault } from '@soroush.design/core/theme'
+import { getSurfaceRadius } from '@soroush.design/core/utils'
 
 export interface MenuPaperProps {
   elevation: PaperElevation

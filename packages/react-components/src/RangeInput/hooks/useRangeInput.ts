@@ -7,7 +7,7 @@ import {
   type RefObject,
   type SyntheticEvent,
 } from 'react'
-import { clamp } from '../../utils/clamp'
+import { clamp } from '@soroush.design/core/utils'
 import { isRtl } from '../../utils/isRtl'
 import { useControlled } from '../../utils/useControlled'
 import {

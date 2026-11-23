@@ -1,10 +1,10 @@
 import type { KeyboardEvent, MouseEvent, ReactNode, SyntheticEvent } from 'react'
 import type { SpaceProps } from '@soroush.design/styled-system'
-import { createShouldForwardProp, get, props, space, styled, type Theme } from '../index'
+import { createShouldForwardProp, get, props, styled, type Theme, space } from '../index'
 import { useDefaultProps } from '../theme'
 import { Icon } from '../Icon'
-import { themeDefault } from '../theme/utils/themeDefault'
-import { getShapeRadius, type Shape } from '../utils/getShapeRadius'
+import { themeDefault } from '@soroush.design/core/theme'
+import { getShapeRadius, type Shape } from '@soroush.design/core/utils'
 import { alpha } from '../utils'
 
 export type ChipVariant = 'contained' | 'outlined' | 'text'
