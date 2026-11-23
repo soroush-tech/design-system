@@ -15,7 +15,7 @@ export default function Page() {
       <Greeting />
       <Counter />
       <Flex flexDirection="row" gap={1}>
-        <Button href="https://docs.soroush.tech">Components</Button>
+        <Button href="https://docs.soroush.design">Components</Button>
         <Button href="https://reactrouter.com" variant="outlined">
           React Router
         </Button>

@@ -1,5 +1,5 @@
 // Set up by @soroush.design/react init. Your themes: change any value, or add a theme.
-// Every token is listed at https://docs.soroush.tech/design-system/customization/theming/
+// Every token is listed at https://docs.soroush.design/design-system/customization/theming/
 import { baseTheme, createTheme } from '@soroush.design/react/theme'
 
 // To add tokens of your own, declare them here, then give them values in each theme:

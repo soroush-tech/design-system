@@ -1,6 +1,6 @@
 # My App
 
-An [Astro](https://astro.build) app on the [@soroush.tech design system](https://docs.soroush.tech):
+An [Astro](https://astro.build) app on the [@soroush.tech design system](https://docs.soroush.design):
 every page is rendered on the server, on each request, with its styles, and its parts are
 React islands that hydrate in the browser. Astro's client router moves between pages with no
 reload: it fetches the next page's HTML from the server and swaps it in.
@@ -31,4 +31,4 @@ reload: it fetches the next page's HTML from the server and swaps it in.
   runs `src/components/Home.test.tsx`, which checks the title and the counter.
 
 Fonts: the theme names Space Grotesk and JetBrains Mono, and does not load them. See
-https://docs.soroush.tech/design-system/getting-started/installation/#fonts
+https://docs.soroush.design/design-system/getting-started/installation/#fonts

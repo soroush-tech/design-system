@@ -9,15 +9,15 @@ Import every component from its own subpath.
 
 - **ScrollArea** - A scrolling area whose scrollbars are drawn **over** its content rather than beside it - so a rounded panel keeps its corner clean - and show only while the pointer is over the area or focus is inside it.
 - **View** - The base layout primitive.
-- **Flex** - Extends [`View`](https://docs.soroush.tech/design-system/components/view/).
-- **Grid** - Extends [`View`](https://docs.soroush.tech/design-system/components/view/).
+- **Flex** - Extends [`View`](https://docs.soroush.design/design-system/components/view/).
+- **Grid** - Extends [`View`](https://docs.soroush.design/design-system/components/view/).
 - **Paper** - An elevated surface primitive that extends `View`.
 - **Card** - A surface component with an optional title, caption, and variant-based visual treatment.
 - **Quote** - A `View` with a fixed 2px primary left border - used for terminal readouts and markdown blockquotes.
 - **AppBar** - Renders as `<header>`.
 - **Drawer** - A panel that slides in from a screen edge.
 - **Sidebar** - A collapsible vertical icon rail.
-- **SidebarItem** - One entry of a [`Sidebar`](https://docs.soroush.tech/design-system/components/sidebar/): an icon **pinned to the anchored edge** (it holds its position while the rail opens and closes) plus content shown while the rail is open - the `label` by default, or custom `children` (badges, counts, ...).
+- **SidebarItem** - One entry of a [`Sidebar`](https://docs.soroush.design/design-system/components/sidebar/): an icon **pinned to the anchored edge** (it holds its position while the rail opens and closes) plus content shown while the rail is open - the `label` by default, or custom `children` (badges, counts, ...).
 
 ## Content & data display
 
@@ -59,27 +59,27 @@ Import every component from its own subpath.
 - **RangeInput** - A slider: one value on a range, or two or more thumbs for a range of values.
 - **TransferList** - Two lists, and the buttons that move the checked items from one to the other.
 - **Switch** - A sliding toggle control.
-- **NativeSelect** - Not the recommended select: use [`Select`](https://docs.soroush.tech/design-system/components/select/) - and `<Select native>` when you want the platform's own picker, which renders this component for you with the same `MenuItem` children as every other select.
+- **NativeSelect** - Not the recommended select: use [`Select`](https://docs.soroush.design/design-system/components/select/) - and `<Select native>` when you want the platform's own picker, which renders this component for you with the same `MenuItem` children as every other select.
 - **Select** - The select to use for every dropdown choice - always prefer it over `NativeSelect`.
 - **MenuItem** - A row of a list, in one of two roles:
 - **Form** - Renders a `<form>` and provides form-wide field defaults through `FormContext`.
 - **FormControl** - Groups a label, control, and helper text into one accessible field and shares their state through React context.
-- **FormLabel** - A field label built on [`Typography`](https://docs.soroush.tech/design-system/components/typography/), rendered as a `<label>`.
-- **FormHelperText** - Helper or error text for a field, built on [`Typography`](https://docs.soroush.tech/design-system/components/typography/) and rendered as a `<p>`.
+- **FormLabel** - A field label built on [`Typography`](https://docs.soroush.design/design-system/components/typography/), rendered as a `<label>`.
+- **FormHelperText** - Helper or error text for a field, built on [`Typography`](https://docs.soroush.design/design-system/components/typography/) and rendered as a `<p>`.
 - **Pagination** - Page-number navigation for paging a list of arbitrary items (e.g. a blog index), with ellipsis ranges and optional first/last/prev/next controls.
 - **PaginationItem** - The individual item rendered inside `Pagination`.
 
 ## Navigation & menus
 
 - **Breadcrumbs** - The trail of links from a site's root to the current page, so a page shows where it sits and every ancestor is one click away.
-- **Menu** - A trigger and the [`MenuList`](https://docs.soroush.tech/design-system/api/menu-list/) of commands it opens.
-- **ContextMenu** - A [`MenuList`](https://docs.soroush.tech/design-system/api/menu-list/) opened by a right-click over its target, at the pointer - or, from the keyboard, by the context-menu key or Shift+F10 at the focused element.
-- **MenuDivider** - A line between groups of rows in a [`MenuList`](https://docs.soroush.tech/design-system/api/menu-list/), rendered as `<li role="separator">`.
+- **Menu** - A trigger and the [`MenuList`](https://docs.soroush.design/design-system/api/menu-list/) of commands it opens.
+- **ContextMenu** - A [`MenuList`](https://docs.soroush.design/design-system/api/menu-list/) opened by a right-click over its target, at the pointer - or, from the keyboard, by the context-menu key or Shift+F10 at the focused element.
+- **MenuDivider** - A line between groups of rows in a [`MenuList`](https://docs.soroush.design/design-system/api/menu-list/), rendered as `<li role="separator">`.
 - **MenuItems** - Menu rows from data - for menus that come from a list of commands.
 - **MenuList** - A list of commands, rendered as a semantic `<ul role="menu">`.
-- **NavTree** - A tree of links to the pages of a site: its [`NavGroup`](https://docs.soroush.tech/design-system/api/nav-group/)s, each with its [`NavLink`](https://docs.soroush.tech/design-system/api/nav-link/)s, and any link of its own.
-- **NavGroup** - A group of a [`NavTree`](https://docs.soroush.tech/design-system/components/nav-tree/): a name over a list of [`NavLink`](https://docs.soroush.tech/design-system/api/nav-link/)s.
-- **NavLink** - A link to a page of the site, a row of a [`NavTree`](https://docs.soroush.tech/design-system/components/nav-tree/): its name, an optional note beside it, and a fill when it is the current page.
+- **NavTree** - A tree of links to the pages of a site: its [`NavGroup`](https://docs.soroush.design/design-system/api/nav-group/)s, each with its [`NavLink`](https://docs.soroush.design/design-system/api/nav-link/)s, and any link of its own.
+- **NavGroup** - A group of a [`NavTree`](https://docs.soroush.design/design-system/components/nav-tree/): a name over a list of [`NavLink`](https://docs.soroush.design/design-system/api/nav-link/)s.
+- **NavLink** - A link to a page of the site, a row of a [`NavTree`](https://docs.soroush.design/design-system/components/nav-tree/): its name, an optional note beside it, and a fill when it is the current page.
 - **Tabs** - A row of tabs.
 - **Tab** - One tab of a `Tabs` row: a label, an icon on any side of it, and - with a `closeLabel` - a close button of its own.
 - **TabContext** - Holds the selected value for a `TabList` and the `TabPanel`s beside it, wherever they sit - the tabs in a toolbar, the panels further down the page.

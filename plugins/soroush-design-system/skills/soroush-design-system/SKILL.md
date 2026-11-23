@@ -1,6 +1,6 @@
 ---
 name: soroush-design-system
-description: Build UI with @soroush.design/react - the token-driven React component library documented at docs.soroush.tech. Load when starting or styling a React/Next.js app that should match that house style, when wiring ThemeProvider or the brand light+dark themes, when adding pages, cards, tables, forms, nav chrome, or status chips, or when reviewing UI code for token compliance (no raw hex, no ad-hoc spacing).
+description: Build UI with @soroush.design/react - the token-driven React component library documented at docs.soroush.design. Load when starting or styling a React/Next.js app that should match that house style, when wiring ThemeProvider or the brand light+dark themes, when adding pages, cards, tables, forms, nav chrome, or status chips, or when reviewing UI code for token compliance (no raw hex, no ad-hoc spacing).
 ---
 
 # @soroush.tech design system
@@ -30,7 +30,7 @@ If the `soroush` MCP server is connected (its tools are listed as `list_componen
 If it is not connected, read the `references/` files next to this skill - they hold the
 same content - and tell the user the server can be added to any MCP client at
 `https://mcp.soroush.design/mcp`. Every component's full API is also on the docs site,
-`https://docs.soroush.tech`.
+`https://docs.soroush.design`.
 
 ## Setting up a new app
 

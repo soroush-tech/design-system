@@ -15,7 +15,7 @@ function Home({ children }: { readonly children?: ReactNode }) {
       </Typography>
       {children}
       <Flex flexDirection="row" gap={1}>
-        <Button href="https://docs.soroush.tech">Components</Button>
+        <Button href="https://docs.soroush.design">Components</Button>
         <Button href="https://astro.build" variant="outlined">
           Astro
         </Button>

@@ -1,6 +1,6 @@
 # __TITLE__
 
-An [Astro](https://astro.build) app on the [@soroush.tech design system](https://docs.soroush.tech):
+An [Astro](https://astro.build) app on the [@soroush.tech design system](https://docs.soroush.design):
 <!-- @if ssr -->
 every page is rendered on the server, on each request, with its styles, and its parts are
 React islands that hydrate in the browser. Astro's client router moves between pages with no
@@ -87,4 +87,4 @@ React parts render at build time only.
 <!-- @endif -->
 
 Fonts: the theme names Space Grotesk and JetBrains Mono, and does not load them. See
-https://docs.soroush.tech/design-system/getting-started/installation/#fonts
+https://docs.soroush.design/design-system/getting-started/installation/#fonts

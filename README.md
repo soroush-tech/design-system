@@ -45,7 +45,7 @@ claude plugin install soroush-design-system@soroush-tech
 ```
 
 `npx -y @soroush.design/mcp` runs the same server locally over stdio, and
-[docs.soroush.tech/llms.txt](https://docs.soroush.tech/llms.txt) serves a
+[docs.soroush.design/llms.txt](https://docs.soroush.design/llms.txt) serves a
 machine-readable index. See [`packages/mcp/mcp.md`](packages/mcp/mcp.md) for how it is
 built and kept in sync.
 

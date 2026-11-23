@@ -1,6 +1,6 @@
 # Command line
 
-`@soroush.design/cli` is the command line of the [`@soroush.tech`](https://docs.soroush.tech)
+`@soroush.design/cli` is the command line of the [`@soroush.tech`](https://docs.soroush.design)
 design system. It has two commands: `create` starts a new app on the design system - a working
 boilerplate with the theme, the providers and a few pages in place - and `init` sets the design
 system up in an existing React app.
@@ -206,7 +206,7 @@ With sample data pages, it also shows how data gets onto a page, with no data li
   build. A host serves `dist/` once it answers every path with `index.html`.
 
 The switch does not remember the scheme across a reload, and the theme's fonts are not loaded: see
-the [fonts guide](https://docs.soroush.tech/design-system/getting-started/installation/#fonts).
+the [fonts guide](https://docs.soroush.design/design-system/getting-started/installation/#fonts).
 
 ## Set up an existing app: `init`
 
@@ -252,4 +252,4 @@ It is careful with your app:
 - It reaches no network but the install.
 
 Next.js, Vike and React Router apps are refused for now, with a pointer to the
-[setup guide](https://docs.soroush.tech/design-system/getting-started/installation/).
+[setup guide](https://docs.soroush.design/design-system/getting-started/installation/).

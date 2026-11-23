@@ -20,7 +20,7 @@ describe('component pipeline', () => {
       expect(component.summary, `${component.name} has no summary`).not.toBe('')
       const subpath = component.family ?? component.name
       expect(component.importPath).toContain(`from '${component.packageName}/${subpath}'`)
-      expect(component.url.startsWith('https://docs.soroush.tech/')).toBe(true)
+      expect(component.url.startsWith('https://docs.soroush.design/')).toBe(true)
     }
   })
 
@@ -52,7 +52,7 @@ describe('component pipeline', () => {
     expect(menuList.importPath).toBe("import { MenuList } from '@soroush.design/react/Menu'")
     expect(menuList.family).toBe('Menu')
     expect(menuList.category).toBe(components.find((c) => c.name === 'Menu')!.category)
-    expect(menuList.url).toBe('https://docs.soroush.tech/design-system/api/menu-list/')
+    expect(menuList.url).toBe('https://docs.soroush.design/design-system/api/menu-list/')
     expect(menuList.api).toContain('|')
   })
 })

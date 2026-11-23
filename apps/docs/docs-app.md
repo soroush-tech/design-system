@@ -1,6 +1,6 @@
 # Docs app conventions (apps/docs)
 
-The Vike SSG app served at docs.soroush.tech. Architecture mirrors the soroush.tech web
+The Vike SSG app served at docs.soroush.design. Architecture mirrors the soroush.tech web
 app's renderer (critical CSS from the styling engine's cache, managed head tags) with the data layer removed:
 every input is an in-repo glob over `packages/` and `content/` - no remote fetches, no MSW.
 
@@ -38,18 +38,19 @@ pages, and the drift tests; `sectionFor(pathname)` picks the active section.
 
 ## Versioning
 
-**docs.soroush.tech is frozen.** It documents the former package and is served by GitHub Pages
-from the `docs-dist` branch, which no workflow writes to any more: no deploy, no new version, no
-URL change. The `soroush.design` family is a new project whose docs will be a separate site on
-Cloudflare Pages; its deploy comes with #147. Until then CI only builds this app (the `docs` job
-of `ci.yml`) and deploys nothing.
+The site is docs.soroush.design, the documentation of the `soroush.design` family on Cloudflare Pages
+(the deploy is [#147](https://github.com/soroush-tech/design-system/issues/147); until it lands CI
+only builds this app, in the `docs` job of `ci.yml`). The former site, docs.soroush.tech, documents
+the former package and is frozen: nothing here refers to it.
 
-`DOCS_BASE` (vite base) + `DOCS_SECTION` are the build hooks that made a section snapshot
-(`DOCS_SECTION=<pkg> DOCS_BASE=/<pkg>/<version>/` prerenders that section alone, noindex).
-`public/CNAME` and `public/.nojekyll` bind the old site to GitHub Pages and ride along in every
-build; they mean nothing to the new site. The `VersionMenu`, `sections.json`,
-`scripts/docs-release-tag.mjs` and `scripts/canonicalize-docs-dist.mjs` (with its tests) served
-that deploy and are used by no workflow now; they go or change with #148.
+`DOCS_BASE` (vite base) + `DOCS_SECTION` are the build hooks of a section snapshot
+(`DOCS_SECTION=<pkg> DOCS_BASE=/<pkg>/<version>/` prerenders that section alone, noindex). The
+`VersionMenu` reads `/versions.json` at the domain root (`{ "<section>": ["<version>", ...] }`,
+newest first); with none, or an empty list, it shows the live version alone.
+
+What the deploy (#147) has to provide, as the former one did: the snapshot of each release, built
+from the section's release tag (`<npm name>@<version>`, found per section from `sections.json`'s
+`npm`), and the `versions.json` manifest it writes. Neither is in this repo any more.
 
 ## Rules
 

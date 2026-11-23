@@ -1,7 +1,7 @@
 # __TITLE__
 
 A single-page app on [React Router](https://reactrouter.com) and the
-[@soroush.tech design system](https://docs.soroush.tech): the browser renders each page, and moves
+[@soroush.tech design system](https://docs.soroush.design): the browser renders each page, and moves
 between them with no reload.
 
 - `npm run dev` starts it, `npm run build` builds it, and `npm run preview` serves the build.
@@ -64,4 +64,4 @@ between them with no reload.
 <!-- @endif -->
 
 Fonts: the theme names Space Grotesk and JetBrains Mono, and does not load them. See
-https://docs.soroush.tech/design-system/getting-started/installation/#fonts
+https://docs.soroush.design/design-system/getting-started/installation/#fonts

@@ -27,7 +27,7 @@ const LANDING = [
   'Or run it locally over stdio:',
   '  npx -y @soroush.design/mcp',
   '',
-  `Docs: https://docs.soroush.tech`,
+  `Docs: https://docs.soroush.design`,
   '',
 ].join('\n')
 

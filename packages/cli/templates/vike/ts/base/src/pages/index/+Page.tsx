@@ -23,7 +23,7 @@ export default function Page() {
       <Counter />
       {/* @endif */}
       <Flex flexDirection="row" gap={1}>
-        <Button href="https://docs.soroush.tech">Components</Button>
+        <Button href="https://docs.soroush.design">Components</Button>
         <Button href="https://vike.dev" variant="outlined">
           Vike
         </Button>

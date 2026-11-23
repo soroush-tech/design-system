@@ -66,29 +66,18 @@ describe('VersionMenu', () => {
     )
   })
 
-  it('names the newest version of the current package as the latest from a snapshot of it', async () => {
-    stubManifest({ 'design-system': ['2.2.0', '0.2.0', '0.1.0'] })
+  it('keeps the trigger in the case it is written, not capitals', () => {
+    stubManifest({})
+    renderWithTheme(<VersionMenu pkg="design-system" pathname="/design-system/" />)
+    expect(trigger()).toHaveStyle({ textTransform: 'none' })
+  })
+
+  it('names the newest listed version as the latest from a snapshot of it', async () => {
+    stubManifest({ 'design-system': ['0.2.0', '0.1.0'] })
     const user = userEvent.setup()
     renderWithTheme(<VersionMenu pkg="design-system" pathname="/design-system/0.1.0/" />)
     await user.click(trigger())
     expect(await screen.findByRole('menuitemradio', { name: 'Latest (v0.2.0)' })).toBeVisible()
-  })
-
-  it('names the current package, not the highest number, from a snapshot of the former name', async () => {
-    stubManifest({ 'design-system': ['2.2.0', '2.1.2', '0.1.0'] })
-    const user = userEvent.setup()
-    renderWithTheme(<VersionMenu pkg="design-system" pathname="/design-system/2.2.0/" />)
-    expect(trigger()).toHaveTextContent('v2.2.0')
-    await user.click(trigger())
-    expect(await screen.findByRole('menuitemradio', { name: 'Latest (v0.1.0)' })).toBeVisible()
-  })
-
-  it('says just Latest from a snapshot of the former name when the current package has none', async () => {
-    stubManifest({ 'design-system': ['2.2.0', '2.1.2'] })
-    const user = userEvent.setup()
-    renderWithTheme(<VersionMenu pkg="design-system" pathname="/design-system/2.2.0/" />)
-    await user.click(trigger())
-    expect(await screen.findByRole('menuitemradio', { name: 'Latest' })).toBeVisible()
   })
 
   it('says just Latest from a snapshot until a version is known', async () => {
@@ -118,27 +107,6 @@ describe('VersionMenu', () => {
     expect(rows[1]).toHaveTextContent('v0.1.0')
     expect(rows[1]).toHaveAttribute('aria-checked', 'false')
     expect(rows[2]).toHaveTextContent('v0.0.9')
-  })
-
-  it('lists the versions of the former name apart, after those of the current package', async () => {
-    stubManifest({ 'design-system': ['2.2.0', '1.3.3', '0.2.0', '0.1.0'] })
-    const assign = vi.fn()
-    vi.stubGlobal('location', { ...window.location, assign })
-    const user = userEvent.setup()
-    renderWithTheme(<VersionMenu pkg="design-system" pathname="/design-system/" />)
-    await user.click(trigger())
-    const menu = await screen.findByRole('menu', { name: 'Documentation version' })
-    await waitFor(() => expect(within(menu).getAllByRole('menuitemradio')).toHaveLength(3))
-    const rows = within(menu).getAllByRole('menuitemradio')
-    expect(rows[0]).toHaveTextContent(`Latest (v${live})`)
-    expect(rows[1]).toHaveTextContent('v0.2.0')
-    expect(rows[2]).toHaveTextContent('v0.1.0')
-    const group = within(menu).getByRole('menuitem', {
-      name: 'Published as @soroush.tech/design-system',
-    })
-    await user.click(group)
-    await user.click(await screen.findByRole('menuitemradio', { name: 'v2.2.0' }))
-    expect(assign).toHaveBeenCalledWith('/design-system/2.2.0/')
   })
 
   it('marks the version of a snapshot as the chosen one', async () => {

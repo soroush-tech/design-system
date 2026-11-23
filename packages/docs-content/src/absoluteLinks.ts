@@ -1,7 +1,7 @@
 import { allDocComponents, componentLinkPath } from './registry'
 
 /** Where the published docs live; component pages hang off this. */
-export const DOCS_URL = 'https://docs.soroush.tech'
+export const DOCS_URL = 'https://docs.soroush.design'
 
 const DOCS_TARGETS: Record<string, string> = {
   'theming.md': '/design-system/customization/theming/',

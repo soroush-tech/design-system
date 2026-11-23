@@ -31,23 +31,4 @@ describe('sections', () => {
       expect(manifestOf(dir).name, `${id}: packages/${dir}/package.json`).toBe(npm)
     }
   })
-
-  it('tags a release as <npm name>@<version>, and keeps former prefixes apart', () => {
-    for (const { id, npm, tagPrefix, formerTagPrefixes } of Object.values(sections)) {
-      expect(tagPrefix, id).toBe(`${npm}@`)
-      for (const former of formerTagPrefixes) {
-        expect(former, id).toMatch(/^@[\w.-]+\/[\w.-]+@$/)
-        expect(former, id).not.toBe(tagPrefix)
-      }
-    }
-  })
-
-  it('lists the versions of a former name under a prefix of its own, each a stable version', () => {
-    for (const { id, formerTagPrefixes, formerVersions } of Object.values(sections)) {
-      expect(Object.keys(formerVersions), id).toEqual(formerTagPrefixes)
-      for (const versions of Object.values(formerVersions)) {
-        for (const version of versions) expect(version, id).toMatch(/^\d+\.\d+\.\d+$/)
-      }
-    }
-  })
 })

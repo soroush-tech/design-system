@@ -25,7 +25,7 @@ import {
 } from '@soroush.tech/docs-content'
 import { loadPackageFile, loadReadme } from '@soroush.tech/docs-content/node'
 
-const SITE_URL = process.env.VITE_SITE_URL ?? 'https://docs.soroush.tech'
+const SITE_URL = process.env.VITE_SITE_URL ?? 'https://docs.soroush.design'
 
 const componentUrl = (item: ComponentNavItem): string =>
   `${SITE_URL}/${item.pkg}${componentPagePath(item)}`

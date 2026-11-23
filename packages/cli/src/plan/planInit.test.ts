@@ -117,7 +117,7 @@ describe('planInit', () => {
       },
     ])
     expect(plan.manual).toEqual([
-      'Set up the theme by hand: https://docs.soroush.tech/design-system/getting-started/installation/',
+      'Set up the theme by hand: https://docs.soroush.design/design-system/getting-started/installation/',
     ])
     // The package is still installed.
     expect(plan.install).toBeDefined()

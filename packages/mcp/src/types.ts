@@ -5,7 +5,7 @@
 export interface ComponentRecord {
   /** PascalCase component name, as exported. */
   name: string
-  /** URL segment on docs.soroush.tech. */
+  /** URL segment on docs.soroush.design. */
   slug: string
   /** Workspace package the component ships from. */
   pkg: string

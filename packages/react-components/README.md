@@ -50,7 +50,7 @@ claude plugin marketplace add soroush-tech/design-system
 claude plugin install soroush-design-system@soroush-tech
 ```
 
-Any other tool can read [docs.soroush.tech/llms.txt](https://docs.soroush.tech/llms.txt).
+Any other tool can read [docs.soroush.design/llms.txt](https://docs.soroush.design/llms.txt).
 See [`@soroush.design/mcp`](../mcp) for the full tool list.
 
 ---
