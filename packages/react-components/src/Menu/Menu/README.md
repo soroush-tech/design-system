@@ -7,9 +7,9 @@ trigger, so a panel that scrolls or clips its content can't cut it off - but it 
 menu's own box in the DOM, so focus moving inside it is still focus inside the menu.
 
 ```tsx
-import { Menu, MenuDivider } from '@soroush.design/react-components/Menu'
-import { MenuItem } from '@soroush.design/react-components/MenuItem'
-import { Button } from '@soroush.design/react-components/Button'
+import { Menu, MenuDivider } from '@soroush.design/react/Menu'
+import { MenuItem } from '@soroush.design/react/MenuItem'
+import { Button } from '@soroush.design/react/Button'
 
 ;<Menu trigger={<Button variant="text">main</Button>} onSelect={run}>
   <MenuItem value="new">New branch...</MenuItem>

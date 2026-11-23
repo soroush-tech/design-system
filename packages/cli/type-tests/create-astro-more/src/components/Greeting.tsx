@@ -1,5 +1,5 @@
 import useSWR from 'swr'
-import { Typography } from '@soroush.design/react-components/Typography'
+import { Typography } from '@soroush.design/react/Typography'
 import { fetchGreeting } from '../data/api'
 import { withIsland } from '../theme/Island'
 

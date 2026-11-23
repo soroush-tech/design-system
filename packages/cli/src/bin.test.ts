@@ -23,7 +23,6 @@ describe('bin', () => {
       expect.objectContaining({ cwd: process.cwd() }),
       {
         name: '@soroush.design/react-components',
-        version: designSystem.version,
         peerDependencies: designSystem.peerDependencies,
       }
     )

@@ -1,10 +1,10 @@
 import type { ReactNode } from 'react'
-import { AppBar } from '@soroush.design/react-components/AppBar'
-import { Flex } from '@soroush.design/react-components/Flex'
-import { Link } from '@soroush.design/react-components/Link'
-import { useTheme } from '@soroush.design/react-components/theme'
-import { Typography } from '@soroush.design/react-components/Typography'
-import { alpha } from '@soroush.design/react-components/utils'
+import { AppBar } from '@soroush.design/react/AppBar'
+import { Flex } from '@soroush.design/react/Flex'
+import { Link } from '@soroush.design/react/Link'
+import { useTheme } from '@soroush.design/react/theme'
+import { Typography } from '@soroush.design/react/Typography'
+import { alpha } from '@soroush.design/react/utils'
 
 /**
  * The app bar on every page: the app's title, its links, and `children` at its end. It sticks to

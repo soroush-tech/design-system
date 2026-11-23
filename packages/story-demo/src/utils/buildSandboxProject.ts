@@ -12,12 +12,14 @@ export interface SandboxOptions {
   versions: Record<string, string>
   /** The react / react-dom pin for the sandbox package.json. */
   reactVersion: string
+  /** The package the entry takes the theme from: the one the demo's own imports name. */
+  packageName?: string
 }
 
 const INDEX_HTML = '<div id="root"></div>'
 
-const INDEX_TSX = `import { createRoot } from 'react-dom/client'
-import { ThemeProvider, baseTheme, createTheme } from '@soroush.design/react-components/theme'
+const createIndexSource = (packageName: string) => `import { createRoot } from 'react-dom/client'
+import { ThemeProvider, baseTheme, createTheme } from '${packageName}/theme'
 import Demo from './Demo'
 
 const theme = createTheme(baseTheme, {})
@@ -67,9 +69,15 @@ export const buildSandboxProject = (
   source: string,
   options: SandboxOptions
 ): SandboxFiles => {
-  const { language, versions, reactVersion } = options
+  const {
+    language,
+    versions,
+    reactVersion,
+    packageName = '@soroush.design/react-components',
+  } = options
   const extension = language === 'ts' ? 'tsx' : 'jsx'
-  const indexSource = language === 'ts' ? INDEX_TSX : tsToJs(INDEX_TSX)
+  const indexTsx = createIndexSource(packageName)
+  const indexSource = language === 'ts' ? indexTsx : tsToJs(indexTsx)
   const typescriptFiles: SandboxFiles =
     language === 'ts' ? { 'tsconfig.json': { content: TSCONFIG } } : {}
   const typescriptDevDependencies =

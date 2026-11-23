@@ -1,4 +1,5 @@
 import { kebabCase } from './kebabCase'
+import { sections } from './sections'
 
 export type DocsPackage = 'design-system' | 'markdown' | 'styled-system'
 
@@ -202,6 +203,14 @@ export const componentLinkPath = (item: ComponentNavItem, section = ''): string 
 
 /** The subpath a component is imported from - a member's is its family's. */
 export const importSubpathOf = (item: ComponentNavItem): string => item.family ?? item.name
+
+/**
+ * The package an app imports a component from: the React platform umbrella for the component
+ * library, the package itself for the others. The library's own name stays in `sections`, which
+ * says what a section documents.
+ */
+export const importPackageOf = (item: ComponentNavItem): string =>
+  item.pkg === 'design-system' ? '@soroush.design/react' : sections[item.pkg].npm
 
 /** The markdown package's component library - flat, no categories. */
 export const markdownComponents: ComponentNavItem[] = [

@@ -32,6 +32,9 @@ importers:
       '@mdx-js/react':
         specifier: ^3.1.1
         version: 3.1.1(@types/react@19.3.0)(react@19.3.1)
+      '@soroush.design/react':
+        specifier: workspace:*
+        version: link:../../packages/react
       '@soroush.design/react-components':
         specifier: workspace:*
         version: link:../../packages/react-components

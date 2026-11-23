@@ -1,6 +1,6 @@
 ---
 name: wcag
-description: WCAG 2.2 AA accessibility rules for apps built with @soroush.design/react-components. Load when fixing a11y violations, checking color contrast, adding ARIA attributes, labeling form controls (Checkbox, Switch, TextInput, icon-only buttons), labeling nav landmarks, or writing accessibility tests and stories.
+description: WCAG 2.2 AA accessibility rules for apps built with @soroush.design/react. Load when fixing a11y violations, checking color contrast, adding ARIA attributes, labeling form controls (Checkbox, Switch, TextInput, icon-only buttons), labeling nav landmarks, or writing accessibility tests and stories.
 ---
 
 # WCAG accessibility

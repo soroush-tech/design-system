@@ -10,7 +10,7 @@ import { createTestIo } from './testApp'
 vi.mock('./init', () => ({ runInit: vi.fn(async () => 0) }))
 vi.mock('./create/create', () => ({ runCreate: vi.fn(async () => 0) }))
 
-const DESIGN_SYSTEM = { name: '@soroush.design/react-components', version: '0.1.0' }
+const DESIGN_SYSTEM = { name: '@soroush.design/react-components' }
 
 async function runMain(...argv: string[]) {
   const { io, getOutput } = createTestIo('.')
@@ -68,14 +68,12 @@ describe('main', () => {
         isDryRun: true,
         isGit: false,
       },
-      io,
-      DESIGN_SYSTEM
+      io
     )
     await runMain('create', '--ts')
     expect(runCreate).toHaveBeenLastCalledWith(
       expect.objectContaining({ name: undefined, isTypeScript: true, isGit: true }),
-      expect.anything(),
-      DESIGN_SYSTEM
+      expect.anything()
     )
     await runMain('create')
     expect(runCreate).toHaveBeenLastCalledWith(
@@ -84,8 +82,7 @@ describe('main', () => {
         framework: undefined,
         hasSampleData: undefined,
       }),
-      expect.anything(),
-      DESIGN_SYSTEM
+      expect.anything()
     )
   })
 
@@ -143,8 +140,7 @@ describe('main', () => {
     await runMain('create', '--with', '')
     expect(runCreate).toHaveBeenLastCalledWith(
       expect.objectContaining({ libraries: [] }),
-      expect.anything(),
-      DESIGN_SYSTEM
+      expect.anything()
     )
     expect(await runMain('create', '--with', 'msw,redux')).toMatchObject({
       code: 1,
@@ -157,8 +153,7 @@ describe('main', () => {
     await runMain('create', '--layout', 'standalone')
     expect(runCreate).toHaveBeenLastCalledWith(
       expect.objectContaining({ layout: 'standalone' }),
-      expect.anything(),
-      DESIGN_SYSTEM
+      expect.anything()
     )
     expect(await runMain('create', '--layout', 'monorepo')).toMatchObject({
       code: 1,

@@ -7,8 +7,8 @@ scroll lock, and Escape / click-away close - then adds anchor positioning
 
 ```tsx
 import { useState } from 'react'
-import { Popover } from '@soroush.design/react-components/Popover'
-import { Button } from '@soroush.design/react-components/Button'
+import { Popover } from '@soroush.design/react/Popover'
+import { Button } from '@soroush.design/react/Button'
 
 function Example() {
   const [anchor, setAnchor] = useState<HTMLElement | null>(null)

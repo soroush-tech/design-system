@@ -9,7 +9,7 @@ dropdown affordance icon, and integrates with `Form` / `FormControl` context the
 default.
 
 ```tsx
-import { NativeSelect } from '@soroush.design/react-components/NativeSelect'
+import { NativeSelect } from '@soroush.design/react/NativeSelect'
 
 ;<NativeSelect
   variant="outlined"

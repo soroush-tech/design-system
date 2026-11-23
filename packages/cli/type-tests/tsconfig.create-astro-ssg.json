@@ -9,6 +9,8 @@
     // What astro sync writes into an app, as astro check runs: import.meta.env and the like.
     "types": ["astro/client"],
     "paths": {
+      "@soroush.design/react": ["../../react/dist/index.d.mts"],
+      "@soroush.design/react/*": ["../../react/dist/*.d.mts"],
       "@soroush.design/react-components": ["../../react-components/dist/index.d.mts"],
       "@soroush.design/react-components/*": ["../../react-components/dist/*.d.mts"]
     }

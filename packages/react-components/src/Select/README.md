@@ -7,8 +7,8 @@ selection, and integrates with `Form` / `FormControl` context exactly like `Nati
 `TextInput`.
 
 ```tsx
-import { Select } from '@soroush.design/react-components/Select'
-import { MenuItem } from '@soroush.design/react-components/MenuItem'
+import { Select } from '@soroush.design/react/Select'
+import { MenuItem } from '@soroush.design/react/MenuItem'
 
 ;<Select variant="outlined" placeholder="Pick a platform" onChange={(value) => console.log(value)}>
   <MenuItem value="web">Web</MenuItem>

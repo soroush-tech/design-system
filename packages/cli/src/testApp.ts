@@ -1,6 +1,6 @@
 // Test helpers for the command line: a throwaway app folder, and an Io that records what init
 // prints and runs instead of touching a terminal or starting a process.
-import { mkdirSync, mkdtempSync, realpathSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, readFileSync, realpathSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import type { Io, RunOptions, RunResult } from './io'
@@ -90,3 +90,11 @@ export function createTestIo(
   }
   return { io, commands, getOutput: () => output.join('') }
 }
+
+/**
+ * The version of `@soroush.design/react` in the workspace, read from its package.json: what init
+ * and create install, as the tests expect it without asking the constant they check.
+ */
+export const UMBRELLA_VERSION: string = JSON.parse(
+  readFileSync(join(import.meta.dirname, '../../react/package.json'), 'utf8')
+).version

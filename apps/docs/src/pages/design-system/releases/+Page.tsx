@@ -1,4 +1,4 @@
-import { Typography } from '@soroush.design/react-components/Typography'
+import { Typography } from '@soroush.design/react/Typography'
 import { DocsNav } from 'src/common/DocsNav/DocsNav'
 import { Layout } from 'src/common/Layout'
 import { ReleaseNotes } from 'src/common/ReleaseNotes/ReleaseNotes'

@@ -5,5 +5,5 @@ export default {
   prerender: sectionPrerender('design-system'),
   title: 'Installation',
   description:
-    'Install @soroush.design/react-components, wrap your app in the ThemeProvider, and set up the fonts.',
+    'Install @soroush.design/react, wrap your app in the ThemeProvider, and set up the fonts.',
 } satisfies Config

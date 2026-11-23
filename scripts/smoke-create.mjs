@@ -1,7 +1,7 @@
 // Proves that an app `create` starts works, on this checkout's code rather than npm's:
 //
-// 1. builds and packs the design system and the workspace packages it depends on (the cli among
-//    them);
+// 1. builds and packs the umbrella an app imports from and the workspace packages it depends on (the
+//    component library and the cli among them);
 // 2. runs the built cli's `create` in a temp folder, through its own `main`, with an Io whose
 //    install first points the new app at those tarballs;
 // 3. typechecks (TypeScript) and builds the app, checks that the build prerendered its pages,
@@ -34,6 +34,9 @@ import { dirname, join } from 'node:path'
 import { parseArgs } from 'node:util'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 
+// The umbrella an app depends on and imports from, and the component library behind it, whose React
+// range `create` reads.
+const APP_PACKAGE = '@soroush.design/react'
 const DESIGN_SYSTEM = '@soroush.design/react-components'
 const APP = 'smokeApp'
 
@@ -120,7 +123,7 @@ function readWorkspacePackages() {
   return packages
 }
 
-/** The design system and every workspace package it depends on, however deep. */
+/** The umbrella and every workspace package it depends on, however deep. */
 function collectShipped(packages) {
   const names = new Set()
   const visit = (name) => {
@@ -131,7 +134,7 @@ function collectShipped(packages) {
       if (range.startsWith('workspace:')) visit(dependency)
     }
   }
-  visit(DESIGN_SYSTEM)
+  visit(APP_PACKAGE)
   return [...names]
 }
 
@@ -151,14 +154,14 @@ const readJson = (path) => JSON.parse(readFileSync(path, 'utf8'))
 const writeJson = (path, value) => writeFileSync(path, `${JSON.stringify(value, null, 2)}\n`)
 
 /**
- * Points the new app at the tarballs: the design system as the app's dependency, and the packages
- * the design system depends on as overrides, in the root's package.json, where each package
+ * Points the new app at the tarballs: the umbrella as the app's dependency, and the packages the
+ * umbrella depends on as overrides, in the root's package.json, where each package
  * manager reads them. `rootDir` is where the install runs; `appDir` is the app's own folder.
  */
 function useTarballs(rootDir, appDir, tarballs) {
   const toSpec = (name) => `file:${tarballs[name].replaceAll('\\', '/')}`
   const appManifest = readJson(join(appDir, 'package.json'))
-  appManifest.dependencies[DESIGN_SYSTEM] = toSpec(DESIGN_SYSTEM)
+  appManifest.dependencies[APP_PACKAGE] = toSpec(APP_PACKAGE)
   writeJson(join(appDir, 'package.json'), appManifest)
   const rootManifest = readJson(join(rootDir, 'package.json'))
   const overrides = Object.fromEntries(Object.keys(tarballs).map((name) => [name, toSpec(name)]))
@@ -377,12 +380,12 @@ try {
       return nodeIo.run(command, args, options)
     },
   }
-  const { name, version, peerDependencies } = packages.get(DESIGN_SYSTEM).manifest
+  const { name, peerDependencies } = packages.get(DESIGN_SYSTEM).manifest
   const argv = ['create', APP, '--yes', `--${lang}`, '--framework', framework, '--no-git']
   argv.push('--layout', layout, '--render', render, '--with', libraries)
   if (hasSampleData) argv.push('--sample-data')
   console.log(`\n$ create ${argv.slice(1).join(' ')}   (with ${pm})`)
-  const code = await cli.default(argv, io, { name, version, peerDependencies })
+  const code = await cli.default(argv, io, { name, peerDependencies })
   if (code !== 0) throw new Error(`create exited with ${code}`)
 
   const rootDir = join(workDir, APP)

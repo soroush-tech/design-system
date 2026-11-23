@@ -8,7 +8,7 @@ Every name is yours - each thumb's (`getAriaLabel`, or a `FormLabel`), and the t
 (`getAriaValueText`) - so the slider carries no language of its own.
 
 ```tsx
-import { RangeInput } from '@soroush.design/react-components/RangeInput'
+import { RangeInput } from '@soroush.design/react/RangeInput'
 
 // One thumb
 ;<RangeInput

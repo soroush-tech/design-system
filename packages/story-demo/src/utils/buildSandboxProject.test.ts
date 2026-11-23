@@ -28,6 +28,16 @@ describe('buildSandboxProject', () => {
     expect(manifest.devDependencies.typescript).toBe('latest')
   })
 
+  it('takes the theme from the library by default, and from the package it is given', () => {
+    const entry = (packageName?: string) =>
+      buildSandboxProject('Basic', SOURCE, { ...OPTIONS, language: 'ts', packageName })[
+        'src/index.tsx'
+      ].content as string
+    expect(entry()).toContain("from '@soroush.design/react-components/theme'")
+    expect(entry('@soroush.design/react')).toContain("from '@soroush.design/react/theme'")
+    expect(entry('@soroush.design/react')).not.toContain('react-components')
+  })
+
   it('assembles a plain JavaScript project when language is js', () => {
     const files = buildSandboxProject('Basic button group', SOURCE, { ...OPTIONS, language: 'js' })
     expect(files['src/Demo.jsx'].content).toBe(SOURCE)

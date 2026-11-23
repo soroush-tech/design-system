@@ -6,7 +6,7 @@ the menu is open. The actions zoom in over `theme.transitions`, the one next to 
 out of the tree while it is closed. Where it floats is the page's: no position is built in.
 
 ```tsx
-import { FabMenu, FabMenuItem } from '@soroush.design/react-components/FabMenu'
+import { FabMenu, FabMenuItem } from '@soroush.design/react/FabMenu'
 
 ;<FabMenu aria-label="Create">
   <FabMenuItem icon={<Icon name="add" color="inherit" />} onClick={newDocument}>

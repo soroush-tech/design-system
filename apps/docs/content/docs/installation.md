@@ -30,7 +30,7 @@ It shows every change before it makes one, and writes nothing until you say yes:
   you make your own;
 - `src/theme/Providers` - the `ThemeProvider` with the base page styles;
 - your root - what it renders is wrapped in `<Providers>`;
-- the install of `@soroush.design/react-components`, with your own package manager.
+- the install of `@soroush.design/react`, with your own package manager.
 
 It runs in a git repository with no uncommitted change, never overwrites a file, and takes back
 every change if a write fails. Run in a workspace's root, it sets up the one app in it. Add
@@ -45,7 +45,7 @@ and React Router apps are not supported by `init` yet: set those up by hand, bel
 Install the design system and its peer dependencies:
 
 ```sh
-npm i @soroush.design/react-components react react-dom
+npm i @soroush.design/react react react-dom
 ```
 
 React 19.2 or later is required.
@@ -55,7 +55,7 @@ React 19.2 or later is required.
 Every component reads its colors, spacing, and typography from the theme. Wrap your app once:
 
 ```tsx
-import { ThemeProvider, baseTheme, createTheme } from '@soroush.design/react-components/theme'
+import { ThemeProvider, baseTheme, createTheme } from '@soroush.design/react/theme'
 
 const theme = createTheme(baseTheme, {
   // Your brand overrides - palettes, backgrounds, text colors, ...

@@ -64,10 +64,10 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 
 ## Critical conventions
 
-- **Design-system imports:** Consumers - `@soroush.tech/markdown` included - import UI primitives from the subpath `@soroush.design/react-components/X` (barrel `@soroush.design/react-components` for `styled`, `css`, `Theme`, etc.).
+- **Design-system imports:** Apps (the docs app, the starters, every example) import UI primitives from the umbrella's subpath `@soroush.design/react/X` (barrel `@soroush.design/react` for `styled`, `css`, `Theme`, etc.). Library packages - `@soroush.tech/markdown`, `story-demo` and `lab` included - import the component library by its own name, `@soroush.design/react-components/X`: the umbrella depends on the libraries, never the reverse.
 - **Theme tokens:** The design-system ships a single hex-inlined `baseTheme` - the **only** place hex values are allowed in the package - for its tests, stories, and npm consumers. Everything else styles through theme tokens; consumers build brand themes with `createTheme(baseTheme, ...)`.
 - **SSR guard:** Never import browser-only APIs at module top level - guard with `typeof window !== 'undefined'` or move into effects. These packages are consumed by SSR apps.
-- **Styled-system:** Use `Flex`, `View`, `Typography` from `@soroush.design/react-components` over raw `div`/`p` for layout.
+- **Styled-system:** Use `Flex`, `View`, `Typography` over raw `div`/`p` for layout, from `@soroush.design/react` in an app and from `@soroush.design/react-components` in a library package.
 - **Test placement:** Co-located next to source. Unit → `*.test.ts(x)` (vitest). Integration → `*.spec.ts(x)` (vitest). Real-browser tier → `*.browser.test.ts(x)` (vitest + Chromium, only for what jsdom can't run).
 - **Lint:** `pnpm lint` runs `oxlint --deny-warnings` - any warning fails. Formatting is not
   linted; `oxfmt` owns it, via `pnpm format` and the `format:check` gate in CI.

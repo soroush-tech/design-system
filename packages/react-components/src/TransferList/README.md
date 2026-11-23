@@ -7,7 +7,7 @@ and the platform's checkboxes work as they always do.
 Every name is yours - the lists' titles and the four buttons' - so it carries no language of its own.
 
 ```tsx
-import { TransferList } from '@soroush.design/react-components/TransferList'
+import { TransferList } from '@soroush.design/react/TransferList'
 
 ;<TransferList
   items={[

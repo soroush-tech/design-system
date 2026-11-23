@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react'
-import { View } from '@soroush.design/react-components/View'
+import { View } from '@soroush.design/react/View'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useScheme } from '../state/scheme'
 import { Header } from '../components/Header'

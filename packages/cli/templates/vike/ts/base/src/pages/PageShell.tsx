@@ -1,5 +1,5 @@
 import { StrictMode } from 'react'
-import { CacheProvider, styleCache } from '@soroush.design/react-components/engine'
+import { CacheProvider, styleCache } from '@soroush.design/react/engine'
 // @if redux-toolkit
 import { Provider as StoreProvider } from 'react-redux'
 // @endif

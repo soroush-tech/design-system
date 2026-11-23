@@ -1,4 +1,4 @@
-import { View } from '@soroush.design/react-components/View'
+import { View } from '@soroush.design/react/View'
 import { Preview } from '@soroush.tech/markdown/Preview'
 import type { DocsSection } from 'src/common/nav'
 import { releaseNotesFor } from './utils/releaseNotesFor'

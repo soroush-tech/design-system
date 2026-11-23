@@ -1,8 +1,9 @@
-import { Link } from '@soroush.design/react-components/Link'
-import { Typography } from '@soroush.design/react-components/Typography'
-import { View } from '@soroush.design/react-components/View'
+import { Link } from '@soroush.design/react/Link'
+import { Typography } from '@soroush.design/react/Typography'
+import { View } from '@soroush.design/react/View'
 import { CodeBlock } from '@soroush.tech/markdown/CodeBlock'
 import { componentBySlug, importSubpathOf, kebabCase } from 'src/common/nav'
+import { APP_PACKAGE } from 'src/common/packageVersions'
 import { sectionPath } from 'src/common/sectionPath'
 import { DocsNav } from 'src/common/DocsNav/DocsNav'
 import { Layout } from 'src/common/Layout'
@@ -23,7 +24,7 @@ export default function Page() {
   // A family member has no tabs of its own, so its README stays whole; a component's accessibility
   // notes are on their own tab.
   const { intro, api } = splitReadme(item?.family ? parts.source : parts.rest)
-  const importSnippet = `import { ${name} } from '${sections['design-system'].npm}/${item ? importSubpathOf(item) : name}'`
+  const importSnippet = `import { ${name} } from '${APP_PACKAGE}/${item ? importSubpathOf(item) : name}'`
   // A family member's demos are under its own heading on its family's page - a PascalCase
   // name's heading id is the name in lower case.
   const demosPath = item?.family

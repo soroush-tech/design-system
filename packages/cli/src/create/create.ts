@@ -3,7 +3,7 @@ import { join } from 'node:path'
 import { applyPlan } from '../apply/applyPlan'
 import { nodeFileSystem, type FileSystem } from '../apply/fileSystem'
 import { AGENT_STEPS, FONTS_STEP } from '../closing'
-import type { PackageJson } from '../detect/detect'
+import { APP_PACKAGE_VERSION } from '../designSystemPackage'
 import { askScheme } from '../init'
 import type { Io } from '../io'
 import { formatPlan } from '../plan/formatPlan'
@@ -516,12 +516,11 @@ function formatHeadline({
 /**
  * Starts a new app on the design system, in a new or empty folder in `io.cwd`: asks what it is
  * not told, plans with the starter, shows the plan, and writes and installs only after a yes.
- * `designSystem` is the package it installs. Returns the exit code.
+ * Returns the exit code.
  */
 export async function runCreate(
   options: CreateOptions,
   io: Io,
-  designSystem: PackageJson,
   {
     starters = STARTERS,
     fileSystem = nodeFileSystem,
@@ -546,7 +545,7 @@ export async function runCreate(
     libraries: choices.libraries,
     scheme: choices.scheme,
     hasSampleData: choices.hasSampleData,
-    version: designSystem.version!,
+    version: APP_PACKAGE_VERSION,
   })
   const plan: Plan = {
     creates: isWorkspace

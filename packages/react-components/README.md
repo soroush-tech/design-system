@@ -15,7 +15,7 @@ Tired of forking a component library just to change a color? Every token here is
 ## Install
 
 ```sh
-npm i @soroush.design/react-components
+npm i @soroush.design/react
 ```
 
 `react` and `react-dom` are peer dependencies, and React 19.2 or later is required. The styling engine (UmberStyle, the `@umber-style/*` packages) is an internal implementation detail - it ships as a regular dependency, not a peer, so you never install it yourself.
@@ -60,37 +60,32 @@ See [`@soroush.design/mcp`](../mcp) for the full tool list.
 Import components by subpath, styling primitives from the barrel:
 
 ```ts
-import { Typography } from '@soroush.design/react-components/Typography'
-import { Flex } from '@soroush.design/react-components/Flex'
+import { Typography } from '@soroush.design/react/Typography'
+import { Flex } from '@soroush.design/react/Flex'
 ```
 
-Styling primitives (the engine) come from the barrel `@soroush.design/react-components` - `styled`, `css`, `keyframes`, the `Theme` type, styled-system functions, and `createShouldForwardProp`. The barrel (`src/index.ts`) is the engine abstraction layer: to swap the CSS-in-JS engine, only that file changes.
+Styling primitives (the engine) come from the barrel `@soroush.design/react` - `styled`, `css`, `keyframes`, the `Theme` type, styled-system functions, and `createShouldForwardProp`. The barrel (`src/index.ts`) is the engine abstraction layer: to swap the CSS-in-JS engine, only that file changes.
 
 ```ts
-import { styled, css, type Theme } from '@soroush.design/react-components'
+import { styled, css, type Theme } from '@soroush.design/react'
 ```
 
 `ThemeProvider` and the theme-value hooks (`useTheme`, `useDefaultProps`, `withTheme`) live at their own subpath:
 
 ```ts
-import { ThemeProvider, useTheme } from '@soroush.design/react-components/theme'
+import { ThemeProvider, useTheme } from '@soroush.design/react/theme'
 ```
 
 Style-computation helpers (`useStyle`, `withStyles`, `StylesConsumer`) - resolving a `StyleInput`/`StyleFactory` into a `CSSObject` - live at their own subpath:
 
 ```ts
-import { useStyle } from '@soroush.design/react-components/style'
+import { useStyle } from '@soroush.design/react/style'
 ```
 
 Raw engine primitives for building your own global styles - `Global`, `globalStyles`, and the SSR-only `CacheProvider`/`styleCache` pairing - live at their own subpath, not the barrel:
 
 ```ts
-import {
-  Global,
-  globalStyles,
-  CacheProvider,
-  styleCache,
-} from '@soroush.design/react-components/engine'
+import { Global, globalStyles, CacheProvider, styleCache } from '@soroush.design/react/engine'
 ```
 
 `Global` (retyped against this package's `Theme`) applies app-wide CSS and should render inside `ThemeProvider` so it resolves against the active theme. `globalStyles(theme)` is the base reset this package owns - box-sizing, margin/table resets, and theme-driven body colors - compose it into your own `Global` styles array alongside your app's own concerns (font-family, webfont loading, and anything else app-specific stay entirely app policy).
@@ -100,7 +95,7 @@ design tool's palette, a source writer) - lives at its own subpath and loads in 
 ([docs](./docs/catalog.md)):
 
 ```ts
-import { catalog } from '@soroush.design/react-components/catalog'
+import { catalog } from '@soroush.design/react/catalog'
 ```
 
 Server rendering with critical CSS (a Vike or other static or server renderer) is a separate, opt-in concern - that's what `CacheProvider` and its paired `styleCache` instance are for. Give `CacheProvider` the `styleCache`, render, then read the CSS of the page from the same cache with `createInstance` from `@umber-style/server/create-instance` (`pnpm add @umber-style/server`): `extractCriticalToChunks(html)` and `constructStyleTagsFromChunks(chunks)` give the `<style data-umber>` tags to put in the head. Next.js App Router apps collect the styles with a registry instead - see `docs/consumer/setup.md`.
@@ -129,15 +124,15 @@ The engine packages are regular dependencies of this package, not peers, on purp
 
 ### Content & data display
 
-| Component    | Purpose                                                                                                                                                                                                                                           |
-| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Typography` | Text with variant → element mapping - the reference implementation for all components                                                                                                                                                             |
-| `Link`       | Anchor with theme-aware styling                                                                                                                                                                                                                   |
-| `Icon`       | Icon renderer                                                                                                                                                                                                                                     |
-| `Image`      | Image with styled-system props                                                                                                                                                                                                                    |
-| `Avatar`     | User/entity avatar                                                                                                                                                                                                                                |
-| `Table`      | Compound data table - exports `TableContainer`, `TableHead`, `TableBody`, `TableFooter`, `TableRow`, `TableCell`, `TablePagination`, `TablePaginationActions`, `TableSortLabel`, and `TableControl` from `@soroush.design/react-components/Table` |
-| `Accordion`  | A heading that opens and closes a region - exports `AccordionSummary`, `AccordionDetails`, `AccordionActions` and `AccordionGroup` from `@soroush.design/react-components/Accordion`                                                              |
+| Component    | Purpose                                                                                                                                                                                                                                |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Typography` | Text with variant → element mapping - the reference implementation for all components                                                                                                                                                  |
+| `Link`       | Anchor with theme-aware styling                                                                                                                                                                                                        |
+| `Icon`       | Icon renderer                                                                                                                                                                                                                          |
+| `Image`      | Image with styled-system props                                                                                                                                                                                                         |
+| `Avatar`     | User/entity avatar                                                                                                                                                                                                                     |
+| `Table`      | Compound data table - exports `TableContainer`, `TableHead`, `TableBody`, `TableFooter`, `TableRow`, `TableCell`, `TablePagination`, `TablePaginationActions`, `TableSortLabel`, and `TableControl` from `@soroush.design/react/Table` |
+| `Accordion`  | A heading that opens and closes a region - exports `AccordionSummary`, `AccordionDetails`, `AccordionActions` and `AccordionGroup` from `@soroush.design/react/Accordion`                                                              |
 
 ### Inputs & forms
 
@@ -160,25 +155,25 @@ The engine packages are regular dependencies of this package, not peers, on purp
 
 ### Navigation & menus
 
-| Component     | Purpose                                                                                                                                                                                                                                                                              |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `NavTree`     | A tree of links to the pages of a site - groups of links, which can fold                                                                                                                                                                                                             |
-| `Breadcrumbs` | The trail of links from a site's root to the current page - a long one collapses behind a button that shows it all                                                                                                                                                                   |
-| `Menu`        | A trigger and the list of commands it opens - exports `MenuList` (the `role="menu"` list that owns the keyboard), `MenuDivider`, `MenuItems` (rows from data) and `ContextMenu` (the same list, opened at the pointer by a right-click) from `@soroush.design/react-components/Menu` |
-| `Tabs`        | A row of tabs - exports `Tab`, `TabContext` (holds the value for a `TabList` and its panels), `TabList` (the `Tabs` of a `TabContext`), `TabPanel` (the content a tab shows) and `TabScrollButton` from `@soroush.design/react-components/Tabs`                                      |
+| Component     | Purpose                                                                                                                                                                                                                                                                   |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `NavTree`     | A tree of links to the pages of a site - groups of links, which can fold                                                                                                                                                                                                  |
+| `Breadcrumbs` | The trail of links from a site's root to the current page - a long one collapses behind a button that shows it all                                                                                                                                                        |
+| `Menu`        | A trigger and the list of commands it opens - exports `MenuList` (the `role="menu"` list that owns the keyboard), `MenuDivider`, `MenuItems` (rows from data) and `ContextMenu` (the same list, opened at the pointer by a right-click) from `@soroush.design/react/Menu` |
+| `Tabs`        | A row of tabs - exports `Tab`, `TabContext` (holds the value for a `TabList` and its panels), `TabList` (the `Tabs` of a `TabContext`), `TabPanel` (the content a tab shows) and `TabScrollButton` from `@soroush.design/react/Tabs`                                      |
 
 ### Feedback
 
-| Component                            | Purpose                                                                                                                                |
-| ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
-| `FabMenu`                            | A fab that opens a stack of actions from the corner of a page                                                                          |
-| `Snackbar`                           | A transient message in a corner of the window, with auto-hide and an action                                                            |
-| `Alert`                              | An inline message with a severity, an icon, a title and an action - exports `AlertTitle` from `@soroush.design/react-components/Alert` |
-| `Badge`                              | A count or a dot anchored over another element                                                                                         |
-| `Chip`                               | A compact tag: a label, an icon or avatar, a click and a delete                                                                        |
-| `CircularProgress`, `LinearProgress` | Determinate/indeterminate progress indicators                                                                                          |
-| `Skeleton`                           | Loading placeholder with pulse/wave animations                                                                                         |
-| `Backdrop`                           | Dimmed overlay behind modal surfaces                                                                                                   |
+| Component                            | Purpose                                                                                                                     |
+| ------------------------------------ | --------------------------------------------------------------------------------------------------------------------------- |
+| `FabMenu`                            | A fab that opens a stack of actions from the corner of a page                                                               |
+| `Snackbar`                           | A transient message in a corner of the window, with auto-hide and an action                                                 |
+| `Alert`                              | An inline message with a severity, an icon, a title and an action - exports `AlertTitle` from `@soroush.design/react/Alert` |
+| `Badge`                              | A count or a dot anchored over another element                                                                              |
+| `Chip`                               | A compact tag: a label, an icon or avatar, a click and a delete                                                             |
+| `CircularProgress`, `LinearProgress` | Determinate/indeterminate progress indicators                                                                               |
+| `Skeleton`                           | Loading placeholder with pulse/wave animations                                                                              |
+| `Backdrop`                           | Dimmed overlay behind modal surfaces                                                                                        |
 
 ### Transitions
 
@@ -226,8 +221,8 @@ The theme belongs to you - the package only ships defaults. This section is the 
 `ThemeProvider` provides exactly one theme - the built-in dark theme when you pass nothing. Bring one theme, or as many as you like: switching between them is your state, not the provider's.
 
 ```tsx
-import { ThemeProvider } from '@soroush.design/react-components/theme'
-import { baseTheme, createTheme } from '@soroush.design/react-components/theme'
+import { ThemeProvider } from '@soroush.design/react/theme'
+import { baseTheme, createTheme } from '@soroush.design/react/theme'
 
 // Zero-config: the built-in `baseTheme`.
 <ThemeProvider>{app}</ThemeProvider>
@@ -241,7 +236,7 @@ const [isDark, setIsDark] = useState(true)
 <ThemeProvider theme={isDark ? brandDark : brandLight}>{app}</ThemeProvider>
 ```
 
-`createTheme(base, overrides)` (exported from `@soroush.design/react-components/theme`) is the merge primitive: plain objects recurse, arrays (`shadows`, `fontSizes`) and functions replace wholesale, `undefined` values are ignored - keys are added or replaced, never removed.
+`createTheme(base, overrides)` (exported from `@soroush.design/react/theme`) is the merge primitive: plain objects recurse, arrays (`shadows`, `fontSizes`) and functions replace wholesale, `undefined` values are ignored - keys are added or replaced, never removed.
 
 ### Breakpoints and layout
 
@@ -304,7 +299,7 @@ const brand = createTheme(baseTheme, {
       },
 
       // A new variant value - register it first so it typechecks:
-      // declare module '@soroush.design/react-components/theme' { interface ButtonVariants { dashed: true } }
+      // declare module '@soroush.design/react/theme' { interface ButtonVariants { dashed: true } }
       variants: [
         {
           props: { variant: 'dashed' },
@@ -325,12 +320,12 @@ Your own components can join the same mechanism: create their roots with this pa
 
 ### Extending tokens (declaration merging)
 
-Every scale is an open interface declared on `@soroush.design/react-components/theme`, so you can add palette colors, tokens, or whole scales - and every component prop union (`color`, `bg`, `size`, ...) widens automatically:
+Every scale is an open interface declared on `@soroush.design/react/theme`, so you can add palette colors, tokens, or whole scales - and every component prop union (`color`, `bg`, `size`, ...) widens automatically:
 
 ```ts
-import type { PaletteEntry } from '@soroush.design/react-components/theme'
+import type { PaletteEntry } from '@soroush.design/react/theme'
 
-declare module '@soroush.design/react-components/theme' {
+declare module '@soroush.design/react/theme' {
   interface ThemePalette {
     brand: PaletteEntry // new palette color
   }

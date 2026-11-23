@@ -7,16 +7,25 @@ renders; [`README.md`](./README.md) is npm's short page, which points there.
 
 ## Two ways in, one command line
 
-| Run as                                      | Bin                                    | The design system it installs                                                       |
-| ------------------------------------------- | -------------------------------------- | ----------------------------------------------------------------------------------- |
-| `npx @soroush.design/react-components init` | `packages/react-components/src/bin.ts` | That package itself, found by its `package.json`                                    |
-| `npx @soroush.design/cli init`              | `packages/cli/src/bin.ts`              | The workspace's version, read at build time: a released one, even from an alpha cli |
+| Run as                                      | Bin                                    | The React range it checks                        |
+| ------------------------------------------- | -------------------------------------- | ------------------------------------------------ |
+| `npx @soroush.design/react-components init` | `packages/react-components/src/bin.ts` | That package itself, found by its `package.json` |
+| `npx @soroush.design/cli init`              | `packages/cli/src/bin.ts`              | The workspace's library, read at build time      |
+
+An app imports from the platform umbrella `@soroush.design/react`, so that is what both commands
+install, and the one version they install is the umbrella's, whichever bin ran: `src/designSystemPackage.ts`
+reads it from `packages/react/package.json` when this package is built, and the bundler keeps only
+that field. It is a released version, even from an alpha cli. The umbrella holds no code and no bin,
+so the commands stay in the component library's bin and here.
 
 `@soroush.design/react-components` depends on this package at an exact version, and its bin is a
 shim: it calls this package's default export, `main(argv, io, designSystem)`, with its own
-`package.json`. So the version `init` installs and the React range it checks always come from
-the design system that ran it. This package never depends on the design system, so there is no
-cycle; its `type-tests/init` fixture reads the design system's built types by path.
+`package.json`, whose React peer range `init` checks the app against. This package never depends on
+the packages it installs, so there is no cycle; its `type-tests` read the umbrella's and the library's
+built types by path. Build and publish the umbrella before this package, so the version it bundles
+exists on npm.
+
+An app counts as set up when it has the umbrella or the library as a dependency.
 
 Publish this package first: the design system's release names its exact version. CD orders an
 `all` run dependencies-first.
@@ -30,15 +39,17 @@ Publish this package first: the design system's release names its exact version.
 - `src/plan/` works out every change from what `detect` read, writing nothing: the files, the
   root's edit, the install. It reads files only through `InitFacts.readFile`.
 - `src/apply/` writes the plan, taking every change back when a write fails.
-- `src/templates/` holds the files `init` writes. Each starts with `MARKER`, which is how a second
-  run tells its own files from the app's.
+- `src/templates/` holds the files `init` writes. Each starts with `MARKER`
+  (`// Set up by @soroush.design/react init.`), which is how a second run tells its own files from the
+  app's. A file that starts with an earlier marker, the library's name or `@soroush.tech/design-system`,
+  is still init's own.
 - `src/closing.ts` holds the lines both commands end on: the fonts, and the agent suggestions.
 
 ## How `create` works, and where a starter plugs in
 
 `create` is the same for every framework. A starter, in `src/create/starters.ts`, only supplies
 the files: `createFiles(facts)` gets the name, the language, the scheme, whether to add the
-sample data pages, and the design system's version, and returns each file by its path from the app's folder, its `package.json` among them.
+sample data pages, and the umbrella's version, and returns each file by its path from the app's folder, its `package.json` among them.
 `create` does the rest:
 
 1. It reads the options, and asks for what it was not told, in a terminal only.

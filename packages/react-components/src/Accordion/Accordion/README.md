@@ -11,7 +11,7 @@ import {
   AccordionActions,
   AccordionDetails,
   AccordionSummary,
-} from '@soroush.design/react-components/Accordion'
+} from '@soroush.design/react/Accordion'
 
 ;<Accordion>
   <AccordionSummary>Shipping</AccordionSummary>

@@ -204,7 +204,7 @@ export function StoryDemo({
             helpersText:
               language === 'js' ? tsToJs(demoModule.helpersText).trimEnd() : demoModule.helpersText,
           })
-    openInCodeSandbox(title, sandboxSource, { language, versions, reactVersion })
+    openInCodeSandbox(title, sandboxSource, { language, versions, reactVersion, packageName })
   }
 
   const toolbar = (

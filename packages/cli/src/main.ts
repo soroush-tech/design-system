@@ -1,4 +1,4 @@
-import { DESIGN_SYSTEM_PACKAGE } from './designSystemPackage'
+import { APP_PACKAGE } from './designSystemPackage'
 import { parseArgs } from 'node:util'
 import { runCreate } from './create/create'
 import { LIBRARY_NAMES, type Library } from './create/libraries'
@@ -18,7 +18,7 @@ const BIN = 'npx @soroush.design/cli'
 export const USAGE = `Usage: ${BIN} <command> [options]
 
 Commands:
-  init            set up ${DESIGN_SYSTEM_PACKAGE} in the React app in this folder
+  init            set up ${APP_PACKAGE} in the React app in this folder
   create [name]   start a new app on the design system, in a new folder
 
 Each shows every change first, and writes nothing until you say yes.
@@ -170,8 +170,9 @@ function findValueRefusal(
 
 /**
  * Reads the command line and runs the command, for `designSystem`: the package of
- * `@soroush.design/react-components` the command installs. Returns the exit code: 130 when the person
- * stops it at a question, which is before anything is written.
+ * `@soroush.design/react-components`, whose peer range for React `init` checks the app against.
+ * Returns the exit code: 130 when the person stops it at a question, which is before anything is
+ * written.
  */
 export async function main(
   argv: readonly string[],
@@ -247,8 +248,7 @@ async function runCommandLine(
         isDryRun,
         isGit: !values['no-git'],
       },
-      io,
-      designSystem
+      io
     )
   }
   return runInit(

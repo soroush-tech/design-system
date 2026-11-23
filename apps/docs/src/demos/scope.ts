@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { css, keyframes } from '@umber-style/css'
-import * as theme from '@soroush.design/react-components/theme'
+import * as theme from '@soroush.design/react/theme'
 import * as storiesOptions from '@soroush.design/react-components/utils/test/storiesOptions'
 // The stories' shared toggle helpers (`ColorSwatchRows`) render inside their demos.
 import * as storiesToggle from '@soroush.design/react-components/utils/test/storiesToggle'

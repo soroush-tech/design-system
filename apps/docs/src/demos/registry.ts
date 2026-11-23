@@ -1,6 +1,9 @@
 import { listStoryNames, type StoriesModule } from '@soroush.tech/story-demo'
-import { sections } from '@soroush.tech/docs-content'
-import { COMPONENT_LIBRARY_REACT_RANGE, PACKAGE_VERSIONS } from 'src/common/packageVersions'
+import {
+  APP_PACKAGE,
+  APP_PACKAGE_VERSION,
+  COMPONENT_LIBRARY_REACT_RANGE,
+} from 'src/common/packageVersions'
 import { requireMatches } from './requireMatches'
 
 // Every design-system stories module, resolved at build time - once as a namespace
@@ -73,7 +76,7 @@ export const demoByPath = new Map(
 
 /** Published versions for our own packages in sandbox exports; anything else rides at latest. */
 export const demoVersions: Record<string, string> = {
-  [sections['design-system'].npm]: `^${PACKAGE_VERSIONS['design-system']}`,
+  [APP_PACKAGE]: `^${APP_PACKAGE_VERSION}`,
 }
 
 /** The react / react-dom pin for sandbox exports. */

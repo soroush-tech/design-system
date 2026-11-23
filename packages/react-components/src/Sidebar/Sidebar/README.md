@@ -13,7 +13,7 @@ open state and anchor through `SidebarContext`, so they need no wiring of their 
 ## Usage
 
 ```tsx
-import { Sidebar, SidebarItem } from '@soroush.design/react-components/Sidebar'
+import { Sidebar, SidebarItem } from '@soroush.design/react/Sidebar'
 
 const [isOpen, setIsOpen] = useState(false)
 

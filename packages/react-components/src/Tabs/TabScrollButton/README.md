@@ -5,12 +5,7 @@ end while its tabs overflow; it is out of the tab order and hidden from assistiv
 since the arrow keys already reach every tab.
 
 ```tsx
-import {
-  Tab,
-  Tabs,
-  TabScrollButton,
-  type TabScrollButtonProps,
-} from '@soroush.design/react-components/Tabs'
+import { Tab, Tabs, TabScrollButton, type TabScrollButtonProps } from '@soroush.design/react/Tabs'
 
 // A button of your own, in place of the default one.
 function Arrow(props: TabScrollButtonProps) {

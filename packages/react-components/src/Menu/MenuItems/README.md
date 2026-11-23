@@ -8,7 +8,7 @@ submenu as more entries) or `{ type: 'divider' }`. It renders the same `MenuItem
 `items`.
 
 ```tsx
-import { MenuItems, MenuList, type MenuItemData } from '@soroush.design/react-components/Menu'
+import { MenuItems, MenuList, type MenuItemData } from '@soroush.design/react/Menu'
 
 const items: MenuItemData[] = [
   { value: 'new', label: 'New branch...', shortcut: 'Control+B' },

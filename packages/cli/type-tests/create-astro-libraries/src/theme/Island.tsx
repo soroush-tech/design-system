@@ -1,6 +1,6 @@
 import { useState, type ComponentType, type ReactNode } from 'react'
 import { QueryClientProvider } from '@tanstack/react-query'
-import { ThemeProvider } from '@soroush.design/react-components/theme'
+import { ThemeProvider } from '@soroush.design/react/theme'
 import { getQueryClient } from '../data/queryClient'
 import { useScheme } from './scheme'
 import themes from './themes'

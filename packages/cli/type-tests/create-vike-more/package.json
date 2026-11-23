@@ -11,7 +11,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@soroush.design/react-components": "^0.1.0",
+    "@soroush.design/react": "^0.1.0",
     "@umber-style/server": "^0.3.0",
     "swr": "^2.5.1",
     "@reduxjs/toolkit": "^2.14.0",

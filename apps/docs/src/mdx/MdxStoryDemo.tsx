@@ -1,5 +1,6 @@
 import { StoryDemo } from '@soroush.tech/story-demo/StoryDemo'
 import { demoByPath, demoReactVersion, demoVersions } from 'src/demos/registry'
+import { APP_PACKAGE } from 'src/common/packageVersions'
 import { loadDemoScope } from 'src/demos/scopeLoader'
 
 export interface MdxStoryDemoProps {
@@ -25,6 +26,7 @@ export function MdxStoryDemo({ of, title, description }: Readonly<MdxStoryDemoPr
       scope={loadDemoScope}
       versions={demoVersions}
       reactVersion={demoReactVersion}
+      packageName={APP_PACKAGE}
     />
   )
 }

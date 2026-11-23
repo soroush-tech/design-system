@@ -6,7 +6,7 @@ import useSWR from 'swr'
 // @else
 import { useEffect, useState } from 'react'
 // @endif
-import { Typography } from '@soroush.design/react-components/Typography'
+import { Typography } from '@soroush.design/react/Typography'
 // @if !tanstack-query && !swr
 import type { Greeting as Reply } from '../data/api'
 // @endif

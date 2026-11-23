@@ -1,5 +1,5 @@
-import { Flex } from '@soroush.design/react-components/Flex'
-import { Typography } from '@soroush.design/react-components/Typography'
+import { Flex } from '@soroush.design/react/Flex'
+import { Typography } from '@soroush.design/react/Typography'
 import { useParams } from 'react-router'
 import useSWR from 'swr'
 import { RouterLink } from '../../components/RouterLink'

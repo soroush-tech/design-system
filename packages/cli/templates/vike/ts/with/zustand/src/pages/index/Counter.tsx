@@ -1,6 +1,6 @@
-import { Button } from '@soroush.design/react-components/Button'
-import { Flex } from '@soroush.design/react-components/Flex'
-import { Typography } from '@soroush.design/react-components/Typography'
+import { Button } from '@soroush.design/react/Button'
+import { Flex } from '@soroush.design/react/Flex'
+import { Typography } from '@soroush.design/react/Typography'
 import { useCounter } from '../../state/counter'
 
 /** A count, held in a zustand store, src/state/counter, and the button that adds to it. */

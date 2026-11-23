@@ -449,7 +449,7 @@ describe('the Vike starter', () => {
     const packageJson = JSON.parse(createFiles().get('package.json')!)
     expect(packageJson.name).toBe('my-app')
     expect(packageJson.dependencies).toEqual({
-      '@soroush.design/react-components': '^0.1.0',
+      '@soroush.design/react': '^0.1.0',
       '@umber-style/server': `^${devDependencies['@umber-style/server']}`,
       react: devDependencies.react,
       'react-dom': devDependencies['react-dom'],
@@ -465,7 +465,7 @@ describe('the Vike starter', () => {
     })
     expect(packageJson.devDependencies.vitest).toBe(devDependencies.vitest)
     const prerelease = JSON.parse(createFiles({ version: '0.1.0-alpha.1' }).get('package.json')!)
-    expect(prerelease.dependencies['@soroush.design/react-components']).toBe('^0.1.0-alpha.1')
+    expect(prerelease.dependencies['@soroush.design/react']).toBe('^0.1.0-alpha.1')
   })
 
   it('renders <Providers> in +Layout only, starting on the scheme it was given', () => {

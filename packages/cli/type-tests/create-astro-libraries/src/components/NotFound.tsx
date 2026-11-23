@@ -1,6 +1,6 @@
-import { Flex } from '@soroush.design/react-components/Flex'
-import { Link } from '@soroush.design/react-components/Link'
-import { Typography } from '@soroush.design/react-components/Typography'
+import { Flex } from '@soroush.design/react/Flex'
+import { Link } from '@soroush.design/react/Link'
+import { Typography } from '@soroush.design/react/Typography'
 import { withIsland } from '../theme/Island'
 
 /** Shown for a page that does not exist. */

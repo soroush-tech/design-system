@@ -17,8 +17,6 @@ import { createTestIo } from '../testApp'
 import { runCreate, toPackageName, type CreateDependencies, type CreateOptions } from './create'
 import type { Starter, StarterFacts } from './starters'
 
-const DESIGN_SYSTEM = { name: '@soroush.design/react-components', version: '0.1.0' }
-
 const YES: CreateOptions = {
   name: 'my-app',
   title: undefined,
@@ -83,7 +81,7 @@ function setUp({ isInteractive, answers, run = runOutsideGit, dependencies }: Se
   const { starter, createFiles } = createTestStarter()
   const test = createTestIo(cwd, { isInteractive, answers, run })
   const create = (options: CreateOptions) =>
-    runCreate(options, test.io, DESIGN_SYSTEM, {
+    runCreate(options, test.io, {
       starters: { test: starter, bare: BARE },
       userAgent: 'npm/11.4.0 node/v24.1.0 linux x64',
       ...dependencies,
@@ -594,9 +592,9 @@ Create:
   it('says when it has no starter at all', async () => {
     const cwd = createWorkspace()
     const { io, getOutput } = createTestIo(cwd)
-    expect(await runCreate(YES, io, DESIGN_SYSTEM, { starters: {} })).toBe(1)
+    expect(await runCreate(YES, io, { starters: {} })).toBe(1)
     expect(getOutput()).toBe('create has no starter for any framework. It has: none yet.\n')
-    expect(await runCreate({ ...YES, framework: 'next' }, io, DESIGN_SYSTEM)).toBe(1)
+    expect(await runCreate({ ...YES, framework: 'next' }, io)).toBe(1)
     expect(getOutput()).toContain(
       'create has no starter for next. It has: vike, astro, react-router.'
     )

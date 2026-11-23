@@ -7,7 +7,7 @@ import type { ComponentType, ReactNode } from 'react'
 // @if redux-toolkit
 import { Provider as StoreProvider } from 'react-redux'
 // @endif
-import { ThemeProvider } from '@soroush.design/react-components/theme'
+import { ThemeProvider } from '@soroush.design/react/theme'
 // @if tanstack-query
 import { getQueryClient } from '../data/queryClient'
 // @endif

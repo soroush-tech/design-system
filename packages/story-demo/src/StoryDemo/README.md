@@ -56,7 +56,9 @@ The `react` / `react-dom` pin for the sandbox `package.json`. Default: `` `lates
 
 ### `packageName`
 
-The npm package that the stories' relative imports are rewritten to. Default:
+The npm package that the stories' relative imports are rewritten to, and that the CodeSandbox
+entry takes the theme from. The docs app passes the umbrella `@soroush.design/react`, so the code
+it shows is the code an app writes. Default:
 `` `@soroush.design/react-components` ``.
 
 ## Controls

@@ -4,8 +4,8 @@ import {
   allDocComponents,
   categoryOf,
   componentPagePath,
+  importPackageOf,
   importSubpathOf,
-  sections,
   splitReadme,
   stripReadmeChrome,
   type ComponentNavItem,
@@ -15,11 +15,9 @@ import type { ComponentRecord } from '../types'
 
 export { DOCS_URL }
 
-const packageNameFor = (pkg: ComponentNavItem['pkg']): string => sections[pkg].npm
-
 /** The subpath import a consumer writes for a component. */
 export const importPathFor = (item: ComponentNavItem): string =>
-  `import { ${item.name} } from '${packageNameFor(item.pkg)}/${importSubpathOf(item)}'`
+  `import { ${item.name} } from '${importPackageOf(item)}/${importSubpathOf(item)}'`
 
 // Markdown prose only: skip headings, badges, block quotes, HTML, and table or rule
 // syntax, so the summary is the first real sentence a reader would see.
@@ -90,7 +88,7 @@ export const buildComponents = (): ComponentRecord[] =>
       name: item.name,
       slug: item.slug,
       pkg: item.pkg,
-      packageName: packageNameFor(item.pkg),
+      packageName: importPackageOf(item),
       category: categoryOf(item),
       family: item.family,
       importPath: importPathFor(item),

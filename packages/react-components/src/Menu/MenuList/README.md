@@ -10,8 +10,8 @@ A `MenuList` renders in place - a menu embedded in a panel or a sidebar. It move
 its rows, but doesn't move focus into itself unless `shouldAutoFocus` is set.
 
 ```tsx
-import { MenuDivider, MenuList } from '@soroush.design/react-components/Menu'
-import { MenuItem } from '@soroush.design/react-components/MenuItem'
+import { MenuDivider, MenuList } from '@soroush.design/react/Menu'
+import { MenuItem } from '@soroush.design/react/MenuItem'
 
 ;<MenuList aria-label="Branch" onSelect={(value) => run(value)}>
   <MenuItem value="new" shortcut="Control+B">

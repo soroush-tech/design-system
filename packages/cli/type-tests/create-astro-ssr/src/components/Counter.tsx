@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { Button } from '@soroush.design/react-components/Button'
-import { Flex } from '@soroush.design/react-components/Flex'
-import { Typography } from '@soroush.design/react-components/Typography'
+import { Button } from '@soroush.design/react/Button'
+import { Flex } from '@soroush.design/react/Flex'
+import { Typography } from '@soroush.design/react/Typography'
 import { withIsland } from '../theme/Island'
 
 /**

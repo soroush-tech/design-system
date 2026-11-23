@@ -7,7 +7,7 @@ told why. It is a `role="status"`, announced politely, and never takes the focus
 not stack: the app queues them.
 
 ```tsx
-import { Snackbar } from '@soroush.design/react-components/Snackbar'
+import { Snackbar } from '@soroush.design/react/Snackbar'
 
 ;<Snackbar
   isOpen={isOpen}

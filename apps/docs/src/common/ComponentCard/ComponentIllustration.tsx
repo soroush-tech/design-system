@@ -1,4 +1,4 @@
-import { useTheme } from '@soroush.design/react-components/theme'
+import { useTheme } from '@soroush.design/react/theme'
 import { illustrationInk } from 'src/theme/illustrationInk'
 import { illustrations } from './illustrations'
 import { Bar, Box } from './shapes'

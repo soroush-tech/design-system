@@ -284,9 +284,7 @@ test.describe('design-system section', () => {
     await expect(
       page.getByRole('navigation', { name: 'Button pages' }).getByRole('link', { name: 'Specs' })
     ).toHaveAttribute('aria-current', 'page')
-    await expect(
-      page.getByText(/import \{ Button \} from '@soroush\.design\/react-components/)
-    ).toBeVisible()
+    await expect(page.getByText(/import \{ Button \} from '@soroush\.design\/react/)).toBeVisible()
     await expect(page.getByRole('heading', { name: /Button-specific props/ })).toBeVisible()
     await expect(
       page.getByRole('link', { name: 'the implementation of the component' })

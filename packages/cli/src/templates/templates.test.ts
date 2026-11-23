@@ -19,7 +19,7 @@ describe('createThemesSource', () => {
 
   it('gives a TypeScript app the augmentation stub, as a comment, and a JavaScript app none', () => {
     expect(createThemesSource({ isTypeScript: true })).toContain(
-      "// declare module '@soroush.design/react-components/theme' {"
+      "// declare module '@soroush.design/react/theme' {"
     )
     expect(createThemesSource({ isTypeScript: false })).not.toContain('declare module')
   })
@@ -55,17 +55,21 @@ describe('createProvidersSource', () => {
 })
 
 describe('isSetUpByInit', () => {
-  it('writes the current name of the library', () => {
-    expect(MARKER).toBe('// Set up by @soroush.design/react-components init.')
+  it('writes the name of the umbrella an app imports from', () => {
+    expect(MARKER).toBe('// Set up by @soroush.design/react init.')
   })
 
   it('recognises a file that starts with the current marker', () => {
+    expect(isSetUpByInit('// Set up by @soroush.design/react init. Your themes')).toBe(true)
+  })
+
+  it('recognises a file that starts with the marker of the library, the name before the umbrella', () => {
     expect(isSetUpByInit('// Set up by @soroush.design/react-components init. Your themes')).toBe(
       true
     )
   })
 
-  it('recognises a file that starts with the marker of the former name', () => {
+  it('recognises a file that starts with the marker of the former name, before the library was renamed', () => {
     expect(isSetUpByInit('// Set up by @soroush.tech/design-system init. Your themes')).toBe(true)
   })
 

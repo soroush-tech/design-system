@@ -2,7 +2,7 @@
 // mode on Vite. Its files are the templates in templates/react-router/ (see templates/templates.md);
 // this module adds what is computed: package.json, from the libraries picked, and the themes and
 // Providers `init` writes too.
-import { DESIGN_SYSTEM_PACKAGE } from '../../designSystemPackage'
+import { APP_PACKAGE } from '../../designSystemPackage'
 import { createProvidersSource, createThemesSource } from '../../templates/templates'
 import type { Starter, StarterFacts, StarterFile } from '../starters'
 import { createTemplateFiles } from '../template/starterFiles'
@@ -29,7 +29,7 @@ function createPackageJson({
       test: 'vitest run',
     },
     dependencies: {
-      [DESIGN_SYSTEM_PACKAGE]: toRange(version),
+      [APP_PACKAGE]: toRange(version),
       ...pickVersions([...libraryPackages, 'react', 'react-dom', 'react-router']),
     },
     devDependencies: pickVersions([

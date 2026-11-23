@@ -1,13 +1,13 @@
 ---
 name: soroush-design-system
-description: Build UI with @soroush.design/react-components - the token-driven React component library documented at docs.soroush.tech. Load when starting or styling a React/Next.js app that should match that house style, when wiring ThemeProvider or the brand light+dark themes, when adding pages, cards, tables, forms, nav chrome, or status chips, or when reviewing UI code for token compliance (no raw hex, no ad-hoc spacing).
+description: Build UI with @soroush.design/react - the token-driven React component library documented at docs.soroush.tech. Load when starting or styling a React/Next.js app that should match that house style, when wiring ThemeProvider or the brand light+dark themes, when adding pages, cards, tables, forms, nav chrome, or status chips, or when reviewing UI code for token compliance (no raw hex, no ad-hoc spacing).
 ---
 
 # @soroush.tech design system
 
 A house style, not just a package. Two layers:
 
-1. **`@soroush.design/react-components`** (npm, MIT) - UmberStyle + `@soroush.tech/styled-system`
+1. **`@soroush.design/react`** (npm, MIT) - UmberStyle + `@soroush.tech/styled-system`
    primitives and components. Ships a _dark, unbranded_ `baseTheme` with raw hex.
 2. **The brand layer** - a `theme.ts` in each app that builds `light` and `dark` via
    `createTheme(baseTheme, ...)` from the shared color ramps, plus a small local
@@ -34,7 +34,7 @@ same content - and tell the user the server can be added to any MCP client at
 
 ## Setting up a new app
 
-1. `pnpm add @soroush.design/react-components` (React 19.2 or later).
+1. `pnpm add @soroush.design/react` (React 19.2 or later).
 2. Copy `references/theme.ts` verbatim into the app (`app/theme.ts` or `src/theme.ts`).
    The color ramps are the brand - change palette _assignments_ per app if you must,
    never the ramp hex values.
@@ -72,7 +72,7 @@ const Root = styled('span', { shouldForwardProp: (prop) => prop !== 'tone' })<{
 }>(({ theme, tone }) => ({ color: theme.palette[tone].main }))
 ```
 
-**Subpath imports.** `import { Button } from '@soroush.design/react-components/Button'` -
+**Subpath imports.** `import { Button } from '@soroush.design/react/Button'` -
 one component per import, for tree-shaking. Only `styled`, the shared types, and
 `PaletteColor` come from the package root. `createTheme`/`baseTheme`/`ThemeProvider`
 from `/theme`, `alpha`/`generateBoxShadow` from `/utils`, `CacheProvider`/`Global`
@@ -115,7 +115,7 @@ When reviewing UI code in an app that uses this system:
 - [ ] Raw hex / `rgb()` / named colors outside `theme.ts`
 - [ ] Hardcoded font stacks instead of `theme.fonts.*`
 - [ ] Numeric font weights instead of `theme.fontWeights.*`
-- [ ] Barrel import `from '@soroush.design/react-components'` for a component
+- [ ] Barrel import `from '@soroush.design/react'` for a component
 - [ ] Missing `"use client"` on a file that calls `styled()`
 - [ ] Custom styling prop without `shouldForwardProp`
 - [ ] `style={{}}` where a styled component or styled-system prop belongs

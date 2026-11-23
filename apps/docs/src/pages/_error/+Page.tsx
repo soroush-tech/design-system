@@ -1,5 +1,5 @@
-import { Typography } from '@soroush.design/react-components/Typography'
-import { View } from '@soroush.design/react-components/View'
+import { Typography } from '@soroush.design/react/Typography'
+import { View } from '@soroush.design/react/View'
 import { Layout } from 'src/common/Layout'
 
 export default function Page() {

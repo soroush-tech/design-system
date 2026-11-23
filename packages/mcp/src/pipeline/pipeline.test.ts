@@ -43,15 +43,13 @@ describe('component pipeline', () => {
 
   it('builds the subpath import for a component', () => {
     expect(importPathFor(allDocComponents.find((item) => item.name === 'Card')!)).toBe(
-      "import { Card } from '@soroush.design/react-components/Card'"
+      "import { Card } from '@soroush.design/react/Card'"
     )
   })
 
   it("imports a family member from its family's subpath, and points at its API page", () => {
     const menuList = components.find((c) => c.name === 'MenuList')!
-    expect(menuList.importPath).toBe(
-      "import { MenuList } from '@soroush.design/react-components/Menu'"
-    )
+    expect(menuList.importPath).toBe("import { MenuList } from '@soroush.design/react/Menu'")
     expect(menuList.family).toBe('Menu')
     expect(menuList.category).toBe(components.find((c) => c.name === 'Menu')!.category)
     expect(menuList.url).toBe('https://docs.soroush.tech/design-system/api/menu-list/')

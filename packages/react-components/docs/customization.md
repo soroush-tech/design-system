@@ -59,7 +59,7 @@ Extra variant entries matched by props: an entry applies when every key in its `
 **New variant values** need two things - the type registration and the styles:
 
 ```ts
-declare module '@soroush.design/react-components/theme' {
+declare module '@soroush.design/react/theme' {
   interface ButtonVariants {
     dashed: true // widens ButtonVariant so variant="dashed" typechecks
   }
@@ -96,10 +96,10 @@ So a composed slot is customizable at three levels: **props** (`defaultProps.tit
 The mechanism is infrastructure, not just configuration. Create your roots with this package's `styled` and register the name:
 
 ```ts
-import { styled } from '@soroush.design/react-components'
-import type { ComponentConfig } from '@soroush.design/react-components/theme'
+import { styled } from '@soroush.design/react'
+import type { ComponentConfig } from '@soroush.design/react/theme'
 
-declare module '@soroush.design/react-components/theme' {
+declare module '@soroush.design/react/theme' {
   interface ThemeComponents {
     MyWidget?: ComponentConfig<{ tone?: 'calm' | 'loud' }, 'root' | 'handle'>
   }

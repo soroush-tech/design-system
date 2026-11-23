@@ -1,4 +1,4 @@
-import { DESIGN_SYSTEM_PACKAGE } from './designSystemPackage'
+import { APP_PACKAGE, APP_PACKAGE_VERSION, DESIGN_SYSTEM_PACKAGE } from './designSystemPackage'
 import { existsSync, realpathSync } from 'node:fs'
 import { join } from 'node:path'
 import { applyPlan, type ApplyError } from './apply/applyPlan'
@@ -42,7 +42,7 @@ function formatClosing({ creates, manual }: Plan): string {
   return `Done: the design system is set up.
 ${leftToYou}
 Next:
-  - Use a component: import { Button } from '${DESIGN_SYSTEM_PACKAGE}/Button'${themesStep}
+  - Use a component: import { Button } from '${APP_PACKAGE}/Button'${themesStep}
 ${FONTS_STEP}
 
 ${AGENT_STEPS}`
@@ -129,7 +129,7 @@ export async function askScheme(io: Io): Promise<Scheme> {
   return (await io.select('Default color scheme', choices)) as Scheme
 }
 
-function collectFacts(app: App, scheme: Scheme | undefined, designSystem: PackageJson): InitFacts {
+function collectFacts(app: App, scheme: Scheme | undefined): InitFacts {
   const { root, packageJson, rootCandidates } = app
   const rootPath = rootCandidates.length === 1 ? rootCandidates[0] : undefined
   return {
@@ -137,10 +137,13 @@ function collectFacts(app: App, scheme: Scheme | undefined, designSystem: Packag
     hasSrcFolder: existsSync(join(root, 'src')),
     root: rootPath ? { path: rootPath, source: readText(join(root, rootPath))! } : undefined,
     rootCandidates,
-    hasDesignSystem: Boolean(getDependency(packageJson, DESIGN_SYSTEM_PACKAGE)),
+    // An app that has the component library alone is set up too: init adds nothing to it.
+    hasDesignSystem: [APP_PACKAGE, DESIGN_SYSTEM_PACKAGE].some((name) =>
+      getDependency(packageJson, name)
+    ),
     needsParcelPackageExports: needsParcelPackageExports(packageJson),
     packageManager: detectPackageManager(root, packageJson),
-    version: designSystem.version!,
+    version: APP_PACKAGE_VERSION,
     scheme: scheme ?? 'light',
     readFile: (path) => readText(join(root, path)),
   }
@@ -198,8 +201,9 @@ function applyAndInstall(plan: Plan, root: string, io: Io, fileSystem: FileSyste
 
 /**
  * Sets up the design system in the app in `io.cwd`: checks, plans, shows the plan, and applies it
- * only after a yes. `designSystem` is the package it installs: its version, and the React range it
- * checks the app against. Returns the exit code.
+ * only after a yes. It installs the umbrella `@soroush.design/react`; `designSystem` is the
+ * component library's package, whose peer range for React the app is checked against. Returns the
+ * exit code.
  */
 export async function runInit(
   options: InitOptions,
@@ -226,7 +230,7 @@ export async function runInit(
     return 1
   }
 
-  const facts = collectFacts(app, options.scheme, designSystem)
+  const facts = collectFacts(app, options.scheme)
   const canAsk = !options.scheme && !isPreviewOnly && !options.isConfirmed
   const plan = await planWithScheme(facts, canAsk, io)
 
@@ -236,7 +240,7 @@ export async function runInit(
     return 0
   }
   const appName = packageJson.name ?? 'this app'
-  io.write(`init will set up ${DESIGN_SYSTEM_PACKAGE} in ${appName}:\n\n${formatPlan(plan)}\n`)
+  io.write(`init will set up ${APP_PACKAGE} in ${appName}:\n\n${formatPlan(plan)}\n`)
   if (!(await isApproved(options, isPreviewOnly, io))) return 0
   return applyAndInstall(plan, root, io, fileSystem)
 }

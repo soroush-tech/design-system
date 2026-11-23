@@ -14,7 +14,7 @@ that respects `prefers-reduced-motion`; the page behind is dimmed through the po
 ## Usage
 
 ```tsx
-import { Drawer, DrawerToggle } from '@soroush.design/react-components/Drawer'
+import { Drawer, DrawerToggle } from '@soroush.design/react/Drawer'
 
 <DrawerToggle drawer="nav" aria-label="Open navigation">
   <Icon name="menu" />
@@ -81,12 +81,12 @@ controlled `isOpen` does nothing rather than throwing - and the rest of the page
 
 ## Testing
 
-jsdom has no Popover API either. `installPopover` from `@soroush.design/react-components/testing`
+jsdom has no Popover API either. `installPopover` from `@soroush.design/react/testing`
 stands in for it - show, hide, the `toggle` event, Escape and `DrawerToggle` clicks - and returns
 a function that removes it:
 
 ```tsx
-import { installPopover } from '@soroush.design/react-components/testing'
+import { installPopover } from '@soroush.design/react/testing'
 
 let restore = () => {}
 beforeAll(() => {

@@ -79,7 +79,7 @@ release did not have yet is dropped from the registry.
 
 - Imports use the `src/`, `content/`, and `packages/` aliases. Never relative `../../`
   (the `+route.ts`/`+config.ts` exception above aside).
-- Design-system imports use per-component subpaths (`@soroush.design/react-components/Button`).
+- Design-system imports use per-component subpaths (`@soroush.design/react/Button`).
 - All prose content - MDX included - must use ASCII punctuation (the repo-wide `aiwg`
   guard scans it).
 - Never hardcode a section URL - build links with `sectionPath()` so snapshots stay

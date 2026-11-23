@@ -1,8 +1,8 @@
 import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react'
-import { styled, get } from '@soroush.design/react-components'
-import { alpha } from '@soroush.design/react-components/utils'
-import { Typography } from '@soroush.design/react-components/Typography'
-import { View } from '@soroush.design/react-components/View'
+import { styled, get } from '@soroush.design/react'
+import { alpha } from '@soroush.design/react/utils'
+import { Typography } from '@soroush.design/react/Typography'
+import { View } from '@soroush.design/react/View'
 
 interface Heading {
   id: string

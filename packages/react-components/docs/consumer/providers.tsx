@@ -2,8 +2,8 @@
 
 import { useServerInsertedHTML } from 'next/navigation'
 import { useState } from 'react'
-import { CacheProvider, createCache, Global } from '@soroush.design/react-components/engine'
-import { ThemeProvider } from '@soroush.design/react-components/theme'
+import { CacheProvider, createCache, Global } from '@soroush.design/react/engine'
+import { ThemeProvider } from '@soroush.design/react/theme'
 import { light } from '@/theme'
 
 /** Collects the styles rendered on the server and re-injects them into the

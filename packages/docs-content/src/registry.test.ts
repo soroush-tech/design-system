@@ -7,6 +7,7 @@ import {
   componentCategories,
   componentLinkPath,
   componentPagePath,
+  importPackageOf,
   importSubpathOf,
   markdownComponents,
   memberComponents,
@@ -116,6 +117,12 @@ describe('component registry', () => {
     expect(importSubpathOf(menu)).toBe('Menu')
     expect(componentPagePath(menuList)).toBe('/api/menu-list/')
     expect(componentPagePath(menu)).toBe('/components/menu/')
+  })
+
+  it('imports a component from the umbrella, and a markdown component from its own package', () => {
+    expect(importPackageOf(componentBySlug.get('button')!)).toBe('@soroush.design/react')
+    expect(importPackageOf(componentBySlug.get('menu-list')!)).toBe('@soroush.design/react')
+    expect(importPackageOf(componentBySlug.get('preview')!)).toBe('@soroush.tech/markdown')
   })
 
   it("sends a link to a README's section to the page that shows it", () => {

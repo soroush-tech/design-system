@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react'
-import { AppBar } from '@soroush.design/react-components/AppBar'
-import { Flex } from '@soroush.design/react-components/Flex'
-import { useTheme } from '@soroush.design/react-components/theme'
-import { Typography } from '@soroush.design/react-components/Typography'
-import { alpha } from '@soroush.design/react-components/utils'
+import { AppBar } from '@soroush.design/react/AppBar'
+import { Flex } from '@soroush.design/react/Flex'
+import { useTheme } from '@soroush.design/react/theme'
+import { Typography } from '@soroush.design/react/Typography'
+import { alpha } from '@soroush.design/react/utils'
 import { RouterLink } from './RouterLink'
 
 /**

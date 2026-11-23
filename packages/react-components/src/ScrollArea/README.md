@@ -7,7 +7,7 @@ overflows gets a track, down the right edge or along the bottom, whose thumb dra
 one view toward the pointer, as a native one does.
 
 ```tsx
-import { ScrollArea } from '@soroush.design/react-components/ScrollArea'
+import { ScrollArea } from '@soroush.design/react/ScrollArea'
 
 ;<ScrollArea maxHeight={240} aria-label="Notes" tabIndex={0}>
   {notes}

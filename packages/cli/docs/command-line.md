@@ -216,8 +216,9 @@ Run it in your app's folder, or in a workspace's root that holds one app:
 npx @soroush.design/cli init
 ```
 
-It installs the design system version the command line was released next to.
-`npx @soroush.design/react-components init` does the same with the design system version you ask for.
+It installs `@soroush.design/react`, the version the command line was released next to.
+`npx @soroush.design/react-components init` does the same: the component library's command line is
+the same one, and checks your React against the library's range.
 
 | Option            | What it does                                 |
 | ----------------- | -------------------------------------------- |
@@ -235,7 +236,7 @@ App), in TypeScript or JavaScript:
 - It writes `src/theme/themes` (a `light` and a `dark` theme, each a `createTheme(baseTheme,
   {...})` call you edit) and `src/theme/Providers` (`ThemeProvider` with the base page styles).
 - It wraps what your root renders in `<Providers>`.
-- It installs `@soroush.design/react-components` with your own package manager.
+- It installs `@soroush.design/react` with your own package manager.
 
 It is careful with your app:
 
@@ -245,7 +246,8 @@ It is careful with your app:
 - It never overwrites a file, and edits the root only when it has the standard shape: one
   `createRoot(...).render(` or `ReactDOM.render(` call. Otherwise it prints the lines to add.
 - When a write fails, it takes back every change it made. The install runs last, with no scripts.
-- A second run finds its own files and changes nothing.
+- A second run finds its own files and changes nothing, and an app that already has
+  `@soroush.design/react` or `@soroush.design/react-components` gets no install.
 - It checks your React against the design system's peer range, and never upgrades React.
 - It reaches no network but the install.
 

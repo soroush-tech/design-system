@@ -38,7 +38,7 @@ describe('planInit', () => {
     expect(plan.edits[0].after).toContain("import { Providers } from './theme/Providers.ts'")
     expect(plan.install).toEqual({
       command: 'pnpm',
-      args: ['add', '@soroush.design/react-components@^0.1.0', '--ignore-scripts'],
+      args: ['add', '@soroush.design/react@^0.1.0', '--ignore-scripts'],
       env: {},
     })
     expect(plan.skips).toEqual([])
@@ -167,7 +167,7 @@ describe('planInit', () => {
 it('asks a Parcel app to read package exports, and edits no bundler config', () => {
   const plan = planInit(createFacts({ needsParcelPackageExports: true }))
   expect(plan.manual).toEqual([
-    'Parcel finds @soroush.design/react-components/theme and the other subpaths only once it reads package exports. Add to package.json: "@parcel/resolver-default": { "packageExports": true }',
+    'Parcel finds @soroush.design/react/theme and the other subpaths only once it reads package exports. Add to package.json: "@parcel/resolver-default": { "packageExports": true }',
   ])
   expect(plan.edits.map((edit) => edit.path)).toEqual(['src/main.tsx'])
 })
@@ -176,12 +176,12 @@ describe('createInstallCommand', () => {
   it("uses the app's package manager and runs no scripts", () => {
     expect(createInstallCommand({ name: 'npm', isYarnBerry: false }, '0.1.0')).toEqual({
       command: 'npm',
-      args: ['install', '@soroush.design/react-components@^0.1.0', '--ignore-scripts'],
+      args: ['install', '@soroush.design/react@^0.1.0', '--ignore-scripts'],
       env: {},
     })
     expect(createInstallCommand({ name: 'yarn', isYarnBerry: false }, '0.1.0').args).toEqual([
       'add',
-      '@soroush.design/react-components@^0.1.0',
+      '@soroush.design/react@^0.1.0',
       '--ignore-scripts',
     ])
     expect(createInstallCommand({ name: 'bun', isYarnBerry: false }, '0.1.0').command).toBe('bun')
@@ -190,14 +190,14 @@ describe('createInstallCommand', () => {
   it('turns scripts off for Yarn 2 and later through its setting, which takes no flag', () => {
     expect(createInstallCommand({ name: 'yarn', isYarnBerry: true }, '0.1.0')).toEqual({
       command: 'yarn',
-      args: ['add', '@soroush.design/react-components@^0.1.0'],
+      args: ['add', '@soroush.design/react@^0.1.0'],
       env: { YARN_ENABLE_SCRIPTS: 'false' },
     })
   })
 
   it('pins a prerelease exactly', () => {
     expect(createInstallCommand({ name: 'npm', isYarnBerry: false }, '0.1.0-alpha.1').args[1]).toBe(
-      '@soroush.design/react-components@0.1.0-alpha.1'
+      '@soroush.design/react@0.1.0-alpha.1'
     )
   })
 })

@@ -5,13 +5,7 @@ broadcasts cell config (`size`, `cellPadding`, `hasStickyHeader`) to descendant 
 `TableContext`.
 
 ```tsx
-import {
-  Table,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableCell,
-} from '@soroush.design/react-components/Table'
+import { Table, TableHead, TableBody, TableRow, TableCell } from '@soroush.design/react/Table'
 
 ;<Table size="sm" hasStickyHeader>
   <TableHead>...</TableHead>

@@ -1,12 +1,12 @@
 # The component catalog
 
-`@soroush.design/react-components/catalog` describes every component as data, for tools that place
+`@soroush.design/react/catalog` describes every component as data, for tools that place
 and write components rather than render them: a design tool's component palette, a page's
 source writer, a generator. It ships with the package and is versioned with it, so a tool reads
 the catalog of the version it installed instead of keeping a copy that drifts.
 
 ```ts
-import { catalog } from '@soroush.design/react-components/catalog'
+import { catalog } from '@soroush.design/react/catalog'
 
 catalog.components.Select.module // '@soroush.design/react-components/Select'
 catalog.components.Select.example // { component: 'Select', props: { placeholder: ... }, children: [...] }

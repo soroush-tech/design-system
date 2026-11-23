@@ -20,6 +20,7 @@
     "@fontsource-variable/jetbrains-mono": "^5.3.0",
     "@fontsource-variable/space-grotesk": "^5.3.0",
     "@mdx-js/react": "^3.1.1",
+    "@soroush.design/react": "workspace:*",
     "@soroush.design/react-components": "workspace:*",
     "@soroush.tech/docs-content": "workspace:*",
     "@soroush.tech/hooks": "workspace:*",

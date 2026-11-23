@@ -8,7 +8,7 @@ size, color, error and disabled state apply. The words - clear, open, close, loa
 yours: no built-in English.
 
 ```tsx
-import { Autocomplete } from '@soroush.design/react-components/Autocomplete'
+import { Autocomplete } from '@soroush.design/react/Autocomplete'
 
 ;<Autocomplete
   options={['Berlin', 'Lisbon', 'Oslo']}

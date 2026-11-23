@@ -4,7 +4,7 @@ The `Tabs` of a `TabContext`: it shows the context's value and chooses through i
 tab to its `TabPanel` - the tab `aria-controls` its panel, and the panel is named by its tab.
 
 ```tsx
-import { Tab, TabContext, TabList, TabPanel } from '@soroush.design/react-components/Tabs'
+import { Tab, TabContext, TabList, TabPanel } from '@soroush.design/react/Tabs'
 
 const [value, setValue] = useState('1')
 
