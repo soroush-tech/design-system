@@ -22,6 +22,12 @@ export interface SectionDescription {
   tagPrefix: string
   /** Prefixes of the tags of earlier names: archived versions only, never the newest release. */
   formerTagPrefixes: string[]
+  /**
+   * The stable versions released under each former prefix, keyed by the prefix. A line that ended
+   * with its rename is closed, so the list is fixed: it is how the version menu tells an archived
+   * version of the old name from one of the current package, whatever their numbers.
+   */
+  formerVersions: Record<string, string[]>
 }
 
 // Typed so a section missing from the file, or a field missing from one, fails the typecheck.

@@ -3,36 +3,56 @@
     "dir": "react-components",
     "npm": "@soroush.design/react-components",
     "tagPrefix": "@soroush.design/react-components@",
-    "formerTagPrefixes": ["@soroush.tech/design-system@"]
+    "formerTagPrefixes": ["@soroush.tech/design-system@"],
+    "formerVersions": {
+      "@soroush.tech/design-system@": [
+        "1.0.0",
+        "1.1.0",
+        "1.2.0",
+        "1.3.0",
+        "1.3.1",
+        "1.3.2",
+        "1.3.3",
+        "2.0.0",
+        "2.1.1",
+        "2.1.2",
+        "2.2.0"
+      ]
+    }
   },
   "markdown": {
     "dir": "markdown",
     "npm": "@soroush.tech/markdown",
     "tagPrefix": "@soroush.tech/markdown@",
-    "formerTagPrefixes": []
+    "formerTagPrefixes": [],
+    "formerVersions": {}
   },
   "styled-system": {
     "dir": "styled-system",
     "npm": "@soroush.tech/styled-system",
     "tagPrefix": "@soroush.tech/styled-system@",
-    "formerTagPrefixes": []
+    "formerTagPrefixes": [],
+    "formerVersions": {}
   },
   "mcp": {
     "dir": "mcp",
     "npm": "@soroush.design/mcp",
     "tagPrefix": "@soroush.design/mcp@",
-    "formerTagPrefixes": []
+    "formerTagPrefixes": [],
+    "formerVersions": {}
   },
   "ui-spec": {
     "dir": "ui-spec",
     "npm": "@soroush.tech/ui-spec",
     "tagPrefix": "@soroush.tech/ui-spec@",
-    "formerTagPrefixes": []
+    "formerTagPrefixes": [],
+    "formerVersions": {}
   },
   "cli": {
     "dir": "cli",
     "npm": "@soroush.design/cli",
     "tagPrefix": "@soroush.design/cli@",
-    "formerTagPrefixes": []
+    "formerTagPrefixes": [],
+    "formerVersions": {}
   }
 }

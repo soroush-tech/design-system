@@ -67,6 +67,7 @@ describe('readSection', () => {
       npm: '@soroush.design/cli',
       tagPrefix: '@soroush.design/cli@',
       formerTagPrefixes: [],
+      formerVersions: {},
     })
   })
 

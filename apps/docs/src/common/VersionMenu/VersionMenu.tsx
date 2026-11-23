@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react'
 import { Button } from '@soroush.design/react/Button'
 import { Menu } from '@soroush.design/react/Menu'
 import { MenuItem } from '@soroush.design/react/MenuItem'
-import type { DocsSection } from 'src/common/nav'
+import { sections, type DocsSection } from 'src/common/nav'
 import { PACKAGE_VERSIONS } from 'src/common/packageVersions'
+import { groupVersions } from './utils/groupVersions'
 import { newestVersion } from './utils/newestVersion'
 import { currentVersion } from './utils/versionFromPath'
 
@@ -43,6 +44,12 @@ const useVersions = (pkg: DocsSection): string[] => {
   return versions
 }
 
+const versionRow = (version: string, current: string) => (
+  <MenuItem key={version} value={version} role="menuitemradio" selected={current === version}>
+    v{version}
+  </MenuItem>
+)
+
 /**
  * The version of the docs, and a menu to change it: the live docs (`latest`) or any released
  * snapshot. A snapshot is a separate build, so choosing one loads it.
@@ -50,9 +57,11 @@ const useVersions = (pkg: DocsSection): string[] => {
 export function VersionMenu({ pkg, pathname }: Readonly<VersionMenuProps>) {
   const versions = useVersions(pkg)
   const current = currentVersion(pathname, pkg, import.meta.env.BASE_URL)
-  // The live build is the newest version. A snapshot is older than the latest, so it names the
-  // newest the manifest knows - and just "Latest" before there is one.
-  const live = current === 'latest' ? PACKAGE_VERSIONS[pkg] : newestVersion(versions)
+  const { current: own, former } = groupVersions(versions, sections[pkg])
+  // "Latest" is the current package's version, never the highest number: the live build names its
+  // own, a snapshot the newest the manifest lists for the current package - and just "Latest"
+  // before there is one. A version of an earlier name never counts.
+  const live = current === 'latest' ? PACKAGE_VERSIONS[pkg] : newestVersion(own)
   const shown = current === 'latest' ? PACKAGE_VERSIONS[pkg] : current
   return (
     <Menu
@@ -74,9 +83,10 @@ export function VersionMenu({ pkg, pathname }: Readonly<VersionMenuProps>) {
       <MenuItem value="latest" role="menuitemradio" selected={current === 'latest'}>
         {live === undefined ? 'Latest' : `Latest (v${live})`}
       </MenuItem>
-      {versions.map((version) => (
-        <MenuItem key={version} value={version} role="menuitemradio" selected={current === version}>
-          v{version}
+      {own.map((version) => versionRow(version, current))}
+      {former.map(({ name, versions: older }) => (
+        <MenuItem key={name} submenu={older.map((version) => versionRow(version, current))}>
+          Published as {name}
         </MenuItem>
       ))}
     </Menu>

@@ -51,8 +51,13 @@ serves that branch at docs.soroush.tech, so pushing it _is_ the deploy - there i
 publish step. `public/CNAME` carries the domain and `public/.nojekyll` keeps Pages from
 running Jekyll over the build; both ride along in every build's output. The
 `VersionMenu` reads `/versions.json` from the domain root (revalidated, not cached), so old
-snapshots list newer releases; its "Latest" row names the newest version in that manifest
-from a snapshot, and the build's own version on the live site.
+snapshots list newer releases. Its "Latest" row is the current package's version, never the
+highest number: the build's own version on the live site, and the newest version of the current
+package in that manifest from a snapshot. Which package a version was published as comes from
+`formerVersions` in `sections.json` (the versions released under each former tag prefix), not
+from its number: those are listed apart, in a group named for the former package, after the
+current package's. The manifest keeps one flat list per section; a snapshot is frozen, so only
+the live site and snapshots built after this change use the grouping.
 
 What search engines are told about the archived pages is settled when the tree is composed, not
 when a snapshot is built - a snapshot is frozen and cannot know what later releases add or drop.

@@ -53,11 +53,11 @@ test.describe('design-system section', () => {
   }) => {
     // The deploy writes /versions.json at the domain root; a local build has none, so it is given.
     await page.route('**/versions.json', (route) =>
-      route.fulfill({ json: { 'design-system': ['1.3.3'] } })
+      route.fulfill({ json: { 'design-system': ['2.2.0', '0.1.0'] } })
     )
     // A snapshot is a build of its own, so its page is given too.
-    await page.route('**/design-system/1.3.3/', (route) =>
-      route.fulfill({ contentType: 'text/html', body: '<title>1.3.3 snapshot</title>' })
+    await page.route('**/design-system/0.1.0/', (route) =>
+      route.fulfill({ contentType: 'text/html', body: '<title>0.1.0 snapshot</title>' })
     )
     await page.goto('/design-system/')
     await page
@@ -69,8 +69,12 @@ test.describe('design-system section', () => {
       'aria-checked',
       'true'
     )
-    await menu.getByRole('menuitemradio', { name: 'v1.3.3' }).click()
-    await expect(page).toHaveURL(/\/design-system\/1\.3\.3\/$/)
+    // The versions of the former name are apart, in a group of their own.
+    await expect(
+      menu.getByRole('menuitem', { name: 'Published as @soroush.tech/design-system' })
+    ).toBeVisible()
+    await menu.getByRole('menuitemradio', { name: 'v0.1.0', exact: true }).click()
+    await expect(page).toHaveURL(/\/design-system\/0\.1\.0\/$/)
   })
 
   test('sidebar navigates to installation', async ({ page }) => {

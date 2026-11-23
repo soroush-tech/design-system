@@ -58,7 +58,7 @@ const trigger = () => screen.getByRole('button', { name: /Documentation version/
 
 describe('VersionMenu', () => {
   it('shows the version of the live docs on the live site', async () => {
-    stubManifest({ 'design-system': ['1.3.3'] })
+    stubManifest({ 'design-system': ['0.1.0'] })
     renderWithTheme(<VersionMenu pkg="design-system" pathname="/design-system/" />)
     expect(trigger()).toHaveTextContent(`v${live}`)
     await waitFor(() =>
@@ -66,30 +66,47 @@ describe('VersionMenu', () => {
     )
   })
 
-  it('names the newest released version as the latest from a snapshot', async () => {
-    stubManifest({ 'design-system': ['1.3.3', '2.1.0', '2.0.0'] })
+  it('names the newest version of the current package as the latest from a snapshot of it', async () => {
+    stubManifest({ 'design-system': ['2.2.0', '0.2.0', '0.1.0'] })
     const user = userEvent.setup()
-    renderWithTheme(<VersionMenu pkg="design-system" pathname="/design-system/1.3.3/" />)
+    renderWithTheme(<VersionMenu pkg="design-system" pathname="/design-system/0.1.0/" />)
     await user.click(trigger())
-    expect(await screen.findByRole('menuitemradio', { name: 'Latest (v2.1.0)' })).toBeVisible()
+    expect(await screen.findByRole('menuitemradio', { name: 'Latest (v0.2.0)' })).toBeVisible()
+  })
+
+  it('names the current package, not the highest number, from a snapshot of the former name', async () => {
+    stubManifest({ 'design-system': ['2.2.0', '2.1.2', '0.1.0'] })
+    const user = userEvent.setup()
+    renderWithTheme(<VersionMenu pkg="design-system" pathname="/design-system/2.2.0/" />)
+    expect(trigger()).toHaveTextContent('v2.2.0')
+    await user.click(trigger())
+    expect(await screen.findByRole('menuitemradio', { name: 'Latest (v0.1.0)' })).toBeVisible()
+  })
+
+  it('says just Latest from a snapshot of the former name when the current package has none', async () => {
+    stubManifest({ 'design-system': ['2.2.0', '2.1.2'] })
+    const user = userEvent.setup()
+    renderWithTheme(<VersionMenu pkg="design-system" pathname="/design-system/2.2.0/" />)
+    await user.click(trigger())
+    expect(await screen.findByRole('menuitemradio', { name: 'Latest' })).toBeVisible()
   })
 
   it('says just Latest from a snapshot until a version is known', async () => {
     stubManifest({}, false)
     const user = userEvent.setup()
-    renderWithTheme(<VersionMenu pkg="design-system" pathname="/design-system/1.3.3/" />)
+    renderWithTheme(<VersionMenu pkg="design-system" pathname="/design-system/0.1.0/" />)
     await user.click(trigger())
     expect(await screen.findByRole('menuitemradio', { name: 'Latest' })).toBeVisible()
   })
 
   it('shows the version of a snapshot on its path', () => {
-    stubManifest({ 'design-system': ['1.3.3'] })
-    renderWithTheme(<VersionMenu pkg="design-system" pathname="/design-system/1.3.3/" />)
-    expect(trigger()).toHaveTextContent('v1.3.3')
+    stubManifest({ 'design-system': ['0.1.0'] })
+    renderWithTheme(<VersionMenu pkg="design-system" pathname="/design-system/0.1.0/" />)
+    expect(trigger()).toHaveTextContent('v0.1.0')
   })
 
   it('lists the live docs and every released version from the root manifest', async () => {
-    stubManifest({ 'design-system': ['1.3.3', '1.3.2'] })
+    stubManifest({ 'design-system': ['0.1.0', '0.0.9'] })
     const user = userEvent.setup()
     renderWithTheme(<VersionMenu pkg="design-system" pathname="/design-system/" />)
     await user.click(trigger())
@@ -98,41 +115,62 @@ describe('VersionMenu', () => {
     const rows = within(menu).getAllByRole('menuitemradio')
     expect(rows[0]).toHaveTextContent(`Latest (v${live})`)
     expect(rows[0]).toHaveAttribute('aria-checked', 'true')
-    expect(rows[1]).toHaveTextContent('v1.3.3')
+    expect(rows[1]).toHaveTextContent('v0.1.0')
     expect(rows[1]).toHaveAttribute('aria-checked', 'false')
-    expect(rows[2]).toHaveTextContent('v1.3.2')
+    expect(rows[2]).toHaveTextContent('v0.0.9')
+  })
+
+  it('lists the versions of the former name apart, after those of the current package', async () => {
+    stubManifest({ 'design-system': ['2.2.0', '1.3.3', '0.2.0', '0.1.0'] })
+    const assign = vi.fn()
+    vi.stubGlobal('location', { ...window.location, assign })
+    const user = userEvent.setup()
+    renderWithTheme(<VersionMenu pkg="design-system" pathname="/design-system/" />)
+    await user.click(trigger())
+    const menu = await screen.findByRole('menu', { name: 'Documentation version' })
+    await waitFor(() => expect(within(menu).getAllByRole('menuitemradio')).toHaveLength(3))
+    const rows = within(menu).getAllByRole('menuitemradio')
+    expect(rows[0]).toHaveTextContent(`Latest (v${live})`)
+    expect(rows[1]).toHaveTextContent('v0.2.0')
+    expect(rows[2]).toHaveTextContent('v0.1.0')
+    const group = within(menu).getByRole('menuitem', {
+      name: 'Published as @soroush.tech/design-system',
+    })
+    await user.click(group)
+    await user.click(await screen.findByRole('menuitemradio', { name: 'v2.2.0' }))
+    expect(assign).toHaveBeenCalledWith('/design-system/2.2.0/')
   })
 
   it('marks the version of a snapshot as the chosen one', async () => {
-    stubManifest({ 'design-system': ['1.3.3'] })
+    stubManifest({ 'design-system': ['0.1.0'] })
     const user = userEvent.setup()
-    renderWithTheme(<VersionMenu pkg="design-system" pathname="/design-system/1.3.3/" />)
+    renderWithTheme(<VersionMenu pkg="design-system" pathname="/design-system/0.1.0/" />)
     await user.click(trigger())
     const menu = await screen.findByRole('menu', { name: 'Documentation version' })
     await waitFor(() => expect(within(menu).getAllByRole('menuitemradio')).toHaveLength(2))
-    expect(within(menu).getByRole('menuitemradio', { name: 'v1.3.3' })).toHaveAttribute(
+    expect(within(menu).getByRole('menuitemradio', { name: 'v0.1.0' })).toHaveAttribute(
       'aria-checked',
       'true'
     )
   })
 
   it('loads the snapshot that is chosen', async () => {
-    stubManifest({ 'design-system': ['1.3.3'] })
+    stubManifest({ 'design-system': ['0.1.0'] })
     const assign = vi.fn()
     vi.stubGlobal('location', { ...window.location, assign })
     const user = userEvent.setup()
     renderWithTheme(<VersionMenu pkg="design-system" pathname="/design-system/" />)
     await user.click(trigger())
-    await user.click(await screen.findByRole('menuitemradio', { name: 'v1.3.3' }))
-    expect(assign).toHaveBeenCalledWith('/design-system/1.3.3/')
+    await user.click(await screen.findByRole('menuitemradio', { name: 'v0.1.0' }))
+    expect(assign).toHaveBeenCalledWith('/design-system/0.1.0/')
   })
 
   it('goes from a snapshot back to the live docs', async () => {
-    stubManifest({ 'design-system': ['1.3.3'] })
+    stubManifest({ 'design-system': ['0.1.0'] })
     const assign = vi.fn()
     vi.stubGlobal('location', { ...window.location, assign })
     const user = userEvent.setup()
-    renderWithTheme(<VersionMenu pkg="design-system" pathname="/design-system/1.3.3/" />)
+    renderWithTheme(<VersionMenu pkg="design-system" pathname="/design-system/0.1.0/" />)
     await user.click(trigger())
     await user.click(await screen.findByRole('menuitemradio', { name: /^Latest/ }))
     expect(assign).toHaveBeenCalledWith('/design-system/')
