@@ -1,13 +1,44 @@
-// Generates the entry points of the platform umbrella from the libraries it points at.
+// Generates the entry points of an umbrella from the packages it points at.
 //
-// An umbrella holds no code: every entry point is a one-line re-export of a library's entry
-// point. This file turns the libraries' published export maps into
+// An umbrella holds no code: every entry point is a one-line re-export of an entry point of one of
+// its sources. The platform umbrella (`@soroush.design/react`) has libraries as sources; the family
+// umbrella (`soroush.design`) has the platform umbrellas, each mounted under its platform's name.
+// Both are described by the same list of `Library`, because a platform umbrella publishes an
+// export map like any library. This file turns the published export maps into
 //   - one file per entry point under src/, and
 //   - the `exports` and `publishConfig.exports` of package.json,
-// and `--check` (see gen.ts) fails when what is on disk differs from what it would write.
+// and `check` fails when what is on disk differs from what it would write.
 import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
-import type { Library } from '../libraries'
+
+// A source is added by one line in the umbrella's `libraries.ts` and an entry in package.json;
+// `pnpm gen:umbrellas` then writes its entry points.
+//
+//   { package: '@soroush.design/react-components' }                    merged at the top: /Button
+//   { package: '@soroush.design/react-markdown', under: 'markdown' }   under a name: /markdown/Editor
+//   { package: '@soroush.design/react', under: 'react' }               a platform: /react/Button
+//   { package: '...', omit: ['./style'] }                               without an entry point another source serves
+//
+// A source with heavy dependencies is `optional: true`: the umbrella lists it as an optional peer,
+// so an app that never imports its entry points installs none of them.
+export interface Library {
+  /** The source's package name. */
+  package: string
+  /** A lowercase name to mount the source under; without it the source is merged at the top. */
+  under?: string
+  /**
+   * The app installs the source itself: it is an optional peer of the umbrella, not a dependency,
+   * and importing its entry points without it fails with a module-not-found error.
+   */
+  optional?: boolean
+  /**
+   * Entry points of the source the umbrella does not re-export, as the source publishes them
+   * (`'.'`, `'./style'`). Two sources may hold the same name - the component library re-exports the
+   * theme library's `/style` - and the umbrella takes it from one: the generator checks that an
+   * omitted entry point exists and that another source serves it.
+   */
+  omit?: string[]
+}
 
 /** One entry point of a library: `.` or `./Button`, and whether it has a default export. */
 export interface LibraryEntry {
@@ -155,22 +186,30 @@ const conditions = (name: string) => ({
   require: { types: `./dist/${name}.d.cts`, default: `./dist/${name}.cjs` },
 })
 
-/** package.json with the entry points: source in the workspace, `dist` once published. */
+/**
+ * package.json with the entry points: source in the workspace, `dist` once published. An umbrella
+ * with no root entry point (the family's: an app imports a platform, never the family) has no
+ * `main`, `module` or `types` either.
+ */
 export function renderPackageJson(source: string, entries: Entry[]): string {
   const manifest = JSON.parse(source) as Record<string, unknown>
   const outputName = ({ subpath }: Entry) => entryFile(subpath).slice(0, -'.ts'.length)
+  const hasRoot = entries.some(({ subpath }) => subpath === '.')
   manifest.exports = Object.fromEntries(
     entries.map((entry) => [entry.subpath, `./src/${entryFile(entry.subpath)}`])
   )
-  manifest.types = './src/index.ts'
+  if (hasRoot) manifest.types = './src/index.ts'
+  else delete manifest.types
   manifest.publishConfig = {
     access: 'public',
     exports: Object.fromEntries(
       entries.map((entry) => [entry.subpath, conditions(outputName(entry))])
     ),
-    main: './dist/index.cjs',
-    module: './dist/index.mjs',
-    types: './dist/index.d.mts',
+    ...(hasRoot && {
+      main: './dist/index.cjs',
+      module: './dist/index.mjs',
+      types: './dist/index.d.mts',
+    }),
     typesVersions: { '*': { '*': ['./dist/*.d.cts'] } },
   }
   return `${JSON.stringify(manifest, null, 2)}\n`
@@ -268,7 +307,7 @@ export function run({ root, libraries, check }: RunOptions): {
   if (!check) return { problems: [], summary: `Wrote ${problems.length} files; ${total}.` }
   if (problems.length === 0) return { problems, summary: `Up to date: ${total}.` }
   return {
-    problems: [...problems, 'Run `pnpm gen:react` and commit what it writes.'],
+    problems: [...problems, 'Run `pnpm gen:umbrellas` and commit what it writes.'],
     summary: 'The umbrella has drifted from its libraries.',
   }
 }

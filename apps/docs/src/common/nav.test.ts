@@ -11,7 +11,7 @@ import {
 } from './nav'
 
 // The registry itself - and its lockstep with the README and MDX files on disk - is
-// guarded by @soroush.tech/docs-content's own tests. What matters here is that this
+// guarded by @soroush.design/docs-content's own tests. What matters here is that this
 // module turns that registry into a correct rail and sidebar.
 
 afterEach(() => {

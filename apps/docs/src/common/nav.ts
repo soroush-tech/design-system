@@ -13,16 +13,16 @@ import {
   styledSystemGuides,
   type ComponentNavItem,
   type DocsSection,
-} from '@soroush.tech/docs-content'
+} from '@soroush.design/docs-content'
 import { PACKAGES } from 'src/common/packages'
 import { sectionPath } from 'src/common/sectionPath'
 
 // The component taxonomy and the styled-system doc lists live in
-// @soroush.tech/docs-content, shared with the MCP server so both describe the same
+// @soroush.design/docs-content, shared with the MCP server so both describe the same
 // library. Re-exported here because the app imports them through this module, and
 // guarded against the files on disk by that package's own tests. What stays below is
 // app-specific: turning the registry into the rail, the sidebar groups and the hrefs.
-export * from '@soroush.tech/docs-content'
+export * from '@soroush.design/docs-content'
 
 export interface NavItem {
   label: string

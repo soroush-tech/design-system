@@ -1,4 +1,4 @@
-import { DOC_LINK, docPagePath } from '@soroush.tech/docs-content'
+import { DOC_LINK, docPagePath } from '@soroush.design/docs-content'
 import { allDocComponents, componentLinkPath } from 'src/common/nav'
 import { sectionPath } from 'src/common/sectionPath'
 

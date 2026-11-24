@@ -1,4 +1,4 @@
-import { sections } from '@soroush.tech/docs-content'
+import { sections } from '@soroush.design/docs-content'
 import type { DocsSection } from 'src/common/nav'
 
 /**

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { sections } from '@soroush.tech/docs-content'
+import { sections } from '@soroush.design/docs-content'
 import { allComponents } from 'src/common/nav'
 import { PACKAGES, sourceUrlOf } from './packages'
 

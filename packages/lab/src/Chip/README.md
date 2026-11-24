@@ -1,7 +1,7 @@
 # Chip
 
 A small pill-shaped label for compact metadata - version badges, statuses, counts. Renders
-through `Typography`, so the full Typography prop surface applies. Part of `@soroush.tech/lab`:
+through `Typography`, so the full Typography prop surface applies. Part of `@soroush.design/lab`:
 the API may change before the component is promoted into the design system.
 
 ---
@@ -33,7 +33,7 @@ space/layout props.
 ## Examples
 
 ```tsx
-import { Chip } from '@soroush.tech/lab/Chip'
+import { Chip } from '@soroush.design/lab/Chip'
 
 // Version badge
 <Chip>v1.3.3</Chip>

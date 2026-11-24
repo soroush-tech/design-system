@@ -95,4 +95,4 @@ extract siblings (with co-located tests) only when it grows unwieldy. Required f
 - App code uses the `src/`, `content/`, and `packages/` aliases - never relative `../../`.
   The one exception: Vike `+route.ts`/`+config.ts` run at config time without aliases and
   import their helpers relatively.
-- Package directory name == package name minus the `@soroush.tech/` scope.
+- Package directory name == package name minus the `@soroush.design/` scope.

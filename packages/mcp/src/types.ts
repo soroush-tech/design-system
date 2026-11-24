@@ -1,5 +1,5 @@
 // The shape of the generated content bundle. Declared locally rather than imported
-// from @soroush.tech/docs-content so the published package's .d.ts stays self-contained
+// from @soroush.design/docs-content so the published package's .d.ts stays self-contained
 // (docs-content is a private workspace package and never reaches npm).
 
 export interface ComponentRecord {

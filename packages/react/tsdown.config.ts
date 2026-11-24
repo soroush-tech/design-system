@@ -1,7 +1,7 @@
 import { globSync } from 'node:fs'
 import { defineConfig } from 'tsdown'
 
-// Every file under src/ is one generated entry point (see scripts/generate.ts), so the build
+// Every file under src/ is one generated entry point (see @soroush.design/umbrella-gen), so the build
 // reads the folder instead of keeping a second list. `index.ts` is the root. The library behind
 // each entry stays an import: this package bundles none of it.
 const entries = globSync('src/**/*.ts').map((file) => file.replaceAll('\\', '/'))

@@ -32,6 +32,12 @@ importers:
       '@mdx-js/react':
         specifier: ^3.1.1
         version: 3.1.1(@types/react@19.3.0)(react@19.3.1)
+      '@soroush.design/docs-content':
+        specifier: workspace:*
+        version: link:../../packages/docs-content
+      '@soroush.design/lab':
+        specifier: workspace:*
+        version: link:../../packages/lab
       '@soroush.design/react':
         specifier: workspace:*
         version: link:../../packages/react
@@ -41,13 +47,7 @@ importers:
       '@soroush.design/react-markdown':
         specifier: workspace:*
         version: link:../../packages/react-markdown
-      '@soroush.tech/docs-content':
-        specifier: workspace:*
-        version: link:../../packages/docs-content
-      '@soroush.tech/lab':
-        specifier: workspace:*
-        version: link:../../packages/lab
-      '@soroush.tech/story-demo':
+      '@soroush.design/story-demo':
         specifier: workspace:*
         version: link:../../packages/story-demo
       '@umber-style/css':
@@ -246,7 +246,7 @@ importers:
 
   packages/core:
     devDependencies:
-      '@soroush.tech/docs-content':
+      '@soroush.design/docs-content':
         specifier: workspace:*
         version: link:../docs-content
       '@soroush.tech/eslint-config':
@@ -365,7 +365,7 @@ importers:
         specifier: ^4.6.7
         version: 4.6.7
     devDependencies:
-      '@soroush.tech/docs-content':
+      '@soroush.design/docs-content':
         specifier: workspace:*
         version: link:../docs-content
       '@soroush.tech/eslint-config':
@@ -411,6 +411,9 @@ importers:
       '@soroush.design/react-markdown':
         specifier: workspace:*
         version: link:../react-markdown
+      '@soroush.design/umbrella-gen':
+        specifier: workspace:*
+        version: link:../umbrella-gen
       '@soroush.tech/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
@@ -721,6 +724,55 @@ importers:
         specifier: ^5.1.0
         version: 5.1.0(@types/node@26.6.6)(@vitest/browser-playwright@5.1.0)(@vitest/coverage-v8@5.1.0)(@vitest/ui@5.1.0)(jsdom@31.0.1)(msw@3.0.5(@types/node@26.6.6)(typescript@7.0.2)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1)))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))
 
+  packages/soroush.design:
+    dependencies:
+      '@soroush.design/react':
+        specifier: workspace:^
+        version: link:../react
+    devDependencies:
+      '@soroush.design/umbrella-gen':
+        specifier: workspace:*
+        version: link:../umbrella-gen
+      '@soroush.tech/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@types/node':
+        specifier: ^26.6.6
+        version: 26.6.6
+      '@types/react':
+        specifier: ^19.3.0
+        version: 19.3.0
+      '@types/react-dom':
+        specifier: ^19.3.0
+        version: 19.3.0(@types/react@19.3.0)
+      '@vitest/coverage-v8':
+        specifier: ^5.1.0
+        version: 5.1.0(@vitest/browser@5.1.0)(vitest@5.1.0)
+      jsdom:
+        specifier: ^31.0.0
+        version: 31.0.1
+      oxlint:
+        specifier: ^1.93.0
+        version: 1.93.0
+      react:
+        specifier: ^19.3.1
+        version: 19.3.1
+      react-dom:
+        specifier: ^19.3.1
+        version: 19.3.1(react@19.3.1)
+      tsdown:
+        specifier: ^0.23.7
+        version: 0.23.7(@volar/typescript@2.4.31(typescript@7.0.2))(oxc-resolver@11.21.2)(tsx@4.23.15)(typescript@7.0.2)
+      tsx:
+        specifier: ^4.23.15
+        version: 4.23.15
+      typescript:
+        specifier: ~7.0.2
+        version: 7.0.2
+      vitest:
+        specifier: ^5.1.0
+        version: 5.1.0(@types/node@26.6.6)(@vitest/browser-playwright@5.1.0)(@vitest/coverage-v8@5.1.0)(@vitest/ui@5.1.0)(jsdom@31.0.1)(msw@3.0.5(@types/node@26.6.6)(typescript@7.0.2)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1)))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))
+
   packages/story-demo:
     dependencies:
       '@storybook/react-vite':
@@ -852,6 +904,27 @@ importers:
       tsdown:
         specifier: ^0.23.7
         version: 0.23.7(@volar/typescript@2.4.31(typescript@7.0.2))(oxc-resolver@11.21.2)(tsx@4.23.15)(typescript@7.0.2)
+      typescript:
+        specifier: ~7.0.2
+        version: 7.0.2
+      vitest:
+        specifier: ^5.1.0
+        version: 5.1.0(@types/node@26.6.6)(@vitest/browser-playwright@5.1.0)(@vitest/coverage-v8@5.1.0)(@vitest/ui@5.1.0)(jsdom@31.0.1)(msw@3.0.5(@types/node@26.6.6)(typescript@7.0.2)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1)))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))
+
+  packages/umbrella-gen:
+    devDependencies:
+      '@soroush.tech/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@types/node':
+        specifier: ^26.6.6
+        version: 26.6.6
+      '@vitest/coverage-v8':
+        specifier: ^5.1.0
+        version: 5.1.0(@vitest/browser@5.1.0)(vitest@5.1.0)
+      oxlint:
+        specifier: ^1.93.0
+        version: 1.93.0
       typescript:
         specifier: ~7.0.2
         version: 7.0.2

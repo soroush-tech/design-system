@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { allDocComponents } from '@soroush.tech/docs-content'
+import { allDocComponents } from '@soroush.design/docs-content'
 import { buildComponents, importPathFor, summarize } from './components'
 import { buildDocs } from './docs'
 import { buildTokens, flatten, themeScaleNames } from './tokens'

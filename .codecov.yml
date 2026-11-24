@@ -25,9 +25,11 @@ coverage:
           - react-hooks
           - react-markdown
           - react-theme
+          - soroush.design
           - story-demo
           - styled-system
           - ui-spec
+          - umbrella-gen
           # gen:codecov-patch-flags end
           # App flags are hand-managed; the docs app is not a package.
           - docs
@@ -73,6 +75,9 @@ flag_management:
     - name: react-theme
       paths:
         - packages/react-theme/
+    - name: soroush.design
+      paths:
+        - packages/soroush.design/
     - name: story-demo
       paths:
         - packages/story-demo/
@@ -82,6 +87,9 @@ flag_management:
     - name: ui-spec
       paths:
         - packages/ui-spec/
+    - name: umbrella-gen
+      paths:
+        - packages/umbrella-gen/
     # gen:codecov-flags end
     # The docs app flag (hand-managed - apps are not package-generated).
     - name: docs
@@ -141,6 +149,10 @@ component_management:
       name: react-theme
       paths:
         - packages/react-theme/**
+    - component_id: soroush.design
+      name: soroush.design
+      paths:
+        - packages/soroush.design/**
     - component_id: story-demo
       name: story-demo
       paths:
@@ -153,6 +165,10 @@ component_management:
       name: ui-spec
       paths:
         - packages/ui-spec/**
+    - component_id: umbrella-gen
+      name: umbrella-gen
+      paths:
+        - packages/umbrella-gen/**
     # gen:codecov-components end
     - component_id: docs
       name: docs

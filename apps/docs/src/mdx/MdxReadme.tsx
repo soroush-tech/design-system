@@ -1,6 +1,6 @@
 import { allDocComponents } from 'src/common/nav'
 import { Readme } from 'src/common/Readme/Readme'
-import { splitReadme } from '@soroush.tech/docs-content'
+import { splitReadme } from '@soroush.design/docs-content'
 import { splitAccessibility } from 'src/common/readmeText'
 import { readmeForSlug } from './readmeSources'
 

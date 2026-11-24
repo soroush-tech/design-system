@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { screen } from '@testing-library/react'
-import type { StoriesModule } from '@soroush.tech/story-demo/StoryDemo'
+import type { StoriesModule } from '@soroush.design/story-demo/StoryDemo'
 import { renderWithTheme } from 'src/test/utils/wrapper'
 import { MdxStoryDemo } from './MdxStoryDemo'
 

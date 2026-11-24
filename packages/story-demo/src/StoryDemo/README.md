@@ -71,7 +71,7 @@ selects and inputs show the argType's `table.defaultValue.summary`.
 ## Examples
 
 ```tsx
-import { StoryDemo } from '@soroush.tech/story-demo/StoryDemo'
+import { StoryDemo } from '@soroush.design/story-demo/StoryDemo'
 import * as buttonStories from 'packages/react-components/src/Button/Button.stories'
 import buttonSource from 'packages/react-components/src/Button/Button.stories.tsx?raw'
 

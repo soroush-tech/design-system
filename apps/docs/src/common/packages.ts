@@ -1,4 +1,4 @@
-import { sections, type ComponentNavItem } from '@soroush.tech/docs-content'
+import { sections, type ComponentNavItem } from '@soroush.design/docs-content'
 import type { DocsSection } from 'src/common/nav'
 import { PACKAGE_VERSIONS } from 'src/common/packageVersions'
 

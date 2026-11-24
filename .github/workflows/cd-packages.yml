@@ -35,6 +35,7 @@ on:
           - react-hooks
           - react-markdown
           - react-theme
+          - soroush.design
           - styled-system
           - ui-spec
         # gen:publish-options end

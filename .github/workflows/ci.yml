@@ -146,10 +146,10 @@ jobs:
       - name: Check release notes
         run: ${{ needs.prepare.outputs.runner }} run check:release-notes
 
-      # Fail the build if the platform umbrella no longer matches the libraries it points at: its
+      # Fail the build if an umbrella (the platform one, the family one) no longer matches what it points at: its
       # entry points are generated, so a library that changed its exports leaves it stale.
       - name: Check umbrella entry points
-        run: ${{ needs.prepare.outputs.runner }} run gen:react --check
+        run: ${{ needs.prepare.outputs.runner }} run gen:umbrellas --check
 
       # Fail the build if `npx skills add soroush-tech/design-system` would offer anything but the
       # public skill: every skill in .claude/skills marked internal, the plugin's skills/ only ours.
@@ -398,7 +398,7 @@ jobs:
 
       - name: Install Playwright browsers
         if: steps.playwright-cache.outputs.cache-hit != 'true'
-        run: pnpm --filter @soroush.tech/docs exec playwright install --with-deps chromium
+        run: pnpm --filter @soroush.design/docs exec playwright install --with-deps chromium
 
       # Same attempts as the packages matrix.
       - name: Install Playwright system deps
@@ -406,7 +406,7 @@ jobs:
         run: |
           echo 'DPkg::Lock::Timeout "120";' | sudo tee /etc/apt/apt.conf.d/90-lock-timeout > /dev/null
           for attempt in 1 2 3; do
-            timeout 180 pnpm --filter @soroush.tech/docs exec playwright install-deps chromium && exit 0
+            timeout 180 pnpm --filter @soroush.design/docs exec playwright install-deps chromium && exit 0
             echo "::warning::Playwright system deps, attempt $attempt of 3 failed"
             sudo pkill -x apt-get || true
             sudo dpkg --configure -a || true
@@ -421,13 +421,13 @@ jobs:
           key: ${{ runner.os }}-playwright-${{ needs.prepare.outputs.playwright_version }}
 
       - name: Run Tests with Coverage
-        run: ${{ needs.prepare.outputs.runner }} --filter @soroush.tech/docs test:coverage
+        run: ${{ needs.prepare.outputs.runner }} --filter @soroush.design/docs test:coverage
 
       - name: Build (prerender)
-        run: ${{ needs.prepare.outputs.runner }} --filter @soroush.tech/docs build
+        run: ${{ needs.prepare.outputs.runner }} --filter @soroush.design/docs build
 
       - name: Run E2E
-        run: ${{ needs.prepare.outputs.runner }} --filter @soroush.tech/docs test:e2e
+        run: ${{ needs.prepare.outputs.runner }} --filter @soroush.design/docs test:e2e
         env:
           CI: true
 

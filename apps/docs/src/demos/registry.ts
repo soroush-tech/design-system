@@ -1,4 +1,4 @@
-import { listStoryNames, type StoriesModule } from '@soroush.tech/story-demo'
+import { listStoryNames, type StoriesModule } from '@soroush.design/story-demo'
 import {
   APP_PACKAGE,
   APP_PACKAGE_VERSION,

@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2023", "DOM"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "strict": true,
+    "jsx": "react-jsx",
+    "types": [],
+    "paths": {
+      "soroush.design/react": ["../dist/react.d.mts"],
+      "soroush.design/react/*": ["../dist/react/*.d.mts"],
+      "@soroush.design/react": ["../../react/dist/index.d.mts"],
+      "@soroush.design/react/*": ["../../react/dist/*.d.mts"],
+      "@soroush.design/react-components": ["../../react-components/dist/index.d.mts"],
+      "@soroush.design/react-components/*": ["../../react-components/dist/*.d.mts"],
+      "@soroush.design/react-theme": ["../../react-theme/dist/index.d.mts"],
+      "@soroush.design/react-theme/*": ["../../react-theme/dist/*.d.mts"],
+      "@soroush.design/core/*": ["../../core/dist/*.d.mts"]
+    }
+  }
+}

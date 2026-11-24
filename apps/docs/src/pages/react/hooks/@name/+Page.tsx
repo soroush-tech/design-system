@@ -1,5 +1,5 @@
 import readme from 'packages/react-hooks/README.md?raw'
-import { hookSection } from '@soroush.tech/docs-content'
+import { hookSection } from '@soroush.design/docs-content'
 import { DocPage } from 'src/common/DocPage/DocPage'
 import { usePageContext } from 'src/hooks/usePageContext'
 

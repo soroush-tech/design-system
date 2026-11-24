@@ -4,7 +4,7 @@
 //
 // A post-build script rather than a Vite plugin: vite.config.ts is executed by Node
 // with workspace dependencies left external, and this reads the registry out of
-// @soroush.tech/docs-content, whose exports are TypeScript source. Run under tsx.
+// @soroush.design/docs-content, whose exports are TypeScript source. Run under tsx.
 import { writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -25,8 +25,8 @@ import {
   styledSystemDocs,
   styledSystemGuides,
   type ComponentNavItem,
-} from '@soroush.tech/docs-content'
-import { loadPackageFile, loadReadme, loadRepoFile } from '@soroush.tech/docs-content/node'
+} from '@soroush.design/docs-content'
+import { loadPackageFile, loadReadme, loadRepoFile } from '@soroush.design/docs-content/node'
 
 const SITE_URL = process.env.VITE_SITE_URL ?? 'https://docs.soroush.design'
 

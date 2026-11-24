@@ -1,4 +1,4 @@
-import { loadPackageFile } from '@soroush.tech/docs-content/node'
+import { loadPackageFile } from '@soroush.design/docs-content/node'
 import type { ContentBundle } from '../types'
 import { buildComponents } from './components'
 import { buildDocs } from './docs'

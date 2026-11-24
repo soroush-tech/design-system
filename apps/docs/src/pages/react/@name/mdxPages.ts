@@ -1,5 +1,5 @@
 import type { ComponentType } from 'react'
-import { kebabCase } from '@soroush.tech/docs-content'
+import { kebabCase } from '@soroush.design/docs-content'
 
 // Each component owns its docs page: `<Name>.mdx` lives in the component's folder next
 // to its README (both glob levels - container primaries live at Table/Table/).

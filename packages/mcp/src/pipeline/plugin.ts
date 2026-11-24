@@ -1,7 +1,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { sections } from '@soroush.tech/docs-content'
-import { loadPackageFile, repoRoot } from '@soroush.tech/docs-content/node'
+import { sections } from '@soroush.design/docs-content'
+import { loadPackageFile, repoRoot } from '@soroush.design/docs-content/node'
 import { tokenPath } from '../tokenPath'
 import type { ContentBundle } from '../types'
 

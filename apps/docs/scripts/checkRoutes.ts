@@ -3,13 +3,13 @@
 // (Cloudflare Pages) finds only what is there, spelled the way the path is, which a
 // case-insensitive disk (Windows, macOS) would forgive.
 //
-// A post-build script, like emitLlms.ts: it reads the registry out of @soroush.tech/docs-content,
+// A post-build script, like emitLlms.ts: it reads the registry out of @soroush.design/docs-content,
 // whose exports are TypeScript source. Run under tsx.
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { REDIRECT_LIMIT, docsPages } from '@soroush.tech/docs-content'
-import { loadReadme } from '@soroush.tech/docs-content/node'
+import { REDIRECT_LIMIT, docsPages } from '@soroush.design/docs-content'
+import { loadReadme } from '@soroush.design/docs-content/node'
 import { splitAccessibility } from '../src/common/readmeText'
 
 const ORIGIN = process.env.VITE_SITE_URL ?? 'https://docs.soroush.design'

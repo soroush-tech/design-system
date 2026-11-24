@@ -84,8 +84,8 @@ want one name for all of them.
 [`libraries.ts`](./libraries.ts):
 
 ```sh
-pnpm gen:react          # write them
-pnpm gen:react --check  # fail when a library changed and this package did not (CI, pre-commit)
+pnpm gen:umbrellas          # write them
+pnpm gen:umbrellas --check  # fail when a library changed and this package did not (CI, pre-commit)
 ```
 
 Release notes are in [`release-notes`](./release-notes).

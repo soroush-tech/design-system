@@ -7,7 +7,7 @@
   "scripts": {
     "prepare": "husky",
     "gen:publish-options": "node scripts/gen-publish-options.mjs",
-    "gen:react": "pnpm --filter @soroush.design/react gen",
+    "gen:umbrellas": "pnpm --workspace-concurrency=1 --filter @soroush.design/react --filter soroush.design gen",
     "gen:plugin-refs": "pnpm --filter @soroush.design/mcp gen -- --plugin",
     "check:release-notes": "node scripts/check-release-notes.mjs",
     "check:skills": "node scripts/check-skills.mjs",

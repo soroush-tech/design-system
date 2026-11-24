@@ -4,8 +4,8 @@ import {
   styledSystemDocs,
   styledSystemGuides,
   stripReadmeChrome,
-} from '@soroush.tech/docs-content'
-import { loadPackageFile, loadRepoFile } from '@soroush.tech/docs-content/node'
+} from '@soroush.design/docs-content'
+import { loadPackageFile, loadRepoFile } from '@soroush.design/docs-content/node'
 import type { DocRecord } from '../types'
 import { DOCS_URL } from './components'
 

@@ -7,8 +7,8 @@ pnpm exec oxfmt-quick --staged
 # quoted string is how a file stops parsing.
 pnpm exec aiwg --staged --fix
 pnpm gen:publish-options --check
-# The platform umbrella is entirely generated from the libraries it points at.
-pnpm gen:react --check
+# The umbrellas are entirely generated from the packages they point at.
+pnpm gen:umbrellas --check
 # The plugin ships generated references (users install it from git), so they are
 # committed - this fails the commit when they no longer match the repo they describe.
 pnpm gen:plugin-refs --check

@@ -145,6 +145,7 @@
   },
   "devDependencies": {
     "@soroush.design/react-markdown": "workspace:*",
+    "@soroush.design/umbrella-gen": "workspace:*",
     "@soroush.tech/eslint-config": "workspace:*",
     "@types/node": "^26.6.6",
     "@types/react": "^19.3.0",

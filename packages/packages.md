@@ -23,7 +23,7 @@ For a plain-English overview of what currently lives here, see [`README.md`](./R
 
 ## Folder structure
 
-Directory name == package name **minus the `@soroush.tech` scope**.
+Directory name == package name **minus its scope**: `@soroush.design/react-theme` is `packages/react-theme`, and the unscoped `soroush.design` is `packages/soroush.design`.
 
 ```
 packages/
@@ -46,7 +46,7 @@ Keep the **public API in `index.ts`** (the single entry); extract internal helpe
 
 ## Naming & scope
 
-- Every package is scoped **`@soroush.tech/*`**, except the MCP server, the command-line tool, the component library, its hooks, theme and markdown libraries, its platform umbrella and the shared core, which are **`@soroush.design/mcp`**, **`@soroush.design/cli`**, **`@soroush.design/react-components`**, **`@soroush.design/react-hooks`**, **`@soroush.design/react-theme`**, **`@soroush.design/react-markdown`**, **`@soroush.design/react`** and **`@soroush.design/core`** (apps are not - `apps/web` stays `@soroush/web`).
+- Every package is scoped **`@soroush.design/*`**, private ones included (`@soroush.design/docs-content`, `story-demo`, `lab`, `umbrella-gen`, and the docs app `@soroush.design/docs`). The exceptions: the family umbrella, whose name is the unscoped **`soroush.design`**; **`@soroush.tech/ui-spec`**, which keeps its name and is not edited; and **`@soroush.tech/eslint-config`**, which keeps its name because `ui-spec` lists it as a `workspace:*` dev dependency and renaming it would edit `ui-spec`. A new package takes the `@soroush.design` scope (apps are not - `apps/web` stays `@soroush/web`).
 - A Vite plugin's internal `name` field **must equal its package name minus the scope** (`vite-plugin-watch`), so build logs read `[vite-plugin-watch]`. Keep the directory, package name, and plugin `name` in sync.
 
 ---
@@ -148,10 +148,12 @@ import { useMergedRefs, useEventCallback } from 'soroush.design/react/hooks'
 - **The styling engine is configured in the theme library**, by a function the library calls - not by a module imported for its effect, which a bundler drops from a package marked `"sideEffects": false`.
 - **An app can take the lean route.** Every library works installed alone, without an umbrella.
 - **An app imports from the umbrella; libraries import each other by their real names.** The docs, the starters, `init`, the READMEs and the MCP content all write `@soroush.design/react/...`, so splitting a library later changes no import of an app. A library, private ones such as `story-demo` and `lab` included, imports the library it builds on by its own name and never the umbrella: the umbrella depends on the libraries, so the reverse is a cycle.
-- **An umbrella is generated whole.** `src/` holds one file per entry point, each a line of `export * from '<library>/<subpath>'` (plus `export { default } from` where the target has a default export). The `exports` and `publishConfig.exports` of package.json are written beside them. Both are committed, like the plugin references, and `pnpm gen:react --check` fails in the pre-commit hook and in CI when they drift. The generator reads what each library _publishes_ (`publishConfig.exports`): an entry a library serves only in the workspace never reaches the umbrella.
-- **Registering a library on an umbrella** is one line in the umbrella's `libraries.ts` - `{ package: '@soroush.design/react-components' }` merges it at the top (`/Button`), `{ package: '...', under: 'markdown' }` mounts it under a lowercase name (`/markdown`, `/markdown/Editor`) - plus the library in the umbrella's `dependencies` as `workspace:^`. A library with heavy dependencies (`markdown`) is `optional: true` instead: the umbrella lists it in `peerDependencies` with an explicit range and `peerDependenciesMeta` `optional`, and in `devDependencies` as `workspace:*` for the generator and the tests, so an app installs it only when it imports its entry points; without it, those imports fail with a module-not-found error naming the library. Run `pnpm gen:<platform>`. Two libraries that claim the same subpath, or two that differ only by case, fail the generator with both package names, unless one **omits** it: `omit: ['./style', './engine']` on the component library's line leaves those two entry points to the theme library, which serves them (the generator fails when an omitted entry point is not one the library publishes, or when no other library serves it). The theme library's own `.` and `./theme` are omitted too: the umbrella's root is the component library's, and its `/theme` is the component library's, which adds the typing of the components (owner states, `TabsVariants`) to the theme library's names. The family umbrella (`soroush.design`) repeats this with the platforms as its libraries.
+- **An umbrella is generated whole.** `src/` holds one file per entry point, each a line of `export * from '<library>/<subpath>'` (plus `export { default } from` where the target has a default export). The `exports` and `publishConfig.exports` of package.json are written beside them. Both are committed, like the plugin references, and `pnpm gen:umbrellas --check` fails in the pre-commit hook and in CI when they drift. One generator, `@soroush.design/umbrella-gen`, writes both umbrellas: an umbrella is a list of sources in its `libraries.ts`, each mounted under a prefix or merged at the top, and the platform umbrella's sources are libraries while the family umbrella's are the platform umbrellas. The generator reads what each library _publishes_ (`publishConfig.exports`): an entry a library serves only in the workspace never reaches the umbrella.
+- **Registering a library on an umbrella** is one line in the umbrella's `libraries.ts` - `{ package: '@soroush.design/react-components' }` merges it at the top (`/Button`), `{ package: '...', under: 'markdown' }` mounts it under a lowercase name (`/markdown`, `/markdown/Editor`) - plus the library in the umbrella's `dependencies` as `workspace:^`. A library with heavy dependencies (`markdown`) is `optional: true` instead: the umbrella lists it in `peerDependencies` with an explicit range and `peerDependenciesMeta` `optional`, and in `devDependencies` as `workspace:*` for the generator and the tests, so an app installs it only when it imports its entry points; without it, those imports fail with a module-not-found error naming the library. Run `pnpm gen:umbrellas`. Two libraries that claim the same subpath, or two that differ only by case, fail the generator with both package names, unless one **omits** it: `omit: ['./style', './engine']` on the component library's line leaves those two entry points to the theme library, which serves them (the generator fails when an omitted entry point is not one the library publishes, or when no other library serves it). The theme library's own `.` and `./theme` are omitted too: the umbrella's root is the component library's, and its `/theme` is the component library's, which adds the typing of the components (owner states, `TabsVariants`) to the theme library's names. The family umbrella is the same list one level up (next paragraph).
+- **The family umbrella** (`soroush.design`, in `packages/soroush.design`: the folder is the package name minus its scope, and it has none) points at the platform umbrellas: `{ package: '@soroush.design/react', under: 'react' }` mounts every entry point of `@soroush.design/react` under `/react` (`soroush.design/react/Button`, `soroush.design/react/markdown/Editor`; the platform's root is `soroush.design/react`). It has **no root entry point** - an app imports a platform, never the family - so its `exports` start at `./react` and it has no `main`, `module` or `types`. Its entries come from the platform umbrella's own export map, so a library registered on the platform reaches the family with one `pnpm gen:umbrellas`, and the pre-commit hook and CI fail when it has not. **Adding a platform** (`@soroush.design/react-native`, `@soroush.design/vue`) is one line in `packages/soroush.design/libraries.ts` (`{ package: '@soroush.design/vue', under: 'vue' }`), the platform in `dependencies` as `workspace:^`, its framework as an optional peer `peerDependencies` entry of the family, and `pnpm gen:umbrellas`. A platform umbrella is a **dependency** of the family, never an optional peer: it holds no code but its re-exports, its own framework is an optional peer of that umbrella, so it brings no framework, and an app that installs `soroush.design` and React has what it needs, with no warning about React Native or Vue; making a platform optional later would be a breaking change for the apps that rely on it. The family's `test:types` holds the theme typing through the extra hop (`type-tests/family-name`, `platform-name`, `no-augmentation`).
+- **An unscoped package** is handled where tooling reads names: the Codecov flag is `name.split('/').pop()` (`soroush.design`, the directory's name), the release tag is `<name>@<version>` (`soroush.design@0.1.0`), the docs' release-notes heading accepts a scope or none, and `--filter soroush.design` selects it. npm trusted publishing is set up per package by the owner, so the first publish of a new name needs that step before the workflow can run.
 - **An umbrella's tests are not in `src/`**, which holds only generated files: they are in `test/` and `scripts/`. v8 reports a file of re-exports as empty, so its coverage is a test that imports every entry point and compares its names with the library's, a test that no file of `src/` is not generated, and a test of the build: each file in `dist/` imports its library and holds none of it. A file with real code in `src/` counts toward the 100% and fails it.
-- **Theme typing goes through an umbrella unchanged.** `/theme` is a plain `export *`, and TypeScript merges `declare module '@soroush.design/react/theme' { interface ThemePalette { ... } }` into the library's own interface, so the line can name the umbrella or the library, and both reach `useTheme`, `styled` and the props of every component. Nothing is declared in the umbrella. Each umbrella has a type test for both forms (`type-tests/`), one program per form, because an augmentation in one program leaks into every file of it. The interfaces are the core's and reach the umbrella through three re-exports (core, theme library, component library, umbrella); `type-tests/core-name` holds the form that names the core and `type-tests/theme-name` the one that names the theme library.
+- **Theme typing goes through an umbrella unchanged.** `/theme` is a plain `export *`, and TypeScript merges `declare module '@soroush.design/react/theme' { interface ThemePalette { ... } }` into the library's own interface, so the line can name the umbrella or the library, and both reach `useTheme`, `styled` and the props of every component. Nothing is declared in the umbrella. Each umbrella has a type test for each form (`type-tests/`), one program per form, because an augmentation in one program leaks into every file of it. The interfaces are the core's and reach the umbrella through three re-exports (core, theme library, component library, umbrella); `type-tests/core-name` holds the form that names the core and `type-tests/theme-name` the one that names the theme library.
 - **New packages start at `0.1.0`**, with release notes written for that version: what the package is and how to move to it, not a list of changes against a package it replaces.
 
 ---
@@ -172,7 +174,7 @@ import { useMergedRefs, useEventCallback } from 'soroush.design/react/hooks'
 
   ```ts
   // consumer
-  import watch from '@soroush.tech/vite-plugin-watch'
+  import watch from '@soroush.design/vite-plugin-watch'
   ```
 
 - Internal (monorepo) consumption is **TypeScript source**: `exports: { ".": "./src/index.ts" }`, consumed under `moduleResolution: bundler` via `workspace:*`. **No `paths` alias, no build step** for internal use.
@@ -218,7 +220,7 @@ So release **only** one of these two ways:
 
    ```sh
    # bump the version in packages/<name>/package.json first (a version can't be republished)
-   pnpm --filter '@soroush.tech/<name>' publish --no-git-checks --otp=<code>
+   pnpm --filter '@soroush.design/<name>' publish --no-git-checks --otp=<code>
    ```
 
    `--no-git-checks` is needed off a clean/main branch; quote the `@scope/name` in PowerShell (a bare `@` is the splat operator). **Do not** `cd packages/<name> && npm publish` - that is the exact thing that ships the broken `./src` exports.
@@ -226,15 +228,15 @@ So release **only** one of these two ways:
 **Verify the published artifact, not just the metadata.** Download the real tarball and confirm `exports` resolves to `dist`:
 
 ```sh
-npm pack '@soroush.tech/<name>@<version>'        # downloads from the registry
-tar -xzf soroush.tech-<name>-<version>.tgz -O package/package.json | grep -A3 '"exports"'
+npm pack '@soroush.design/<name>@<version>'        # downloads from the registry
+tar -xzf soroush.design-<name>-<version>.tgz -O package/package.json | grep -A3 '"exports"'
 # exports must point at ./dist/*, and the tarball must NOT rely on any ./src file
 ```
 
 If a broken version already went out, you can't overwrite it - **bump, republish with pnpm, then deprecate** the bad ones:
 
 ```sh
-npm deprecate '@soroush.tech/<name>@<badrange>' 'Broken exports; use >=<fixed>.' --otp=<code>
+npm deprecate '@soroush.design/<name>@<badrange>' 'Broken exports; use >=<fixed>.' --otp=<code>
 ```
 
 ---

@@ -22,7 +22,7 @@ For the consumer-facing view - how to connect and what the tools do - see
 | Accessibility (WCAG) skill           | `plugins/.../skills/wcag/`                  | The plugin, and `npx skills add soroush-tech/design-system` |
 | Shared registry and README splitting | `packages/docs-content/`                    | Private workspace package                                   |
 
-`@soroush.tech/docs-content` is the seam. It owns the component taxonomy and the
+`@soroush.design/docs-content` is the seam. It owns the component taxonomy and the
 `splitReadme` / `stripReadmeChrome` / `kebabCase` helpers, and `apps/docs/src/common/nav.ts`
 re-exports it. The docs site, `llms.txt`, and the MCP server therefore all describe one
 library from one registry - which is the whole point of the package existing.

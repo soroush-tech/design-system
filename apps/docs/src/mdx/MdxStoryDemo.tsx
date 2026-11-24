@@ -1,4 +1,4 @@
-import { StoryDemo } from '@soroush.tech/story-demo/StoryDemo'
+import { StoryDemo } from '@soroush.design/story-demo/StoryDemo'
 import { demoByPath, demoReactVersion, demoVersions } from 'src/demos/registry'
 import { APP_PACKAGE } from 'src/common/packageVersions'
 import { loadDemoScope } from 'src/demos/scopeLoader'

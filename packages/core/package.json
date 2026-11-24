@@ -120,7 +120,7 @@
     "prepublishOnly": "pnpm build"
   },
   "devDependencies": {
-    "@soroush.tech/docs-content": "workspace:*",
+    "@soroush.design/docs-content": "workspace:*",
     "@soroush.tech/eslint-config": "workspace:*",
     "@types/node": "^26.6.6",
     "@vitest/coverage-v8": "^5.1.0",

@@ -10,8 +10,8 @@ import {
   splitReadme,
   stripReadmeChrome,
   type ComponentNavItem,
-} from '@soroush.tech/docs-content'
-import { loadReadme } from '@soroush.tech/docs-content/node'
+} from '@soroush.design/docs-content'
+import { loadReadme } from '@soroush.design/docs-content/node'
 import type { ComponentRecord } from '../types'
 
 export { DOCS_URL }

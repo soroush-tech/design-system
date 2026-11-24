@@ -1,8 +1,8 @@
-// `pnpm gen:react` writes the umbrella's entry points; `pnpm gen:react --check` fails when
-// they no longer match the libraries. All the logic is in ./generate.ts.
+// `pnpm gen:umbrellas` writes the umbrella's entry points; `pnpm gen:umbrellas --check` fails when
+// they no longer match the libraries. All the logic is in @soroush.design/umbrella-gen.
+import { run } from '@soroush.design/umbrella-gen'
 import { fileURLToPath } from 'node:url'
 import { libraries } from '../libraries'
-import { run } from './generate'
 
 const { problems, summary } = run({
   root: fileURLToPath(new URL('..', import.meta.url)),

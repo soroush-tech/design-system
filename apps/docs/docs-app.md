@@ -9,7 +9,7 @@ every input is an in-repo glob over `packages/` and `content/` - no remote fetch
 Six per-package sections, independently versioned: `/react/`, `/react/markdown/`,
 `/styled-system/`, `/mcp/`, `/ui-spec/` and `/cli/`. A section has an id (`react`, `markdown`, ...: its route
 folder, `DOCS_SECTION` and its key in `versions.json`) and a route, where it is on the site
-(`sectionRoutes.ts` in `@soroush.tech/docs-content`). The registry in `src/common/nav.ts` drives the
+(`sectionRoutes.ts` in `@soroush.design/docs-content`). The registry in `src/common/nav.ts` drives the
 sidebars, the component pages, and the drift tests; `sectionFor(pathname)` picks the active section -
 the one with the longest route that holds the path, so `/react/markdown/Editor/` is the markdown
 section's and not React's.
@@ -51,7 +51,7 @@ frozen from the first publish of the site, so no route is renamed after it.
   differ only by case are an error.
 - **A path ends in a slash**, as the prerendered `<path>/index.html` does; the host sends the path
   without it to the one with it.
-- **The list of pages is derived, not kept twice.** `docsPages()` in `@soroush.tech/docs-content`
+- **The list of pages is derived, not kept twice.** `docsPages()` in `@soroush.design/docs-content`
   builds it from the registry; its test holds it to the umbrella's entry points
   (`packages/react/package.json`): every entry point has exactly one page at its path, and every
   capitalised page is an entry point or an export of one. The built output is held to the same list by
@@ -89,7 +89,7 @@ frozen from the first publish of the site, so no route is renamed after it.
   `<Component>/<StoryExport>` path at a design-system `*.stories.tsx` export; the
   registry globs every stories module (namespace + `?raw`) so the demo UI - rendering,
   controls, code synthesis, live editing, TS/JS toggle, sandbox export - comes from
-  `@soroush.tech/story-demo`'s `StoryDemo`. `src/demos/scope.ts` is the identifier
+  `@soroush.design/story-demo`'s `StoryDemo`. `src/demos/scope.ts` is the identifier
   scope for live-edited code.
 - `vite/sitemapPlugin.ts` - vendored sitemap generator (live builds only).
 
@@ -122,9 +122,9 @@ from the section's release tag (`<npm name>@<version>`, found per section from `
 ## Verify
 
 ```sh
-pnpm --filter @soroush.tech/docs test:coverage   # unit, 100% thresholds
-pnpm --filter @soroush.tech/docs build           # SSG prerender - gates every page
-pnpm --filter @soroush.tech/docs test:e2e        # Playwright against build/client
+pnpm --filter @soroush.design/docs test:coverage   # unit, 100% thresholds
+pnpm --filter @soroush.design/docs build           # SSG prerender - gates every page
+pnpm --filter @soroush.design/docs test:e2e        # Playwright against build/client
 # Snapshot smoke (PowerShell: set env vars accordingly):
-DOCS_SECTION=react DOCS_BASE=/react/9.9.9/ pnpm --filter @soroush.tech/docs build
+DOCS_SECTION=react DOCS_BASE=/react/9.9.9/ pnpm --filter @soroush.design/docs build
 ```

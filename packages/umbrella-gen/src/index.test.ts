@@ -12,7 +12,7 @@ import {
   renderPackageJson,
   run,
   type ResolvedLibrary,
-} from './generate'
+} from './index'
 
 // Two fake libraries, one of each kind: components merged at the top, markdown under a name.
 const components: ResolvedLibrary = {
@@ -185,6 +185,68 @@ describe('planEntries', () => {
   })
 })
 
+// The family umbrella: its sources are platform umbrellas, each mounted under the platform's name.
+describe('planEntries of platforms', () => {
+  const react: ResolvedLibrary = {
+    package: '@fake/react',
+    under: 'react',
+    entries: [
+      { subpath: '.', hasDefault: false },
+      { subpath: './Button', hasDefault: false },
+      { subpath: './markdown/Editor', hasDefault: true },
+    ],
+  }
+  const reactNative: ResolvedLibrary = {
+    package: '@fake/react-native',
+    under: 'react-native',
+    entries: [
+      { subpath: '.', hasDefault: false },
+      { subpath: './Button', hasDefault: false },
+    ],
+  }
+
+  it('mounts the root of a platform and each of its entry points under its name, with no root of its own', () => {
+    expect(
+      planEntries([reactNative, react]).map(({ subpath, target, hasDefault }) => [
+        subpath,
+        target,
+        hasDefault,
+      ])
+    ).toEqual([
+      ['./react', '@fake/react', false],
+      ['./react-native', '@fake/react-native', false],
+      ['./react-native/Button', '@fake/react-native/Button', false],
+      ['./react/Button', '@fake/react/Button', false],
+      ['./react/markdown/Editor', '@fake/react/markdown/Editor', true],
+    ])
+  })
+
+  it('fails when two platforms are mounted under one name, naming both', () => {
+    expect(() => planEntries([react, { ...reactNative, under: 'react' }])).toThrow(
+      '@fake/react and @fake/react-native both claim "./react".'
+    )
+  })
+
+  it('fails when a platform has an entry point that differs from another only by case', () => {
+    const vue: ResolvedLibrary = {
+      package: '@fake/vue',
+      under: 'react',
+      entries: [{ subpath: './button', hasDefault: false }],
+    }
+    expect(() =>
+      planEntries([{ ...react, entries: [{ subpath: './Button', hasDefault: false }] }, vue])
+    ).toThrow(
+      '@fake/react and @fake/vue both claim "./react/button" (it differs from "./react/Button" only by case).'
+    )
+  })
+
+  it('fails when a platform is mounted under a name that is not lowercase', () => {
+    expect(() => planEntries([{ ...react, under: 'React' }])).toThrow(
+      '@fake/react: "React" is not a lowercase name'
+    )
+  })
+})
+
 describe('rendering', () => {
   const [root, button, cell] = planEntries([components])
 
@@ -224,6 +286,28 @@ describe('rendering', () => {
     })
     expect(manifest.publishConfig.exports['.'].import.default).toBe('./dist/index.mjs')
     expect(manifest.publishConfig.typesVersions).toEqual({ '*': { '*': ['./dist/*.d.cts'] } })
+  })
+
+  it('leaves out main, module and types when the umbrella has no root entry point', () => {
+    const family = planEntries([{ ...components, under: 'react' }])
+    const manifest = JSON.parse(
+      renderPackageJson('{ "name": "fake", "types": "./src/index.ts" }', family)
+    )
+    expect(Object.keys(manifest.exports)).toEqual([
+      './react',
+      './react/Button',
+      './react/Table/TableCell',
+    ])
+    expect(manifest.types).toBeUndefined()
+    expect(Object.keys(manifest.publishConfig).sort()).toEqual([
+      'access',
+      'exports',
+      'typesVersions',
+    ])
+    expect(manifest.publishConfig.exports['./react'].import.default).toBe('./dist/react.mjs')
+    expect(manifest.publishConfig.exports['./react/Button'].require.types).toBe(
+      './dist/react/Button.d.cts'
+    )
   })
 })
 
@@ -359,7 +443,7 @@ describe('on disk', () => {
       'src/Card.ts is out of date.',
       'src/Orphan.ts is not an entry point of any library.',
       'src/Table/Cell.ts is not an entry point of any library.',
-      'Run `pnpm gen:react` and commit what it writes.',
+      'Run `pnpm gen:umbrellas` and commit what it writes.',
     ])
     expect(checked.summary).toBe('The umbrella has drifted from its libraries.')
     expect(read('src/Orphan.ts')).toBe('export const a = 1\n')
@@ -368,6 +452,70 @@ describe('on disk', () => {
     expect(read('src/Card.ts')).toBe("export * from '@fake/react-components/Card'\n")
     expect(run(options(true)).problems).toEqual([])
     expect(() => read('src/Orphan.ts')).toThrow()
+  })
+
+  describe('a platform umbrella as a source', () => {
+    const platform = (entries: Record<string, string>) =>
+      fakeLibrary(
+        '@fake/react',
+        {
+          exports: Object.fromEntries(Object.keys(entries).map((key) => [key, `./src/${key}.ts`])),
+          publishConfig: { exports: Object.fromEntries(Object.keys(entries).map((k) => [k, {}])) },
+        },
+        Object.fromEntries(
+          Object.entries(entries).map(([key, source]) => [`src/${key}.ts`, source])
+        )
+      )
+    const family = (check: boolean) => ({
+      root,
+      libraries: [{ package: '@fake/react', under: 'react' }],
+      check,
+    })
+
+    beforeEach(() => {
+      write(
+        'package.json',
+        JSON.stringify({
+          name: 'fake-family',
+          types: './src/index.ts',
+          dependencies: { '@fake/react': '1' },
+        })
+      )
+      platform({
+        './Button': "export * from '@fake/react-components/Button'",
+        './Table': "export * from '@fake/x'\nexport { default } from '@fake/x'",
+      })
+    })
+
+    it('mounts the platform under its name, with no root, and keeps the default of an entry', () => {
+      expect(run(family(false)).summary).toBe(
+        'Wrote 3 files; 2 entry points from 1 library package(s).'
+      )
+      expect(read('src/react/Button.ts')).toBe("export * from '@fake/react/Button'\n")
+      expect(read('src/react/Table.ts')).toBe(
+        "export * from '@fake/react/Table'\nexport { default } from '@fake/react/Table'\n"
+      )
+      const manifest = JSON.parse(read('package.json'))
+      expect(Object.keys(manifest.exports)).toEqual(['./react/Button', './react/Table'])
+      expect(manifest.types).toBeUndefined()
+      expect(manifest.publishConfig.main).toBeUndefined()
+      expect(run(family(true)).problems).toEqual([])
+    })
+
+    it('drifts when the platform gains an entry point', () => {
+      run(family(false))
+      platform({
+        './Button': "export * from '@fake/react-components/Button'",
+        './Table': "export * from '@fake/x'",
+        './Card': "export * from '@fake/y'",
+      })
+      expect(run(family(true)).problems).toEqual([
+        'package.json is out of date.',
+        'src/react/Card.ts is out of date.',
+        'src/react/Table.ts is out of date.',
+        'Run `pnpm gen:umbrellas` and commit what it writes.',
+      ])
+    })
   })
 
   it('asks for the dependency of a library it is given', () => {

@@ -1,4 +1,4 @@
-import { sections, type DocsPackage } from '@soroush.tech/docs-content'
+import { sections, type DocsPackage } from '@soroush.design/docs-content'
 import { allDocComponents } from 'src/common/nav'
 
 // Every component README as a raw string, resolved at build time: design-system

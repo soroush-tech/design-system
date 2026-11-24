@@ -2,7 +2,7 @@ import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { libraries } from '../libraries'
-import { run } from '../scripts/generate'
+import { run } from '@soroush.design/umbrella-gen'
 
 const root = process.cwd()
 const read = (file: string) => readFileSync(join(root, file), 'utf8')

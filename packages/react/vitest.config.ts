@@ -1,7 +1,8 @@
 import { defineConfig } from 'vitest/config'
 
 // src/ holds only generated one-line re-exports, so a test that imports every entry point is
-// what runs them; scripts/ and libraries.ts are the generator. gen.ts only calls run().
+// what runs them; libraries.ts says what is generated, and the generator is @soroush.design/umbrella-gen.
+// scripts/gen.ts only calls its run().
 export default defineConfig({
   test: {
     globals: true,

@@ -1,5 +1,5 @@
 import { componentByName, type ComponentNavItem } from 'src/common/nav'
-import { splitReadme } from '@soroush.tech/docs-content'
+import { splitReadme } from '@soroush.design/docs-content'
 import { readmeForSlug } from 'src/mdx/readmeSources'
 import { leadOf, splitAccessibility } from './readmeText'
 
