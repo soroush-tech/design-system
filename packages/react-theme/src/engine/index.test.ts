@@ -1,4 +1,4 @@
-import createEngineCache from '@umber-style/cache'
+import { createCache as createEngineCache } from '@umber-style/cache'
 import { describe, expect, it } from 'vitest'
 import { createCache } from './index'
 

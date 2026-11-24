@@ -831,7 +831,7 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@umber-style/react": "^0.3.0",
+    "@umber-style/react": "^0.4.0",
     "@soroush.design/cli": "workspace:*",
     "@soroush.design/core": "workspace:^",
     "@soroush.design/react-hooks": "workspace:^",
@@ -843,7 +843,7 @@
     "react-dom": "^19.2.8"
   },
   "devDependencies": {
-    "@umber-style/css": "^0.3.0",
+    "@umber-style/css": "^0.4.0",
     "@soroush.tech/eslint-config": "workspace:*",
     "@storybook/addon-a11y": "^10.6.7",
     "@storybook/addon-docs": "^10.6.7",

@@ -27,7 +27,7 @@ const subpaths = [...new Set(entries.map((entry) => entry.subpath))]
 const source = `
 import { createElement, Fragment } from 'react'
 import { renderToString } from 'react-dom/server'
-import createStyleServer from '@umber-style/server/create-instance'
+import { createInstance } from '@umber-style/server/create-instance'
 import { Global, globalStyles, styleCache } from '@soroush.design/react/engine'
 import { ThemeProvider, baseTheme } from '@soroush.design/react/theme'
 ${subpaths.map((subpath, index) => `import * as m${index} from '@soroush.design/react/${subpath}'`).join('\n')}
@@ -46,7 +46,7 @@ const wrap = (children) =>
 
 /** The full server path of a page: its HTML, then the styles it used. */
 const renderPage = (elements) => {
-  const { extractCriticalToChunks, constructStyleTagsFromChunks } = createStyleServer(styleCache)
+  const { extractCriticalToChunks, constructStyleTagsFromChunks } = createInstance(styleCache)
   const html = renderToString(wrap(elements))
   const styles = constructStyleTagsFromChunks(extractCriticalToChunks(html))
   return { html, styles }

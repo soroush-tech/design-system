@@ -21,7 +21,7 @@ Inside `@soroush.design/react-components/`, every styling primitive must be impo
 
 ```ts
 // ✗
-import styled from '@umber-style/styled'
+import { styled } from '@umber-style/styled'
 import { css, keyframes } from '@umber-style/react'
 import { system, variant, compose, layout, color } from 'styled-system'
 import shouldForwardProp from '@styled-system/should-forward-prop'

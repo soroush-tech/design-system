@@ -99,9 +99,9 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@umber-style/cache": "^0.3.0",
-    "@umber-style/react": "^0.3.0",
-    "@umber-style/styled": "^0.3.0",
+    "@umber-style/cache": "^0.4.0",
+    "@umber-style/react": "^0.4.0",
+    "@umber-style/styled": "^0.4.0",
     "@soroush.design/core": "workspace:^"
   },
   "peerDependencies": {

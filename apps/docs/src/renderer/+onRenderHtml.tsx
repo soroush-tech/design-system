@@ -1,6 +1,6 @@
 import { renderToString } from 'react-dom/server'
 import { escapeInject, dangerouslySkipEscape } from 'vike/server'
-import createStyleServer from '@umber-style/server/create-instance'
+import { createInstance } from '@umber-style/server/create-instance'
 import { Bootstrap } from '../common/Bootstrap'
 import type { OnRenderHtmlSync } from 'vike/types'
 import { styleCache } from '@soroush.design/react/engine'
@@ -8,7 +8,7 @@ import faviconUrl from 'src/assets/soroush_logo.svg'
 import { buildHead } from './buildHead'
 
 export const onRenderHtml: OnRenderHtmlSync = (pageContext): ReturnType<OnRenderHtmlSync> => {
-  const { extractCriticalToChunks, constructStyleTagsFromChunks } = createStyleServer(styleCache)
+  const { extractCriticalToChunks, constructStyleTagsFromChunks } = createInstance(styleCache)
   const html = renderToString(<Bootstrap pageContext={pageContext} />)
   const chunks = extractCriticalToChunks(html)
   const styles = constructStyleTagsFromChunks(chunks)

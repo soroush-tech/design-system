@@ -1,4 +1,4 @@
-import createStyleServer from '@umber-style/server/create-instance'
+import { createInstance } from '@umber-style/server/create-instance'
 import { renderToString } from 'react-dom/server'
 import { styleCache } from '@soroush.design/react/engine'
 import { dangerouslySkipEscape, escapeInject } from 'vike/server'
@@ -10,7 +10,7 @@ import { PageShell } from './PageShell'
  * head, so it is drawn styled before any script runs.
  */
 export const onRenderHtml: OnRenderHtmlSync = (pageContext) => {
-  const { extractCriticalToChunks, constructStyleTagsFromChunks } = createStyleServer(styleCache)
+  const { extractCriticalToChunks, constructStyleTagsFromChunks } = createInstance(styleCache)
   const html = renderToString(<PageShell pageContext={pageContext} />)
   const styles = constructStyleTagsFromChunks(extractCriticalToChunks(html))
   return escapeInject`<!doctype html>

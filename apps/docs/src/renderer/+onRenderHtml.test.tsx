@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 vi.mock('@umber-style/server/create-instance', () => ({
-  default: vi.fn(() => ({
+  createInstance: vi.fn(() => ({
     extractCriticalToChunks: vi.fn(() => ({ html: '<div />', styles: [] })),
     constructStyleTagsFromChunks: vi.fn(() => '<style data-umber="soroush"></style>'),
   })),
@@ -17,16 +17,16 @@ vi.mock('../common/Bootstrap', () => ({ Bootstrap: () => null }))
 vi.mock('@soroush.design/react/engine', () => ({ styleCache: { key: 'soroush' } }))
 
 import { onRenderHtml } from './+onRenderHtml'
-import createStyleServer from '@umber-style/server/create-instance'
+import { createInstance } from '@umber-style/server/create-instance'
 import { renderToString } from 'react-dom/server'
 
 describe('+onRenderHtml', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    vi.mocked(createStyleServer).mockReturnValue({
+    vi.mocked(createInstance).mockReturnValue({
       extractCriticalToChunks: vi.fn(() => ({ html: '<div />', styles: [] })),
       constructStyleTagsFromChunks: vi.fn(() => '<style data-umber="soroush"></style>'),
-    } as unknown as ReturnType<typeof createStyleServer>)
+    } as unknown as ReturnType<typeof createInstance>)
   })
 
   it('calls renderToString with Bootstrap', async () => {
@@ -34,22 +34,22 @@ describe('+onRenderHtml', () => {
     expect(renderToString).toHaveBeenCalled()
   })
 
-  it('calls createStyleServer with the style cache', async () => {
+  it('calls createInstance with the style cache', async () => {
     await onRenderHtml({} as never)
-    expect(createStyleServer).toHaveBeenCalledWith({ key: 'soroush' })
+    expect(createInstance).toHaveBeenCalledWith({ key: 'soroush' })
   })
 
   it('extracts critical chunks from the rendered HTML', async () => {
     await onRenderHtml({} as never)
     expect(
-      vi.mocked(createStyleServer).mock.results[0].value.extractCriticalToChunks
+      vi.mocked(createInstance).mock.results[0].value.extractCriticalToChunks
     ).toHaveBeenCalledWith('<div id="app" />')
   })
 
   it('constructs style tags from chunks', async () => {
     await onRenderHtml({} as never)
     expect(
-      vi.mocked(createStyleServer).mock.results[0].value.constructStyleTagsFromChunks
+      vi.mocked(createInstance).mock.results[0].value.constructStyleTagsFromChunks
     ).toHaveBeenCalled()
   })
 

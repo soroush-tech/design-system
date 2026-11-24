@@ -1,7 +1,5 @@
-import createEngineCache from '@umber-style/cache'
-import { defaultExport } from './defaultExport'
+import { createCache } from '@umber-style/cache'
 
-// Named import when the engine has one (#144).
-export const createCache = defaultExport(createEngineCache)
+export { createCache }
 
 export default createCache({ key: 'soroush' })
