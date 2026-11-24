@@ -12,12 +12,12 @@
 //
 //   node scripts/smoke-create.mjs [--lang ts|js] [--pm npm|pnpm] [--framework vike|astro|react-router]
 //     [--layout standalone|workspace] [--render isomorphic|spa|ssg] [--with <libraries>]
-//     [--sample-data]
+//     [--sample-data] [--keep]
 //
 // In a workspace, the app is apps/web, and its scripts run from the workspace's root.
 //
 // The temp folder is removed when every check passes, and kept, with its path printed, when one
-// fails.
+// fails, or with --keep.
 import { spawn, spawnSync } from 'node:child_process'
 import {
   existsSync,
@@ -50,6 +50,7 @@ const { values } = parseArgs({
     render: { type: 'string', default: 'isomorphic' },
     with: { type: 'string', default: '' },
     'sample-data': { type: 'boolean', default: false },
+    keep: { type: 'boolean', default: false },
   },
 })
 const { lang, pm, framework, layout, render, with: libraries } = values
@@ -432,7 +433,10 @@ try {
   await checkServedPages(appDir)
   isPassed = true
 } finally {
-  if (isPassed) {
+  if (isPassed && values.keep) {
+    console.log(`
+The app is kept in ${workDir}`)
+  } else if (isPassed) {
     try {
       rmSync(workDir, { recursive: true, force: true, maxRetries: 5, retryDelay: 500 })
     } catch {
