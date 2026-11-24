@@ -1,5 +1,5 @@
 import { createContext, useContext, type SyntheticEvent } from 'react'
-import type { Theme } from '../theme'
+import type { Theme } from '@soroush.design/react-theme/theme'
 
 export type MenuItemValue = string | number
 

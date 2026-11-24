@@ -34,7 +34,7 @@ import { Global } from '@soroush.design/react-components/engine'
 import { useTheme } from '@soroush.design/react-components/theme'
 ```
 
-This applies to every file in `@soroush.design/react-components/` and `src/common/`. `src/style/`, `src/theme/engine.ts` and `src/engine/` are the seam to the styling engine.
+This applies to every file in `@soroush.design/react-components/` and `src/common/`. `@soroush.design/react-theme` (`packages/react-theme/src/style/`, `src/theme/engine.ts` and `src/engine/`) is the seam to the styling engine.
 
 ---
 

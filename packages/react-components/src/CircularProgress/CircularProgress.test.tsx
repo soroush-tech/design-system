@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
-import { baseTheme } from '../theme/themes'
+import { baseTheme } from '@soroush.design/react-theme/theme'
 import { CircularProgress } from '../CircularProgress'
 
 const VIEWBOX = 44

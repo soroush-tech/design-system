@@ -2,11 +2,14 @@ import { type ChangeEvent, type SelectHTMLAttributes } from 'react'
 import { useFormControl } from '../FormControl'
 import { Icon, type IconName, type IconProps } from '../Icon'
 import type { SpaceProps, LayoutProps } from '@soroush.design/styled-system'
-import { styled, type Theme, createShouldForwardProp, props, get, system, space } from '../index'
-import { useTheme } from '../theme'
+import { styled } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { createShouldForwardProp, props, get, system, space } from '../index'
+import { useTheme } from '@soroush.design/react-theme/theme'
 import { inputVariantStyles } from '../utils/inputVariantStyles'
 import { themeDefault } from '@soroush.design/core/theme'
 import { getFocusRing, getInputMinWidth } from '../utils/inputStyles'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 export type NativeSelectColor = keyof Theme['palette']
 export type NativeSelectTextColor = keyof Theme['text']
@@ -364,4 +367,10 @@ export function NativeSelect({
       <DropdownIcon name={iconName} size={size} color="inherit" {...iconProps} />
     </NativeSelectRoot>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    NativeSelect?: ComponentConfig<Record<string, unknown>, 'root' | 'select' | 'icon'>
+  }
 }

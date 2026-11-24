@@ -1,10 +1,13 @@
 import { type ReactNode } from 'react'
-import { styled, type Theme, type CSSObject } from '../index'
+import { styled } from '@soroush.design/react-theme'
+import { type Theme, type CSSObject } from '@soroush.design/react-theme/theme'
 import { themeDefault } from '@soroush.design/core/theme'
-import { useDefaultProps, useTheme } from '../theme'
+import { useDefaultProps, useTheme } from '@soroush.design/react-theme/theme'
 import { Paper, type PaperProps } from '../Paper'
 import { Typography, type TypographyProps } from '../Typography'
 import { Icon, type IconName, type IconProps } from '../Icon'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
+import type { CardOwnerState } from '../theme/themes'
 
 export type CardVariant = 'paper' | 'bracketBox' | 'interactive'
 
@@ -100,4 +103,10 @@ export function Card({
       {children}
     </CardSurface>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    Card?: ComponentConfig<CardOwnerState, 'root' | 'title' | 'caption' | 'icon'>
+  }
 }

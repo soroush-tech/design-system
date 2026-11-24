@@ -1,9 +1,10 @@
 import { useId, useMemo, useState, type ReactNode } from 'react'
-import { type Theme } from '../theme/themes'
-import { styled } from '../index'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { styled } from '@soroush.design/react-theme'
 import type { ViewProps } from '../View'
 import { Flex, type FlexProps } from '../Flex'
 import { FormControlContext } from './FormControlContext'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 // Named styled root - theme-customizable via
 // `theme.components.FormControl.styleOverrides.root`.
@@ -93,4 +94,10 @@ export function FormControl({
       </FormControlRoot>
     </FormControlContext.Provider>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    FormControl?: ComponentConfig
+  }
 }

@@ -1,5 +1,5 @@
 import { createContext } from 'react'
-import { type Theme } from '../theme/themes'
+import { type Theme } from '@soroush.design/react-theme/theme'
 
 /** Per-field state, middle priority in the override chain (overrides Form, overridden by explicit props). */
 export interface FormControlContextValue {

@@ -23,11 +23,11 @@ export const flatten = (node: ThemeNode, prefix = ''): TokenScale['tokens'] => {
 /**
  * The token contract, serialized from the live `baseTheme` object rather than a
  * hand-kept copy - a scale added to the theme shows up here with no extra step.
- * Loaded by path so generating content pulls in `themes.ts` alone, not the whole
- * component library.
+ * Loaded by path from the core, which owns it, so generating content pulls in
+ * `baseTheme.ts` alone, not the component library.
  */
 export const buildTokens = async (): Promise<TokenScale[]> => {
-  const themesPath = join(packageDir('react'), 'src', 'theme', 'themes.ts')
+  const themesPath = join(packageDir('react'), '..', 'core', 'src', 'theme', 'baseTheme.ts')
   const { baseTheme } = (await import(pathToFileURL(themesPath).href)) as {
     baseTheme: Record<string, ThemeNode>
   }
@@ -38,7 +38,7 @@ export const buildTokens = async (): Promise<TokenScale[]> => {
 
 /** Every top-level key of the theme, so a test can assert nothing was dropped. */
 export const themeScaleNames = async (): Promise<string[]> => {
-  const themesPath = join(packageDir('react'), 'src', 'theme', 'themes.ts')
+  const themesPath = join(packageDir('react'), '..', 'core', 'src', 'theme', 'baseTheme.ts')
   const { baseTheme } = (await import(pathToFileURL(themesPath).href)) as {
     baseTheme: Record<string, ThemeNode>
   }

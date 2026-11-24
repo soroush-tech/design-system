@@ -8,8 +8,10 @@ import {
   type ReactNode,
 } from 'react'
 import type { LayoutProps, SpaceProps } from '@soroush.design/styled-system'
-import { styled, type Theme, createShouldForwardProp, props, space, layout } from '../../index'
-import { useDefaultProps } from '../../theme'
+import { styled } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { createShouldForwardProp, props, space, layout } from '../../index'
+import { useDefaultProps } from '@soroush.design/react-theme/theme'
 import { themeDefault } from '@soroush.design/core/theme'
 import { MenuActivationContext } from '../MenuActivationContext'
 import {
@@ -21,6 +23,8 @@ import {
 import { getNextRow, type RowStep } from './utils/getNextRow'
 import { getOwnRows, isRowEnabled } from './utils/getOwnRows'
 import { findRowByText } from './utils/findRowByText'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
+import type { MenuListOwnerState } from '../../theme/themes'
 
 export type { MenuItemValue } from '../MenuListContext'
 
@@ -188,4 +192,10 @@ export function MenuList({
       </MenuListRoot>
     </MenuListContext.Provider>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    MenuList?: ComponentConfig<MenuListOwnerState>
+  }
 }

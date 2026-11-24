@@ -3,7 +3,7 @@ import type {
   CatalogOption as CoreCatalogOption,
   DesignSystemCatalog as CoreDesignSystemCatalog,
 } from '@soroush.design/core/catalog'
-import type { Theme } from '../theme/themes'
+import type { Theme } from '@soroush.design/react-theme/theme'
 
 export type {
   CatalogContent,

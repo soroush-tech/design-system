@@ -10,6 +10,7 @@ import {
   space,
   get,
 } from '@soroush.design/react-components'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 export type TableSortLabelDirection = 'asc' | 'desc'
 
@@ -129,4 +130,10 @@ export function TableSortLabel({
       />
     </SortLabelRoot>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    TableSortLabel?: ComponentConfig<Record<string, unknown>, 'root' | 'icon'>
+  }
 }

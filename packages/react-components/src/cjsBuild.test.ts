@@ -12,13 +12,14 @@ const published = Object.entries(manifest.publishConfig.exports) as [
   { import: { default: string }; require: { default: string } },
 ][]
 
-// The workspace serves @soroush.design/styled-system, @soroush.design/core and
-// @soroush.design/react-hooks as source; the built package requires their builds.
+// The workspace serves @soroush.design/styled-system, @soroush.design/core,
+// @soroush.design/react-hooks and @soroush.design/react-theme as source; the built package requires their builds.
 const Module = require('node:module')
 const resolveFilename = Module._resolveFilename
 const styledSystemDist = join(root, '..', 'styled-system', 'dist')
 const coreDist = join(root, '..', 'core', 'dist')
 const hooksDist = join(root, '..', 'react-hooks', 'dist')
+const themeDist = join(root, '..', 'react-theme', 'dist')
 
 beforeAll(() => {
   Module._resolveFilename = (request: string, ...rest: unknown[]) =>
@@ -31,6 +32,9 @@ beforeAll(() => {
         .replace(/^@soroush\.design\/core\/(.*)$/, (_, path) => join(coreDist, `${path}.cjs`))
         .replace(/^@soroush\.design\/react-hooks\/(.*)$/, (_, path) =>
           join(hooksDist, `${path}.cjs`)
+        )
+        .replace(/^@soroush\.design\/react-theme\/?(.*)$/, (_, path) =>
+          join(themeDist, `${path || 'index'}.cjs`)
         ),
       ...rest
     )

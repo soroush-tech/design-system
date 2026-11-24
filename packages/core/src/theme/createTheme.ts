@@ -1,4 +1,5 @@
 import { withBreakpointHelpers } from '../breakpoints'
+import { deepMerge } from '../utils/deepMerge'
 import type { Theme } from './types'
 
 /**
@@ -17,22 +18,6 @@ export type DeepPartial<T> = {
 
 /** Sparse theme patch accepted by `createTheme` and `ThemeProvider`'s `themes` prop. */
 export type ThemeOverride = DeepPartial<Theme>
-
-const isPlainObject = (value: unknown): value is Record<string, unknown> =>
-  typeof value === 'object' && value !== null && !Array.isArray(value)
-
-export const deepMerge = (base: Record<string, unknown>, overrides: Record<string, unknown>) => {
-  const merged: Record<string, unknown> = { ...base }
-  for (const [key, value] of Object.entries(overrides)) {
-    if (value === undefined) {
-      continue
-    }
-    const baseValue = merged[key]
-    merged[key] =
-      isPlainObject(baseValue) && isPlainObject(value) ? deepMerge(baseValue, value) : value
-  }
-  return merged
-}
 
 /**
  * Builds a theme by deep-merging sparse `overrides` onto `base`.
@@ -53,7 +38,7 @@ export const createTheme = <T extends Theme>(base: T, overrides: NoInfer<DeepPar
 }
 
 /** A theme whose `breakpoints` carry the query helpers - added when a hand-built theme lacks them. */
-export const withHelpers = <T extends Theme>(theme: T): T =>
+const withHelpers = <T extends Theme>(theme: T): T =>
   theme.breakpoints && !('up' in theme.breakpoints)
     ? ({ ...theme, breakpoints: withBreakpointHelpers(theme.breakpoints) } as T)
     : theme

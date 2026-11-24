@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
-import { styled, keyframes, createShouldForwardProp } from '../index'
+import { styled, keyframes } from '@soroush.design/react-theme'
+import { createShouldForwardProp } from '../index'
 import { Paper, type PaperElevation } from '../Paper'
 import { FocusTrap } from '../FocusTrap'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 export type DrawerAnchor = 'left' | 'right' | 'top' | 'bottom'
 
@@ -200,4 +202,10 @@ export function Drawer({
       </Paper>
     </DrawerPanel>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    Drawer?: ComponentConfig
+  }
 }

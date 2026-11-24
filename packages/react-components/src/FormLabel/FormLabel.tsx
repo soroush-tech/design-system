@@ -1,8 +1,9 @@
 import { useContext, useEffect, type ComponentType, type ReactNode } from 'react'
-import { styled } from '../index'
+import { styled } from '@soroush.design/react-theme'
 import { Typography, type TypographyProps } from '../Typography'
 import { FormControlContext } from '../FormControl/FormControlContext'
 import { FormContext } from '../Form/FormContext'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 // Typography forwards unknown DOM attributes but does not declare `htmlFor` (a label-only
 // attribute) in its props. Render it through this alias so `htmlFor` type-checks.
@@ -68,4 +69,10 @@ export function FormLabel({
       {isRequired ? ' *' : ''}
     </FormLabelRoot>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    FormLabel?: ComponentConfig
+  }
 }

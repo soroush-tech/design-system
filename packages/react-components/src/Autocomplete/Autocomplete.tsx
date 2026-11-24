@@ -10,8 +10,10 @@ import {
   type RefObject,
 } from 'react'
 import type { LayoutProps, SpaceProps } from '@soroush.design/styled-system'
-import { createShouldForwardProp, get, props, styled, system, type Theme, space } from '../index'
-import { useDefaultProps, useTheme } from '../theme'
+import { styled } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { createShouldForwardProp, get, props, system, space } from '../index'
+import { useDefaultProps, useTheme } from '@soroush.design/react-theme/theme'
 import { getSurfaceRadius } from '@soroush.design/core/utils'
 import { getFocusRing, getInputMinWidth } from '../utils/inputStyles'
 import { useFormControl } from '../FormControl'
@@ -28,6 +30,8 @@ import {
   type AutocompleteInputReason,
   type AutocompleteValue,
 } from './hooks/useAutocomplete'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
+import type { AutocompleteOwnerState } from '../theme/themes'
 
 export type {
   AutocompleteChangeReason,
@@ -741,4 +745,24 @@ export function Autocomplete<T = string, Multiple extends boolean | undefined = 
       )}
     </>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    Autocomplete?: ComponentConfig<
+      AutocompleteOwnerState,
+      | 'root'
+      | 'tags'
+      | 'input'
+      | 'clearIndicator'
+      | 'popupIndicator'
+      | 'popup'
+      | 'listbox'
+      | 'group'
+      | 'groupLabel'
+      | 'groupItems'
+      | 'option'
+      | 'status'
+    >
+  }
 }

@@ -62,12 +62,20 @@ export function mountSubpath(subpath: string, under?: string): string {
 export function planEntries(libraries: ResolvedLibrary[]): Entry[] {
   const seen = new Map<string, Entry>()
   for (const library of libraries) {
+    for (const subpath of library.omit ?? []) {
+      if (!library.entries.some((entry) => entry.subpath === subpath)) {
+        throw new Error(
+          `${library.package}: omits "${subpath}", which is not one of its entry points.`
+        )
+      }
+    }
     if (library.under !== undefined && !LOWERCASE_NAME.test(library.under)) {
       throw new Error(
         `${library.package}: "${library.under}" is not a lowercase name; a library is mounted under a name such as "markdown".`
       )
     }
     for (const { subpath, hasDefault } of library.entries) {
+      if (library.omit?.includes(subpath)) continue
       const mounted = mountSubpath(subpath, library.under)
       const entry: Entry = {
         subpath: mounted,
@@ -82,6 +90,16 @@ export function planEntries(libraries: ResolvedLibrary[]): Entry[] {
         throw new Error(`${taken.library} and ${library.package} both claim "${mounted}"${byCase}.`)
       }
       seen.set(mounted.toLowerCase(), entry)
+    }
+  }
+  for (const library of libraries) {
+    for (const subpath of library.omit ?? []) {
+      const mounted = mountSubpath(subpath, library.under)
+      if (!seen.has(mounted.toLowerCase())) {
+        throw new Error(
+          `${library.package}: omits "${subpath}" but no other library serves "${mounted}".`
+        )
+      }
     }
   }
   return [...seen.values()].sort((a, b) => {

@@ -13,6 +13,7 @@ import {
   system,
   get,
 } from '@soroush.design/react-components'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 /** Valid values for the bg prop - derived from theme.background keys. */
 export type TableBackgroundToken = keyof Theme['background']
@@ -146,4 +147,10 @@ export function Table({
       </TableBase>
     </TableContext.Provider>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    Table?: ComponentConfig
+  }
 }

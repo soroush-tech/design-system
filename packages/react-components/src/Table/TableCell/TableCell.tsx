@@ -18,6 +18,7 @@ import {
   get,
 } from '@soroush.design/react-components'
 import { themeDefault } from '@soroush.design/core/theme'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 /** Cell type - inherited from the enclosing section, overridable per cell. */
 export type TableCellVariant = TableSection
@@ -173,4 +174,10 @@ export function TableCell({
       {children}
     </TableCellBase>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    TableCell?: ComponentConfig
+  }
 }

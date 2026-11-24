@@ -20,6 +20,7 @@ body:
         - react-components
         - react-hooks
         - react-markdown
+        - react-theme
         - story-demo
         - styled-system
         - ui-spec

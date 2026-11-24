@@ -1,7 +1,9 @@
 import { Children, useId, type HTMLAttributes, type ReactNode } from 'react'
-import { get, styled } from '../../index'
+import { styled } from '@soroush.design/react-theme'
+import { get } from '../../index'
 import { alpha } from '../../utils'
 import { Typography } from '../../Typography'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 export interface NavGroupProps extends Omit<HTMLAttributes<HTMLElement>, 'children'> {
   /** The group's name - a heading over its links, or the button that folds it. */
@@ -115,4 +117,10 @@ export function NavGroup({
       {list}
     </NavGroupRoot>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    NavGroup?: ComponentConfig<Record<string, unknown>, 'root' | 'label' | 'list'>
+  }
 }

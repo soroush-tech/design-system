@@ -13,6 +13,7 @@ import {
 } from '@soroush.design/react-components'
 import { alpha } from '@soroush.design/react-components/utils'
 import { themeDefault } from '@soroush.design/core/theme'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 export type PaginationItemColor = PaletteColor
 export type PaginationItemVariant = 'text' | 'outlined'
@@ -204,4 +205,10 @@ export function PaginationItem({
       {type === 'page' ? page : <Icon name={NAV_ICONS[type]} size="1.25em" color="inherit" />}
     </ItemRoot>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    PaginationItem?: ComponentConfig<Record<string, unknown>, 'root' | 'ellipsis'>
+  }
 }

@@ -12,6 +12,7 @@ import {
   system,
 } from '@soroush.design/react-components'
 import { themeDefault } from '@soroush.design/core/theme'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 /** Palette color driving the hover/selected shading - a `theme.palette` key. */
 export type TableRowColor = PaletteColor
@@ -81,4 +82,10 @@ export function TableRow({ color, ...rest }: Readonly<TableRowProps>) {
   // Resolution: explicit prop → enclosing Table's broadcast → 'primary' (in the style fns).
   const table = useContext(TableContext)
   return <TableRowBase color={color ?? table.color} {...rest} />
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    TableRow?: ComponentConfig
+  }
 }

@@ -1,11 +1,15 @@
 import type { KeyboardEvent, MouseEvent, ReactNode, SyntheticEvent } from 'react'
 import type { SpaceProps } from '@soroush.design/styled-system'
-import { createShouldForwardProp, get, props, styled, type Theme, space } from '../index'
-import { useDefaultProps } from '../theme'
+import { styled } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { createShouldForwardProp, get, props, space } from '../index'
+import { useDefaultProps } from '@soroush.design/react-theme/theme'
 import { Icon } from '../Icon'
 import { themeDefault } from '@soroush.design/core/theme'
 import { getShapeRadius, type Shape } from '@soroush.design/core/utils'
 import { alpha } from '../utils'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
+import type { ChipOwnerState } from '../theme/themes'
 
 export type ChipVariant = 'contained' | 'outlined' | 'text'
 export type ChipColor = keyof Theme['palette']
@@ -252,4 +256,13 @@ export function Chip({
       )}
     </ChipRoot>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    Chip?: ComponentConfig<
+      ChipOwnerState,
+      'root' | 'body' | 'label' | 'icon' | 'avatar' | 'deleteIcon'
+    >
+  }
 }

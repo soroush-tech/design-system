@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react'
-import { get, styled } from '../../index'
+import { styled } from '@soroush.design/react-theme'
+import { get } from '../../index'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 export interface AlertTitleProps {
   /** The title. */
@@ -27,4 +29,10 @@ export function AlertTitle({
       {children}
     </AlertTitleRoot>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    AlertTitle?: ComponentConfig
+  }
 }

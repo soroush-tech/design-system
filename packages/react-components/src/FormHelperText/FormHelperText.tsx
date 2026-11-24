@@ -1,8 +1,9 @@
 import { useContext, useEffect, type ReactNode } from 'react'
-import { styled } from '../index'
+import { styled } from '@soroush.design/react-theme'
 import { Typography, type TypographyProps } from '../Typography'
 import { FormControlContext } from '../FormControl/FormControlContext'
 import { FormContext } from '../Form/FormContext'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 // Named styled root - theme-customizable via
 // `theme.components.FormHelperText.styleOverrides.root`.
@@ -58,4 +59,10 @@ export function FormHelperText({
       {children}
     </FormHelperTextRoot>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    FormHelperText?: ComponentConfig
+  }
 }

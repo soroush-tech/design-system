@@ -55,7 +55,7 @@ from disk at runtime.
 | Content           | Source of truth                                                                              |
 | ----------------- | -------------------------------------------------------------------------------------------- |
 | Component records | `packages/*/src/*/README.md`, split into `intro` / `api` / `examples`                        |
-| Token contract    | `baseTheme` in `packages/react-components/src/theme/themes.ts`, imported and serialized      |
+| Token contract    | `baseTheme` in `packages/core/src/theme/baseTheme.ts`, imported and serialized               |
 | Guides            | `packages/react-components/docs/`, `apps/docs/content/docs/`, `packages/styled-system/docs/` |
 | Consumer refs     | `packages/react-components/docs/consumer/`                                                   |
 

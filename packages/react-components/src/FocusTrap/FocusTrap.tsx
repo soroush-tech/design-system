@@ -1,5 +1,6 @@
 import { useEffect, useRef, type ReactNode } from 'react'
-import { styled } from '../index'
+import { styled } from '@soroush.design/react-theme'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 // Named styled root - the trap wrapper is theme-customizable via
 // `theme.components.FocusTrap.styleOverrides.root`. `outline: none` stays the
@@ -118,4 +119,10 @@ export function FocusTrap({
       {children}
     </FocusTrapRoot>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    FocusTrap?: ComponentConfig
+  }
 }

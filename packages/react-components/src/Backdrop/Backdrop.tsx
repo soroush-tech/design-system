@@ -1,5 +1,6 @@
-import { styled } from '../index'
+import { styled } from '@soroush.design/react-theme'
 import { View, type ViewProps } from '../View'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 export type BackdropProps = ViewProps
 
@@ -19,4 +20,10 @@ const BackdropRoot = styled(View, { name: 'Backdrop', label: 'Backdrop' })({
  */
 export function Backdrop(props: Readonly<BackdropProps>) {
   return <BackdropRoot bg="backdrop" {...props} />
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    Backdrop?: ComponentConfig
+  }
 }

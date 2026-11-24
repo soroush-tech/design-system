@@ -1,6 +1,6 @@
+import { styled } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
 import {
-  styled,
-  type Theme,
   createShouldForwardProp,
   props,
   border,
@@ -19,6 +19,7 @@ import {
 } from '../index'
 import { Flex, type FlexProps } from '../Flex'
 import { themeDefault } from '@soroush.design/core/theme'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 /** Valid values for the color prop - derived from theme.background keys. */
 export type AppBarColor = keyof Theme['background']
@@ -105,4 +106,10 @@ const AppBarBase = styled(Flex, {
 
 export function AppBar({ elevation = 4, size, ...rest }: Readonly<AppBarProps>) {
   return <AppBarBase as="header" elevation={elevation} size={size} {...rest} />
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    AppBar?: ComponentConfig
+  }
 }

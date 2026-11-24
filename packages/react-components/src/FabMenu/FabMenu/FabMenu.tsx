@@ -14,8 +14,10 @@ import {
   type SyntheticEvent,
 } from 'react'
 import type { SpaceProps } from '@soroush.design/styled-system'
-import { createShouldForwardProp, props, styled, type Theme, space } from '../../index'
-import { useDefaultProps } from '../../theme'
+import { styled } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { createShouldForwardProp, props, space } from '../../index'
+import { useDefaultProps } from '@soroush.design/react-theme/theme'
 import { Fab } from '../../Fab'
 import { Icon } from '../../Icon'
 import { Zoom } from '../../Zoom'
@@ -23,6 +25,8 @@ import { isRtl } from '../../utils/isRtl'
 import { useControlled } from '@soroush.design/react-hooks/useControlled'
 import { FabMenuContext } from '../FabMenuContext'
 import { useFabMenuLayout } from '../hooks/useFabMenuLayout'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
+import type { FabMenuOwnerState } from '../../theme/themes'
 
 export type FabMenuDirection = 'up' | 'down' | 'left' | 'right'
 export type FabMenuAlign = 'start' | 'end'
@@ -302,4 +306,10 @@ export function FabMenu({
       </FabMenuRoot>
     </FabMenuContext.Provider>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    FabMenu?: ComponentConfig<FabMenuOwnerState, 'root' | 'list'>
+  }
 }

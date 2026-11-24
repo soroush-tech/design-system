@@ -24,6 +24,7 @@ coverage:
           - react-components
           - react-hooks
           - react-markdown
+          - react-theme
           - story-demo
           - styled-system
           - ui-spec
@@ -69,6 +70,9 @@ flag_management:
     - name: react-markdown
       paths:
         - packages/react-markdown/
+    - name: react-theme
+      paths:
+        - packages/react-theme/
     - name: story-demo
       paths:
         - packages/story-demo/
@@ -133,6 +137,10 @@ component_management:
       name: react-markdown
       paths:
         - packages/react-markdown/**
+    - component_id: react-theme
+      name: react-theme
+      paths:
+        - packages/react-theme/**
     - component_id: story-demo
       name: story-demo
       paths:

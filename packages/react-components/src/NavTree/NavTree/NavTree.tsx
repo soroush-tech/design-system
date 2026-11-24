@@ -1,7 +1,9 @@
 import { useMemo } from 'react'
-import { styled, type Theme } from '../../index'
+import { styled } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
 import { Flex, type FlexProps } from '../../Flex'
 import { NavTreeContext } from '../NavTreeContext'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 export interface NavTreeProps extends FlexProps {
   /** Palette color of the current page's pill, a hovered link and the focus ring - resolves to `theme.palette`. Default: `'primary'`. */
@@ -27,4 +29,10 @@ export function NavTree({ color = 'primary', ...rest }: Readonly<NavTreeProps>) 
       <NavTreeRoot {...rest} />
     </NavTreeContext.Provider>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    NavTree?: ComponentConfig<Record<string, unknown>, 'root'>
+  }
 }

@@ -1,10 +1,13 @@
 import { type ChangeEvent, type KeyboardEvent, type ReactNode } from 'react'
 import type { SpaceProps } from '@soroush.design/styled-system'
-import { get, styled, type Theme, createShouldForwardProp, props, space } from '../index'
-import { useTheme } from '../theme'
+import { styled } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { get, createShouldForwardProp, props, space } from '../index'
+import { useTheme } from '@soroush.design/react-theme/theme'
 import { useFormControl } from '../FormControl'
 import { alpha } from '../utils'
 import { themeDefault } from '@soroush.design/core/theme'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -421,4 +424,13 @@ export function Switch({
       {children != null && <SwitchLabel textColor={fc.textColor}>{children}</SwitchLabel>}
     </SwitchRoot>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    Switch?: ComponentConfig<
+      Record<string, unknown>,
+      'root' | 'input' | 'track' | 'thumb' | 'label'
+    >
+  }
 }

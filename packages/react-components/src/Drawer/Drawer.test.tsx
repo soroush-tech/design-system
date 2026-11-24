@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeAll, afterAll, afterEach } from 'vitest'
 import { act, cleanup, fireEvent, screen } from '@testing-library/react'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
-import { baseTheme } from '../theme/themes'
+import { baseTheme } from '@soroush.design/react-theme/theme'
 import { installPopover } from '../testing'
 import { getCssVariable } from '../utils/test/getCssVariable'
 import { getStyleRulesFor } from '../utils/test/getStyleRulesFor'

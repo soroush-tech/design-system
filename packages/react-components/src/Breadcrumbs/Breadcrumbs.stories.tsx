@@ -8,8 +8,9 @@ import { Menu } from '../Menu'
 import { MenuItem } from '../MenuItem'
 import { Typography } from '../Typography'
 import { View } from '../View'
-import { ThemeProvider } from '../theme'
-import { baseTheme, createTheme } from '../theme/themes'
+import { ThemeProvider } from '@soroush.design/react-theme/theme'
+import { baseTheme } from '@soroush.design/react-theme/theme'
+import { createTheme } from '@soroush.design/core/theme'
 import { p } from '../utils/test/storiesArgs'
 import {
   breadcrumbsSeparatorTokens,

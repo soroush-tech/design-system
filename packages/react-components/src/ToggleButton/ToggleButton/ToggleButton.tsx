@@ -6,6 +6,7 @@ import { styled, type Theme, get } from '@soroush.design/react-components'
 import { useTheme } from '@soroush.design/react-components/theme'
 import { alpha } from '@soroush.design/react-components/utils'
 import { themeDefault } from '@soroush.design/core/theme'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 export interface ToggleButtonProps extends Omit<
   ButtonProps,
@@ -97,4 +98,10 @@ export function ToggleButton({
       {...rest}
     />
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    ToggleButton?: ComponentConfig
+  }
 }

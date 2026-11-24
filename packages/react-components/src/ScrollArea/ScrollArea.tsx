@@ -1,9 +1,13 @@
 import { useRef, type ReactNode, type Ref, type RefObject } from 'react'
 import type { LayoutProps, SpaceProps } from '@soroush.design/styled-system'
-import { createShouldForwardProp, get, props, styled, system, type Theme, space } from '../index'
-import { useDefaultProps } from '../theme'
+import { styled } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { createShouldForwardProp, get, props, system, space } from '../index'
+import { useDefaultProps } from '@soroush.design/react-theme/theme'
 import { useMergedRefs } from '@soroush.design/react-hooks/useMergedRefs'
 import { useScrollThumb, type ScrollAxis } from './hooks/useScrollThumb'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
+import type { ScrollAreaOwnerState } from '../theme/themes'
 
 /** Which ways it scrolls. */
 export type ScrollAxes = ScrollAxis | 'both'
@@ -185,4 +189,10 @@ export function ScrollArea({
       {axes !== 'y' && <ScrollBar box={box} axis="x" />}
     </ScrollAreaRoot>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    ScrollArea?: ComponentConfig<ScrollAreaOwnerState, 'root' | 'viewport' | 'track' | 'thumb'>
+  }
 }

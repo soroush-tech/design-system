@@ -15,6 +15,7 @@ Monorepo for the `@soroush.tech` UI libraries, extracted from [`soroush-tech/cor
 | [`@soroush.design/mcp`](packages/mcp)                           | MCP server exposing the components, READMEs, and tokens to AI coding tools    |
 | [`@soroush.tech/ui-spec`](packages/ui-spec)                     | Generative-UI spec on A2UI v1.0: catalogs, a behavior schema, and validators  |
 | [`@soroush.design/react-hooks`](packages/react-hooks)           | React hooks that belong to no component and no theme                          |
+| [`@soroush.design/react-theme`](packages/react-theme)           | The theme and the configured styling: build your own components on our tokens |
 | [`@soroush.tech/lab`](packages/lab)                             | Incubator for components heading into the design system (private, internal)   |
 | [`@soroush.tech/story-demo`](packages/story-demo)               | Renders CSF3 stories as interactive docs demos (private, internal)            |
 | [`@soroush.tech/docs-content`](packages/docs-content)           | Component registry and README parsing shared by the docs app and MCP server   |

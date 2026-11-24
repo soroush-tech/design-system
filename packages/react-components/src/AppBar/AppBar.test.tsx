@@ -1,8 +1,9 @@
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
-import { ThemeProvider } from '../theme'
-import { baseTheme, createTheme } from '../theme/themes'
+import { ThemeProvider } from '@soroush.design/react-theme/theme'
+import { baseTheme } from '@soroush.design/react-theme/theme'
+import { createTheme } from '@soroush.design/core/theme'
 
 // A second theme with a different surface value - proves tokens resolve per-theme.
 const light = createTheme(baseTheme, { background: { paper: '#F3F3F3' } })

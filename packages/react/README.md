@@ -15,7 +15,8 @@ npm i @soroush.design/react
 ```
 
 `react` and `react-dom` (19.2.8 or later) are peer dependencies. The component library,
-[`@soroush.design/react-components`](../react-components), and the hooks library,
+[`@soroush.design/react-components`](../react-components), the theme library,
+[`@soroush.design/react-theme`](../react-theme), and the hooks library,
 [`@soroush.design/react-hooks`](../react-hooks), are installed with it, once each: the umbrella
 imports them and never bundles them, so an app has one theme context.
 

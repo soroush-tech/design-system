@@ -1,5 +1,6 @@
-import { get, type Theme } from '../../index'
-import type { TabsVariants } from '../../theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { get } from '../../index'
+import type { TabsVariants } from '../../theme/themes'
 
 /**
  * The divider - the line along a row of tabs' foot, a column's end side - as an inset shadow,

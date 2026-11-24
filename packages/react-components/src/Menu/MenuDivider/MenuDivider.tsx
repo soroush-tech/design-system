@@ -1,4 +1,6 @@
-import { styled, get } from '../../index'
+import { styled } from '@soroush.design/react-theme'
+import { get } from '../../index'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 export interface MenuDividerProps {
   className?: string
@@ -23,4 +25,10 @@ const MenuDividerRoot = styled('li', { name: 'MenuDivider', label: 'MenuDivider'
  */
 export function MenuDivider({ className, 'data-testid': dataTestid }: Readonly<MenuDividerProps>) {
   return <MenuDividerRoot role="separator" className={className} data-testid={dataTestid} />
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    MenuDivider?: ComponentConfig
+  }
 }

@@ -1,17 +1,12 @@
 import { type HTMLAttributes } from 'react'
 import type { SpaceProps, LayoutProps, PaddingProps } from '@soroush.design/styled-system'
-import {
-  styled,
-  type Theme,
-  keyframes,
-  createShouldForwardProp,
-  props,
-  space,
-  layout,
-} from '../index'
+import { styled, keyframes } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { createShouldForwardProp, props, space, layout } from '../index'
 import type { ButtonColor } from '../Button'
 import { clamp } from '../utils'
 import { themeDefault } from '@soroush.design/core/theme'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 export type CircularProgressVariant = 'indeterminate' | 'determinate'
 export type CircularProgressColor = ButtonColor | 'inherit'
@@ -210,4 +205,10 @@ export function CircularProgress({
       </svg>
     </CircularProgressRoot>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    CircularProgress?: ComponentConfig<Record<string, unknown>, 'root' | 'track' | 'circle'>
+  }
 }

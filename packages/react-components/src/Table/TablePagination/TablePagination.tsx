@@ -7,6 +7,7 @@ import { Typography } from '@soroush.design/react-components/Typography'
 import { TableCell, type TableCellProps } from '../TableCell'
 import { TablePaginationActions, type TablePaginationActionType } from '../TablePaginationActions'
 import { styled } from '@soroush.design/react-components'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 export interface TablePaginationDisplayedRowsInfo {
   from: number
@@ -129,4 +130,10 @@ export function TablePagination({
       </Toolbar>
     </TableCell>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    TablePagination?: ComponentConfig
+  }
 }

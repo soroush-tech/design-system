@@ -119,12 +119,13 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "test:types": "pnpm --filter @soroush.design/core build && pnpm --filter @soroush.design/react-components build && pnpm build && tsc -p type-tests/umbrella-name/tsconfig.json && tsc -p type-tests/library-name/tsconfig.json && tsc -p type-tests/core-name/tsconfig.json && tsc -p type-tests/no-augmentation/tsconfig.json",
+    "test:types": "pnpm --filter @soroush.design/core build && pnpm --filter @soroush.design/react-theme build && pnpm --filter @soroush.design/react-components build && pnpm build && tsc -p type-tests/umbrella-name/tsconfig.json && tsc -p type-tests/library-name/tsconfig.json && tsc -p type-tests/core-name/tsconfig.json && tsc -p type-tests/theme-name/tsconfig.json && tsc -p type-tests/no-augmentation/tsconfig.json",
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
     "@soroush.design/react-components": "workspace:^",
-    "@soroush.design/react-hooks": "workspace:^"
+    "@soroush.design/react-hooks": "workspace:^",
+    "@soroush.design/react-theme": "workspace:^"
   },
   "peerDependencies": {
     "@soroush.design/react-markdown": "^0.1.0",

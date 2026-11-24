@@ -6,6 +6,7 @@ import {
 import { styled } from '@soroush.design/react-components'
 import { useTheme } from '@soroush.design/react-components/theme'
 import { themeDefault } from '@soroush.design/core/theme'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 export type TablePaginationActionType = 'first' | 'previous' | 'next' | 'last'
 
@@ -99,4 +100,10 @@ export function TablePaginationActions({
       )}
     </ActionsRoot>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    TablePaginationActions?: ComponentConfig
+  }
 }

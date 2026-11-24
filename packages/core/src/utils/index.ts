@@ -1,5 +1,6 @@
 export * from './alpha'
 export * from './clamp'
+export * from './deepMerge'
 export * from './generateBoxShadow'
 export * from './getAnchorRel'
 export * from './getShapeRadius'

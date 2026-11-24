@@ -10,6 +10,7 @@ import {
   border,
   system,
 } from '@soroush.design/react-components'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 /** Valid values for the color prop - derived from theme.text keys. */
 export type TableFooterColorToken = keyof Theme['text']
@@ -57,4 +58,10 @@ export function TableFooter({ as, children, ...rest }: Readonly<TableFooterProps
       </TableFooterBase>
     </TableSectionContext.Provider>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    TableFooter?: ComponentConfig
+  }
 }

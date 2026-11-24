@@ -7,8 +7,10 @@ import {
   type ReactNode,
 } from 'react'
 import type { LayoutProps, SpaceProps } from '@soroush.design/styled-system'
-import { createShouldForwardProp, get, props, styled, system, type Theme, space } from '../index'
-import { useDefaultProps, useTheme } from '../theme'
+import { styled } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { createShouldForwardProp, get, props, system, space } from '../index'
+import { useDefaultProps, useTheme } from '@soroush.design/react-theme/theme'
 import { useFormControl } from '../FormControl'
 import { FormControlContext } from '../FormControl/FormControlContext'
 import { Icon, type IconName } from '../Icon'
@@ -18,6 +20,8 @@ import { inputVariantStyles } from '../utils/inputVariantStyles'
 import { useHoldRepeat } from './hooks/useHoldRepeat'
 import { useNumberInput } from './hooks/useNumberInput'
 import { useWheelStep } from './hooks/useWheelStep'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
+import type { NumberInputOwnerState } from '../theme/themes'
 
 export type NumberInputVariant = 'default' | 'outlined' | 'text' | 'underline'
 export type NumberInputSpinButtons = 'stacked' | 'sides' | 'none'
@@ -488,4 +492,13 @@ export function NumberInput({
       {isSide && increment}
     </NumberInputRoot>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    NumberInput?: ComponentConfig<
+      NumberInputOwnerState,
+      'root' | 'input' | 'content' | 'spinButtons' | 'increment' | 'decrement'
+    >
+  }
 }

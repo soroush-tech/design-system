@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { fireEvent, screen, within } from '@testing-library/react'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
-import { baseTheme } from '../theme/themes'
+import { baseTheme } from '@soroush.design/react-theme/theme'
 import { MenuItem } from '../MenuItem'
 import { FormControl } from '../FormControl'
 import { FormLabel } from '../FormLabel'

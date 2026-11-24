@@ -7,11 +7,16 @@ import {
 } from 'react'
 import { Icon } from '../../Icon'
 import { Tooltip } from '../../Tooltip'
-import { styled, type Theme, createShouldForwardProp, get } from '../../index'
-import { useDefaultProps, type TabsVariants } from '../../theme'
+import { styled } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { createShouldForwardProp, get } from '../../index'
+import { useDefaultProps } from '@soroush.design/react-theme/theme'
+import { type TabsVariants } from '../../theme/themes'
 import { TabIndexContext, useTabsContext, type TabValue } from '../TabsContext'
 import { getDividerShadow } from '../utils/dividerLine'
 import { TONAL_RADIUS } from '../utils/tonalRadius'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
+import type { TabOwnerState } from '../../theme/themes'
 
 /** Where `icon` sits around a tab's label. */
 export type TabIconPosition = 'start' | 'end' | 'top' | 'bottom'
@@ -513,4 +518,10 @@ export function Tab({
       )}
     </TabRoot>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    Tab?: ComponentConfig<TabOwnerState, 'root' | 'label' | 'icon' | 'secondaryAction' | 'close'>
+  }
 }

@@ -1,5 +1,5 @@
 import { createContext, useContext, type SyntheticEvent } from 'react'
-import type { Theme } from '../theme/themes'
+import type { Theme } from '@soroush.design/react-theme/theme'
 
 /** What a `FabMenuItem` reads from the `FabMenu` it sits in. */
 export interface FabMenuContextValue {

@@ -1,5 +1,5 @@
 import { type CSSProperties, type ElementType, type HTMLAttributes } from 'react'
-import { useTheme } from '../theme'
+import { useTheme } from '@soroush.design/react-theme/theme'
 import type {
   SpaceProps,
   LayoutProps,
@@ -8,9 +8,9 @@ import type {
   BorderProps,
   PositionProps,
 } from '@soroush.design/styled-system'
+import { styled } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
 import {
-  styled,
-  type Theme,
   createShouldForwardProp,
   props,
   flexbox,
@@ -22,6 +22,7 @@ import {
   typography,
 } from '../index'
 import type { TypographyVariant } from '@soroush.design/core/theme'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 export type { TypographyVariant }
 
@@ -103,4 +104,10 @@ export function Typography({ variant = 'body1', as, ...rest }: Readonly<Typograp
   // The theme holds a tag name; `as` takes any element type.
   const element = as ?? (theme.typography[variant].element as ElementType)
   return <TypographyBase as={element} variant={variant} {...rest} />
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    Typography?: ComponentConfig
+  }
 }

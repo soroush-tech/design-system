@@ -8,13 +8,17 @@ import {
   type SyntheticEvent,
 } from 'react'
 import type { SpaceProps } from '@soroush.design/styled-system'
-import { createShouldForwardProp, get, props, styled, type Theme, space } from '../index'
-import { useDefaultProps } from '../theme'
+import { styled } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { createShouldForwardProp, get, props, space } from '../index'
+import { useDefaultProps } from '@soroush.design/react-theme/theme'
 import { useFormControl } from '../FormControl'
 import { FormControlContext } from '../FormControl/FormControlContext'
 import { Icon } from '../Icon'
 import { useRating } from './hooks/useRating'
 import { roundToPrecision } from '@soroush.design/core/utils'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
+import type { RatingOwnerState } from '../theme/themes'
 
 export interface RatingProps extends SpaceProps<Theme> {
   /** The rating - `null` for none. Controlled with `onChange`. */
@@ -420,4 +424,13 @@ export function Rating({
       )}
     </RatingRoot>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    Rating?: ComponentConfig<
+      RatingOwnerState,
+      'root' | 'item' | 'icon' | 'decimal' | 'input' | 'text' | 'emptyLabel'
+    >
+  }
 }

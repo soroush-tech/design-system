@@ -5,17 +5,18 @@ import type {
   BackgroundProps,
   PositionProps,
 } from '@soroush.design/styled-system'
+import { styled } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
 import {
-  styled,
   createShouldForwardProp,
   props,
   background,
   position,
   system,
-  type Theme,
   layout,
   space,
 } from '../index'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 type Phase = 'initial' | 'without-srcset' | 'fallback' | 'failed'
 
@@ -122,4 +123,10 @@ export function Image({ src, srcSet, fallback, alt, onError, ...rest }: Readonly
       {...rest}
     />
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    Image?: ComponentConfig
+  }
 }

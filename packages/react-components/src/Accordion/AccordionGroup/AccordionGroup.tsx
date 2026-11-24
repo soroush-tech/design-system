@@ -1,8 +1,12 @@
 import { useMemo, useState, type KeyboardEvent, type ReactNode } from 'react'
 import type { SpaceProps } from '@soroush.design/styled-system'
-import { createShouldForwardProp, props, styled, type Theme, space } from '../../index'
-import { useDefaultProps } from '../../theme'
+import { styled } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { createShouldForwardProp, props, space } from '../../index'
+import { useDefaultProps } from '@soroush.design/react-theme/theme'
 import { AccordionGroupContext } from '../AccordionContext'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
+import type { AccordionGroupOwnerState } from '../../theme/themes'
 
 export type AccordionGroupVariant = 'separated' | 'attached'
 
@@ -92,4 +96,10 @@ export function AccordionGroup({
       </GroupRoot>
     </AccordionGroupContext.Provider>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    AccordionGroup?: ComponentConfig<AccordionGroupOwnerState>
+  }
 }

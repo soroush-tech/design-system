@@ -1,4 +1,4 @@
-import type { Theme } from '../theme/themes'
+import type { Theme } from '@soroush.design/react-theme/theme'
 import { themeDefault } from '@soroush.design/core/theme'
 import { get } from '../index'
 

@@ -1,5 +1,6 @@
 import { createContext, useContext } from 'react'
-import type { Theme, TabsVariants } from '../theme'
+import type { Theme } from '@soroush.design/react-theme/theme'
+import type { TabsVariants } from '../theme/themes'
 
 /** A tab's value: what it is chosen as. A `Tab` without one takes its position. */
 export type TabValue = string | number

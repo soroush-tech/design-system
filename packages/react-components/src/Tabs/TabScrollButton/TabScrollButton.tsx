@@ -1,9 +1,13 @@
 import { useContext, type MouseEvent, type ReactNode } from 'react'
-import { styled, createShouldForwardProp, get, type Theme } from '../../index'
-import { useDefaultProps, useTheme } from '../../theme'
+import { styled } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { createShouldForwardProp, get } from '../../index'
+import { useDefaultProps, useTheme } from '@soroush.design/react-theme/theme'
 import { Icon } from '../../Icon'
 import { TabsContext } from '../TabsContext'
 import { getEnclosedPieceStyle } from '../utils/dividerLine'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
+import type { TabScrollButtonOwnerState } from '../../theme/themes'
 
 /** Which way a scroll button scrolls a row of tabs: towards its start, or its end. */
 export type TabScrollDirection = 'start' | 'end'
@@ -134,4 +138,10 @@ export function TabScrollButton({
       )}
     </TabScrollButtonRoot>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    TabScrollButton?: ComponentConfig<TabScrollButtonOwnerState>
+  }
 }

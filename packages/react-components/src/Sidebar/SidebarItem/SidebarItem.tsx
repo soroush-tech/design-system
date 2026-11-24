@@ -12,6 +12,7 @@ import {
   type SidebarItemVariant,
   type SidebarLayout,
 } from '../SidebarContext'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 /** Density token - controls padding and font size. Resolves against `theme.sizes`. */
 export type SidebarItemSize = keyof Theme['sizes']
@@ -335,4 +336,10 @@ export function SidebarItem({
       {isPorting && panelNode && <Portal container={panelNode}>{children}</Portal>}
     </>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    SidebarItem?: ComponentConfig<Record<string, unknown>, 'root' | 'pill'>
+  }
 }

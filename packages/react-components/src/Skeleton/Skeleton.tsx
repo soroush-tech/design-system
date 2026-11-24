@@ -1,15 +1,9 @@
 import { type HTMLAttributes } from 'react'
 import type { SpaceProps, PaddingProps } from '@soroush.design/styled-system'
-import {
-  styled,
-  type Theme,
-  keyframes,
-  createShouldForwardProp,
-  props,
-  system,
-  variant as styledVariant,
-  space,
-} from '../index'
+import { styled, keyframes } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { createShouldForwardProp, props, system, variant as styledVariant, space } from '../index'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 export type SkeletonVariant = 'text' | 'circular' | 'rectangular'
 export type SkeletonAnimation = 'pulse' | 'wave' | false
@@ -150,4 +144,10 @@ export function Skeleton({
       {hasChildren ? <HiddenContent>{children}</HiddenContent> : null}
     </SkeletonRoot>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    Skeleton?: ComponentConfig<Record<string, unknown>, 'root' | 'content'>
+  }
 }

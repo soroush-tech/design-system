@@ -823,19 +823,19 @@
     "test": "vitest run",
     "test:storybook": "vitest run --project=storybook",
     "test:coverage": "vitest run --coverage",
-    "test:types": "pnpm --filter @soroush.design/core build && pnpm build && node scripts/check-dts.mjs && node scripts/check-catalog-dist.mjs && tsc -p type-tests/tsconfig.json",
+    "test:types": "pnpm --filter @soroush.design/core build && pnpm --filter @soroush.design/react-theme build && pnpm build && node scripts/check-dts.mjs && node scripts/check-catalog-dist.mjs && tsc -p type-tests/tsconfig.json && node scripts/check-single-copy.mjs",
     "check:dts": "node scripts/check-dts.mjs",
     "check:catalog-dist": "node scripts/check-catalog-dist.mjs",
+    "check:single-copy": "node scripts/check-single-copy.mjs",
     "audit:styled": "node scripts/audit-styled.mjs",
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@umber-style/cache": "^0.3.0",
     "@umber-style/react": "^0.3.0",
-    "@umber-style/styled": "^0.3.0",
     "@soroush.design/cli": "workspace:*",
     "@soroush.design/core": "workspace:^",
     "@soroush.design/react-hooks": "workspace:^",
+    "@soroush.design/react-theme": "workspace:^",
     "@soroush.design/styled-system": "workspace:^"
   },
   "peerDependencies": {

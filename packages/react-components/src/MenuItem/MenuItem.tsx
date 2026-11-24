@@ -12,8 +12,10 @@ import {
 } from 'react'
 import { Icon } from '../Icon'
 import { Tooltip } from '../Tooltip'
-import { styled, type Theme, createShouldForwardProp, get } from '../index'
-import { useDefaultProps, useTheme } from '../theme'
+import { styled } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { createShouldForwardProp, get } from '../index'
+import { useDefaultProps, useTheme } from '@soroush.design/react-theme/theme'
 import { themeDefault } from '@soroush.design/core/theme'
 import {
   useMenuListContext,
@@ -22,6 +24,8 @@ import {
 } from '../Menu/MenuListContext'
 import { Submenu } from './Submenu'
 import { useSubmenu } from './useSubmenu'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
+import type { MenuItemOwnerState } from '../theme/themes'
 
 export type MenuItemColor = keyof Theme['palette']
 export type MenuItemSize = keyof Theme['sizes']
@@ -586,4 +590,20 @@ export function MenuItem({
       )}
     </EntrySlot>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    MenuItem?: ComponentConfig<
+      MenuItemOwnerState,
+      | 'root'
+      | 'check'
+      | 'startIcon'
+      | 'label'
+      | 'shortcut'
+      | 'submenuIcon'
+      | 'entry'
+      | 'secondaryAction'
+    >
+  }
 }

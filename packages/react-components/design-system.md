@@ -6,14 +6,14 @@ How the theme is built, how components are structured, and the conventions every
 
 ## Stack
 
-| Concern                   | Library                                                                                                                     |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| CSS-in-JS                 | UmberStyle: `@umber-style/styled` + `@umber-style/react` (internal only - see `src/theme/engine.ts`)                        |
-| Theme tokens              | `styled-system` (space, layout, typography, flexbox, border, position)                                                      |
-| Custom prop→scale mapping | `styled-system` `system()`                                                                                                  |
-| Prop filtering            | `@styled-system/should-forward-prop`                                                                                        |
-| Component stories         | Storybook v10 (`@storybook/react-vite`)                                                                                     |
-| Theme augmentation        | native interfaces owned by `src/theme/themes.ts`, augmentable via `declare module '@soroush.design/react-components/theme'` |
+| Concern                   | Library                                                                                                                                                            |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| CSS-in-JS                 | UmberStyle: `@umber-style/styled` + `@umber-style/react` (internal only - configured in `@soroush.design/react-theme`, `packages/react-theme/src/style/engine.ts`) |
+| Theme tokens              | `styled-system` (space, layout, typography, flexbox, border, position)                                                                                             |
+| Custom prop→scale mapping | `styled-system` `system()`                                                                                                                                         |
+| Prop filtering            | `@styled-system/should-forward-prop`                                                                                                                               |
+| Component stories         | Storybook v10 (`@storybook/react-vite`)                                                                                                                            |
+| Theme augmentation        | native interfaces owned by `src/theme/themes.ts`, augmentable via `declare module '@soroush.design/react-components/theme'`                                        |
 
 ---
 
@@ -70,7 +70,7 @@ type MyBgProp = keyof Theme['background'] // 'backdrop' | 'modal' | 'primary' | 
 
 Full consumer guide: [`docs/customization.md`](./docs/customization.md); theming overview: [`docs/theming.md`](./docs/theming.md).
 
-The engine `styled` (in `src/style/styled.ts`, re-exported from the barrel) accepts `name`/`slot`/`systemProps` options. A named root reads `theme.components[name]` and appends the matching `styleOverrides[slot]` and `variants` after the component's own styles - but before `systemProps`, so per-instance props always win. Zero-config themes bail out on the first check.
+The engine `styled` (in `packages/react-theme/src/style/styled.ts`, the theme library the component library depends on, re-exported from the barrel) accepts `name`/`slot`/`systemProps` options. A named root reads `theme.components[name]` and appends the matching `styleOverrides[slot]` and `variants` after the component's own styles - but before `systemProps`, so per-instance props always win. Zero-config themes bail out on the first check.
 
 Rules when converting a component:
 

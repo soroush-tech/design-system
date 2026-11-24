@@ -1,5 +1,6 @@
-import { styled } from '../index'
+import { styled } from '@soroush.design/react-theme'
 import { View, type ViewProps } from '../View'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 export type QuoteProps = ViewProps
 
@@ -7,3 +8,9 @@ export type QuoteProps = ViewProps
 export const Quote = styled(View, { name: 'Quote', label: 'Quote' })(({ theme }) => ({
   borderLeft: `2px solid ${theme.border.primary}`,
 }))
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    Quote?: ComponentConfig
+  }
+}

@@ -14,8 +14,9 @@ import {
   type Ref,
   type SyntheticEvent,
 } from 'react'
-import { styled, type Theme } from '../../index'
-import { useDefaultProps, useTheme } from '../../theme'
+import { styled } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { useDefaultProps, useTheme } from '@soroush.design/react-theme/theme'
 import type { PaperElevation } from '../../Paper'
 import { MenuList, type MenuListSlotProps } from '../MenuList'
 import { MenuItem } from '../../MenuItem'
@@ -29,6 +30,8 @@ import type { MenuAlign } from '../utils/getMenuOrigins'
 import { isRtl } from '../../utils/isRtl'
 import { assignRef } from '../utils/assignRef'
 import { getElementRef } from '../../utils/getElementRef'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
+import type { MenuOwnerState } from '../../theme/themes'
 
 export type { MenuAlign } from '../utils/getMenuOrigins'
 
@@ -303,4 +306,10 @@ export function Menu({
       )}
     </MenuRoot>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    Menu?: ComponentConfig<MenuOwnerState, 'root' | 'paper'>
+  }
 }

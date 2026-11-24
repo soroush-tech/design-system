@@ -119,6 +119,65 @@ describe('planEntries', () => {
     )
   })
 
+  describe('omit', () => {
+    // A theme library whose style entry the component library also holds.
+    const theme: ResolvedLibrary = {
+      package: '@fake/react-theme',
+      omit: ['.'],
+      entries: [
+        { subpath: '.', hasDefault: false },
+        { subpath: './style', hasDefault: false },
+      ],
+    }
+    const withStyle: ResolvedLibrary = {
+      ...components,
+      omit: ['./style'],
+      entries: [...components.entries, { subpath: './style', hasDefault: false }],
+    }
+
+    it('takes a name two libraries hold from the one that does not omit it', () => {
+      const entries = planEntries([theme, withStyle])
+      expect(entries.map(({ subpath }) => subpath)).toEqual([
+        '.',
+        './Button',
+        './Table/TableCell',
+        './style',
+      ])
+      expect(entries.find(({ subpath }) => subpath === '.')?.library).toBe('@fake/react-components')
+      expect(entries.find(({ subpath }) => subpath === './style')?.target).toBe(
+        '@fake/react-theme/style'
+      )
+    })
+
+    it('mounts an omitted name where its library is mounted', () => {
+      const mounted = { ...markdown, omit: ['.'] }
+      const other: ResolvedLibrary = {
+        package: '@fake/other',
+        under: 'markdown',
+        entries: [{ subpath: '.', hasDefault: false }],
+      }
+      expect(planEntries([mounted, other]).map(({ target }) => target)).toEqual([
+        '@fake/other',
+        '@fake/react-markdown/Editor',
+      ])
+    })
+
+    it('fails when an omitted entry point is not one the library publishes', () => {
+      expect(() => planEntries([{ ...components, omit: ['./Missing'] }])).toThrow(
+        '@fake/react-components: omits "./Missing", which is not one of its entry points.'
+      )
+    })
+
+    it('fails when no other library serves an omitted entry point', () => {
+      expect(() => planEntries([{ ...theme, omit: ['.', './style'] }, components])).toThrow(
+        'no other library serves "./style"'
+      )
+      expect(() => planEntries([{ ...theme, omit: ['./style'] }])).toThrow(
+        '@fake/react-theme: omits "./style" but no other library serves "./style".'
+      )
+    })
+  })
+
   it('fails when a library is mounted under a name that is not lowercase', () => {
     expect(() => planEntries([{ ...markdown, under: 'Markdown' }])).toThrow(
       '@fake/react-markdown: "Markdown" is not a lowercase name'

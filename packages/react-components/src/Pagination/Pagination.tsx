@@ -12,7 +12,10 @@ import {
   type PaginationItemVariant,
 } from './PaginationItem'
 import type { SpaceProps } from '@soroush.design/styled-system'
-import { styled, type Theme, createShouldForwardProp, props, space } from '../index'
+import { styled } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { createShouldForwardProp, props, space } from '../index'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 export type PaginationColor = PaginationItemColor
 export type PaginationVariant = PaginationItemVariant
@@ -131,4 +134,10 @@ export function Pagination({
       </PaginationList>
     </PaginationNav>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    Pagination?: ComponentConfig<Record<string, unknown>, 'root' | 'list'>
+  }
 }

@@ -13,20 +13,15 @@ import type {
   BorderProps,
   TypographyProps,
 } from '@soroush.design/styled-system'
-import {
-  styled,
-  type Theme,
-  createShouldForwardProp,
-  props,
-  border,
-  space,
-  layout,
-  typography,
-} from '../index'
+import { styled } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { createShouldForwardProp, props, border, space, layout, typography } from '../index'
 import { alpha } from '../utils'
 import { getAnchorRel } from '@soroush.design/core/utils'
 import { themeDefault, type ButtonVariants, type PaletteColor } from '@soroush.design/core/theme'
-import { useDefaultProps, useTheme } from '../theme'
+import { useDefaultProps, useTheme } from '@soroush.design/react-theme/theme'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
+import type { ButtonOwnerState } from '../theme/themes'
 
 /** Augmentable via the `ButtonVariants` interface - style new values through `theme.components.Button.variants`. */
 export type ButtonVariant = keyof ButtonVariants
@@ -303,3 +298,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     </ButtonRoot>
   )
 })
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    Button?: ComponentConfig<ButtonOwnerState, 'root' | 'label' | 'icon' | 'loader'>
+  }
+}

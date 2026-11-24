@@ -1,6 +1,9 @@
 import type { FlexboxProps } from '@soroush.design/styled-system'
-import { styled, type Theme, createShouldForwardProp, props, flexbox, space } from '../index'
+import { styled } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { createShouldForwardProp, props, flexbox, space } from '../index'
 import { View, type ViewProps } from '../View'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 /** Valid values for the gap prop - derived from theme.space keys. */
 export type GapToken = keyof Theme['space']
@@ -22,3 +25,9 @@ export const Flex = styled(View, {
   shouldForwardProp,
   systemProps: [flexbox, space],
 })<FlexProps>({ display: 'flex', flexDirection: 'column' })
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    Flex?: ComponentConfig
+  }
+}

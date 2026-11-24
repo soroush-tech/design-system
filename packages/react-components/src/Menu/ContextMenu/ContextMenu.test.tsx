@@ -1,9 +1,10 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import { act, fireEvent, screen } from '@testing-library/react'
 import { renderWithTheme } from '../../utils/test/renderWithTheme'
-import { baseTheme, createTheme, type Theme } from '../../theme/themes'
+import { baseTheme, type Theme } from '@soroush.design/react-theme/theme'
+import { createTheme } from '@soroush.design/core/theme'
 import { MenuItem } from '../../MenuItem'
-import { ThemeProvider } from '../../theme'
+import { ThemeProvider } from '@soroush.design/react-theme/theme'
 import type { ReactNode } from 'react'
 import { ContextMenu, type ContextMenuProps } from './ContextMenu'
 

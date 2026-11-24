@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { screen } from '@testing-library/react'
 import { renderWithTheme } from './test/renderWithTheme'
-import { baseTheme } from '../theme/themes'
+import { baseTheme } from '@soroush.design/react-theme/theme'
 import { Checkbox } from '../Checkbox'
 import { Form } from '../Form'
 import { FormControl } from '../FormControl'

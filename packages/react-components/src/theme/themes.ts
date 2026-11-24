@@ -1,13 +1,8 @@
 import type { ReactNode } from 'react'
 import type { PaperElevation } from '../Paper/Paper'
-import type { CSSObject as EngineCSSObject } from '@umber-style/react'
-import { baseTheme as coreBaseTheme } from '@soroush.design/core/theme'
 import type {
   ButtonVariants,
-  DeepPartial,
   InputVariantKey,
-  OpenScale,
-  Theme as CoreTheme,
   ThemeBackground,
   ThemeFonts,
   ThemePalette,
@@ -20,49 +15,12 @@ import type {
   ThemeZOrder,
 } from '@soroush.design/core/theme'
 
-// The theme itself - the token scales, `createTheme`, `baseTheme` - is `@soroush.design/core`'s,
-// and every platform reads the same one. It is re-exported here, so an app imports it from this
-// entry, and augments it from this entry: `declare module '@soroush.design/react/theme' {
-// interface ThemePalette { brand: PaletteEntry } }` merges into the core's interface.
-export * from '@soroush.design/core/theme'
-
-/** Design-system's own style-object shape - the engine stays an internal implementation detail. */
-export type CSSObject = EngineCSSObject
-
-// ---------------------------------------------------------------------------
-// What names this platform stays here: `Theme` adds `theme.components` to the core's, and the
-// typing of every component's slots, owner state and variants - they name React's components.
-// Every component prop union derives via `keyof Theme['scale']`, so keys an app adds to a scale
-// propagate to component props automatically.
-// ---------------------------------------------------------------------------
-
-/**
- * A style contributed from `theme.components` - a plain CSS object, or a
- * callback receiving the theme and the styled root's resolved props
- * (`ownerState`) for conditional styling.
- */
-export type ComponentStyle<OwnerState> =
-  | CSSObject
-  | ((args: { theme: Theme; ownerState: OwnerState }) => CSSObject)
-
-/** One theme-contributed variant: applied when every key in `props` matches the render props. */
-export interface ComponentVariant<OwnerState> {
-  props: Partial<OwnerState>
-  style: ComponentStyle<OwnerState>
-}
-
-/** Per-component customization: default prop values, per-slot CSS, extra variants. */
-export interface ComponentConfig<
-  OwnerState = Record<string, unknown>,
-  Slot extends string = 'root',
-> {
-  /** Default prop values - explicit props and group context always win. */
-  defaultProps?: Partial<OwnerState>
-  /** Per-slot CSS merged after the component's own styles (theme wins). */
-  styleOverrides?: Partial<Record<Slot, ComponentStyle<OwnerState>>>
-  /** Extra variants matched by props. Replaced wholesale by `createTheme`, never merged. */
-  variants?: ReadonlyArray<ComponentVariant<OwnerState>>
-}
+// The typing of every component's owner state and variants stays here, as it names this library's
+// components; `/theme` exports it. The theme, its types and `ComponentConfig` are
+// `@soroush.design/react-theme`'s. Each component's folder adds its slots to the theme's open
+// `ThemeComponents` in its own `index.ts`, so an app that imports a component sees
+// `theme.components.<Component>` typed. Every prop union derives via `keyof Theme['scale']`, so keys
+// an app adds to a scale propagate to component props automatically.
 
 /** The defaults a theme may set for every `RangeInput`. */
 export interface RangeInputOwnerState {
@@ -396,168 +354,3 @@ export interface PressableOwnerState {
   /** Opacity held content fades to under `feedback: 'opacity'`. */
   activeOpacity?: number
 }
-
-/**
- * Per-component theme customization, keyed by component name. Augment this
- * interface to register additional components (including your own, when their
- * styled roots are created with this package's `styled(tag, { name })`).
- */
-export interface ThemeComponents {
-  AppBar?: ComponentConfig
-  Avatar?: ComponentConfig<Record<string, unknown>, 'root' | 'img'>
-  Backdrop?: ComponentConfig
-  Breadcrumbs?: ComponentConfig<
-    BreadcrumbsOwnerState,
-    'root' | 'list' | 'item' | 'separator' | 'collapsed' | 'collapsedIcon'
-  >
-  Button?: ComponentConfig<ButtonOwnerState, 'root' | 'label' | 'icon' | 'loader'>
-  ButtonGroup?: ComponentConfig
-  Card?: ComponentConfig<CardOwnerState, 'root' | 'title' | 'caption' | 'icon'>
-  Checkbox?: ComponentConfig<Record<string, unknown>, 'root' | 'input' | 'icon' | 'label'>
-  CircularProgress?: ComponentConfig<Record<string, unknown>, 'root' | 'track' | 'circle'>
-  ContextMenu?: ComponentConfig<ContextMenuOwnerState, 'root' | 'paper'>
-  Drawer?: ComponentConfig
-  Flex?: ComponentConfig
-  FocusTrap?: ComponentConfig
-  Form?: ComponentConfig
-  FormControl?: ComponentConfig
-  FormHelperText?: ComponentConfig
-  FormLabel?: ComponentConfig
-  Grid?: ComponentConfig
-  Icon?: ComponentConfig
-  Image?: ComponentConfig
-  LinearProgress?: ComponentConfig<
-    Record<string, unknown>,
-    'root' | 'track' | 'dash' | 'bar' | 'traveler' | 'segment' | 'secondaryBar'
-  >
-  Link?: ComponentConfig
-  Menu?: ComponentConfig<MenuOwnerState, 'root' | 'paper'>
-  MenuDivider?: ComponentConfig
-  MenuItem?: ComponentConfig<
-    MenuItemOwnerState,
-    | 'root'
-    | 'check'
-    | 'startIcon'
-    | 'label'
-    | 'shortcut'
-    | 'submenuIcon'
-    | 'entry'
-    | 'secondaryAction'
-  >
-  MenuList?: ComponentConfig<MenuListOwnerState>
-  Modal?: ComponentConfig
-  NativeSelect?: ComponentConfig<Record<string, unknown>, 'root' | 'select' | 'icon'>
-  Pagination?: ComponentConfig<Record<string, unknown>, 'root' | 'list'>
-  PaginationItem?: ComponentConfig<Record<string, unknown>, 'root' | 'ellipsis'>
-  Paper?: ComponentConfig
-  Popover?: ComponentConfig<Record<string, unknown>, 'root' | 'positioner'>
-  Pressable?: ComponentConfig<PressableOwnerState>
-  Quote?: ComponentConfig
-  Radio?: ComponentConfig<Record<string, unknown>, 'root' | 'input' | 'icon' | 'label'>
-  RangeInput?: ComponentConfig<
-    RangeInputOwnerState,
-    'root' | 'rail' | 'track' | 'thumb' | 'mark' | 'markLabel' | 'valueLabel' | 'input'
-  >
-  Tooltip?: ComponentConfig<TooltipOwnerState, 'root' | 'arrow'>
-  Snackbar?: ComponentConfig<SnackbarOwnerState, 'root' | 'content' | 'message' | 'action'>
-  Fab?: ComponentConfig<FabOwnerState, 'root' | 'label' | 'labelText'>
-  FabMenu?: ComponentConfig<FabMenuOwnerState, 'root' | 'list'>
-  Alert?: ComponentConfig<AlertOwnerState, 'root' | 'icon' | 'message' | 'action' | 'closeButton'>
-  AlertTitle?: ComponentConfig
-  Badge?: ComponentConfig<BadgeOwnerState, 'root' | 'badge' | 'label'>
-  Chip?: ComponentConfig<
-    ChipOwnerState,
-    'root' | 'body' | 'label' | 'icon' | 'avatar' | 'deleteIcon'
-  >
-  Accordion?: ComponentConfig<AccordionOwnerState, 'root' | 'region'>
-  AccordionSummary?: ComponentConfig<
-    AccordionSummaryOwnerState,
-    'root' | 'button' | 'content' | 'icon'
-  >
-  AccordionDetails?: ComponentConfig
-  AccordionActions?: ComponentConfig
-  AccordionGroup?: ComponentConfig<AccordionGroupOwnerState>
-  Collapse?: ComponentConfig<CollapseOwnerState, 'root' | 'wrapper' | 'inner'>
-  TransferList?: ComponentConfig<
-    TransferListOwnerState,
-    'root' | 'list' | 'header' | 'title' | 'count' | 'items' | 'item' | 'controls' | 'icon'
-  >
-  Autocomplete?: ComponentConfig<
-    AutocompleteOwnerState,
-    | 'root'
-    | 'tags'
-    | 'input'
-    | 'clearIndicator'
-    | 'popupIndicator'
-    | 'popup'
-    | 'listbox'
-    | 'group'
-    | 'groupLabel'
-    | 'groupItems'
-    | 'option'
-    | 'status'
-  >
-  NumberInput?: ComponentConfig<
-    NumberInputOwnerState,
-    'root' | 'input' | 'content' | 'spinButtons' | 'increment' | 'decrement'
-  >
-  Rating?: ComponentConfig<
-    RatingOwnerState,
-    'root' | 'item' | 'icon' | 'decimal' | 'input' | 'text' | 'emptyLabel'
-  >
-  ScrollArea?: ComponentConfig<ScrollAreaOwnerState, 'root' | 'viewport' | 'track' | 'thumb'>
-  Select?: ComponentConfig<
-    Record<string, unknown>,
-    'root' | 'value' | 'valueArea' | 'valueGhost' | 'listbox'
-  >
-  NavGroup?: ComponentConfig<Record<string, unknown>, 'root' | 'label' | 'list'>
-  NavLink?: ComponentConfig<Record<string, unknown>, 'root' | 'label' | 'note'>
-  NavTree?: ComponentConfig<Record<string, unknown>, 'root'>
-  Sidebar?: ComponentConfig<Record<string, unknown>, 'root' | 'rail' | 'panel'>
-  SidebarItem?: ComponentConfig<Record<string, unknown>, 'root' | 'pill'>
-  Skeleton?: ComponentConfig<Record<string, unknown>, 'root' | 'content'>
-  Switch?: ComponentConfig<Record<string, unknown>, 'root' | 'input' | 'track' | 'thumb' | 'label'>
-  Tab?: ComponentConfig<TabOwnerState, 'root' | 'label' | 'icon' | 'secondaryAction' | 'close'>
-  Table?: ComponentConfig
-  TableBody?: ComponentConfig
-  TableCell?: ComponentConfig
-  TableContainer?: ComponentConfig
-  TableFooter?: ComponentConfig
-  TableHead?: ComponentConfig
-  TablePagination?: ComponentConfig
-  TablePaginationActions?: ComponentConfig
-  TableRow?: ComponentConfig
-  TableSortLabel?: ComponentConfig<Record<string, unknown>, 'root' | 'icon'>
-  TabPanel?: ComponentConfig<TabPanelOwnerState>
-  TabScrollButton?: ComponentConfig<TabScrollButtonOwnerState>
-  Tabs?: ComponentConfig<
-    TabsOwnerState,
-    | 'root'
-    | 'list'
-    | 'indicator'
-    | 'startContent'
-    | 'endContent'
-    | 'scrollButton'
-    | 'overflowButton'
-    | 'overflowClose'
-  >
-  TextInput?: ComponentConfig<Record<string, unknown>, 'root' | 'input'>
-  ToggleButton?: ComponentConfig
-  ToggleButtonGroup?: ComponentConfig
-  Typography?: ComponentConfig
-  View?: ComponentConfig
-}
-/** The core's theme, with the typing of `theme.components` that names this library's components. */
-export interface Theme extends CoreTheme {
-  /** Optional per-component customization - see `ThemeComponents`. */
-  components?: OpenScale<ThemeComponents>
-}
-
-/** Sparse theme patch accepted by `createTheme` and `ThemeProvider`'s `themes` prop. */
-export type ThemeOverride = DeepPartial<Theme>
-
-/**
- * The core's base theme, typed as this library's `Theme` - the same object. `createTheme(baseTheme, ...)`
- * then accepts and returns `theme.components` too.
- */
-export const baseTheme: Theme = coreBaseTheme

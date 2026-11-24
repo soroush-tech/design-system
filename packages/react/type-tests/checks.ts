@@ -15,3 +15,14 @@ export const appTheme = createTheme(baseTheme, {
   palette: { brand: { main: '#0a7', light: '#3c9', dark: '#065', contrastText: '#fff' } },
 })
 export const brandMain: string = appTheme.palette.brand.main
+
+// The component library adds each component's slots to the theme's open `components`, so a theme
+// types `Button` once the app imports the entry point of `Button` (above).
+export const buttonTheme = createTheme(baseTheme, {
+  components: {
+    Button: {
+      defaultProps: { size: 'sm', color: 'brand' },
+      styleOverrides: { root: ({ ownerState }) => ({ opacity: ownerState.disabled ? 0.4 : 1 }) },
+    },
+  },
+})

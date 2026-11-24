@@ -1,1 +1,1 @@
-export * from '@soroush.design/react-components/style'
+export * from '@soroush.design/react-theme/style'

@@ -4,6 +4,7 @@ import { ButtonGroup, type ButtonGroupProps } from '@soroush.design/react-compon
 import { styled, type Theme } from '@soroush.design/react-components'
 import { useTheme } from '@soroush.design/react-components/theme'
 import { themeDefault } from '@soroush.design/core/theme'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 export interface ToggleButtonGroupProps extends Omit<ButtonGroupProps, 'variant' | 'onChange'> {
   /** Selected value(s) - single when `isExclusive`, array otherwise. Controlled. */
@@ -81,4 +82,10 @@ export function ToggleButtonGroup({
       </ToggleButtonGroupRoot>
     </ToggleButtonGroupContext.Provider>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    ToggleButtonGroup?: ComponentConfig
+  }
 }

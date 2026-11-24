@@ -1,10 +1,14 @@
 import { Fragment, useId, useRef, type CSSProperties, type ReactNode } from 'react'
 import type { LayoutProps, SpaceProps } from '@soroush.design/styled-system'
-import { createShouldForwardProp, get, props, styled, system, type Theme, space } from '../index'
-import { useDefaultProps } from '../theme'
+import { styled } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { createShouldForwardProp, get, props, system, space } from '../index'
+import { useDefaultProps } from '@soroush.design/react-theme/theme'
 import { useFormControl } from '../FormControl'
 import { useRangeInput, type RangeInputValue } from './hooks/useRangeInput'
 import { getMarks, valueToPercent, type Mark, type Orientation } from './utils/range'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
+import type { RangeInputOwnerState } from '../theme/themes'
 
 export type { Mark as RangeInputMark } from './utils/range'
 export type RangeInputTrack = 'normal' | false | 'inverted'
@@ -553,4 +557,13 @@ export function RangeInput({
       })}
     </RangeInputRoot>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    RangeInput?: ComponentConfig<
+      RangeInputOwnerState,
+      'root' | 'rail' | 'track' | 'thumb' | 'mark' | 'markLabel' | 'valueLabel' | 'input'
+    >
+  }
 }

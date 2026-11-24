@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import { screen, fireEvent, cleanup } from '@testing-library/react'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
-import { baseTheme } from '../theme/themes'
+import { baseTheme } from '@soroush.design/react-theme/theme'
 import { Modal } from './'
 
 const getRoot = () => document.querySelector('[role="presentation"]') as HTMLElement

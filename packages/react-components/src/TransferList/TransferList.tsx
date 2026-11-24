@@ -1,7 +1,9 @@
 import { useId } from 'react'
 import type { SpaceProps } from '@soroush.design/styled-system'
-import { createShouldForwardProp, get, props, styled, type Theme, space } from '../index'
-import { useDefaultProps } from '../theme'
+import { styled } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { createShouldForwardProp, get, props, space } from '../index'
+import { useDefaultProps } from '@soroush.design/react-theme/theme'
 import { useFormControl } from '../FormControl'
 import { Button } from '../Button'
 import { Checkbox } from '../Checkbox'
@@ -14,6 +16,8 @@ import {
   type TransferListValue,
   type TransferSide,
 } from './hooks/useTransferList'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
+import type { TransferListOwnerState } from '../theme/themes'
 
 export type { TransferListItem, TransferListValue } from './hooks/useTransferList'
 
@@ -402,4 +406,13 @@ export function TransferList({
       />
     </TransferListRoot>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    TransferList?: ComponentConfig<
+      TransferListOwnerState,
+      'root' | 'list' | 'header' | 'title' | 'count' | 'items' | 'item' | 'controls' | 'icon'
+    >
+  }
 }

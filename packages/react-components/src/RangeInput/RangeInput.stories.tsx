@@ -7,8 +7,9 @@ import { FormLabel } from '../FormLabel'
 import { NumberInput } from '../NumberInput'
 import { Typography } from '../Typography'
 import { View } from '../View'
-import { ThemeProvider } from '../theme'
-import { baseTheme, createTheme } from '../theme/themes'
+import { ThemeProvider } from '@soroush.design/react-theme/theme'
+import { baseTheme } from '@soroush.design/react-theme/theme'
+import { createTheme } from '@soroush.design/core/theme'
 import { height, m, maxWidth, minWidth, p, width } from '../utils/test/storiesArgs'
 import {
   buttonColorTokens,

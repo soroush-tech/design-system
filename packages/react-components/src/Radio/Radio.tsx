@@ -1,8 +1,11 @@
 import { type ChangeEvent, type InputHTMLAttributes, type ReactNode } from 'react'
 import { useFormControl } from '../FormControl'
 import type { SpaceProps } from '@soroush.design/styled-system'
-import { get, styled, type Theme, createShouldForwardProp, props, space } from '../index'
+import { styled } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { get, createShouldForwardProp, props, space } from '../index'
 import { themeDefault, type PaletteColor } from '@soroush.design/core/theme'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 export type RadioColor = PaletteColor
 export type RadioSize = keyof Theme['sizes']
@@ -204,4 +207,10 @@ export function Radio({
       {children != null && <RadioLabel textColor={fc.textColor}>{children}</RadioLabel>}
     </RadioRoot>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    Radio?: ComponentConfig<Record<string, unknown>, 'root' | 'input' | 'icon' | 'label'>
+  }
 }

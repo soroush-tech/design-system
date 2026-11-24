@@ -3,8 +3,11 @@ import type { ButtonVariant, ButtonColor, ButtonSize } from '../Button'
 import { alpha } from '../utils'
 import { ButtonGroupContext } from './ButtonGroupContext'
 import type { SpaceProps } from '@soroush.design/styled-system'
-import { styled, type Theme, createShouldForwardProp, props, get, space } from '../index'
+import { styled } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { createShouldForwardProp, props, get, space } from '../index'
 import { themeDefault } from '@soroush.design/core/theme'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 export type ButtonGroupOrientation = 'horizontal' | 'vertical'
 
@@ -169,4 +172,10 @@ export function ButtonGroup({
       </GroupRoot>
     </ButtonGroupContext.Provider>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    ButtonGroup?: ComponentConfig
+  }
 }

@@ -1,15 +1,11 @@
 import { useState } from 'react'
-import {
-  styled,
-  type Theme,
-  createShouldForwardProp,
-  props,
-  system,
-  variant as styledVariant,
-} from '../index'
-import { useTheme } from '../theme'
+import { styled } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { createShouldForwardProp, props, system, variant as styledVariant } from '../index'
+import { useTheme } from '@soroush.design/react-theme/theme'
 import { Flex, type FlexProps } from '../Flex'
 import { themeDefault } from '@soroush.design/core/theme'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 export type AvatarVariant = 'circular' | 'rounded' | 'square'
 export type AvatarSize = keyof Theme['avatar']
@@ -159,4 +155,10 @@ export function Avatar({
       )}
     </AvatarRoot>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    Avatar?: ComponentConfig<Record<string, unknown>, 'root' | 'img'>
+  }
 }

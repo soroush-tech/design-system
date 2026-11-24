@@ -1,8 +1,11 @@
 import { useContext, type AnchorHTMLAttributes, type ReactNode } from 'react'
-import { createShouldForwardProp, get, styled, type Theme } from '../../index'
+import { styled } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { createShouldForwardProp, get } from '../../index'
 import { Icon } from '../../Icon'
 import { alpha } from '../../utils'
 import { NavTreeContext } from '../NavTreeContext'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 export interface NavLinkProps extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'color'> {
   /** Where it goes. */
@@ -90,4 +93,10 @@ export function NavLink({
       {isExternal && <Icon name="external_link" size="0.875rem" color="inherit" />}
     </NavLinkRoot>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    NavLink?: ComponentConfig<Record<string, unknown>, 'root' | 'label' | 'note'>
+  }
 }

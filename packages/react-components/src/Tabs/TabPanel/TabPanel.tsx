@@ -1,11 +1,15 @@
 import type { ReactNode } from 'react'
 import type { SpaceProps } from '@soroush.design/styled-system'
-import { styled, type Theme, createShouldForwardProp, props, space } from '../../index'
-import { useDefaultProps } from '../../theme'
+import { styled } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { createShouldForwardProp, props, space } from '../../index'
+import { useDefaultProps } from '@soroush.design/react-theme/theme'
 import { surfaceSystem } from '../utils/surfaceSystem'
 import type { TabValue } from '../TabsContext'
 import { useTabsValue } from '../TabsValueContext'
 import { getPanelId, getTabId } from '../utils/tabIds'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
+import type { TabPanelOwnerState } from '../../theme/themes'
 
 export interface TabPanelProps extends SpaceProps<Theme> {
   /** The value of the tab this panel belongs to. */
@@ -64,4 +68,10 @@ export function TabPanel({
       {isSelected || shouldKeepMounted ? children : null}
     </TabPanelRoot>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    TabPanel?: ComponentConfig<TabPanelOwnerState>
+  }
 }

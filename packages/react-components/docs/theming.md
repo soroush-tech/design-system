@@ -2,6 +2,8 @@
 
 The theme belongs to you - the package ships defaults, every part is replaceable, and the type system widens with your extensions. This guide covers the full ladder, from using the built-ins to owning every token.
 
+`ThemeProvider`, the hooks that read the theme, the `Theme` type and the configured styling live in the theme library, `@soroush.design/react-theme`, which an app can also use alone, to build its own components on the tokens. The component library depends on it, re-exports it from `/theme`, `/style` and `/engine`, and adds the typing of its components to `theme.components`.
+
 ## The ladder
 
 1. **Use the default** - `<ThemeProvider>` with no props renders the built-in `baseTheme` (dark-schemed).

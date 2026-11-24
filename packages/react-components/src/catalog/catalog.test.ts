@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { catalog as core } from '@soroush.design/core/catalog'
-import { baseTheme } from '../theme/themes'
+import { baseTheme } from '@soroush.design/react-theme/theme'
 import { catalog } from './index'
 import { DESIGN_SYSTEM_SCALES, readStyleScales } from './styleScales'
 

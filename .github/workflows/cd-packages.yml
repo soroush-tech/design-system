@@ -34,6 +34,7 @@ on:
           - react-components
           - react-hooks
           - react-markdown
+          - react-theme
           - styled-system
           - ui-spec
         # gen:publish-options end

@@ -7,6 +7,7 @@ import {
   type SidebarItemVariant,
   type SidebarLayout,
 } from '../SidebarContext'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 export interface SidebarProps extends FlexProps {
   /**
@@ -217,4 +218,10 @@ export function Sidebar({
       )}
     </SidebarRoot>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    Sidebar?: ComponentConfig<Record<string, unknown>, 'root' | 'rail' | 'panel'>
+  }
 }

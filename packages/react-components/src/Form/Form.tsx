@@ -1,7 +1,8 @@
 import { useMemo, type ReactNode, type SyntheticEvent } from 'react'
-import { type Theme } from '../theme/themes'
-import { styled } from '../index'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { styled } from '@soroush.design/react-theme'
 import { FormContext } from './FormContext'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 // Named styled root - the `<form>` element is theme-customizable via
 // `theme.components.Form.styleOverrides.root`.
@@ -62,4 +63,10 @@ export function Form({
       </FormRoot>
     </FormContext.Provider>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    Form?: ComponentConfig
+  }
 }

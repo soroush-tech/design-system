@@ -9,9 +9,9 @@ import type {
   SpanProps,
   LayoutFrameProps,
 } from '@soroush.design/styled-system'
+import { styled } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
 import {
-  styled,
-  type Theme,
   createShouldForwardProp,
   props,
   border,
@@ -23,6 +23,7 @@ import {
   layout,
   typography,
 } from '../index'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 /** Valid values for the color prop - derived from theme.text keys. */
 export type ViewColorToken = keyof Theme['text']
@@ -83,3 +84,9 @@ export const View = styled('div', {
   // add the columns on top of this frame.
   systemProps: [space, layout, typography, border, colorSystem, position, span, layoutFrame],
 })<ViewProps>()
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    View?: ComponentConfig
+  }
+}

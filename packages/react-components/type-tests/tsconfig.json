@@ -14,6 +14,8 @@
     "paths": {
       "@soroush.design/react-components": ["../dist/index.d.mts"],
       "@soroush.design/react-components/*": ["../dist/*.d.mts"],
+      "@soroush.design/react-theme": ["../../react-theme/dist/index.d.mts"],
+      "@soroush.design/react-theme/*": ["../../react-theme/dist/*.d.mts"],
       "@soroush.design/core/*": ["../../core/dist/*.d.mts"]
     }
   },

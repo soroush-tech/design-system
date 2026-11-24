@@ -14,8 +14,10 @@ import {
   type Ref,
   type SyntheticEvent,
 } from 'react'
-import { createShouldForwardProp, get, styled, type Theme } from '../index'
-import { useDefaultProps } from '../theme'
+import { styled } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { createShouldForwardProp, get } from '../index'
+import { useDefaultProps } from '@soroush.design/react-theme/theme'
 import { themeDefault } from '@soroush.design/core/theme'
 import { getSurfaceRadius } from '@soroush.design/core/utils'
 import { Portal } from '../Portal'
@@ -33,6 +35,8 @@ import {
   resolveTooltipPlacement,
   type TooltipPlacement,
 } from './utils/getTooltipOrigins'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
+import type { TooltipOwnerState } from '../theme/themes'
 
 export type { TooltipPlacement } from './utils/getTooltipOrigins'
 
@@ -466,3 +470,9 @@ export const Tooltip = forwardRef<HTMLElement, TooltipProps>(function Tooltip(
     </>
   )
 })
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    Tooltip?: ComponentConfig<TooltipOwnerState, 'root' | 'arrow'>
+  }
+}

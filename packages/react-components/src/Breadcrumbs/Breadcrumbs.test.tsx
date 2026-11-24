@@ -2,8 +2,9 @@ import { describe, it, expect } from 'vitest'
 import { fireEvent, render, screen } from '@testing-library/react'
 import type { ReactNode } from 'react'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
-import { baseTheme, createTheme, type Theme } from '../theme/themes'
-import { ThemeProvider } from '../theme'
+import { baseTheme, type Theme } from '@soroush.design/react-theme/theme'
+import { createTheme } from '@soroush.design/core/theme'
+import { ThemeProvider } from '@soroush.design/react-theme/theme'
 import { Breadcrumbs, type BreadcrumbsProps } from './Breadcrumbs'
 
 const nine = ['first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth']

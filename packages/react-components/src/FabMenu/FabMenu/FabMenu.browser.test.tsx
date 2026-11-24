@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { page, userEvent } from 'vitest/browser'
 import { screen } from '@testing-library/react'
-import { baseTheme } from '../../theme/themes'
+import { baseTheme } from '@soroush.design/react-theme/theme'
 import { renderWithTheme } from '../../utils/test/renderWithTheme'
 import { View } from '../../View'
 import { FabMenuItem } from '../FabMenuItem'

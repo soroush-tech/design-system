@@ -10,7 +10,7 @@ import {
   space,
   typography,
 } from '@soroush.design/styled-system'
-import { baseTheme } from '../theme/themes'
+import { baseTheme } from '@soroush.design/react-theme/theme'
 
 // Reads the scales from the parsers; the catalog holds the same table as data in
 // `@soroush.design/core`, and catalog.test.ts holds the two equal. Not shipped.

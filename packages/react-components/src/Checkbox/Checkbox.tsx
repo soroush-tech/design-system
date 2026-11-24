@@ -1,8 +1,11 @@
 import { useEffect, useRef, type ChangeEvent, type ReactNode } from 'react'
 import { useFormControl } from '../FormControl'
 import type { SpaceProps } from '@soroush.design/styled-system'
-import { get, styled, type Theme, createShouldForwardProp, props, space } from '../index'
+import { styled } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { get, createShouldForwardProp, props, space } from '../index'
 import { themeDefault, type PaletteColor } from '@soroush.design/core/theme'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 export type CheckboxColor = PaletteColor
 export type CheckboxSize = keyof Theme['sizes']
@@ -262,4 +265,10 @@ export function Checkbox({
       {children != null && <CheckboxLabel textColor={fc.textColor}>{children}</CheckboxLabel>}
     </CheckboxRoot>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    Checkbox?: ComponentConfig<Record<string, unknown>, 'root' | 'input' | 'icon' | 'label'>
+  }
 }

@@ -1,7 +1,8 @@
 import { screen } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
-import { baseTheme, typography, fonts } from '../theme/themes'
+import { baseTheme } from '@soroush.design/react-theme/theme'
+import { typography, fonts } from '@soroush.design/core/theme'
 import { Typography, type TypographyVariant, type TextColorToken } from '../Typography'
 import { toPx } from '../utils/test/toPx'
 

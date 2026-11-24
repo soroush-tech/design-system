@@ -14,8 +14,9 @@ import {
   type ReactNode,
   type SyntheticEvent,
 } from 'react'
-import { styled, type Theme } from '../../index'
-import { useDefaultProps, useTheme } from '../../theme'
+import { styled } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { useDefaultProps, useTheme } from '@soroush.design/react-theme/theme'
 import type { PaperElevation } from '../../Paper'
 import type { PopoverPosition } from '../../Popover/utils/computePopoverPosition'
 import { MenuList, type MenuListSlotProps } from '../MenuList'
@@ -27,6 +28,8 @@ import { MenuContext, type MenuContextValue } from '../MenuContext'
 import { MenuPaper, type MenuPaperProps } from '../MenuPaper'
 import { useMenuPlacement } from '../hooks/useMenuPlacement'
 import type { MenuCloseReason } from '../Menu'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
+import type { ContextMenuOwnerState } from '../../theme/themes'
 
 interface TargetProps {
   onContextMenu?: (event: MouseEvent<HTMLElement>) => void
@@ -268,4 +271,10 @@ export function ContextMenu({
       )}
     </ContextMenuRoot>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    ContextMenu?: ComponentConfig<ContextMenuOwnerState, 'root' | 'paper'>
+  }
 }

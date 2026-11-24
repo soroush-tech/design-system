@@ -3,17 +3,11 @@ import type {
   FlexboxProps,
   LayoutGridProps,
 } from '@soroush.design/styled-system'
-import {
-  styled,
-  type Theme,
-  createShouldForwardProp,
-  props,
-  grid,
-  flexbox,
-  layoutGrid,
-  space,
-} from '../index'
+import { styled } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { createShouldForwardProp, props, grid, flexbox, layoutGrid, space } from '../index'
 import { View, type ViewProps } from '../View'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 /** Valid values for the gap / columnGap / rowGap props - derived from theme.space keys. */
 export type GapToken = keyof Theme['space']
@@ -43,3 +37,9 @@ export const Grid = styled(View, {
   shouldForwardProp,
   systemProps: [layoutGrid, grid, flexbox, space],
 })<GridProps>({ display: 'grid' })
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    Grid?: ComponentConfig
+  }
+}

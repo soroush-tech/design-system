@@ -1,6 +1,6 @@
 import { useContext } from 'react'
-import { type Theme } from '../theme/themes'
-import { useTheme } from '../theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { useTheme } from '@soroush.design/react-theme/theme'
 import { FormContext } from '../Form/FormContext'
 import { FormControlContext } from './FormControlContext'
 import { themeDefault } from '@soroush.design/core/theme'

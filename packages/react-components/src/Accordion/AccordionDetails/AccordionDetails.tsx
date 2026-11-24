@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react'
-import { createShouldForwardProp, styled } from '../../index'
+import { styled } from '@soroush.design/react-theme'
+import { createShouldForwardProp } from '../../index'
 import { useAccordion } from '../AccordionContext'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 export interface AccordionDetailsProps {
   /** What the accordion opens. */
@@ -29,4 +31,10 @@ export function AccordionDetails({
       {children}
     </DetailsRoot>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    AccordionDetails?: ComponentConfig
+  }
 }

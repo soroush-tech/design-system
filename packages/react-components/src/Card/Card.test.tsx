@@ -1,8 +1,9 @@
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
-import { ThemeProvider } from '../theme'
-import { createTheme, baseTheme } from '../theme/themes'
+import { ThemeProvider } from '@soroush.design/react-theme/theme'
+import { createTheme } from '@soroush.design/core/theme'
+import { baseTheme } from '@soroush.design/react-theme/theme'
 import { Card } from './Card'
 import { toPx } from '../utils/test/toPx'
 

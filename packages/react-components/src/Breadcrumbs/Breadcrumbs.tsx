@@ -8,11 +8,14 @@ import {
   type ElementType,
   type ReactNode,
 } from 'react'
-import { styled, get } from '../index'
-import { useDefaultProps } from '../theme'
+import { styled } from '@soroush.design/react-theme'
+import { get } from '../index'
+import { useDefaultProps } from '@soroush.design/react-theme/theme'
 import { themeDefault } from '@soroush.design/core/theme'
 import { Icon, type IconProps } from '../Icon'
 import { Typography, type TypographyProps, type TypographyVariant } from '../Typography'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
+import type { BreadcrumbsOwnerState } from '../theme/themes'
 
 export interface BreadcrumbsProps extends Omit<TypographyProps, 'children' | 'variant'> {
   /** The crumbs - the app's `Link`s, and the current page as `Typography` or a `Link` with `aria-current="page"`. */
@@ -198,4 +201,13 @@ export function Breadcrumbs({
       </BreadcrumbsList>
     </BreadcrumbsRoot>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    Breadcrumbs?: ComponentConfig<
+      BreadcrumbsOwnerState,
+      'root' | 'list' | 'item' | 'separator' | 'collapsed' | 'collapsedIcon'
+    >
+  }
 }

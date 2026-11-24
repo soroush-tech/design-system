@@ -1,5 +1,6 @@
 import { styled } from '@soroush.design/react-components'
 import { View, type ViewProps } from '@soroush.design/react-components/View'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 export type TableContainerProps = ViewProps
 
@@ -14,3 +15,9 @@ export const TableContainer = styled(View, {
 })<TableContainerProps>({
   overflowX: 'auto',
 })
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    TableContainer?: ComponentConfig
+  }
+}

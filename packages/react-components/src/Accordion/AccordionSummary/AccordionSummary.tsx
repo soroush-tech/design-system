@@ -1,8 +1,11 @@
 import type { ReactNode } from 'react'
-import { createShouldForwardProp, get, styled } from '../../index'
-import { useDefaultProps } from '../../theme'
+import { styled } from '@soroush.design/react-theme'
+import { createShouldForwardProp, get } from '../../index'
+import { useDefaultProps } from '@soroush.design/react-theme/theme'
 import { Icon } from '../../Icon'
 import { getRegionId, getSummaryId, useAccordion } from '../AccordionContext'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
+import type { AccordionSummaryOwnerState } from '../../theme/themes'
 
 export type AccordionHeadingLevel = 1 | 2 | 3 | 4 | 5 | 6
 
@@ -101,4 +104,13 @@ export function AccordionSummary({
       </SummaryButton>
     </SummaryHeading>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    AccordionSummary?: ComponentConfig<
+      AccordionSummaryOwnerState,
+      'root' | 'button' | 'content' | 'icon'
+    >
+  }
 }

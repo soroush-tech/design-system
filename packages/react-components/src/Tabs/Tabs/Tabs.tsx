@@ -16,8 +16,11 @@ import {
   type Ref,
 } from 'react'
 import type { SpaceProps } from '@soroush.design/styled-system'
-import { styled, type Theme, createShouldForwardProp, props, get, space } from '../../index'
-import { useDefaultProps, useTheme, type TabsVariants } from '../../theme'
+import { styled } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { createShouldForwardProp, props, get, space } from '../../index'
+import { useDefaultProps, useTheme } from '@soroush.design/react-theme/theme'
+import { type TabsVariants } from '../../theme/themes'
 import { themeDefault } from '@soroush.design/core/theme'
 import { Icon } from '../../Icon'
 import { Tooltip } from '../../Tooltip'
@@ -41,6 +44,8 @@ import { getPanelId, getTabId } from '../utils/tabIds'
 import { getDividerColor, getDividerShadow, getEnclosedPieceStyle } from '../utils/dividerLine'
 import { surfaceSystem } from '../utils/surfaceSystem'
 import { TONAL_RADIUS } from '../utils/tonalRadius'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
+import type { TabsOwnerState } from '../../theme/themes'
 
 export type { TabValue } from '../TabsContext'
 export type TabsVariant = keyof TabsVariants
@@ -764,4 +769,20 @@ export function Tabs({
       </TabsRoot>
     </TabsContext.Provider>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    Tabs?: ComponentConfig<
+      TabsOwnerState,
+      | 'root'
+      | 'list'
+      | 'indicator'
+      | 'startContent'
+      | 'endContent'
+      | 'scrollButton'
+      | 'overflowButton'
+      | 'overflowClose'
+    >
+  }
 }

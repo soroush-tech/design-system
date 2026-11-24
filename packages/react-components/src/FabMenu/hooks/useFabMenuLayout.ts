@@ -1,5 +1,5 @@
 import { useLayoutEffect, useState, type RefObject } from 'react'
-import { useTheme } from '../../theme'
+import { useTheme } from '@soroush.design/react-theme/theme'
 import { isRtl } from '../../utils/isRtl'
 import type { FabMenuAlign, FabMenuDirection } from '../FabMenu/FabMenu'
 

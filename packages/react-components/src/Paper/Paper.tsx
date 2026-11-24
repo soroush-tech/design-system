@@ -1,8 +1,11 @@
 import { type CSSProperties, type ElementType } from 'react'
-import { styled, type Theme, createShouldForwardProp, system } from '../index'
-import { useTheme } from '../theme'
+import { styled } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { createShouldForwardProp, system } from '../index'
+import { useTheme } from '@soroush.design/react-theme/theme'
 import { Flex, type FlexProps } from '../Flex'
 import { themeDefault } from '@soroush.design/core/theme'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 export type PaperElevation =
   | 0
@@ -81,4 +84,10 @@ export function Paper({ elevation = 1, p = 2, bg, borderRadius, ...rest }: Reado
       {...rest}
     />
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    Paper?: ComponentConfig
+  }
 }

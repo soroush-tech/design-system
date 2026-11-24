@@ -8,8 +8,10 @@ import {
   type ReactNode,
   type Ref,
 } from 'react'
-import { styled, type Theme, createShouldForwardProp } from '../index'
-import { useTheme } from '../theme'
+import { styled } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { createShouldForwardProp } from '../index'
+import { useTheme } from '@soroush.design/react-theme/theme'
 import { Modal, type ModalCloseReason } from '../Modal'
 import { Paper, type PaperProps, type PaperElevation } from '../Paper'
 import { resolveAnchorEl, type PopoverAnchorEl } from './utils/resolveAnchorEl'
@@ -19,6 +21,7 @@ import {
   type PopoverPosition,
   type PopoverReference,
 } from './utils/computePopoverPosition'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 export type { PopoverAnchorEl, PopoverOrigin, PopoverPosition, PopoverReference }
 
@@ -227,4 +230,10 @@ export function Popover({
       </Positioner>
     </Modal>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    Popover?: ComponentConfig<Record<string, unknown>, 'root' | 'positioner'>
+  }
 }

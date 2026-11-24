@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import { baseTheme, createTheme } from '../theme/themes'
+import { baseTheme } from '@soroush.design/react-theme/theme'
+import { createTheme } from '@soroush.design/core/theme'
 import { getFocusRing, getInputMinWidth } from './inputStyles'
 
 describe('getInputMinWidth', () => {

@@ -6,7 +6,7 @@ import {
   type ReactElement,
   type RefObject,
 } from 'react'
-import type { Theme } from '../theme/themes'
+import type { Theme } from '@soroush.design/react-theme/theme'
 
 /** Where a transition is: out, going in, in, or going out - or not in the tree at all. */
 export type TransitionStatus = 'unmounted' | 'exited' | 'entering' | 'entered' | 'exiting'

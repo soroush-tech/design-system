@@ -1,5 +1,5 @@
 import { createContext } from 'react'
-import type { Theme } from '../theme/themes'
+import type { Theme } from '@soroush.design/react-theme/theme'
 
 /** What a `NavGroup` and a `NavLink` read from the `NavTree` they sit in. */
 export interface NavTreeContextValue {

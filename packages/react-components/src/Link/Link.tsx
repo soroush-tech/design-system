@@ -1,9 +1,11 @@
 import { type AnchorHTMLAttributes, type ComponentType, type ElementType } from 'react'
-import { styled, type CSSObject, type Theme } from '../index'
-import { useTheme } from '../theme'
+import { styled } from '@soroush.design/react-theme'
+import { type CSSObject, type Theme } from '@soroush.design/react-theme/theme'
+import { useTheme } from '@soroush.design/react-theme/theme'
 import { Typography, type TypographyProps } from '../Typography'
 import { themeDefault } from '@soroush.design/core/theme'
 import { getAnchorRel } from '@soroush.design/core/utils'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 export type LinkUnderline = 'always' | 'hover' | 'none'
 
@@ -76,4 +78,10 @@ export function Link({
       {...rest}
     />
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    Link?: ComponentConfig
+  }
 }

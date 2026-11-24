@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react'
-import { useTheme, type Theme } from '../theme'
+import { useTheme, type Theme } from '@soroush.design/react-theme/theme'
 import type { PaperElevation } from '../Paper'
 import type { MenuAlign } from './utils/getMenuOrigins'
 import type { MenuListSlotProps } from './MenuList'

@@ -14,8 +14,10 @@ import { Popover } from '../Popover'
 import { NativeSelect, type NativeSelectOption } from '../NativeSelect'
 import { type MenuItemProps } from '../MenuItem'
 import type { SpaceProps, LayoutProps } from '@soroush.design/styled-system'
-import { styled, type Theme, createShouldForwardProp, props, get, system, space } from '../index'
-import { useTheme } from '../theme'
+import { styled } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { createShouldForwardProp, props, get, system, space } from '../index'
+import { useTheme } from '@soroush.design/react-theme/theme'
 import { inputVariantStyles } from '../utils/inputVariantStyles'
 import { useSelectPopover } from './hooks/useSelectPopover'
 import { getOptionsFromChildren } from './utils/getOptionsFromChildren'
@@ -25,6 +27,7 @@ import { computeNextValue } from './utils/computeNextValue'
 import { resolveDisplayLabel } from './utils/resolveDisplayLabel'
 import { themeDefault } from '@soroush.design/core/theme'
 import { getFocusRing, getInputMinWidth } from '../utils/inputStyles'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 export type { SelectValue }
 export type SelectColor = keyof Theme['palette']
@@ -713,4 +716,13 @@ function NonNativeSelect({
       </Popover>
     </>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    Select?: ComponentConfig<
+      Record<string, unknown>,
+      'root' | 'value' | 'valueArea' | 'valueGhost' | 'listbox'
+    >
+  }
 }

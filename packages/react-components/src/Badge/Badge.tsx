@@ -1,7 +1,11 @@
 import { cloneElement, isValidElement, useId, type ReactElement, type ReactNode } from 'react'
 import type { SpaceProps } from '@soroush.design/styled-system'
-import { createShouldForwardProp, get, props, styled, type Theme, space } from '../index'
-import { useDefaultProps } from '../theme'
+import { styled } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { createShouldForwardProp, get, props, space } from '../index'
+import { useDefaultProps } from '@soroush.design/react-theme/theme'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
+import type { BadgeOwnerState } from '../theme/themes'
 
 export type BadgeVariant = 'standard' | 'dot'
 export type BadgeOverlap = 'rectangular' | 'circular'
@@ -181,4 +185,10 @@ export function Badge({
       )}
     </BadgeRoot>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    Badge?: ComponentConfig<BadgeOwnerState, 'root' | 'badge' | 'label'>
+  }
 }

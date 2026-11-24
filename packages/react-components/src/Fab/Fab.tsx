@@ -1,7 +1,10 @@
 import { forwardRef, type ForwardedRef, type ReactNode, type Ref } from 'react'
-import { get, styled, space } from '../index'
-import { useDefaultProps } from '../theme'
+import { styled } from '@soroush.design/react-theme'
+import { get, space } from '../index'
+import { useDefaultProps } from '@soroush.design/react-theme/theme'
 import { Button, type ButtonProps } from '../Button'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
+import type { FabOwnerState } from '../theme/themes'
 
 export type FabVariant = 'circular' | 'extended'
 
@@ -178,3 +181,9 @@ export const Fab = forwardRef<HTMLButtonElement, FabProps>(function Fab(
     </FabRoot>
   )
 })
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    Fab?: ComponentConfig<FabOwnerState, 'root' | 'label' | 'labelText'>
+  }
+}

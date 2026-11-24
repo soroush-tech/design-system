@@ -1,10 +1,13 @@
 import { type ReactNode } from 'react'
-import { styled, createShouldForwardProp, type Theme } from '../index'
+import { styled } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { createShouldForwardProp } from '../index'
 import { View } from '../View'
 import { Portal } from '../Portal'
 import { Backdrop } from '../Backdrop'
 import { FocusTrap } from '../FocusTrap'
 import { useModal, type ModalCloseReason } from './useModal'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 export type ModalScroll = 'paper' | 'body'
 
@@ -118,4 +121,10 @@ export function Modal({
   )
 
   return shouldUsePortal ? <Portal container={portalContainer}>{content}</Portal> : content
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    Modal?: ComponentConfig
+  }
 }

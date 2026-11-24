@@ -1,12 +1,16 @@
 import { useRef, type ReactNode } from 'react'
-import { createShouldForwardProp, styled, type Theme } from '../index'
-import { useDefaultProps, useTheme } from '../theme'
+import { styled } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { createShouldForwardProp } from '../index'
+import { useDefaultProps, useTheme } from '@soroush.design/react-theme/theme'
 import {
   useTransition,
   type TransitionCallbacks,
   type TransitionStatus,
   type TransitionTimeout,
 } from '../utils/useTransition'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
+import type { CollapseOwnerState } from '../theme/themes'
 
 export type CollapseOrientation = 'vertical' | 'horizontal'
 
@@ -182,4 +186,10 @@ export function Collapse({
       </CollapseWrapper>
     </CollapseRoot>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    Collapse?: ComponentConfig<CollapseOwnerState, 'root' | 'wrapper' | 'inner'>
+  }
 }

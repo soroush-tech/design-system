@@ -8,8 +8,10 @@ import {
   type SyntheticEvent,
 } from 'react'
 import type { SpaceProps } from '@soroush.design/styled-system'
-import { createShouldForwardProp, get, props, styled, type Theme, space } from '../../index'
-import { useDefaultProps } from '../../theme'
+import { styled } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { createShouldForwardProp, get, props, space } from '../../index'
+import { useDefaultProps } from '@soroush.design/react-theme/theme'
 import { themeDefault } from '@soroush.design/core/theme'
 import { getSurfaceRadius } from '@soroush.design/core/utils'
 import { Collapse, type CollapseProps } from '../../Collapse'
@@ -20,6 +22,8 @@ import {
   getRegionId,
   getSummaryId,
 } from '../AccordionContext'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
+import type { AccordionOwnerState } from '../../theme/themes'
 
 /** What an `Accordion` hands the transition that opens and closes its region. */
 export type AccordionTransitionProps = Pick<
@@ -160,4 +164,10 @@ export function Accordion({
       </AccordionRoot>
     </AccordionContext.Provider>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    Accordion?: ComponentConfig<AccordionOwnerState, 'root' | 'region'>
+  }
 }

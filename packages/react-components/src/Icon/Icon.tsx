@@ -1,10 +1,12 @@
 import { type ComponentType, type ElementType, type SVGProps } from 'react'
 import type { LayoutProps, SpaceProps } from '@soroush.design/styled-system'
-import { styled, createShouldForwardProp, props, system, layout, space } from '../index'
-import { useTheme } from '../theme'
+import { styled } from '@soroush.design/react-theme'
+import { createShouldForwardProp, props, system, layout, space } from '../index'
+import { useTheme } from '@soroush.design/react-theme/theme'
 import { type TextColorToken } from '../Typography'
 import { icons, type IconName } from './icons'
 import { themeDefault, type ThemeIconSizes } from '@soroush.design/core/theme'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 export interface IconProps
   extends
@@ -55,4 +57,10 @@ export function Icon({ name, color, size, ...rest }: Readonly<IconProps>) {
       {...rest}
     />
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    Icon?: ComponentConfig
+  }
 }

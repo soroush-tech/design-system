@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest'
 import { act, screen } from '@testing-library/react'
 import type { ReactElement } from 'react'
-import { baseTheme } from '../theme/themes'
+import { baseTheme } from '@soroush.design/react-theme/theme'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { describeTransition } from '../utils/test/describeTransition'
 import { Slide, type SlideProps } from './Slide'

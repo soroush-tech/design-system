@@ -1,3 +1,1 @@
-export * from './hooks/useStyle'
-export * from './hoc/withStyles'
-export * from './StylesConsumer'
+export * from '@soroush.design/react-theme/style'

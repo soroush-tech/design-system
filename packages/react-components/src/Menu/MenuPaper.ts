@@ -1,5 +1,7 @@
 import type { PaperElevation } from '../Paper'
-import { styled, type Theme, get, system } from '../index'
+import { styled } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { get, system } from '../index'
 import { themeDefault } from '@soroush.design/core/theme'
 import { getSurfaceRadius } from '@soroush.design/core/utils'
 

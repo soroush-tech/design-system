@@ -1,10 +1,14 @@
 import type { MouseEvent, ReactNode } from 'react'
 import type { SpaceProps } from '@soroush.design/styled-system'
-import { createShouldForwardProp, get, props, styled, type Theme, space } from '../../index'
-import { useDefaultProps } from '../../theme'
+import { styled } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { createShouldForwardProp, get, props, space } from '../../index'
+import { useDefaultProps } from '@soroush.design/react-theme/theme'
 import { getSurfaceRadius } from '@soroush.design/core/utils'
 import { Icon, type IconName } from '../../Icon'
 import { alpha } from '../../utils'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
+import type { AlertOwnerState } from '../../theme/themes'
 
 export type AlertSeverity = 'success' | 'info' | 'warning' | 'error'
 export type AlertVariant = 'standard' | 'contained' | 'outlined'
@@ -191,4 +195,10 @@ export function Alert({
       )}
     </AlertRoot>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    Alert?: ComponentConfig<AlertOwnerState, 'root' | 'icon' | 'message' | 'action' | 'closeButton'>
+  }
 }

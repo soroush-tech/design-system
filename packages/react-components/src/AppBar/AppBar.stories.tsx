@@ -2,8 +2,9 @@ import { useState, type SVGProps } from 'react'
 import type { Meta, StoryObj, Decorator } from '@storybook/react-vite'
 import { border, m, p, position } from '../utils/test/storiesArgs'
 import { appBarSizeTokens, backgroundTokens } from '../utils/test/storiesOptions'
-import { ThemeProvider } from '../theme'
-import { baseTheme, createTheme } from '../theme/themes'
+import { ThemeProvider } from '@soroush.design/react-theme/theme'
+import { baseTheme } from '@soroush.design/react-theme/theme'
+import { createTheme } from '@soroush.design/core/theme'
 
 // Story-local light variant - the package ships only `baseTheme`; consumers
 // build their own light themes the same way.

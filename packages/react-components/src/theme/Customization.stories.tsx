@@ -3,8 +3,8 @@ import { Button, type ButtonVariant } from '../Button'
 import { ButtonGroup } from '../ButtonGroup'
 import { Flex } from '../Flex'
 import { Typography } from '../Typography'
-import { createTheme, baseTheme } from './themes'
-import { ThemeProvider } from './ThemeProvider'
+import { createTheme } from '@soroush.design/core/theme'
+import { baseTheme, ThemeProvider } from '@soroush.design/react-theme/theme'
 
 // Living documentation for theme-level component customization
 // (`theme.components`): defaultProps, styleOverrides, and theme-contributed

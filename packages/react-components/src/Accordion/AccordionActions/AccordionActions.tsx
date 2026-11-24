@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react'
-import { createShouldForwardProp, styled } from '../../index'
+import { styled } from '@soroush.design/react-theme'
+import { createShouldForwardProp } from '../../index'
 import { useAccordion } from '../AccordionContext'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 
 export interface AccordionActionsProps {
   /** The buttons at the foot of the region. */
@@ -33,4 +35,10 @@ export function AccordionActions({
       {children}
     </ActionsRoot>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    AccordionActions?: ComponentConfig
+  }
 }

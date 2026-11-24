@@ -6,8 +6,10 @@ import {
   type ReactNode,
   type SyntheticEvent,
 } from 'react'
-import { createShouldForwardProp, get, styled, type Theme } from '../index'
-import { useDefaultProps } from '../theme'
+import { styled } from '@soroush.design/react-theme'
+import { type Theme } from '@soroush.design/react-theme/theme'
+import { createShouldForwardProp, get } from '../index'
+import { useDefaultProps } from '@soroush.design/react-theme/theme'
 import { themeDefault } from '@soroush.design/core/theme'
 import { getSurfaceRadius, getShapeRadius, type Shape } from '@soroush.design/core/utils'
 import { Grow } from '../Grow'
@@ -15,6 +17,8 @@ import { Portal, type PortalProps } from '../Portal'
 import { useControlled } from '@soroush.design/react-hooks/useControlled'
 import type { TransitionProps } from '../utils/useTransition'
 import { useAutoHide } from './hooks/useAutoHide'
+import type { ComponentConfig } from '@soroush.design/react-theme/theme'
+import type { SnackbarOwnerState } from '../theme/themes'
 
 /** Why a snackbar asks to close. */
 export type SnackbarCloseReason = 'timeout' | 'clickaway' | 'escapeKeyDown'
@@ -249,4 +253,10 @@ export function Snackbar({
       </SnackbarRoot>
     </Portal>
   )
+}
+
+declare module '@soroush.design/react-theme/theme' {
+  interface ThemeComponents {
+    Snackbar?: ComponentConfig<SnackbarOwnerState, 'root' | 'content' | 'message' | 'action'>
+  }
 }
