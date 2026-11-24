@@ -17,10 +17,10 @@ import {
 } from 'react'
 import type { SpaceProps } from '@soroush.design/styled-system'
 import { styled } from '@soroush.design/react-theme'
-import { type Theme } from '@soroush.design/react-theme/theme'
+import { type AppTheme as Theme } from '@soroush.design/react-theme/theme'
 import { createShouldForwardProp, props, get, space } from '../../index'
 import { useDefaultProps, useTheme } from '@soroush.design/react-theme/theme'
-import { type TabsVariants } from '../../theme/themes'
+import { type TabsLook } from '../../theme/themes'
 import { themeDefault } from '@soroush.design/core/theme'
 import { Icon } from '../../Icon'
 import { Tooltip } from '../../Tooltip'
@@ -48,7 +48,7 @@ import type { ComponentConfig } from '@soroush.design/react-theme/theme'
 import type { TabsOwnerState } from '../../theme/themes'
 
 export type { TabValue } from '../TabsContext'
-export type TabsVariant = keyof TabsVariants
+export type TabsVariant = TabsLook
 export type TabsOrientation = 'horizontal' | 'vertical'
 /** What the row does when its tabs don't fit: scroll, list the rest in a menu, or nothing. */
 export type TabsOverflowBehavior = 'scroll' | 'menu' | 'none'

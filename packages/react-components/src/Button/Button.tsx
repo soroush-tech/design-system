@@ -14,18 +14,19 @@ import type {
   TypographyProps,
 } from '@soroush.design/styled-system'
 import { styled } from '@soroush.design/react-theme'
-import { type Theme } from '@soroush.design/react-theme/theme'
+import { type AppTheme as Theme } from '@soroush.design/react-theme/theme'
 import { createShouldForwardProp, props, border, space, layout, typography } from '../index'
 import { alpha } from '../utils'
 import { getAnchorRel } from '@soroush.design/core/utils'
-import { themeDefault, type ButtonVariants, type PaletteColor } from '@soroush.design/core/theme'
+import { themeDefault } from '@soroush.design/core/theme'
 import { useDefaultProps, useTheme } from '@soroush.design/react-theme/theme'
 import type { ComponentConfig } from '@soroush.design/react-theme/theme'
-import type { ButtonOwnerState } from '../theme/themes'
+import type { ButtonLook, ButtonOwnerState } from '../theme/themes'
+import type { ThemeColor } from '@soroush.design/core/theme'
 
-/** Augmentable via the `ButtonVariants` interface - style new values through `theme.components.Button.variants`. */
-export type ButtonVariant = keyof ButtonVariants
-export type ButtonColor = PaletteColor
+/** Augmentable via the `ButtonVariants` interface, or defined by a registered theme - style new values through `theme.components.Button.variants`. */
+export type ButtonVariant = ButtonLook
+export type ButtonColor = ThemeColor
 export type ButtonSize = keyof Theme['sizes']
 export type ButtonShape = 'square' | 'rounded' | 'pill'
 export type ButtonLoadingPosition = 'start' | 'end' | 'center'

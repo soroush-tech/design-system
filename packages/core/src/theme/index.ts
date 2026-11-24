@@ -1,4 +1,5 @@
 export * from './types'
+export * from './register'
 export * from './baseTheme'
 export { createTheme, type DeepPartial, type ThemeOverride } from './createTheme'
 export * from './spacing'

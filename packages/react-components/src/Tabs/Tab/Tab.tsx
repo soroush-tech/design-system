@@ -8,10 +8,10 @@ import {
 import { Icon } from '../../Icon'
 import { Tooltip } from '../../Tooltip'
 import { styled } from '@soroush.design/react-theme'
-import { type Theme } from '@soroush.design/react-theme/theme'
+import { type AppTheme as Theme } from '@soroush.design/react-theme/theme'
 import { createShouldForwardProp, get } from '../../index'
 import { useDefaultProps } from '@soroush.design/react-theme/theme'
-import { type TabsVariants } from '../../theme/themes'
+import { type TabsLook } from '../../theme/themes'
 import { TabIndexContext, useTabsContext, type TabValue } from '../TabsContext'
 import { getDividerShadow } from '../utils/dividerLine'
 import { TONAL_RADIUS } from '../utils/tonalRadius'
@@ -70,7 +70,7 @@ export interface TabProps {
 }
 
 interface TabStyleProps {
-  variant: keyof TabsVariants
+  variant: TabsLook
   color: keyof Theme['palette']
   textColor?: keyof Theme['text']
   sizeToken: keyof Theme['sizes']
@@ -155,7 +155,7 @@ const getEnclosedEdgeStyle = (
 }
 
 interface TabLookProps {
-  variant: keyof TabsVariants
+  variant: TabsLook
   isSelected: boolean
   main: string
 }
@@ -176,7 +176,7 @@ const groundOf = (
 // The tab's corners: its own, else a pill when tonal, else a little when boxed or enclosed.
 const radiusOf = (
   theme: Theme,
-  variant: keyof TabsVariants,
+  variant: TabsLook,
   borderRadius: TabStyleProps['borderRadius']
 ): string | number => {
   if (borderRadius) return theme.radii[borderRadius]

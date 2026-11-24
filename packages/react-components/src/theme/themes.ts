@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import type { ThemeColor, ThemeSize, VariantOf } from '@soroush.design/core/theme'
 import type { PaperElevation } from '../Paper/Paper'
 import type {
   ButtonVariants,
@@ -233,11 +234,14 @@ export interface BreadcrumbsOwnerState {
   color?: keyof ThemeText
 }
 
+/** Button's looks: the built-in ones, those added through `ButtonVariants`, and those a registered theme defines. */
+export type ButtonLook = keyof ButtonVariants | VariantOf<'Button'>
+
 /** The resolved props Button's styled roots receive - what `ownerState` exposes. */
 export interface ButtonOwnerState {
-  variant?: keyof ButtonVariants
-  color?: keyof ThemePalette
-  size?: keyof ThemeSizes
+  variant?: ButtonLook
+  color?: ThemeColor
+  size?: ThemeSize
   shape?: ShapeKey
   fullWidth?: boolean
   disabled?: boolean
@@ -251,11 +255,14 @@ export interface TabsVariants {
   tonal: true
 }
 
+/** Tabs' looks: the built-in ones, those added through `TabsVariants`, and those a registered theme defines. */
+export type TabsLook = keyof TabsVariants | VariantOf<'Tabs'>
+
 /** The resolved props Tabs' styled elements receive - what `ownerState` exposes. */
 export interface TabsOwnerState {
-  variant?: keyof TabsVariants
-  color?: keyof ThemePalette
-  size?: keyof ThemeSizes
+  variant?: TabsLook
+  color?: ThemeColor
+  size?: ThemeSize
   orientation?: 'horizontal' | 'vertical'
   fullWidth?: boolean
   hasDivider?: boolean

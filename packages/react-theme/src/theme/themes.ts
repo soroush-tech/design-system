@@ -1,6 +1,11 @@
 import type { CSSObject as EngineCSSObject } from '@umber-style/react'
 import { baseTheme as coreBaseTheme } from '@soroush.design/core/theme'
-import type { DeepPartial, OpenScale, Theme as CoreTheme } from '@soroush.design/core/theme'
+import type {
+  DeepPartial,
+  OpenScale,
+  RegisteredTheme,
+  Theme as CoreTheme,
+} from '@soroush.design/core/theme'
 
 // The theme itself - the token scales, `createTheme`, `baseTheme` - is `@soroush.design/core`'s,
 // and every platform reads the same one. It is re-exported here, so an app imports it from this
@@ -37,6 +42,11 @@ export interface ComponentConfig<
   styleOverrides?: Partial<Record<Slot, ComponentStyle<OwnerState>>>
   /** Extra variants matched by props. Replaced wholesale by `createTheme`, never merged. */
   variants?: ReadonlyArray<ComponentVariant<OwnerState>>
+  /**
+   * Type only, never set: names the owner state, so `createTheme` can check this config's keys
+   * without reading the types of its values (see `ThemeOverrides` in the core).
+   */
+  readonly $owner?: OwnerState
 }
 
 /**
@@ -54,6 +64,9 @@ export interface Theme extends CoreTheme {
   /** Optional per-component customization - see `ThemeComponents`. */
   components?: OpenScale<ThemeComponents>
 }
+
+/** The theme the app registered (see `Register` in the core), or this package's `Theme` when it registered none. */
+export type AppTheme = RegisteredTheme<Theme>
 
 /** Sparse theme patch accepted by `createTheme` and `ThemeProvider`'s `themes` prop. */
 export type ThemeOverride = DeepPartial<Theme>

@@ -7,7 +7,7 @@ import type {
   StyledOptions,
 } from '@umber-style/styled'
 import type { PropsOf } from '@umber-style/react'
-import type { Theme } from '../theme/themes'
+import type { AppTheme as Theme } from '../theme/themes'
 import type { ComponentClass, ComponentProps, ComponentType, JSX, Ref } from 'react'
 import { configureEngine } from './engine'
 import { defaultExport } from '../engine/defaultExport'

@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react'
-import type { Theme } from '@soroush.design/react-theme/theme'
-import type { TabsVariants } from '../theme/themes'
+import type { AppTheme as Theme } from '@soroush.design/react-theme/theme'
+import type { TabsLook } from '../theme/themes'
 
 /** A tab's value: what it is chosen as. A `Tab` without one takes its position. */
 export type TabValue = string | number
@@ -29,7 +29,7 @@ export interface TabsContextValue {
   /** A navigation of links or buttons (`aria-current`), not a `tablist` (`aria-selected`). */
   isNavigation: boolean
   isVertical: boolean
-  variant: keyof TabsVariants
+  variant: TabsLook
   color: keyof Theme['palette']
   textColor?: keyof Theme['text']
   size: keyof Theme['sizes']

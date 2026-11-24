@@ -1,6 +1,6 @@
-import { type Theme } from '@soroush.design/react-theme/theme'
+import { type AppTheme as Theme } from '@soroush.design/react-theme/theme'
 import { get } from '../../index'
-import type { TabsVariants } from '../../theme/themes'
+import type { TabsLook } from '../../theme/themes'
 
 /**
  * The divider - the line along a row of tabs' foot, a column's end side - as an inset shadow,
@@ -15,14 +15,14 @@ export const getDividerShadow = (theme: Theme, isVertical: boolean, color: strin
 /** The divider's color: the accent in the enclosed look, which outlines the tab in it too. */
 export const getDividerColor = (
   theme: Theme,
-  variant: keyof TabsVariants,
+  variant: TabsLook,
   color: keyof Theme['palette']
 ): string =>
   variant === 'enclosed' ? get(theme, `palette.${color}.main`) : get(theme, 'border.light')
 
 /** What a row's piece needs to know to draw its stretch of the divider. */
 export interface DividerPieceProps {
-  variant: keyof TabsVariants
+  variant: TabsLook
   color: keyof Theme['palette']
   orientation: 'horizontal' | 'vertical'
   hasDivider: boolean
