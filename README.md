@@ -20,6 +20,7 @@ Monorepo for the `@soroush.tech` UI libraries, extracted from [`soroush-tech/cor
 | [`@soroush.design/lab`](packages/lab)                           | Incubator for components heading into the design system (private, internal)     |
 | [`@soroush.design/story-demo`](packages/story-demo)             | Renders CSF3 stories as interactive docs demos (private, internal)              |
 | [`@soroush.design/docs-content`](packages/docs-content)         | Component registry and README parsing shared by the docs app and MCP server     |
+| [`@soroush.design/contract`](packages/contract)                 | The final public shape as export lists and type tests (private, internal)       |
 | [`@soroush.design/umbrella-gen`](packages/umbrella-gen)         | Generates the umbrellas from the packages they point at (private, internal)     |
 | [`@soroush.tech/eslint-config`](packages/eslint-config)         | Shared oxlint config and custom lint plugins (private, internal)                |
 

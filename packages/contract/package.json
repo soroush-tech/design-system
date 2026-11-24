@@ -1,0 +1,26 @@
+{
+  "name": "@soroush.design/contract",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "The final public shape of the soroush.design React family as data and type tests, written before the packages are restructured behind it: the export lists and the type-test programs, with the list of those that fail until the restructure lands.",
+  "scripts": {
+    "lint": "oxlint --deny-warnings",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "check": "node scripts/run.mjs"
+  },
+  "devDependencies": {
+    "@soroush.tech/eslint-config": "workspace:*",
+    "@types/node": "^26.6.6",
+    "@types/react": "^19.3.0",
+    "@vitest/coverage-v8": "^5.1.0",
+    "oxlint": "^1.93.0",
+    "react": "^19.3.1",
+    "tsx": "^4.23.15",
+    "typescript": "~7.0.2",
+    "typescript6": "npm:typescript@6.0.3",
+    "vitest": "^5.1.0"
+  }
+}
