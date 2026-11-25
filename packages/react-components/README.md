@@ -277,6 +277,8 @@ The built-in themes carry no `defaults` - the literals apply. A theme with entir
 <ThemeProvider defaults={{ size: 'compact', color: 'brand', switchVariant: 'inside' }}>
 ```
 
+Two `defaults` objects with the same contents give the same theme, so an inline literal costs nothing per render: the provider derives one theme for each theme and `defaults` contents, and the engine declares its tokens once.
+
 ### Per-component customization (`theme.components`)
 
 Customize one component for the whole app - default prop values, per-slot CSS, and new variant values - without wrapping or forking:

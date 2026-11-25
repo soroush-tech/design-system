@@ -30,6 +30,6 @@ import { Global, globalStyles } from '@soroush.design/react/engine'
 
 ## `CacheProvider`, `styleCache` and `createCache`
 
-For server rendering and critical-CSS extraction. `styleCache` is the library's own cache; `CacheProvider` makes a cache the one the components write to; `createCache` makes a cache of an app's own, so an app never installs an engine package itself. The one package an app adds for extraction is `@umber-style/server`.
+For server rendering and critical-CSS extraction. `styleCache` is the library's own cache; `CacheProvider` makes a cache the one the components write to; `createCache` makes a cache of an app's own, so an app never installs an engine package itself. The one package an app adds for extraction is `@umber-style/server`. Render the page under `<CacheProvider value={styleCache}>` and extract with `createInstance(styleCache)`: without the provider the components write to the engine's own cache, extraction finds nothing, and every styled element sends its own `<style>` element instead.
 
 An app that does not render on the server does not use these.

@@ -53,6 +53,8 @@ Components carry visible literal fallbacks (`size = 'md'`, `variant = 'outside'`
 <ThemeProvider defaults={{ size: 'compact', color: 'brand', switchVariant: 'inside' }}>
 ```
 
+Two `defaults` objects with the same contents give the same theme, so an inline literal costs nothing per render: the provider derives one theme for each theme and `defaults` contents, and the engine declares its tokens once.
+
 The full key table lives in the [README's Theming section](../README.md#component-defaults). The built-in `baseTheme` carries no `defaults` - the literals apply until you say otherwise. For _per-component_ defaults (only Buttons compact), use `theme.components.X.defaultProps` instead ([customization.md](./customization.md)).
 
 ## Extending the type system

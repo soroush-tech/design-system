@@ -60,3 +60,35 @@ describe('ThemeProvider', () => {
     })
   })
 })
+
+describe('ThemeProvider, the theme the engine gets', () => {
+  const themeOf = (props: { theme?: Theme; defaults?: { size: 'lg' | 'sm' } }) =>
+    renderHook(() => useTheme(), {
+      wrapper: ({ children }: { children: ReactNode }) => (
+        <ThemeProvider {...props}>{children}</ThemeProvider>
+      ),
+    }).result.current
+
+  it('is the same object for the same theme, render after render', () => {
+    expect(themeOf({ theme: light })).toBe(themeOf({ theme: light }))
+    expect(themeOf({})).toBe(themeOf({}))
+  })
+
+  it('is another object for another theme, and the given theme is never changed', () => {
+    expect(themeOf({ theme: light })).not.toBe(themeOf({ theme: baseTheme }))
+    expect(light.defaults).toBeUndefined()
+  })
+
+  it('is the same object for the same theme and the same defaults contents, an inline literal too', () => {
+    expect(themeOf({ theme: light, defaults: { size: 'lg' } })).toBe(
+      themeOf({ theme: light, defaults: { size: 'lg' } })
+    )
+    expect(themeOf({ theme: light, defaults: { size: 'lg' } })).not.toBe(themeOf({ theme: light }))
+    expect(themeOf({ theme: light, defaults: { size: 'lg' } })).not.toBe(
+      themeOf({ theme: baseTheme, defaults: { size: 'lg' } })
+    )
+    expect(themeOf({ theme: light, defaults: { size: 'lg' } })).not.toBe(
+      themeOf({ theme: light, defaults: { size: 'sm' } })
+    )
+  })
+})

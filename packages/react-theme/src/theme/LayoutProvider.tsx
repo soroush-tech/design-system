@@ -1,5 +1,6 @@
 import { useCallback } from 'react'
 import type { ReactNode } from 'react'
+import { derivedBy } from './derivedTheme'
 import { EngineThemeProvider } from './engine'
 import { baseTheme, type Theme } from './themes'
 import { createTheme, type ThemeLayout } from '@soroush.design/core/theme'
@@ -31,6 +32,12 @@ const pageLayout = (theme: Theme, layout: ThemeLayout): ThemeLayout => {
   return merged as ThemeLayout
 }
 
+// One derived theme for each outer theme and layout object: the engine sees the same theme object
+// on every render, on a server too.
+const withLayout = derivedBy((theme: Theme, layout: ThemeLayout) =>
+  createTheme(theme, { layout: pageLayout(theme, layout) })
+)
+
 /**
  * @description A page-level layout: everything inside sees `theme.layout` with the page's
  * values merged on top - `View`, `Flex` and `Grid` with `layout`, and `useTheme().layout`. It
@@ -43,7 +50,7 @@ export function LayoutProvider({ layout, children }: Readonly<LayoutProviderProp
       // Without a ThemeProvider, the engine's theme is `{}` - build on the base theme, as
       // ThemeProvider does by default.
       const theme = 'breakpoints' in outer ? outer : baseTheme
-      return createTheme(theme, { layout: pageLayout(theme, layout) })
+      return withLayout(theme, layout)
     },
     [layout]
   )

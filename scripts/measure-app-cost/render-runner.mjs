@@ -28,7 +28,7 @@ const source = `
 import { createElement, Fragment } from 'react'
 import { renderToString } from 'react-dom/server'
 import { createInstance } from '@umber-style/server/create-instance'
-import { Global, globalStyles, styleCache } from '@soroush.design/react/engine'
+import { CacheProvider, Global, globalStyles, styleCache } from '@soroush.design/react/engine'
 import { ThemeProvider, baseTheme } from '@soroush.design/react/theme'
 ${subpaths.map((subpath, index) => `import * as m${index} from '@soroush.design/react/${subpath}'`).join('\n')}
 const modules = { ${subpaths.map((subpath, index) => `${JSON.stringify(subpath)}: m${index}`).join(', ')} }
@@ -41,8 +41,13 @@ const toElement = (node, modulesByName, key) => {
   return createElement(Component, { key, ...node.props }, ...node.children.map((child, index) => toElement(child, modulesByName, index)))
 }
 const exportsByName = Object.assign({}, ...Object.values(modules))
+// Under a CacheProvider the components write to the style cache, the one the extraction reads.
 const wrap = (children) =>
-  createElement(ThemeProvider, { theme: baseTheme }, createElement(Global, { styles: globalStyles }), ...children)
+  createElement(
+    CacheProvider,
+    { value: styleCache },
+    createElement(ThemeProvider, { theme: baseTheme }, createElement(Global, { styles: globalStyles }), ...children)
+  )
 
 /** The full server path of a page: its HTML, then the styles it used. */
 const renderPage = (elements) => {
