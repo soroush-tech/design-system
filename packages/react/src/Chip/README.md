@@ -5,6 +5,8 @@ A compact tag: a label, an optional icon or avatar, and - given `onClick` - a bu
 control and through Backspace and Delete on the chip, so the control itself is out of the tab order;
 it is a button of its own, not a child of the chip's, so pressing it never clicks the chip.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 Every text is yours: the label, and the delete control's name (`deleteLabel`) - no built-in English.
 
 ```tsx

@@ -2,6 +2,8 @@
 
 Groups a label, control, and helper text into one accessible field and shares their state through React context. Works standalone or inside a [`Form`](../Form/README.md).
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 **Architecture:** `FormControl` renders a `View` and provides `FormControlContext`. It auto-generates an `id` via `useId()` (override with the `id` prop) and derives `helperId = ${id}-helper` and `labelId = ${id}-label`. Descendant controls read field state through [`useFormControl`](#useformcontrol); `FormLabel` reads the `id` for `htmlFor`; `FormHelperText` registers its presence so the control points `aria-describedby` at it only while it is rendered - no dangling reference, no manual wiring. `FormLabel` registers too, giving a group control (a rating, which a `for` can't label) its `labelId` to name itself by.
 
 ---

@@ -1,0 +1,13 @@
+{
+  "extends": ["../../packages/eslint-config/.oxlintrc.react.json"],
+  "env": {
+    "browser": true
+  },
+  "rules": {
+    "react-refresh/only-export-components": [
+      "warn",
+      { "allowConstantExport": true, "allowExportNames": ["metadata"] }
+    ]
+  },
+  "ignorePatterns": [".next", "playwright-report", "test-results"]
+}

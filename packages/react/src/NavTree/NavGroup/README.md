@@ -5,6 +5,8 @@ Plain, the name is a heading and the links always show; with `isCollapsible` the
 the links fold under it - a native `details`, so it folds and opens with scripts off. Each child is put in
 a list item of the group's list.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 ```tsx
 <NavGroup label="Components" isCollapsible isOpen={holdsCurrentPage}>
   <NavLink href="/components/button/">Button</NavLink>

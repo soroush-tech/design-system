@@ -6,6 +6,8 @@ the `label` by default, or custom `children` (badges, counts, ...). The `label` 
 accessible name, so collapsed icon-only items stay screen-reader friendly. On a right-anchored
 rail the open content renders to the icon's left.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 Built on [`Pressable`](../../Pressable/README.md), so it carries button semantics with only the
 styling declared here - no inherited uppercase, bold weight, or letter-spacing from the button
 family. It renders Pressable's default element, meaning `role="button"`, a tab stop, and

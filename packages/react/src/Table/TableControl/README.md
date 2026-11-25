@@ -5,6 +5,8 @@ Kills the sortable/paginated-table boilerplate: consumer-called hooks own the st
 plus the hook outputs and renders the visible rows inside `TableBody`. No context, no changes to
 any other component - every wire is explicit and spreadable.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 ```tsx
 const sort = useTableSort(['name', 'latency'])
 const pagination = useTablePagination({ defaultRowsPerPage: 10 })

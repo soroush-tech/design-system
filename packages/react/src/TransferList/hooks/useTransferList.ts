@@ -1,3 +1,5 @@
+'use client'
+
 import { useState } from 'react'
 import { useControlled } from '@soroush.design/react-hooks/useControlled'
 

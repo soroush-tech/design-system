@@ -57,9 +57,14 @@ const sameDefaults = (defaults: ThemeDefaults) => {
 }
 
 // One derived theme for each theme and `defaults`: the engine sees the same object on every
-// render, on a server too, where `useMemo` keeps nothing between renders.
+// render, on a server too, where `useMemo` keeps nothing between renders. A theme that needs
+// nothing added is its own derived theme, so the theme the app registered with
+// `registerBaseTheme` is the very object its provider gives the engine (a copy of it makes the
+// engine merge the two again on every render).
 const withDefaults = derivedBy((theme: Theme, defaults: ThemeDefaults) =>
-  createTheme(theme, defaults === noDefaults ? {} : { defaults })
+  defaults === noDefaults && 'up' in theme.breakpoints
+    ? theme
+    : createTheme(theme, defaults === noDefaults ? {} : { defaults })
 )
 
 // The build tool of the app replaces this, so a production build drops the check below; a program

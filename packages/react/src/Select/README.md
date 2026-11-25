@@ -6,6 +6,8 @@ select with a custom, themeable listbox, and a `native` prop for the platform's 
 selection, and integrates with `Form` / `FormControl` context exactly like `NativeSelect` and
 `TextInput`.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 ```tsx
 import { Select } from '@soroush.design/react/Select'
 import { MenuItem } from '@soroush.design/react/MenuItem'

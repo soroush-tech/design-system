@@ -5,6 +5,8 @@ Positions floating content next to an anchor, portaled above the page. It is bui
 scroll lock, and Escape / click-away close - then adds anchor positioning
 (`anchorOrigin` / `transformOrigin` / `marginThreshold`).
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 ```tsx
 import { useState } from 'react'
 import { Popover } from '@soroush.design/react/Popover'

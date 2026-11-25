@@ -2,6 +2,8 @@
 
 Renders as `<header>`. A top-level container for navigation, toolbars, and application headers. Applies a default elevation shadow from the theme and stretches to full width.
 
+Server component: it renders in a React Server Component, with no client code.
+
 ---
 
 ## AppBar-specific props

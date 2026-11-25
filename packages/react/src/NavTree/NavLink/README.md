@@ -6,6 +6,8 @@ follows it as any link - and the current page is marked `aria-current="page"`. A
 opens in a tab of its own, `noopener noreferrer`, and carries an arrow after its name so it is not
 taken for a page of the site.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 ```tsx
 <NavLink href="/components/button/" isCurrent>Button</NavLink>
 <NavLink href="/markdown/" note="v1.2.3">Markdown</NavLink>

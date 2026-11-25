@@ -1,3 +1,5 @@
+'use client'
+
 import { useContext, type ElementType, type HTMLAttributes } from 'react'
 import { TableContext } from '../TableContext'
 import type { SpaceProps, BorderProps } from '@soroush.design/styled-system'

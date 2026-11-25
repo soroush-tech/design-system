@@ -2,6 +2,8 @@
 
 A row of a list, in one of two roles:
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 - **An option of [`Select`](../Select/README.md)'s listbox**, rendered as a semantic
   `<li role="option">`. Inside a `Select` the selection, highlight, density, and accent props are
   injected automatically - you only supply `value` and the label. On its own it renders a styled,

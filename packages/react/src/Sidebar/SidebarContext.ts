@@ -1,3 +1,5 @@
+'use client'
+
 import { createContext } from 'react'
 
 /** Screen edge a `Sidebar` hugs - item labels render away from that edge. */

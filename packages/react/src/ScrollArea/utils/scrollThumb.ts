@@ -1,3 +1,5 @@
+'use client'
+
 /** What a scrolling box reports about itself along one axis, in pixels. */
 export interface ScrollMetrics {
   /** How far it is scrolled: `scrollTop` or `scrollLeft`. */

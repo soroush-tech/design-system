@@ -7,6 +7,8 @@ highlighted option. It chooses one option, or several with `multiple` - each sho
 size, color, error and disabled state apply. The words - clear, open, close, loading, nothing found - are
 yours: no built-in English.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 ```tsx
 import { Autocomplete } from '@soroush.design/react/Autocomplete'
 

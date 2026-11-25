@@ -1,3 +1,5 @@
+'use client'
+
 import { createContext, useContext, type SyntheticEvent } from 'react'
 import type { Theme } from '../theme/themes'
 

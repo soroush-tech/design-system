@@ -1,3 +1,5 @@
+'use client'
+
 import { createContext } from 'react'
 
 /** The table section a cell lives in - drives `TableCell`'s th/td element resolution. */

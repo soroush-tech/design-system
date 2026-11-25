@@ -1,3 +1,5 @@
+'use client'
+
 import { Children, useId, type HTMLAttributes, type ReactNode } from 'react'
 import { styled } from '../../style/styled'
 import { get } from '@soroush.design/styled-system'

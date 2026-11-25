@@ -1,3 +1,5 @@
+'use client'
+
 import { cloneElement, useRef, type CSSProperties, type ReactElement, type Ref } from 'react'
 import { useMergedRefs } from '@soroush.design/react-hooks/useMergedRefs'
 import { getElementRef } from './getElementRef'

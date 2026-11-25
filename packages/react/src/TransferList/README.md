@@ -4,6 +4,8 @@ Two lists, and the buttons that move the checked items from one to the other. Ea
 rows whose checkbox is the row - one tab stop, the label toggles it - so keys, assistive technology
 and the platform's checkboxes work as they always do.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 Every name is yours - the lists' titles and the four buttons' - so it carries no language of its own.
 
 ```tsx

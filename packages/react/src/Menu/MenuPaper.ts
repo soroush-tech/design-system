@@ -1,3 +1,5 @@
+'use client'
+
 import type { PaperElevation } from '../Paper'
 import { styled } from '../style/styled'
 import { type Theme } from '../theme/themes'

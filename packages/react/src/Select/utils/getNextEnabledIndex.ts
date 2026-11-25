@@ -1,3 +1,5 @@
+'use client'
+
 import { type SelectOption } from './getOptionsFromChildren'
 
 /**

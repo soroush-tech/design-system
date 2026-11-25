@@ -2,6 +2,8 @@
 
 Renders a horizontal loading bar - the linear counterpart of `CircularProgress`. Supports `indeterminate` (looping), `determinate` (value-driven), and `query` (reversed loop) variants, plus a `buffer` mode on top of `determinate`. All fills use CSS `currentColor`; the `color` prop resolves to `theme.palette[color].main`.
 
+Server component: it renders in a React Server Component, with no client code.
+
 **Architecture:** the root element is a `<span>` (display block, `thickness` tall, full width, `overflow: hidden`) that establishes the color context. The track, buffer bar, and primary bar are absolutely positioned spans inside it, all painted with `currentColor` at different opacities - no extra color tokens needed. Value-driven bars translate with `transform: translateX(...)` so progress updates animate on the compositor.
 
 ---

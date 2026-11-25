@@ -1,3 +1,5 @@
+'use client'
+
 const ROW_SELECTOR = '[role="menuitem"], [role="menuitemradio"], [role="menuitemcheckbox"]'
 
 /**

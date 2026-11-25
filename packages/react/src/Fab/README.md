@@ -4,6 +4,8 @@ A floating action button: the one main action of a page, circular - its icon - o
 with a label. It is a `Button`, with its focus ring, press state and disabled behavior, raised on a
 theme shadow. Where it floats is the page's: no position is built in.
 
+Server component: it renders in a React Server Component, with no client code.
+
 ```tsx
 import { Fab } from '@soroush.design/react/Fab'
 

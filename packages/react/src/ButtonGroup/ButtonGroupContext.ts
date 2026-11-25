@@ -1,3 +1,5 @@
+'use client'
+
 import { createContext } from 'react'
 import type { ButtonVariant, ButtonColor, ButtonSize } from '../Button'
 

@@ -1,3 +1,5 @@
+'use client'
+
 import { useMemo, type ReactNode, type SyntheticEvent } from 'react'
 import { type Theme } from '../theme/themes'
 import { styled } from '../style/styled'

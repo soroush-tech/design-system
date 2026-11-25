@@ -6,6 +6,8 @@ closes after their delays, stays open while the pointer is on the tooltip itself
 read and selected), closes on Escape, and never takes or traps the focus. The text is yours: no
 built-in English.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 ```tsx
 import { Tooltip } from '@soroush.design/react/Tooltip'
 

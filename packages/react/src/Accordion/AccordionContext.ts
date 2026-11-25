@@ -1,3 +1,5 @@
+'use client'
+
 import { createContext, useContext, type SyntheticEvent } from 'react'
 
 /** What an `AccordionSummary` and the rest read from the `Accordion` they sit in. */

@@ -2,6 +2,8 @@
 
 Renders a circular loading indicator. Supports `indeterminate` (looping) and `determinate` (value-driven) variants. The stroke color is set via CSS `currentColor`; the `color` prop resolves to `theme.palette[color].main`.
 
+Server component: it renders in a React Server Component, with no client code.
+
 **Architecture:** the root element is a `<span>` (not `<svg>`). This avoids a TypeScript incompatibility between `SVGAttributes.height` and `LayoutProps.height`. The internal `<svg>` fills the span via `width/height="100%"` and uses a fixed `viewBox="0 0 44 44"` coordinate system - the `size` prop scales the outer span via CSS `width`/`height`.
 
 ---

@@ -1,3 +1,5 @@
+'use client'
+
 import { useMemo, useState, type ChangeEvent, type KeyboardEvent } from 'react'
 import { clamp, addExact, snapToStep } from '@soroush.design/core/utils'
 import { useControlled } from '@soroush.design/react-hooks/useControlled'

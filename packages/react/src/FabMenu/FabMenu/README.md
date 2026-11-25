@@ -5,6 +5,8 @@ The trigger is a disclosure button (`aria-expanded`, `aria-controls`) whose icon
 the menu is open. The actions zoom in over `theme.transitions`, the one next to the trigger first, and are
 out of the tree while it is closed. Where it floats is the page's: no position is built in.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 ```tsx
 import { FabMenu, FabMenuItem } from '@soroush.design/react/FabMenu'
 

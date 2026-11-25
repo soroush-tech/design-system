@@ -8,6 +8,8 @@ dropdown affordance icon, and integrates with `Form` / `FormControl` context the
 `TextInput` does. Being native, it is keyboard-operable, screen-reader friendly, and SSR-safe by
 default.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 ```tsx
 import { NativeSelect } from '@soroush.design/react/NativeSelect'
 

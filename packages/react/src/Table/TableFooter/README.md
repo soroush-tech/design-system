@@ -4,6 +4,8 @@ The footer section of a `Table`. Renders `<tfoot>` and provides `TableSectionCon
 which makes descendant `TableCell`s render as `<td>`. The natural home for totals rows and
 `TablePagination`.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 ```tsx
 <Table>
   <TableFooter>

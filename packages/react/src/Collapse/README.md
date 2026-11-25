@@ -6,6 +6,8 @@ grows keeps showing. Closed, it keeps `collapsedSize`, and is hidden when that i
 who asked for less motion (`prefers-reduced-motion: reduce`) sees it change at once, and the
 callbacks still fire.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 ```tsx
 import { Collapse } from '@soroush.design/react/Collapse'
 

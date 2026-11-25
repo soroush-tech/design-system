@@ -1,3 +1,5 @@
+'use client'
+
 /**
  * Width of the vertical scrollbar for the given window, in pixels. Equal to the
  * gap between the inner window width and the document's client width. Used to

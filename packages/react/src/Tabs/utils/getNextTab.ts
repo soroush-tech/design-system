@@ -1,3 +1,5 @@
+'use client'
+
 export type TabStep = 'next' | 'previous' | 'first' | 'last'
 
 /** A tab the keys can reach: not disabled. */

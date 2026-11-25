@@ -1,3 +1,5 @@
+'use client'
+
 import type { KeyboardEvent, MouseEvent, ReactNode } from 'react'
 import { MenuDivider } from '../MenuDivider'
 import type { MenuItemValue } from '../MenuListContext'

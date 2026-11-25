@@ -1,3 +1,5 @@
+'use client'
+
 import { useContext, type ElementType, type ThHTMLAttributes } from 'react'
 import { TableContext, type TableCellPadding } from '../TableContext'
 import { TableSectionContext, type TableSection } from '../TableSectionContext'

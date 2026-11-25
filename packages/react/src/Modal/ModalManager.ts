@@ -1,3 +1,5 @@
+'use client'
+
 import { ownerWindow } from './utils/ownerWindow'
 import { ownerDocument } from '../utils/ownerDocument'
 import { getScrollbarSize } from './utils/getScrollbarSize'

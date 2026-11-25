@@ -1,3 +1,5 @@
+'use client'
+
 import { useCallback, useEffect, useLayoutEffect, useState, type RefObject } from 'react'
 import { isRtl } from '../../utils/isRtl'
 

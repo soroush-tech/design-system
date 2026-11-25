@@ -1,3 +1,5 @@
+'use client'
+
 export type PopoverAnchorEl = HTMLElement | (() => HTMLElement | null) | null
 
 /** Resolves the `anchorEl` prop, which may be an element or a function returning one. */

@@ -1,3 +1,5 @@
+'use client'
+
 import { useId, useMemo, useState, type ElementType, type ReactNode } from 'react'
 import { styled } from '../../style/styled'
 import { Flex, type FlexProps } from '../../Flex'

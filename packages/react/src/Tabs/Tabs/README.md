@@ -5,6 +5,8 @@ its orientation moving between tabs, Enter or Space selecting. With `as="nav"` t
 is a navigation of buttons or links, the current one marked `aria-current="page"`. The row can
 carry content of its own before and after the tabs - an icon, a toolbar, a "+" button.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 ```tsx
 import { Tab, Tabs } from '@soroush.design/react/Tabs'
 

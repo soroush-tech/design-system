@@ -2,6 +2,8 @@
 
 Extends [`View`](../View/). Renders as a `<div>` with `display: grid`.
 
+Server component: it renders in a React Server Component, with no client code.
+
 All `View` props are inherited - including `gap`, `rowGap` and `columnGap`. Grid adds the full set of CSS Grid layout props via `styled-system`.
 
 ---

@@ -1,3 +1,5 @@
+'use client'
+
 import type { Ref } from 'react'
 
 /** Hands `value` to a ref of either kind - a callback, or an object - when there is one. */

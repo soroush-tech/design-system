@@ -4,6 +4,8 @@ A slider: one value on a range, or two or more thumbs for a range of values. Eac
 visually hidden native `<input type="range">`, so the keys (the arrows, Page, Home and End),
 assistive technology and forms work as the platform's; the pointer drags a thumb, touch included.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 Every name is yours - each thumb's (`getAriaLabel`, or a `FormLabel`), and the text of its value
 (`getAriaValueText`) - so the slider carries no language of its own.
 

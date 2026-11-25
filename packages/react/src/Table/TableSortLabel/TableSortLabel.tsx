@@ -1,3 +1,5 @@
+'use client'
+
 import { useContext, type ButtonHTMLAttributes } from 'react'
 import { TableContext } from '../TableContext'
 import { Icon, type IconName, type IconProps } from '../../Icon'

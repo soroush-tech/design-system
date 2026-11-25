@@ -3,6 +3,8 @@
 One action of a `FabMenu`: an extended `Fab` of the menu's size - a pill with an icon and a label. Pressing
 it runs `onClick` and closes the menu, and the focus goes back to the trigger.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 ```tsx
 <FabMenuItem icon={<Icon name="add" color="inherit" />} onClick={newDocument}>
   New document

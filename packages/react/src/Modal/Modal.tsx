@@ -1,3 +1,5 @@
+'use client'
+
 import { type ReactNode } from 'react'
 import { styled } from '../style/styled'
 import { type Theme } from '../theme/themes'

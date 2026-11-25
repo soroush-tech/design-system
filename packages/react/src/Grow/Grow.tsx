@@ -1,3 +1,5 @@
+'use client'
+
 import { useTransitionChild } from '../utils/useTransitionChild'
 import type { TransitionProps } from '../utils/useTransition'
 

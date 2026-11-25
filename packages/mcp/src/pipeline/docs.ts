@@ -78,7 +78,8 @@ const GUIDES: DocSource[] = [
   {
     id: 'providers',
     title: 'Providers (Next.js App Router)',
-    summary: 'ThemeProvider plus the style registry for the Next.js App Router.',
+    summary:
+      'The client Providers file of the Next.js App Router set-up, which registers the theme.',
     read: () =>
       asCode(
         loadPackageFile('react', 'docs/consumer/providers.tsx'),

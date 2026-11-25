@@ -2,6 +2,8 @@
 
 A dimmed, full-viewport scrim rendered behind a modal's content. Built on `View`, so it accepts every `View` prop (background, spacing, layout, event handlers, etc.).
 
+Server component: it renders in a React Server Component, with no client code.
+
 Fixed to the viewport (`position: fixed; inset: 0`) and sits behind the modal content (`z-index: -1` relative to the modal root), so clicks on the empty area land on the backdrop rather than the content. Defaults to the theme `backdrop` background.
 
 ---

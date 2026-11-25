@@ -7,6 +7,8 @@ submenu as more entries) or `{ type: 'divider' }`. It renders the same `MenuItem
 [`Menu`](../Menu/README.md) and [`ContextMenu`](../ContextMenu/README.md) take the same array as
 `items`.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 ```tsx
 import { MenuItems, MenuList, type MenuItemData } from '@soroush.design/react/Menu'
 

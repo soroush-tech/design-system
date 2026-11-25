@@ -1,3 +1,5 @@
+'use client'
+
 import { useRef } from 'react'
 import { isRtl } from '../utils/isRtl'
 import { useTransitionChild } from '../utils/useTransitionChild'

@@ -1,3 +1,5 @@
+'use client'
+
 import { isRowEnabled } from './getOwnRows'
 
 export type RowStep = 'next' | 'previous' | 'first' | 'last'

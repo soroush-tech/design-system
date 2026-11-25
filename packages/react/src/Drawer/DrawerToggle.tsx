@@ -1,3 +1,5 @@
+'use client'
+
 import { Button, type ButtonProps } from '../Button'
 
 export interface DrawerToggleProps extends Omit<ButtonProps, 'href'> {

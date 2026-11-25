@@ -1,3 +1,5 @@
+'use client'
+
 import { Fragment, useId, useRef, type CSSProperties, type ReactNode } from 'react'
 import type { LayoutProps, SpaceProps } from '@soroush.design/styled-system'
 import { styled } from '../style/styled'

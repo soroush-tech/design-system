@@ -5,6 +5,8 @@ and closes it through `popovertarget`, and the browser closes it on Escape or a 
 shows it in the top layer, above everything. None of that needs JavaScript, so a drawer works on
 a prerendered page with scripts off - the mobile navigation menu, for example.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 With JavaScript, it can also be controlled from state (`isOpen` / `onClose`), and while open it
 moves focus inside, keeps Tab cycling within it, locks body scroll, and returns focus when it
 closes. The surface is a [`Paper`](../Paper/README.md) pinned to the chosen edge, with a slide-in

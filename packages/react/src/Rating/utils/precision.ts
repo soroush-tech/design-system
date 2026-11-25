@@ -1,3 +1,5 @@
+'use client'
+
 import { clamp, roundToPrecision } from '@soroush.design/core/utils'
 
 export interface HoverValueParams {

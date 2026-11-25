@@ -1,3 +1,5 @@
+'use client'
+
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { styled, keyframes } from '../style/styled'
 import { createShouldForwardProp } from '@soroush.design/styled-system/should-forward-prop'

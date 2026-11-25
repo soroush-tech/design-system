@@ -1,3 +1,5 @@
+'use client'
+
 import { useMemo } from 'react'
 import { ToggleButtonGroupContext, type ToggleButtonValue } from '../ToggleButtonGroupContext'
 import { ButtonGroup, type ButtonGroupProps } from '../../ButtonGroup'

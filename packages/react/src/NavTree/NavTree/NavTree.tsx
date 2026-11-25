@@ -1,3 +1,5 @@
+'use client'
+
 import { useMemo } from 'react'
 import { styled } from '../../style/styled'
 import { type Theme } from '../../theme/themes'

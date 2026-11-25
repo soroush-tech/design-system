@@ -2,6 +2,8 @@
 
 Keeps keyboard focus within its children while active. On activation it moves focus inside, cycles `Tab` / `Shift+Tab` at the boundaries, pulls focus back when it escapes, and restores focus to the previously focused element on deactivation. Used by Modal to make overlays keyboard-accessible.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 Renders a focus-scope wrapper `<div tabIndex={-1}>` around its children; when there are no focusable descendants, the wrapper itself receives focus.
 
 ---

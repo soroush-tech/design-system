@@ -1,3 +1,5 @@
+'use client'
+
 import { ThemeScope } from '@umber-style/react'
 import { type ReactNode } from 'react'
 import { createPortal } from 'react-dom'

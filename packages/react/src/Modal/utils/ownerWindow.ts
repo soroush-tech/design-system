@@ -1,3 +1,5 @@
+'use client'
+
 import { ownerDocument } from '../../utils/ownerDocument'
 
 /**

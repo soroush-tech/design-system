@@ -6,6 +6,8 @@ A transient message in a corner of the window, through a `Portal`. It hides itse
 told why. It is a `role="status"`, announced politely, and never takes the focus. Several at once do
 not stack: the app queues them.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 ```tsx
 import { Snackbar } from '@soroush.design/react/Snackbar'
 

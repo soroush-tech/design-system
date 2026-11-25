@@ -4,6 +4,8 @@ The individual item rendered inside `Pagination`. Its `type` determines what it 
 number button, a first/previous/next/last nav control (with the matching registry icon), or a
 non-interactive ellipsis.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 ```tsx
 <PaginationItem page={3} isSelected />
 <PaginationItem type="next" onClick={goNext} />

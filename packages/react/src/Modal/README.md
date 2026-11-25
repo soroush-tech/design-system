@@ -2,6 +2,8 @@
 
 A low-level, accessible overlay primitive. Portals its content, dims the page with a `Backdrop`, traps focus, locks body scroll, and closes on Escape (top modal only) or backdrop click. Higher-level overlays - such as `Drawer` - are built on top of it.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 Stacking, scroll-lock (with scrollbar-width compensation), and background `aria-hidden` are coordinated by a shared modal manager, so multiple overlays behave correctly. The root layers at `theme.zOrder.modal` by default, configurable via the `layer` prop (e.g. `Drawer` renders on the lower `drawer` layer).
 
 ---

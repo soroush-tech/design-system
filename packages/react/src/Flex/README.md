@@ -2,6 +2,8 @@
 
 Extends [`View`](../View/). Renders as a `<div>` with `display: flex` and `flex-direction: column` by default.
 
+Server component: it renders in a React Server Component, with no client code.
+
 All `View` props are inherited - including `gap` (resolves from `theme.space`). Flex adds the full set of CSS Flexbox layout props.
 
 ---

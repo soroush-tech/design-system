@@ -1,3 +1,5 @@
+'use client'
+
 import { useMemo, useRef, type ReactNode, type RefObject } from 'react'
 import { MenuList } from '../Menu/MenuList'
 import { MenuPaper } from '../Menu/MenuPaper'

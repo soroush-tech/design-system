@@ -7,6 +7,8 @@ selection state (via `ToggleButtonGroupContext`) and restores the active-color b
 selected children. Renders `role="group"` (give it an accessible label). **Controlled** - the
 consumer owns `value`.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 ```tsx
 const [platform, setPlatform] = useState('web')
 

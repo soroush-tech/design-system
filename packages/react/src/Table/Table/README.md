@@ -4,6 +4,8 @@ The root of the table family. Renders a `<table>` with collapsed borders and ful
 broadcasts cell config (`size`, `cellPadding`, `hasStickyHeader`) to descendant `TableCell`s via
 `TableContext`.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 ```tsx
 import { Table, TableHead, TableBody, TableRow, TableCell } from '@soroush.design/react/Table'
 

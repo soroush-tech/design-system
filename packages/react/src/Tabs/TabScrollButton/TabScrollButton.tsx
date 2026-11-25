@@ -1,3 +1,5 @@
+'use client'
+
 import { useContext, type MouseEvent, type ReactNode } from 'react'
 import { styled } from '../../style/styled'
 import { type Theme } from '../../theme/themes'

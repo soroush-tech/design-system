@@ -1,3 +1,5 @@
+'use client'
+
 import { useContext, useEffect, type ReactNode } from 'react'
 import { styled } from '../style/styled'
 import { Typography, type TypographyProps } from '../Typography'

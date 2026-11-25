@@ -2,6 +2,8 @@
 
 Displays a low-fidelity placeholder while content loads, reducing layout shift and signalling a loading state. Supports three shapes, two animations (or none), explicit or child-inferred dimensions, and derives all colors from theme tokens.
 
+Server component: it renders in a React Server Component, with no client code.
+
 ---
 
 ## Animation sync

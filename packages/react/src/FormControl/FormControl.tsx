@@ -1,3 +1,5 @@
+'use client'
+
 import { useId, useMemo, useState, type ReactNode } from 'react'
 import { type Theme } from '../theme/themes'
 import { styled } from '../style/styled'

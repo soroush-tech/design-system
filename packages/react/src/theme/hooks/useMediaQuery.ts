@@ -1,3 +1,5 @@
+'use client'
+
 import { useMediaQuery as engineUseMediaQuery } from '@umber-style/react'
 import { configureEngine } from '../../style/engine'
 

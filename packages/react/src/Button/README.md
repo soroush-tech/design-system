@@ -2,6 +2,8 @@
 
 Renders as `<button>`. Sharp corners, uppercase, bold, tight letter-spacing - matching the Kinetic Architecture aesthetic. Supports three visual variants, six semantic color palettes, three sizes, start/end icon slots, full-width mode, and a loading state with configurable indicator position.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 Button is the reference implementation for theme-level customization: `theme.components.Button` supports `defaultProps`, per-slot `styleOverrides` (`root` / `label` / `icon`), and theme-contributed `variants` - see [`docs/customization.md`](../../docs/customization.md).
 
 ---

@@ -1,3 +1,5 @@
+'use client'
+
 import { styled } from '../../style/styled'
 import { View, type ViewProps } from '../../View'
 

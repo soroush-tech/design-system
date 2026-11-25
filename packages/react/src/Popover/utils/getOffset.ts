@@ -1,3 +1,5 @@
+'use client'
+
 export type PopoverVerticalOrigin = 'top' | 'center' | 'bottom' | number
 export type PopoverHorizontalOrigin = 'left' | 'center' | 'right' | number
 

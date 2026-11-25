@@ -6,6 +6,8 @@ by its label. Its rows are [`MenuItem`](../../MenuItem/README.md)s, which inside
 as menu rows (`menuitem`, `menuitemradio`, `menuitemcheckbox`) rather than `Select` options, and
 [`MenuDivider`](../MenuDivider/README.md)s between groups.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 A `MenuList` renders in place - a menu embedded in a panel or a sidebar. It moves focus between
 its rows, but doesn't move focus into itself unless `shouldAutoFocus` is set.
 

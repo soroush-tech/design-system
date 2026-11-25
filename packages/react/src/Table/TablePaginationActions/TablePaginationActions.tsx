@@ -1,3 +1,5 @@
+'use client'
+
 import { type HTMLAttributes } from 'react'
 import { PaginationItem, type PaginationItemSize } from '../../Pagination'
 import { styled } from '../../style/styled'

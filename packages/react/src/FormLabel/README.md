@@ -2,6 +2,8 @@
 
 A field label built on [`Typography`](../Typography/README.md), rendered as a `<label>`. Reads the control `id` and `required` flag from [`FormControl`](../FormControl/README.md) context so association and the required indicator wire automatically.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 **Architecture:** `FormLabel` renders `Typography as="label"`. `htmlFor` resolves to the explicit prop, else the FormControl `id`. The `required` indicator (` *`) is appended as text (so it is part of the accessible name) when `required` is set, falling back to the FormControl `required` value. Every Typography prop passes through, so callers restyle freely while keeping the wiring.
 
 ---

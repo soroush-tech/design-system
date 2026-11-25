@@ -5,6 +5,8 @@ hidden native radio inputs, so the keys (Tab to the rating, the arrows to change
 technology and forms work as the platform's. Hovering previews the value under the pointer, and
 pressing the chosen item clears it.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 Every label is yours - an item's name (`getLabelText`) and the "no rating" radio (`emptyLabelText`) -
 so the rating carries no language of its own.
 

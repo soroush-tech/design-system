@@ -5,6 +5,8 @@ ancestor is one click away. A `nav` landmark named by `aria-label`, its crumbs a
 a separator between two; past `maxItems` the trail collapses to its first and last crumbs and a
 button that shows them all.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 The crumbs are yours - a `Link` for each ancestor, and the current page as `Typography` or a `Link`
 marked `aria-current="page"`. The trail lays them out, separates and collapses them; it styles
 none of them, so a router's link drops in as a crumb.

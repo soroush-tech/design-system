@@ -1,3 +1,5 @@
+'use client'
+
 import { createContext, useContext } from 'react'
 
 /** Set by a `TabList`: the id base its `TabContext` shares with the `TabPanel`s. */

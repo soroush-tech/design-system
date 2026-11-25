@@ -4,6 +4,8 @@ An inline message with a severity: an icon, the message, an optional `AlertTitle
 close control. `role="alert"` is announced at once; `"status"`, politely. Every text is yours - the
 message, and the close control's name (`closeLabel`) - no built-in English.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 ```tsx
 import { Alert, AlertTitle } from '@soroush.design/react/Alert'
 

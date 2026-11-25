@@ -1,5 +1,6 @@
 import { baseTheme, createTheme, defineThemes } from '@soroush.design/core/theme'
 import type { ThemeComponents } from '@soroush.design/react'
+import { registerBaseTheme } from '@soroush.design/react/ThemeProvider'
 import { alpha, generateBoxShadow } from '@soroush.design/core/utils'
 
 // Brand color ramps. Every app that copies them shares one color set, so change which
@@ -304,6 +305,11 @@ const darkTheme = createTheme(baseTheme, {
 export const themes = defineThemes({ light: lightTheme, dark: darkTheme }, components)
 
 export const { light, dark } = themes
+
+// What a server component reads, with no provider above it: its `components` and `defaults`.
+// The module is imported by the root layout and by `providers.tsx`, so the server and the browser
+// each register it.
+registerBaseTheme(light)
 
 // Tells every library the themes' colors, sizes and looks.
 declare module '@soroush.design/core/theme' {

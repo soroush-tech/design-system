@@ -2,6 +2,8 @@
 
 Displays a user image, initials, or icon in a consistently sized container. Supports three shapes, four preset sizes, an optional ring outline, and automatic image-error fallback. All styles derive from theme tokens.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 ---
 
 ## Image source priority

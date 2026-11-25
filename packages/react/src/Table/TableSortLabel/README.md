@@ -4,6 +4,8 @@ A button-based label for sortable column headers, placed inside a header `TableC
 column label with a directional sort arrow appended; sort state is owned by the consumer - the
 component renders the control and forwards `onClick`.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 Pair it with `TableCell`'s `sortDirection` prop so screen readers get `aria-sort` on the cell.
 
 ```tsx

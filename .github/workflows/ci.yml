@@ -443,6 +443,78 @@ jobs:
           flags: docs
           name: docs
 
+  # The Next.js App Router fixture (apps/next-fixture): a server component page renders the static
+  # components with the app's theme, and a Playwright run against its production build checks the
+  # computed styles with and without JavaScript, then the hydration and the interactive components.
+  # Its types are checked against the built declarations, as an app sees them.
+  next-fixture:
+    needs: [prepare, lint]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    timeout-minutes: 20
+    env:
+      PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/ms-playwright
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Setup pnpm, Node and dependencies
+        uses: ./.github/actions/setup
+        with:
+          node_version: ${{ needs.prepare.outputs.node_version }}
+          manager: ${{ needs.prepare.outputs.manager }}
+          command: ${{ needs.prepare.outputs.command }}
+
+      # Same pinned browser location and key as the docs job.
+      - name: Restore cache - Playwright binaries
+        uses: actions/cache/restore@v6
+        id: playwright-cache
+        with:
+          path: ${{ github.workspace }}/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ needs.prepare.outputs.playwright_version }}
+
+      - name: Install Playwright browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: pnpm --filter @soroush.design/next-fixture exec playwright install --with-deps chromium
+
+      # Same attempts as the packages matrix.
+      - name: Install Playwright system deps
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: |
+          echo 'DPkg::Lock::Timeout "120";' | sudo tee /etc/apt/apt.conf.d/90-lock-timeout > /dev/null
+          for attempt in 1 2 3; do
+            timeout 180 pnpm --filter @soroush.design/next-fixture exec playwright install-deps chromium && exit 0
+            echo "::warning::Playwright system deps, attempt $attempt of 3 failed"
+            sudo pkill -x apt-get || true
+            sudo dpkg --configure -a || true
+          done
+          exit 1
+
+      - name: Save cache - Playwright binaries
+        if: always() && steps.playwright-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: ${{ github.workspace }}/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ needs.prepare.outputs.playwright_version }}
+
+      # The fixture runs the packages' source, and checks its types against their built declarations.
+      - name: Build the packages the fixture uses
+        run: >-
+          ${{ needs.prepare.outputs.runner }}
+          --filter @soroush.design/core --filter @soroush.design/react-hooks
+          --filter @soroush.design/react build
+
+      - name: Check types
+        run: ${{ needs.prepare.outputs.runner }} --filter @soroush.design/next-fixture test:types
+
+      - name: Run E2E
+        run: ${{ needs.prepare.outputs.runner }} --filter @soroush.design/next-fixture test:e2e
+        env:
+          CI: true
+
   # Performance gate: styled-system's bench suite runs in the pinned Docker sandbox
   # against the last npm release (via soroush-tech/bench-action); any case below the
   # minimum speed ratio fails the job - and, via ci-ok, the PR.
@@ -501,7 +573,7 @@ jobs:
   ci-ok:
     name: ci-ok
     if: always()
-    needs: [prepare, lint, packages, docs, bench, react-range, create-smoke]
+    needs: [prepare, lint, packages, docs, next-fixture, bench, react-range, create-smoke]
     runs-on: ubuntu-latest
     permissions: {}
     timeout-minutes: 5

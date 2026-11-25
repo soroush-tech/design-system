@@ -1,3 +1,5 @@
+'use client'
+
 import { useCallback, useEffect, useLayoutEffect, type RefObject } from 'react'
 import {
   computePopoverPosition,

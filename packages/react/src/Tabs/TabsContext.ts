@@ -1,3 +1,5 @@
+'use client'
+
 import { createContext, useContext } from 'react'
 import type { AppTheme as Theme } from '../theme/themes'
 import type { TabsVariant } from './Tabs/Tabs.types'

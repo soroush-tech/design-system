@@ -2,6 +2,8 @@
 
 What an `Accordion` opens: the padded body of its region. It must sit in an `Accordion`, and takes the side padding of its `hasGutters`.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 ```tsx
 <AccordionDetails>It leaves on Monday.</AccordionDetails>
 ```

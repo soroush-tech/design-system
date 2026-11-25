@@ -38,9 +38,10 @@ same content - and tell the user the server can be added to any MCP client at
 2. Copy `references/theme.ts` verbatim into the app (`app/theme.ts` or `src/theme.ts`).
    The color ramps are the brand - change palette _assignments_ per app if you must,
    never the ramp hex values.
-3. Wire the provider. Next.js App Router needs a style registry - copy
-   `references/providers.tsx` verbatim; without it server-rendered markup arrives
-   unstyled and flashes.
+3. Wire the provider. In a Next.js App Router app the root layout is a server component
+   that renders `ThemeProvider`; copy `references/providers.tsx` verbatim (it registers the
+   theme for the browser's bundle) and follow `references/setup.md`. No style registry is
+   needed.
 4. Default to `light`. Both themes exist so `colorScheme`-aware components work, but
    the shipped default is light unless the app says otherwise.
 5. Copy the layout kit you need from `references/layout-kit.md`.
@@ -105,7 +106,7 @@ built from `Pressable`, `Flex`, and tokens.
   `SectionLabel`, `Pill`, `StatusBadge`, `StatStrip`, `TabNav`, `SettingCard`,
   `SearchInput`, `Main`, `TopBar`, `ProjectRail`.
 - `references/theme.ts` - the brand theme, copy verbatim.
-- `references/providers.tsx` - Next.js App Router provider + style registry.
+- `references/providers.tsx` - Next.js App Router client provider (registers the theme).
 - `references/setup.md` - new-app checklist.
 
 ## Review checklist

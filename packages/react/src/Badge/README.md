@@ -5,6 +5,8 @@ technology, and `badgeLabel` is what is heard instead - read with its child and,
 as that element's description. A count past `max` shows as `max+`, and a count of zero - or nothing -
 shows no badge, unless `shouldShowZero`.
 
+Server component: it renders in a React Server Component, with no client code.
+
 ```tsx
 import { Badge } from '@soroush.design/react/Badge'
 

@@ -1,3 +1,5 @@
+'use client'
+
 import { Children, isValidElement, type ReactNode } from 'react'
 import { type MenuItemProps } from '../../MenuItem'
 

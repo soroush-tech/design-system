@@ -1,3 +1,5 @@
+'use client'
+
 import { useCallback, useLayoutEffect, useRef, useState, type RefObject } from 'react'
 import type { TabValue } from '../TabsContext'
 import { fitTabs } from '../utils/fitTabs'

@@ -1,3 +1,5 @@
+'use client'
+
 import { useEffect, useRef, type ChangeEvent, type ReactNode } from 'react'
 import { useFormControl } from '../FormControl'
 import type { SpaceProps } from '@soroush.design/styled-system'

@@ -1,3 +1,5 @@
+'use client'
+
 import { type ChangeEvent, type SelectHTMLAttributes } from 'react'
 import { useFormControl } from '../FormControl'
 import { Icon, type IconName, type IconProps } from '../Icon'

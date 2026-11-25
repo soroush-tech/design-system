@@ -5,6 +5,8 @@ label appears next to its icon - rendered **away from the anchored edge** (a rig
 shows labels to the left of the icons). The rail renders as a `<nav>` landmark and requires an
 `aria-label` so multiple navigation regions stay distinguishable.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 The open state is **purely controlled**: pass `isOpen` and flip it from wherever your layout
 keeps the menu toggle - usually a hamburger button in the app bar, not inside the rail. Children
 compose freely: `SidebarItem`s, a sponsor logo, a footer, dividers - anything. Items read the

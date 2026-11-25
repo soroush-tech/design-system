@@ -1,3 +1,5 @@
+'use client'
+
 import type { PopoverOrigin } from '../../Popover/utils/computePopoverPosition'
 import type { PlacementContext } from '../../utils/useAnchoredPlacement'
 

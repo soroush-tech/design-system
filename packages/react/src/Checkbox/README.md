@@ -2,6 +2,8 @@
 
 A binary toggle control. Supports controlled and uncontrolled usage, six semantic color palettes, two sizes, indeterminate state, and custom icons.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 **Architecture:** the root element is a `<label>` wrapping a visually-hidden `<input type="checkbox">`, an icon span, and optional label text. Clicking anywhere on the root (icon or text) toggles the checkbox. The native input handles all browser behaviour, form submission, and accessibility.
 
 ---

@@ -1,3 +1,5 @@
+'use client'
+
 import { useMemo, type ReactNode } from 'react'
 import { type TableSortEntry, type TableSortMap } from '../hooks/useTableSort'
 import { type TablePaginationState } from '../hooks/useTablePagination'

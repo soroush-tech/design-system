@@ -130,6 +130,25 @@ for every component. The public paths and the exact names of each are the contra
 - **A package that adds components** - `react-markdown` - extends `ThemeComponents` with one
   `declare module '@soroush.design/react'` block, and the core's `Theme` with its own keys, in a types
   file every entry of the package imports, so an app that imports any entry has them typed.
+- **Server and client components.** The package is used from server components, so each entry is
+  one or the other, and the build keeps it where an app's bundler reads it. A component is
+  **server-capable** when it renders with props, `styled`, `useTheme` and `useDefaultProps` alone: no
+  state, effect, ref logic, event handler of its own, browser API, or React context of ours (a family
+  context - Table, ButtonGroup, Tabs, Menu - makes its members client). Every other entry is
+  **client**. A client entry's modules start with `'use client'` (the first line of the file,
+  never in an `index.ts`, which has `export *`): every module of its folder, and the shared
+  hooks only clients use. The engine's server build (the `react-server` condition, resolved by the
+  app) lacks `CacheProvider`, `ThemeContext`, `ThemeScope`, `useThemeClass` and `useMediaQuery`, so
+  those are imported only by client modules (`theme/engine.client.ts`), and `@umber-style/*` stays
+  external in the build. The bundler drops a directive that is not on an entry, so `tsdown.config.ts`
+  puts it back on each chunk made of such a module and on the entry file of a client folder.
+  `src/clientBoundary.test.ts` reads `dist` (ESM and CJS): each client entry starts with the
+  directive, each server-capable entry (the list is in the test) does not, no file that uses a
+  client-only API lacks it, and a server-capable entry reaches no client chunk but the entry of a
+  client component. A new component is classified by that list, and its README says
+  "Server component" or "Client component" on its second paragraph. `apps/next-fixture` renders
+  both kinds in a Next.js App Router page and is end-to-end tested with and without JavaScript.
+  `registerBaseTheme(theme)` (from `ThemeProvider`) gives server components the app's theme.
 - **No command line.** The package has no `bin` and does not depend on `@soroush.design/cli`: an app
   runs `npx @soroush.design/cli init`, and never installs the command line.
 

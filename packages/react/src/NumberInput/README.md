@@ -5,6 +5,8 @@ reads and writes the number in its locale, clamps it to a range, and steps by th
 Home/End, the mouse wheel and buttons that repeat while held. It is a `role="spinbutton"`, so the
 number and its range are announced, and a hidden input carries the raw number to a form.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 Every label is yours - the buttons' (`incrementLabel`, `decrementLabel`) - so the field carries no
 language of its own.
 

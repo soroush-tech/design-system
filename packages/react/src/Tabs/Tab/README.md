@@ -3,6 +3,8 @@
 One tab of a `Tabs` row: a label, an icon on any side of it, and - with a `closeLabel` - a close
 button of its own.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 ```tsx
 <Tabs aria-label="Views" defaultValue="canvas">
   <Tab value="canvas" label="Canvas" />

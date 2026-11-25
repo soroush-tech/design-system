@@ -2,6 +2,8 @@
 
 The base layout primitive. Renders as `<div>`. All styled-system prop groups are supported: space, layout, color, typography, flexbox, border, and position.
 
+Server component: it renders in a React Server Component, with no client code.
+
 `Flex`, `Grid`, and `Paper` all extend `View`.
 
 ---

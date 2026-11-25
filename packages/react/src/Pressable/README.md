@@ -4,6 +4,8 @@ An unstyled clickable surface: button semantics - keyboard activation, focus rin
 state - with none of a button's looks. It carries no padding, margin, border, background, or
 font of its own, so it can wrap arbitrary content without shifting a single pixel of it.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 Reach for this instead of putting `onClick` on a `div` or a styled `Flex`. Those are invisible
 to keyboard and screen-reader users; this is not. Reach for [`Button`](../Button/README.md)
 instead when you want something that _looks_ like a button.

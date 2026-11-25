@@ -1,3 +1,5 @@
+'use client'
+
 /** The union of value shapes `Select` holds: a single value, or an array in multiple mode. */
 export type SelectValue = string | number | Array<string | number>
 

@@ -1,3 +1,5 @@
+'use client'
+
 import { useCallback, useState, type RefObject } from 'react'
 import type { PopoverPosition } from '../../Popover/utils/computePopoverPosition'
 import {

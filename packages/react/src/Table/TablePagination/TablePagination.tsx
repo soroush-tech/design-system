@@ -1,3 +1,5 @@
+'use client'
+
 import { type ElementType, type ReactNode } from 'react'
 import { NativeSelect, type NativeSelectOption } from '../../NativeSelect'
 import { Typography } from '../../Typography'

@@ -24,6 +24,8 @@ import { ThemeProvider } from '@soroush.design/react'
 
 When `defaults` is provided, the provider merges it into the theme via `createTheme(theme, { defaults })` (memoized). Otherwise the theme passes through untouched.
 
+Server component: it renders in a React Server Component, with no client code.
+
 ## Mode switching
 
 Owned by the consumer - hold the state and pass the active theme:
@@ -34,6 +36,21 @@ const [isDark, setIsDark] = useState(true)
 ```
 
 The web app's reference implementation is `apps/web/src/theme/ThemeModeProvider.tsx` (context + `useThemeMode()` + the brand theme pair).
+
+## registerBaseTheme - the theme of server components
+
+A server component has no provider above it to read. `registerBaseTheme(theme)` (from
+`@soroush.design/react/ThemeProvider`) gives the engine the app's base theme once, at module level, and
+`useTheme()`, `useDefaultProps` and every component's styles read it there: `components` and `defaults`
+as real values, the tokens as CSS variables, so the page's theme (light or dark) decides their
+colors. Call it in the module that defines the app's themes, which the root layout and a client
+`Providers` component both import (the server and the browser each register it). A client component
+with no provider above it reads it too. See [`docs/consumer/setup.md`](../../docs/consumer/setup.md).
+
+```tsx
+export const themes = defineThemes({ light, dark }, components)
+registerBaseTheme(themes.light)
+```
 
 ## LayoutProvider - a page's own layout
 

@@ -3,6 +3,8 @@
 The `Tabs` of a `TabContext`: it shows the context's value and chooses through it, and links each
 tab to its `TabPanel` - the tab `aria-controls` its panel, and the panel is named by its tab.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 ```tsx
 import { Tab, TabContext, TabList, TabPanel } from '@soroush.design/react/Tabs'
 

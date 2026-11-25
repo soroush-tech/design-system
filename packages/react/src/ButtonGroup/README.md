@@ -6,6 +6,8 @@ their leading/trailing corners; every inner corner is squared). Broadcasts `vari
 `size` / `disabled` / `fullWidth` to children via `ButtonGroupContext`; explicit props on a child
 always win.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 ```tsx
 <ButtonGroup variant="contained" aria-label="Basic button group">
   <Button>One</Button>

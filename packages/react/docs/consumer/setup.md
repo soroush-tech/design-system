@@ -1,6 +1,9 @@
 # New-app checklist
 
-Reference wiring: a Next.js App Router app on React 19.
+Reference wiring: a Next.js App Router app on React 19, with server components. The pages and the
+root layout are server components; the design system's static components render on the server with
+the app's theme, and its interactive components are client components that a server component can
+import and render.
 
 ## 1. Install
 
@@ -14,8 +17,7 @@ Reference wiring: a Next.js App Router app on React 19.
 ```
 
 The styling engine (UmberStyle, the `@umber-style/*` packages) comes in as a dependency
-of the design system - don't add it directly. The registry in `providers.tsx` takes
-`createCache` from `@soroush.design/react/engine`. React 19.2 or later is required.
+of the design system - don't add it directly. React 19.2 or later is required.
 
 ## 2. Theme
 
@@ -26,61 +28,116 @@ It exports `light` and `dark`. The color ramps at the top (`carbonBlack`,
 app that copies them shares one color set. Change which ramp fills a palette slot if
 the app needs to, never the ramp values.
 
-## 3. Provider
+Its last line, `registerBaseTheme(light)`, is what makes server components themed. A server
+component has no provider above it to read, so `useTheme()` and every component's styles read the
+theme registered once, at module level: its `components` (the looks of the components) and its
+`defaults` are real values there, and its tokens are CSS variables, so which theme the page is in
+(light or dark) decides their colors. Register the theme the app starts in. Without it a component
+that reads the theme fails on the server (`Cannot read properties of undefined (reading 'body1')`).
 
-Copy `providers.tsx` to `app/providers.tsx`. Two things it does:
+The module is evaluated on both sides, which is the point: the server (the root layout imports
+it) and the browser (`providers.tsx` imports it) each hold their own copy of the registration.
 
-- **Style registry** - collects the styles written during the server render and
-  re-injects them via `useServerInsertedHTML`, so server markup arrives styled.
-  Without it you get an unstyled flash on every hard navigation.
-- **Global reset** - `border-box` everywhere, zero body margin,
-  `background.primary` / `text.initial` / `fonts.body` on `<body>`.
+## 3. Layout and provider
 
-The cache key is the prefix of the class names and the CSS variables under the registry. The
-file uses `soroush`, the design system's own; an app that already has a key of its own may keep
-it. The registry writes one `<style data-umber="<key> ...">` element per flush into the stream.
+Copy `providers.tsx` to `app/providers.tsx`. It is a client component that does nothing but
+import the theme, so the browser's bundle (and the server render of client components) registers
+the base theme before any client component below it renders. `components` can hold functions, and a
+function cannot cross from a server component to a client one.
 
-This set-up is tested on Next.js 16.4 with React 19.2, in development and in a production
-build, with a page that streams through `Suspense`. Keep styled parts in client components:
-the registry collects what client components render.
-
-Under a strict Content Security Policy (a `style-src` with a nonce and no `unsafe-inline`), the
-nonce must reach four places. It is the same in all four for one response and new for each
-request.
-
-1. **The response and the request headers**, set in the app's `proxy.ts` (Next.js 16 renamed the
-   `middleware` file to `proxy`). Put the nonce in the response's `Content-Security-Policy`
-   header, and set the request headers `Content-Security-Policy` and `x-nonce`, so the framework
-   puts the nonce on its own scripts and gives it to React.
-2. **The root layout** reads `x-nonce` with `headers()` and passes it to `Providers` as `nonce`.
-3. **`Providers`** calls `createCache({ key: 'soroush', nonce })` and puts `nonce={cache.nonce}`
-   on the `<style data-umber>` element it returns. That element is the app's own.
-4. **The engine's own style element.** The library handles it: it reads the nonce from the
-   page's scripts. The app does nothing for it.
-
-This is tested in Chromium on Next.js 16.4. On the development server, the framework's own
-development tools write style elements with no nonce, so a strict style policy shows refusals
-in development that are not the library's.
-
-Then in `app/layout.tsx`:
+Then in `app/layout.tsx`, a server component. It reads the page's theme from a cookie, so the
+first HTML already has it, and gives it to `ThemeProvider`, which declares the theme's variables
+on the page:
 
 ```tsx
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+import { Global } from '@soroush.design/react/Global'
+import { ThemeProvider } from '@soroush.design/react/ThemeProvider'
+import { cookies } from 'next/headers'
+import Providers from './providers'
+import { themes } from '@/theme'
+
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const scheme = (await cookies()).get('scheme')?.value === 'dark' ? 'dark' : 'light'
   return (
     <html lang="en">
       <body>
-        <Providers>
-          <TopBar />
-          {children}
-        </Providers>
+        <ThemeProvider theme={themes[scheme]}>
+          <Global
+            styles={(theme) => ({
+              '*, *::before, *::after': { boxSizing: 'border-box' },
+              body: {
+                margin: 0,
+                backgroundColor: theme.background.primary,
+                color: theme.text.initial,
+                fontFamily: theme.fonts.body,
+              },
+            })}
+          />
+          <Providers>
+            <TopBar />
+            {children}
+          </Providers>
+        </ThemeProvider>
       </body>
     </html>
   )
 }
 ```
 
-`<Providers>` wraps everything including the chrome. Route groups then supply their
-own inner layout (rail + `Main`).
+`<ThemeProvider>` wraps everything including the chrome, and `Global` is the reset: `border-box`
+everywhere, zero body margin, `background.primary` / `text.initial` / `fonts.body` on `<body>`.
+Route groups then supply their own inner layout (rail + `Main`).
+
+**Light and dark, with no client code.** A server action writes the cookie, and Next renders the
+page again with the other theme. The switch is a form around a button:
+
+```ts
+// app/actions.ts
+'use server'
+
+import { cookies } from 'next/headers'
+
+export async function switchScheme() {
+  const jar = await cookies()
+  jar.set('scheme', jar.get('scheme')?.value === 'dark' ? 'light' : 'dark')
+}
+```
+
+```tsx
+<form action={switchScheme}>
+  <Button type="submit">Switch theme</Button>
+</form>
+```
+
+**Server and client components.** Import every component from its subpath, in a server component
+too. Each component's README says which it is. The static ones - `Typography`, `View`, `Flex`,
+`Grid`, `Paper`, `Card`, `Skeleton`, `Icon`, `Link`, `Badge`, `AppBar`, `Quote`, the progress
+indicators - are server components: they render on the server with the registered theme and send no
+JavaScript of their own. The ones with state, effects, events or a family context - `Button`,
+`Tabs`, `Menu`, `Table`, the form controls - are client components: their entry starts with
+`'use client'`, so a server component renders them as it renders any client component, with props
+that can cross (text, numbers, elements - not functions). A handler goes in a client component of
+your own, as `Counter` does in `apps/next-fixture`.
+
+**No style registry.** Under the App Router the engine sends the styles of client components with
+the HTML too (each styled element renders its own `<style href precedence>`, which React moves to
+the head), so a page is styled before any JavaScript runs. The `useServerInsertedHTML` registry of
+the earlier set-up is not needed, and `CacheProvider` is not used.
+
+This set-up is tested by `apps/next-fixture` on Next.js 16.4 with React 19.3, in a production
+build, with JavaScript off (computed styles of the static and the client components, and the theme
+from the cookie) and on (no console error, no hydration warning, a click, the switch).
+
+**Limits.**
+
+- A strict Content Security Policy whose `style-src` has a nonce and no `'unsafe-inline'` is not
+  supported with server components yet: the style elements of the server build take their nonce
+  from the engine's configuration, which is set once for the process, not for each request, so the
+  browser blocks them. (The registry set-up this replaces could carry a request's nonce.)
+- A `components` look written as a function is not plain data: a server `ThemeProvider` leaves it
+  out of what it sends to client components, warns once in development with the path, and the
+  client components take the function from the theme module of the browser's bundle - which is why
+  `providers.tsx` imports it.
 
 ## 4. Fonts
 

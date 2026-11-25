@@ -1,3 +1,5 @@
+'use client'
+
 import { useContext, type MouseEvent } from 'react'
 import { ToggleButtonGroupContext, type ToggleButtonValue } from '../ToggleButtonGroupContext'
 import { Button, type ButtonProps } from '../../Button'

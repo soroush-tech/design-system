@@ -1,3 +1,5 @@
+'use client'
+
 import { useMemo } from 'react'
 import { Tabs, type TabsProps } from '../Tabs'
 import { TabListContext } from '../TabListContext'

@@ -48,6 +48,7 @@ describe('the root entry', () => {
         'ThemeProvider',
         'css',
         'keyframes',
+        'registerBaseTheme',
         'styled',
         'useDefaultProps',
         'useMediaQuery',

@@ -6,6 +6,8 @@ page stays usable around it. The list is placed `position: fixed` in the window,
 trigger, so a panel that scrolls or clips its content can't cut it off - but it stays inside the
 menu's own box in the DOM, so focus moving inside it is still focus inside the menu.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 ```tsx
 import { Menu, MenuDivider } from '@soroush.design/react/Menu'
 import { MenuItem } from '@soroush.design/react/MenuItem'

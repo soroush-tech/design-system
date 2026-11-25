@@ -1,3 +1,5 @@
+'use client'
+
 import { forwardRef, type ForwardedRef, type MouseEvent, type ReactNode } from 'react'
 import { Fab, type FabProps } from '../../Fab'
 import { useFabMenu } from '../FabMenuContext'

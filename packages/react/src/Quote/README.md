@@ -3,6 +3,8 @@
 A `View` with a fixed 2px primary left border - used for terminal readouts and markdown
 blockquotes.
 
+Server component: it renders in a React Server Component, with no client code.
+
 ## Props
 
 Accepts all `ViewProps` - spacing (`p`, `m`, ...), layout, `bg` (→ `theme.background`),

@@ -1,3 +1,5 @@
+'use client'
+
 import { type ButtonHTMLAttributes, type ElementType, type ReactNode } from 'react'
 import { Icon, type IconName } from '../../Icon'
 import { type PaginationItemType } from '../hooks/usePagination'

@@ -44,3 +44,7 @@ __screenshots__/
 # Local artifacts
 *.tgz
 .playwright-mcp/
+
+# Next.js
+.next
+next-env.d.ts

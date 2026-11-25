@@ -1,5 +1,7 @@
+'use client'
+
 import type { ComponentType } from 'react'
-import { EngineThemeContext } from '../engine'
+import { EngineThemeContext } from '../engine.client'
 import type { AppTheme } from '../themes'
 
 /** Hands a component the active theme as its `theme` prop, typed as the registered theme. */

@@ -6,6 +6,8 @@ Scrolling itself stays native: the wheel, the keyboard and touch work as they do
 overflows gets a track, down the right edge or along the bottom, whose thumb drags and whose track pages
 one view toward the pointer, as a native one does.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 ```tsx
 import { ScrollArea } from '@soroush.design/react/ScrollArea'
 

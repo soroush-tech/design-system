@@ -4,6 +4,8 @@ A cell in a table. Renders `<th scope="col">` inside a `TableHead` and `<td>` el
 by `TableSectionContext` - and inherits `size` / `cellPadding` from the enclosing `Table` via
 `TableContext`. Explicit props override both contexts.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 ```tsx
 <TableHead>
   <TableRow>

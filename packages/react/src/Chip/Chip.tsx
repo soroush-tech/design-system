@@ -1,3 +1,5 @@
+'use client'
+
 import type { KeyboardEvent, MouseEvent, ReactNode, SyntheticEvent } from 'react'
 import type { SpaceProps } from '@soroush.design/styled-system'
 import { styled } from '../style/styled'

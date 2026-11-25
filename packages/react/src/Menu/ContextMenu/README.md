@@ -5,6 +5,8 @@ from the keyboard, by the context-menu key or Shift+F10 at the focused element. 
 closes as [`Menu`](../Menu/README.md) does, and gives focus back to where it was. The browser's own
 context menu is held back only when this one opens.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 ```tsx
 import { ContextMenu } from '@soroush.design/react/Menu'
 import { MenuItem } from '@soroush.design/react/MenuItem'

@@ -4,6 +4,8 @@ The first / previous / next / last icon-button cluster used inside `TablePaginat
 separately for custom toolbars. Composes `PaginationItem`'s nav types; boundary state is derived
 from `count` / `page` / `rowsPerPage`.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 ```tsx
 <TablePaginationActions
   count={rows.length}

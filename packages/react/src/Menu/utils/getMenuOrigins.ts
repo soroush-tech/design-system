@@ -1,3 +1,5 @@
+'use client'
+
 import type { PopoverOrigin } from '../../Popover/utils/computePopoverPosition'
 
 /** Which edge of its trigger a menu lines up with: the start edge, or the end edge. */

@@ -4,6 +4,8 @@ The button that scrolls a row of tabs. A `Tabs` with `overflowBehavior="scroll"`
 end while its tabs overflow; it is out of the tab order and hidden from assistive technology,
 since the arrow keys already reach every tab.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 ```tsx
 import { Tab, Tabs, TabScrollButton, type TabScrollButtonProps } from '@soroush.design/react/Tabs'
 

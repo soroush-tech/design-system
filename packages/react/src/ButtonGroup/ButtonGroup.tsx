@@ -1,3 +1,5 @@
+'use client'
+
 import { useMemo, type ElementType, type HTMLAttributes } from 'react'
 import type { ButtonVariant, ButtonColor, ButtonSize } from '../Button'
 import { alpha } from '../utils'

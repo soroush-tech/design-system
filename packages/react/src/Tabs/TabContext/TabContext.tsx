@@ -1,3 +1,5 @@
+'use client'
+
 import { useCallback, useId, useMemo, useState, type ReactNode } from 'react'
 import type { TabValue } from '../TabsContext'
 import { TabsValueContext } from '../TabsValueContext'

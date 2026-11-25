@@ -2,6 +2,8 @@
 
 An elevated surface primitive that extends `View`. Adds visual surface styling - shadow via `theme.shadows`, a default `bg="paper"` background, and a default `borderRadius="md"`. Consumers compose `Flex` or `Grid` inside `Paper` for layout.
 
+Server component: it renders in a React Server Component, with no client code.
+
 ---
 
 ## Paper-specific props

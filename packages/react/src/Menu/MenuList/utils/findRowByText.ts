@@ -1,3 +1,5 @@
+'use client'
+
 import { isRowEnabled } from './getOwnRows'
 
 /** A row's label text, without its icon, shortcut or note. */

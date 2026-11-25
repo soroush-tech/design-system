@@ -4,6 +4,8 @@ Page-number navigation for paging a list of arbitrary items (e.g. a blog index),
 ranges and optional first/last/prev/next controls. Renders a `role="navigation"` landmark whose
 items are `PaginationItem`s computed by the headless `usePagination` hook.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 Pages are **1-based** - unlike `TablePagination` (0-based, table footer, rows-per-page selector).
 Prefer `Pagination` where SEO/URLs matter.
 

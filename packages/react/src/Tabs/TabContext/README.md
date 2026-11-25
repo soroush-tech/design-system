@@ -3,6 +3,8 @@
 Holds the selected value for a `TabList` and the `TabPanel`s beside it, wherever they sit - the
 tabs in a toolbar, the panels further down the page. It renders nothing of its own.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 ```tsx
 <TabContext defaultValue="layers">
   <TabList aria-label="Left panel">

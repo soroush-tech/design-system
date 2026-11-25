@@ -8,6 +8,8 @@ not part of the API. Reflects its active state via `aria-pressed`; when grouped,
 from `ToggleButtonGroupContext` and color / size / disabled / fullWidth from `ButtonGroupContext`
 (explicit props always win).
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 ```tsx
 <ToggleButton
   value="check"

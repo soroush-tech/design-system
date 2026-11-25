@@ -1,3 +1,5 @@
+'use client'
+
 import { type AppTheme as Theme } from '../../theme/themes'
 import { get } from '@soroush.design/styled-system'
 import type { TabsVariant } from '../Tabs/Tabs.types'

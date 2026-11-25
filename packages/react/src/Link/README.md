@@ -2,6 +2,8 @@
 
 Renders as `<a>`. Composes `Typography` - all typographic scale, color, spacing, and layout props are inherited. Adds `underline`, and defaults `color` to `"primary"` and `variant` to `"inherit"`.
 
+Server component: it renders in a React Server Component, with no client code.
+
 Setting `target="_blank"` automatically injects `rel="noopener noreferrer"` unless `rel` is explicitly provided.
 
 ---

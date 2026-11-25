@@ -3,6 +3,8 @@
 The header section of a `Table`. Renders `<thead>` and provides `TableSectionContext` = `'head'`,
 which makes descendant `TableCell`s render as `<th scope="col">`.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 ```tsx
 <Table>
   <TableHead>

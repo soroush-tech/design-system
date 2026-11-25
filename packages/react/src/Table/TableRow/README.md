@@ -2,6 +2,8 @@
 
 A row in a table. Renders `<tr>` with optional hover and selected shading.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 ```tsx
 <TableRow isHoverable isSelected={row.id === selectedId}>
   <TableCell>web</TableCell>

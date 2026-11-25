@@ -4,6 +4,8 @@ Renders a `<form>` and provides form-wide field defaults through `FormContext`. 
 priority** in the override chain - a [`FormControl`](../FormControl/README.md) or an explicit prop on
 a control always wins.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 **Architecture:** `Form` is purely presentational + context. It holds no form state, runs no
 validation, and is not tied to any form library - bridging to a specific one (e.g. TanStack Form's
 `Field`) is left to the consuming app. Pass `onSubmit` straight through; wire it to your form

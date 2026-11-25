@@ -5,6 +5,8 @@ button in a heading - and the rest is the region it opens: a `role="region"` nam
 which in turn carries `aria-expanded` and `aria-controls`. The region opens and closes with
 `Collapse`, or the transition given. Open or closed it owns, until `isExpanded` takes it over.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 ```tsx
 import {
   Accordion,

@@ -9,6 +9,7 @@
         "ThemeProvider",
         "css",
         "keyframes",
+        "registerBaseTheme",
         "styled",
         "useDefaultProps",
         "useMediaQuery",
@@ -758,7 +759,7 @@
       ]
     },
     "./ThemeProvider": {
-      "values": ["ThemeProvider"],
+      "values": ["ThemeProvider", "registerBaseTheme"],
       "types": []
     },
     "./ToggleButton": {

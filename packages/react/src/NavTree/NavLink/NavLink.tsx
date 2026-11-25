@@ -1,3 +1,5 @@
+'use client'
+
 import { useContext, type AnchorHTMLAttributes, type ReactNode } from 'react'
 import { styled } from '../../style/styled'
 import { type Theme } from '../../theme/themes'

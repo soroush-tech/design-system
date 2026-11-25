@@ -1,5 +1,7 @@
+'use client'
+
 import type { ReactNode } from 'react'
-import { EngineThemeContext } from '../theme/engine'
+import { EngineThemeContext } from '../theme/engine.client'
 import type { CSSObject, Theme } from '../theme/themes'
 import type { StyleFactory } from './hooks/useStyle'
 

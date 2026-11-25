@@ -4,6 +4,8 @@ A `TableCell`-based pagination control for placing inside `TableFooter > TableRo
 rows-per-page `NativeSelect`, a displayed-rows range label, and the nav button cluster
 (`TablePaginationActions`). **Controlled only**: the consumer owns `page` and `rowsPerPage`.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 Pages are **zero-based** (array-friendly), unlike the standalone `Pagination` (1-based, URL-friendly).
 
 ```tsx

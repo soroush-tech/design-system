@@ -1,3 +1,5 @@
+'use client'
+
 import type { ComponentType } from 'react'
 import type { CSSObject } from '../../theme/themes'
 import type { StyleFactory, StyleInput } from '../hooks/useStyle'

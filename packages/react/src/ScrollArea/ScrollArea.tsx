@@ -1,3 +1,5 @@
+'use client'
+
 import { useRef, type ReactNode, type Ref, type RefObject } from 'react'
 import type { LayoutProps, SpaceProps } from '@soroush.design/styled-system'
 import { styled } from '../style/styled'

@@ -2,6 +2,8 @@
 
 The title of an `Alert`: its first line of the message, in a heavier weight.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 ```tsx
 <Alert severity="success">
   <AlertTitle>Saved</AlertTitle>

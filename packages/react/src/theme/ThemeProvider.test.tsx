@@ -75,6 +75,13 @@ describe('ThemeProvider, the theme the engine gets', () => {
     expect(themeOf({})).toBe(themeOf({}))
   })
 
+  it('gives a theme built by hand its breakpoint helpers', () => {
+    // The helpers are not enumerable, so a copy of the breakpoints has none.
+    const byHand = { ...baseTheme, breakpoints: { ...baseTheme.breakpoints } } as Theme
+    expect('up' in byHand.breakpoints).toBe(false)
+    expect(themeOf({ theme: byHand }).breakpoints.up('sm')).toMatch(/^@media/)
+  })
+
   it('is another object for another theme, and the given theme is never changed', () => {
     expect(themeOf({ theme: light })).not.toBe(themeOf({ theme: baseTheme }))
     expect(light.defaults).toBeUndefined()

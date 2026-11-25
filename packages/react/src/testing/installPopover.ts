@@ -1,3 +1,5 @@
+'use client'
+
 // jsdom implements none of the HTML Popover API: no showPopover / hidePopover / togglePopover,
 // no `toggle` event, no light dismiss, no popovertarget buttons and none of the browser's popover
 // styles. This stands in for them in unit tests: the open state is a data attribute, a closed

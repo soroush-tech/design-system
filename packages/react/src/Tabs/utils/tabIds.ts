@@ -1,3 +1,5 @@
+'use client'
+
 import type { TabValue } from '../TabsContext'
 
 /** A tab's DOM id - what its panel's `aria-labelledby` names. */

@@ -5,6 +5,8 @@ It is shown only while its tab is selected, and sits in a
 [`TabContext`](../TabContext/README.md) beside its `TabList` - which is what links
 the two, wherever they are in the tree.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 ```tsx
 import { Tab, TabContext, TabList, TabPanel } from '@soroush.design/react/Tabs'
 

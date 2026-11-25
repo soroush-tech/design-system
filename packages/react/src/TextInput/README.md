@@ -2,6 +2,8 @@
 
 A theme-aware text input primitive. Supports controlled and uncontrolled usage, multiline (textarea), error and disabled states, and all standard form attributes.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 **Architecture:** `TextInputRoot` is a styled `<div>` that owns the visible border and focus ring. The native `<input>` (or `<textarea>`) sits inside it with a transparent background, so the root border appears as the field border. This makes it easy to add prefix/suffix adornments later.
 
 ---

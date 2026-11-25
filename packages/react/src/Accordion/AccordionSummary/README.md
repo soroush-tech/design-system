@@ -2,6 +2,8 @@
 
 The header of an `Accordion`: a button in a heading that opens and closes it. It carries `aria-expanded` and `aria-controls` for the region, and an icon that turns as it opens. It must sit in an `Accordion`.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 ```tsx
 <AccordionSummary headingLevel={2}>Shipping</AccordionSummary>
 ```

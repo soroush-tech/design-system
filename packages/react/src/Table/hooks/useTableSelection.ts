@@ -1,3 +1,5 @@
+'use client'
+
 import { useMemo, useState } from 'react'
 
 /** Header select-all state - spreads directly onto `Checkbox`. */

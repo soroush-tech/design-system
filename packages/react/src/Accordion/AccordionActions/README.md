@@ -2,6 +2,8 @@
 
 The foot of an `Accordion` region: its buttons, at the end of a row. It must sit in an `Accordion`, and takes the side padding of its `hasGutters`.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 ```tsx
 <AccordionActions>
   <Button variant="text">Track</Button>

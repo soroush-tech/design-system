@@ -2,6 +2,8 @@
 
 A single-selection control for use within a group. Supports controlled checked state, six semantic color palettes, two sizes, and custom icons.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 **Architecture:** the root element is a `<label>` wrapping a visually-hidden `<input type="radio">`, an icon span, and optional label text. Clicking anywhere on the root (icon or text) selects the radio. The native input handles all browser behaviour, form submission, and accessibility. Group exclusivity is enforced by the browser via a shared `name` prop.
 
 ---

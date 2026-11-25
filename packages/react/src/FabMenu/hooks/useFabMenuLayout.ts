@@ -1,3 +1,5 @@
+'use client'
+
 import { useLayoutEffect, useState, type RefObject } from 'react'
 import { useTheme } from '../../theme/hooks/useTheme'
 import { isRtl } from '../../utils/isRtl'

@@ -1,3 +1,5 @@
+'use client'
+
 import { useState, type ComponentType, type ImgHTMLAttributes, type CSSProperties } from 'react'
 import type {
   LayoutProps,

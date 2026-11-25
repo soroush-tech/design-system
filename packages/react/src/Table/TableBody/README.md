@@ -3,6 +3,8 @@
 The body section of a `Table`. Renders `<tbody>` and provides `TableSectionContext` = `'body'`,
 which makes descendant `TableCell`s render as `<td>`.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 ```tsx
 <Table>
   <TableBody>

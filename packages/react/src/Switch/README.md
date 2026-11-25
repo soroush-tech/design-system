@@ -2,6 +2,8 @@
 
 A sliding toggle control. Supports controlled and uncontrolled usage, six semantic color palettes, two sizes, four visual variants, and custom thumb icons.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 **Architecture:** the root element is a `<label>` wrapping a visually-hidden `<input type="checkbox" role="switch">`, a pill-shaped track, and optional label text. Clicking anywhere on the root toggles the switch. All state transitions are driven by CSS - no JavaScript animation.
 
 ---

@@ -2,6 +2,8 @@
 
 Renders as `<p>` by default. The `variant` prop controls both the visual scale and the HTML element. All styled-system prop groups are supported, plus five Typography-specific props.
 
+Server component: it renders in a React Server Component, with no client code.
+
 ---
 
 ## Typography-specific props

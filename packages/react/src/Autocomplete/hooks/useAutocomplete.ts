@@ -1,3 +1,5 @@
+'use client'
+
 import { useState, type ChangeEvent, type KeyboardEvent, type SyntheticEvent } from 'react'
 import { useControlled } from '@soroush.design/react-hooks/useControlled'
 

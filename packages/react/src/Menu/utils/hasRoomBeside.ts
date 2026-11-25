@@ -1,3 +1,5 @@
+'use client'
+
 import type { AnchorRect } from '../../Popover/utils/computePopoverPosition'
 
 /**

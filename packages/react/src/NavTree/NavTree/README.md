@@ -6,6 +6,8 @@ nothing that needs JavaScript - so it is in the server-rendered page and works w
 group that folds is a native `details`. The current page is a pill of the tree's color; a hovered
 link is a wash of it.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 It is what goes in the panel of a navigation rail - a [`Sidebar`](../../Sidebar/Sidebar/README.md)
 with `layout="stacked"` and a `panel` - or in a drawer, or in a column of its own.
 

@@ -2,6 +2,8 @@
 
 A styled-system `<img>` primitive. Accepts all layout, space, background, and position props from the theme, plus `objectFit` / `objectPosition` for common image sizing patterns and `borderRadius` for rounded corners.
 
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
 Built-in source priority and error recovery: when a source fails to load the component advances to the next URL automatically. `onError` fires only when **all** sources are exhausted.
 
 ---
