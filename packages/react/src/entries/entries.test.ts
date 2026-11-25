@@ -16,6 +16,10 @@ const names = readdirSync(join(import.meta.dirname))
   .filter((file) => file.endsWith('.ts') && !file.endsWith('.test.ts'))
   .map((file) => file.replace(/\.ts$/, ''))
 
+// Each case imports a fresh copy of the entry and its whole module graph, which takes seconds on a
+// busy machine (the commit hook runs every package at once).
+const IMPORT_TIMEOUT_MS = 30_000
+
 describe('each entry of the styling system', () => {
   beforeEach(() => {
     vi.resetModules()
@@ -26,12 +30,16 @@ describe('each entry of the styling system', () => {
     expect(names).toHaveLength(13)
   })
 
-  it.each(names)('%s configures the engine on its own, with the soroush prefix', async (name) => {
-    const entry = await import(`./${name}.ts`)
-    expect(Object.keys(entry).length).toBeGreaterThan(0)
-    expect(configure).toHaveBeenCalledTimes(1)
-    expect(configure).toHaveBeenCalledWith(
-      expect.objectContaining({ prefix: 'soroush', hasValueRepair: true })
-    )
-  })
+  it.each(names)(
+    '%s configures the engine on its own, with the soroush prefix',
+    async (name) => {
+      const entry = await import(`./${name}.ts`)
+      expect(Object.keys(entry).length).toBeGreaterThan(0)
+      expect(configure).toHaveBeenCalledTimes(1)
+      expect(configure).toHaveBeenCalledWith(
+        expect.objectContaining({ prefix: 'soroush', hasValueRepair: true })
+      )
+    },
+    IMPORT_TIMEOUT_MS
+  )
 })

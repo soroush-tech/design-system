@@ -35,7 +35,7 @@ describe('importing only styled', () => {
       'function',
       'function',
     ])
-  })
+  }, 30_000)
 
   // Last: rendering uses the engine's default style, which can no longer be configured after.
   it('renders with the soroush class prefix on the server', async () => {

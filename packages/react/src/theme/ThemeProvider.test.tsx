@@ -9,6 +9,20 @@ import { ThemeProvider } from './ThemeProvider'
 // A second theme with a distinct name - proves the theme prop replaces the default.
 const light = createTheme(baseTheme, { name: 'light' })
 
+// What the engine's provider is given, which the engine merges over its base theme: the provider's
+// own contract is the object it passes, not what `useTheme` reads back.
+const given = vi.hoisted(() => [] as unknown[])
+vi.mock('./engine', async (importOriginal) => {
+  const engine = await importOriginal<typeof import('./engine')>()
+  return {
+    ...engine,
+    EngineThemeProvider: (props: { theme: unknown; children: ReactNode }) => {
+      given.push(props.theme)
+      return <engine.EngineThemeProvider {...(props as object)} />
+    },
+  }
+})
+
 const wrapper = ({ children }: { children: ReactNode }) => <ThemeProvider>{children}</ThemeProvider>
 
 describe('ThemeProvider', () => {
@@ -63,12 +77,14 @@ describe('ThemeProvider', () => {
 })
 
 describe('ThemeProvider, the theme the engine gets', () => {
-  const themeOf = (props: { theme?: Theme; defaults?: { size: 'lg' | 'sm' } }) =>
+  const themeOf = (props: { theme?: Theme; defaults?: { size: 'lg' | 'sm' } }) => {
     renderHook(() => useTheme(), {
       wrapper: ({ children }: { children: ReactNode }) => (
         <ThemeProvider {...props}>{children}</ThemeProvider>
       ),
-    }).result.current
+    })
+    return given.at(-1) as Theme
+  }
 
   it('is the same object for the same theme, render after render', () => {
     expect(themeOf({ theme: light })).toBe(themeOf({ theme: light }))

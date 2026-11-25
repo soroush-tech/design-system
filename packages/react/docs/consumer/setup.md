@@ -32,8 +32,9 @@ Its last line, `registerBaseTheme(light)`, is what makes server components theme
 component has no provider above it to read, so `useTheme()` and every component's styles read the
 theme registered once, at module level: its `components` (the looks of the components) and its
 `defaults` are real values there, and its tokens are CSS variables, so which theme the page is in
-(light or dark) decides their colors. Register the theme the app starts in. Without it a component
-that reads the theme fails on the server (`Cannot read properties of undefined (reading 'body1')`).
+(light or dark) decides their colors. Register the theme the app starts in. An app that registers
+nothing renders server components with the library's built-in theme, so nothing fails, but the
+app's own tokens and component styles reach server components only through the registration.
 
 The module is evaluated on both sides, which is the point: the server (the root layout imports
 it) and the browser (`providers.tsx` imports it) each hold their own copy of the registration.

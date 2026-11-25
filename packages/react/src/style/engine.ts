@@ -1,4 +1,5 @@
 import { configure } from '@umber-style/react'
+import { baseTheme } from '@soroush.design/core/theme'
 
 let isConfigured = false
 
@@ -13,6 +14,9 @@ let isConfigured = false
  *
  * `rawKeys` are the theme keys a style function reads as real values, not as CSS variables: the
  * ones that hold names, steps of another scale, or numbers used in JavaScript.
+ *
+ * `theme` is the library's own, so a server component renders with the built-in theme in an app
+ * that registers none; `registerBaseTheme` replaces it.
  */
 export function configureEngine(): void {
   if (isConfigured) return
@@ -23,6 +27,7 @@ export function configureEngine(): void {
       : document.querySelector<HTMLScriptElement>('script[nonce]')?.nonce || undefined
   configure({
     prefix: 'soroush',
+    theme: baseTheme as never,
     hasValueRepair: true,
     nonce,
     rawKeys: [

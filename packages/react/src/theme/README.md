@@ -47,6 +47,10 @@ colors. Call it in the module that defines the app's themes, which the root layo
 `Providers` component both import (the server and the browser each register it). A client component
 with no provider above it reads it too. See [`docs/consumer/setup.md`](../../docs/consumer/setup.md).
 
+The engine's base theme is the library's built-in `baseTheme` until an app registers its own, so an
+app that never calls `registerBaseTheme` still renders server components, with the built-in theme.
+Registration is still how the app's own tokens and component styles reach them.
+
 ```tsx
 export const themes = defineThemes({ light, dark }, components)
 registerBaseTheme(themes.light)

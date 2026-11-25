@@ -28,7 +28,7 @@ describe('LayoutProvider', () => {
     const { result } = renderHook(() => useTheme(), { wrapper: scoped(light, page) })
     expect(result.current.layout.lg?.content?.maxWidth).toBe('1376px')
     for (const key of ['palette', 'text', 'space', 'typography', 'breakpoints'] as const) {
-      expect(result.current[key]).toBe(light[key])
+      expect(result.current[key]).toEqual(light[key])
     }
     expect(result.current.breakpoints.up('md')).toBe(light.breakpoints.up('md'))
     // The outer theme is not mutated.

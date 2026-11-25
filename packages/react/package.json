@@ -939,16 +939,16 @@
     "@soroush.design/core": "workspace:^",
     "@soroush.design/react-hooks": "workspace:^",
     "@soroush.design/styled-system": "workspace:^",
-    "@umber-style/cache": "^0.4.0",
-    "@umber-style/react": "^0.4.0",
-    "@umber-style/styled": "^0.4.0"
+    "@umber-style/cache": "^0.5.0",
+    "@umber-style/react": "^0.5.0",
+    "@umber-style/styled": "^0.5.0"
   },
   "peerDependencies": {
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },
   "devDependencies": {
-    "@umber-style/css": "^0.4.0",
+    "@umber-style/css": "^0.5.0",
     "@soroush.tech/eslint-config": "workspace:*",
     "@storybook/addon-a11y": "^10.6.7",
     "@storybook/addon-docs": "^10.6.7",

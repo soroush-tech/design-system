@@ -57,8 +57,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/styled-system
       '@umber-style/css':
-        specifier: ^0.4.0
-        version: 0.4.0
+        specifier: ^0.5.0
+        version: 0.5.0
       react:
         specifier: ^19.3.1
         version: 19.3.1
@@ -112,8 +112,8 @@ importers:
         specifier: ^19.3.0
         version: 19.3.0(@types/react@19.3.0)
       '@umber-style/server':
-        specifier: ^0.4.0
-        version: 0.4.0
+        specifier: ^0.5.0
+        version: 0.5.0
       '@vitejs/plugin-react':
         specifier: ^6.3.0
         version: 6.3.0(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))
@@ -221,8 +221,8 @@ importers:
         specifier: ^19.3.0
         version: 19.3.0(@types/react@19.3.0)
       '@umber-style/server':
-        specifier: 0.4.0
-        version: 0.4.0
+        specifier: 0.5.0
+        version: 0.5.0
       '@vitejs/plugin-react':
         specifier: ^6.3.0
         version: 6.3.0(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))
@@ -487,14 +487,14 @@ importers:
         specifier: workspace:^
         version: link:../styled-system
       '@umber-style/cache':
-        specifier: ^0.4.0
-        version: 0.4.0
+        specifier: ^0.5.0
+        version: 0.5.0
       '@umber-style/react':
-        specifier: ^0.4.0
-        version: 0.4.0(react@19.3.1)
+        specifier: ^0.5.0
+        version: 0.5.0(react@19.3.1)
       '@umber-style/styled':
-        specifier: ^0.4.0
-        version: 0.4.0(react@19.3.1)
+        specifier: ^0.5.0
+        version: 0.5.0(react@19.3.1)
     devDependencies:
       '@soroush.tech/eslint-config':
         specifier: workspace:*
@@ -527,8 +527,8 @@ importers:
         specifier: ^19.3.0
         version: 19.3.0(@types/react@19.3.0)
       '@umber-style/css':
-        specifier: ^0.4.0
-        version: 0.4.0
+        specifier: ^0.5.0
+        version: 0.5.0
       '@vitest/browser-playwright':
         specifier: ^5.1.0
         version: 5.1.0(msw@3.0.5(@types/node@26.6.6)(typescript@7.0.2)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1)))(playwright@1.65.0)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))(vitest@5.1.0)
@@ -766,8 +766,8 @@ importers:
         specifier: workspace:^
         version: link:../core
       '@umber-style/is-prop-valid':
-        specifier: ^0.4.0
-        version: 0.4.0
+        specifier: ^0.5.0
+        version: 0.5.0
       csstype:
         specifier: ^3.2.3
         version: 3.2.3
@@ -3404,30 +3404,30 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@umber-style/cache@0.4.0':
-    resolution: {integrity: sha512-MG6jbRJVtKmFhaOYEvqnHLCilLbN6NIGwByWLoqTFMj1p9dGHphDMIye1j2gjAwj/CotIGXalhOFaODPYllgqQ==}
+  '@umber-style/cache@0.5.0':
+    resolution: {integrity: sha512-8c9TXwvh/IOrzOZIGvSAWcL7kxrM6ScdU55Uflw4BE2ffGBElLbuaSaeNsFjbTKNWtc9OG7p9uzkOx8AsuLznQ==}
 
-  '@umber-style/core@0.4.0':
-    resolution: {integrity: sha512-kPVeQA7Y4HlVKthejTcWyKG9pB+HO9LRBhcOEh/4ShKxHPmqMcv/cb0sOrxxMpAvInx0WS1wDsoHCjyjjSAaag==}
+  '@umber-style/core@0.5.0':
+    resolution: {integrity: sha512-eq7VYKKtWv91e1jRYda1+9l0qvyHgdSeBT19ZBtOZqhvKgt7UOf56lPDGiOQm/Ebt6ePiJLksP13felyrI7J4w==}
 
-  '@umber-style/css@0.4.0':
-    resolution: {integrity: sha512-aL4zoXKsqpT4eKpg8Pn+QVuItKMt6HACOkVL87vL6QZ0PLPxkPCOFVeSgO1nxrm8ch1tg4dr5HcJaWIYTcXl/Q==}
+  '@umber-style/css@0.5.0':
+    resolution: {integrity: sha512-pQH0e/NXk3r4xhHj6Cc3C9jdki4Y+H1mRcZJ8+hpn0itgUZeRt92ouYFLwq0I1WV0UUO2zsd2z4AnoMjQba2mA==}
 
-  '@umber-style/is-prop-valid@0.4.0':
-    resolution: {integrity: sha512-zB9bSCIDakvdXn1vbjOBW/Dn/GUpKPKhIT/fZz1a/qMBZbb0Uw4GZSUIYyYHc/JZ19r5qX2TSWWORq3tX6KaZA==}
+  '@umber-style/is-prop-valid@0.5.0':
+    resolution: {integrity: sha512-DHQERxGOjwgpeJ0EYkTvtoevsKvSYsZOGPrJ2lsaiobHZ8K8yRBVt1h6z7rpcj3pJQ35cf6hjW0eYN7yCAuVHA==}
 
-  '@umber-style/react@0.4.0':
-    resolution: {integrity: sha512-zbOl6Y08argtnvvaHQXShAfvaIokDxUn31Yjwgy5Oynipf6QRNUHtEOQE3NsgBmUCIvjZZeO7s6SEeXCoYM+SA==}
+  '@umber-style/react@0.5.0':
+    resolution: {integrity: sha512-oU4ljkcvuzDQRy6dO4y1g8p21lq2j37EZgbHeK3cx0555MnTS7OQfswpCnjbeHXzawN6Vlu7qPANVxWgI+LmDA==}
     peerDependencies:
-      react: ^19.2.8
+      react: ^19.0.0
 
-  '@umber-style/server@0.4.0':
-    resolution: {integrity: sha512-YYQXucw71N9IaKPTXVIVYoGn38bh3sHh3PewXCFDJrAIvzrGtGRpQrnSdcCw3BIMPVlD8tnRowZ+k0E5ANa2NQ==}
+  '@umber-style/server@0.5.0':
+    resolution: {integrity: sha512-Ssg6EoP/gUewIIjen6k25yYd59hAF4o1bOx7ryRPnLEzANiAQqVJ7fB8OQp3mhfomju2dGWGPL31tna8zWLutw==}
 
-  '@umber-style/styled@0.4.0':
-    resolution: {integrity: sha512-48Khl3QTpz+g00omF/72+kT/IWKo5Ui8AWyzP1ky5NkEZv1Z/ggi5S8tSzHwvbqV8fTmXdf6OA5v2KJO8t1AJQ==}
+  '@umber-style/styled@0.5.0':
+    resolution: {integrity: sha512-XCgc3GYyb1ZS2Ob52B9XaxLG4y4NOrDVaz6/c15lGDqiBQURob+a5aQK+S1ES1T/n3Z95FCTJHrCssnN/2Cgkw==}
     peerDependencies:
-      react: ^19.2.8
+      react: ^19.0.0
 
   '@ungap/structured-clone@1.4.0':
     resolution: {integrity: sha512-1mEZtMKPM09vDmQt5y7YvmN2+DFTP7Tg0EWXdic8/C6VRnpb33e4ghisCIE3WZjsE2N8mf+QV1Zqh7ZFYLWInQ==}
@@ -9083,33 +9083,33 @@ snapshots:
   '@typescript/typescript-win32-x64@7.0.2':
     optional: true
 
-  '@umber-style/cache@0.4.0':
+  '@umber-style/cache@0.5.0':
     dependencies:
-      '@umber-style/core': 0.4.0
+      '@umber-style/core': 0.5.0
 
-  '@umber-style/core@0.4.0':
+  '@umber-style/core@0.5.0':
     dependencies:
       csstype: 3.2.3
 
-  '@umber-style/css@0.4.0':
+  '@umber-style/css@0.5.0':
     dependencies:
-      '@umber-style/core': 0.4.0
+      '@umber-style/core': 0.5.0
 
-  '@umber-style/is-prop-valid@0.4.0': {}
+  '@umber-style/is-prop-valid@0.5.0': {}
 
-  '@umber-style/react@0.4.0(react@19.3.1)':
+  '@umber-style/react@0.5.0(react@19.3.1)':
     dependencies:
-      '@umber-style/core': 0.4.0
-      '@umber-style/is-prop-valid': 0.4.0
+      '@umber-style/core': 0.5.0
+      '@umber-style/is-prop-valid': 0.5.0
       react: 19.3.1
 
-  '@umber-style/server@0.4.0':
+  '@umber-style/server@0.5.0':
     dependencies:
-      '@umber-style/core': 0.4.0
+      '@umber-style/core': 0.5.0
 
-  '@umber-style/styled@0.4.0(react@19.3.1)':
+  '@umber-style/styled@0.5.0(react@19.3.1)':
     dependencies:
-      '@umber-style/react': 0.4.0(react@19.3.1)
+      '@umber-style/react': 0.5.0(react@19.3.1)
       react: 19.3.1
 
   '@ungap/structured-clone@1.4.0': {}
