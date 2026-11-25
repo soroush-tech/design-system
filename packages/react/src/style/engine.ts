@@ -1,5 +1,6 @@
 import { configure } from '@umber-style/react'
 import { baseTheme } from '@soroush.design/core/theme'
+import styleCache from '../engine/styleCache'
 
 let isConfigured = false
 
@@ -8,9 +9,12 @@ let isConfigured = false
  * importing module calls, not a module that configures on import: the package is marked free of
  * side effects, so a bundler drops an import that is there only for its effect.
  *
- * `nonce` is the page's own, read from its scripts so the engine's style element passes a style
- * policy that allows style elements by nonce. It is the `nonce` property, never the attribute,
- * which the browser hides once the page has loaded. An empty string means no nonce.
+ * `cache` is the library's own, so the engine and the `CacheProvider` an app renders over
+ * `styleCache` write to one cache, which holds the style options (value repair) and the page's nonce.
+ *
+ * `modes` makes a token a real value, not a CSS variable, where its value is a CSS-wide keyword:
+ * `text.inherit` is `inherit`, and as a variable it would take the value of the same variable on
+ * the parent, which is nothing.
  *
  * `rawKeys` are the theme keys a style function reads as real values, not as CSS variables: the
  * ones that hold names, steps of another scale, or numbers used in JavaScript.
@@ -21,15 +25,10 @@ let isConfigured = false
 export function configureEngine(): void {
   if (isConfigured) return
   isConfigured = true
-  const nonce =
-    typeof document === 'undefined'
-      ? undefined
-      : document.querySelector<HTMLScriptElement>('script[nonce]')?.nonce || undefined
   configure({
-    prefix: 'soroush',
+    cache: styleCache,
     theme: baseTheme as never,
-    hasValueRepair: true,
-    nonce,
+    modes: { 'text.inherit': 'raw' },
     rawKeys: [
       'breakpoints',
       'components',

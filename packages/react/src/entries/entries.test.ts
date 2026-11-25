@@ -37,7 +37,7 @@ describe('each entry of the styling system', () => {
       expect(Object.keys(entry).length).toBeGreaterThan(0)
       expect(configure).toHaveBeenCalledTimes(1)
       expect(configure).toHaveBeenCalledWith(
-        expect.objectContaining({ prefix: 'soroush', hasValueRepair: true })
+        expect.objectContaining({ cache: expect.objectContaining({ key: 'soroush' }) })
       )
     },
     IMPORT_TIMEOUT_MS

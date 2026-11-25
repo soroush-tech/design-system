@@ -100,7 +100,7 @@ design tool's palette, a source writer) - lives at its own subpath and loads in 
 import { catalog } from '@soroush.design/react/catalog'
 ```
 
-Server rendering with critical CSS (a Vike or other static or server renderer) is a separate, opt-in concern - that's what `CacheProvider` and its paired `styleCache` instance are for. Give `CacheProvider` the `styleCache`, render, then read the CSS of the page from the same cache with `createInstance` from `@umber-style/server/create-instance` (`pnpm add @umber-style/server`): `extractCriticalToChunks(html)` and `constructStyleTagsFromChunks(chunks)` give the `<style data-umber>` tags to put in the head. Next.js App Router apps collect the styles with a registry instead - see `docs/consumer/setup.md`.
+Server rendering with critical CSS (a Vike or other static or server renderer) is a separate, opt-in concern - that's what `CacheProvider` and its paired `styleCache` instance are for. Give `CacheProvider` the `styleCache` (the cache the library's own engine writes to, so there is one cache on the page), render, then read the CSS of the page from the same cache with `createInstance` from `@umber-style/server/create-instance` (`pnpm add @umber-style/server`): `extractCriticalToChunks(html)` and `constructStyleTagsFromChunks(chunks)` give the `<style data-umber>` tags to put in the head. Next.js App Router apps collect the styles with a registry instead - see `docs/consumer/setup.md`.
 
 The cache key and class prefix is `soroush`. Server-rendered style elements carry `data-umber="soroush ..."`, and the live element in the browser is `<style data-style="soroush">`.
 

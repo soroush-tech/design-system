@@ -18,14 +18,13 @@ describe('importing only styled', () => {
     configure.mockClear()
   })
 
-  it('configures the engine with the prefix, value repair and raw keys, once', async () => {
+  it('configures the engine with the library cache and raw keys, once', async () => {
     const { styled, css, keyframes } = await import('./styled')
     await import('./styled')
     expect(configure).toHaveBeenCalledTimes(1)
     expect(configure).toHaveBeenCalledWith(
       expect.objectContaining({
-        prefix: 'soroush',
-        hasValueRepair: true,
+        cache: expect.objectContaining({ key: 'soroush' }),
         rawKeys: expect.arrayContaining(['components', 'defaults', 'breakpoints']),
       })
     )
@@ -38,9 +37,16 @@ describe('importing only styled', () => {
   }, 30_000)
 
   // Last: rendering uses the engine's default style, which can no longer be configured after.
-  it('renders with the soroush class prefix on the server', async () => {
+  it('renders with the soroush prefix, into the library cache, with text.inherit as a keyword', async () => {
     const { styled } = await import('./styled')
     const Box = styled('div')({ color: 'red' })
     expect(renderToString(createElement(Box))).toMatch(/class="soroush-[a-z0-9]+"/)
+    const { default: styleCache } = await import('../engine/styleCache')
+    const { getEngine } = await import('@umber-style/react')
+    expect(getEngine().cache.sheet).toBe(styleCache.sheet)
+    expect(getEngine().cache.inserted).toBe(styleCache.inserted)
+    const { text } = getEngine().refs as unknown as { text: Record<string, string> }
+    expect(text.inherit).toBe('inherit')
+    expect(text.primary).toMatch(/^var\(--soroush-text-primary/)
   })
 })
