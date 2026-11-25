@@ -10,6 +10,7 @@ import and render.
 ```jsonc
 // package.json
 "dependencies": {
+  "@soroush.design/core": "^0.1.0",
   "@soroush.design/react": "^0.1.0",
   "react": "^19.2.8",
   "react-dom": "^19.2.8"

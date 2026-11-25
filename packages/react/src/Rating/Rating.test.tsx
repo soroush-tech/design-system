@@ -3,13 +3,13 @@ import { fireEvent, render, screen } from '@testing-library/react'
 import type { ReactNode } from 'react'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { baseTheme, type Theme } from '../theme/themes'
-import { createTheme } from '@soroush.design/core/theme'
 import { ThemeProvider } from '../theme/ThemeProvider'
 import { FormControl } from '../FormControl'
 import { FormLabel } from '../FormLabel'
 import { FormHelperText } from '../FormHelperText'
 import { Rating } from './Rating'
 import { toPx } from '../utils/test/toPx'
+import { themeWith } from '../utils/test/themeWith'
 
 afterEach(() => vi.restoreAllMocks())
 
@@ -407,16 +407,14 @@ describe('Rating', () => {
   })
 
   it("takes the theme's defaults for every rating, its own props winning", () => {
-    const theme = createTheme(baseTheme, {
-      components: {
-        Rating: {
-          defaultProps: {
-            max: 3,
-            precision: 0.5,
-            highlightSelectedOnly: true,
-            size: 'sm',
-            color: 'success',
-          },
+    const theme = themeWith({
+      Rating: {
+        defaultProps: {
+          max: 3,
+          precision: 0.5,
+          highlightSelectedOnly: true,
+          size: 'sm',
+          color: 'success',
         },
       },
     })

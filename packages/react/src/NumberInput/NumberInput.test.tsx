@@ -3,13 +3,13 @@ import { act, fireEvent, render, screen } from '@testing-library/react'
 import { useRef, useState, type ReactNode } from 'react'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { baseTheme, type Theme } from '../theme/themes'
-import { createTheme } from '@soroush.design/core/theme'
 import { ThemeProvider } from '../theme/ThemeProvider'
 import { FormControl } from '../FormControl'
 import { FormLabel } from '../FormLabel'
 import { FormHelperText } from '../FormHelperText'
 import { useHoldRepeat } from './hooks/useHoldRepeat'
 import { NumberInput, type NumberInputProps } from './NumberInput'
+import { themeWith } from '../utils/test/themeWith'
 
 afterEach(() => {
   vi.useRealTimers()
@@ -650,22 +650,20 @@ describe('NumberInput', () => {
   })
 
   it("takes the theme's defaults for every field, its own props winning", () => {
-    const theme = createTheme(baseTheme, {
-      components: {
-        NumberInput: {
-          defaultProps: {
-            variant: 'outlined',
-            size: 'sm',
-            color: 'success',
-            spinButtons: 'sides',
-            step: 5,
-            smallStep: 1,
-            largeStep: 50,
-            shouldSnapOnStep: true,
-            shouldScrubOnWheel: true,
-            incrementLabel: 'Augmenter',
-            decrementLabel: 'Diminuer',
-          },
+    const theme = themeWith({
+      NumberInput: {
+        defaultProps: {
+          variant: 'outlined',
+          size: 'sm',
+          color: 'success',
+          spinButtons: 'sides',
+          step: 5,
+          smallStep: 1,
+          largeStep: 50,
+          shouldSnapOnStep: true,
+          shouldScrubOnWheel: true,
+          incrementLabel: 'Augmenter',
+          decrementLabel: 'Diminuer',
         },
       },
     })

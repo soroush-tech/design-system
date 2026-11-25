@@ -15,10 +15,10 @@ Tired of forking a component library just to change a color? Every token here is
 ## Install
 
 ```sh
-npm i @soroush.design/react
+npm i @soroush.design/react @soroush.design/core
 ```
 
-`react` and `react-dom` are peer dependencies, and React 19.2 or later is required. The styling engine (UmberStyle, the `@umber-style/*` packages) is an internal implementation detail - it ships as a regular dependency, not a peer, so you never install it yourself.
+`@soroush.design/core` holds the theme your app writes (`createTheme`, `defineThemes`), imported as `@soroush.design/core/theme`. `react` and `react-dom` are peer dependencies, and React 19.2 or later is required. The styling engine (UmberStyle, the `@umber-style/*` packages) is an internal implementation detail - it ships as a regular dependency, not a peer, so you never install it yourself.
 
 ---
 
@@ -224,19 +224,27 @@ The theme belongs to you - the package only ships defaults. This section is the 
 
 ```tsx
 import { ThemeProvider } from '@soroush.design/react'
-import { baseTheme, createTheme } from '@soroush.design/core/theme'
+import { registerBaseTheme } from '@soroush.design/react/ThemeProvider'
+import { baseTheme, createTheme, defineThemes } from '@soroush.design/core/theme'
 
-// Zero-config: the built-in `baseTheme`.
-<ThemeProvider>{app}</ThemeProvider>
+// Your themes - written from scratch or extended from the base, gathered by `defineThemes`.
+export const themes = defineThemes(
+  {
+    light: createTheme(baseTheme, { name: 'light', colorScheme: 'light' }),
+    dark: createTheme(baseTheme, { palette: { primary: { main: '#00ff88' } } }),
+  },
+  {}
+)
 
-// Your theme - written from scratch or extended from the base.
-const brand = createTheme(baseTheme, { palette: { primary: { main: '#00ff88' } } })
-<ThemeProvider theme={brand}>{app}</ThemeProvider>
+// The theme the app starts in, for server components, which have no provider above them.
+registerBaseTheme(themes.dark)
 
 // Mode switching is app policy - own the state and pass the active theme:
 const [isDark, setIsDark] = useState(true)
-<ThemeProvider theme={isDark ? brandDark : brandLight}>{app}</ThemeProvider>
+<ThemeProvider theme={isDark ? themes.dark : themes.light}>{app}</ThemeProvider>
 ```
+
+With no theme, `ThemeProvider` provides the built-in dark theme. Themes are not annotated with `Theme`: their own type is what the registration (below) hands to every component.
 
 `createTheme(base, overrides)` (exported from `@soroush.design/core/theme`) is the merge primitive: plain objects recurse, arrays (`shadows`, `fontSizes`) and functions replace wholesale, `undefined` values are ignored - keys are added or replaced, never removed.
 

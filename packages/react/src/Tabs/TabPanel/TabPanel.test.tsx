@@ -2,13 +2,13 @@ import { describe, it, expect, vi } from 'vitest'
 import { screen } from '@testing-library/react'
 import { renderWithTheme } from '../../utils/test/renderWithTheme'
 import { baseTheme, type Theme } from '../../theme/themes'
-import { createTheme } from '@soroush.design/core/theme'
 import { Tab } from '../Tab'
 import { TabList } from '../TabList'
 import { TabContext } from '../TabContext'
 import { ThemeProvider } from '../../theme/ThemeProvider'
 import type { ReactNode } from 'react'
 import { TabPanel } from './TabPanel'
+import { themeWith } from '../../utils/test/themeWith'
 
 const renderPanels = (shouldKeepMounted = false) =>
   renderWithTheme(
@@ -75,9 +75,7 @@ describe('TabPanel ground', () => {
 
 describe('TabPanel theme defaults', () => {
   it('keeps hidden content mounted when theme.components.TabPanel.defaultProps says so', () => {
-    const theme = createTheme(baseTheme, {
-      components: { TabPanel: { defaultProps: { shouldKeepMounted: true } } },
-    })
+    const theme = themeWith({ TabPanel: { defaultProps: { shouldKeepMounted: true } } })
     renderWithTheme(
       <TabContext defaultValue="a">
         <TabList>

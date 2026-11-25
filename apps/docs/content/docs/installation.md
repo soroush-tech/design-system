@@ -27,10 +27,11 @@ npx @soroush.design/cli init
 It shows every change before it makes one, and writes nothing until you say yes:
 
 - `src/theme/themes` - a `light` and a `dark` theme, each a `createTheme(baseTheme, {...})` call
-  you make your own;
+  you make your own, gathered by `defineThemes`, with the registration of the themes' types and
+  `registerBaseTheme`;
 - `src/theme/Providers` - the `ThemeProvider` with the base page styles;
 - your root - what it renders is wrapped in `<Providers>`;
-- the install of `@soroush.design/react`, with your own package manager.
+- the install of `@soroush.design/react` and `@soroush.design/core`, with your own package manager.
 
 It runs in a git repository with no uncommitted change, never overwrites a file, and takes back
 every change if a write fails. Run in a workspace's root, it sets up the one app in it. Add
@@ -45,7 +46,7 @@ and React Router apps are not supported by `init` yet: set those up by hand, bel
 Install the design system and its peer dependencies:
 
 ```sh
-npm i @soroush.design/react react react-dom
+npm i @soroush.design/react @soroush.design/core react react-dom
 ```
 
 React 19.2 or later is required.
@@ -56,18 +57,33 @@ Every component reads its colors, spacing, and typography from the theme. Wrap y
 
 ```tsx
 import { ThemeProvider } from '@soroush.design/react'
-import { baseTheme, createTheme } from '@soroush.design/core/theme'
+import { registerBaseTheme } from '@soroush.design/react/ThemeProvider'
+import { baseTheme, createTheme, defineThemes } from '@soroush.design/core/theme'
 
-const theme = createTheme(baseTheme, {
-  // Your brand overrides - palettes, backgrounds, text colors, ...
-})
+export const themes = defineThemes(
+  {
+    light: createTheme(baseTheme, { name: 'light', colorScheme: 'light' }),
+    dark: createTheme(baseTheme, { name: 'dark', colorScheme: 'dark' }),
+  },
+  {}
+)
+
+// The theme the app starts in, for server components, which have no provider above them.
+registerBaseTheme(themes.dark)
+
+declare module '@soroush.design/core/theme' {
+  interface Register {
+    themes: typeof themes
+  }
+}
 
 export function App() {
-  return <ThemeProvider theme={theme}>{/* your app */}</ThemeProvider>
+  return <ThemeProvider theme={themes.dark}>{/* your app */}</ThemeProvider>
 }
 ```
 
-`baseTheme` is a complete dark-schemed default, so an empty override object is a valid start.
+`baseTheme` is a complete dark-schemed default, so empty overrides are a valid start. The second
+argument of `defineThemes` holds the looks of the components, the same in every theme.
 See [Theming](/react/theme/) for building light and dark brand themes.
 
 ## Fonts

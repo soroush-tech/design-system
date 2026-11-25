@@ -20,13 +20,18 @@ The theme belongs to you - the package ships defaults, every part is replaceable
 
 ```tsx
 import { ThemeProvider } from '@soroush.design/react'
-import { baseTheme, createTheme } from '@soroush.design/core/theme'
+import { registerBaseTheme } from '@soroush.design/react/ThemeProvider'
+import { baseTheme, createTheme, defineThemes } from '@soroush.design/core/theme'
 
 const dark = createTheme(baseTheme, { name: 'dark' /* your palettes */ })
 const light = createTheme(baseTheme, { name: 'light', colorScheme: 'light' /* your palettes */ })
+export const themes = defineThemes({ dark, light }, {})
+
+// The theme the app starts in: what a server component reads, with no provider above it.
+registerBaseTheme(themes.dark)
 
 const [isDark, setIsDark] = useState(true)
-<ThemeProvider theme={isDark ? dark : light}>{app}</ThemeProvider>
+<ThemeProvider theme={isDark ? themes.dark : themes.light}>{app}</ThemeProvider>
 ```
 
 ## Building themes with `createTheme`
@@ -86,6 +91,16 @@ declare module '@soroush.design/core/theme' {
 ```
 
 Now `<Button color="brand">` and `<Tabs variant="pill">` typecheck, `<Button color="brnad">` does not, and `useTheme()` carries your custom tokens. The colors, sizes, spacing keys, breakpoints, typography variants and component looks are read from the themes, so adding one is an edit of a theme, not of a declaration. `<ThemeProvider theme={themes.dark}>` takes any registered theme, and a theme object with a key the registered themes do not have is an error.
+
+**Server components.** A server component has no provider above it to read, so register the theme the app starts in, in the same module, once:
+
+```ts
+import { registerBaseTheme } from '@soroush.design/react/ThemeProvider'
+
+registerBaseTheme(themes.light)
+```
+
+Pass the same object to `ThemeProvider`: the tokens are CSS variables, so the page's theme decides their values, and `components` and `defaults` are read from the registered one. The engine then holds one theme for every render.
 
 **Every theme has the same keys.** The types check it at the `defineThemes` call, at every depth, and the error names the theme and the key: `Theme "dark" is missing palette.brand, which "light" has`. The values may differ. Without a registration the components accept only the built-in values.
 

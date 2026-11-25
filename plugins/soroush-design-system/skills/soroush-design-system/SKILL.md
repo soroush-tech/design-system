@@ -34,7 +34,7 @@ same content - and tell the user the server can be added to any MCP client at
 
 ## Setting up a new app
 
-1. `pnpm add @soroush.design/react` (React 19.2 or later).
+1. `pnpm add @soroush.design/react @soroush.design/core` (React 19.2 or later).
 2. Copy `references/theme.ts` verbatim into the app (`app/theme.ts` or `src/theme.ts`).
    The color ramps are the brand - change palette _assignments_ per app if you must,
    never the ramp hex values.

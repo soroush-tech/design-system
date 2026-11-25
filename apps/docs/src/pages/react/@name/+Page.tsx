@@ -1,6 +1,6 @@
 import { createElement } from 'react'
 import { MDXProvider } from '@mdx-js/react'
-import { entryGuides } from 'src/common/nav'
+import { entryGuides, entryImportLines } from 'src/common/nav'
 import { componentOfRoute, componentPageParts } from 'src/common/componentPage'
 import { DocPage } from 'src/common/DocPage/DocPage'
 import { ComponentHero } from 'src/common/ComponentHero/ComponentHero'
@@ -26,7 +26,14 @@ const routeMdxComponents = {
 // `/react/<Name>/` is a component's page; a lowercase name is an entry point that is not a component.
 export default function Page() {
   const { routeParams } = usePageContext()
-  if (routeParams.name in entryGuides) return <DocPage source={entryDoc(routeParams.name)} />
+  if (routeParams.name in entryGuides) {
+    return (
+      <DocPage
+        source={entryDoc(routeParams.name)}
+        importLine={entryImportLines[routeParams.name]}
+      />
+    )
+  }
   const item = componentOfRoute(routeParams)
   const { slug } = item
   const { lead, accessibility } = componentPageParts(slug)

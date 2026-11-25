@@ -67,7 +67,7 @@ function createFiles(facts: StarterFacts): StarterFile[] {
   const x = isTypeScript ? 'ts' : 'js'
   return [
     { path: 'package.json', content: createPackageJson(facts) },
-    { path: `src/theme/themes.${x}`, content: createThemesSource({ isTypeScript }) },
+    { path: `src/theme/themes.${x}`, content: createThemesSource({ isTypeScript, scheme }) },
     {
       path: `src/theme/Providers.${x}`,
       content: createProvidersSource({ isTypeScript, scheme, themesImport: './themes' }),

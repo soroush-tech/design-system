@@ -3,11 +3,11 @@ import { createRef } from 'react'
 import { act, fireEvent, render, screen } from '@testing-library/react'
 import { renderWithTheme } from '../../utils/test/renderWithTheme'
 import { baseTheme } from '../../theme/themes'
-import { createTheme } from '@soroush.design/core/theme'
 import { ThemeProvider } from '../../theme/ThemeProvider'
 import { type TabsVariants } from '@soroush.design/core/theme'
 import { Tabs, type TabsActions, type TabsProps } from './Tabs'
 import { Tab } from '../Tab'
+import { themeWith } from '../../utils/test/themeWith'
 
 const renderViews = (props: Partial<TabsProps> = {}) =>
   renderWithTheme(
@@ -282,9 +282,7 @@ describe('Tabs', () => {
   })
 
   it('takes selectedBg from the theme', () => {
-    const theme = createTheme(baseTheme, {
-      components: { Tabs: { defaultProps: { selectedBg: 'default' } } },
-    })
+    const theme = themeWith({ Tabs: { defaultProps: { selectedBg: 'default' } } })
     render(
       <ThemeProvider theme={theme}>
         <Tabs aria-label="Views" defaultValue="a">
@@ -339,8 +337,8 @@ describe('Tabs', () => {
   })
 
   it('takes its variant, color and size from the theme defaults', () => {
-    const theme = createTheme(baseTheme, {
-      components: { Tabs: { defaultProps: { variant: 'boxed', color: 'error', size: 'sm' } } },
+    const theme = themeWith({
+      Tabs: { defaultProps: { variant: 'boxed', color: 'error', size: 'sm' } },
     })
     render(
       <ThemeProvider theme={theme}>
@@ -431,8 +429,7 @@ describe('Tabs', () => {
 })
 
 describe('theme.components.Tabs', () => {
-  const withComponents = (components: Parameters<typeof createTheme>[1]['components']) =>
-    createTheme(baseTheme, { components })
+  const withComponents = (components: Parameters<typeof themeWith>[0]) => themeWith(components)
   const indicator = () => screen.getByRole('tablist').querySelector('[aria-hidden]')
 
   it('applies a theme-contributed variant to a look of its own', () => {
@@ -474,10 +471,10 @@ describe('theme.components.Tabs', () => {
   })
 
   it('defaultProps beat theme.defaults', () => {
-    const theme = createTheme(baseTheme, {
-      defaults: { color: 'success' },
-      components: { Tabs: { defaultProps: { color: 'error' } } },
-    })
+    const theme = themeWith(
+      { Tabs: { defaultProps: { color: 'error' } } },
+      { defaults: { color: 'success' } }
+    )
     render(
       <ThemeProvider theme={theme}>
         <Tabs aria-label="Views" defaultValue={0}>

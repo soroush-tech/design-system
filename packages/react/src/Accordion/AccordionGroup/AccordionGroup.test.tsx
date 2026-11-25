@@ -3,12 +3,12 @@ import { act, fireEvent, render, screen } from '@testing-library/react'
 import type { ReactNode } from 'react'
 import { ThemeProvider } from '../../theme/ThemeProvider'
 import { baseTheme, type Theme } from '../../theme/themes'
-import { createTheme } from '@soroush.design/core/theme'
 import { renderWithTheme } from '../../utils/test/renderWithTheme'
 import { Accordion } from '../Accordion'
 import { AccordionDetails } from '../AccordionDetails'
 import { AccordionSummary } from '../AccordionSummary'
 import { AccordionGroup, type AccordionGroupProps } from './AccordionGroup'
+import { themeWith } from '../../utils/test/themeWith'
 
 const withTheme = (theme: Theme) =>
   function Wrapper({ children }: { children: ReactNode }) {
@@ -178,9 +178,7 @@ describe('AccordionGroup', () => {
     })
 
     it('takes variant from the theme, an own prop winning', () => {
-      const theme = createTheme(baseTheme, {
-        components: { AccordionGroup: { defaultProps: { variant: 'attached' } } },
-      })
+      const theme = themeWith({ AccordionGroup: { defaultProps: { variant: 'attached' } } })
       const { unmount } = render(view(), { wrapper: withTheme(theme) })
       expect(screen.getByTestId('group')).toHaveStyle({ gap: '0' })
       unmount()
@@ -191,9 +189,7 @@ describe('AccordionGroup', () => {
 
   describe('theme', () => {
     it('takes isExclusive from the theme, an own prop winning', () => {
-      const theme = createTheme(baseTheme, {
-        components: { AccordionGroup: { defaultProps: { isExclusive: true } } },
-      })
+      const theme = themeWith({ AccordionGroup: { defaultProps: { isExclusive: true } } })
       const { unmount } = render(view(), { wrapper: withTheme(theme) })
       press('One')
       press('Two')
@@ -206,9 +202,7 @@ describe('AccordionGroup', () => {
     })
 
     it('styles its root from styleOverrides', () => {
-      const theme = createTheme(baseTheme, {
-        components: { AccordionGroup: { styleOverrides: { root: { opacity: 0.9 } } } },
-      })
+      const theme = themeWith({ AccordionGroup: { styleOverrides: { root: { opacity: 0.9 } } } })
       render(view(), { wrapper: withTheme(theme) })
       expect(screen.getByTestId('group')).toHaveStyle({ opacity: '0.9' })
     })

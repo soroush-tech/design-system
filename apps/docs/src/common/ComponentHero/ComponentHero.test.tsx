@@ -27,6 +27,15 @@ describe('ComponentHero', () => {
     expect(screen.getByText('A button.')).toBeInTheDocument()
   })
 
+  it('shows the install and the import of the component, from its package', () => {
+    renderHero()
+    expect(
+      screen.getByText((text) =>
+        text.includes("import { Button } from '@soroush.design/react/Button'")
+      )
+    ).toBeInTheDocument()
+  })
+
   it('draws the component beside its name', () => {
     const { container } = renderHero()
     expect(container.querySelector('svg')).toHaveAttribute('aria-hidden', 'true')

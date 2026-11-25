@@ -2,10 +2,9 @@ import { screen, fireEvent, render } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { ThemeProvider } from '../theme/ThemeProvider'
-import { createTheme } from '@soroush.design/core/theme'
-import { baseTheme } from '../theme/themes'
 import { useFormControl } from '../FormControl'
 import { Form } from './Form'
+import { themeWith } from '../utils/test/themeWith'
 
 const Probe = () => {
   const fc = useFormControl()
@@ -47,9 +46,7 @@ describe('Form', () => {
   })
 
   it('applies theme.components.Form.styleOverrides.root to the form element', () => {
-    const theme = createTheme(baseTheme, {
-      components: { Form: { styleOverrides: { root: { display: 'grid' } } } },
-    })
+    const theme = themeWith({ Form: { styleOverrides: { root: { display: 'grid' } } } })
     render(
       <ThemeProvider theme={theme}>
         <Form data-testid="form">

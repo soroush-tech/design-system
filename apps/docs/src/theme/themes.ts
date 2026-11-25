@@ -1,4 +1,5 @@
 import { baseTheme, createTheme, defineThemes } from '@soroush.design/core/theme'
+import { registerBaseTheme } from '@soroush.design/react/ThemeProvider'
 import type { ThemeComponents } from '@soroush.design/react'
 import { alpha, generateBoxShadow } from '@soroush.design/core/utils'
 import {
@@ -246,6 +247,10 @@ const darkTheme = createTheme(baseTheme, {
 const themes = defineThemes({ light: lightTheme, dark: darkTheme }, components)
 
 export const { light, dark } = themes
+
+// What a server component reads with no provider above it: the theme the provider starts in
+// (dark, see ThemeModeProvider), the same object, so its components and defaults match.
+registerBaseTheme(dark)
 
 declare module '@soroush.design/core/theme' {
   interface Register {

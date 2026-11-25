@@ -1,6 +1,8 @@
 // Set up by @soroush.design/react init. Your themes: change any value, or add a theme.
 // Every token is listed at https://docs.soroush.design/react/theme/
 import { baseTheme, createTheme, defineThemes } from '@soroush.design/core/theme'
+import type { ThemeComponents } from '@soroush.design/react'
+import { registerBaseTheme } from '@soroush.design/react/ThemeProvider'
 
 // To add tokens of your own, declare them here, then give them values in each theme:
 //
@@ -70,8 +72,12 @@ const themes = defineThemes(
       colorScheme: 'dark',
     }),
   },
-  {}
+  {} satisfies ThemeComponents
 )
+
+// What a server component reads, with no provider above it: the theme the app starts in. It is the
+// same object the provider gets, so the components and defaults match.
+registerBaseTheme(themes.light)
 
 declare module '@soroush.design/core/theme' {
   interface Register {

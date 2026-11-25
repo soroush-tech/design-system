@@ -1,11 +1,10 @@
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest'
 import { act, fireEvent, render, screen } from '@testing-library/react'
 import { ThemeProvider } from '../theme/ThemeProvider'
-import { baseTheme } from '../theme/themes'
-import { createTheme } from '@soroush.design/core/theme'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { Tooltip } from './Tooltip'
 import { TooltipGroup } from './TooltipGroup'
+import { themeWith } from '../utils/test/themeWith'
 
 const tick = (ms: number) => act(() => vi.advanceTimersByTime(ms))
 const icon = (name: string) => screen.getByRole('button', { name, hidden: true })
@@ -195,9 +194,7 @@ describe('TooltipGroup', () => {
 
 describe('skipDelayDuration in the theme', () => {
   const themed = (skipDelayDuration?: number) =>
-    createTheme(baseTheme, {
-      components: { Tooltip: { defaultProps: { enterDelay: 500, skipDelayDuration } } },
-    })
+    themeWith({ Tooltip: { defaultProps: { enterDelay: 500, skipDelayDuration } } })
   const pair = (
     <>
       <Tooltip title="First">

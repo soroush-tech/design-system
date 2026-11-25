@@ -35,17 +35,17 @@ This package is not a dependency of `@soroush.design/react`: an app that never i
 
 ```sh
 # npm
-npm install @soroush.design/react @soroush.design/react-markdown react react-dom
+npm install @soroush.design/react @soroush.design/core @soroush.design/react-markdown react react-dom
 ```
 
 ```sh
 # pnpm
-pnpm add @soroush.design/react @soroush.design/react-markdown react react-dom
+pnpm add @soroush.design/react @soroush.design/core @soroush.design/react-markdown react react-dom
 ```
 
 ```sh
 # yarn
-yarn add @soroush.design/react @soroush.design/react-markdown react react-dom
+yarn add @soroush.design/react @soroush.design/core @soroush.design/react-markdown react react-dom
 ```
 
 > **Requires the component library.** This package renders through `@soroush.design/react`, so its components must live inside that library's `ThemeProvider`. If you aren't already using it, [start there first](https://www.npmjs.com/package/@soroush.design/react).

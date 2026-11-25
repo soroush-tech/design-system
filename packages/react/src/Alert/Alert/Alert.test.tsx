@@ -3,9 +3,9 @@ import { fireEvent, render, screen } from '@testing-library/react'
 import type { ReactNode } from 'react'
 import { ThemeProvider } from '../../theme/ThemeProvider'
 import { baseTheme, type Theme } from '../../theme/themes'
-import { createTheme } from '@soroush.design/core/theme'
 import { renderWithTheme } from '../../utils/test/renderWithTheme'
 import { Alert, type AlertProps } from './Alert'
+import { themeWith } from '../../utils/test/themeWith'
 
 const withTheme = (theme: Theme) =>
   function Wrapper({ children }: { children: ReactNode }) {
@@ -163,9 +163,7 @@ describe('Alert', () => {
       expect(root()).toHaveStyle({ borderRadius: baseTheme.radii.sq })
       rerender(view({ borderRadius: 'lg' }))
       expect(root()).toHaveStyle({ borderRadius: baseTheme.radii.lg })
-      const theme = createTheme(baseTheme, {
-        components: { Alert: { defaultProps: { borderRadius: 'md' } } },
-      })
+      const theme = themeWith({ Alert: { defaultProps: { borderRadius: 'md' } } })
       render(view(), { wrapper: withTheme(theme) })
       expect(screen.getAllByTestId('alert')[1]).toHaveStyle({ borderRadius: baseTheme.radii.md })
     })
@@ -173,15 +171,13 @@ describe('Alert', () => {
 
   describe('theme', () => {
     it('takes its defaults from the theme, an own prop winning', () => {
-      const theme = createTheme(baseTheme, {
-        components: {
-          Alert: {
-            defaultProps: {
-              severity: 'warning',
-              variant: 'outlined',
-              closeLabel: 'Close it',
-              role: 'status',
-            },
+      const theme = themeWith({
+        Alert: {
+          defaultProps: {
+            severity: 'warning',
+            variant: 'outlined',
+            closeLabel: 'Close it',
+            role: 'status',
           },
         },
       })
@@ -199,16 +195,14 @@ describe('Alert', () => {
     })
 
     it('styles each slot from styleOverrides', () => {
-      const theme = createTheme(baseTheme, {
-        components: {
-          Alert: {
-            styleOverrides: {
-              root: { opacity: 0.9 },
-              icon: { opacity: 0.8 },
-              message: { opacity: 0.7 },
-              action: { opacity: 0.6 },
-              closeButton: { opacity: 0.5 },
-            },
+      const theme = themeWith({
+        Alert: {
+          styleOverrides: {
+            root: { opacity: 0.9 },
+            icon: { opacity: 0.8 },
+            message: { opacity: 0.7 },
+            action: { opacity: 0.6 },
+            closeButton: { opacity: 0.5 },
           },
         },
       })

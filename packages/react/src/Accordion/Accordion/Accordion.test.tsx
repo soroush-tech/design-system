@@ -8,6 +8,7 @@ import { renderWithTheme } from '../../utils/test/renderWithTheme'
 import { AccordionDetails } from '../AccordionDetails'
 import { AccordionSummary } from '../AccordionSummary'
 import { Accordion, type AccordionProps, type AccordionTransitionProps } from './Accordion'
+import { themeWith } from '../../utils/test/themeWith'
 
 const withTheme = (theme: Theme) =>
   function Wrapper({ children }: { children: ReactNode }) {
@@ -167,10 +168,8 @@ describe('Accordion', () => {
     })
 
     it('takes them from the theme, an own prop winning', () => {
-      const theme = createTheme(baseTheme, {
-        components: {
-          Accordion: { defaultProps: { borderRadius: 'md', bg: 'modal', textColor: 'secondary' } },
-        },
+      const theme = themeWith({
+        Accordion: { defaultProps: { borderRadius: 'md', bg: 'modal', textColor: 'secondary' } },
       })
       const { unmount } = render(view(), { wrapper: withTheme(theme) })
       expect(root()).toHaveStyle({
@@ -192,9 +191,7 @@ describe('Accordion', () => {
 
   describe('theme', () => {
     it('takes hasGutters from the theme, an own prop winning', () => {
-      const theme = createTheme(baseTheme, {
-        components: { Accordion: { defaultProps: { hasGutters: false } } },
-      })
+      const theme = themeWith({ Accordion: { defaultProps: { hasGutters: false } } })
       const { unmount } = render(view(), { wrapper: withTheme(theme) })
       expect(button()).toHaveStyle({ paddingLeft: '0px' })
       unmount()
@@ -203,10 +200,8 @@ describe('Accordion', () => {
     })
 
     it('styles the root and the region from styleOverrides', () => {
-      const theme = createTheme(baseTheme, {
-        components: {
-          Accordion: { styleOverrides: { root: { opacity: 0.9 }, region: { opacity: 0.8 } } },
-        },
+      const theme = themeWith({
+        Accordion: { styleOverrides: { root: { opacity: 0.9 }, region: { opacity: 0.8 } } },
       })
       render(view({ defaultExpanded: true }), { wrapper: withTheme(theme) })
       expect(screen.getByTestId('accordion')).toHaveStyle({ opacity: '0.9' })

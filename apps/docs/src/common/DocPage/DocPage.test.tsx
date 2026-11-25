@@ -4,6 +4,7 @@ import type { ReactNode } from 'react'
 import type { PageContext as VikePageContext } from 'vike/types'
 import { PageContext } from 'src/common/PageContext'
 import { ThemeModeProvider } from 'src/theme/ThemeModeProvider'
+import { hookImportLine } from 'src/common/nav'
 import { DocPage } from './DocPage'
 
 const renderDocPage = (props: Parameters<typeof DocPage>[0]) => {
@@ -25,6 +26,13 @@ describe('DocPage', () => {
     ).toHaveLength(2)
     expect(screen.getByRole('heading', { name: 'Doc Title' })).toBeInTheDocument()
     expect(screen.getByText('Body copy.')).toBeInTheDocument()
+  })
+
+  it('shows the install and the import of its subject at the top, when it has them', () => {
+    renderDocPage({ source: 'Body.', importLine: hookImportLine('useDebounce') })
+    expect(
+      screen.getByText((text) => text.includes('npm i @soroush.design/react-hooks'))
+    ).toBeInTheDocument()
   })
 
   it('renders its own title and strips the source chrome when title is given', () => {

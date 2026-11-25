@@ -3,11 +3,11 @@ import { render, screen } from '@testing-library/react'
 import type { ReactNode } from 'react'
 import { ThemeProvider } from '../../theme/ThemeProvider'
 import { baseTheme, type Theme } from '../../theme/themes'
-import { createTheme } from '@soroush.design/core/theme'
 import { renderWithTheme } from '../../utils/test/renderWithTheme'
 import { Accordion } from '../Accordion'
 import { AccordionSummary } from '../AccordionSummary'
 import { AccordionActions } from './AccordionActions'
+import { themeWith } from '../../utils/test/themeWith'
 
 const withTheme = (theme: Theme) =>
   function Wrapper({ children }: { children: ReactNode }) {
@@ -41,9 +41,7 @@ describe('AccordionActions', () => {
   })
 
   it('styles its root from styleOverrides', () => {
-    const theme = createTheme(baseTheme, {
-      components: { AccordionActions: { styleOverrides: { root: { opacity: 0.9 } } } },
-    })
+    const theme = themeWith({ AccordionActions: { styleOverrides: { root: { opacity: 0.9 } } } })
     render(view(), { wrapper: withTheme(theme) })
     expect(screen.getByTestId('actions')).toHaveStyle({ opacity: '0.9' })
   })

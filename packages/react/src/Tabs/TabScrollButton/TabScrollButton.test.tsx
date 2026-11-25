@@ -2,13 +2,13 @@ import { describe, it, expect, vi } from 'vitest'
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { renderWithTheme } from '../../utils/test/renderWithTheme'
 import { baseTheme } from '../../theme/themes'
-import { createTheme } from '@soroush.design/core/theme'
 import { ThemeProvider } from '../../theme/ThemeProvider'
 import type { ComponentType } from 'react'
 import { Tab } from '../Tab'
 import { Tabs } from '../Tabs'
 import { TabScrollButton, type TabScrollButtonProps } from './TabScrollButton'
 import { toRgb } from '../../utils/test/toRgb'
+import { themeWith } from '../../utils/test/themeWith'
 
 // It is aria-hidden - out of the accessibility tree - so it is found by its test id.
 const button = () => screen.getByTestId('scroll')
@@ -139,10 +139,8 @@ describe("a scroll button's own look", () => {
   })
 
   it("colors its chevron by its own textColor, then the row's, then the theme's for every button", () => {
-    const theme = createTheme(baseTheme, {
-      components: {
-        TabScrollButton: { defaultProps: { textColor: 'disabled', color: 'success' } },
-      },
+    const theme = themeWith({
+      TabScrollButton: { defaultProps: { textColor: 'disabled', color: 'success' } },
     })
     const row = (props: Partial<TabScrollButtonProps>, rowProps = {}) =>
       render(

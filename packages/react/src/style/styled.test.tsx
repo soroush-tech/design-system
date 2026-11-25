@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
 import { ThemeProvider } from '../theme/ThemeProvider'
-import { createTheme } from '@soroush.design/core/theme'
 import { baseTheme, type ComponentConfig } from '../theme/themes'
 import { styled } from './styled'
+import { themeWith } from '../utils/test/themeWith'
 
 // A consumer-style component registered under a custom theme.components key -
 // exercises the wrapper directly, independent of any design-system component.
@@ -15,10 +15,8 @@ declare module '@umber-style/react' {
 
 const TestBox = styled('div', { name: 'TestBox' })<{ tone?: string }>({ padding: '1px' })
 
-const renderWith = (
-  components: Parameters<typeof createTheme>[1]['components'],
-  ui: React.ReactNode
-) => render(<ThemeProvider theme={createTheme(baseTheme, { components })}>{ui}</ThemeProvider>)
+const renderWith = (components: Parameters<typeof themeWith>[0], ui: React.ReactNode) =>
+  render(<ThemeProvider theme={themeWith(components)}>{ui}</ThemeProvider>)
 
 describe('styled (theme customization wrapper)', () => {
   it('falls through to the plain engine when no name is given', () => {

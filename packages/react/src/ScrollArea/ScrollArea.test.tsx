@@ -6,6 +6,7 @@ import { baseTheme, type Theme } from '../theme/themes'
 import { createTheme } from '@soroush.design/core/theme'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { ScrollArea, type ScrollAreaProps } from './ScrollArea'
+import { themeWith } from '../utils/test/themeWith'
 
 const withTheme = (theme: Theme) =>
   function Wrapper({ children }: { children: ReactNode }) {
@@ -257,9 +258,7 @@ describe('ScrollArea', () => {
   describe('theme', () => {
     it('takes its axes from the theme, an own prop winning', () => {
       sized(400, 100)
-      const theme = createTheme(baseTheme, {
-        components: { ScrollArea: { defaultProps: { axes: 'x' } } },
-      })
+      const theme = themeWith({ ScrollArea: { defaultProps: { axes: 'x' } } })
       const { unmount } = render(view(), { wrapper: withTheme(theme) })
       expect(thumbOn('x')).not.toBeNull()
       expect(thumbOn('y')).toBeNull()
@@ -283,11 +282,9 @@ describe('ScrollArea', () => {
     it('styles every part from styleOverrides', () => {
       sized(400, 100)
       const style = { outlineColor: 'rgb(1, 2, 3)' }
-      const theme = createTheme(baseTheme, {
-        components: {
-          ScrollArea: {
-            styleOverrides: { root: style, viewport: style, track: style, thumb: style },
-          },
+      const theme = themeWith({
+        ScrollArea: {
+          styleOverrides: { root: style, viewport: style, track: style, thumb: style },
         },
       })
       render(view(), { wrapper: withTheme(theme) })

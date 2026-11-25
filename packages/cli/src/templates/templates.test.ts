@@ -4,13 +4,13 @@ import { createProvidersSource, createThemesSource, isSetUpByInit, MARKER } from
 
 describe('createThemesSource', () => {
   it('default-exports defineThemes of named themes, each createTheme(base, {...literal})', () => {
-    const source = createThemesSource({ isTypeScript: true })
+    const source = createThemesSource({ isTypeScript: true, scheme: 'light' })
     expect(source.startsWith(MARKER)).toBe(true)
     expect(source).toMatch(
       /\nconst themes = defineThemes\(\n {2}\{\n {4}light: createTheme\(baseTheme, \{\n/
     )
     expect(source).toMatch(/\n {4}dark: createTheme\(baseTheme, \{\n/)
-    expect(source).toMatch(/\n {2}\},\n {2}\{\}\n\)\n/)
+    expect(source).toMatch(/\n {2}\},\n {2}\{\} satisfies ThemeComponents\n\)\n/)
     expect(source).toMatch(/\nexport default themes\n$/)
     // Every theme ends with a literal object: no theme is built by a function or from a variable.
     const themeCalls = [...source.matchAll(/createTheme\((\w+), (.)/g)]
@@ -21,12 +21,26 @@ describe('createThemesSource', () => {
   })
 
   it('gives a TypeScript app the augmentation stub, as a comment, and the registration; a JavaScript app neither', () => {
-    const source = createThemesSource({ isTypeScript: true })
+    const source = createThemesSource({ isTypeScript: true, scheme: 'light' })
     expect(source).toContain("// declare module '@soroush.design/core/theme' {")
     expect(source).toContain(
       "\ndeclare module '@soroush.design/core/theme' {\n  interface Register {\n    themes: typeof themes\n  }\n}\n"
     )
-    expect(createThemesSource({ isTypeScript: false })).not.toContain('declare module')
+    expect(createThemesSource({ isTypeScript: false, scheme: 'light' })).not.toContain(
+      'declare module'
+    )
+  })
+
+  it('registers the theme the app starts in as the base theme, and types the components in TypeScript only', () => {
+    const dark = createThemesSource({ isTypeScript: true, scheme: 'dark' })
+    expect(dark).toContain(
+      "import { registerBaseTheme } from '@soroush.design/react/ThemeProvider'"
+    )
+    expect(dark).toContain("import type { ThemeComponents } from '@soroush.design/react'")
+    expect(dark).toContain('\nregisterBaseTheme(themes.dark)\n')
+    const js = createThemesSource({ isTypeScript: false, scheme: 'light' })
+    expect(js).toContain('\nregisterBaseTheme(themes.light)\n')
+    expect(js).not.toContain('ThemeComponents')
   })
 })
 

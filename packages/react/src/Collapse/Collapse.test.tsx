@@ -3,10 +3,10 @@ import { act, render, screen } from '@testing-library/react'
 import type { ReactElement, ReactNode } from 'react'
 import { ThemeProvider } from '../theme/ThemeProvider'
 import { baseTheme, type Theme } from '../theme/themes'
-import { createTheme } from '@soroush.design/core/theme'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { Collapse, type CollapseProps } from './Collapse'
 import { toPx } from '../utils/test/toPx'
+import { themeWith } from '../utils/test/themeWith'
 
 const withTheme = (theme: Theme) =>
   function Wrapper({ children }: { children: ReactNode }) {
@@ -156,16 +156,14 @@ describe('Collapse', () => {
 
   describe('theme', () => {
     it('takes its defaults from the theme, an own prop winning', () => {
-      const theme = createTheme(baseTheme, {
-        components: {
-          Collapse: {
-            defaultProps: {
-              orientation: 'horizontal',
-              collapsedSize: 12,
-              timeout: 77,
-              easing: 'enter',
-              shouldAppear: false,
-            },
+      const theme = themeWith({
+        Collapse: {
+          defaultProps: {
+            orientation: 'horizontal',
+            collapsedSize: 12,
+            timeout: 77,
+            easing: 'enter',
+            shouldAppear: false,
           },
         },
       })
@@ -184,14 +182,12 @@ describe('Collapse', () => {
     })
 
     it('styles each slot from styleOverrides', () => {
-      const theme = createTheme(baseTheme, {
-        components: {
-          Collapse: {
-            styleOverrides: {
-              root: { opacity: 0.9 },
-              wrapper: { opacity: 0.8 },
-              inner: { opacity: 0.7 },
-            },
+      const theme = themeWith({
+        Collapse: {
+          styleOverrides: {
+            root: { opacity: 0.9 },
+            wrapper: { opacity: 0.8 },
+            inner: { opacity: 0.7 },
           },
         },
       })

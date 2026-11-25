@@ -4,10 +4,10 @@ import { renderWithTheme } from '../../utils/test/renderWithTheme'
 import { MenuItem } from '../../MenuItem'
 import { MenuDivider } from '../MenuDivider'
 import { baseTheme, type Theme } from '../../theme/themes'
-import { createTheme } from '@soroush.design/core/theme'
 import { ThemeProvider } from '../../theme/ThemeProvider'
 import type { ReactNode } from 'react'
 import { MenuList } from './MenuList'
+import { themeWith } from '../../utils/test/themeWith'
 
 const renderBranchMenu = (props: Partial<Parameters<typeof MenuList>[0]> = {}) =>
   renderWithTheme(
@@ -217,16 +217,14 @@ const withTheme = (theme: Theme) =>
 
 describe('MenuList theme defaults', () => {
   it("takes wrapping and its rows' look from theme.components.MenuList.defaultProps", () => {
-    const theme = createTheme(baseTheme, {
-      components: {
-        MenuList: {
-          defaultProps: {
-            shouldWrap: false,
-            color: 'error',
-            textColor: 'secondary',
-            size: 'sm',
-            dense: true,
-          },
+    const theme = themeWith({
+      MenuList: {
+        defaultProps: {
+          shouldWrap: false,
+          color: 'error',
+          textColor: 'secondary',
+          size: 'sm',
+          dense: true,
         },
       },
     })

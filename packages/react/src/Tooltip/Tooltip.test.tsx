@@ -3,9 +3,9 @@ import { act, fireEvent, render, screen } from '@testing-library/react'
 import type { ReactNode } from 'react'
 import { ThemeProvider } from '../theme/ThemeProvider'
 import { baseTheme, type Theme } from '../theme/themes'
-import { createTheme } from '@soroush.design/core/theme'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { Tooltip, type TooltipProps } from './Tooltip'
+import { themeWith } from '../utils/test/themeWith'
 
 const withTheme = (theme: Theme) =>
   function Wrapper({ children }: { children: ReactNode }) {
@@ -500,10 +500,8 @@ describe('Tooltip', () => {
     })
 
     it('is set for every tooltip by the theme', () => {
-      const theme = createTheme(baseTheme, {
-        components: {
-          Tooltip: { defaultProps: { shouldDescribeChild: true, isDescriptionPersistent: true } },
-        },
+      const theme = themeWith({
+        Tooltip: { defaultProps: { shouldDescribeChild: true, isDescriptionPersistent: true } },
       })
       render(view(), { wrapper: withTheme(theme) })
       expect(button()).toHaveAccessibleDescription('Save')
@@ -540,9 +538,7 @@ describe('Tooltip', () => {
     })
 
     it('is set for every tooltip by the theme', () => {
-      const theme = createTheme(baseTheme, {
-        components: { Tooltip: { defaultProps: { isInteractive: false } } },
-      })
+      const theme = themeWith({ Tooltip: { defaultProps: { isInteractive: false } } })
       render(view({ defaultOpen: true }), { wrapper: withTheme(theme) })
       expect(tooltip()).toHaveStyle({ pointerEvents: 'none' })
     })
@@ -983,10 +979,8 @@ describe('Tooltip', () => {
     })
 
     it('takes them from the theme', () => {
-      const theme = createTheme(baseTheme, {
-        components: {
-          Tooltip: { defaultProps: { borderRadius: 'md', bg: 'paper', textColor: 'secondary' } },
-        },
+      const theme = themeWith({
+        Tooltip: { defaultProps: { borderRadius: 'md', bg: 'paper', textColor: 'secondary' } },
       })
       render(view({ defaultOpen: true }), { wrapper: withTheme(theme) })
       expect(tooltip()).toHaveStyle({
@@ -999,22 +993,20 @@ describe('Tooltip', () => {
 
   describe('theme', () => {
     it('takes its defaults from the theme, an own prop winning', () => {
-      const theme = createTheme(baseTheme, {
-        components: {
-          Tooltip: {
-            defaultProps: {
-              placement: 'bottom',
-              hasArrow: true,
-              enterDelay: 10,
-              leaveDelay: 20,
-              enterTouchDelay: 30,
-              leaveTouchDelay: 40,
-              shouldDescribeChild: true,
-              shouldOpenOnHover: false,
-              shouldOpenOnFocus: false,
-              shouldOpenOnTouch: false,
-              layer: 'modal',
-            },
+      const theme = themeWith({
+        Tooltip: {
+          defaultProps: {
+            placement: 'bottom',
+            hasArrow: true,
+            enterDelay: 10,
+            leaveDelay: 20,
+            enterTouchDelay: 30,
+            leaveTouchDelay: 40,
+            shouldDescribeChild: true,
+            shouldOpenOnHover: false,
+            shouldOpenOnFocus: false,
+            shouldOpenOnTouch: false,
+            layer: 'modal',
           },
         },
       })
@@ -1041,10 +1033,8 @@ describe('Tooltip', () => {
     })
 
     it('styles the surface and the arrow from styleOverrides', () => {
-      const theme = createTheme(baseTheme, {
-        components: {
-          Tooltip: { styleOverrides: { root: { opacity: 0.9 }, arrow: { opacity: 0.8 } } },
-        },
+      const theme = themeWith({
+        Tooltip: { styleOverrides: { root: { opacity: 0.9 }, arrow: { opacity: 0.8 } } },
       })
       render(view({ defaultOpen: true, hasArrow: true }), { wrapper: withTheme(theme) })
       expect(tooltip()).toHaveStyle({ opacity: '0.9' })

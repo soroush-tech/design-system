@@ -3,13 +3,13 @@ import { act, fireEvent, screen } from '@testing-library/react'
 import { renderWithTheme } from '../../utils/test/renderWithTheme'
 import { Tabs, type TabsProps } from '../Tabs'
 import { baseTheme, type Theme } from '../../theme/themes'
-import { createTheme } from '@soroush.design/core/theme'
 import { ThemeProvider } from '../../theme/ThemeProvider'
 import type { ReactNode } from 'react'
 import { Menu } from '../../Menu'
 import { MenuItem } from '../../MenuItem'
 import { Tab } from './Tab'
 import { toRgb } from '../../utils/test/toRgb'
+import { themeWith } from '../../utils/test/themeWith'
 
 const renderEditor = (props: Partial<TabsProps> = {}) =>
   renderWithTheme(
@@ -239,9 +239,7 @@ const withTheme = (theme: Theme) =>
 
 describe('Tab theme defaults', () => {
   it('wraps its label when theme.components.Tab.defaultProps says so', () => {
-    const theme = createTheme(baseTheme, {
-      components: { Tab: { defaultProps: { isWrapped: true } } },
-    })
+    const theme = themeWith({ Tab: { defaultProps: { isWrapped: true } } })
     renderWithTheme(
       <Tabs aria-label="Views" defaultValue="canvas">
         <Tab value="canvas" label="Canvas" />
@@ -265,9 +263,7 @@ describe('Tab ground', () => {
   })
 
   it('takes bg and borderRadius from the theme', () => {
-    const theme = createTheme(baseTheme, {
-      components: { Tab: { defaultProps: { bg: 'default', borderRadius: 'md' } } },
-    })
+    const theme = themeWith({ Tab: { defaultProps: { bg: 'default', borderRadius: 'md' } } })
     renderWithTheme(
       <Tabs aria-label="Views" defaultValue="a">
         <Tab value="a" label="A" />
@@ -308,9 +304,7 @@ describe("a tab's own look", () => {
   })
 
   it("lets a value set on the row beat the theme's for every tab, and that beat the row's own default", () => {
-    const theme = createTheme(baseTheme, {
-      components: { Tab: { defaultProps: { color: 'success', size: 'sm' } } },
-    })
+    const theme = themeWith({ Tab: { defaultProps: { color: 'success', size: 'sm' } } })
     renderWithTheme(
       <>
         <Tabs aria-label="Set" defaultValue="a" color="error">
@@ -358,7 +352,7 @@ describe("a tab's own look", () => {
   })
 
   it('stays compact when every tab is small, and down a column each tab keeps its own', () => {
-    const theme = createTheme(baseTheme, { components: { Tab: { defaultProps: { size: 'sm' } } } })
+    const theme = themeWith({ Tab: { defaultProps: { size: 'sm' } } })
     renderWithTheme(
       <>
         <Tabs aria-label="Row" defaultValue="a">

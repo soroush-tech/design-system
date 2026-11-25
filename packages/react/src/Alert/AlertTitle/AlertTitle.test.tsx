@@ -3,9 +3,9 @@ import { render, screen } from '@testing-library/react'
 import type { ReactNode } from 'react'
 import { ThemeProvider } from '../../theme/ThemeProvider'
 import { baseTheme, type Theme } from '../../theme/themes'
-import { createTheme } from '@soroush.design/core/theme'
 import { renderWithTheme } from '../../utils/test/renderWithTheme'
 import { AlertTitle } from './AlertTitle'
+import { themeWith } from '../../utils/test/themeWith'
 
 const withTheme = (theme: Theme) =>
   function Wrapper({ children }: { children: ReactNode }) {
@@ -26,9 +26,7 @@ describe('AlertTitle', () => {
   })
 
   it('styles its root from styleOverrides', () => {
-    const theme = createTheme(baseTheme, {
-      components: { AlertTitle: { styleOverrides: { root: { opacity: 0.9 } } } },
-    })
+    const theme = themeWith({ AlertTitle: { styleOverrides: { root: { opacity: 0.9 } } } })
     render(<AlertTitle data-testid="title">Saved</AlertTitle>, { wrapper: withTheme(theme) })
     expect(screen.getByTestId('title')).toHaveStyle({ opacity: '0.9' })
   })

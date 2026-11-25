@@ -10,6 +10,7 @@ import { getStyleRulesFor } from '../utils/test/getStyleRulesFor'
 import { Menu } from '../Menu'
 import { MenuItem } from '../MenuItem'
 import { Fab, type FabProps } from './Fab'
+import { themeWith } from '../utils/test/themeWith'
 
 const withTheme = (theme: Theme) =>
   function Wrapper({ children }: { children: ReactNode }) {
@@ -106,10 +107,8 @@ describe('Fab', () => {
 
   describe('theme', () => {
     it('takes its defaults from the theme, an own prop winning', () => {
-      const theme = createTheme(baseTheme, {
-        components: {
-          Fab: { defaultProps: { variant: 'extended', color: 'success', size: 'sm' } },
-        },
+      const theme = themeWith({
+        Fab: { defaultProps: { variant: 'extended', color: 'success', size: 'sm' } },
       })
       const { unmount } = render(<Fab data-testid="fab">Create</Fab>, { wrapper: withTheme(theme) })
       expect(fab()).toHaveStyle({
@@ -132,9 +131,7 @@ describe('Fab', () => {
     })
 
     it('styles its root from styleOverrides', () => {
-      const theme = createTheme(baseTheme, {
-        components: { Fab: { styleOverrides: { root: { opacity: 0.9 } } } },
-      })
+      const theme = themeWith({ Fab: { styleOverrides: { root: { opacity: 0.9 } } } })
       render(view(), { wrapper: withTheme(theme) })
       expect(fab()).toHaveStyle({ opacity: '0.9' })
     })
@@ -256,9 +253,7 @@ describe('Fab', () => {
 
     it('has slots of its own in the theme', () => {
       const style = { outlineColor: 'rgb(1, 2, 3)' }
-      const theme = createTheme(baseTheme, {
-        components: { Fab: { styleOverrides: { label: style, labelText: style } } },
-      })
+      const theme = themeWith({ Fab: { styleOverrides: { label: style, labelText: style } } })
       render(view({ variant: 'extended', children: 'Create' }), { wrapper: withTheme(theme) })
       expect(screen.getByText('Create')).toHaveStyle(style)
       expect(screen.getByText('Create').parentElement).toHaveStyle(style)

@@ -9,6 +9,7 @@ import { MenuItem } from '../../MenuItem'
 import { Tooltip } from '../../Tooltip'
 import { ThemeProvider } from '../../theme/ThemeProvider'
 import { Menu, type MenuProps } from './Menu'
+import { themeWith } from '../../utils/test/themeWith'
 
 const renderMenu = (props: Partial<MenuProps> = {}) =>
   renderWithTheme(
@@ -377,9 +378,7 @@ describe('Menu', () => {
       )
       expect(surface()).toHaveStyle({ borderRadius: baseTheme.radii.md })
       unmount()
-      const own = createTheme(baseTheme, {
-        components: { Menu: { defaultProps: { borderRadius: 'sm' } } },
-      })
+      const own = themeWith({ Menu: { defaultProps: { borderRadius: 'sm' } } })
       renderWithTheme(
         <Menu trigger={<Button>main</Button>} defaultOpen>
           <MenuItem value="a">One</MenuItem>
@@ -477,19 +476,17 @@ const withTheme = (theme: Theme) =>
 
 describe('Menu theme defaults', () => {
   it('takes its placement, surface and row look from theme.components.Menu.defaultProps', () => {
-    const theme = createTheme(baseTheme, {
-      components: {
-        Menu: {
-          defaultProps: {
-            align: 'end',
-            marginThreshold: 1,
-            elevation: 2,
-            layer: 'drawer',
-            color: 'error',
-            textColor: 'secondary',
-            size: 'sm',
-            dense: true,
-          },
+    const theme = themeWith({
+      Menu: {
+        defaultProps: {
+          align: 'end',
+          marginThreshold: 1,
+          elevation: 2,
+          layer: 'drawer',
+          color: 'error',
+          textColor: 'secondary',
+          size: 'sm',
+          dense: true,
         },
       },
     })

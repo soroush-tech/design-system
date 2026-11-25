@@ -10,6 +10,7 @@ import { FormLabel } from '../FormLabel'
 import { FormHelperText } from '../FormHelperText'
 import { RangeInput, type RangeInputProps } from './RangeInput'
 import { toPx } from '../utils/test/toPx'
+import { themeWith } from '../utils/test/themeWith'
 
 afterEach(() => vi.restoreAllMocks())
 
@@ -686,19 +687,17 @@ describe('RangeInput', () => {
   })
 
   it("takes the theme's defaults for every slider, its own props winning", () => {
-    const theme = createTheme(baseTheme, {
-      components: {
-        RangeInput: {
-          defaultProps: {
-            size: 'lg',
-            color: 'success',
-            orientation: 'vertical',
-            track: 'inverted',
-            step: 5,
-            shiftStep: 25,
-            valueLabel: 'on',
-            shouldSwapThumbs: false,
-          },
+    const theme = themeWith({
+      RangeInput: {
+        defaultProps: {
+          size: 'lg',
+          color: 'success',
+          orientation: 'vertical',
+          track: 'inverted',
+          step: 5,
+          shiftStep: 25,
+          valueLabel: 'on',
+          shouldSwapThumbs: false,
         },
       },
     })

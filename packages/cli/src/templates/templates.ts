@@ -48,10 +48,22 @@ declare module '${CORE_PACKAGE}/theme' {
  * `createTheme` call with a literal object last, the shape tools that edit a theme read and write.
  * `{}` is the components' customization, the same in every theme.
  */
-export function createThemesSource({ isTypeScript }: { isTypeScript: boolean }): string {
+export function createThemesSource({
+  isTypeScript,
+  scheme,
+}: {
+  isTypeScript: boolean
+  scheme: Scheme
+}): string {
   return `${MARKER} Your themes: change any value, or add a theme.
 // Every token is listed at ${THEMING_DOCS}
 import { baseTheme, createTheme, defineThemes } from '${CORE_PACKAGE}/theme'
+${
+  isTypeScript
+    ? `import type { ThemeComponents } from '${APP_PACKAGE}'
+`
+    : ''
+}import { registerBaseTheme } from '${APP_PACKAGE}/ThemeProvider'
 ${isTypeScript ? AUGMENTATION_STUB : ''}
 const themes = defineThemes(
   {
@@ -111,8 +123,12 @@ const themes = defineThemes(
       colorScheme: 'dark',
     }),
   },
-  {}
+  {}${isTypeScript ? ' satisfies ThemeComponents' : ''}
 )
+
+// What a server component reads, with no provider above it: the theme the app starts in. It is the
+// same object the provider gets, so the components and defaults match.
+registerBaseTheme(themes.${scheme})
 ${isTypeScript ? REGISTRATION : ''}
 export default themes
 `

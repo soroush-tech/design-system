@@ -5,7 +5,8 @@
 [![license](https://img.shields.io/npm/l/@soroush.design/core.svg?cacheSeconds=86400)](./LICENSE)
 
 What every platform of the soroush.design family shares and that needs no framework. The React,
-React Native and Vue libraries build on it; an app seldom installs it directly. It holds the theme
+React Native and Vue libraries build on it, and an app installs it to write its own theme with
+`createTheme` and `defineThemes`. It holds the theme
 (the tokens, `baseTheme`, `createTheme`), the breakpoint and container-query helpers, the pure
 utilities, and the component catalog.
 

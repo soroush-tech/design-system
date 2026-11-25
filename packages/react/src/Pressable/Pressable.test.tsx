@@ -4,11 +4,11 @@ import { render, fireEvent, screen } from '@testing-library/react'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { ThemeProvider } from '../theme/ThemeProvider'
 import { baseTheme } from '../theme/themes'
-import { createTheme } from '@soroush.design/core/theme'
 import { Pressable } from './Pressable'
 import { toPx } from '../utils/test/toPx'
 import { getCssVariable } from '../utils/test/getCssVariable'
 import { getStyleRulesFor } from '../utils/test/getStyleRulesFor'
+import { themeWith } from '../utils/test/themeWith'
 
 /** What the rules that target the element and contain the selector fragment declare for a property. */
 const declared = (element: HTMLElement, suffix: string, property: string) =>
@@ -301,11 +301,9 @@ describe('Pressable', () => {
 
   describe('theme defaults', () => {
     it('takes feedback, color, and activeOpacity from theme.components defaultProps', () => {
-      const theme = createTheme(baseTheme, {
-        components: {
-          Pressable: {
-            defaultProps: { feedback: 'highlight', color: 'error', activeOpacity: 0.2 },
-          },
+      const theme = themeWith({
+        Pressable: {
+          defaultProps: { feedback: 'highlight', color: 'error', activeOpacity: 0.2 },
         },
       })
       render(
@@ -317,8 +315,8 @@ describe('Pressable', () => {
     })
 
     it('lets an explicit prop beat the theme default', () => {
-      const theme = createTheme(baseTheme, {
-        components: { Pressable: { defaultProps: { feedback: 'highlight', activeOpacity: 0.2 } } },
+      const theme = themeWith({
+        Pressable: { defaultProps: { feedback: 'highlight', activeOpacity: 0.2 } },
       })
       render(
         <ThemeProvider theme={theme}>

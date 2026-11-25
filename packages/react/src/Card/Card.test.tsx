@@ -2,10 +2,10 @@ import { render, screen } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { ThemeProvider } from '../theme/ThemeProvider'
-import { createTheme } from '@soroush.design/core/theme'
 import { baseTheme } from '../theme/themes'
 import { Card } from './Card'
 import { toPx } from '../utils/test/toPx'
+import { themeWith } from '../utils/test/themeWith'
 
 describe('Card', () => {
   describe('children', () => {
@@ -84,10 +84,8 @@ describe('Card', () => {
   })
 
   describe('theme.components.Card', () => {
-    const withComponents = (
-      components: NonNullable<Parameters<typeof createTheme>[1]['components']>,
-      ui: React.ReactNode
-    ) => render(<ThemeProvider theme={createTheme(baseTheme, { components })}>{ui}</ThemeProvider>)
+    const withComponents = (components: Parameters<typeof themeWith>[0], ui: React.ReactNode) =>
+      render(<ThemeProvider theme={themeWith(components)}>{ui}</ThemeProvider>)
 
     it('defaultProps.titleProps restyle the title tokens (variant changes the element)', () => {
       withComponents(

@@ -2,11 +2,11 @@ import { describe, it, expect, vi } from 'vitest'
 import { fireEvent, render, screen } from '@testing-library/react'
 import type { ReactNode } from 'react'
 import { ThemeProvider } from '../../theme/ThemeProvider'
-import { baseTheme, type Theme } from '../../theme/themes'
-import { createTheme } from '@soroush.design/core/theme'
+import { type Theme } from '../../theme/themes'
 import { renderWithTheme } from '../../utils/test/renderWithTheme'
 import { Accordion } from '../Accordion'
 import { AccordionSummary, type AccordionSummaryProps } from './AccordionSummary'
+import { themeWith } from '../../utils/test/themeWith'
 
 const withTheme = (theme: Theme) =>
   function Wrapper({ children }: { children: ReactNode }) {
@@ -33,9 +33,7 @@ describe('AccordionSummary', () => {
     const { unmount } = renderWithTheme(view({ headingLevel: 2 }))
     expect(screen.getByRole('heading', { level: 2 })).toBeInTheDocument()
     unmount()
-    const theme = createTheme(baseTheme, {
-      components: { AccordionSummary: { defaultProps: { headingLevel: 5 } } },
-    })
+    const theme = themeWith({ AccordionSummary: { defaultProps: { headingLevel: 5 } } })
     const { unmount: unmountThemed } = render(view(), { wrapper: withTheme(theme) })
     expect(screen.getByRole('heading', { level: 5 })).toBeInTheDocument()
     unmountThemed()
@@ -67,15 +65,13 @@ describe('AccordionSummary', () => {
   })
 
   it('styles each slot from styleOverrides', () => {
-    const theme = createTheme(baseTheme, {
-      components: {
-        AccordionSummary: {
-          styleOverrides: {
-            root: { opacity: 0.9 },
-            button: { opacity: 0.8 },
-            content: { opacity: 0.7 },
-            icon: { opacity: 0.6 },
-          },
+    const theme = themeWith({
+      AccordionSummary: {
+        styleOverrides: {
+          root: { opacity: 0.9 },
+          button: { opacity: 0.8 },
+          content: { opacity: 0.7 },
+          icon: { opacity: 0.6 },
         },
       },
     })

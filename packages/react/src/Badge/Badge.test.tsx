@@ -3,10 +3,10 @@ import { render, screen } from '@testing-library/react'
 import type { ReactNode } from 'react'
 import { ThemeProvider } from '../theme/ThemeProvider'
 import { baseTheme, type Theme } from '../theme/themes'
-import { createTheme } from '@soroush.design/core/theme'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { getStyleRulesFor } from '../utils/test/getStyleRulesFor'
 import { Badge, type BadgeProps } from './Badge'
+import { themeWith } from '../utils/test/themeWith'
 
 const withTheme = (theme: Theme) =>
   function Wrapper({ children }: { children: ReactNode }) {
@@ -188,16 +188,14 @@ describe('Badge', () => {
 
   describe('theme', () => {
     it('takes its defaults from the theme, an own prop winning', () => {
-      const theme = createTheme(baseTheme, {
-        components: {
-          Badge: {
-            defaultProps: {
-              max: 9,
-              variant: 'dot',
-              color: 'info',
-              anchorOrigin: { vertical: 'bottom', horizontal: 'start' },
-              overlap: 'circular',
-            },
+      const theme = themeWith({
+        Badge: {
+          defaultProps: {
+            max: 9,
+            variant: 'dot',
+            color: 'info',
+            anchorOrigin: { vertical: 'bottom', horizontal: 'start' },
+            overlap: 'circular',
           },
         },
       })
@@ -213,14 +211,12 @@ describe('Badge', () => {
     })
 
     it('styles each slot from styleOverrides', () => {
-      const theme = createTheme(baseTheme, {
-        components: {
-          Badge: {
-            styleOverrides: {
-              root: { opacity: 0.9 },
-              badge: { opacity: 0.8 },
-              label: { opacity: 0.7 },
-            },
+      const theme = themeWith({
+        Badge: {
+          styleOverrides: {
+            root: { opacity: 0.9 },
+            badge: { opacity: 0.8 },
+            label: { opacity: 0.7 },
           },
         },
       })

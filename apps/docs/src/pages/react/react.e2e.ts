@@ -333,6 +333,44 @@ test.describe('react section', () => {
     await page.goto('/react/hooks/useDebounce/')
     await expect(page.getByRole('heading', { level: 1, name: 'useDebounce' })).toBeVisible()
     await expect(page.getByText('Needs a browser: no.')).toBeVisible()
+    await expect(page.getByText('npm i @soroush.design/react-hooks')).toBeVisible()
+    await expect(
+      page
+        .getByText("import { useDebounce } from '@soroush.design/react-hooks/useDebounce'")
+        .first()
+    ).toBeVisible()
+  })
+
+  test('a page shows the install and the import of the package that exports its subject', async ({
+    page,
+  }) => {
+    await page.goto('/react/Button/')
+    await expect(
+      page.getByText("import { Button } from '@soroush.design/react/Button'")
+    ).toBeVisible()
+    await page.goto('/react/Table/TableCell/')
+    await expect(
+      page.getByText("import { TableCell } from '@soroush.design/react/Table'")
+    ).toBeVisible()
+    await page.goto('/react/markdown/Editor/')
+    await expect(page.getByText('npm i @soroush.design/react-markdown')).toBeVisible()
+    await expect(
+      page.getByText("import { Editor } from '@soroush.design/react-markdown/Editor'")
+    ).toBeVisible()
+    await page.goto('/react/theme/')
+    await expect(
+      page.getByText("from '@soroush.design/core/theme'", { exact: false }).first()
+    ).toBeVisible()
+  })
+
+  test('the installation page installs the React package and the theme package', async ({
+    page,
+  }) => {
+    await page.goto('/react/installation/')
+    await expect(
+      page.getByText('npm i @soroush.design/react @soroush.design/core react react-dom')
+    ).toBeVisible()
+    await expect(page.getByText('registerBaseTheme(themes.dark)')).toBeVisible()
   })
 
   // Each example runs live once its page has loaded: a name its code uses and the demo scope

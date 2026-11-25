@@ -2,11 +2,11 @@ import { describe, it, expect, vi } from 'vitest'
 import { act, fireEvent, screen } from '@testing-library/react'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { baseTheme, type Theme } from '../theme/themes'
-import { createTheme } from '@soroush.design/core/theme'
 import { MenuList } from '../Menu/MenuList'
 import { ThemeProvider } from '../theme/ThemeProvider'
 import type { ReactNode } from 'react'
 import { MenuItem } from './MenuItem'
+import { themeWith } from '../utils/test/themeWith'
 
 describe('MenuItem', () => {
   it('renders a semantic option with its label and value', () => {
@@ -481,11 +481,9 @@ const withTheme = (theme: Theme) =>
 
 describe('MenuItem theme defaults', () => {
   it("takes its look from theme.components.MenuItem.defaultProps, under its list's", () => {
-    const theme = createTheme(baseTheme, {
-      components: {
-        MenuItem: {
-          defaultProps: { color: 'error', textColor: 'secondary', size: 'sm', dense: true },
-        },
+    const theme = themeWith({
+      MenuItem: {
+        defaultProps: { color: 'error', textColor: 'secondary', size: 'sm', dense: true },
       },
     })
     renderWithTheme(

@@ -6,9 +6,9 @@ import { FormLabel } from '../FormLabel'
 import { FormHelperText } from '../FormHelperText'
 import { ThemeProvider } from '../theme/ThemeProvider'
 import { baseTheme } from '../theme/themes'
-import { createTheme } from '@soroush.design/core/theme'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { Autocomplete, type AutocompleteProps } from './Autocomplete'
+import { themeWith } from '../utils/test/themeWith'
 
 const CITIES = ['Berlin', 'Lisbon', 'Oslo', 'Rome']
 
@@ -583,21 +583,19 @@ describe('Autocomplete', () => {
 
   describe('theme', () => {
     it('takes its defaults and its labels from the theme', () => {
-      const theme = createTheme(baseTheme, {
-        components: {
-          Autocomplete: {
-            defaultProps: {
-              shouldAllowFreeText: true,
-              clearLabel: 'Wipe',
-              openLabel: 'Show',
-              closeLabel: 'Hide',
-              noOptionsText: 'Empty',
-              loadingText: 'Wait',
-              layer: 'tooltip',
-              variant: 'outlined',
-              size: 'sm',
-              color: 'secondary',
-            },
+      const theme = themeWith({
+        Autocomplete: {
+          defaultProps: {
+            shouldAllowFreeText: true,
+            clearLabel: 'Wipe',
+            openLabel: 'Show',
+            closeLabel: 'Hide',
+            noOptionsText: 'Empty',
+            loadingText: 'Wait',
+            layer: 'tooltip',
+            variant: 'outlined',
+            size: 'sm',
+            color: 'secondary',
           },
         },
       })
@@ -615,18 +613,16 @@ describe('Autocomplete', () => {
 
     it('styles every part of the open list from the theme', () => {
       const style = { outlineColor: 'rgb(1, 2, 3)' }
-      const theme = createTheme(baseTheme, {
-        components: {
-          Autocomplete: {
-            styleOverrides: {
-              popup: style,
-              listbox: style,
-              group: style,
-              groupLabel: style,
-              groupItems: style,
-              option: style,
-              status: style,
-            },
+      const theme = themeWith({
+        Autocomplete: {
+          styleOverrides: {
+            popup: style,
+            listbox: style,
+            group: style,
+            groupLabel: style,
+            groupItems: style,
+            option: style,
+            status: style,
           },
         },
       })

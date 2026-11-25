@@ -3,9 +3,9 @@ import { fireEvent, render, screen } from '@testing-library/react'
 import type { ReactNode } from 'react'
 import { ThemeProvider } from '../theme/ThemeProvider'
 import { baseTheme, type Theme } from '../theme/themes'
-import { createTheme } from '@soroush.design/core/theme'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { Chip, type ChipProps } from './Chip'
+import { themeWith } from '../utils/test/themeWith'
 
 const withTheme = (theme: Theme) =>
   function Wrapper({ children }: { children: ReactNode }) {
@@ -197,15 +197,11 @@ describe('Chip', () => {
     })
 
     it('takes its shape and radius from the theme, an own prop winning', () => {
-      const theme = createTheme(baseTheme, {
-        components: { Chip: { defaultProps: { shape: 'square' } } },
-      })
+      const theme = themeWith({ Chip: { defaultProps: { shape: 'square' } } })
       const { unmount } = render(view(), { wrapper: withTheme(theme) })
       expect(root()).toHaveStyle({ borderRadius: '0' })
       unmount()
-      const radius = createTheme(baseTheme, {
-        components: { Chip: { defaultProps: { shape: 'rounded', borderRadius: 'sm' } } },
-      })
+      const radius = themeWith({ Chip: { defaultProps: { shape: 'rounded', borderRadius: 'sm' } } })
       render(view(), { wrapper: withTheme(radius) })
       expect(root()).toHaveStyle({ borderRadius: baseTheme.radii.sm })
     })
@@ -213,15 +209,13 @@ describe('Chip', () => {
 
   describe('theme', () => {
     it('takes its defaults from the theme, an own prop winning', () => {
-      const theme = createTheme(baseTheme, {
-        components: {
-          Chip: {
-            defaultProps: {
-              variant: 'outlined',
-              color: 'info',
-              size: 'sm',
-              deleteLabel: 'Remove it',
-            },
+      const theme = themeWith({
+        Chip: {
+          defaultProps: {
+            variant: 'outlined',
+            color: 'info',
+            size: 'sm',
+            deleteLabel: 'Remove it',
           },
         },
       })
@@ -241,16 +235,14 @@ describe('Chip', () => {
     })
 
     it('styles each slot from styleOverrides', () => {
-      const theme = createTheme(baseTheme, {
-        components: {
-          Chip: {
-            styleOverrides: {
-              root: { opacity: 0.9 },
-              body: { opacity: 0.8 },
-              label: { opacity: 0.7 },
-              icon: { opacity: 0.6 },
-              deleteIcon: { opacity: 0.5 },
-            },
+      const theme = themeWith({
+        Chip: {
+          styleOverrides: {
+            root: { opacity: 0.9 },
+            body: { opacity: 0.8 },
+            label: { opacity: 0.7 },
+            icon: { opacity: 0.6 },
+            deleteIcon: { opacity: 0.5 },
           },
         },
       })
@@ -265,9 +257,7 @@ describe('Chip', () => {
     })
 
     it('styles the avatar slot', () => {
-      const theme = createTheme(baseTheme, {
-        components: { Chip: { styleOverrides: { avatar: { opacity: 0.4 } } } },
-      })
+      const theme = themeWith({ Chip: { styleOverrides: { avatar: { opacity: 0.4 } } } })
       render(view({ avatar: <b data-testid="avatar" /> }), { wrapper: withTheme(theme) })
       expect(screen.getByTestId('avatar').parentElement).toHaveStyle({ opacity: '0.4' })
     })

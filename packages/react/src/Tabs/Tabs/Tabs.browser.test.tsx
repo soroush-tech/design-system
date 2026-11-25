@@ -3,13 +3,13 @@ import { userEvent } from 'vitest/browser'
 import { render, screen } from '@testing-library/react'
 import { renderWithTheme } from '../../utils/test/renderWithTheme'
 import { baseTheme } from '../../theme/themes'
-import { createTheme } from '@soroush.design/core/theme'
 import { ThemeProvider } from '../../theme/ThemeProvider'
 import { Tabs, type TabsProps } from './Tabs'
 import { Tab } from '../Tab'
 import { TabContext } from '../TabContext'
 import { TabList } from '../TabList'
 import { TabPanel } from '../TabPanel'
+import { themeWith } from '../../utils/test/themeWith'
 
 // The indicator is measured from real layout, which jsdom doesn't have.
 
@@ -198,9 +198,7 @@ describe('the divider in a browser', () => {
   })
 
   it('takes hasDivider from the theme, and turns the line to the end side in a column', () => {
-    const theme = createTheme(baseTheme, {
-      components: { Tabs: { defaultProps: { hasDivider: false } } },
-    })
+    const theme = themeWith({ Tabs: { defaultProps: { hasDivider: false } } })
     const { unmount } = render(
       <ThemeProvider theme={theme}>
         <Tabs aria-label="Views" defaultValue="canvas">

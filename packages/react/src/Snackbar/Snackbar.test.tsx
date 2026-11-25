@@ -3,10 +3,10 @@ import { act, fireEvent, render, screen } from '@testing-library/react'
 import type { ReactNode } from 'react'
 import { ThemeProvider } from '../theme/ThemeProvider'
 import { baseTheme, type Theme } from '../theme/themes'
-import { createTheme } from '@soroush.design/core/theme'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import type { TransitionProps } from '../utils/useTransition'
 import { Snackbar, type SnackbarProps } from './Snackbar'
+import { themeWith } from '../utils/test/themeWith'
 
 const withTheme = (theme: Theme) =>
   function Wrapper({ children }: { children: ReactNode }) {
@@ -311,15 +311,13 @@ describe('Snackbar', () => {
     })
 
     it('takes them from the theme', () => {
-      const theme = createTheme(baseTheme, {
-        components: {
-          Snackbar: {
-            defaultProps: {
-              shape: 'rounded',
-              borderRadius: 'md',
-              bg: 'paper',
-              textColor: 'secondary',
-            },
+      const theme = themeWith({
+        Snackbar: {
+          defaultProps: {
+            shape: 'rounded',
+            borderRadius: 'md',
+            bg: 'paper',
+            textColor: 'secondary',
           },
         },
       })
@@ -335,15 +333,13 @@ describe('Snackbar', () => {
 
   describe('theme', () => {
     it('takes its defaults from the theme, an own prop winning', () => {
-      const theme = createTheme(baseTheme, {
-        components: {
-          Snackbar: {
-            defaultProps: {
-              autoHideDuration: 500,
-              resumeHideDuration: 100,
-              anchorOrigin: { vertical: 'top', horizontal: 'center' },
-              layer: 'modal',
-            },
+      const theme = themeWith({
+        Snackbar: {
+          defaultProps: {
+            autoHideDuration: 500,
+            resumeHideDuration: 100,
+            anchorOrigin: { vertical: 'top', horizontal: 'center' },
+            layer: 'modal',
           },
         },
       })
@@ -375,16 +371,14 @@ describe('Snackbar', () => {
     })
 
     it('styles each slot from styleOverrides', () => {
-      const theme = createTheme(baseTheme, {
-        components: {
-          Snackbar: {
-            styleOverrides: {
-              root: { opacity: 0.9 },
-              // Its transition owns its opacity: another property shows the override.
-              content: { textTransform: 'uppercase' },
-              message: { opacity: 0.7 },
-              action: { opacity: 0.6 },
-            },
+      const theme = themeWith({
+        Snackbar: {
+          styleOverrides: {
+            root: { opacity: 0.9 },
+            // Its transition owns its opacity: another property shows the override.
+            content: { textTransform: 'uppercase' },
+            message: { opacity: 0.7 },
+            action: { opacity: 0.6 },
           },
         },
       })

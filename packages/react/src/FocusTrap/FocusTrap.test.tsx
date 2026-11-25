@@ -1,17 +1,14 @@
 import { describe, it, expect, afterEach } from 'vitest'
 import { render, screen, fireEvent, cleanup } from '@testing-library/react'
 import { ThemeProvider } from '../theme/ThemeProvider'
-import { createTheme } from '@soroush.design/core/theme'
-import { baseTheme } from '../theme/themes'
 import { FocusTrap } from './'
+import { themeWith } from '../utils/test/themeWith'
 
 afterEach(cleanup)
 
 describe('FocusTrap - theme customization', () => {
   it('applies theme.components.FocusTrap.styleOverrides.root to the wrapper', () => {
-    const theme = createTheme(baseTheme, {
-      components: { FocusTrap: { styleOverrides: { root: { display: 'contents' } } } },
-    })
+    const theme = themeWith({ FocusTrap: { styleOverrides: { root: { display: 'contents' } } } })
     render(
       <ThemeProvider theme={theme}>
         <FocusTrap>

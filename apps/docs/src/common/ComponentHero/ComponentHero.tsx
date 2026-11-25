@@ -11,9 +11,11 @@ import { View } from '@soroush.design/react/View'
 import { ComponentIllustration } from 'src/common/ComponentCard/ComponentIllustration'
 import { CONTENT_MAX_WIDTH, PANEL_RADIUS } from 'src/common/layoutSizes'
 import { RailGlyph } from 'src/common/NavRail/RailGlyph'
+import { ImportLines } from 'src/common/ImportLines/ImportLines'
 import { sourceUrlOf } from 'src/common/packages'
 import {
   componentAccessibilityPath,
+  componentImportLine,
   componentPagePath,
   componentSpecsPath,
   type ComponentNavItem,
@@ -212,6 +214,9 @@ export function ComponentHero({
             <ComponentIllustration name={item.name} />
           </Tile>
         </Hero>
+        <View mt={2}>
+          <ImportLines line={componentImportLine(item)} />
+        </View>
       </View>
       {active && (
         <TabBar

@@ -8,6 +8,7 @@ import { View } from '@soroush.design/react/View'
 import { ComponentIllustration } from 'src/common/ComponentCard/ComponentIllustration'
 import { Layout } from 'src/common/Layout'
 import { PACKAGE_VERSIONS } from 'src/common/packageVersions'
+import { appInstallLine } from 'src/common/nav'
 import { sectionPath } from 'src/common/sectionPath'
 
 // What the library stands for, in four lines - each a card under the hero.
@@ -77,7 +78,7 @@ export default function Page() {
               </Button>
             </Flex>
             <Typography as="code" variant="body2" fontFamily="mono">
-              npm i @soroush.design/react
+              {appInstallLine}
             </Typography>
           </Flex>
           <Grid

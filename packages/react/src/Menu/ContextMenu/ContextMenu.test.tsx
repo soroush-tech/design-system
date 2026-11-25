@@ -2,11 +2,11 @@ import { describe, it, expect, vi, afterEach } from 'vitest'
 import { act, fireEvent, screen } from '@testing-library/react'
 import { renderWithTheme } from '../../utils/test/renderWithTheme'
 import { baseTheme, type Theme } from '../../theme/themes'
-import { createTheme } from '@soroush.design/core/theme'
 import { MenuItem } from '../../MenuItem'
 import { ThemeProvider } from '../../theme/ThemeProvider'
 import type { ReactNode } from 'react'
 import { ContextMenu, type ContextMenuProps } from './ContextMenu'
+import { themeWith } from '../../utils/test/themeWith'
 
 const renderMenu = (props: Partial<ContextMenuProps> = {}) =>
   renderWithTheme(
@@ -61,9 +61,7 @@ describe('ContextMenu corners', () => {
   })
 
   it('takes its radius from the theme', () => {
-    const theme = createTheme(baseTheme, {
-      components: { ContextMenu: { defaultProps: { borderRadius: 'md' } } },
-    })
+    const theme = themeWith({ ContextMenu: { defaultProps: { borderRadius: 'md' } } })
     renderWithTheme(
       <ContextMenu target={<div data-testid="canvas">Canvas</div>} aria-label="Canvas">
         <MenuItem value="paste">Paste</MenuItem>
@@ -313,20 +311,18 @@ const withTheme = (theme: Theme) =>
 
 describe('ContextMenu theme defaults', () => {
   it('takes its surface and row look from theme.components.ContextMenu.defaultProps', () => {
-    const theme = createTheme(baseTheme, {
-      components: {
-        ContextMenu: {
-          defaultProps: {
-            marginThreshold: 1,
-            elevation: 2,
-            layer: 'drawer',
-            color: 'error',
-            textColor: 'secondary',
-            size: 'sm',
-            dense: true,
-          },
-          styleOverrides: { paper: { outlineStyle: 'dotted' } },
+    const theme = themeWith({
+      ContextMenu: {
+        defaultProps: {
+          marginThreshold: 1,
+          elevation: 2,
+          layer: 'drawer',
+          color: 'error',
+          textColor: 'secondary',
+          size: 'sm',
+          dense: true,
         },
+        styleOverrides: { paper: { outlineStyle: 'dotted' } },
       },
     })
     renderWithTheme(

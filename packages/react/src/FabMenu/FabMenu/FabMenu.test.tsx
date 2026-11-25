@@ -3,10 +3,10 @@ import { act, fireEvent, render, screen } from '@testing-library/react'
 import type { ReactNode } from 'react'
 import { ThemeProvider } from '../../theme/ThemeProvider'
 import { baseTheme, type Theme } from '../../theme/themes'
-import { createTheme } from '@soroush.design/core/theme'
 import { renderWithTheme } from '../../utils/test/renderWithTheme'
 import { FabMenuItem } from '../FabMenuItem'
 import { FabMenu, type FabMenuProps } from './FabMenu'
+import { themeWith } from '../../utils/test/themeWith'
 
 const withTheme = (theme: Theme) =>
   function Wrapper({ children }: { children: ReactNode }) {
@@ -635,11 +635,9 @@ describe('FabMenu', () => {
 
   describe('theme', () => {
     it('takes its defaults from the theme, an own prop winning', () => {
-      const theme = createTheme(baseTheme, {
-        components: {
-          FabMenu: {
-            defaultProps: { direction: 'down', align: 'start', color: 'error', size: 'sm' },
-          },
+      const theme = themeWith({
+        FabMenu: {
+          defaultProps: { direction: 'down', align: 'start', color: 'error', size: 'sm' },
         },
       })
       const { unmount } = render(view({ defaultOpen: true }), { wrapper: withTheme(theme) })
@@ -657,9 +655,7 @@ describe('FabMenu', () => {
 
     it('styles its root and its list from styleOverrides', () => {
       const style = { outlineColor: 'rgb(1, 2, 3)' }
-      const theme = createTheme(baseTheme, {
-        components: { FabMenu: { styleOverrides: { root: style, list: style } } },
-      })
+      const theme = themeWith({ FabMenu: { styleOverrides: { root: style, list: style } } })
       render(view({ defaultOpen: true }), { wrapper: withTheme(theme) })
       expect(screen.getByTestId('menu')).toHaveStyle(style)
       expect(

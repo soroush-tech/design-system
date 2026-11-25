@@ -3,9 +3,9 @@ import { fireEvent, render, screen } from '@testing-library/react'
 import type { ReactNode } from 'react'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { baseTheme, type Theme } from '../theme/themes'
-import { createTheme } from '@soroush.design/core/theme'
 import { ThemeProvider } from '../theme/ThemeProvider'
 import { Breadcrumbs, type BreadcrumbsProps } from './Breadcrumbs'
+import { themeWith } from '../utils/test/themeWith'
 
 const nine = ['first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth']
 
@@ -123,17 +123,15 @@ describe('Breadcrumbs', () => {
   })
 
   it("takes the theme's defaults - its separator, collapse, label and color - and its own props win", () => {
-    const theme = createTheme(baseTheme, {
-      components: {
-        Breadcrumbs: {
-          defaultProps: {
-            separator: '›',
-            maxItems: 2,
-            itemsBeforeCollapse: 1,
-            itemsAfterCollapse: 1,
-            expandLabel: 'Afficher le chemin',
-            color: 'primary',
-          },
+    const theme = themeWith({
+      Breadcrumbs: {
+        defaultProps: {
+          separator: '›',
+          maxItems: 2,
+          itemsBeforeCollapse: 1,
+          itemsAfterCollapse: 1,
+          expandLabel: 'Afficher le chemin',
+          color: 'primary',
         },
       },
     })

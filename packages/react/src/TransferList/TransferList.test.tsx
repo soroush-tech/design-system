@@ -3,13 +3,13 @@ import { fireEvent, render, screen, within } from '@testing-library/react'
 import type { ReactNode } from 'react'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { baseTheme, type Theme } from '../theme/themes'
-import { createTheme } from '@soroush.design/core/theme'
 import { ThemeProvider } from '../theme/ThemeProvider'
 import { FormControl } from '../FormControl'
 import { FormLabel } from '../FormLabel'
 import { FormHelperText } from '../FormHelperText'
 import { TransferList, type TransferListProps } from './TransferList'
 import { toPx } from '../utils/test/toPx'
+import { themeWith } from '../utils/test/themeWith'
 
 const withTheme = (theme: Theme) =>
   function Wrapper({ children }: { children: ReactNode }) {
@@ -284,19 +284,17 @@ describe('TransferList', () => {
 
   describe('theme', () => {
     it('takes its defaults from the theme, an own prop winning', () => {
-      const theme = createTheme(baseTheme, {
-        components: {
-          TransferList: {
-            defaultProps: {
-              shouldShowMoveAll: true,
-              hasSelectAll: true,
-              moveAllRightLabel: 'Everything right',
-              moveRightLabel: 'To the right',
-              moveLeftLabel: 'To the left',
-              moveAllLeftLabel: 'Everything left',
-              size: 'sm',
-              color: 'secondary',
-            },
+      const theme = themeWith({
+        TransferList: {
+          defaultProps: {
+            shouldShowMoveAll: true,
+            hasSelectAll: true,
+            moveAllRightLabel: 'Everything right',
+            moveRightLabel: 'To the right',
+            moveLeftLabel: 'To the left',
+            moveAllLeftLabel: 'Everything left',
+            size: 'sm',
+            color: 'secondary',
           },
         },
       })
@@ -309,11 +307,9 @@ describe('TransferList', () => {
     })
 
     it('styles each slot from styleOverrides', () => {
-      const theme = createTheme(baseTheme, {
-        components: {
-          TransferList: {
-            styleOverrides: { items: { height: '5rem' } },
-          },
+      const theme = themeWith({
+        TransferList: {
+          styleOverrides: { items: { height: '5rem' } },
         },
       })
       render(list(), { wrapper: withTheme(theme) })

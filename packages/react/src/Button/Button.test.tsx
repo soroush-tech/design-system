@@ -4,11 +4,11 @@ import { describe, it, expect, vi } from 'vitest'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { ThemeProvider } from '../theme/ThemeProvider'
 import { ButtonGroup } from '../ButtonGroup'
-import { createTheme } from '@soroush.design/core/theme'
 import { baseTheme } from '../theme/themes'
 import { Button, type ButtonColor, type ButtonVariant, type ButtonSize } from '../Button'
 import type { ButtonShape } from '../Button'
 import { toPx } from '../utils/test/toPx'
+import { themeWith } from '../utils/test/themeWith'
 
 describe('Button', () => {
   it('gives its ref the element it renders, on React 18 as on 19', () => {
@@ -143,10 +143,8 @@ describe('Button', () => {
   })
 
   describe('theme.components.Button', () => {
-    const withComponents = (
-      components: NonNullable<Parameters<typeof createTheme>[1]['components']>,
-      ui: ReactNode
-    ) => render(<ThemeProvider theme={createTheme(baseTheme, { components })}>{ui}</ThemeProvider>)
+    const withComponents = (components: Parameters<typeof themeWith>[0], ui: ReactNode) =>
+      render(<ThemeProvider theme={themeWith(components)}>{ui}</ThemeProvider>)
 
     describe('defaultProps', () => {
       it('applies theme-contributed default props', () => {
@@ -187,10 +185,10 @@ describe('Button', () => {
       it('defaultProps beat theme.defaults', () => {
         render(
           <ThemeProvider
-            theme={createTheme(baseTheme, {
-              defaults: { color: 'success' },
-              components: { Button: { defaultProps: { color: 'error' } } },
-            })}
+            theme={themeWith(
+              { Button: { defaultProps: { color: 'error' } } },
+              { defaults: { color: 'success' } }
+            )}
           >
             <Button data-testid="btn">btn</Button>
           </ThemeProvider>
