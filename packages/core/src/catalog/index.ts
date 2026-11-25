@@ -1,9 +1,11 @@
 import { categories } from './categories'
 import { catalogSources } from './sources'
 import { styleScales } from './styleScales'
+import { themeComponents } from './themeComponents'
 import type { CatalogEntry, DesignSystemCatalog } from './types'
 
 export type * from './types'
+export { validateThemeComponents, type ThemeProblem } from './validateThemeComponents'
 
 // Every name is in a category - the catalog's tests hold it to the docs' taxonomy.
 const categoryOf = (name: string): string =>
@@ -12,7 +14,7 @@ const categoryOf = (name: string): string =>
 const components: Record<string, CatalogEntry> = Object.fromEntries(
   Object.entries(catalogSources).map(([name, { entry, subpath, family }]) => [
     name,
-    { ...entry, name, subpath, category: categoryOf(family ?? name) },
+    { ...entry, name, subpath, category: categoryOf(family ?? name), ...themeComponents[name] },
   ])
 )
 

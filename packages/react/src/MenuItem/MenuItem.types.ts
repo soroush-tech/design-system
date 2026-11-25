@@ -1,11 +1,11 @@
-import type { ThemePalette, ThemeSizes, ThemeText } from '@soroush.design/core/theme'
+import type { ThemeText, ThemeColor, ThemeSize } from '@soroush.design/core/theme'
 import type { ComponentConfig } from '../theme/themes'
 
 /** The defaults a theme may set for every `MenuItem` - a list's own values win. */
 export interface MenuItemOwnerState {
-  color?: keyof ThemePalette
+  color?: ThemeColor
   textColor?: keyof ThemeText
-  size?: keyof ThemeSizes
+  size?: ThemeSize
   dense?: boolean
 }
 

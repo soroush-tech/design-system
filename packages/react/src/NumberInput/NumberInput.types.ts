@@ -1,11 +1,11 @@
-import type { InputVariantKey, ThemePalette, ThemeSizes } from '@soroush.design/core/theme'
+import type { InputVariantKey, ThemeColor, ThemeSize } from '@soroush.design/core/theme'
 import type { ComponentConfig } from '../theme/themes'
 
 /** The defaults a theme may set for every `NumberInput` - its button labels give it a language. */
 export interface NumberInputOwnerState {
   variant?: InputVariantKey
-  size?: keyof ThemeSizes
-  color?: keyof ThemePalette
+  size?: ThemeSize
+  color?: ThemeColor
   spinButtons?: 'stacked' | 'sides' | 'none'
   step?: number
   smallStep?: number

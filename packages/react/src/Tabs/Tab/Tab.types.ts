@@ -1,9 +1,9 @@
 import type {
   ThemeBackground,
-  ThemePalette,
   ThemeRadii,
-  ThemeSizes,
   ThemeText,
+  ThemeColor,
+  ThemeSize,
 } from '@soroush.design/core/theme'
 import type { ComponentConfig } from '../../theme/themes'
 
@@ -12,9 +12,9 @@ export interface TabOwnerState {
   isWrapped?: boolean
   bg?: keyof ThemeBackground
   borderRadius?: keyof ThemeRadii
-  color?: keyof ThemePalette
+  color?: ThemeColor
   textColor?: keyof ThemeText
-  size?: keyof ThemeSizes
+  size?: ThemeSize
   selectedBg?: keyof ThemeBackground
 }
 

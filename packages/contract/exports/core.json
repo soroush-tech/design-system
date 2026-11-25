@@ -21,7 +21,7 @@
       ]
     },
     "./catalog": {
-      "values": ["catalog"],
+      "values": ["catalog", "validateThemeComponents"],
       "types": [
         "CatalogContent",
         "CatalogEntry",
@@ -31,6 +31,7 @@
         "DesignSystemCatalog",
         "ExampleNode",
         "JsonValue",
+        "ThemeProblem",
         "ThemeScale"
       ]
     },

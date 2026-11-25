@@ -1,10 +1,10 @@
-import type { ThemePalette, ThemeSizes } from '@soroush.design/core/theme'
+import type { ThemeColor, ThemeSize } from '@soroush.design/core/theme'
 import type { ComponentConfig } from '../theme/themes'
 
 /** The defaults a theme may set for every `RangeInput`. */
 export interface RangeInputOwnerState {
-  size?: keyof ThemeSizes
-  color?: keyof ThemePalette
+  size?: ThemeSize
+  color?: ThemeColor
   orientation?: 'horizontal' | 'vertical'
   track?: 'normal' | false | 'inverted'
   step?: number | null

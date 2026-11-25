@@ -1,10 +1,10 @@
 import type {
-  ThemePalette,
   ThemeRadii,
-  ThemeSizes,
-  ThemeSpace,
   ThemeText,
   ThemeZOrder,
+  ThemeColor,
+  ThemeSize,
+  ThemeSpaceKey,
 } from '@soroush.design/core/theme'
 import type { ComponentConfig } from '../../theme/themes'
 import type { PaperElevation } from '../../Paper/Paper'
@@ -13,12 +13,12 @@ import type { PaperElevation } from '../../Paper/Paper'
 export interface MenuOwnerState {
   align?: 'start' | 'end'
   borderRadius?: keyof ThemeRadii
-  marginThreshold?: keyof ThemeSpace
+  marginThreshold?: ThemeSpaceKey
   elevation?: PaperElevation
   layer?: keyof ThemeZOrder
-  color?: keyof ThemePalette
+  color?: ThemeColor
   textColor?: keyof ThemeText
-  size?: keyof ThemeSizes
+  size?: ThemeSize
   dense?: boolean
 }
 

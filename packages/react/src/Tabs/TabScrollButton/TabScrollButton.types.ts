@@ -1,9 +1,9 @@
-import type { ThemePalette, ThemeText } from '@soroush.design/core/theme'
+import type { ThemeText, ThemeColor } from '@soroush.design/core/theme'
 import type { ComponentConfig } from '../../theme/themes'
 
 /** The defaults a theme may set for every `TabScrollButton`. */
 export interface TabScrollButtonOwnerState {
-  color?: keyof ThemePalette
+  color?: ThemeColor
   textColor?: keyof ThemeText
 }
 

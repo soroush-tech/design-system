@@ -8,6 +8,7 @@
   "sortPackageJson": false,
   "ignorePatterns": [
     "packages/ui-spec/vendor",
+    "packages/core/src/catalog/themeComponents.ts",
     "packages/cli/templates/*/js/**",
     "packages/cli/templates/**/README.md"
   ]

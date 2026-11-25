@@ -1,12 +1,12 @@
-import type { ThemePalette, ThemeSizes } from '@soroush.design/core/theme'
+import type { ThemeColor, ThemeSize } from '@soroush.design/core/theme'
 import type { ComponentConfig } from '../../theme/themes'
 
 /** The defaults a theme may set for every `FabMenu`. */
 export interface FabMenuOwnerState {
   direction?: 'up' | 'down' | 'left' | 'right'
   align?: 'start' | 'end'
-  color?: keyof ThemePalette
-  size?: keyof ThemeSizes
+  color?: ThemeColor
+  size?: ThemeSize
 }
 
 /** The slots of FabMenu a theme can style with `styleOverrides`. */

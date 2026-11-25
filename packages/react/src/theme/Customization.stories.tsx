@@ -3,7 +3,8 @@ import { Button, type ButtonVariant } from '../Button'
 import { ButtonGroup } from '../ButtonGroup'
 import { Flex } from '../Flex'
 import { Typography } from '../Typography'
-import { createTheme } from '@soroush.design/core/theme'
+import { defineThemes } from '@soroush.design/core/theme'
+import type { ThemeComponents as Components } from './components'
 import { baseTheme } from './themes'
 import { ThemeProvider } from './ThemeProvider'
 
@@ -11,29 +12,27 @@ import { ThemeProvider } from './ThemeProvider'
 // (`theme.components`): defaultProps, styleOverrides, and theme-contributed
 // variants - locked by Chromatic so the customization contract can't silently break.
 
-const customized = createTheme(baseTheme, {
-  components: {
-    Button: {
-      defaultProps: { size: 'sm', shape: 'rounded' },
-      styleOverrides: {
-        root: ({ theme, ownerState }) => ({
-          letterSpacing: theme.letterSpacings.wide,
-          ...(ownerState.variant === 'contained' && { textTransform: 'none' }),
+const customized = defineThemes({ customized: baseTheme }, {
+  Button: {
+    defaultProps: { size: 'sm', shape: 'rounded' },
+    styleOverrides: {
+      root: ({ theme, ownerState }) => ({
+        letterSpacing: theme.letterSpacings.wide,
+        ...(ownerState.variant === 'contained' && { textTransform: 'none' }),
+      }),
+    },
+    variants: [
+      {
+        props: { variant: 'dashed' as ButtonVariant },
+        style: ({ theme }) => ({
+          backgroundColor: 'transparent',
+          color: theme.palette.primary.main,
+          border: `${theme.borderWidths.thin} dashed ${theme.border.primary}`,
         }),
       },
-      variants: [
-        {
-          props: { variant: 'dashed' as ButtonVariant },
-          style: ({ theme }) => ({
-            backgroundColor: 'transparent',
-            color: theme.palette.primary.main,
-            border: `${theme.borderWidths.thin} dashed ${theme.border.primary}`,
-          }),
-        },
-      ],
-    },
+    ],
   },
-})
+} satisfies Components).customized
 
 const meta: Meta<typeof ThemeProvider> = {
   title: 'Theme/Customization',

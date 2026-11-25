@@ -1,4 +1,4 @@
-import type { ThemePalette, ThemeRadii, ThemeSizes } from '@soroush.design/core/theme'
+import type { ThemeRadii, ThemeColor, ThemeSize } from '@soroush.design/core/theme'
 import type { ComponentConfig } from '../theme/themes'
 
 /** The corner shapes of a control or a surface. */
@@ -7,8 +7,8 @@ type ShapeKey = 'square' | 'rounded' | 'pill'
 /** The defaults a theme may set for every `Chip` - its `deleteLabel` gives it a language. */
 export interface ChipOwnerState {
   variant?: 'contained' | 'outlined' | 'text'
-  color?: keyof ThemePalette
-  size?: keyof ThemeSizes
+  color?: ThemeColor
+  size?: ThemeSize
   shape?: ShapeKey
   borderRadius?: keyof ThemeRadii
   deleteLabel?: string

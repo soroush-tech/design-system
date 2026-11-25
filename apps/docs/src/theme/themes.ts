@@ -1,5 +1,5 @@
-import type { Theme } from '@soroush.design/core/theme'
-import { baseTheme, createTheme } from '@soroush.design/core/theme'
+import { baseTheme, createTheme, defineThemes } from '@soroush.design/core/theme'
+import type { ThemeComponents } from '@soroush.design/react'
 import { alpha, generateBoxShadow } from '@soroush.design/core/utils'
 import {
   blackAlpha,
@@ -35,11 +35,12 @@ const darkShadows = Array.from({ length: 25 }, (_, elevation) =>
 )
 
 // The docs' buttons are pills, as the rest of the rounded look.
-const components = { Button: { defaultProps: { shape: 'pill' as const } } }
+const components = {
+  Button: { defaultProps: { shape: 'pill' as const } },
+} satisfies ThemeComponents
 
-export const light: Theme = createTheme(baseTheme, {
+const lightTheme = createTheme(baseTheme, {
   name: 'light',
-  components,
   colorScheme: 'light',
   logoFilter: 'brightness(0)',
   portraitBlend: 'multiply',
@@ -140,9 +141,8 @@ export const light: Theme = createTheme(baseTheme, {
   shadows: lightShadows,
 })
 
-export const dark: Theme = createTheme(baseTheme, {
+const darkTheme = createTheme(baseTheme, {
   name: 'dark',
-  components,
   colorScheme: 'dark',
   logoFilter: 'brightness(0) invert(1)',
   portraitBlend: 'screen',
@@ -243,9 +243,14 @@ export const dark: Theme = createTheme(baseTheme, {
   shadows: darkShadows,
 })
 
-const themes = {
-  light,
-  dark,
+const themes = defineThemes({ light: lightTheme, dark: darkTheme }, components)
+
+export const { light, dark } = themes
+
+declare module '@soroush.design/core/theme' {
+  interface Register {
+    themes: typeof themes
+  }
 }
 
 export default themes

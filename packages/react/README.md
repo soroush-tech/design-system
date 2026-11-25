@@ -286,39 +286,48 @@ Two `defaults` objects with the same contents give the same theme, so an inline 
 Customize one component for the whole app - default prop values, per-slot CSS, and new variant values - without wrapping or forking:
 
 ```tsx
-const brand = createTheme(baseTheme, {
-  components: {
-    Button: {
-      // Buttons default to sm + rounded; explicit props and ButtonGroup still win.
-      defaultProps: { size: 'sm', shape: 'rounded' },
+import { baseTheme, createTheme, defineThemes } from '@soroush.design/core/theme'
+import type { ThemeComponents } from '@soroush.design/react'
 
-      // Per-slot CSS merged after Button's own styles - the theme wins the cascade,
-      // but per-instance props (m, p, width, ...) still beat the theme.
-      styleOverrides: {
-        root: ({ theme, ownerState }) => ({
-          letterSpacing: theme.letterSpacings.wide,
-          ...(ownerState.variant === 'contained' && { textTransform: 'none' }),
-        }),
-        label: { fontStyle: 'italic' },
-      },
+const brand = createTheme(baseTheme, { name: 'brand' })
 
-      // A new variant value - register it first so it typechecks:
-      // declare module '@soroush.design/core/theme' { interface ButtonVariants { dashed: true } }
-      variants: [
-        {
-          props: { variant: 'dashed' },
-          style: ({ theme }) => ({
-            backgroundColor: 'transparent',
-            border: `${theme.borderWidths.thin} dashed ${theme.border.primary}`,
-          }),
-        },
-      ],
+// The components are set once for all your themes, and checked with `satisfies ThemeComponents`.
+export const themes = defineThemes({ brand }, {
+  Button: {
+    // Buttons default to sm + rounded; explicit props and ButtonGroup still win.
+    defaultProps: { size: 'sm', shape: 'rounded' },
+
+    // Per-slot CSS merged after Button's own styles - the theme wins the cascade,
+    // but per-instance props (m, p, width, ...) still beat the theme.
+    styleOverrides: {
+      root: ({ theme, ownerState }) => ({
+        letterSpacing: theme.letterSpacings.wide,
+        ...(ownerState.variant === 'contained' && { textTransform: 'none' }),
+      }),
+      label: { fontStyle: 'italic' },
     },
+
+    // A new variant value - register the themes (below) and `variant="dashed"` typechecks:
+    variants: [
+      {
+        props: { variant: 'dashed' },
+        style: ({ theme }) => ({
+          backgroundColor: 'transparent',
+          border: `${theme.borderWidths.thin} dashed ${theme.border.primary}`,
+        }),
+      },
+    ],
   },
-})
+} satisfies ThemeComponents)
+
+declare module '@soroush.design/core/theme' {
+  interface Register {
+    themes: typeof themes
+  }
+}
 ```
 
-Style callbacks receive `{ theme, ownerState }`, where `ownerState` is the styled root's **resolved** props (after group context, `defaultProps`, and `theme.defaults`). `defaultProps` sits in the standard precedence chain: explicit prop → group context → `defaultProps` → `theme.defaults.*` → the component's literal fallback. `variants` arrays are replaced wholesale by `createTheme`, never merged.
+Style callbacks receive `{ theme, ownerState }`, where `ownerState` is the styled root's **resolved** props (after group context, `defaultProps`, and `theme.defaults`). `defaultProps` sits in the standard precedence chain: explicit prop → group context → `defaultProps` → `theme.defaults.*` → the component's literal fallback.
 
 Your own components can join the same mechanism: create their roots with this package's `styled(tag, { name: 'MyWidget', slot: 'root' })` and register the name by augmenting `ThemeComponents`. Zero-config themes pay nothing - the resolver bails out on the first check when `theme.components` is absent.
 

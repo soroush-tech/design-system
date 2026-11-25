@@ -1,11 +1,11 @@
-import type { ThemePalette } from '@soroush.design/core/theme'
+import type { ThemeColor } from '@soroush.design/core/theme'
 import type { ComponentConfig } from '../theme/themes'
 
 /** The defaults a theme may set for every `Badge`. */
 export interface BadgeOwnerState {
   max?: number
   variant?: 'standard' | 'dot'
-  color?: keyof ThemePalette
+  color?: ThemeColor
   anchorOrigin?: { vertical: 'top' | 'bottom'; horizontal: 'start' | 'end' }
   overlap?: 'rectangular' | 'circular'
 }

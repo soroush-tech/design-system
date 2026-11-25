@@ -70,6 +70,10 @@ export interface CatalogEntry {
   example: ExampleNode
   variants: CatalogVariant[]
   options: Record<string, CatalogOption>
+  /** The slots a theme can style with `components.<Name>.styleOverrides`; absent for a component with no theme entry. */
+  slots?: string[]
+  /** The fields of its owner state, the props a theme may default; absent when open or when it has no theme entry. */
+  ownerState?: string[]
   content: Record<string, CatalogContent>
   twoWay?: CatalogTwoWay
   /** Event handlers worth offering, named as the platform's components take them. */

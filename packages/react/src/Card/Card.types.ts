@@ -1,8 +1,8 @@
 import type {
   ThemeFonts,
-  ThemeSpace,
   ThemeText,
-  ThemeTypographyVariants,
+  ThemeSpaceKey,
+  ThemeTypography,
 } from '@soroush.design/core/theme'
 import type { ComponentConfig } from '../theme/themes'
 
@@ -19,10 +19,10 @@ export interface CardOwnerState {
 
 /** Token-typed Typography props a theme may set for Card's title/caption slots. */
 interface CardSlotTypographyProps {
-  variant?: keyof ThemeTypographyVariants
+  variant?: ThemeTypography
   color?: keyof ThemeText
   fontFamily?: keyof ThemeFonts
-  mb?: keyof ThemeSpace
+  mb?: ThemeSpaceKey
 }
 
 /** Token-typed Icon props a theme may set for Card's icon slot. */

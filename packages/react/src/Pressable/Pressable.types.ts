@@ -1,4 +1,4 @@
-import type { ThemePalette } from '@soroush.design/core/theme'
+import type { ThemeColor } from '@soroush.design/core/theme'
 import type { ComponentConfig } from '../theme/themes'
 
 /**
@@ -9,7 +9,7 @@ import type { ComponentConfig } from '../theme/themes'
  */
 export interface PressableOwnerState {
   feedback?: 'none' | 'opacity' | 'highlight'
-  color?: keyof ThemePalette
+  color?: ThemeColor
   /** Opacity held content fades to under `feedback: 'opacity'`. */
   activeOpacity?: number
 }

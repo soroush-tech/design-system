@@ -1,10 +1,10 @@
-import type { ThemePalette, ThemeSizes } from '@soroush.design/core/theme'
+import type { ThemeColor, ThemeSize } from '@soroush.design/core/theme'
 import type { ComponentConfig } from '../theme/themes'
 
 /** The defaults a theme may set for every `TransferList` - its button labels give it a language. */
 export interface TransferListOwnerState {
-  size?: keyof ThemeSizes
-  color?: keyof ThemePalette
+  size?: ThemeSize
+  color?: ThemeColor
   shouldShowMoveAll?: boolean
   hasSelectAll?: boolean
   moveAllRightLabel?: string

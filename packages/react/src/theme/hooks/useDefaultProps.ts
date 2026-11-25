@@ -1,8 +1,8 @@
 import type { ThemeComponents } from '../themes'
 import { useTheme } from './useTheme'
 
-type DefaultPropsOf<N extends keyof ThemeComponents> = NonNullable<
-  NonNullable<ThemeComponents[N]>['defaultProps']
+type DefaultPropsOf<N extends keyof ThemeComponents> = Partial<
+  NonNullable<NonNullable<ThemeComponents[N]>['$owner']>
 >
 
 /**

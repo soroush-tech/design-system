@@ -5,7 +5,7 @@ import { ThemeProvider } from './theme/ThemeProvider'
 import { Flex } from './Flex'
 import { Grid } from './Grid'
 import { View } from './View'
-import { createTheme } from '@soroush.design/core/theme'
+import { defineThemes } from '@soroush.design/core/theme'
 import { baseTheme, type ThemeComponents } from './theme/themes'
 import { AppBar } from './AppBar'
 import { Avatar } from './Avatar'
@@ -867,9 +867,10 @@ const cases: Case[] = [
 
 describe('theme.components styleOverrides', () => {
   it.each(cases)('$name applies styleOverrides.$slot', ({ name, slot, label, ui, open }) => {
-    const theme = createTheme(baseTheme, {
-      components: { [name]: { styleOverrides: { [slot]: MARKER } } },
-    })
+    const theme = defineThemes(
+      { theme: baseTheme },
+      { [name]: { styleOverrides: { [slot]: MARKER } } }
+    ).theme
     render(<ThemeProvider theme={theme}>{ui}</ThemeProvider>)
     open?.()
     expect(byLabel(label)).toHaveStyle(MARKER)

@@ -2,7 +2,7 @@ import { type ReactNode } from 'react'
 import { describe, it, expect, afterEach } from 'vitest'
 import { render, cleanup, fireEvent, screen } from '@testing-library/react'
 import { ThemeProvider } from '@soroush.design/react'
-import { createTheme, baseTheme } from '@soroush.design/core/theme'
+import { createTheme, defineThemes, baseTheme } from '@soroush.design/core/theme'
 import type { ThemeComponents } from '@soroush.design/react'
 import { CodeBlock } from './CodeBlock'
 import { syntaxDark } from './CodeBlock/CodeBlock.data'
@@ -104,10 +104,10 @@ const cases: Case[] = [
 
 describe('theme.components styleOverrides', () => {
   it.each(cases)('$name applies styleOverrides.$slot', ({ name, slot, label, ui, open }) => {
-    const theme = createTheme(baseTheme, {
-      syntax: syntaxDark,
-      components: { [name]: { styleOverrides: { [slot]: MARKER } } },
-    })
+    const theme = defineThemes(
+      { theme: createTheme(baseTheme, { syntax: syntaxDark }) },
+      { [name]: { styleOverrides: { [slot]: MARKER } } }
+    ).theme
     render(<ThemeProvider theme={theme}>{ui}</ThemeProvider>)
     open?.()
     expect(byLabel(label)).toHaveStyle(MARKER)

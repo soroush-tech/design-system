@@ -1,11 +1,11 @@
 import type {
   InputVariantKey,
   ThemeBackground,
-  ThemePalette,
   ThemeRadii,
-  ThemeSizes,
   ThemeText,
   ThemeZOrder,
+  ThemeColor,
+  ThemeSize,
 } from '@soroush.design/core/theme'
 import type { ComponentConfig } from '../theme/themes'
 
@@ -15,8 +15,8 @@ export interface AutocompleteOwnerState {
   bg?: keyof ThemeBackground
   textColor?: keyof ThemeText
   variant?: InputVariantKey
-  size?: keyof ThemeSizes
-  color?: keyof ThemePalette
+  size?: ThemeSize
+  color?: ThemeColor
   shouldAllowFreeText?: boolean
   layer?: keyof ThemeZOrder
   clearLabel?: string

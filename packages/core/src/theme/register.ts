@@ -8,20 +8,25 @@ import type {
 } from './types'
 
 /**
- * The app's theme, named once, for every platform. An app registers the type of its theme value,
- * and the types of every library that reads it - React, React Native, Vue - follow:
+ * The app's themes, named once, for every platform. An app registers the type of its `defineThemes`
+ * result, and the types of every library that reads it - React, React Native, Vue - follow:
  *
- *   export const light = createTheme(baseTheme, { palette: { brand: { ... } } })
- *   declare module '@soroush.design/core/theme' { interface Register { theme: typeof light } }
+ *   export const themes = defineThemes({ light, dark }, components)
+ *   declare module '@soroush.design/core/theme' { interface Register { themes: typeof themes } }
  *
- * The block holds no key of its own: what the theme VALUE adds - a palette color, a size, a look in
+ * The block holds no key of its own: what the theme VALUES add - a palette color, a size, a look in
  * `components.X.variants` - is what the types accept.
  */
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type -- open on purpose: the app registers its theme
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type -- open on purpose: the app registers its themes
 export interface Register {}
 
-/** The theme the app registered, or `Fallback` (a platform passes its own `Theme`) when it registered none. */
-export type RegisteredTheme<Fallback = Theme> = Register extends { theme: infer T } ? T : Fallback
+/**
+ * The shape the registered themes share (`defineThemes` makes every theme have the same keys), with
+ * the one `components` value; `Fallback` (a platform passes its own `Theme`) when none is registered.
+ */
+export type RegisteredTheme<Fallback = Theme> = Register extends { themes: infer T }
+  ? T[keyof T]
+  : Fallback
 
 /** A palette color: the built-in and augmented ones, and those the registered theme adds. */
 export type ThemeColor = keyof ThemePalette | keyof RegisteredTheme['palette']
@@ -39,17 +44,23 @@ export type ThemeTypography = keyof ThemeTypographyVariants | keyof RegisteredTh
  * (`VariantOf<'Tabs'>` is `'pill'` when the theme has `variants: [{ props: { variant: 'pill' }, ... }]`).
  * Only literal values count; `never` when nothing is registered.
  */
-export type VariantOf<Name extends string, Prop extends string = 'variant'> = Register extends {
-  theme: { components: infer C }
-}
-  ? Name extends keyof C
-    ? C[Name] extends { variants: ReadonlyArray<infer V> }
+export type VariantOf<Name extends string, Prop extends string = 'variant'> = [
+  RegisteredComponents,
+] extends [never]
+  ? never
+  : Name extends keyof RegisteredComponents
+    ? RegisteredComponents[Name] extends { variants: ReadonlyArray<infer V> }
       ? V extends { props: { [P in Prop]: infer X } }
         ? string extends X
           ? never
           : X
         : never
       : never
+    : never
+
+type RegisteredComponents = Register extends { themes: infer T }
+  ? T[keyof T] extends { components: infer C }
+    ? C
     : never
   : never
 

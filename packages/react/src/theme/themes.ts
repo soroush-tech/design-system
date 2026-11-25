@@ -6,6 +6,7 @@ export type { ThemeComponents }
 import type {
   DeepPartial,
   OpenScale,
+  Register,
   RegisteredTheme,
   Theme as CoreTheme,
 } from '@soroush.design/core/theme'
@@ -22,9 +23,30 @@ export type ComponentStyle<OwnerState> =
   | CSSObject
   | ((args: { theme: Theme; ownerState: OwnerState }) => CSSObject)
 
+/**
+ * The owner-state fields whose types the registered themes widen: the colors, sizes, spacing keys
+ * and looks they add.
+ */
+type DerivedFields = 'color' | 'size' | 'variant' | 'mb' | 'marginThreshold'
+
+// A union holding a string literal, so a look written as `'pill'` keeps its literal type (an open
+// `unknown` would widen it to `string`), and the registered themes can name it.
+type OpenValue = '' | (string & {}) | number | boolean | null | object
+
+/**
+ * The owner state as the theme's own `components` are checked against it. Once themes are
+ * registered, the derived fields are left open: a type that reads the registered themes cannot be
+ * checked while those themes are being written (it would read itself). A misspelt value is checked
+ * where it is used (a component's props), and in development by the validator `ThemeProvider` runs.
+ * Every other field keeps its type.
+ */
+type OwnerKeys<OwnerState> = keyof Register extends never
+  ? Partial<OwnerState>
+  : { [K in keyof OwnerState]?: K extends DerivedFields ? OpenValue : OwnerState[K] }
+
 /** One theme-contributed variant: applied when every key in `props` matches the render props. */
 export interface ComponentVariant<OwnerState> {
-  props: Partial<OwnerState>
+  props: OwnerKeys<OwnerState>
   style: ComponentStyle<OwnerState>
 }
 
@@ -34,15 +56,12 @@ export interface ComponentConfig<
   Slot extends string = 'root',
 > {
   /** Default prop values - explicit props and group context always win. */
-  defaultProps?: Partial<OwnerState>
+  defaultProps?: OwnerKeys<OwnerState>
   /** Per-slot CSS merged after the component's own styles (theme wins). */
   styleOverrides?: Partial<Record<Slot, ComponentStyle<OwnerState>>>
-  /** Extra variants matched by props. Replaced wholesale by `createTheme`, never merged. */
+  /** Extra variants matched by props. */
   variants?: ReadonlyArray<ComponentVariant<OwnerState>>
-  /**
-   * Type only, never set: names the owner state, so `createTheme` can check this config's keys
-   * without reading the types of its values (see `ThemeOverrides` in the core).
-   */
+  /** Type only, never set: names the owner state, for `useDefaultProps` to type what it hands back. */
   readonly $owner?: OwnerState
 }
 

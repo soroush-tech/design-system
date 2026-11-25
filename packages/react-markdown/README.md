@@ -163,12 +163,10 @@ const theme = createTheme(baseTheme, {
 For tweaks specific to the editor, toolbar, or preview, this package registers three themeable slots under `theme.components` - `MarkdownEditor`, `MarkdownPreview`, and `MarkdownToolbar`:
 
 ```tsx
-const theme = createTheme(baseTheme, {
-  components: {
-    MarkdownPreview: { styleOverrides: { root: { maxWidth: '72ch' } } },
-    MarkdownToolbar: { styleOverrides: { root: { gap: 4 } } },
-  },
-})
+const themes = defineThemes({ app: createTheme(baseTheme, {}) }, {
+  MarkdownPreview: { styleOverrides: { root: { maxWidth: '72ch' } } },
+  MarkdownToolbar: { styleOverrides: { root: { gap: 4 } } },
+} satisfies ThemeComponents)
 ```
 
 The overrides are fully typed - importing the package registers the slots on the theme automatically.

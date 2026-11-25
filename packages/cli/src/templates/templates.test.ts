@@ -3,11 +3,14 @@ import { describe, expect, it } from 'vitest'
 import { createProvidersSource, createThemesSource, isSetUpByInit, MARKER } from './templates'
 
 describe('createThemesSource', () => {
-  it('default-exports an object of named themes, each createTheme(base, {...literal})', () => {
+  it('default-exports defineThemes of named themes, each createTheme(base, {...literal})', () => {
     const source = createThemesSource({ isTypeScript: true })
     expect(source.startsWith(MARKER)).toBe(true)
-    expect(source).toMatch(/\nconst themes = \{\n {2}light: createTheme\(baseTheme, \{\n/)
-    expect(source).toMatch(/\n {2}dark: createTheme\(baseTheme, \{\n/)
+    expect(source).toMatch(
+      /\nconst themes = defineThemes\(\n {2}\{\n {4}light: createTheme\(baseTheme, \{\n/
+    )
+    expect(source).toMatch(/\n {4}dark: createTheme\(baseTheme, \{\n/)
+    expect(source).toMatch(/\n {2}\},\n {2}\{\}\n\)\n/)
     expect(source).toMatch(/\nexport default themes\n$/)
     // Every theme ends with a literal object: no theme is built by a function or from a variable.
     const themeCalls = [...source.matchAll(/createTheme\((\w+), (.)/g)]
@@ -17,9 +20,11 @@ describe('createThemesSource', () => {
     ])
   })
 
-  it('gives a TypeScript app the augmentation stub, as a comment, and a JavaScript app none', () => {
-    expect(createThemesSource({ isTypeScript: true })).toContain(
-      "// declare module '@soroush.design/core/theme' {"
+  it('gives a TypeScript app the augmentation stub, as a comment, and the registration; a JavaScript app neither', () => {
+    const source = createThemesSource({ isTypeScript: true })
+    expect(source).toContain("// declare module '@soroush.design/core/theme' {")
+    expect(source).toContain(
+      "\ndeclare module '@soroush.design/core/theme' {\n  interface Register {\n    themes: typeof themes\n  }\n}\n"
     )
     expect(createThemesSource({ isTypeScript: false })).not.toContain('declare module')
   })

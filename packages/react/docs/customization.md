@@ -2,31 +2,45 @@
 
 Customize one component for the whole app - default prop values, per-slot CSS, and new variant values - without wrapping or forking. Zero-config themes pay nothing: the resolver bails out on its first check when `theme.components` is absent.
 
+Component customization is set once for all your themes, by `defineThemes(themes, components)`; `createTheme` builds tokens only and does not accept `components` (the error says to use `defineThemes`). Check `components` where you write it with `satisfies ThemeComponents`: it types `ownerState`, the slot names and the default props.
+
 ```ts
-const brand = createTheme(baseTheme, {
-  components: {
-    Button: {
-      defaultProps: { size: 'sm', shape: 'rounded' },
-      styleOverrides: {
-        root: ({ theme, ownerState }) => ({
-          letterSpacing: theme.letterSpacings.wide,
-          ...(ownerState.variant === 'contained' && { textTransform: 'none' }),
-        }),
-        label: { fontStyle: 'italic' },
-      },
-      variants: [
-        {
-          props: { variant: 'dashed' },
-          style: ({ theme }) => ({
-            backgroundColor: 'transparent',
-            border: `${theme.borderWidths.thin} dashed ${theme.border.primary}`,
-          }),
-        },
-      ],
+import { baseTheme, createTheme, defineThemes } from '@soroush.design/core/theme'
+import type { ThemeComponents } from '@soroush.design/react'
+
+const light = createTheme(baseTheme, { name: 'light', colorScheme: 'light' })
+const dark = createTheme(baseTheme, { name: 'dark' })
+
+export const themes = defineThemes({ light, dark }, {
+  Button: {
+    defaultProps: { size: 'sm', shape: 'rounded' },
+    styleOverrides: {
+      root: ({ theme, ownerState }) => ({
+        letterSpacing: theme.letterSpacings.wide,
+        ...(ownerState.variant === 'contained' && { textTransform: 'none' }),
+      }),
+      label: { fontStyle: 'italic' },
     },
+    variants: [
+      {
+        props: { variant: 'dashed' },
+        style: ({ theme }) => ({
+          backgroundColor: 'transparent',
+          border: `${theme.borderWidths.thin} dashed ${theme.border.primary}`,
+        }),
+      },
+    ],
   },
-})
+} satisfies ThemeComponents)
+
+declare module '@soroush.design/core/theme' {
+  interface Register {
+    themes: typeof themes
+  }
+}
 ```
+
+`defineThemes` returns new theme objects, each with the one shared `components` object; it changes none of its arguments. See [theming.md](./theming.md#defining-and-registering-your-themes) for the registration and its limits.
 
 The `Theme/Customization` Storybook story renders all three mechanisms under a customized theme and is locked by Chromatic - it is the living contract.
 
@@ -54,19 +68,9 @@ Slot names (`root`, `label`, `icon`, ...) are typed per component in `ThemeCompo
 
 ## `variants`
 
-Extra variant entries matched by props: an entry applies when every key in its `props` equals the render prop. Matching runs on the component's root slot only. Note that `createTheme` replaces `variants` arrays wholesale - composing two override sets does not concatenate them.
+Extra variant entries matched by props: an entry applies when every key in its `props` equals the render prop. Matching runs on the component's root slot only.
 
-**New variant values** need two things - the type registration and the styles:
-
-```ts
-declare module '@soroush.design/core/theme' {
-  interface ButtonVariants {
-    dashed: true // widens ButtonVariant so variant="dashed" typechecks
-  }
-}
-```
-
-Registering the value without a matching `variants` entry renders an unstyled button - always pair them.
+**New variant values** are the `variant` of your own entries: once the themes are registered (see [theming.md](./theming.md#defining-and-registering-your-themes)), `variant="dashed"` typechecks on `Button` because the registered `components.Button.variants` has it - there is nothing else to declare. (Without the registration, widen the type yourself: `declare module '@soroush.design/core/theme' { interface ButtonVariants { dashed: true } }`.) A look needs its `variants` entry: without one the button renders unstyled.
 
 ## Slot props - customizing composed sub-elements
 
@@ -120,6 +124,10 @@ Your widget now honors `theme.components.MyWidget.styleOverrides` / `.variants` 
 3. Resolve `defaultProps` via `useDefaultProps(name)` in the wrapper, in the chain above.
 4. Type the component's theme entry in `<Name>.types.ts` beside it - `<Name>OwnerState`, `<Name>Slot` and `<Name>ThemeConfig = ComponentConfig<<Name>OwnerState, <Name>Slot>` - export it from the folder's `index.ts`, and run `pnpm gen:theme-components`, which adds the key to `ThemeComponents`. A test fails when a `styled(..., { name, slot })` names a key or a slot the types lack. If it has variants, expose them via an augmentable interface (see `ButtonVariants`).
 5. Cover all three mechanisms plus the precedence pairs in the component's tests.
+
+## The development check
+
+In development, `ThemeProvider` checks the active theme's `components` against the catalog and warns once per distinct problem, naming the path: a component the design system lacks, a slot a component has not (`components.Tabs.styleOverrides.indicater is not a slot of Tabs (root, list, indicator, ...)`), a default prop or a look's prop the component does not take, a default value outside the values the catalog lists. It runs only when `process.env.NODE_ENV !== 'production'` and is removed from a production build. The check is a pure function, `validateThemeComponents(components)` from `@soroush.design/core/catalog`, which returns the problems as `{ path, message }`, for a tool that edits themes.
 
 ## Runtime cost
 

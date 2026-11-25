@@ -7,7 +7,7 @@ The theme belongs to you - the package ships defaults, every part is replaceable
 ## The ladder
 
 1. **Use the default** - `<ThemeProvider>` with no props renders the built-in `baseTheme` (dark-schemed).
-2. **Override values** - build your theme with `createTheme(base, overrides)` and pass it via `theme`.
+2. **Override values** - build your theme with `createTheme(base, overrides)` (tokens only), collect your themes with `defineThemes` and pass one via `theme`.
 3. **Repoint component defaults** - `theme.defaults` / the provider's `defaults` prop change what components fall back to.
 4. **Extend the type system** - declaration merging adds palette colors, scale keys, and whole scales.
 5. **Customize single components** - `theme.components` (see [customization.md](./customization.md)).
@@ -56,6 +56,46 @@ Components carry visible literal fallbacks (`size = 'md'`, `variant = 'outside'`
 Two `defaults` objects with the same contents give the same theme, so an inline literal costs nothing per render: the provider derives one theme for each theme and `defaults` contents, and the engine declares its tokens once.
 
 The full key table lives in the [README's Theming section](../README.md#component-defaults). The built-in `baseTheme` carries no `defaults` - the literals apply until you say otherwise. For _per-component_ defaults (only Buttons compact), use `theme.components.X.defaultProps` instead ([customization.md](./customization.md)).
+
+## Defining and registering your themes
+
+`defineThemes(themes, components)` collects the themes of an app, one or many, and gives every one the same `components` (see [customization.md](./customization.md)). It returns new objects and changes none of its arguments. Register the result once, and every component, hook and `styled` callback knows what your themes add:
+
+```ts
+import { baseTheme, createTheme, defineThemes } from '@soroush.design/core/theme'
+import type { ThemeComponents } from '@soroush.design/react'
+
+const light = createTheme(baseTheme, {
+  palette: { brand: { main: '#0a7a5a', light: '#3d9b80', dark: '#075640', contrastText: '#fff' } },
+})
+const dark = createTheme(baseTheme, {
+  palette: {
+    brand: { main: '#3ddc97', light: '#7ae8b9', dark: '#1fa86f', contrastText: '#06231a' },
+  },
+})
+
+export const themes = defineThemes({ light, dark }, {
+  Tabs: { variants: [{ props: { variant: 'pill' }, style: { borderRadius: 999 } }] },
+} satisfies ThemeComponents)
+
+declare module '@soroush.design/core/theme' {
+  interface Register {
+    themes: typeof themes
+  }
+}
+```
+
+Now `<Button color="brand">` and `<Tabs variant="pill">` typecheck, `<Button color="brnad">` does not, and `useTheme()` carries your custom tokens. The colors, sizes, spacing keys, breakpoints, typography variants and component looks are read from the themes, so adding one is an edit of a theme, not of a declaration. `<ThemeProvider theme={themes.dark}>` takes any registered theme, and a theme object with a key the registered themes do not have is an error.
+
+**Every theme has the same keys.** The types check it at the `defineThemes` call, at every depth, and the error names the theme and the key: `Theme "dark" is missing palette.brand, which "light" has`. The values may differ. Without a registration the components accept only the built-in values.
+
+**Limits**
+
+- A misspelt key in a lone theme becomes a new key (`palette.primray`): the other themes catch it, since they lack it; with one theme, a use of it does.
+- Some values are checked where the theme is used, not in the theme file: the `defaultProps` values and variant `props` values of the props the registered themes widen (`color`, `size`, `variant`, `mb`, `marginThreshold`). In development `ThemeProvider` warns about a default outside the catalog's listed values.
+- In the registered theme's own style callbacks, reading a derived `ownerState` prop (`variant`, `color`, `size`) makes TypeScript read the theme it is building. Write the callback's return type (`({ ownerState }): CSSObject => ...`) to break the loop. The other `ownerState` fields (`fullWidth`) read fine.
+- `theme` in a `components` callback is the built-in `Theme`, not the registered one.
+- Do not annotate a theme with `Theme` (`const light: Theme = ...`): the annotation erases the keys the theme adds.
 
 ## Extending the type system
 

@@ -1,5 +1,5 @@
-import type { Theme } from '@soroush.design/core/theme'
-import { baseTheme, createTheme } from '@soroush.design/core/theme'
+import { baseTheme, createTheme, defineThemes } from '@soroush.design/core/theme'
+import type { ThemeComponents } from '@soroush.design/react'
 import { alpha, generateBoxShadow } from '@soroush.design/core/utils'
 
 // Brand color ramps. Every app that copies them shares one color set, so change which
@@ -102,13 +102,13 @@ const darkShadows = Array.from({ length: 25 }, (_, elevation) =>
 )
 
 // Chromatic-style pill buttons app-wide; label loses the uppercase treatment.
-const components: Theme['components'] = {
+const components = {
   Button: {
     styleOverrides: {
       root: { borderRadius: '3em' },
     },
   },
-}
+} satisfies ThemeComponents
 
 const typographyOverrides = {
   button: {
@@ -121,14 +121,13 @@ const typographyOverrides = {
 } as const
 
 /** Default theme: white surfaces, brand green accents. */
-export const light: Theme = createTheme(baseTheme, {
+const lightTheme = createTheme(baseTheme, {
   name: 'light',
   colorScheme: 'light',
   logoFilter: 'brightness(0)',
   portraitBlend: 'multiply',
   portraitOpacity: 1,
   shadow: { color: carbonBlack[900], opacity: 0.1 },
-  components,
   typography: typographyOverrides,
   palette: {
     default: {
@@ -212,14 +211,13 @@ export const light: Theme = createTheme(baseTheme, {
   shadows: lightShadows,
 })
 
-export const dark: Theme = createTheme(baseTheme, {
+const darkTheme = createTheme(baseTheme, {
   name: 'dark',
   colorScheme: 'dark',
   logoFilter: 'brightness(0) invert(1)',
   portraitBlend: 'screen',
   portraitOpacity: 0.8,
   shadow: { color: carbonBlack[900], opacity: 0.4 },
-  components,
   typography: typographyOverrides,
   palette: {
     default: {
@@ -302,3 +300,14 @@ export const dark: Theme = createTheme(baseTheme, {
   },
   shadows: darkShadows,
 })
+
+export const themes = defineThemes({ light: lightTheme, dark: darkTheme }, components)
+
+export const { light, dark } = themes
+
+// Tells every library the themes' colors, sizes and looks.
+declare module '@soroush.design/core/theme' {
+  interface Register {
+    themes: typeof themes
+  }
+}

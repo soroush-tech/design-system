@@ -62,11 +62,9 @@ whole trail and moves focus to its first link, so focus isn't lost with the butt
 every trail the app's language:
 
 ```tsx
-createTheme(baseTheme, {
-  components: {
-    Breadcrumbs: { defaultProps: { expandLabel: 'Afficher le chemin', separator: '›' } },
-  },
-})
+defineThemes({ app: createTheme(baseTheme, {}) }, {
+  Breadcrumbs: { defaultProps: { expandLabel: 'Afficher le chemin', separator: '›' } },
+} satisfies ThemeComponents)
 ```
 
 ## Accessibility
