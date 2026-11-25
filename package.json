@@ -3,6 +3,12 @@
   "private": true,
   "license": "MIT",
   "type": "module",
+  "lockstep": [
+    "@soroush.design/core",
+    "@soroush.design/react-hooks",
+    "@soroush.design/react",
+    "@soroush.design/react-markdown"
+  ],
   "packageManager": "pnpm@10.13.1",
   "scripts": {
     "prepare": "husky",
@@ -10,6 +16,7 @@
     "gen:theme-components": "node packages/react/scripts/gen-theme-components.mjs",
     "gen:plugin-refs": "pnpm --filter @soroush.design/mcp gen -- --plugin",
     "check:release-notes": "node scripts/check-release-notes.mjs",
+    "check:lockstep": "node scripts/check-lockstep.mjs",
     "check:skills": "node scripts/check-skills.mjs",
     "check:typography": "aiwg --all",
     "deprecate-alpha": "node scripts/deprecate-alpha.mjs",

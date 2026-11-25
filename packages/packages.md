@@ -75,6 +75,25 @@ never `@soroush.design/react/markdown`. Later packages repeat the pattern (`reac
 and a diagram library, and an app that wants buttons should not install either. Components are
 **not** split into a package each - subpath imports already load only what is used.
 
+### One version: the lockstep set
+
+`@soroush.design/core`, `@soroush.design/react-hooks`, `@soroush.design/react` and
+`@soroush.design/react-markdown` are one product: they share **one version** and are published
+together ([#159](https://github.com/soroush-tech/design-system/issues/159)), so an app never has to
+match a version of one to another. The list is the `lockstep` array of the root `package.json`, the
+one place the guard, the publish workflow and this page agree on. `@soroush.design/styled-system`,
+`@soroush.design/mcp`, `@soroush.design/cli` and `@soroush.tech/ui-spec` keep a version of their own.
+
+- **A change to any of them bumps all of them**, with one release-notes file each (an unchanged
+  package says so in a line).
+- **The guard.** `pnpm check:lockstep` (`scripts/check-lockstep.mjs`; the pre-commit hook, the CI
+  lint job and the publish run it) fails, naming each package and its version, when their versions
+  differ, or when a dependency or peer range on a sibling does not cover the shared version
+  (`workspace:^` and `workspace:*` do; `^0.1.0` must).
+- **Publishing.** Dispatching any one of them publishes the whole set, dependencies first, in one
+  run; `scripts/prerelease-versions.mjs` fails a run that would publish only some of them. Alpha, rc
+  and stable behave as for any package.
+
 ### The core
 
 `@soroush.design/core` holds what every platform shares and that needs **no framework**: the theme

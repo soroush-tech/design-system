@@ -45,6 +45,9 @@ nobody edits it.
 - A prerelease never lands on `latest` - the workflow publishes with `--tag <channel>` and fails
   the run if `latest` ever points at a prerelease. That is also why the
   `check:release-notes` gate keeps passing: it compares `package.json` with `latest` only.
+- The `lockstep` packages (root `package.json`: core, react-hooks, react, react-markdown) share one
+  version and publish together: dispatching one of them publishes the set, and a run with only
+  some of them fails. Bump all of them and add each one's notes file.
 - Publish dependencies first (`styled-system` before `design-system`): `workspace:^` publishes
   as `^<sibling's version>`, so a prerelease run points each workspace dependency at its newest
   prerelease on the same channel, and stops with "publish X first" when there is none; a
