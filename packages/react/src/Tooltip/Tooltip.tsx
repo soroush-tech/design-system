@@ -16,7 +16,8 @@ import {
   type Ref,
   type SyntheticEvent,
 } from 'react'
-import { styled } from '../style/styled'
+import { styled, subtract, type LiveValue } from '../style/styled'
+import { useLiveValue } from '../style/hooks/useLiveValue'
 import { type Theme } from '../theme/themes'
 import { createShouldForwardProp } from '@soroush.design/styled-system/should-forward-prop'
 import { get } from '@soroush.design/styled-system'
@@ -209,18 +210,32 @@ const TooltipTarget = styled('span', { label: 'TooltipTarget' })({
   display: 'inline-grid',
 })
 
+// The arrow sticks out of the edge of the tooltip that faces the child, `offset` along it: a live
+// value, so an arrow that moves with the tooltip is no new class.
 const TooltipArrow = styled('span', {
   name: 'Tooltip',
   slot: 'arrow',
   label: 'TooltipArrow',
-})({
-  position: 'absolute',
-  width: ARROW,
-  height: ARROW,
-  // The surface's own background, whatever it was given.
-  backgroundColor: 'inherit',
-  transform: 'rotate(45deg)',
-  pointerEvents: 'none',
+  shouldForwardProp: (prop) => prop !== 'side' && prop !== 'offset',
+})<{ side: ArrowSide; offset: LiveValue }>(({ side, offset }) => {
+  const half = ARROW / 2
+  const along = subtract(offset, half)
+  const edge = {
+    top: { bottom: -half, left: along },
+    bottom: { top: -half, left: along },
+    left: { right: -half, top: along },
+    right: { left: -half, top: along },
+  }[side]
+  return {
+    position: 'absolute',
+    width: ARROW,
+    height: ARROW,
+    // The surface's own background, whatever it was given.
+    backgroundColor: 'inherit',
+    transform: 'rotate(45deg)',
+    pointerEvents: 'none',
+    ...edge,
+  }
 })
 
 // Where the tooltip landed, and so which side the arrow is on and where along it.
@@ -239,14 +254,10 @@ const getArrow = ({ anchorRect, surfaceSize, top, left }: AnchoredPlacement): Ar
 const isSameArrow = (a: ArrowState | null, b: ArrowState) =>
   a !== null && a.side === b.side && a.offset === b.offset
 
-// The arrow sticks out of the edge of the tooltip that faces the child.
-const getArrowStyle = ({ side, offset }: ArrowState): CSSProperties => {
-  const half = ARROW / 2
-  if (side === 'top') return { bottom: -half, left: offset - half }
-  if (side === 'bottom') return { top: -half, left: offset - half }
-  if (side === 'left') return { right: -half, top: offset - half }
-  return { left: -half, top: offset - half }
-}
+// The arrow's position is the tooltip's: a style given to the arrow does not move it.
+const POSITION = new Set(['top', 'right', 'bottom', 'left'])
+const withoutPosition = (style: CSSProperties = {}) =>
+  Object.fromEntries(Object.entries(style).filter(([property]) => !POSITION.has(property)))
 
 type ChildProps = Record<string, unknown> & { ref?: Ref<HTMLElement> }
 
@@ -370,6 +381,7 @@ export const Tooltip = forwardRef<HTMLElement, TooltipProps>(function Tooltip(
   const ref = useMergedRefs(isChildDisabled ? undefined : anchorRef, childRef)
 
   const [arrow, setArrow] = useState<ArrowState | null>(null)
+  const arrowOffset = useLiveValue(arrow?.offset ?? 0, 'px')
   const getOrigins = useCallback(
     (context: PlacementContext) =>
       getTooltipOrigins(resolveTooltipPlacement(placement, context), context.isRtl),
@@ -461,7 +473,9 @@ export const Tooltip = forwardRef<HTMLElement, TooltipProps>(function Tooltip(
               <TooltipArrow
                 {...slotProps?.arrow}
                 as={slots?.arrow}
-                style={{ ...slotProps?.arrow?.style, ...getArrowStyle(arrow) }}
+                style={withoutPosition(slotProps?.arrow?.style)}
+                side={arrow.side}
+                offset={arrowOffset}
                 aria-hidden="true"
               />
             ) : null}

@@ -2,13 +2,12 @@
 
 import { type ChangeEvent, type KeyboardEvent, type ReactNode } from 'react'
 import type { SpaceProps } from '@soroush.design/styled-system'
-import { styled } from '../style/styled'
+import { alpha, styled } from '../style/styled'
 import { type Theme } from '../theme/themes'
 import { get, space } from '@soroush.design/styled-system'
 import { createShouldForwardProp, props } from '@soroush.design/styled-system/should-forward-prop'
 import { useTheme } from '../theme/hooks/useTheme'
 import { useFormControl } from '../FormControl'
-import { alpha } from '../utils'
 import { themeDefault } from '@soroush.design/core/theme'
 
 // ─── Types ────────────────────────────────────────────────────────────────────

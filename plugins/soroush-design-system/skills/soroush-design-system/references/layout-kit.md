@@ -133,9 +133,8 @@ Ghost by default (10% tint + 25% inset ring), `filled` for emphasis.
 
 ```tsx
 'use client'
-import { styled } from '@soroush.design/react'
+import { alpha, styled } from '@soroush.design/react'
 import type { PaletteColor } from '@soroush.design/core/theme'
-import { alpha } from '@soroush.design/core/utils'
 
 const PillRoot = styled('span', {
   shouldForwardProp: (prop) => prop !== 'tone' && prop !== 'filled',

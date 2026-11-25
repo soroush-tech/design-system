@@ -1,8 +1,16 @@
 'use client'
 
-import { Fragment, useId, useRef, type CSSProperties, type ReactNode } from 'react'
+import {
+  Fragment,
+  useId,
+  useRef,
+  type ComponentProps,
+  type CSSProperties,
+  type ReactNode,
+} from 'react'
 import type { LayoutProps, SpaceProps } from '@soroush.design/styled-system'
-import { styled } from '../style/styled'
+import { alpha, styled, type LiveValue } from '../style/styled'
+import { useLiveValue } from '../style/hooks/useLiveValue'
 import { type Theme } from '../theme/themes'
 import { createShouldForwardProp, props } from '@soroush.design/styled-system/should-forward-prop'
 import { get, system, space } from '@soroush.design/styled-system'
@@ -269,6 +277,10 @@ interface ThumbStyle extends AxisStyle {
   color: keyof Theme['palette']
   isActive: boolean
   isPassive: boolean
+  /** How far along the rail the thumb is, from the start edge or the bottom: a live value, so a drag writes no rule. */
+  place: LiveValue
+  /** The thumb that was used last is over the others. */
+  isLastUsed: boolean
 }
 
 const RangeInputThumb = styled('span', {
@@ -281,8 +293,10 @@ const RangeInputThumb = styled('span', {
     'color',
     'isActive',
     'isPassive',
+    'place',
+    'isLastUsed',
   ]),
-})<ThumbStyle>(({ theme, size, orientation, color, isActive, isPassive }) => {
+})<ThumbStyle>(({ theme, size, orientation, color, isActive, isPassive, place, isLastUsed }) => {
   const thumb = theme.icon[size]
   const main = get(theme, `palette.${color}.main`)
   return {
@@ -294,9 +308,10 @@ const RangeInputThumb = styled('span', {
     backgroundColor: main,
     // While another thumb is pressed this one is out of the way - and shows no label on hover.
     ...(isPassive && { pointerEvents: 'none' }),
-    boxShadow: isActive ? `0 0 0 ${theme.space[1]} ${main}33` : 'none',
+    ...(isLastUsed && { zIndex: 1 }),
+    boxShadow: isActive ? `0 0 0 ${theme.space[1]} ${alpha(main, 0.2)}` : 'none',
     transition: 'box-shadow 0.15s ease',
-    '&:hover': { boxShadow: `0 0 0 ${theme.space[1]} ${main}29` },
+    '&:hover': { boxShadow: `0 0 0 ${theme.space[1]} ${alpha(main, 0.16)}` },
     '&:has(input:focus-visible)': {
       outline: `${theme.borderWidths.base} solid ${main}`,
       outlineOffset: theme.space[0.5],
@@ -304,13 +319,27 @@ const RangeInputThumb = styled('span', {
     '@media (prefers-reduced-motion: reduce)': { transition: 'none' },
     ...(orientation === 'vertical'
       ? {
+          bottom: `${place}`,
           insetInlineStart: '50%',
           marginInlineStart: `calc(${thumb} / -2)`,
           marginBottom: `calc(${thumb} / -2)`,
         }
-      : { top: '50%', marginTop: `calc(${thumb} / -2)`, marginInlineStart: `calc(${thumb} / -2)` }),
+      : {
+          insetInlineStart: `${place}`,
+          top: '50%',
+          marginTop: `calc(${thumb} / -2)`,
+          marginInlineStart: `calc(${thumb} / -2)`,
+        }),
   }
 })
+
+// A thumb knows its own place, so it holds the live value of it.
+function PlacedThumb({
+  percent,
+  ...rest
+}: Readonly<Omit<ComponentProps<typeof RangeInputThumb>, 'place'> & { percent: number }>) {
+  return <RangeInputThumb place={useLiveValue(percent, '%')} {...rest} />
+}
 
 const RangeInputInput = styled('input', {
   name: 'RangeInput',
@@ -508,16 +537,16 @@ export function RangeInput({
         const isShown =
           valueLabel === 'on' ||
           (valueLabel === 'auto' && [range.active, range.hovered, range.focused].includes(index))
-        const zIndex = range.lastUsed === index ? 1 : undefined
         const input = range.getInputProps(index)
         return (
-          <RangeInputThumb
+          <PlacedThumb
             key={thumbKeys[index]}
             data-index={index}
             color={color}
             isActive={range.active === index}
             isPassive={range.active !== -1 && range.active !== index}
-            style={{ ...place(orientation, valueToPercent(thumbValue, min, max)), zIndex }}
+            percent={valueToPercent(thumbValue, min, max)}
+            isLastUsed={range.lastUsed === index}
             {...axis}
             {...range.getThumbProps(index)}
           >
@@ -553,7 +582,7 @@ export function RangeInput({
               aria-valuetext={getAriaValueText?.(scale(thumbValue), index)}
               {...input}
             />
-          </RangeInputThumb>
+          </PlacedThumb>
         )
       })}
     </RangeInputRoot>

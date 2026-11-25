@@ -157,7 +157,7 @@
     "unified": "^11.0.5"
   },
   "peerDependencies": {
-    "@soroush.design/react": "^0.1.0",
+    "@soroush.design/react": "workspace:^",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },

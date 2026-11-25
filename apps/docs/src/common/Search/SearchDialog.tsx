@@ -1,12 +1,12 @@
 import { useMemo, useRef, useState, type KeyboardEvent } from 'react'
-import { styled } from '@soroush.design/react'
+import { alpha, styled } from '@soroush.design/react'
 import { get } from '@soroush.design/styled-system'
-import { alpha } from '@soroush.design/core/utils'
 import { Flex } from '@soroush.design/react/Flex'
 import { Modal } from '@soroush.design/react/Modal'
 import { Paper } from '@soroush.design/react/Paper'
 import { Typography } from '@soroush.design/react/Typography'
 import { View } from '@soroush.design/react/View'
+import { PlainList } from 'src/common/PlainList/PlainList'
 import { RailGlyph } from 'src/common/NavRail/RailGlyph'
 import { searchEntriesFor, sectionFor, type SearchEntry } from 'src/common/nav'
 import { usePageContext } from 'src/hooks/usePageContext'
@@ -42,7 +42,7 @@ const Field = styled('input')(({ theme }) => ({
   background: 'transparent',
   color: 'inherit',
   font: 'inherit',
-  fontSize: `${theme.fontSizes[2]}px`,
+  fontSize: theme.fontSizes[2],
 }))
 
 const IconButton = styled('button')(({ theme }) => ({
@@ -63,6 +63,9 @@ const IconButton = styled('button')(({ theme }) => ({
     outlineOffset: 2,
   },
 }))
+
+// The name of a page takes the room the row leaves.
+const RowLabel = styled(Typography)({ flex: '1 1 auto' })
 
 const Row = styled('a')(({ theme }) => ({
   display: 'flex',
@@ -100,9 +103,9 @@ function PageRow({ entry, onFollow }: Readonly<{ entry: SearchEntry; onFollow: (
   return (
     <Row href={entry.href} data-row onClick={onFollow}>
       <RailGlyph name="article" size={20} />
-      <Typography variant="body1" as="span" style={{ flex: '1 1 auto' }}>
+      <RowLabel variant="body1" as="span">
         {entry.label}
-      </Typography>
+      </RowLabel>
       <Typography variant="caption" color="secondary" as="span">
         {entry.group}
       </Typography>
@@ -117,9 +120,9 @@ function Block({ title, children }: Readonly<{ title: string; children: React.Re
       <Typography variant="subtitle2" as="h2" m={0} mb={1} px={2}>
         {title}
       </Typography>
-      <View as="ul" m={0} p={0} style={{ listStyle: 'none' }}>
+      <PlainList as="ul" m={0} p={0}>
         {children}
-      </View>
+      </PlainList>
     </View>
   )
 }

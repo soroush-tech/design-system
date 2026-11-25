@@ -9,7 +9,7 @@ import {
 } from 'react'
 import { Icon } from '../../Icon'
 import { Tooltip } from '../../Tooltip'
-import { styled } from '../../style/styled'
+import { alpha, negate, styled, type AlphaColor } from '../../style/styled'
 import { type AppTheme as Theme } from '../../theme/themes'
 import { createShouldForwardProp } from '@soroush.design/styled-system/should-forward-prop'
 import { get } from '@soroush.design/styled-system'
@@ -137,8 +137,8 @@ const getEnclosedEdgeStyle = (
   const thin = theme.borderWidths.thin
   // The inset shadow on each side but the divider's: top, end (right), foot, start (left).
   const top = `inset 0 ${thin} 0 ${main}`
-  const right = `inset -${thin} 0 0 ${main}`
-  const foot = `inset 0 -${thin} 0 ${main}`
+  const right = `inset ${negate(thin)} 0 0 ${main}`
+  const foot = `inset 0 ${negate(thin)} 0 ${main}`
   const left = `inset ${thin} 0 0 ${main}`
   const outline = isVertical ? [top, foot, left] : [top, right, left]
   let edges = 'none'
@@ -168,10 +168,10 @@ const groundOf = (
   { variant, isSelected, main }: TabLookProps,
   selectedBg: TabStyleProps['selectedBg'],
   bg: TabStyleProps['bg']
-): string => {
+): string | AlphaColor => {
   const groundKey = isSelected && selectedBg ? selectedBg : bg
   if (groundKey) return get(theme, `background.${groundKey}`)
-  return variant === 'tonal' && isSelected ? `${main}29` : 'transparent'
+  return variant === 'tonal' && isSelected ? alpha(main, 0.16) : 'transparent'
 }
 
 // The tab's corners: its own, else a pill when tonal, else a little when boxed or enclosed.
@@ -208,7 +208,7 @@ const TabRoot = styled('div', {
 }) => {
   const main = get(theme, `palette.${color}.main`)
   const isBoxed = variant === 'boxed'
-  const outlineColor = isBoxed && isSelected ? `${main}59` : 'transparent'
+  const outlineColor = isBoxed && isSelected ? alpha(main, 0.35) : 'transparent'
   const raised = get(theme, 'background.paper')
   const ground = groundOf(theme, { variant, isSelected, main }, selectedBg, bg)
   const radius = radiusOf(theme, variant, borderRadius)
@@ -234,7 +234,7 @@ const TabRoot = styled('div', {
         String(radius)
       )),
     transition: 'background-color 0.12s ease',
-    ...(isDisabled ? {} : { '&:hover': { backgroundColor: isBoxed ? raised : `${main}14` } }),
+    ...(isDisabled ? {} : { '&:hover': { backgroundColor: isBoxed ? raised : alpha(main, 0.08) } }),
     // The close button shows on the selected tab and under the pointer, keeping its room.
     '&:hover [data-tab-close]': { visibility: 'visible' as const, opacity: 1 },
   }
@@ -301,7 +301,7 @@ const TabLabel = styled('button', {
     outline: 'none',
     '&:focus-visible': {
       outline: `${theme.borderWidths.base} solid ${main}`,
-      outlineOffset: `-${theme.borderWidths.base}`,
+      outlineOffset: negate(theme.borderWidths.base),
     },
   }
 })
@@ -347,7 +347,7 @@ const TabClose = styled('button', {
     ...(isAnnounced
       ? { opacity: isSelected ? 1 : 0, '&:focus-visible': { opacity: 1 } }
       : { visibility: isSelected ? ('visible' as const) : ('hidden' as const) }),
-    '&:hover': { backgroundColor: `${main}1F` },
+    '&:hover': { backgroundColor: alpha(main, 0.12) },
   }
 })
 

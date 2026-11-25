@@ -1,7 +1,7 @@
 'use client'
 
 import { useContext, useEffect, type MouseEvent, type ReactNode } from 'react'
-import { styled } from '../../style/styled'
+import { alpha, styled, type AlphaColor } from '../../style/styled'
 import { type Theme } from '../../theme/themes'
 import { get } from '@soroush.design/styled-system'
 import { Flex } from '../../Flex'
@@ -9,7 +9,6 @@ import { Icon, type IconName } from '../../Icon'
 import { Portal } from '../../Portal'
 import { Pressable, type PressableProps } from '../../Pressable'
 import { Typography } from '../../Typography'
-import { alpha } from '@soroush.design/core/utils'
 import {
   SidebarContext,
   type SidebarAnchor,
@@ -154,7 +153,7 @@ const stateStyles = (props: SidebarItemRootProps & { theme: Theme }) => {
   }
   // Suppressed rather than guarded by `:not(:disabled)`, which a non-form element
   // defeats - the same reason Pressable gates its press feedback on the prop.
-  const hoverFill = (backgroundColor: string) =>
+  const hoverFill = (backgroundColor: string | AlphaColor) =>
     disabled ? {} : { '&:hover': { backgroundColor } }
 
   // plain carries selection in the text color alone - no fill, no feedback.

@@ -9,7 +9,7 @@ import {
   type ReactNode,
 } from 'react'
 import type { LayoutProps, SpaceProps } from '@soroush.design/styled-system'
-import { styled } from '../style/styled'
+import { alpha, styled } from '../style/styled'
 import { type Theme } from '../theme/themes'
 import { createShouldForwardProp, props } from '@soroush.design/styled-system/should-forward-prop'
 import { get, system, space } from '@soroush.design/styled-system'
@@ -243,7 +243,7 @@ const spinStyle = ({ theme, color, isSide }: SpinStyle & { theme: Theme }) => {
     background: 'transparent',
     color: 'inherit',
     cursor: 'pointer',
-    '&:hover:not(:disabled)': { backgroundColor: `${main}1F` },
+    '&:hover:not(:disabled)': { backgroundColor: alpha(main, 0.12) },
     '&:disabled': { opacity: 0.4, cursor: 'default' },
   }
 }

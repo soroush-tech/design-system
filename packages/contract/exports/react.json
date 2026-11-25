@@ -7,13 +7,16 @@
         "LayoutProvider",
         "StylesConsumer",
         "ThemeProvider",
+        "alpha",
         "css",
         "keyframes",
+        "negate",
         "registerBaseTheme",
         "styled",
         "useDefaultProps",
         "useMediaQuery",
         "useStyle",
+        "useStyleValue",
         "useTheme",
         "withStyles",
         "withTheme"
@@ -22,6 +25,7 @@
         "CSSObject",
         "ComponentConfig",
         "LayoutProviderProps",
+        "LiveValue",
         "StyleFactory",
         "StyleInput",
         "ThemeComponents"
@@ -848,7 +852,7 @@
       ]
     },
     "./css": {
-      "values": ["css"],
+      "values": ["alpha", "css", "negate"],
       "types": []
     },
     "./engine": {
@@ -876,8 +880,8 @@
       "types": []
     },
     "./useStyle": {
-      "values": ["useStyle"],
-      "types": ["StyleFactory", "StyleInput"]
+      "values": ["useStyle", "useStyleValue"],
+      "types": ["LiveValue", "StyleFactory", "StyleInput"]
     },
     "./useTheme": {
       "values": ["useTheme"],

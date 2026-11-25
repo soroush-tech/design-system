@@ -4,12 +4,11 @@ import { type ButtonHTMLAttributes, type ElementType, type ReactNode } from 'rea
 import { Icon, type IconName } from '../../Icon'
 import { type PaginationItemType } from '../hooks/usePagination'
 import type { SpaceProps } from '@soroush.design/styled-system'
-import { styled } from '../../style/styled'
+import { alpha, styled } from '../../style/styled'
 import { type Theme } from '../../theme/themes'
 import { type PaletteColor } from '@soroush.design/core/theme'
 import { createShouldForwardProp, props } from '@soroush.design/styled-system/should-forward-prop'
 import { space, get } from '@soroush.design/styled-system'
-import { alpha } from '@soroush.design/core/utils'
 import { themeDefault } from '@soroush.design/core/theme'
 
 export type PaginationItemColor = PaletteColor

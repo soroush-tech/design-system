@@ -10,7 +10,7 @@ let isConfigured = false
  * side effects, so a bundler drops an import that is there only for its effect.
  *
  * `cache` is the library's own, so the engine and the `CacheProvider` an app renders over
- * `styleCache` write to one cache, which holds the style options (value repair) and the page's nonce.
+ * `styleCache` write to one cache, which holds the style options (the style memo, the colour fallbacks) and the page's nonce.
  *
  * `modes` makes a token a real value, not a CSS variable, where its value is a CSS-wide keyword:
  * `text.inherit` is `inherit`, and as a variable it would take the value of the same variable on

@@ -150,17 +150,21 @@ const LinearProgressTraveler = styled('span', {
   animation: `${travel} 1.4s ${easing} infinite`,
 }))
 
+// A value-length segment of the spinning bar, and the copy of it one track width behind. A hook
+// cannot hold the width: the bar renders in a server component, so each value is a class.
 const LinearProgressSegment = styled('span', {
   name: 'LinearProgress',
   slot: 'segment',
   label: 'LinearProgressSegment',
-})({
+  shouldForwardProp: (prop) => prop !== 'percent' && prop !== 'isCopy',
+})<{ percent: number; isCopy?: boolean }>(({ percent, isCopy }) => ({
   position: 'absolute',
   top: 0,
   bottom: 0,
-  left: 0,
+  left: isCopy ? '-100%' : 0,
+  width: `${percent}%`,
   backgroundColor: 'currentColor',
-})
+}))
 
 // Secondary bar - delayed animation for indeterminate/query, buffer amount in buffer mode.
 const LinearProgressBarSecondary = styled('span', {
@@ -272,8 +276,8 @@ export function LinearProgress({
       )}
       {isSpinning ? (
         <LinearProgressTraveler easing={easing}>
-          <LinearProgressSegment style={{ width: `${valuePercent}%` }} />
-          <LinearProgressSegment style={{ width: `${valuePercent}%`, left: '-100%' }} />
+          <LinearProgressSegment percent={valuePercent} />
+          <LinearProgressSegment percent={valuePercent} isCopy />
         </LinearProgressTraveler>
       ) : (
         <LinearProgressBar variant={variant} easing={easing} style={barStyle} />

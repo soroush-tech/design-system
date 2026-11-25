@@ -4,11 +4,10 @@ import { useContext, type MouseEvent } from 'react'
 import { ToggleButtonGroupContext, type ToggleButtonValue } from '../ToggleButtonGroupContext'
 import { Button, type ButtonProps } from '../../Button'
 import { ButtonGroupContext } from '../../ButtonGroup'
-import { styled } from '../../style/styled'
+import { alpha, styled } from '../../style/styled'
 import { type Theme } from '../../theme/themes'
 import { get } from '@soroush.design/styled-system'
 import { useTheme } from '../../theme/hooks/useTheme'
-import { alpha } from '@soroush.design/core/utils'
 import { themeDefault } from '@soroush.design/core/theme'
 
 export interface ToggleButtonProps extends Omit<

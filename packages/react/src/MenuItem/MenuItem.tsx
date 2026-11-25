@@ -14,7 +14,7 @@ import {
 } from 'react'
 import { Icon } from '../Icon'
 import { Tooltip } from '../Tooltip'
-import { styled } from '../style/styled'
+import { alpha, negate, styled } from '../style/styled'
 import { type Theme } from '../theme/themes'
 import { createShouldForwardProp } from '@soroush.design/styled-system/should-forward-prop'
 import { get } from '@soroush.design/styled-system'
@@ -172,7 +172,7 @@ const menuStyles = ({
     return { color: get(theme, 'text.disabled'), cursor: 'default' }
   }
   const main = get(theme, `palette.${color}.main`)
-  const highlight = { backgroundColor: `${main}1F` }
+  const highlight = { backgroundColor: alpha(main, 0.12) }
   return {
     color: textColor ? get(theme, `text.${textColor}`) : main,
     '&:focus': highlight,
@@ -180,7 +180,7 @@ const menuStyles = ({
     // scrolling surface never clips it.
     '&:focus-visible': {
       outline: `${theme.borderWidths.base} solid ${main}`,
-      outlineOffset: `-${theme.borderWidths.base}`,
+      outlineOffset: negate(theme.borderWidths.base),
     },
     // A row stays highlighted while its submenu is open.
     '&[aria-expanded="true"]': highlight,
@@ -188,15 +188,15 @@ const menuStyles = ({
 }
 
 // Hover/selected shading is derived from the accent palette so menus stay on-theme
-// in both color schemes. Opacity is expressed with a hex suffix, never `rgba()`.
+// in both color schemes. Opacity goes through `alpha()`, never `rgba()`.
 const interactionStyles = (props: MenuItemRootProps & { theme: Theme }) => {
   const { theme, color, textColor, selected, highlighted, disabled, isMenu } = props
   if (isMenu) return menuStyles(props)
 
   const main = get(theme, `palette.${color}.main`)
-  const hoverBg = `${main}1F`
-  const selectedBg = `${main}29`
-  const activeSelectedBg = `${main}3D`
+  const hoverBg = alpha(main, 0.12)
+  const selectedBg = alpha(main, 0.16)
+  const activeSelectedBg = alpha(main, 0.24)
 
   if (disabled) {
     return {

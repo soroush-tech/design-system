@@ -10,7 +10,7 @@ import { Flex } from '@soroush.design/react/Flex'
 import { Typography } from '@soroush.design/react/Typography'
 ```
 
-The barrel export carries the styling engine and theme helpers:
+The barrel export carries the styling functions (`styled`, `css`, `alpha`). The theme, `createTheme` and the `Theme` type are the core package's:
 
 ```tsx
 import { styled, css } from '@soroush.design/react'

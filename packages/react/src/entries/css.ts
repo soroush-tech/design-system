@@ -1,1 +1,1 @@
-export { css } from '../style/styled'
+export { alpha, css, negate } from '../style/styled'

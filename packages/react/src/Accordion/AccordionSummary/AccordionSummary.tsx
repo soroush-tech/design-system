@@ -1,7 +1,7 @@
 'use client'
 
 import type { ReactNode } from 'react'
-import { styled } from '../../style/styled'
+import { negate, styled } from '../../style/styled'
 import { createShouldForwardProp } from '@soroush.design/styled-system/should-forward-prop'
 import { get } from '@soroush.design/styled-system'
 import { useDefaultProps } from '../../theme/hooks/useDefaultProps'
@@ -48,7 +48,7 @@ const SummaryButton = styled('button', {
   '&:disabled': { opacity: 0.5, cursor: 'not-allowed' },
   '&:focus-visible': {
     outline: `${theme.borderWidths.base} solid ${get(theme, 'palette.primary.main')}`,
-    outlineOffset: `-${theme.borderWidths.base}`,
+    outlineOffset: negate(theme.borderWidths.base),
   },
 }))
 

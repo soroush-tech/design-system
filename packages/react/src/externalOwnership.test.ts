@@ -71,7 +71,7 @@ describe('the theme and the engine in the built library', () => {
     const defining = (pattern: RegExp) => all.filter(({ source }) => pattern.test(source)).length
     expect(defining(/function ThemeProvider\b/)).toBe(1)
     expect(defining(/function LayoutProvider\b/)).toBe(1)
-    expect(defining(/hasValueRepair/)).toBe(1)
+    expect(defining(/hasStyleMemo/)).toBe(1)
     expect(defining(/key: ["']soroush["']/)).toBe(1)
   })
 

@@ -1,9 +1,9 @@
 import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react'
-import { styled } from '@soroush.design/react'
+import { alpha, styled } from '@soroush.design/react'
 import { get } from '@soroush.design/styled-system'
-import { alpha } from '@soroush.design/core/utils'
 import { Typography } from '@soroush.design/react/Typography'
 import { View } from '@soroush.design/react/View'
+import { PlainList } from 'src/common/PlainList/PlainList'
 
 interface Heading {
   id: string
@@ -155,7 +155,7 @@ export function OnThisPage() {
         On this page
       </Typography>
       {title && <TocTitle href="#">{title}</TocTitle>}
-      <View as="ul" ref={list} m={0} p={0} position="relative" style={{ listStyle: 'none' }}>
+      <PlainList as="ul" ref={list} m={0} p={0} position="relative">
         <Marker ref={marker} aria-hidden />
         {headings.map((heading) => (
           <View as="li" key={heading.id}>
@@ -168,7 +168,7 @@ export function OnThisPage() {
             </TocLink>
           </View>
         ))}
-      </View>
+      </PlainList>
     </View>
   )
 }

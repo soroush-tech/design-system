@@ -2,10 +2,9 @@
 
 import { useMemo, type ElementType, type HTMLAttributes } from 'react'
 import type { ButtonVariant, ButtonColor, ButtonSize } from '../Button'
-import { alpha } from '../utils'
 import { ButtonGroupContext } from './ButtonGroupContext'
 import type { SpaceProps } from '@soroush.design/styled-system'
-import { styled } from '../style/styled'
+import { alpha, negate, styled } from '../style/styled'
 import { type Theme } from '../theme/themes'
 import { createShouldForwardProp, props } from '@soroush.design/styled-system/should-forward-prop'
 import { get, space } from '@soroush.design/styled-system'
@@ -53,7 +52,7 @@ const orientationStyles = ({
   orientation = 'horizontal',
   borderRadius,
 }: GroupRootProps & { theme: Theme }) => {
-  const overlap = `-${theme.borderWidths.thin}`
+  const overlap = negate(theme.borderWidths.thin)
   const r = get(theme, `radii.${borderRadius ?? themeDefault(theme, 'borderRadius', 'md')}`)
   if (orientation === 'vertical') {
     return {

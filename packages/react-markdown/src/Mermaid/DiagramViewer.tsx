@@ -1,11 +1,13 @@
 import {
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   type MouseEvent,
   type ReactNode,
   type WheelEvent,
 } from 'react'
+import { styled, useStyleValue, type LiveValue } from '@soroush.design/react'
 import { View } from '@soroush.design/react/View'
 import { Flex } from '@soroush.design/react/Flex'
 import { Grid } from '@soroush.design/react/Grid'
@@ -21,6 +23,27 @@ const PAN_STEP = 48
 // never clipped on a short diagram, capped so a huge one stays scrollable-by-pan (or fullscreen).
 const MIN_HEIGHT = 180
 const MAX_HEIGHT = 640
+
+// The diagram is not selectable, so a pan-drag never flickers a selection; the cursor says it is
+// dragged.
+const Viewport = styled(Flex)<{ isDragging: boolean }>(({ isDragging }) => ({
+  cursor: isDragging ? 'grabbing' : 'grab',
+  userSelect: 'none',
+  WebkitUserSelect: 'none',
+}))
+
+// The diagram layer: a live transform, which changes on every frame of a drag or a zoom, so it is
+// the values of three variables and not a style of its own for each frame.
+const Layer = styled(View)<{
+  isDragging: boolean
+  panX: LiveValue
+  panY: LiveValue
+  zoomLevel: LiveValue
+}>(({ isDragging, panX, panY, zoomLevel }) => ({
+  transform: `translate(${panX}, ${panY}) scale(${zoomLevel})`,
+  transformOrigin: 'center',
+  transition: isDragging ? 'none' : 'transform 0.12s ease-out',
+}))
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value))
 
@@ -58,6 +81,15 @@ export function DiagramViewer({
   useEffect(() => {
     setNaturalHeight(contentRef.current!.offsetHeight)
   }, [svg])
+
+  const [x, setX] = useStyleValue(0, 'px')
+  const [y, setY] = useStyleValue(0, 'px')
+  const [zoom, setZoom] = useStyleValue(1)
+  useLayoutEffect(() => {
+    setX(offset.x)
+    setY(offset.y)
+    setZoom(scale)
+  }, [offset, scale, setX, setY, setZoom])
 
   const zoomBy = (delta: number) =>
     setScale((current) => clamp(current + delta, MIN_SCALE, MAX_SCALE))
@@ -121,7 +153,8 @@ export function DiagramViewer({
         borderRadius="md"
         height={fill ? '100%' : undefined}
       >
-        <Flex
+        <Viewport
+          isDragging={dragging}
           onWheel={fill ? onWheel : undefined}
           onMouseDown={onMouseDown}
           onMouseMove={onMouseMove}
@@ -132,26 +165,17 @@ export function DiagramViewer({
           alignItems="center"
           justifyContent="center"
           height={fill ? '100%' : `${inlineHeight}px`}
-          // cursor and text-selection are interaction state with no styled-system prop; the
-          // diagram is not selectable so a pan-drag never flickers a selection.
-          style={{
-            cursor: dragging ? 'grabbing' : 'grab',
-            userSelect: 'none',
-            WebkitUserSelect: 'none',
-          }}
         >
-          <View
+          <Layer
             ref={contentRef}
             data-testid="diagram-transform"
-            // A live CSS transform - dynamic per drag/zoom frame, so inline (not a token/prop).
-            style={{
-              transform: `translate(${offset.x}px, ${offset.y}px) scale(${scale})`,
-              transformOrigin: 'center',
-              transition: dragging ? 'none' : 'transform 0.12s ease-out',
-            }}
+            isDragging={dragging}
+            panX={x}
+            panY={y}
+            zoomLevel={zoom}
             dangerouslySetInnerHTML={{ __html: svg }}
           />
-        </Flex>
+        </Viewport>
 
         {expandable && (
           <View position="absolute" top={1} right={1} zIndex={1}>

@@ -146,7 +146,7 @@ const positiveOrNegative = (scale: unknown, value: unknown): unknown => {
   }
   const absolute = Math.abs(value)
   const n = get(scale, absolute, absolute)
-  if (typeof n === 'string') return '-' + n
+  if (typeof n === 'string') return `calc(${n} * -1)`
   return (n as number) * -1
 }
 

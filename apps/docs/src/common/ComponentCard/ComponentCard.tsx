@@ -10,8 +10,8 @@ import { ComponentIllustration } from './ComponentIllustration'
 /** One component of the components page: its drawing on a tile, its name under it, a link to its page. */
 export function ComponentCard({ item }: Readonly<{ item: ComponentNavItem }>) {
   return (
-    <Link href={sectionPath(item.pkg, componentPagePath(item))} style={{ textDecoration: 'none' }}>
-      <Card p={0} borderRadius="lg" style={{ overflow: 'hidden' }}>
+    <Link href={sectionPath(item.pkg, componentPagePath(item))} underline="none">
+      <Card p={0} borderRadius="lg" overflow="hidden">
         <Flex bg="secondary" alignItems="center" justifyContent="center" height="184px" p={1}>
           <ComponentIllustration name={item.name} />
         </Flex>

@@ -10,7 +10,7 @@ import {
   type ReactNode,
 } from 'react'
 import type { LayoutProps, SpaceProps } from '@soroush.design/styled-system'
-import { styled } from '../../style/styled'
+import { negate, styled } from '../../style/styled'
 import { type Theme } from '../../theme/themes'
 import { createShouldForwardProp, props } from '@soroush.design/styled-system/should-forward-prop'
 import { space, layout } from '@soroush.design/styled-system'
@@ -98,7 +98,7 @@ const MenuListRoot = styled('ul', {
   // A list with no row to focus takes focus itself - outlined for the keys, the way a row is.
   '&:focus-visible': {
     outline: `${theme.borderWidths.base} solid ${theme.palette[themeDefault(theme, 'color', 'primary')].main}`,
-    outlineOffset: `-${theme.borderWidths.base}`,
+    outlineOffset: negate(theme.borderWidths.base),
   },
 }))
 

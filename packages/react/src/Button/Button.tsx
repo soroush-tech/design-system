@@ -15,11 +15,10 @@ import type {
   BorderProps,
   TypographyProps,
 } from '@soroush.design/styled-system'
-import { styled } from '../style/styled'
+import { alpha, styled } from '../style/styled'
 import { type AppTheme as Theme } from '../theme/themes'
 import { createShouldForwardProp, props } from '@soroush.design/styled-system/should-forward-prop'
 import { border, space, layout, typography } from '@soroush.design/styled-system'
-import { alpha } from '../utils'
 import { getAnchorRel } from '@soroush.design/core/utils'
 import { themeDefault } from '@soroush.design/core/theme'
 import { useDefaultProps } from '../theme/hooks/useDefaultProps'

@@ -79,6 +79,20 @@ describe('Sidebar', () => {
     expect(rail()).toHaveStyle({ width: toPx('12rem') })
   })
 
+  it('puts no style prop on the rail or the landmark as an attribute', () => {
+    renderWithTheme(
+      <Sidebar aria-label="Panels" isOpen>
+        <SidebarItem icon="folder" label="Directory" />
+      </Sidebar>
+    )
+    const nav = screen.getByRole('navigation', { name: 'Panels' })
+    for (const element of [nav, nav.firstElementChild!]) {
+      expect(
+        element.getAttributeNames().filter((name) => /^(flex|gap|rail|expanded)/.test(name))
+      ).toEqual([])
+    }
+  })
+
   it('passes its variant down to items, letting an explicit item variant win', () => {
     renderWithTheme(
       <Sidebar aria-label="Panels" isOpen variant="outlined">

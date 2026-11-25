@@ -1,9 +1,8 @@
 'use client'
 
 import { Children, useId, type HTMLAttributes, type ReactNode } from 'react'
-import { styled } from '../../style/styled'
+import { alpha, styled } from '../../style/styled'
 import { get } from '@soroush.design/styled-system'
-import { alpha } from '../../utils'
 import { Typography } from '../../Typography'
 
 export interface NavGroupProps extends Omit<HTMLAttributes<HTMLElement>, 'children'> {

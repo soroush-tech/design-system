@@ -1,11 +1,18 @@
 import { Fragment, useCallback, useMemo, type ReactNode } from 'react'
 import { LiveError, LivePreview, LiveProvider } from 'react-live'
-import { useTheme } from '@soroush.design/react'
+import { styled, useTheme } from '@soroush.design/react'
 import { prepareLiveCode } from '../../utils/prepareLiveCode'
 import { snippetToModule } from '../../utils/snippetToModule'
 import { prismTheme } from '../../utils/prismTheme'
 import { DemoFrame } from '../DemoFrame'
 import { TrackedEditor } from '../TrackedEditor'
+
+// The error of the evaluated code, as plain text on the demo surface.
+const EvaluationError = styled(LiveError, {
+  name: 'StoryDemo',
+  slot: 'error',
+  label: 'LiveError',
+})({ margin: 0, whiteSpace: 'pre-wrap', fontFamily: 'inherit' })
 
 export interface LiveCodeProps {
   /** The visible editor buffer - the collapsed snippet or the full module. */
@@ -55,7 +62,7 @@ export function LiveCode({
       <DemoFrame
         // No wrapper of its own: the demo sits straight on the surface, as the read-only one does.
         preview={<LivePreview Component={Fragment} />}
-        error={<LiveError style={{ margin: 0, whiteSpace: 'pre-wrap', fontFamily: 'inherit' }} />}
+        error={<EvaluationError />}
         toolbar={toolbar}
         code={<TrackedEditor onCodeChange={onCodeChange} />}
       />

@@ -1,11 +1,11 @@
-import { styled } from '@soroush.design/react'
+import { alpha, styled } from '@soroush.design/react'
 import { get } from '@soroush.design/styled-system'
 import { Flex } from '@soroush.design/react/Flex'
 import { Grid } from '@soroush.design/react/Grid'
 import { Link } from '@soroush.design/react/Link'
 import { Typography } from '@soroush.design/react/Typography'
 import { View } from '@soroush.design/react/View'
-import { alpha } from '@soroush.design/core/utils'
+import { PlainList } from 'src/common/PlainList/PlainList'
 import logoUrl from 'src/assets/soroush.svg'
 import { CONTENT_MAX_WIDTH, TOC_ROOM } from 'src/common/layoutSizes'
 import { PACKAGES } from 'src/common/packages'
@@ -32,7 +32,7 @@ const Heading = styled('h2')(({ theme }) => ({
   marginBottom: theme.space[3],
   color: get(theme, 'palette.primary.main'),
   fontFamily: 'inherit',
-  fontSize: `${theme.fontSizes[0]}px`,
+  fontSize: theme.fontSizes[0],
   fontWeight: 400,
   letterSpacing: '0.2em',
   textTransform: 'uppercase',
@@ -51,7 +51,7 @@ function FooterLinks({
   return (
     <View as="nav" aria-label={label}>
       <Heading>{label}</Heading>
-      <View as="ul" m={0} p={0} style={{ listStyle: 'none' }}>
+      <PlainList as="ul" m={0} p={0}>
         {links.map((link) => (
           <View as="li" key={link.href} py={0.75}>
             <Link
@@ -64,7 +64,7 @@ function FooterLinks({
             </Link>
           </View>
         ))}
-      </View>
+      </PlainList>
     </View>
   )
 }

@@ -1,6 +1,7 @@
 'use client'
 
 import { type AppTheme as Theme } from '../../theme/themes'
+import { negate } from '../../style/styled'
 import { get } from '@soroush.design/styled-system'
 import type { TabsVariant } from '../Tabs/Tabs.types'
 
@@ -10,7 +11,7 @@ import type { TabsVariant } from '../Tabs/Tabs.types'
  */
 export const getDividerShadow = (theme: Theme, isVertical: boolean, color: string): string => {
   const thin = theme.borderWidths.thin
-  const offset = isVertical ? `-${thin} 0` : `0 -${thin}`
+  const offset = isVertical ? `${negate(thin)} 0` : `0 ${negate(thin)}`
   return `inset ${offset} 0 ${color}`
 }
 

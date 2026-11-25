@@ -137,7 +137,7 @@ for every component. The public paths and the exact names of each are the contra
   `@soroush.design/core/...`, never through a barrel of the package.
 - **The engine is configured by a function** (`configureEngine()`), which every entry point of the
   styling system calls before its first use. An app that imports only `keyframes` gets the prefix,
-  the value repair and the raw theme keys. `src/entries/entries.test.ts` holds each entry to it.
+  the style memo and the raw theme keys. `src/entries/entries.test.ts` holds each entry to it.
 - **A component's theme types are plain types next to it.** `<Name>/<Name>.types.ts` holds
   `<Name>OwnerState` (the resolved props its styled elements receive), `<Name>Slot` (the slot names
   it uses with `styled(..., { name, slot })`) and `<Name>ThemeConfig`

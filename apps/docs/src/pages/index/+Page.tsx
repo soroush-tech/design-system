@@ -1,3 +1,4 @@
+import { styled } from '@soroush.design/react'
 import { Button } from '@soroush.design/react/Button'
 import { Card } from '@soroush.design/react/Card'
 import { Flex } from '@soroush.design/react/Flex'
@@ -49,6 +50,9 @@ const PACKAGES = [
   },
 ] as const
 
+// The drawings beside the hero: they take the room the text leaves, up to a width.
+const Showcase = styled(Grid)({ flex: '1 1 22rem' })
+
 // A few of the components, drawn - a first look at what the library has.
 const SHOWCASE = ['Button', 'Tabs', 'Autocomplete', 'RangeInput'] as const
 
@@ -81,11 +85,7 @@ export default function Page() {
               {appInstallLine}
             </Typography>
           </Flex>
-          <Grid
-            gridTemplateColumns="1fr 1fr"
-            gridGap={2}
-            style={{ flex: '1 1 22rem', maxWidth: '34rem' }}
-          >
+          <Showcase gridTemplateColumns="1fr 1fr" gridGap={2} maxWidth="34rem">
             {SHOWCASE.map((name) => (
               <Flex
                 key={name}
@@ -99,7 +99,7 @@ export default function Page() {
                 <ComponentIllustration name={name} />
               </Flex>
             ))}
-          </Grid>
+          </Showcase>
         </Flex>
       </View>
 
@@ -130,10 +130,10 @@ export default function Page() {
             <Link
               key={pkg}
               href={sectionPath(pkg, '/')}
-              style={{ textDecoration: 'none' }}
+              underline="none"
               aria-label={`${name} documentation`}
             >
-              <Card p={3} borderRadius="lg" style={{ height: '100%' }}>
+              <Card p={3} borderRadius="lg" height="100%">
                 <Typography variant="h6" as="h3" gutterBottom>
                   {name}
                 </Typography>

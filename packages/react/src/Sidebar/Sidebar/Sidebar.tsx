@@ -2,6 +2,7 @@
 
 import { useId, useMemo, useState, type ElementType, type ReactNode } from 'react'
 import { styled } from '../../style/styled'
+import { createShouldForwardProp, props } from '@soroush.design/styled-system/should-forward-prop'
 import { Flex, type FlexProps } from '../../Flex'
 import {
   SidebarContext,
@@ -87,12 +88,17 @@ const SidebarRail = styled(Flex, {
   name: 'Sidebar',
   slot: 'rail',
   label: 'SidebarRail',
-  shouldForwardProp: (prop) =>
-    prop !== 'isOpen' &&
-    prop !== 'railLayout' &&
-    prop !== 'expandedWidth' &&
-    prop !== 'collapsedWidth' &&
-    prop !== 'stackedWidth',
+  // Flex's own filter, and the rail's props: a filter given here replaces the one of Flex, so the
+  // style props (`flexDirection`, `gap`, `flexShrink`) would reach the element.
+  shouldForwardProp: createShouldForwardProp([
+    ...props,
+    'layout',
+    'isOpen',
+    'railLayout',
+    'expandedWidth',
+    'collapsedWidth',
+    'stackedWidth',
+  ]),
 })<SidebarRailProps>(({ isOpen, railLayout, expandedWidth, collapsedWidth, stackedWidth }) =>
   // A stacked rail has one width and nothing to animate: its labels are always shown.
   railLayout === 'stacked'

@@ -18,7 +18,7 @@ import {
   type Ref,
 } from 'react'
 import type { SpaceProps } from '@soroush.design/styled-system'
-import { styled } from '../../style/styled'
+import { alpha, negate, styled } from '../../style/styled'
 import { type AppTheme as Theme } from '../../theme/themes'
 import { createShouldForwardProp, props } from '@soroush.design/styled-system/should-forward-prop'
 import { get, space } from '@soroush.design/styled-system'
@@ -335,7 +335,7 @@ const OverflowButton = styled('button', {
     outline: 'none',
     '&:focus-visible': {
       outline: `${theme.borderWidths.base} solid ${main}`,
-      outlineOffset: `-${theme.borderWidths.base}`,
+      outlineOffset: negate(theme.borderWidths.base),
     },
   }
 })
@@ -360,7 +360,7 @@ const OverflowClose = styled('button', {
     backgroundColor: 'transparent',
     color: get(theme, 'text.secondary'),
     cursor: 'pointer',
-    '&:hover': { backgroundColor: `${main}1F` },
+    '&:hover': { backgroundColor: alpha(main, 0.12) },
   }
 })
 

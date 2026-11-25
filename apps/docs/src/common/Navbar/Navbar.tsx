@@ -45,7 +45,7 @@ export function Navbar({ menuDrawer, onSearch, versionMenu }: Readonly<NavbarPro
               </DrawerToggle>
             </View>
           )}
-          <Link href="/" color="primary" style={{ textDecoration: 'none' }}>
+          <Link href="/" color="primary" underline="none">
             <Typography variant="h6" color="primary">
               SOROUSH.DESIGN
             </Typography>

@@ -18,7 +18,7 @@ const getMargin: Transform = (n, scale) => {
   const absolute = Math.abs(n)
   const value = get(scale, absolute, absolute)
   if (!isNumber(value)) {
-    return isNegative ? '-' + value : value
+    return isNegative ? `calc(${value} * -1)` : value
   }
   return value * (isNegative ? -1 : 1)
 }

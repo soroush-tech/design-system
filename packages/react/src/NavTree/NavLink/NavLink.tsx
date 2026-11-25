@@ -1,12 +1,11 @@
 'use client'
 
 import { useContext, type AnchorHTMLAttributes, type ReactNode } from 'react'
-import { styled } from '../../style/styled'
+import { alpha, styled } from '../../style/styled'
 import { type Theme } from '../../theme/themes'
 import { createShouldForwardProp } from '@soroush.design/styled-system/should-forward-prop'
 import { get } from '@soroush.design/styled-system'
 import { Icon } from '../../Icon'
-import { alpha } from '../../utils'
 import { NavTreeContext } from '../NavTreeContext'
 
 export interface NavLinkProps extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'color'> {

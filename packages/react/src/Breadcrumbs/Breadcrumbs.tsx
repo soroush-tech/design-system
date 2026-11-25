@@ -10,7 +10,7 @@ import {
   type ElementType,
   type ReactNode,
 } from 'react'
-import { styled } from '../style/styled'
+import { alpha, styled } from '../style/styled'
 import { get } from '@soroush.design/styled-system'
 import { useDefaultProps } from '../theme/hooks/useDefaultProps'
 import { themeDefault } from '@soroush.design/core/theme'
@@ -97,7 +97,7 @@ const BreadcrumbsCollapsed = styled('button', {
     color: 'inherit',
     cursor: 'pointer',
     outline: 'none',
-    '&:hover': { backgroundColor: `${main}1F` },
+    '&:hover': { backgroundColor: alpha(main, 0.12) },
     '&:focus-visible': {
       outline: `${theme.borderWidths.base} solid ${main}`,
       outlineOffset: theme.borderWidths.thin,
