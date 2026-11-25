@@ -40,4 +40,4 @@ The checks read the packages' **built** declarations. The test builds a package 
 
 ## Adding to the contract
 
-A new entry point or name: edit `exports/<package>.json` (sorted, as the tests demand) and, for `@soroush.design/react`, add its import to `type-tests/paths/index.ts`. A new case: a folder under `type-tests/` with a `tsconfig.json` that extends the base, and its line in `expected-failures.json` if it cannot pass yet. When a legacy package (`react-theme`, `react-components`) is removed, drop its paths from `tsconfig.base.json` and from `BUILT` in `src/check.ts`.
+A new entry point or name: edit `exports/<package>.json` (sorted, as the tests demand) and, for `@soroush.design/react`, add its import to `type-tests/paths/index.ts`. A new case: a folder under `type-tests/` with a `tsconfig.json` that extends the base, and its line in `expected-failures.json` if it cannot pass yet.

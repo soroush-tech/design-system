@@ -1,4 +1,4 @@
-import { APP_PACKAGE } from '../designSystemPackage'
+import { APP_PACKAGE, CORE_PACKAGE } from '../designSystemPackage'
 import { posix } from 'node:path'
 import {
   createProvidersSource,
@@ -59,12 +59,12 @@ export function createInstallCommand(
   version: string
 ): InstallCommand {
   const range = version.includes('-') ? version : `^${version}`
-  const spec = `${APP_PACKAGE}@${range}`
+  const specs = [`${APP_PACKAGE}@${range}`, `${CORE_PACKAGE}@${range}`]
   if (name === 'yarn' && isYarnBerry) {
-    return { command: 'yarn', args: ['add', spec], env: { YARN_ENABLE_SCRIPTS: 'false' } }
+    return { command: 'yarn', args: ['add', ...specs], env: { YARN_ENABLE_SCRIPTS: 'false' } }
   }
   const verb = name === 'npm' ? 'install' : 'add'
-  return { command: name, args: [verb, spec, '--ignore-scripts'], env: {} }
+  return { command: name, args: [verb, ...specs, '--ignore-scripts'], env: {} }
 }
 
 function describeRootProblem(facts: InitFacts): string {
@@ -93,7 +93,7 @@ export function planInit(facts: InitFacts): Plan {
   }
   if (facts.needsParcelPackageExports) {
     plan.manual.push(
-      `Parcel finds ${APP_PACKAGE}/theme and the other subpaths only once it reads package exports. Add to package.json: "@parcel/resolver-default": { "packageExports": true }`
+      `Parcel finds ${CORE_PACKAGE}/theme and the subpaths of ${APP_PACKAGE} only once it reads package exports. Add to package.json: "@parcel/resolver-default": { "packageExports": true }`
     )
   }
   if (!facts.hasDesignSystem)

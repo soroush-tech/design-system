@@ -213,21 +213,18 @@ export const componentAccessibilityPath = (item: ComponentNavItem): string =>
 export const componentLinkPath = (item: ComponentNavItem, section = ''): string =>
   `${section ? componentSpecsPath(item) : componentPagePath(item)}${section}`
 
-/**
- * The subpath a component is imported from - a member's is its family's, and a markdown component
- * is under `markdown`, where the umbrella mounts that library.
- */
-export const importSubpathOf = (item: ComponentNavItem): string => {
-  const entry = item.family ?? item.name
-  return item.pkg === 'markdown' ? `markdown/${entry}` : entry
-}
+/** The subpath a component is imported from - a member's is its family's. */
+export const importSubpathOf = (item: ComponentNavItem): string => item.family ?? item.name
 
-/**
- * The package an app imports every component from, the markdown ones included: the React platform
- * umbrella. The libraries behind it keep their own names in `sections`, which says what a section
- * documents.
- */
+/** The React package: what an app imports every component of the design system from. */
 export const IMPORT_PACKAGE = '@soroush.design/react'
+
+/** The markdown package, which a markdown component is imported from. */
+export const MARKDOWN_PACKAGE = '@soroush.design/react-markdown'
+
+/** The package an app imports a component from: its own, so the line on a page is the real one. */
+export const importPackageOf = (item: ComponentNavItem): string =>
+  item.pkg === 'markdown' ? MARKDOWN_PACKAGE : IMPORT_PACKAGE
 
 /** The markdown package's component library - flat, no categories. */
 export const markdownComponents: ComponentNavItem[] = [
@@ -295,9 +292,11 @@ export const styledSystemDocSlug = (file: string): string =>
   file.replace(/\.md$/, '').replace(/\/index$/, '')
 
 /**
- * The entry points of the React platform that are not components, each with the file of the
- * component library's `docs/` that is its page: `/react/theme/` documents
- * `@soroush.design/react/theme`. `routes.test.ts` holds this list to the umbrella's entry points.
+ * The lowercase pages of the React package, each with the file of its `docs/` that is its page:
+ * `/react/engine/` documents `@soroush.design/react/engine`. `catalog`, `engine` and `testing` are
+ * entry points; `style`, `theme` and `utils` are pages whose URLs are indexed, and which stay,
+ * though the names they document are entry points of their own now (`stylingEntries`) or live in
+ * `@soroush.design/core` (`utils`). `routes.test.ts` holds this list to the package's entry points.
  */
 export const entryGuides: Record<string, string> = {
   catalog: 'catalog.md',
@@ -309,9 +308,29 @@ export const entryGuides: Record<string, string> = {
 }
 
 /**
- * The hooks of the hooks library (`@soroush.design/react-hooks`), which the umbrella mounts under
- * `hooks`: `@soroush.design/react/hooks/useDebounce` has its page at `/react/hooks/useDebounce/`,
- * the `## useDebounce` section of the library's README. `registry.test.ts` holds the list to the
+ * The names of the styling system, each an entry point of `@soroush.design/react` (`/useTheme`,
+ * `/styled`, ...), with the page that documents it: the theme's or the style's.
+ */
+export const stylingEntries: Record<string, 'theme' | 'style'> = {
+  ThemeProvider: 'theme',
+  LayoutProvider: 'theme',
+  useTheme: 'theme',
+  useDefaultProps: 'theme',
+  useMediaQuery: 'theme',
+  withTheme: 'theme',
+  styled: 'style',
+  css: 'style',
+  keyframes: 'style',
+  Global: 'style',
+  useStyle: 'style',
+  withStyles: 'style',
+  StylesConsumer: 'style',
+}
+
+/**
+ * The hooks of the hooks library (`@soroush.design/react-hooks`, `@soroush.design/react-hooks/useDebounce`),
+ * documented under the platform: the page of `useDebounce` is `/react/hooks/useDebounce/`, the
+ * `## useDebounce` section of the library's README. `registry.test.ts` holds the list to the
  * library's entry points and README.
  */
 export const reactHooks = [

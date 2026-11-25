@@ -8,7 +8,7 @@ Wraps a rendered diagram SVG in a zoom/pan viewport. Used internally by
 - **Drag to pan.** The diagram is not text-selectable, so a pan-drag never flickers a selection.
 - **Wheel to zoom - fullscreen only.** Inline, the wheel scrolls the page rather than the diagram
   hijacking it.
-- Every glyph is a design-system [`Icon`](../../../react-components/src/Icon); no inline SVG.
+- Every glyph is a design-system [`Icon`](../../../react/src/Icon); no inline SVG.
 
 The viewport grows with the diagram between a min and max height, then clips (pan/zoom/fullscreen
 to see the rest). The control cluster sits above the (clipped) diagram, so a short diagram never

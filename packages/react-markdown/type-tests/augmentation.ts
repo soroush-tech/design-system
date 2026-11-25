@@ -1,11 +1,13 @@
 // Type-level test: the markdown package's `theme.components` slots must reach
 // consumers through the PUBLISHED d.ts. Runs via `pnpm test:types` (builds dist
 // first, then typechecks this isolated program). Guards that importing the
-// package barrel pulls in the `declare module '@soroush.design/react-components/theme'`
-// augmentation - i.e. it survives tsdown's d.ts chunking - so
+// package barrel pulls in the `declare module '@soroush.design/react'` and
+// `declare module '@soroush.design/core/theme'` augmentations - i.e. they survive tsdown's d.ts
+// chunking - so
 // `theme.components.MarkdownPreview` and friends type-check for npm consumers.
 import '@soroush.design/react-markdown'
-import type { Theme, ThemeComponents } from '@soroush.design/react-components/theme'
+import type { ThemeComponents } from '@soroush.design/react'
+import type { Theme } from '@soroush.design/core/theme'
 
 // The three slots the package registers resolve to configurable component slots.
 export const editor: ThemeComponents['MarkdownEditor'] = {

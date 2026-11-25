@@ -1,7 +1,7 @@
 {
   "name": "@soroush.design/react-markdown",
   "version": "0.1.0",
-  "description": "A markdown editor and renderer for @soroush.design/react-components - Control, Toolbar, Editor, Preview, LiveEdit, CodeBlock and a themed, zoomable diagram viewer.",
+  "description": "A markdown editor and renderer for @soroush.design/react - Control, Toolbar, Editor, Preview, LiveEdit, CodeBlock and a themed, zoomable diagram viewer.",
   "keywords": [
     "markdown",
     "editor",
@@ -144,6 +144,7 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
+    "@soroush.design/core": "workspace:^",
     "@soroush.design/react-hooks": "workspace:^",
     "mermaid": "^12.3.0",
     "react-markdown": "^10.1.0",
@@ -156,12 +157,12 @@
     "unified": "^11.0.5"
   },
   "peerDependencies": {
-    "@soroush.design/react-components": "^0.1.0",
+    "@soroush.design/react": "^0.1.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },
   "devDependencies": {
-    "@soroush.design/react-components": "workspace:*",
+    "@soroush.design/react": "workspace:*",
     "@soroush.tech/eslint-config": "workspace:*",
     "@storybook/react-vite": "^10.6.7",
     "@testing-library/jest-dom": "^7.0.1",

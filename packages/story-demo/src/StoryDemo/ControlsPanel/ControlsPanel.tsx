@@ -1,7 +1,7 @@
-import { Grid } from '@soroush.design/react-components/Grid'
-import { Paper } from '@soroush.design/react-components/Paper'
-import { Typography } from '@soroush.design/react-components/Typography'
-import { View } from '@soroush.design/react-components/View'
+import { Grid } from '@soroush.design/react/Grid'
+import { Paper } from '@soroush.design/react/Paper'
+import { Typography } from '@soroush.design/react/Typography'
+import { View } from '@soroush.design/react/View'
 import type { ControlModel } from '../../utils/controlsFor'
 import { ArgControl } from '../ArgControl'
 

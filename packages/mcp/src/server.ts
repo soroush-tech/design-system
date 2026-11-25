@@ -78,7 +78,7 @@ export const renderTokens = (bundle: ContentBundle, scale?: string): string => {
     return `Unknown scale "${scale}". Available: ${bundle.tokens.map((item) => item.name).join(', ')}.`
   }
   return [
-    `Theme tokens from \`baseTheme\` (@soroush.design/react-components ${bundle.version}).`,
+    `Theme tokens from \`baseTheme\` (@soroush.design/react ${bundle.version}).`,
     'Reference them through the theme - never hardcode the literal value.',
     '',
     ...scales.flatMap((item) => [

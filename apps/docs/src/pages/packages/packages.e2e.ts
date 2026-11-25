@@ -16,7 +16,7 @@ test.describe('packages', () => {
     }
     await expect(page.locator('main').getByRole('link', { name: 'npm' }).first()).toHaveAttribute(
       'href',
-      /npmjs\.com\/package\/@soroush\.design\/react-components/
+      /npmjs\.com\/package\/@soroush\.design\/react/
     )
   })
 
@@ -40,7 +40,7 @@ test.describe('packages', () => {
     await page.goto('/react/Button/')
     await expect(page.locator('main header').getByRole('link', { name: 'Source' })).toHaveAttribute(
       'href',
-      'https://github.com/soroush-tech/design-system/tree/main/packages/react-components/src/Button'
+      'https://github.com/soroush-tech/design-system/tree/main/packages/react/src/Button'
     )
   })
 })

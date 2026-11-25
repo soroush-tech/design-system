@@ -3,11 +3,11 @@ import ReactMarkdown, { type Components, type Options } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeHighlight from 'rehype-highlight'
 import rehypeSlug from 'rehype-slug'
-import { styled } from '@soroush.design/react-components'
-import { Quote, type QuoteProps } from '@soroush.design/react-components/Quote'
-import { Checkbox, type CheckboxProps } from '@soroush.design/react-components/Checkbox'
-import { Image, type ImageProps } from '@soroush.design/react-components/Image'
-import { Link, type LinkProps } from '@soroush.design/react-components/Link'
+import { styled } from '@soroush.design/react'
+import { Quote, type QuoteProps } from '@soroush.design/react/Quote'
+import { Checkbox, type CheckboxProps } from '@soroush.design/react/Checkbox'
+import { Image, type ImageProps } from '@soroush.design/react/Image'
+import { Link, type LinkProps } from '@soroush.design/react/Link'
 import {
   Table,
   TableBody,
@@ -20,9 +20,9 @@ import {
   type TableHeadProps,
   type TableProps,
   type TableRowProps,
-} from '@soroush.design/react-components/Table'
-import { Typography, type TypographyProps } from '@soroush.design/react-components/Typography'
-import { View, type ViewProps } from '@soroush.design/react-components/View'
+} from '@soroush.design/react/Table'
+import { Typography, type TypographyProps } from '@soroush.design/react/Typography'
+import { View, type ViewProps } from '@soroush.design/react/View'
 import { CodeBlock, type CodeBlockProps } from '../CodeBlock'
 import { Mermaid, type MermaidProps } from '../Mermaid'
 import { MERMAID_LANGUAGE, isMermaidBlock, mermaidSource } from './mermaidBlock'

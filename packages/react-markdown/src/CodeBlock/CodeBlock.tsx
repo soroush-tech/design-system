@@ -1,8 +1,9 @@
 import { useRef, type ReactNode } from 'react'
-import { styled, type Theme } from '@soroush.design/react-components'
-import { View, type ViewProps } from '@soroush.design/react-components/View'
-import { Button } from '@soroush.design/react-components/Button'
-import { Icon } from '@soroush.design/react-components/Icon'
+import { styled } from '@soroush.design/react'
+import type { Theme } from '@soroush.design/core/theme'
+import { View, type ViewProps } from '@soroush.design/react/View'
+import { Button } from '@soroush.design/react/Button'
+import { Icon } from '@soroush.design/react/Icon'
 import { useCopyToClipboard } from '@soroush.design/react-hooks/useCopyToClipboard'
 
 // Maps highlight.js token classes to the theme's `syntax` tokens. Descendant

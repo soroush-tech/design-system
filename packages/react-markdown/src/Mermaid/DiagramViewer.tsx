@@ -6,12 +6,12 @@ import {
   type ReactNode,
   type WheelEvent,
 } from 'react'
-import { View } from '@soroush.design/react-components/View'
-import { Flex } from '@soroush.design/react-components/Flex'
-import { Grid } from '@soroush.design/react-components/Grid'
-import { Button } from '@soroush.design/react-components/Button'
-import { Icon, type IconName } from '@soroush.design/react-components/Icon'
-import { Modal } from '@soroush.design/react-components/Modal'
+import { View } from '@soroush.design/react/View'
+import { Flex } from '@soroush.design/react/Flex'
+import { Grid } from '@soroush.design/react/Grid'
+import { Button } from '@soroush.design/react/Button'
+import { Icon, type IconName } from '@soroush.design/react/Icon'
+import { Modal } from '@soroush.design/react/Modal'
 
 const MIN_SCALE = 0.2
 const MAX_SCALE = 5

@@ -449,6 +449,7 @@ describe('the Vike starter', () => {
     const packageJson = JSON.parse(createFiles().get('package.json')!)
     expect(packageJson.name).toBe('my-app')
     expect(packageJson.dependencies).toEqual({
+      '@soroush.design/core': '^0.1.0',
       '@soroush.design/react': '^0.1.0',
       '@umber-style/server': `^${devDependencies['@umber-style/server']}`,
       react: devDependencies.react,

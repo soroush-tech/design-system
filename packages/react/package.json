@@ -1,11 +1,12 @@
 {
   "name": "@soroush.design/react",
   "version": "0.1.0",
-  "description": "The React platform of the soroush.design family: every component, the theme, the styling API and the catalog under one name, with no code of its own.",
+  "description": "The React design system: components, the theme's provider and hooks, and the styling system (`styled`, `css`, `keyframes`, `Global`) on the UmberStyle engine, as one package.",
   "keywords": [
     "design-system",
     "react",
     "umberstyle",
+    "styled-system",
     "components",
     "theme",
     "typescript"
@@ -28,137 +29,88 @@
   ],
   "exports": {
     ".": "./src/index.ts",
-    "./Accordion": "./src/Accordion.ts",
-    "./Alert": "./src/Alert.ts",
-    "./AppBar": "./src/AppBar.ts",
-    "./Autocomplete": "./src/Autocomplete.ts",
-    "./Avatar": "./src/Avatar.ts",
-    "./Backdrop": "./src/Backdrop.ts",
-    "./Badge": "./src/Badge.ts",
-    "./Breadcrumbs": "./src/Breadcrumbs.ts",
-    "./Button": "./src/Button.ts",
-    "./ButtonGroup": "./src/ButtonGroup.ts",
-    "./Card": "./src/Card.ts",
-    "./Checkbox": "./src/Checkbox.ts",
-    "./Chip": "./src/Chip.ts",
-    "./CircularProgress": "./src/CircularProgress.ts",
-    "./Collapse": "./src/Collapse.ts",
-    "./Drawer": "./src/Drawer.ts",
-    "./Fab": "./src/Fab.ts",
-    "./FabMenu": "./src/FabMenu.ts",
-    "./Fade": "./src/Fade.ts",
-    "./Flex": "./src/Flex.ts",
-    "./FocusTrap": "./src/FocusTrap.ts",
-    "./Form": "./src/Form.ts",
-    "./FormControl": "./src/FormControl.ts",
-    "./FormHelperText": "./src/FormHelperText.ts",
-    "./FormLabel": "./src/FormLabel.ts",
-    "./Grid": "./src/Grid.ts",
-    "./Grow": "./src/Grow.ts",
-    "./Icon": "./src/Icon.ts",
-    "./Image": "./src/Image.ts",
-    "./LinearProgress": "./src/LinearProgress.ts",
-    "./Link": "./src/Link.ts",
-    "./Menu": "./src/Menu.ts",
-    "./MenuItem": "./src/MenuItem.ts",
-    "./Modal": "./src/Modal.ts",
-    "./NativeSelect": "./src/NativeSelect.ts",
-    "./NavTree": "./src/NavTree.ts",
-    "./NumberInput": "./src/NumberInput.ts",
-    "./Pagination": "./src/Pagination.ts",
-    "./Paper": "./src/Paper.ts",
-    "./Popover": "./src/Popover.ts",
-    "./Portal": "./src/Portal.ts",
-    "./Pressable": "./src/Pressable.ts",
-    "./Quote": "./src/Quote.ts",
-    "./Radio": "./src/Radio.ts",
-    "./RangeInput": "./src/RangeInput.ts",
-    "./Rating": "./src/Rating.ts",
-    "./ScrollArea": "./src/ScrollArea.ts",
-    "./Select": "./src/Select.ts",
-    "./Sidebar": "./src/Sidebar.ts",
-    "./Skeleton": "./src/Skeleton.ts",
-    "./Slide": "./src/Slide.ts",
-    "./Snackbar": "./src/Snackbar.ts",
-    "./Switch": "./src/Switch.ts",
-    "./Table": "./src/Table.ts",
-    "./Tabs": "./src/Tabs.ts",
-    "./TextInput": "./src/TextInput.ts",
-    "./ToggleButton": "./src/ToggleButton.ts",
-    "./Tooltip": "./src/Tooltip.ts",
-    "./TransferList": "./src/TransferList.ts",
-    "./Typography": "./src/Typography.ts",
-    "./View": "./src/View.ts",
-    "./Zoom": "./src/Zoom.ts",
-    "./catalog": "./src/catalog.ts",
-    "./engine": "./src/engine.ts",
-    "./hooks": "./src/hooks.ts",
-    "./hooks/useControlled": "./src/hooks/useControlled.ts",
-    "./hooks/useCopyToClipboard": "./src/hooks/useCopyToClipboard.ts",
-    "./hooks/useDebounce": "./src/hooks/useDebounce.ts",
-    "./hooks/useDebouncedCallback": "./src/hooks/useDebouncedCallback.ts",
-    "./hooks/useEventCallback": "./src/hooks/useEventCallback.ts",
-    "./hooks/useMergedRefs": "./src/hooks/useMergedRefs.ts",
-    "./markdown": "./src/markdown.ts",
-    "./markdown/CodeBlock": "./src/markdown/CodeBlock.ts",
-    "./markdown/Control": "./src/markdown/Control.ts",
-    "./markdown/Editor": "./src/markdown/Editor.ts",
-    "./markdown/LiveEdit": "./src/markdown/LiveEdit.ts",
-    "./markdown/Mermaid": "./src/markdown/Mermaid.ts",
-    "./markdown/Preview": "./src/markdown/Preview.ts",
-    "./markdown/Toolbar": "./src/markdown/Toolbar.ts",
-    "./style": "./src/style.ts",
-    "./testing": "./src/testing.ts",
-    "./theme": "./src/theme.ts",
-    "./utils": "./src/utils.ts"
-  },
-  "scripts": {
-    "gen": "tsx scripts/gen.ts",
-    "build": "tsdown",
-    "lint": "oxlint --deny-warnings",
-    "typecheck": "tsc --noEmit",
-    "test": "vitest run",
-    "test:coverage": "vitest run --coverage",
-    "test:types": "pnpm --filter @soroush.design/core build && pnpm --filter @soroush.design/react-theme build && pnpm --filter @soroush.design/react-components build && pnpm build && tsc -p type-tests/umbrella-name/tsconfig.json && tsc -p type-tests/library-name/tsconfig.json && tsc -p type-tests/core-name/tsconfig.json && tsc -p type-tests/theme-name/tsconfig.json && tsc -p type-tests/no-augmentation/tsconfig.json",
-    "prepublishOnly": "pnpm build"
-  },
-  "dependencies": {
-    "@soroush.design/react-components": "workspace:^",
-    "@soroush.design/react-hooks": "workspace:^",
-    "@soroush.design/react-theme": "workspace:^"
-  },
-  "peerDependencies": {
-    "@soroush.design/react-markdown": "^0.1.0",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8"
-  },
-  "peerDependenciesMeta": {
-    "@soroush.design/react-markdown": {
-      "optional": true
-    },
-    "react": {
-      "optional": true
-    },
-    "react-dom": {
-      "optional": true
-    }
-  },
-  "devDependencies": {
-    "@soroush.design/react-markdown": "workspace:*",
-    "@soroush.design/umbrella-gen": "workspace:*",
-    "@soroush.tech/eslint-config": "workspace:*",
-    "@types/node": "^26.6.6",
-    "@types/react": "^19.3.0",
-    "@types/react-dom": "^19.3.0",
-    "@vitest/coverage-v8": "^5.1.0",
-    "jsdom": "^31.0.0",
-    "oxlint": "^1.93.0",
-    "react": "^19.3.1",
-    "react-dom": "^19.3.1",
-    "tsdown": "^0.23.7",
-    "tsx": "^4.23.15",
-    "typescript": "~7.0.2",
-    "vitest": "^5.1.0"
+    "./Accordion": "./src/Accordion/index.ts",
+    "./Alert": "./src/Alert/index.ts",
+    "./AppBar": "./src/AppBar/index.ts",
+    "./Autocomplete": "./src/Autocomplete/index.ts",
+    "./Avatar": "./src/Avatar/index.ts",
+    "./Backdrop": "./src/Backdrop/index.ts",
+    "./Badge": "./src/Badge/index.ts",
+    "./Breadcrumbs": "./src/Breadcrumbs/index.ts",
+    "./Button": "./src/Button/index.ts",
+    "./ButtonGroup": "./src/ButtonGroup/index.ts",
+    "./Card": "./src/Card/index.ts",
+    "./Checkbox": "./src/Checkbox/index.ts",
+    "./Chip": "./src/Chip/index.ts",
+    "./CircularProgress": "./src/CircularProgress/index.ts",
+    "./Collapse": "./src/Collapse/index.ts",
+    "./Drawer": "./src/Drawer/index.ts",
+    "./Fab": "./src/Fab/index.ts",
+    "./FabMenu": "./src/FabMenu/index.ts",
+    "./Fade": "./src/Fade/index.ts",
+    "./Flex": "./src/Flex/index.ts",
+    "./FocusTrap": "./src/FocusTrap/index.ts",
+    "./Form": "./src/Form/index.ts",
+    "./FormControl": "./src/FormControl/index.ts",
+    "./FormHelperText": "./src/FormHelperText/index.ts",
+    "./FormLabel": "./src/FormLabel/index.ts",
+    "./Grid": "./src/Grid/index.ts",
+    "./Grow": "./src/Grow/index.ts",
+    "./Icon": "./src/Icon/index.ts",
+    "./Image": "./src/Image/index.ts",
+    "./NavTree": "./src/NavTree/index.ts",
+    "./RangeInput": "./src/RangeInput/index.ts",
+    "./LinearProgress": "./src/LinearProgress/index.ts",
+    "./Link": "./src/Link/index.ts",
+    "./Menu": "./src/Menu/index.ts",
+    "./MenuItem": "./src/MenuItem/index.ts",
+    "./Modal": "./src/Modal/index.ts",
+    "./NativeSelect": "./src/NativeSelect/index.ts",
+    "./NumberInput": "./src/NumberInput/index.ts",
+    "./Pagination": "./src/Pagination/index.ts",
+    "./Paper": "./src/Paper/index.ts",
+    "./Popover": "./src/Popover/index.ts",
+    "./Portal": "./src/Portal/index.ts",
+    "./Pressable": "./src/Pressable/index.ts",
+    "./Quote": "./src/Quote/index.ts",
+    "./Radio": "./src/Radio/index.ts",
+    "./Rating": "./src/Rating/index.ts",
+    "./ScrollArea": "./src/ScrollArea/index.ts",
+    "./Select": "./src/Select/index.ts",
+    "./Sidebar": "./src/Sidebar/index.ts",
+    "./Skeleton": "./src/Skeleton/index.ts",
+    "./Slide": "./src/Slide/index.ts",
+    "./Snackbar": "./src/Snackbar/index.ts",
+    "./Switch": "./src/Switch/index.ts",
+    "./Table": "./src/Table/index.ts",
+    "./Tabs": "./src/Tabs/index.ts",
+    "./TextInput": "./src/TextInput/index.ts",
+    "./ToggleButton": "./src/ToggleButton/index.ts",
+    "./Tooltip": "./src/Tooltip/index.ts",
+    "./TransferList": "./src/TransferList/index.ts",
+    "./Typography": "./src/Typography/index.ts",
+    "./View": "./src/View/index.ts",
+    "./Zoom": "./src/Zoom/index.ts",
+    "./catalog": "./src/catalog/index.ts",
+    "./testing": "./src/testing/index.ts",
+    "./engine": "./src/engine/index.ts",
+    "./utils/test/renderWithTheme": "./src/utils/test/renderWithTheme.tsx",
+    "./utils/test/storiesArgs": "./src/utils/test/storiesArgs.ts",
+    "./utils/test/storiesOptions": "./src/utils/test/storiesOptions.ts",
+    "./utils/test/storiesToggle": "./src/utils/test/storiesToggle.tsx",
+    "./ThemeProvider": "./src/entries/ThemeProvider.ts",
+    "./LayoutProvider": "./src/entries/LayoutProvider.ts",
+    "./useTheme": "./src/entries/useTheme.ts",
+    "./useDefaultProps": "./src/entries/useDefaultProps.ts",
+    "./useMediaQuery": "./src/entries/useMediaQuery.ts",
+    "./withTheme": "./src/entries/withTheme.ts",
+    "./styled": "./src/entries/styled.ts",
+    "./css": "./src/entries/css.ts",
+    "./keyframes": "./src/entries/keyframes.ts",
+    "./Global": "./src/entries/Global.ts",
+    "./useStyle": "./src/entries/useStyle.ts",
+    "./withStyles": "./src/entries/withStyles.ts",
+    "./StylesConsumer": "./src/entries/StylesConsumer.ts"
   },
   "types": "./src/index.ts",
   "publishConfig": {
@@ -464,6 +416,26 @@
           "default": "./dist/Image.cjs"
         }
       },
+      "./NavTree": {
+        "import": {
+          "types": "./dist/NavTree.d.mts",
+          "default": "./dist/NavTree.mjs"
+        },
+        "require": {
+          "types": "./dist/NavTree.d.cts",
+          "default": "./dist/NavTree.cjs"
+        }
+      },
+      "./RangeInput": {
+        "import": {
+          "types": "./dist/RangeInput.d.mts",
+          "default": "./dist/RangeInput.mjs"
+        },
+        "require": {
+          "types": "./dist/RangeInput.d.cts",
+          "default": "./dist/RangeInput.cjs"
+        }
+      },
       "./LinearProgress": {
         "import": {
           "types": "./dist/LinearProgress.d.mts",
@@ -522,16 +494,6 @@
         "require": {
           "types": "./dist/NativeSelect.d.cts",
           "default": "./dist/NativeSelect.cjs"
-        }
-      },
-      "./NavTree": {
-        "import": {
-          "types": "./dist/NavTree.d.mts",
-          "default": "./dist/NavTree.mjs"
-        },
-        "require": {
-          "types": "./dist/NavTree.d.cts",
-          "default": "./dist/NavTree.cjs"
         }
       },
       "./NumberInput": {
@@ -612,16 +574,6 @@
         "require": {
           "types": "./dist/Radio.d.cts",
           "default": "./dist/Radio.cjs"
-        }
-      },
-      "./RangeInput": {
-        "import": {
-          "types": "./dist/RangeInput.d.mts",
-          "default": "./dist/RangeInput.mjs"
-        },
-        "require": {
-          "types": "./dist/RangeInput.d.cts",
-          "default": "./dist/RangeInput.cjs"
         }
       },
       "./Rating": {
@@ -804,176 +756,6 @@
           "default": "./dist/catalog.cjs"
         }
       },
-      "./engine": {
-        "import": {
-          "types": "./dist/engine.d.mts",
-          "default": "./dist/engine.mjs"
-        },
-        "require": {
-          "types": "./dist/engine.d.cts",
-          "default": "./dist/engine.cjs"
-        }
-      },
-      "./hooks": {
-        "import": {
-          "types": "./dist/hooks.d.mts",
-          "default": "./dist/hooks.mjs"
-        },
-        "require": {
-          "types": "./dist/hooks.d.cts",
-          "default": "./dist/hooks.cjs"
-        }
-      },
-      "./hooks/useControlled": {
-        "import": {
-          "types": "./dist/hooks/useControlled.d.mts",
-          "default": "./dist/hooks/useControlled.mjs"
-        },
-        "require": {
-          "types": "./dist/hooks/useControlled.d.cts",
-          "default": "./dist/hooks/useControlled.cjs"
-        }
-      },
-      "./hooks/useCopyToClipboard": {
-        "import": {
-          "types": "./dist/hooks/useCopyToClipboard.d.mts",
-          "default": "./dist/hooks/useCopyToClipboard.mjs"
-        },
-        "require": {
-          "types": "./dist/hooks/useCopyToClipboard.d.cts",
-          "default": "./dist/hooks/useCopyToClipboard.cjs"
-        }
-      },
-      "./hooks/useDebounce": {
-        "import": {
-          "types": "./dist/hooks/useDebounce.d.mts",
-          "default": "./dist/hooks/useDebounce.mjs"
-        },
-        "require": {
-          "types": "./dist/hooks/useDebounce.d.cts",
-          "default": "./dist/hooks/useDebounce.cjs"
-        }
-      },
-      "./hooks/useDebouncedCallback": {
-        "import": {
-          "types": "./dist/hooks/useDebouncedCallback.d.mts",
-          "default": "./dist/hooks/useDebouncedCallback.mjs"
-        },
-        "require": {
-          "types": "./dist/hooks/useDebouncedCallback.d.cts",
-          "default": "./dist/hooks/useDebouncedCallback.cjs"
-        }
-      },
-      "./hooks/useEventCallback": {
-        "import": {
-          "types": "./dist/hooks/useEventCallback.d.mts",
-          "default": "./dist/hooks/useEventCallback.mjs"
-        },
-        "require": {
-          "types": "./dist/hooks/useEventCallback.d.cts",
-          "default": "./dist/hooks/useEventCallback.cjs"
-        }
-      },
-      "./hooks/useMergedRefs": {
-        "import": {
-          "types": "./dist/hooks/useMergedRefs.d.mts",
-          "default": "./dist/hooks/useMergedRefs.mjs"
-        },
-        "require": {
-          "types": "./dist/hooks/useMergedRefs.d.cts",
-          "default": "./dist/hooks/useMergedRefs.cjs"
-        }
-      },
-      "./markdown": {
-        "import": {
-          "types": "./dist/markdown.d.mts",
-          "default": "./dist/markdown.mjs"
-        },
-        "require": {
-          "types": "./dist/markdown.d.cts",
-          "default": "./dist/markdown.cjs"
-        }
-      },
-      "./markdown/CodeBlock": {
-        "import": {
-          "types": "./dist/markdown/CodeBlock.d.mts",
-          "default": "./dist/markdown/CodeBlock.mjs"
-        },
-        "require": {
-          "types": "./dist/markdown/CodeBlock.d.cts",
-          "default": "./dist/markdown/CodeBlock.cjs"
-        }
-      },
-      "./markdown/Control": {
-        "import": {
-          "types": "./dist/markdown/Control.d.mts",
-          "default": "./dist/markdown/Control.mjs"
-        },
-        "require": {
-          "types": "./dist/markdown/Control.d.cts",
-          "default": "./dist/markdown/Control.cjs"
-        }
-      },
-      "./markdown/Editor": {
-        "import": {
-          "types": "./dist/markdown/Editor.d.mts",
-          "default": "./dist/markdown/Editor.mjs"
-        },
-        "require": {
-          "types": "./dist/markdown/Editor.d.cts",
-          "default": "./dist/markdown/Editor.cjs"
-        }
-      },
-      "./markdown/LiveEdit": {
-        "import": {
-          "types": "./dist/markdown/LiveEdit.d.mts",
-          "default": "./dist/markdown/LiveEdit.mjs"
-        },
-        "require": {
-          "types": "./dist/markdown/LiveEdit.d.cts",
-          "default": "./dist/markdown/LiveEdit.cjs"
-        }
-      },
-      "./markdown/Mermaid": {
-        "import": {
-          "types": "./dist/markdown/Mermaid.d.mts",
-          "default": "./dist/markdown/Mermaid.mjs"
-        },
-        "require": {
-          "types": "./dist/markdown/Mermaid.d.cts",
-          "default": "./dist/markdown/Mermaid.cjs"
-        }
-      },
-      "./markdown/Preview": {
-        "import": {
-          "types": "./dist/markdown/Preview.d.mts",
-          "default": "./dist/markdown/Preview.mjs"
-        },
-        "require": {
-          "types": "./dist/markdown/Preview.d.cts",
-          "default": "./dist/markdown/Preview.cjs"
-        }
-      },
-      "./markdown/Toolbar": {
-        "import": {
-          "types": "./dist/markdown/Toolbar.d.mts",
-          "default": "./dist/markdown/Toolbar.mjs"
-        },
-        "require": {
-          "types": "./dist/markdown/Toolbar.d.cts",
-          "default": "./dist/markdown/Toolbar.cjs"
-        }
-      },
-      "./style": {
-        "import": {
-          "types": "./dist/style.d.mts",
-          "default": "./dist/style.mjs"
-        },
-        "require": {
-          "types": "./dist/style.d.cts",
-          "default": "./dist/style.cjs"
-        }
-      },
       "./testing": {
         "import": {
           "types": "./dist/testing.d.mts",
@@ -984,24 +766,144 @@
           "default": "./dist/testing.cjs"
         }
       },
-      "./theme": {
+      "./engine": {
         "import": {
-          "types": "./dist/theme.d.mts",
-          "default": "./dist/theme.mjs"
+          "types": "./dist/engine.d.mts",
+          "default": "./dist/engine.mjs"
         },
         "require": {
-          "types": "./dist/theme.d.cts",
-          "default": "./dist/theme.cjs"
+          "types": "./dist/engine.d.cts",
+          "default": "./dist/engine.cjs"
         }
       },
-      "./utils": {
+      "./ThemeProvider": {
         "import": {
-          "types": "./dist/utils.d.mts",
-          "default": "./dist/utils.mjs"
+          "types": "./dist/ThemeProvider.d.mts",
+          "default": "./dist/ThemeProvider.mjs"
         },
         "require": {
-          "types": "./dist/utils.d.cts",
-          "default": "./dist/utils.cjs"
+          "types": "./dist/ThemeProvider.d.cts",
+          "default": "./dist/ThemeProvider.cjs"
+        }
+      },
+      "./LayoutProvider": {
+        "import": {
+          "types": "./dist/LayoutProvider.d.mts",
+          "default": "./dist/LayoutProvider.mjs"
+        },
+        "require": {
+          "types": "./dist/LayoutProvider.d.cts",
+          "default": "./dist/LayoutProvider.cjs"
+        }
+      },
+      "./useTheme": {
+        "import": {
+          "types": "./dist/useTheme.d.mts",
+          "default": "./dist/useTheme.mjs"
+        },
+        "require": {
+          "types": "./dist/useTheme.d.cts",
+          "default": "./dist/useTheme.cjs"
+        }
+      },
+      "./useDefaultProps": {
+        "import": {
+          "types": "./dist/useDefaultProps.d.mts",
+          "default": "./dist/useDefaultProps.mjs"
+        },
+        "require": {
+          "types": "./dist/useDefaultProps.d.cts",
+          "default": "./dist/useDefaultProps.cjs"
+        }
+      },
+      "./useMediaQuery": {
+        "import": {
+          "types": "./dist/useMediaQuery.d.mts",
+          "default": "./dist/useMediaQuery.mjs"
+        },
+        "require": {
+          "types": "./dist/useMediaQuery.d.cts",
+          "default": "./dist/useMediaQuery.cjs"
+        }
+      },
+      "./withTheme": {
+        "import": {
+          "types": "./dist/withTheme.d.mts",
+          "default": "./dist/withTheme.mjs"
+        },
+        "require": {
+          "types": "./dist/withTheme.d.cts",
+          "default": "./dist/withTheme.cjs"
+        }
+      },
+      "./styled": {
+        "import": {
+          "types": "./dist/styled.d.mts",
+          "default": "./dist/styled.mjs"
+        },
+        "require": {
+          "types": "./dist/styled.d.cts",
+          "default": "./dist/styled.cjs"
+        }
+      },
+      "./css": {
+        "import": {
+          "types": "./dist/css.d.mts",
+          "default": "./dist/css.mjs"
+        },
+        "require": {
+          "types": "./dist/css.d.cts",
+          "default": "./dist/css.cjs"
+        }
+      },
+      "./keyframes": {
+        "import": {
+          "types": "./dist/keyframes.d.mts",
+          "default": "./dist/keyframes.mjs"
+        },
+        "require": {
+          "types": "./dist/keyframes.d.cts",
+          "default": "./dist/keyframes.cjs"
+        }
+      },
+      "./Global": {
+        "import": {
+          "types": "./dist/Global.d.mts",
+          "default": "./dist/Global.mjs"
+        },
+        "require": {
+          "types": "./dist/Global.d.cts",
+          "default": "./dist/Global.cjs"
+        }
+      },
+      "./useStyle": {
+        "import": {
+          "types": "./dist/useStyle.d.mts",
+          "default": "./dist/useStyle.mjs"
+        },
+        "require": {
+          "types": "./dist/useStyle.d.cts",
+          "default": "./dist/useStyle.cjs"
+        }
+      },
+      "./withStyles": {
+        "import": {
+          "types": "./dist/withStyles.d.mts",
+          "default": "./dist/withStyles.mjs"
+        },
+        "require": {
+          "types": "./dist/withStyles.d.cts",
+          "default": "./dist/withStyles.cjs"
+        }
+      },
+      "./StylesConsumer": {
+        "import": {
+          "types": "./dist/StylesConsumer.d.mts",
+          "default": "./dist/StylesConsumer.mjs"
+        },
+        "require": {
+          "types": "./dist/StylesConsumer.d.cts",
+          "default": "./dist/StylesConsumer.cjs"
         }
       }
     },
@@ -1015,5 +917,59 @@
         ]
       }
     }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "storybook": "storybook dev -p 6007",
+    "build:storybook": "storybook build",
+    "lint": "oxlint --deny-warnings",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:storybook": "vitest run --project=storybook",
+    "test:coverage": "vitest run --coverage",
+    "test:types": "pnpm --filter @soroush.design/core build && pnpm --filter @soroush.design/react-hooks build && pnpm build && node scripts/check-dts.mjs && node scripts/check-catalog-dist.mjs && tsc -p type-tests/tsconfig.json && node scripts/check-single-copy.mjs",
+    "check:dts": "node scripts/check-dts.mjs",
+    "check:catalog-dist": "node scripts/check-catalog-dist.mjs",
+    "check:single-copy": "node scripts/check-single-copy.mjs",
+    "audit:styled": "node scripts/audit-styled.mjs",
+    "prepublishOnly": "pnpm build",
+    "gen:theme-components": "node scripts/gen-theme-components.mjs"
+  },
+  "dependencies": {
+    "@soroush.design/core": "workspace:^",
+    "@soroush.design/react-hooks": "workspace:^",
+    "@soroush.design/styled-system": "workspace:^",
+    "@umber-style/cache": "^0.4.0",
+    "@umber-style/react": "^0.4.0",
+    "@umber-style/styled": "^0.4.0"
+  },
+  "peerDependencies": {
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@umber-style/css": "^0.4.0",
+    "@soroush.tech/eslint-config": "workspace:*",
+    "@storybook/addon-a11y": "^10.6.7",
+    "@storybook/addon-docs": "^10.6.7",
+    "@storybook/addon-vitest": "^10.6.7",
+    "@storybook/react-vite": "^10.6.7",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@types/node": "^26.6.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitest/browser-playwright": "^5.1.0",
+    "@vitest/coverage-v8": "^5.1.0",
+    "jsdom": "^31.0.0",
+    "oxlint": "^1.93.0",
+    "playwright": "^1.65.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "storybook": "^10.6.7",
+    "tsdown": "^0.23.7",
+    "typescript": "~7.0.2",
+    "vitest": "^5.1.0",
+    "zod": "^4.6.7"
   }
 }

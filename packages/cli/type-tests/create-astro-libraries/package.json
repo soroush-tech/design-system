@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@soroush.design/react": "^0.1.0",
+    "@soroush.design/core": "^0.1.0",
     "@astrojs/node": "^11.1.13",
     "@astrojs/react": "^7.1.9",
     "@tanstack/react-query": "^5.107.1",

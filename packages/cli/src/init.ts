@@ -1,4 +1,4 @@
-import { APP_PACKAGE, APP_PACKAGE_VERSION, DESIGN_SYSTEM_PACKAGE } from './designSystemPackage'
+import { APP_PACKAGE, APP_PACKAGE_VERSION } from './designSystemPackage'
 import { existsSync, realpathSync } from 'node:fs'
 import { join } from 'node:path'
 import { applyPlan, type ApplyError } from './apply/applyPlan'
@@ -137,10 +137,7 @@ function collectFacts(app: App, scheme: Scheme | undefined): InitFacts {
     hasSrcFolder: existsSync(join(root, 'src')),
     root: rootPath ? { path: rootPath, source: readText(join(root, rootPath))! } : undefined,
     rootCandidates,
-    // An app that has the component library alone is set up too: init adds nothing to it.
-    hasDesignSystem: [APP_PACKAGE, DESIGN_SYSTEM_PACKAGE].some((name) =>
-      getDependency(packageJson, name)
-    ),
+    hasDesignSystem: Boolean(getDependency(packageJson, APP_PACKAGE)),
     needsParcelPackageExports: needsParcelPackageExports(packageJson),
     packageManager: detectPackageManager(root, packageJson),
     version: APP_PACKAGE_VERSION,
@@ -201,8 +198,8 @@ function applyAndInstall(plan: Plan, root: string, io: Io, fileSystem: FileSyste
 
 /**
  * Sets up the design system in the app in `io.cwd`: checks, plans, shows the plan, and applies it
- * only after a yes. It installs the umbrella `@soroush.design/react`; `designSystem` is the
- * component library's package, whose peer range for React the app is checked against. Returns the
+ * only after a yes. It installs `@soroush.design/react` and `@soroush.design/core`; `designSystem` is
+ * the React package, whose peer range for React the app is checked against. Returns the
  * exit code.
  */
 export async function runInit(

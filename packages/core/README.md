@@ -48,9 +48,6 @@ declare module '@soroush.design/core/theme' {
 }
 ```
 
-A platform's library re-exports these interfaces, so the same line may name the library instead
-(`@soroush.design/react/theme`) and reach the same interface.
-
 ## Breakpoints
 
 `@soroush.design/core/breakpoints` holds the helpers behind `theme.breakpoints`:
@@ -102,7 +99,7 @@ library re-exports the catalog and adds its own facts. The React component libra
 ```ts
 import { catalog } from '@soroush.design/react/catalog'
 
-catalog.components.Select.module // '@soroush.design/react-components/Select'
+catalog.components.Select.module // '@soroush.design/react/Select'
 ```
 
 ### The entries

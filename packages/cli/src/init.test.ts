@@ -5,10 +5,10 @@ import { describe, expect, it } from 'vitest'
 import { nodeFileSystem } from './apply/fileSystem'
 import { runInit, type InitOptions } from './init'
 import { MARKER } from './templates/templates'
-import { createTestApp, createTestIo, UMBRELLA_VERSION, VITE_ROOT } from './testApp'
+import { createTestApp, createTestIo, APP_VERSION, VITE_ROOT } from './testApp'
 
 const DESIGN_SYSTEM = {
-  name: '@soroush.design/react-components',
+  name: '@soroush.design/react',
   peerDependencies: { react: '^18.0.0 || ^19.0.0' },
 }
 
@@ -40,7 +40,12 @@ describe('runInit', () => {
       ['git', ['status', '--porcelain'], { cwd: root }],
       [
         'pnpm',
-        ['add', `@soroush.design/react@^${UMBRELLA_VERSION}`, '--ignore-scripts'],
+        [
+          'add',
+          `@soroush.design/react@^${APP_VERSION}`,
+          `@soroush.design/core@^${APP_VERSION}`,
+          '--ignore-scripts',
+        ],
         { cwd: root, env: {}, showOutput: true },
       ],
     ])
@@ -81,7 +86,7 @@ describe('runInit', () => {
   it('counts an app that has the component library alone as set up, and installs nothing', async () => {
     const root = createViteApp()
     await runInit(YES, createTestIo(root).io, DESIGN_SYSTEM)
-    const dependencies = { react: '19.0.0', '@soroush.design/react-components': '^0.1.0' }
+    const dependencies = { react: '19.0.0', '@soroush.design/react': '^0.1.0' }
     writeFileSync(join(root, 'package.json'), JSON.stringify({ dependencies }))
     const { io, commands, getOutput } = createTestIo(root)
     expect(await runInit(YES, io, DESIGN_SYSTEM)).toBe(0)
@@ -94,7 +99,7 @@ describe('runInit', () => {
   it('reports what it skipped even when there is nothing left to change', async () => {
     const root = createViteApp({
       'package.json': JSON.stringify({
-        dependencies: { react: '19.0.0', '@soroush.design/react-components': '0.1.0' },
+        dependencies: { react: '19.0.0', '@soroush.design/react': '0.1.0' },
       }),
       'src/theme/themes.ts': 'export default {}',
     })
@@ -253,7 +258,7 @@ describe('runInit', () => {
     })
     expect(await runInit(YES, io, DESIGN_SYSTEM)).toBe(1)
     expect(getOutput()).toContain(
-      `The install failed. The files are written; install the package yourself:\n  pnpm add @soroush.design/react@^${UMBRELLA_VERSION} --ignore-scripts`
+      `The install failed. The files are written; install the package yourself:\n  pnpm add @soroush.design/react@^${APP_VERSION} @soroush.design/core@^${APP_VERSION} --ignore-scripts`
     )
     expect(existsSync(join(root, 'src/theme/themes.ts'))).toBe(true)
   })
@@ -261,7 +266,7 @@ describe('runInit', () => {
   it('names what is left to do in the closing message, for an app with no root it can edit', async () => {
     const root = createTestApp({
       'package.json': JSON.stringify({
-        dependencies: { react: '19.0.0', '@soroush.design/react-components': '0.1.0' },
+        dependencies: { react: '19.0.0', '@soroush.design/react': '0.1.0' },
       }),
       'tsconfig.json': '{}',
     })
@@ -334,7 +339,12 @@ describe('runInit in a workspace', () => {
     // pnpm adds the package to the app it runs in, not to the workspace's root.
     expect(commands.at(-1)).toEqual({
       command: 'pnpm',
-      args: ['add', `@soroush.design/react@^${UMBRELLA_VERSION}`, '--ignore-scripts'],
+      args: [
+        'add',
+        `@soroush.design/react@^${APP_VERSION}`,
+        `@soroush.design/core@^${APP_VERSION}`,
+        '--ignore-scripts',
+      ],
       options: { cwd: app, env: {}, showOutput: true },
     })
   })

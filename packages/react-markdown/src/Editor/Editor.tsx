@@ -6,10 +6,11 @@ import {
   type KeyboardEvent,
   type SyntheticEvent,
 } from 'react'
-import { Flex } from '@soroush.design/react-components/Flex'
-import { styled } from '@soroush.design/react-components'
-import { useTheme, themeDefault } from '@soroush.design/react-components/theme'
-import { Typography } from '@soroush.design/react-components/Typography'
+import { Flex } from '@soroush.design/react/Flex'
+import { styled } from '@soroush.design/react'
+import { useTheme } from '@soroush.design/react'
+import { themeDefault } from '@soroush.design/core/theme'
+import { Typography } from '@soroush.design/react/Typography'
 
 // Named styled root - theme-customizable via
 // `theme.components.MarkdownEditor.styleOverrides.root`.
@@ -20,7 +21,7 @@ import {
   type TextInputSize,
   type TextInputTextColor,
   type TextInputVariant,
-} from '@soroush.design/react-components/TextInput'
+} from '@soroush.design/react/TextInput'
 import { applyAction } from '../utils/applyAction'
 import { MarkdownContext, type MarkdownSelection } from '../MarkdownContext'
 import type { LinePrefixAction } from '../const'

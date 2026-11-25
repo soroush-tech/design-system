@@ -19,7 +19,7 @@ describe('createThemesSource', () => {
 
   it('gives a TypeScript app the augmentation stub, as a comment, and a JavaScript app none', () => {
     expect(createThemesSource({ isTypeScript: true })).toContain(
-      "// declare module '@soroush.design/react/theme' {"
+      "// declare module '@soroush.design/core/theme' {"
     )
     expect(createThemesSource({ isTypeScript: false })).not.toContain('declare module')
   })
@@ -55,7 +55,7 @@ describe('createProvidersSource', () => {
 })
 
 describe('isSetUpByInit', () => {
-  it('writes the name of the umbrella an app imports from', () => {
+  it('writes the name of the package an app imports from', () => {
     expect(MARKER).toBe('// Set up by @soroush.design/react init.')
   })
 
@@ -63,7 +63,7 @@ describe('isSetUpByInit', () => {
     expect(isSetUpByInit('// Set up by @soroush.design/react init. Your themes')).toBe(true)
   })
 
-  it('recognises a file that starts with the marker of the library, the name before the umbrella', () => {
+  it('recognises a file that starts with the marker of the library, its name before', () => {
     expect(isSetUpByInit('// Set up by @soroush.design/react-components init. Your themes')).toBe(
       true
     )

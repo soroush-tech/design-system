@@ -15,8 +15,7 @@ import type {
  *   declare module '@soroush.design/core/theme' { interface Register { theme: typeof light } }
  *
  * The block holds no key of its own: what the theme VALUE adds - a palette color, a size, a look in
- * `components.X.variants` - is what the types accept. The same line works under any name that
- * re-exports this module (`@soroush.design/react/theme`, `soroush.design/react/theme`, ...).
+ * `components.X.variants` - is what the types accept.
  */
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type -- open on purpose: the app registers its theme
 export interface Register {}

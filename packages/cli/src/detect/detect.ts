@@ -1,4 +1,3 @@
-import { DESIGN_SYSTEM_PACKAGE } from '../designSystemPackage'
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { dirname, join, posix } from 'node:path'
 import type { Io } from '../io'
@@ -149,19 +148,6 @@ export function findPackageFolder(root: string, path: string): string {
     if (existsSync(join(root, folder, 'package.json'))) return folder
   }
   return ''
-}
-
-/**
- * The `package.json` of `@soroush.design/react-components`: the nearest one above `fromFile` that is named
- * for it. Its bin finds itself this way.
- */
-export function readDesignSystemPackage(fromFile: string): PackageJson {
-  for (let directory = dirname(fromFile); ; directory = dirname(directory)) {
-    const packageJson = readPackageJson(directory)
-    if (packageJson?.name === DESIGN_SYSTEM_PACKAGE) return packageJson
-    if (dirname(directory) === directory)
-      throw new Error(`init cannot find the package.json of ${DESIGN_SYSTEM_PACKAGE}`)
-  }
 }
 
 const UNSUPPORTED_FRAMEWORKS: [string, string][] = [

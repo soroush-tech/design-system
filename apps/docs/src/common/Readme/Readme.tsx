@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { Preview } from '@soroush.design/react/markdown/Preview'
+import { Preview } from '@soroush.design/react-markdown/Preview'
 import { View } from '@soroush.design/react/View'
 import { rewriteReadmeLinks } from './utils/rewriteReadmeLinks'
 import { stripReadmeChrome } from '@soroush.design/docs-content'

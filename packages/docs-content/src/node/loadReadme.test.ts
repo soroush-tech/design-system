@@ -10,7 +10,7 @@ import {
 
 describe('packageDir', () => {
   it('points at the workspace package', () => {
-    expect(packageDir('react').replace(/\\/g, '/')).toMatch(/packages\/react-components$/)
+    expect(packageDir('react').replace(/\\/g, '/')).toMatch(/packages\/react$/)
     expect(packageDir('cli').replace(/\\/g, '/')).toMatch(/packages\/cli$/)
   })
 })

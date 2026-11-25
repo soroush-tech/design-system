@@ -216,9 +216,8 @@ Run it in your app's folder, or in a workspace's root that holds one app:
 npx @soroush.design/cli init
 ```
 
-It installs `@soroush.design/react`, the version the command line was released next to.
-`npx @soroush.design/react-components init` does the same: the component library's command line is
-the same one, and checks your React against the library's range.
+It installs `@soroush.design/react`, the version the command line was released next to, and checks
+your React against its range.
 
 | Option            | What it does                                 |
 | ----------------- | -------------------------------------------- |
@@ -247,7 +246,7 @@ It is careful with your app:
   `createRoot(...).render(` or `ReactDOM.render(` call. Otherwise it prints the lines to add.
 - When a write fails, it takes back every change it made. The install runs last, with no scripts.
 - A second run finds its own files and changes nothing, and an app that already has
-  `@soroush.design/react` or `@soroush.design/react-components` gets no install.
+  `@soroush.design/react` gets no install.
 - It checks your React against the design system's peer range, and never upgrades React.
 - It reaches no network but the install.
 

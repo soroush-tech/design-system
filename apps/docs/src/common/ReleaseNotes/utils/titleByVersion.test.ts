@@ -3,7 +3,7 @@ import { titleByVersion } from './titleByVersion'
 
 describe('titleByVersion', () => {
   it.each([
-    ['## @soroush.design/react-components@0.1.0\n\nbody', '## v0.1.0\n\nbody'],
+    ['## @soroush.design/react@0.1.0\n\nbody', '## v0.1.0\n\nbody'],
     ['## @soroush.tech/ui-spec@0.1.2', '## v0.1.2'],
     ['## soroush.design@0.1.0\n\nbody', '## v0.1.0\n\nbody'],
   ])('turns the heading of %j into the version', (body, expected) => {

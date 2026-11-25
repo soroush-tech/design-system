@@ -13,14 +13,13 @@ import {
   getGitState,
   isWorkspaceRoot,
   needsParcelPackageExports,
-  readDesignSystemPackage,
   readPackageJson,
   readText,
   satisfiesRange,
 } from './detect'
 
-// A file inside the design system's own folder in this workspace.
-const DESIGN_SYSTEM_FILE = join(process.cwd(), '../react-components/src/index.ts')
+// The design system's own folder in this workspace.
+const DESIGN_SYSTEM_FOLDER = join(process.cwd(), '../react')
 
 describe('readText and readPackageJson', () => {
   it('reads a file, and gives undefined when there is none', () => {
@@ -124,7 +123,7 @@ describe('satisfiesRange', () => {
   })
 
   it("reads the design system's peer range, and throws on a shape it does not read", () => {
-    const { peerDependencies } = readDesignSystemPackage(DESIGN_SYSTEM_FILE)
+    const { peerDependencies } = readPackageJson(DESIGN_SYSTEM_FOLDER)!
     expect(satisfiesRange('19.2.8', peerDependencies!.react)).toBe(true)
     expect(() => satisfiesRange('19.0.0', '>=18')).toThrow('init cannot read the range >=18')
   })
@@ -184,20 +183,6 @@ describe('findRootFiles', () => {
     mkdirSync(join(root, 'src'))
     symlinkSync(elsewhere, join(root, 'src/linked'), 'junction')
     expect(findRootFiles(root)).toEqual([])
-  })
-})
-
-describe('readDesignSystemPackage', () => {
-  it("finds the design system's package.json above a file in it", () => {
-    expect(readDesignSystemPackage(DESIGN_SYSTEM_FILE).name).toBe(
-      '@soroush.design/react-components'
-    )
-  })
-
-  it('throws when there is none', () => {
-    expect(() => readDesignSystemPackage(join(createTestApp(), 'bin.mjs'))).toThrow(
-      'init cannot find the package.json of @soroush.design/react-components'
-    )
   })
 })
 

@@ -1,11 +1,11 @@
-import { Button } from '@soroush.design/react-components/Button'
-import { Flex } from '@soroush.design/react-components/Flex'
-import { Icon } from '@soroush.design/react-components/Icon'
+import { Button } from '@soroush.design/react/Button'
+import { Flex } from '@soroush.design/react/Flex'
+import { Icon } from '@soroush.design/react/Icon'
 import {
   ToggleButton,
   ToggleButtonGroup,
   type ToggleButtonValue,
-} from '@soroush.design/react-components/ToggleButton'
+} from '@soroush.design/react/ToggleButton'
 
 type Language = 'ts' | 'js'
 

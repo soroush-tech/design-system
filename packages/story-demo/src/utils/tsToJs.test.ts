@@ -4,7 +4,7 @@ import { tsToJs } from './tsToJs'
 describe('tsToJs', () => {
   it('strips type annotations and as-const while keeping JSX', () => {
     const code = [
-      "import { Flex } from '@soroush.design/react-components/Flex'",
+      "import { Flex } from '@soroush.design/react/Flex'",
       '',
       'export default function Demo() {',
       '  return (',

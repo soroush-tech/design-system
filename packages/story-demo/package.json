@@ -22,13 +22,14 @@
     "sucrase": "^3.35.1"
   },
   "peerDependencies": {
-    "@soroush.design/react-components": "workspace:^",
+    "@soroush.design/react": "workspace:^",
     "@soroush.design/react-hooks": "workspace:^",
     "@soroush.design/react-markdown": "workspace:^",
     "react": "^19.2.8"
   },
   "devDependencies": {
-    "@soroush.design/react-components": "workspace:*",
+    "@soroush.design/core": "workspace:*",
+    "@soroush.design/react": "workspace:*",
     "@soroush.design/react-hooks": "workspace:*",
     "@soroush.design/react-markdown": "workspace:*",
     "@soroush.tech/eslint-config": "workspace:*",

@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import designSystem from '../../react-components/package.json'
+import designSystem from '../../react/package.json'
 import { main } from './main'
 
 vi.mock('./main', () => ({ main: vi.fn(async () => 3) }))
@@ -22,7 +22,7 @@ describe('bin', () => {
       ['init', '--yes'],
       expect.objectContaining({ cwd: process.cwd() }),
       {
-        name: '@soroush.design/react-components',
+        name: '@soroush.design/react',
         peerDependencies: designSystem.peerDependencies,
       }
     )

@@ -4,9 +4,8 @@ import type { DocsSection } from './sections'
 // when Vike loads its config, in plain Node, where nothing else of this package can be loaded.
 
 /**
- * Where each section is on the docs site (`/<route>/`): the path an app imports it from in the
- * `soroush.design` umbrella - `react`, and `react/markdown` for the library that will be mounted
- * under it.
+ * Where each section is on the docs site (`/<route>/`): `react`, and `react/markdown` for the
+ * markdown package, whose pages are grouped under the platform.
  */
 export const sectionRoutes: Record<DocsSection, string> = {
   react: 'react',

@@ -134,8 +134,8 @@ Ghost by default (10% tint + 25% inset ring), `filled` for emphasis.
 ```tsx
 'use client'
 import { styled } from '@soroush.design/react'
-import type { PaletteColor } from '@soroush.design/react'
-import { alpha } from '@soroush.design/react/utils'
+import type { PaletteColor } from '@soroush.design/core/theme'
+import { alpha } from '@soroush.design/core/utils'
 
 const PillRoot = styled('span', {
   shouldForwardProp: (prop) => prop !== 'tone' && prop !== 'filled',
@@ -181,7 +181,7 @@ worth copying: statuses map to palette slots in one table, so adding a status is
 
 ```tsx
 import { styled } from '@soroush.design/react'
-import type { PaletteColor } from '@soroush.design/react'
+import type { PaletteColor } from '@soroush.design/core/theme'
 
 const STATUS_TONE: Record<string, PaletteColor> = {
   PASSED: 'success',

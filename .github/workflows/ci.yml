@@ -146,10 +146,9 @@ jobs:
       - name: Check release notes
         run: ${{ needs.prepare.outputs.runner }} run check:release-notes
 
-      # Fail the build if an umbrella (the platform one, the family one) no longer matches what it points at: its
-      # entry points are generated, so a library that changed its exports leaves it stale.
-      - name: Check umbrella entry points
-        run: ${{ needs.prepare.outputs.runner }} run gen:umbrellas --check
+      # Fail the build if ThemeComponents no longer matches the component folders it is generated from.
+      - name: Check ThemeComponents
+        run: ${{ needs.prepare.outputs.runner }} run gen:theme-components --check
 
       # Fail the build if `npx skills add soroush-tech/design-system` would offer anything but the
       # public skill: every skill in .claude/skills marked internal, the plugin's skills/ only ours.
@@ -294,11 +293,11 @@ jobs:
             echo "  react-dom: $REACT"
           } >> pnpm-workspace.yaml
           pnpm install --no-frozen-lockfile --ignore-scripts
-          node -e "const v=require('./packages/react-components/node_modules/react/package.json').version; if (v !== process.env.REACT) { console.error('react is ' + v); process.exit(1) }"
+          node -e "const v=require('./packages/react/node_modules/react/package.json').version; if (v !== process.env.REACT) { console.error('react is ' + v); process.exit(1) }"
 
       - name: Run Unit Tests
         run: |
-          pnpm --filter @soroush.design/react-components exec vitest run --project=unit
+          pnpm --filter @soroush.design/react exec vitest run --project=unit
           pnpm --filter @soroush.design/react-markdown test
 
   # The apps `create` starts (packages/cli): the design system and the cli are packed from this

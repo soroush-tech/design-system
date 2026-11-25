@@ -1,7 +1,7 @@
 // Proves that an app `create` starts works, on this checkout's code rather than npm's:
 //
-// 1. builds and packs the umbrella an app imports from and the workspace packages it depends on (the
-//    component library and the cli among them);
+// 1. builds and packs the React package an app imports from and the workspace packages it depends
+//    on, and builds the cli;
 // 2. runs the built cli's `create` in a temp folder, through its own `main`, with an Io whose
 //    install first points the new app at those tarballs;
 // 3. typechecks (TypeScript) and builds the app, checks that the build prerendered its pages,
@@ -34,10 +34,10 @@ import { dirname, join } from 'node:path'
 import { parseArgs } from 'node:util'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 
-// The umbrella an app depends on and imports from, and the component library behind it, whose React
-// range `create` reads.
+// The React package an app depends on and imports from, whose React range `create` reads, and the
+// command line that runs `create`: built, never packed, since an app does not install it.
 const APP_PACKAGE = '@soroush.design/react'
-const DESIGN_SYSTEM = '@soroush.design/react-components'
+const CLI_PACKAGE = '@soroush.design/cli'
 const APP = 'smokeApp'
 
 const repoRoot = join(dirname(fileURLToPath(import.meta.url)), '..')
@@ -124,7 +124,7 @@ function readWorkspacePackages() {
   return packages
 }
 
-/** The umbrella and every workspace package it depends on, however deep. */
+/** The React package and every workspace package it depends on, however deep. */
 function collectShipped(packages) {
   const names = new Set()
   const visit = (name) => {
@@ -155,14 +155,16 @@ const readJson = (path) => JSON.parse(readFileSync(path, 'utf8'))
 const writeJson = (path, value) => writeFileSync(path, `${JSON.stringify(value, null, 2)}\n`)
 
 /**
- * Points the new app at the tarballs: the umbrella as the app's dependency, and the packages the
- * umbrella depends on as overrides, in the root's package.json, where each package
+ * Points the new app at the tarballs: each package it lists as a dependency, and every package of
+ * the React package's tree as an override, in the root's package.json, where each package
  * manager reads them. `rootDir` is where the install runs; `appDir` is the app's own folder.
  */
 function useTarballs(rootDir, appDir, tarballs) {
   const toSpec = (name) => `file:${tarballs[name].replaceAll('\\', '/')}`
   const appManifest = readJson(join(appDir, 'package.json'))
-  appManifest.dependencies[APP_PACKAGE] = toSpec(APP_PACKAGE)
+  for (const name of Object.keys(appManifest.dependencies)) {
+    if (name in tarballs) appManifest.dependencies[name] = toSpec(name)
+  }
   writeJson(join(appDir, 'package.json'), appManifest)
   const rootManifest = readJson(join(rootDir, 'package.json'))
   const overrides = Object.fromEntries(Object.keys(tarballs).map((name) => [name, toSpec(name)]))
@@ -357,13 +359,17 @@ let isPassed = false
 try {
   const packages = readWorkspacePackages()
   const shipped = collectShipped(packages)
-  run('pnpm', [...shipped.flatMap((name) => ['--filter', name]), 'build'], repoRoot)
+  run(
+    'pnpm',
+    [...[...shipped, CLI_PACKAGE].flatMap((name) => ['--filter', name]), 'build'],
+    repoRoot
+  )
   const packDir = join(workDir, 'packs')
   mkdirSync(packDir)
   const tarballs = pack(shipped, packages, packDir)
 
   const cli = await import(
-    pathToFileURL(join(packages.get('@soroush.design/cli').dir, 'dist/index.mjs')).href
+    pathToFileURL(join(packages.get(CLI_PACKAGE).dir, 'dist/index.mjs')).href
   )
   // create reads the package manager that ran it from here.
   process.env.npm_config_user_agent = `${pm}/10.0.0 node/${process.version}`
@@ -381,7 +387,7 @@ try {
       return nodeIo.run(command, args, options)
     },
   }
-  const { name, peerDependencies } = packages.get(DESIGN_SYSTEM).manifest
+  const { name, peerDependencies } = packages.get(APP_PACKAGE).manifest
   const argv = ['create', APP, '--yes', `--${lang}`, '--framework', framework, '--no-git']
   argv.push('--layout', layout, '--render', render, '--with', libraries)
   if (hasSampleData) argv.push('--sample-data')

@@ -17,8 +17,8 @@ export interface SectionDescription {
   /** The section's key: its route folder, `DOCS_SECTION` and its entry in `versions.json`. */
   id: DocsSection
   /**
-   * Where the section is on the docs site (`/<route>/`), the path an app imports it from in the
-   * `soroush.design` umbrella: `react`, and `react/markdown` for the library mounted under it.
+   * Where the section is on the docs site (`/<route>/`): `react` for the React package, and
+   * `react/markdown` for the markdown package, whose pages are grouped under the platform.
    */
   route: string
   /** The package's folder under `packages/`. */

@@ -1,4 +1,5 @@
-import { styled, get } from '@soroush.design/react'
+import { styled } from '@soroush.design/react'
+import { get } from '@soroush.design/styled-system'
 import { Flex } from '@soroush.design/react/Flex'
 import type { IconName } from '@soroush.design/react/Icon'
 import { Sidebar, SidebarItem } from '@soroush.design/react/Sidebar'

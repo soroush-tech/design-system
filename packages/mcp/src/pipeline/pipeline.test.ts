@@ -58,9 +58,9 @@ describe('component pipeline', () => {
     )
     const preview = components.find((c) => c.name === 'Preview')!
     expect(preview.importPath).toBe(
-      "import { Preview } from '@soroush.design/react/markdown/Preview'"
+      "import { Preview } from '@soroush.design/react-markdown/Preview'"
     )
-    expect(preview.packageName).toBe('@soroush.design/react/markdown')
+    expect(preview.packageName).toBe('@soroush.design/react-markdown')
     expect(components.find((c) => c.name === 'Card')!.packageName).toBe('@soroush.design/react')
   })
 

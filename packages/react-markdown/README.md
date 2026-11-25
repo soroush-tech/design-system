@@ -31,7 +31,7 @@ Most markdown editors hand you a fixed widget - a bordered box with a toolbar bo
 
 ## Install
 
-The markdown library is optional on the React umbrella: an app that never imports it installs none of its dependencies. Install it beside the umbrella, with React:
+This package is not a dependency of `@soroush.design/react`: an app that never imports it installs none of its dependencies. Install it beside `@soroush.design/react`, with React:
 
 ```sh
 # npm
@@ -48,17 +48,15 @@ pnpm add @soroush.design/react @soroush.design/react-markdown react react-dom
 yarn add @soroush.design/react @soroush.design/react-markdown react react-dom
 ```
 
-An app that takes the lean route installs the libraries it uses by their own names, `@soroush.design/react-components` and `@soroush.design/react-markdown`; the imports below then name those packages instead of the umbrella.
-
-> **Requires the component library.** This package renders through `@soroush.design/react-components`, so its components must live inside that library's `ThemeProvider`. If you aren't already using it, [start there first](https://www.npmjs.com/package/@soroush.design/react-components).
+> **Requires the component library.** This package renders through `@soroush.design/react`, so its components must live inside that library's `ThemeProvider`. If you aren't already using it, [start there first](https://www.npmjs.com/package/@soroush.design/react).
 
 ## Quick start
 
 Wrap your app in the design system's `ThemeProvider` once, then render markdown anywhere inside it:
 
 ```tsx
-import { ThemeProvider } from '@soroush.design/react/theme'
-import { Preview } from '@soroush.design/react/markdown/Preview'
+import { ThemeProvider } from '@soroush.design/react'
+import { Preview } from '@soroush.design/react-markdown/Preview'
 
 export function App() {
   return (
@@ -81,8 +79,8 @@ The `Editor` works standalone via `value`/`onChange` - no `Control` needed:
 
 ```tsx
 import { useState } from 'react'
-import { Editor } from '@soroush.design/react/markdown/Editor'
-import { ThemeProvider } from '@soroush.design/react/theme'
+import { Editor } from '@soroush.design/react-markdown/Editor'
+import { ThemeProvider } from '@soroush.design/react'
 
 function MarkdownField() {
   const [value, setValue] = useState('# Start writing\n\nJust the source editor - no preview.')
@@ -101,7 +99,7 @@ Everything inside `Control` shares one value and selection, so you arrange the p
 
 ```tsx
 import { useState } from 'react'
-import { Control, Toolbar, Editor, Preview } from '@soroush.design/react/markdown'
+import { Control, Toolbar, Editor, Preview } from '@soroush.design/react-markdown'
 import { Flex } from '@soroush.design/react/Flex'
 
 function MarkdownField() {
@@ -132,7 +130,7 @@ There is intentionally **no Edit·Split·Preview switch** - which panes to show,
 | `Editor`  | The source `<textarea>` - Tab-to-indent, selection, caret restore.                |
 | `Preview` | Renders a markdown string (its child) to themed components.                       |
 
-`Toolbar` and `Editor` must be rendered inside `Control`; `Preview` works anywhere. Import each from its own entry point, `@soroush.design/react/markdown/Editor`, or all of them from `@soroush.design/react/markdown` - there is no `Markdown.*` namespace. Full prop references live in the [docs](https://docs.soroush.design/react/markdown/).
+`Toolbar` and `Editor` must be rendered inside `Control`; `Preview` works anywhere. Import each from its own entry point, `@soroush.design/react-markdown/Editor`, or all of them from `@soroush.design/react-markdown` - there is no `Markdown.*` namespace. Full prop references live in the [docs](https://docs.soroush.design/react/markdown/).
 
 ## Customizing the look
 
@@ -140,10 +138,11 @@ Everything is styled through the design system's theme, and there are two levels
 
 ### Customize the theme - restyle everything
 
-`Preview` renders design-system components that read theme tokens, so your theme already governs how markdown looks. Build one with `createTheme` - palette, spacing, type scale, radii - and pass it to `ThemeProvider`; the markdown output changes along with the rest of your UI, no markdown-specific setup. See the [design system's theming guide](https://www.npmjs.com/package/@soroush.design/react-components) for the full token set.
+`Preview` renders design-system components that read theme tokens, so your theme already governs how markdown looks. Build one with `createTheme` - palette, spacing, type scale, radii - and pass it to `ThemeProvider`; the markdown output changes along with the rest of your UI, no markdown-specific setup. See the [design system's theming guide](https://www.npmjs.com/package/@soroush.design/react) for the full token set.
 
 ```tsx
-import { ThemeProvider, createTheme, baseTheme } from '@soroush.design/react/theme'
+import { ThemeProvider } from '@soroush.design/react'
+import { createTheme, baseTheme } from '@soroush.design/core/theme'
 
 const theme = createTheme(baseTheme, {
   palette: {

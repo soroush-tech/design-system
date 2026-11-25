@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
-import { ThemeProvider, baseTheme } from '@soroush.design/react-components/theme'
+import { ThemeProvider } from '@soroush.design/react'
+import { baseTheme } from '@soroush.design/core/theme'
 import { DemoFrame } from './DemoFrame'
 
 describe('DemoFrame', () => {

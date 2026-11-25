@@ -13,15 +13,8 @@ const packagesDir = join(contractDir, '..')
 /** The packages with an export list. */
 export const LISTED = ['core', 'react-hooks', 'react', 'react-markdown']
 
-/** The packages whose build the checks read, dependencies first: the four above, and what today's `react` builds on. */
-export const BUILT = [
-  'core',
-  'react-hooks',
-  'react-theme',
-  'react-components',
-  'react',
-  'react-markdown',
-]
+/** The packages whose build the checks read, dependencies first. */
+export const BUILT = LISTED
 
 /** Builds what is stale, then runs every export-list check and every type-test program, and holds the failing set to `expected-failures.json`. */
 export const checkAll = async () => {

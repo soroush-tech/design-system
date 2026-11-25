@@ -14,7 +14,7 @@ The barrel export carries the styling engine and theme helpers:
 
 ```tsx
 import { styled, css } from '@soroush.design/react'
-import { createTheme, type Theme } from '@soroush.design/react/theme'
+import { createTheme, type Theme } from '@soroush.design/core/theme'
 ```
 
 ## Style props

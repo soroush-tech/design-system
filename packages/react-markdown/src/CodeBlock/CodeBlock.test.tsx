@@ -1,7 +1,8 @@
 import type { ReactNode } from 'react'
 import { fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { ThemeProvider, createTheme, baseTheme } from '@soroush.design/react-components/theme'
+import { ThemeProvider } from '@soroush.design/react'
+import { createTheme, baseTheme } from '@soroush.design/core/theme'
 import { CodeBlock } from './CodeBlock'
 import { syntaxDark } from './CodeBlock.data'
 

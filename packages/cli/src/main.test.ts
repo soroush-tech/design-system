@@ -10,7 +10,7 @@ import { createTestIo } from './testApp'
 vi.mock('./init', () => ({ runInit: vi.fn(async () => 0) }))
 vi.mock('./create/create', () => ({ runCreate: vi.fn(async () => 0) }))
 
-const DESIGN_SYSTEM = { name: '@soroush.design/react-components' }
+const DESIGN_SYSTEM = { name: '@soroush.design/react' }
 
 async function runMain(...argv: string[]) {
   const { io, getOutput } = createTestIo('.')

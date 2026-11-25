@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@soroush.design/react": "^0.1.0",
+    "@soroush.design/core": "^0.1.0",
     "jotai": "^3.0.2",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",

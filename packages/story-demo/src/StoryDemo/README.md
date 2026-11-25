@@ -57,9 +57,9 @@ The `react` / `react-dom` pin for the sandbox `package.json`. Default: `` `lates
 ### `packageName`
 
 The npm package that the stories' relative imports are rewritten to, and that the CodeSandbox
-entry takes the theme from. The docs app passes the umbrella `@soroush.design/react`, so the code
+entry takes `ThemeProvider` from. The docs app passes `@soroush.design/react`, so the code
 it shows is the code an app writes. Default:
-`` `@soroush.design/react-components` ``.
+`` `@soroush.design/react` ``.
 
 ## Controls
 
@@ -72,8 +72,8 @@ selects and inputs show the argType's `table.defaultValue.summary`.
 
 ```tsx
 import { StoryDemo } from '@soroush.design/story-demo/StoryDemo'
-import * as buttonStories from 'packages/react-components/src/Button/Button.stories'
-import buttonSource from 'packages/react-components/src/Button/Button.stories.tsx?raw'
+import * as buttonStories from 'packages/react/src/Button/Button.stories'
+import buttonSource from 'packages/react/src/Button/Button.stories.tsx?raw'
 
 ;<StoryDemo
   stories={buttonStories}
@@ -81,7 +81,7 @@ import buttonSource from 'packages/react-components/src/Button/Button.stories.ts
   storyName="Variants"
   title="Variants"
   scope={() => import('./scope').then((module) => module.demoScope)}
-  versions={{ '@soroush.design/react-components': '^1.3.3' }}
+  versions={{ '@soroush.design/react': '^1.3.3' }}
   reactVersion="^19.2.8"
 />
 ```

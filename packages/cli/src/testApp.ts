@@ -95,6 +95,6 @@ export function createTestIo(
  * The version of `@soroush.design/react` in the workspace, read from its package.json: what init
  * and create install, as the tests expect it without asking the constant they check.
  */
-export const UMBRELLA_VERSION: string = JSON.parse(
+export const APP_VERSION: string = JSON.parse(
   readFileSync(join(import.meta.dirname, '../../react/package.json'), 'utf8')
 ).version

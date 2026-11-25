@@ -6,8 +6,8 @@ import {
   type KeyboardEvent,
   type ReactNode,
 } from 'react'
-import { styled } from '@soroush.design/react-components'
-import { View } from '@soroush.design/react-components/View'
+import { styled } from '@soroush.design/react'
+import { View } from '@soroush.design/react/View'
 import { MarkdownContext } from '../MarkdownContext'
 import { Preview, type PreviewSlotProps } from '../Preview'
 import { blockToMarkdown } from '../utils/blockToMarkdown'

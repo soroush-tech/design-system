@@ -30,15 +30,11 @@ jobs:
             lab
             mcp
             react
-            react-components
             react-hooks
             react-markdown
-            react-theme
-            soroush.design
             story-demo
             styled-system
             ui-spec
-            umbrella-gen
             # gen:issue-areas end
         with:
           script: |

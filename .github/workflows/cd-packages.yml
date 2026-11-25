@@ -31,11 +31,8 @@ on:
           - core
           - mcp
           - react
-          - react-components
           - react-hooks
           - react-markdown
-          - react-theme
-          - soroush.design
           - styled-system
           - ui-spec
         # gen:publish-options end

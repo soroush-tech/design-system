@@ -55,7 +55,8 @@ React 19.2 or later is required.
 Every component reads its colors, spacing, and typography from the theme. Wrap your app once:
 
 ```tsx
-import { ThemeProvider, baseTheme, createTheme } from '@soroush.design/react/theme'
+import { ThemeProvider } from '@soroush.design/react'
+import { baseTheme, createTheme } from '@soroush.design/core/theme'
 
 const theme = createTheme(baseTheme, {
   // Your brand overrides - palettes, backgrounds, text colors, ...

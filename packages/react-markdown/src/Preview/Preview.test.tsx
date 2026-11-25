@@ -1,7 +1,8 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { renderWithTheme } from '@soroush.design/react-components/utils/test/renderWithTheme'
-import { ThemeProvider, createTheme, baseTheme } from '@soroush.design/react-components/theme'
+import { renderWithTheme } from '@soroush.design/react/utils/test/renderWithTheme'
+import { ThemeProvider } from '@soroush.design/react'
+import { createTheme, baseTheme } from '@soroush.design/core/theme'
 import { syntaxDark } from '../CodeBlock/CodeBlock.data'
 import { Preview } from './Preview'
 

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen, within } from '@testing-library/react'
-import { ThemeProvider } from '@soroush.design/react/theme'
+import { ThemeProvider } from '@soroush.design/react'
 import { PACKAGES } from 'src/common/packages'
 import { sectionPath } from 'src/common/sectionPath'
 import { dark } from 'src/theme/themes'

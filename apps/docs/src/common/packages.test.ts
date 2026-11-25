@@ -5,7 +5,7 @@ import { PACKAGES, sourceUrlOf } from './packages'
 
 // The MCP server and the command line are published under their own scope.
 const NPM_NAMES = {
-  react: '@soroush.design/react-components',
+  react: '@soroush.design/react',
   markdown: '@soroush.design/react-markdown',
   'styled-system': '@soroush.design/styled-system',
   mcp: '@soroush.design/mcp',
@@ -43,13 +43,13 @@ describe('sourceUrlOf', () => {
 
   it("is the component's folder on GitHub", () => {
     expect(sourceUrlOf(find('Button'))).toBe(
-      'https://github.com/soroush-tech/design-system/tree/main/packages/react-components/src/Button'
+      'https://github.com/soroush-tech/design-system/tree/main/packages/react/src/Button'
     )
   })
 
   it('is the inner folder of a component that is a family', () => {
     expect(sourceUrlOf(find('Table'))).toBe(
-      'https://github.com/soroush-tech/design-system/tree/main/packages/react-components/src/Table/Table'
+      'https://github.com/soroush-tech/design-system/tree/main/packages/react/src/Table/Table'
     )
   })
 })

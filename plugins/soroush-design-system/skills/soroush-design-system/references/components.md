@@ -118,7 +118,7 @@ Import every component from its own subpath.
 - **Popover** - Positions floating content next to an anchor, portaled above the page.
 - **Pressable** - An unstyled clickable surface: button semantics - keyboard activation, focus ring, disabled state - with none of a button's looks.
 
-## @soroush.design/react/markdown
+## @soroush.design/react-markdown
 
 - **Preview** - Renders a markdown **string** with every element mapped to a design-system primitive - headings, paragraphs, links, lists, GFM task-list checkboxes (`theme/Checkbox`), tables, blockquotes, images, and syntax-highlighted fenced code blocks (`CodeBlock`, via `rehype-highlight`).
 - **Editor** - The source `<textarea>` of the `Markdown` compound.

@@ -10,15 +10,15 @@ metadata:
 Three structural regimes exist in this repo. Pick the regime first, then follow its
 contract. The deep-dive docs are authoritative - read the matching one before building:
 
-| Regime                     | Authority                                                                                                                                  |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| Component-library packages | `packages/react-components/design-system.md` (`## Component Architecture`, `## Files per Component`) - markdown and lab follow it verbatim |
-| Utility/tool packages      | `packages/packages.md` (`## Folder structure`, `## Exports`)                                                                               |
-| The docs app (`apps/docs`) | `apps/docs/docs-app.md`                                                                                                                    |
+| Regime                     | Authority                                                                                                                       |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| Component-library packages | `packages/react/design-system.md` (`## Component Architecture`, `## Files per Component`) - markdown and lab follow it verbatim |
+| Utility/tool packages      | `packages/packages.md` (`## Folder structure`, `## Exports`)                                                                    |
+| The docs app (`apps/docs`) | `apps/docs/docs-app.md`                                                                                                         |
 
 ## Where does a new thing go?
 
-- **Reusable UI component, stable API** -> `packages/react-components/src/<Name>/`.
+- **Reusable UI component, stable API** -> `packages/react/src/<Name>/`.
 - **Reusable UI component, API still settling** -> `packages/lab/src/<Name>/` (the
   incubator; promoted into design-system once stable).
 - **Markdown-rendering component** -> `packages/react-markdown/src/<Name>/`.
@@ -35,6 +35,7 @@ Every component owns a folder; the barrel keeps subpath imports stable:
 src/ComponentName/
   index.ts                  <- export * from './ComponentName'
   ComponentName.tsx         <- component + exported prop types
+  ComponentName.types.ts    <- its theme types: ComponentNameOwnerState, ...Slot, ...ThemeConfig
   README.md                 <- prop reference (token tables, styled-system props, Examples)
   ComponentName.mdx         <- optional hand-authored docs page; overrides the automatic
                                README+demos page on docs.soroush.design
@@ -89,8 +90,7 @@ extract siblings (with co-located tests) only when it grows unwieldy. Required f
 
 ## Imports
 
-- Components ship on subpaths: an app imports `@soroush.design/react/Button`, a library package
-  `@soroush.design/react-components/Button`; the barrel carries `styled`, `css`, `Theme`. Never
+- Components ship on subpaths: an app or another package imports `@soroush.design/react/Button`; the root carries `styled`, `css`, `useTheme`. Never
   deep-import another package's internals.
 - App code uses the `src/`, `content/`, and `packages/` aliases - never relative `../../`.
   The one exception: Vike `+route.ts`/`+config.ts` run at config time without aliases and

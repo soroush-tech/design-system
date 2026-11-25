@@ -2,6 +2,8 @@ import { listStoryNames, type StoriesModule } from '@soroush.design/story-demo'
 import {
   APP_PACKAGE,
   APP_PACKAGE_VERSION,
+  CORE_PACKAGE,
+  CORE_PACKAGE_VERSION,
   COMPONENT_LIBRARY_REACT_RANGE,
 } from 'src/common/packageVersions'
 import { requireMatches } from './requireMatches'
@@ -10,14 +12,14 @@ import { requireMatches } from './requireMatches'
 // (rendered via portable stories) and once as raw text (parsed into the shown code),
 // so the code shown is the code run.
 const modules = requireMatches(
-  'packages/react-components/src/**/*.stories.tsx',
-  import.meta.glob('packages/react-components/src/**/*.stories.tsx', {
+  'packages/react/src/**/*.stories.tsx',
+  import.meta.glob('packages/react/src/**/*.stories.tsx', {
     eager: true,
   }) as Record<string, StoriesModule>
 )
 const sources = requireMatches(
-  'packages/react-components/src/**/*.stories.tsx (?raw)',
-  import.meta.glob('packages/react-components/src/**/*.stories.tsx', {
+  'packages/react/src/**/*.stories.tsx (?raw)',
+  import.meta.glob('packages/react/src/**/*.stories.tsx', {
     query: '?raw',
     import: 'default',
     eager: true,
@@ -77,6 +79,7 @@ export const demoByPath = new Map(
 /** Published versions for our own packages in sandbox exports; anything else rides at latest. */
 export const demoVersions: Record<string, string> = {
   [APP_PACKAGE]: `^${APP_PACKAGE_VERSION}`,
+  [CORE_PACKAGE]: `^${CORE_PACKAGE_VERSION}`,
 }
 
 /** The react / react-dom pin for sandbox exports. */

@@ -4,8 +4,10 @@
 // missing weights to synthesize).
 import '@fontsource-variable/space-grotesk/wght.css'
 import '@fontsource-variable/jetbrains-mono/wght.css'
-import { css, type Theme } from '@soroush.design/react'
-import { Global, globalStyles } from '@soroush.design/react/engine'
+import { css } from '@soroush.design/react'
+import { type Theme } from '@soroush.design/core/theme'
+import { Global } from '@soroush.design/react'
+import { globalStyles } from '@soroush.design/react/engine'
 
 const globalLocalStyles = (theme: Theme) => css`
   html {

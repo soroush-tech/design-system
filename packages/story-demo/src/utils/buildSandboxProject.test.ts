@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest'
 import { buildSandboxProject } from './buildSandboxProject'
 
-const SOURCE = "import { Button } from '@soroush.design/react-components/Button'\n<Button />"
+const SOURCE = "import { Button } from '@soroush.design/react/Button'\n<Button />"
 const OPTIONS = {
-  versions: { '@soroush.design/react-components': '^1.2.3' },
+  versions: { '@soroush.design/react': '^1.2.3' },
   reactVersion: '^19.2.8',
 }
 
@@ -22,20 +22,22 @@ describe('buildSandboxProject', () => {
     }
     expect(manifest.name).toBe('basic-button-group-demo')
     expect(manifest.main).toBe('src/index.tsx')
-    expect(manifest.dependencies['@soroush.design/react-components']).toBe('^1.2.3')
+    expect(manifest.dependencies['@soroush.design/react']).toBe('^1.2.3')
     expect(manifest.dependencies.react).toBe('^19.2.8')
     expect(manifest.dependencies['react-dom']).toBe('^19.2.8')
     expect(manifest.devDependencies.typescript).toBe('latest')
   })
 
-  it('takes the theme from the library by default, and from the package it is given', () => {
+  it('takes the provider from the library by default, and from the package it is given', () => {
     const entry = (packageName?: string) =>
       buildSandboxProject('Basic', SOURCE, { ...OPTIONS, language: 'ts', packageName })[
         'src/index.tsx'
       ].content as string
-    expect(entry()).toContain("from '@soroush.design/react-components/theme'")
-    expect(entry('@soroush.design/react')).toContain("from '@soroush.design/react/theme'")
-    expect(entry('@soroush.design/react')).not.toContain('react-components')
+    expect(entry()).toContain("import { ThemeProvider } from '@soroush.design/react'")
+    expect(entry('@soroush.design/other')).toContain(
+      "import { ThemeProvider } from '@soroush.design/other'"
+    )
+    expect(entry()).toContain("from '@soroush.design/core/theme'")
   })
 
   it('assembles a plain JavaScript project when language is js', () => {

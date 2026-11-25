@@ -11,6 +11,7 @@ import {
   componentPagePath,
   componentSpecsPath,
   IMPORT_PACKAGE,
+  importPackageOf,
   importSubpathOf,
   markdownComponents,
   memberComponents,
@@ -137,10 +138,13 @@ describe('component registry', () => {
     expect(componentSpecsPath(menu)).toBe('/Menu/specs/')
   })
 
-  it('imports every component from the umbrella, a markdown one from under `markdown`', () => {
+  it('imports a component from its own package, so the line on a page is the real one', () => {
     expect(IMPORT_PACKAGE).toBe('@soroush.design/react')
+    expect(importPackageOf(componentBySlug.get('button')!)).toBe('@soroush.design/react')
     expect(importSubpathOf(componentBySlug.get('button')!)).toBe('Button')
-    expect(importSubpathOf(componentBySlug.get('preview')!)).toBe('markdown/Preview')
+    expect(importPackageOf(componentBySlug.get('preview')!)).toBe('@soroush.design/react-markdown')
+    expect(importSubpathOf(componentBySlug.get('preview')!)).toBe('Preview')
+    expect(importSubpathOf(componentBySlug.get('menu-list')!)).toBe('Menu')
   })
 
   it("sends a link to a README's section to the page that shows it", () => {

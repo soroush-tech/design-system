@@ -21,7 +21,7 @@ Decide the correct frontmatter based on what the skill does:
 
 **`paths`** - set only if the skill is scoped to specific files. Use glob patterns:
 
-- Design system / theme work → `@soroush.design/react-components/**`
+- Design system / theme work → `packages/react/**`
 - All TypeScript → `**/*.ts,**/*.tsx`
 - Omit for project-wide knowledge
 

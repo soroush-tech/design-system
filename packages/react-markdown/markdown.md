@@ -1,9 +1,9 @@
 # Markdown package conventions
 
-`@soroush.design/react-markdown` is the markdown library of the React platform, a companion to
-[`@soroush.design/react-components`](../react-components); an app writes
-`@soroush.design/react/markdown/Editor`. **Its components follow the design system's
-conventions verbatim** - read [`../react-components/design-system.md`](../react-components/design-system.md)
+`@soroush.design/react-markdown` is the markdown package of the React design system, a companion to
+[`@soroush.design/react`](../react); an app writes
+`@soroush.design/react-markdown/Editor`. **Its components follow the design system's
+conventions verbatim** - read [`../react/design-system.md`](../react/design-system.md)
 before working here. That doc is the law for: per-component folder structure, prop types derived
 from `Theme` (never manual unions), `styled(...)` naming + `system()` wiring, `shouldForwardProp`,
 the Storybook argType rules (`controls.include` whitelist, an `argType` per included prop,
@@ -34,21 +34,22 @@ sub-component adds `SubName.README.md` + `SubName.stories.tsx` next to its sibli
 
 ## Markdown-specifics
 
-- **On the umbrella as an optional library.** `packages/react/libraries.ts` registers it as
-  `{ package: '@soroush.design/react-markdown', under: 'markdown', optional: true }`: the umbrella lists
-  it as an optional peer, so an app that never imports `/markdown` installs no editor or diagram
-  dependencies. Its entry points are listed one by one in `exports` and `publishConfig.exports` (the
-  umbrella generator refuses a pattern) and each has a docs page at `/react/markdown/<Name>/`; a new
-  one is an entry and a page together. `tsdown.config.ts` builds the entries `exports` lists.
+- **Its own package, a peer of the React package.** An app that never imports it installs no editor or
+  diagram dependencies: `@soroush.design/react` does not depend on it. Its entry points are listed one
+  by one in `exports` and `publishConfig.exports`, and each has a docs page at
+  `/react/markdown/<Name>/`; a new one is an entry and a page together. `tsdown.config.ts` builds the
+  entries `exports` lists.
 - **The hooks are a dependency.** `@soroush.design/react-hooks` is imported by its name and never
-  bundled; the component library stays a peer.
+  bundled; the React package stays a peer.
 
-- **Theme slots via augmentation.** Unlike an in-repo design-system component, this package is a
+- **Theme slots via one augmentation.** Unlike an in-repo design-system component, this package is a
   _consumer_ of the design system, so it registers its `theme.components` slots (`MarkdownEditor`,
-  `MarkdownPreview`, `MarkdownToolbar`, `CodeBlock`) by augmenting
-  `@soroush.design/react-components/theme` in `src/index.ts` - the consumer recipe from design-system
-  `docs/theming.md`. Its own `themeComponents.spec.tsx` locks that wiring (design-system's spec
-  covers only design-system components).
+  `MarkdownPreview`, `MarkdownToolbar`, `CodeBlock`) with one `declare module '@soroush.design/react'`
+  block on `ThemeComponents`, and `theme.syntax` and `theme.mermaid` with one on
+  `@soroush.design/core/theme`'s `Theme`, in `src/themeTypes.ts`. Every entry's `index.ts` imports
+  that file, so the built declaration of each entry reaches the block: an app that imports any entry
+  has the slots and the keys typed. Its own `themeComponents.spec.tsx` locks the wiring
+  (design-system's spec covers only design-system components).
 - **No `audit:styled`.** The styled-audit tooling is design-system-only. Markdown's named `styled`
   roots (`MarkdownEditor`, `MarkdownPreview`, `MarkdownToolbar`, `CodeBlock`) are instead locked by
   `themeComponents.spec.tsx`.

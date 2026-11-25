@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react'
-import { styled, get } from '@soroush.design/react'
-import { alpha } from '@soroush.design/react/utils'
+import { styled } from '@soroush.design/react'
+import { get } from '@soroush.design/styled-system'
+import { alpha } from '@soroush.design/core/utils'
 import { Typography } from '@soroush.design/react/Typography'
 import { View } from '@soroush.design/react/View'
 

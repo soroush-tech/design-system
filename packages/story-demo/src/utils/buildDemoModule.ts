@@ -34,7 +34,7 @@ export interface BuildDemoModuleOptions {
 
 /**
  * Relative story imports become package subpaths: sibling component folders map to the
- * per-component export (`../Flex` -> `<pkg>/Flex`, `../theme/themes` -> `<pkg>/theme`),
+ * per-component export (`../Flex` -> `<pkg>/Flex`),
  * while `utils/` paths keep their full subpath (they are exported as-is).
  */
 const rewriteSpecifier = (specifier: string, packageName: string): string => {

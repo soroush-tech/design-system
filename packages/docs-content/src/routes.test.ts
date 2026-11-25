@@ -9,39 +9,53 @@ import {
   markdownComponents,
   membersOf,
   reactHooks,
+  stylingEntries,
 } from './registry'
 import { REDIRECT_LIMIT, caseRedirects, docsPages, renderRedirects } from './routes'
 
-// The umbrella's entry points, as it publishes them: what an app can import is what the docs
-// have a page for, at the same path.
-const umbrella = (
-  JSON.parse(readFileSync(join(repoRoot(), 'packages', 'react', 'package.json'), 'utf8')) as {
-    exports: Record<string, unknown>
-  }
-).exports
-const entries = Object.keys(umbrella)
-  .filter((subpath) => subpath !== '.')
-  .map((subpath) => subpath.slice(2))
+// The entry points of each package, as it publishes them: what an app can import is what the docs
+// have a page for. The React package's are at `/react/<entry>/`; the hooks package's and the
+// markdown package's are grouped under it, at `/react/hooks/<hook>/` and `/react/markdown/<name>/`.
+const entriesOf = (name: string): string[] => {
+  const { publishConfig } = JSON.parse(
+    readFileSync(join(repoRoot(), 'packages', name, 'package.json'), 'utf8')
+  ) as { publishConfig: { exports: Record<string, unknown> } }
+  return Object.keys(publishConfig.exports)
+    .filter((subpath) => subpath !== '.')
+    .map((subpath) => subpath.slice(2))
+}
+const entries = entriesOf('react')
 
 const pages = docsPages(() => true)
 const paths = pages.map(({ path }) => path)
 
 describe('the docs routes are the import paths', () => {
-  it('gives every entry point of the umbrella exactly one page, at its path', () => {
+  it('gives every entry point of the React package a page at its path, or a guide that covers it', () => {
     for (const entry of entries) {
+      if (entry in stylingEntries) {
+        expect(paths, `the guide of ${entry}`).toContain(`/react/${stylingEntries[entry]}/`)
+        continue
+      }
       const matching = paths.filter((path) => path === `/react/${entry}/`)
       expect(
         matching,
-        `soroush.design/react/${entry} has no docs page at /react/${entry}/`
+        `@soroush.design/react/${entry} has no docs page at /react/${entry}/`
       ).toHaveLength(1)
     }
+  })
+
+  it('covers each name of the styling system with an entry point', () => {
+    expect(Object.keys(stylingEntries).sort()).toEqual(
+      entries.filter((entry) => entry in stylingEntries).sort()
+    )
+    expect(Object.keys(stylingEntries)).toHaveLength(13)
   })
 
   it('has no capitalised page that is not an entry point or an export of one', () => {
     for (const { path, kind } of pages) {
       const [, platform, first, second] = path.split('/')
       if (platform !== 'react' || !/^[A-Z]/.test(first ?? '')) continue
-      expect(entries, `${path} is not an entry point of the umbrella`).toContain(first)
+      expect(entries, `${path} is not an entry point of the React package`).toContain(first)
       if (kind === 'member') {
         const member = componentByName.get(second)
         expect(member?.family, `${path}: ${second} is not an export of ${first}`).toBe(first)
@@ -49,16 +63,24 @@ describe('the docs routes are the import paths', () => {
     }
   })
 
-  it('has a lowercase page only for what an entry point or a library says', () => {
-    const lowercase = entries.filter((entry) => /^[a-z]/.test(entry) && !entry.includes('/'))
-    expect(lowercase.sort()).toEqual([...Object.keys(entryGuides), 'hooks', 'markdown'].sort())
+  it('keeps the lowercase pages whose URLs are indexed, entry point or not', () => {
+    const lowercase = entries.filter((entry) => /^[a-z]/.test(entry) && !(entry in stylingEntries))
+    expect(lowercase.sort()).toEqual(['catalog', 'engine', 'testing'])
+    expect(Object.keys(entryGuides).sort()).toEqual([
+      'catalog',
+      'engine',
+      'style',
+      'testing',
+      'theme',
+      'utils',
+    ])
   })
 
-  it('gives each library mounted under the platform a page for each of its entry points', () => {
-    const under = (library: string) =>
-      entries.filter((entry) => entry.startsWith(`${library}/`)).map((entry) => entry.split('/')[1])
-    expect(under('hooks').sort()).toEqual([...reactHooks].sort())
-    expect(under('markdown').sort()).toEqual(markdownComponents.map(({ name }) => name).sort())
+  it('gives each package grouped under the platform a page for each of its entry points', () => {
+    expect(entriesOf('react-hooks').sort()).toEqual([...reactHooks].sort())
+    expect(entriesOf('react-markdown').sort()).toEqual(
+      markdownComponents.map(({ name }) => name).sort()
+    )
   })
 
   it('never lets a tab take the name of an export', () => {

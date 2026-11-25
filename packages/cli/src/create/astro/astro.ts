@@ -3,7 +3,7 @@
 // needs no 'use client' here, and an island's styles are in its HTML. Its files are the templates in
 // templates/astro/ (see templates/templates.md); this module adds what is computed: package.json,
 // and the themes and Providers `init` writes too.
-import { APP_PACKAGE } from '../../designSystemPackage'
+import { APP_PACKAGE, CORE_PACKAGE } from '../../designSystemPackage'
 import { createProvidersSource, createThemesSource } from '../../templates/templates'
 import type { Starter, StarterFacts, StarterFile } from '../starters'
 import { createTemplateFiles } from '../template/starterFiles'
@@ -39,6 +39,7 @@ function createPackageJson({
     },
     dependencies: {
       [APP_PACKAGE]: toRange(version),
+      [CORE_PACKAGE]: toRange(version),
       ...pickVersions([
         ...(isServer ? (['@astrojs/node'] as const) : ([] as const)),
         '@astrojs/react',

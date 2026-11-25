@@ -1,5 +1,5 @@
 import type { ComponentType, ReactNode } from 'react'
-import { ThemeProvider } from '@soroush.design/react/theme'
+import { ThemeProvider } from '@soroush.design/react'
 import themes from './themes'
 
 /**

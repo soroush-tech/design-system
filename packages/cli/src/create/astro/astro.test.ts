@@ -91,6 +91,7 @@ describe('the Astro starter', () => {
     expect(packageJson.dependencies).toEqual({
       '@astrojs/node': devDependencies['@astrojs/node'],
       '@astrojs/react': devDependencies['@astrojs/react'],
+      '@soroush.design/core': '^0.1.0',
       '@soroush.design/react': '^0.1.0',
       astro: devDependencies.astro,
       react: devDependencies.react,

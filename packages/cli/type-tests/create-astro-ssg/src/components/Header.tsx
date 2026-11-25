@@ -2,9 +2,9 @@ import type { ReactNode } from 'react'
 import { AppBar } from '@soroush.design/react/AppBar'
 import { Flex } from '@soroush.design/react/Flex'
 import { Link } from '@soroush.design/react/Link'
-import { useTheme } from '@soroush.design/react/theme'
+import { useTheme } from '@soroush.design/react'
 import { Typography } from '@soroush.design/react/Typography'
-import { alpha } from '@soroush.design/react/utils'
+import { alpha } from '@soroush.design/core/utils'
 import { Providers } from '../theme/Providers'
 
 /**

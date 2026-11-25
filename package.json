@@ -7,7 +7,7 @@
   "scripts": {
     "prepare": "husky",
     "gen:publish-options": "node scripts/gen-publish-options.mjs",
-    "gen:umbrellas": "pnpm --workspace-concurrency=1 --filter @soroush.design/react --filter soroush.design gen",
+    "gen:theme-components": "node packages/react/scripts/gen-theme-components.mjs",
     "gen:plugin-refs": "pnpm --filter @soroush.design/mcp gen -- --plugin",
     "check:release-notes": "node scripts/check-release-notes.mjs",
     "check:skills": "node scripts/check-skills.mjs",
@@ -20,8 +20,8 @@
     "test:coverage": "pnpm -r test:coverage",
     "format": "oxfmt",
     "format:check": "oxfmt --check",
-    "storybook": "pnpm --filter @soroush.design/react-components storybook",
-    "build:storybook": "pnpm --filter @soroush.design/react-components build:storybook",
+    "storybook": "pnpm --filter @soroush.design/react storybook",
+    "build:storybook": "pnpm --filter @soroush.design/react build:storybook",
     "smoke:create": "node scripts/smoke-create.mjs"
   },
   "devDependencies": {

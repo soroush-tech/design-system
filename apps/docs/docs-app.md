@@ -16,25 +16,24 @@ section's and not React's.
 
 ## Routes
 
-**A page's route is the import path.** The route of a thing is the path an app imports it from in the
-`soroush.design` umbrella, and the page's content is that thing's own markdown file. The URLs are
+**A page's route is the import path under its platform.** The route of a thing is the path an app imports it from, with the hooks and the markdown package grouped under `/react/`, and the page's content is that thing's own markdown file. The URLs are
 frozen from the first publish of the site, so no route is renamed after it.
 
-| An app imports                                    | The docs page               | Content                             |
-| ------------------------------------------------- | --------------------------- | ----------------------------------- |
-| `@soroush.design/react/Button`                    | `/react/Button/`            | the component's README and MDX page |
-| `@soroush.design/react/Table` and its `TableCell` | `/react/Table/TableCell/`   | the member's README                 |
-| `@soroush.design/react/theme`                     | `/react/theme/`             | `docs/theming.md` of the library    |
-| `@soroush.design/react/engine`                    | `/react/engine/`            | `docs/engine.md` of the library     |
-| `@soroush.design/react/markdown/Editor`           | `/react/markdown/Editor/`   | the markdown package's README       |
-| `@soroush.design/react/hooks/useDebounce`         | `/react/hooks/useDebounce/` | its section of the hooks README     |
-| later `@soroush.design/react-native/Button`       | `/react-native/Button/`     |                                     |
-| a package of no platform: `@soroush.design/cli`   | `/cli/`                     | its README and release notes        |
+| An app imports                                                             | The docs page                    | Content                                           |
+| -------------------------------------------------------------------------- | -------------------------------- | ------------------------------------------------- |
+| `@soroush.design/react/Button`                                             | `/react/Button/`                 | the component's README and MDX page               |
+| `@soroush.design/react/Table` and its `TableCell`                          | `/react/Table/TableCell/`        | the member's README                               |
+| `@soroush.design/react/useTheme` and the other names of the styling system | `/react/theme/`, `/react/style/` | `docs/theming.md`, `docs/style.md` of the package |
+| `@soroush.design/react/engine`                                             | `/react/engine/`                 | `docs/engine.md` of the package                   |
+| `@soroush.design/react-markdown/Editor`                                    | `/react/markdown/Editor/`        | the markdown package's README                     |
+| `@soroush.design/react-hooks/useDebounce`                                  | `/react/hooks/useDebounce/`      | its section of the hooks README                   |
+| later `@soroush.design/react-native/Button`                                | `/react-native/Button/`          |                                                   |
+| a package of no platform: `@soroush.design/cli`                            | `/cli/`                          | its README and release notes                      |
 
-- **The platform is the first segment.** A package that is not part of a platform umbrella keeps its
+- **The platform is the first segment.** A package that is not part of a platform keeps its
   own name: `/styled-system/...`, `/cli/...`, `/mcp/...`, `/ui-spec/...`, later `/core/...`.
 - **A capitalised segment is a component, exactly as exported**: `/react/Button/`. A lowercase one is
-  an entry point that is not a component (`/react/theme/`), a library mounted under the platform
+  an entry point that is not a component (`/react/engine/`), a guide whose URL is indexed (`/react/theme/`, `/react/style/`, `/react/utils/`: the names they document are entry points of their own, or `@soroush.design/core`'s), a package grouped under the platform
   (`/react/markdown/`), or a page that is not an entry point at all: the guides
   (`/react/installation/`, `/react/usage/`, `/react/customization/`), `/react/components/` (the
   index of the components) and `/react/releases/`. A guide is never named like an entry point.
@@ -52,8 +51,8 @@ frozen from the first publish of the site, so no route is renamed after it.
 - **A path ends in a slash**, as the prerendered `<path>/index.html` does; the host sends the path
   without it to the one with it.
 - **The list of pages is derived, not kept twice.** `docsPages()` in `@soroush.design/docs-content`
-  builds it from the registry; its test holds it to the umbrella's entry points
-  (`packages/react/package.json`): every entry point has exactly one page at its path, and every
+  builds it from the registry; its test holds it to the entry points of `@soroush.design/react`,
+  `react-hooks` and `react-markdown` (their `package.json`): every entry point has exactly one page at its path (the names of the styling system, `stylingEntries` in the registry, are covered by the guide that documents them), and every
   capitalised page is an entry point or an export of one. The built output is held to the same list by
   `routes.e2e.ts` (exact names, the sitemap, no broken link, no link to a path of the former site).
 - **Adding a thing**: a new component is registered in `registry.ts` and has its README and MDX page; a
@@ -81,7 +80,7 @@ frozen from the first publish of the site, so no route is renamed after it.
   `sectionPath`, `sectionRoute`.
 - `src/mdx/` - the MDX element map (mirrors the markdown package's Preview),
   `MdxStoryDemo`, `MdxReadme`, and the README sources. Every component owns its page in
-  its own package folder next to its README (`packages/react-components/src/<Name>/<Name>.mdx`)
+  its own package folder next to its README (`packages/react/src/<Name>/<Name>.mdx`)
   and the component route renders that page alone - `<StoryDemo of="Component/StoryExport" />`
   and `<Readme of="Name" part="intro" />` need no imports. Pages are mandatory:
   `nav.test.ts` guards the set against disk and a missing one fails the prerender.

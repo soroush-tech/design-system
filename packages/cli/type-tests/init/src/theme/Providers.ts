@@ -1,8 +1,8 @@
 // Set up by @soroush.design/react init. The app's root renders inside Providers.
 import { createElement } from 'react'
 import type { ReactNode } from 'react'
-import { Global, globalStyles } from '@soroush.design/react/engine'
-import { ThemeProvider } from '@soroush.design/react/theme'
+import { Global, ThemeProvider } from '@soroush.design/react'
+import { globalStyles } from '@soroush.design/react/engine'
 import themes from './themes.ts'
 
 /** Gives every component its theme, and draws the page's base styles. */

@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
-import { Flex } from '@soroush.design/react-components/Flex'
-import { Typography } from '@soroush.design/react-components/Typography'
-import { View } from '@soroush.design/react-components/View'
+import { Flex } from '@soroush.design/react/Flex'
+import { Typography } from '@soroush.design/react/Typography'
+import { View } from '@soroush.design/react/View'
 
 export interface DemoFrameProps {
   /** The rendered demo, on its surface. */

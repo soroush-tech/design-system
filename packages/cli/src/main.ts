@@ -170,7 +170,7 @@ function findValueRefusal(
 
 /**
  * Reads the command line and runs the command, for `designSystem`: the package of
- * `@soroush.design/react-components`, whose peer range for React `init` checks the app against.
+ * `@soroush.design/react`, whose peer range for React `init` checks the app against.
  * Returns the exit code: 130 when the person stops it at a question, which is before anything is
  * written.
  */

@@ -1,7 +1,8 @@
 import type { ReactNode } from 'react'
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
-import { ThemeProvider, createTheme, baseTheme } from '@soroush.design/react-components/theme'
+import { ThemeProvider } from '@soroush.design/react'
+import { createTheme, baseTheme } from '@soroush.design/core/theme'
 import { syntaxDark } from '@soroush.design/react-markdown/CodeBlock'
 import { LiveCode } from './LiveCode'
 
@@ -36,7 +37,7 @@ describe('LiveCode', () => {
 
   it('evaluates a full module buffer as-is', async () => {
     const code = [
-      "import { Sample } from '@soroush.design/react-components/Sample'",
+      "import { Sample } from '@soroush.design/react/Sample'",
       '',
       'export default function Demo() {',
       '  return <Sample>full module</Sample>',

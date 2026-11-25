@@ -1,12 +1,12 @@
 // Set up by @soroush.design/react init. Your themes: change any value, or add a theme.
 // Every token is listed at https://docs.soroush.design/react/theme/
-import { baseTheme, createTheme } from '@soroush.design/react/theme'
+import { baseTheme, createTheme } from '@soroush.design/core/theme'
 
 // To add tokens of your own, declare them here, then give them values in each theme:
 //
-// import type { PaletteEntry } from '@soroush.design/react/theme'
+// import type { PaletteEntry } from '@soroush.design/core/theme'
 //
-// declare module '@soroush.design/react/theme' {
+// declare module '@soroush.design/core/theme' {
 //   interface ThemePalette {
 //     brand: PaletteEntry
 //   }

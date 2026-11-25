@@ -3,7 +3,7 @@ import sampleRaw from './__fixtures__/Sample.stories.tsx?raw'
 import { buildDemoModule } from './buildDemoModule'
 import { parseStoriesSource } from './parseStoriesSource'
 
-const PKG = '@soroush.design/react-components'
+const PKG = '@soroush.design/react'
 const parsed = parseStoriesSource(sampleRaw)
 
 describe('buildDemoModule', () => {
@@ -24,7 +24,7 @@ describe('buildDemoModule', () => {
     expect(demo.preview).toBe('<Sample size="md" aria-label="A sample">Sample</Sample>')
     expect(demo.full).toBe(
       [
-        "import { Sample } from '@soroush.design/react-components/Sample'",
+        "import { Sample } from '@soroush.design/react/Sample'",
         '',
         'export default function Demo() {',
         '  return (',
@@ -69,8 +69,8 @@ describe('buildDemoModule', () => {
     const demo = buildDemoModule({ parsed, storyName: 'Sizes', args: {}, packageName: PKG })
     expect(demo.full).toBe(
       [
-        "import { Stack } from '@soroush.design/react-components/Stack'",
-        "import { Sample } from '@soroush.design/react-components/Sample'",
+        "import { Stack } from '@soroush.design/react/Stack'",
+        "import { Sample } from '@soroush.design/react/Sample'",
         '',
         "const noun = 'group'",
         '',
@@ -113,8 +113,8 @@ describe('buildDemoModule', () => {
     ])
     expect(demo.full).toBe(
       [
-        "import { Stack } from '@soroush.design/react-components/Stack'",
-        "import { Sample, type SampleProps } from '@soroush.design/react-components/Sample'",
+        "import { Stack } from '@soroush.design/react/Stack'",
+        "import { Sample, type SampleProps } from '@soroush.design/react/Sample'",
         '',
         '// Shared children - kept top-level so stories stay terse.',
         'const items = [<Stack key="one">One</Stack>, <Stack key="two">Two</Stack>]',
@@ -147,7 +147,7 @@ describe('buildDemoModule', () => {
     const demo = buildDemoModule({ parsed, storyName: 'Block', args: {}, packageName: PKG })
     expect(demo.full).toBe(
       [
-        "import { Sample } from '@soroush.design/react-components/Sample'",
+        "import { Sample } from '@soroush.design/react/Sample'",
         '',
         'export default function Demo() {',
         "  const heading = 'block'",
@@ -162,7 +162,7 @@ describe('buildDemoModule', () => {
     const module = [
       "import { css } from '@umber-style/css'",
       "import { m } from '../utils/test/storiesArgs'",
-      "import { baseTheme } from '../theme/themes'",
+      "import { baseTheme } from '@soroush.design/core/theme'",
       "import { Chip } from './Chip'",
       'const meta: Meta<typeof Chip> = { component: Chip }',
       'export const S: Story = {',
@@ -176,13 +176,9 @@ describe('buildDemoModule', () => {
       packageName: PKG,
     })
     expect(demo.full).toContain("import { css } from '@umber-style/css'")
-    expect(demo.full).toContain(
-      "import { m } from '@soroush.design/react-components/utils/test/storiesArgs'"
-    )
-    expect(demo.full).toContain(
-      "import { baseTheme } from '@soroush.design/react-components/theme'"
-    )
-    expect(demo.full).toContain("import { Chip } from '@soroush.design/react-components/Chip'")
+    expect(demo.full).toContain("import { m } from '@soroush.design/react/utils/test/storiesArgs'")
+    expect(demo.full).toContain("import { baseTheme } from '@soroush.design/core/theme'")
+    expect(demo.full).toContain("import { Chip } from '@soroush.design/react/Chip'")
   })
 
   it('merges imports that rewrite to the same specifier', () => {
@@ -201,12 +197,8 @@ describe('buildDemoModule', () => {
       args: {},
       packageName: PKG,
     })
-    expect(demo.full).toContain(
-      "import TableRow, * as tokens from '@soroush.design/react-components/Table'"
-    )
-    expect(demo.full).toContain(
-      "import { TableCell } from '@soroush.design/react-components/TableCell'"
-    )
+    expect(demo.full).toContain("import TableRow, * as tokens from '@soroush.design/react/Table'")
+    expect(demo.full).toContain("import { TableCell } from '@soroush.design/react/TableCell'")
   })
 
   it('prints renamed imports and args consts inside block bodies', () => {
@@ -228,7 +220,7 @@ describe('buildDemoModule', () => {
     })
     expect(demo.full).toBe(
       [
-        "import { Chip as Tag } from '@soroush.design/react-components/Chip'",
+        "import { Chip as Tag } from '@soroush.design/react/Chip'",
         '',
         'export default function Demo() {',
         "  const args = { size: 'sm' }",

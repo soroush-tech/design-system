@@ -1,14 +1,19 @@
-import { globSync } from 'node:fs'
+import { readFileSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'tsdown'
 
-// Every file under src/ is one generated entry point (see @soroush.design/umbrella-gen), so the build
-// reads the folder instead of keeping a second list. `index.ts` is the root. The library behind
-// each entry stays an import: this package bundles none of it.
-const entries = globSync('src/**/*.ts').map((file) => file.replaceAll('\\', '/'))
+// One build entry per published export of package.json, so the list of entry points is kept once:
+// `./Button` is `src/Button/index.ts`, built to `dist/Button.*`, and `.` is `index`. The source-only
+// `./utils/test/*` helpers of the stories are not published, so they are not built.
+const { exports, publishConfig } = JSON.parse(
+  readFileSync(fileURLToPath(new URL('package.json', import.meta.url)), 'utf8')
+) as { exports: Record<string, string>; publishConfig: { exports: Record<string, unknown> } }
 
 export default defineConfig({
   entry: Object.fromEntries(
-    entries.map((file) => [file.slice('src/'.length, -'.ts'.length), file])
+    Object.entries(exports)
+      .filter(([subpath]) => subpath in publishConfig.exports)
+      .map(([subpath, file]) => [subpath === '.' ? 'index' : subpath.slice(2), file])
   ),
   format: ['esm', 'cjs'],
   dts: true,

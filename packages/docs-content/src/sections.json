@@ -1,7 +1,7 @@
 {
   "react": {
-    "dir": "react-components",
-    "npm": "@soroush.design/react-components"
+    "dir": "react",
+    "npm": "@soroush.design/react"
   },
   "markdown": {
     "dir": "react-markdown",

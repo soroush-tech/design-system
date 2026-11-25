@@ -4,7 +4,7 @@ import {
   allDocComponents,
   categoryOf,
   componentPagePath,
-  IMPORT_PACKAGE,
+  importPackageOf,
   importSubpathOf,
   sitePath,
   splitReadme,
@@ -23,13 +23,12 @@ export { DOCS_URL }
 export const packageIdOf = (item: ComponentNavItem): string =>
   item.pkg === 'react' ? 'design-system' : item.pkg
 
-/** The module a consumer imports a component from: the umbrella, and `/markdown` for that library. */
-export const packageNameOf = (item: ComponentNavItem): string =>
-  item.pkg === 'markdown' ? `${IMPORT_PACKAGE}/markdown` : IMPORT_PACKAGE
+/** The package a consumer imports a component from. */
+export const packageNameOf = importPackageOf
 
 /** The subpath import a consumer writes for a component. */
 export const importPathFor = (item: ComponentNavItem): string =>
-  `import { ${item.name} } from '${IMPORT_PACKAGE}/${importSubpathOf(item)}'`
+  `import { ${item.name} } from '${importPackageOf(item)}/${importSubpathOf(item)}'`
 
 // Markdown prose only: skip headings, badges, block quotes, HTML, and table or rule
 // syntax, so the summary is the first real sentence a reader would see.

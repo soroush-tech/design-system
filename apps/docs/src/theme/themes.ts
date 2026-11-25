@@ -1,6 +1,6 @@
-import type { Theme } from '@soroush.design/react'
-import { baseTheme, createTheme } from '@soroush.design/react/theme'
-import { alpha, generateBoxShadow } from '@soroush.design/react/utils'
+import type { Theme } from '@soroush.design/core/theme'
+import { baseTheme, createTheme } from '@soroush.design/core/theme'
+import { alpha, generateBoxShadow } from '@soroush.design/core/utils'
 import {
   blackAlpha,
   carbonBlack,

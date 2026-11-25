@@ -27,14 +27,14 @@ emits `hljs-*` classes the surface themes to `theme.syntax`).
 ## Theming
 
 `theme.syntax` (typed `ThemeSyntax`) is not one of design-system's own scales - this package
-augments `@soroush.design/react-components/theme` with it (see `src/index.ts`), since it exists solely
+augments `@soroush.design/core/theme` with it (see `src/themeTypes.ts`), since it exists solely
 for this component's highlight.js token mapping and its `font` (the code surface's font family,
 independent of `theme.fonts.mono`). It's required wherever `CodeBlock` renders, so merge one of the
 shipped presets into your theme:
 
 ```ts
-import { baseTheme, createTheme } from '@soroush.design/react/theme'
-import { syntaxDark } from '@soroush.design/react/markdown/CodeBlock'
+import { baseTheme, createTheme } from '@soroush.design/core/theme'
+import { syntaxDark } from '@soroush.design/react-markdown/CodeBlock'
 
 const theme = createTheme(baseTheme, { syntax: syntaxDark })
 ```

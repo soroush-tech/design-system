@@ -19,7 +19,7 @@ describe('openInCodeSandbox', () => {
     })
     openInCodeSandbox(
       'Basic button group',
-      "import { Button } from '@soroush.design/react-components/Button'",
+      "import { Button } from '@soroush.design/react/Button'",
       { language: 'ts', versions: {}, reactVersion: '^19.2.8' }
     )
     expect(submitSpy).toHaveBeenCalledOnce()

@@ -5,27 +5,23 @@ an existing app, and `create` starts a new one (RFC #84). This is the contributo
 user's is [`docs/command-line.md`](./docs/command-line.md), which the docs site's `/cli/` page
 renders; [`README.md`](./README.md) is npm's short page, which points there.
 
-## Two ways in, one command line
+## One command line, one way in
 
-| Run as                                      | Bin                                    | The React range it checks                        |
-| ------------------------------------------- | -------------------------------------- | ------------------------------------------------ |
-| `npx @soroush.design/react-components init` | `packages/react-components/src/bin.ts` | That package itself, found by its `package.json` |
-| `npx @soroush.design/cli init`              | `packages/cli/src/bin.ts`              | The workspace's library, read at build time      |
+| Run as                         | Bin                       | The React range it checks                         |
+| ------------------------------ | ------------------------- | ------------------------------------------------- |
+| `npx @soroush.design/cli init` | `packages/cli/src/bin.ts` | The workspace's React package, read at build time |
 
-An app imports from the platform umbrella `@soroush.design/react`, so that is what both commands
-install, and the one version they install is the umbrella's, whichever bin ran: `src/designSystemPackage.ts`
-reads it from `packages/react/package.json` when this package is built, and the bundler keeps only
-that field. It is a released version, even from an alpha cli. The umbrella holds no code and no bin,
-so the commands stay in the component library's bin and here.
+An app imports from `@soroush.design/react`, so that is what the command installs, at the version it
+was released next to: `src/designSystemPackage.ts` reads it from `packages/react/package.json` when
+this package is built, and the bundler keeps only that field. It is a released version, even from
+an alpha cli. `src/bin.ts` reads the package's name and its React peer range the same way.
 
-`@soroush.design/react-components` depends on this package at an exact version, and its bin is a
-shim: it calls this package's default export, `main(argv, io, designSystem)`, with its own
-`package.json`, whose React peer range `init` checks the app against. This package never depends on
-the packages it installs, so there is no cycle; its `type-tests` read the umbrella's and the library's
-built types by path. Build and publish the umbrella before this package, so the version it bundles
-exists on npm.
+`@soroush.design/react` has no bin and does not depend on this package: an app installs the React
+package and never the command line at run time. This package never depends on the package it
+installs, so there is no cycle; its `type-tests` read that package's built types by path. Build
+and publish the React package before this one, so the version it bundles exists on npm.
 
-An app counts as set up when it has the umbrella or the library as a dependency.
+An app counts as set up when it has `@soroush.design/react` as a dependency.
 
 Publish this package first: the design system's release names its exact version. CD orders an
 `all` run dependencies-first.
@@ -41,7 +37,7 @@ Publish this package first: the design system's release names its exact version.
 - `src/apply/` writes the plan, taking every change back when a write fails.
 - `src/templates/` holds the files `init` writes. Each starts with `MARKER`
   (`// Set up by @soroush.design/react init.`), which is how a second run tells its own files from the
-  app's. A file that starts with an earlier marker, the library's name or `@soroush.tech/design-system`,
+  app's. A file that starts with an earlier marker, the former library name or `@soroush.tech/design-system`,
   is still init's own.
 - `src/closing.ts` holds the lines both commands end on: the fonts, and the agent suggestions.
 
@@ -49,7 +45,7 @@ Publish this package first: the design system's release names its exact version.
 
 `create` is the same for every framework. A starter, in `src/create/starters.ts`, only supplies
 the files: `createFiles(facts)` gets the name, the language, the scheme, whether to add the
-sample data pages, and the umbrella's version, and returns each file by its path from the app's folder, its `package.json` among them.
+sample data pages, and the React package's version, and returns each file by its path from the app's folder, its `package.json` among them.
 `create` does the rest:
 
 1. It reads the options, and asks for what it was not told, in a terminal only.

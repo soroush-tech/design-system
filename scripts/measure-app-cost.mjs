@@ -306,12 +306,15 @@ function build(app) {
 
 /** The catalog as the app's own core resolves it - or, for the docs, the workspace's build. */
 async function writeCatalog(app, workDir) {
+  const built = join(repoRoot, 'packages/core/dist/catalog.mjs')
   let path
   try {
     path = fromApp(app.dir, '@soroush.design/core/catalog')
   } catch {
-    path = join(repoRoot, 'packages/core/dist/catalog.mjs')
+    path = built
   }
+  // The docs app's core is the workspace's source, which Node cannot load: its build.
+  if (path.endsWith('.ts')) path = built
   if (!existsSync(path)) throw new Error(`Build @soroush.design/core first: no catalog at ${path}`)
   const { catalog } = await import(pathToFileURL(path).href)
   const file = join(workDir, `catalog-${app.name}.json`)

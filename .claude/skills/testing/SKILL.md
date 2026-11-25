@@ -15,14 +15,14 @@ metadata:
 
 ## Vitest projects
 
-Only **design-system** splits into projects (`packages/react-components/vitest.config.ts`):
+Only **design-system** splits into projects (`packages/react/vitest.config.ts`):
 
 - `unit` - jsdom, runs `**/*.{test,spec}.*` (excludes `*.browser.test.*`)
 - `browser` - headless Chromium (Playwright provider), runs only `*.browser.test.*`
 - `storybook` - runs `*.stories.tsx` via the Storybook addon
 
 Scope a run with `--project=unit` (etc.) and pass path filters:
-`pnpm --filter @soroush.design/react-components exec vitest run --project=unit src/Button`.
+`pnpm --filter @soroush.design/react exec vitest run --project=unit src/Button`.
 The other packages have a single flat vitest config.
 
 ## Commands

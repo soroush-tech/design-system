@@ -14,7 +14,7 @@ import {
   componentPagePath,
   hookSection,
   sitePath,
-  IMPORT_PACKAGE,
+  importPackageOf,
   importSubpathOf,
   markdownComponents,
   membersOf,
@@ -109,7 +109,7 @@ export const renderFull = (): string =>
       return [
         `## ${item.name}`,
         '',
-        `Import: \`import { ${item.name} } from '${IMPORT_PACKAGE}/${importSubpathOf(item)}'\``,
+        `Import: \`import { ${item.name} } from '${importPackageOf(item)}/${importSubpathOf(item)}'\``,
         '',
         stripReadmeChrome(intro),
         api,

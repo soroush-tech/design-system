@@ -1,23 +1,23 @@
 ---
 name: css-in-js
-description: CSS-in-JS and styled-system conventions for this design system. Use when writing or reviewing code in @soroush.design/react-components/, when building design system components, or when the user asks about styling patterns.
+description: CSS-in-JS and styled-system conventions for this design system. Use when writing or reviewing code in packages/react/, when building design system components, or when the user asks about styling patterns.
 argument-hint: [component-name or filename]
-paths: '@soroush.design/react-components/**'
+paths: 'packages/react/**'
 metadata:
   internal: true
 ---
 
 ## Canonical reference
 
-Read `@soroush.design/react-components/Avatar/Avatar.tsx` before writing any new component - it is the correct styled-system pattern.
+Read `packages/react/src/Avatar/Avatar.tsx` before writing any new component - it is the correct styled-system pattern.
 
 ---
 
 ## Rules
 
-### 0. All engine imports come from `@soroush.design/react-components` - never from the underlying packages
+### 0. All engine imports come from the package's own styling system - never from the underlying packages
 
-Inside `@soroush.design/react-components/`, every styling primitive must be imported from the barrel, not from its original package:
+Inside `packages/react/`, every styling primitive is imported from the package's own modules or from `@soroush.design/styled-system`, never from the engine's packages:
 
 ```ts
 // ✗
@@ -26,15 +26,14 @@ import { css, keyframes } from '@umber-style/react'
 import { system, variant, compose, layout, color } from 'styled-system'
 import shouldForwardProp from '@styled-system/should-forward-prop'
 
-// ✓
-import { styled, css, keyframes } from '@soroush.design/react-components'
-import { system, variant, compose, layout, color } from '@soroush.design/react-components'
-import { createShouldForwardProp } from '@soroush.design/react-components'
-import { Global } from '@soroush.design/react-components/engine'
-import { useTheme } from '@soroush.design/react-components/theme'
+// ✓ (a component's file: relative paths into the package)
+import { styled, css, keyframes } from '../style/styled'
+import { useTheme } from '../theme/hooks/useTheme'
+import { system, variant, compose, layout, color } from '@soroush.design/styled-system'
+import { createShouldForwardProp } from '@soroush.design/styled-system/should-forward-prop'
 ```
 
-This applies to every file in `@soroush.design/react-components/` and `src/common/`. `@soroush.design/react-theme` (`packages/react-theme/src/style/`, `src/theme/engine.ts` and `src/engine/`) is the seam to the styling engine.
+An app or another package imports the same names from `@soroush.design/react` (`styled`, `css`, `keyframes`, `Global`, `useTheme`) and `@soroush.design/styled-system`. `packages/react/src/style/` (`engine.ts`, `styled.ts`), `src/theme/engine.ts` and `src/engine/` are the seam to the styling engine: nothing else imports it.
 
 ---
 

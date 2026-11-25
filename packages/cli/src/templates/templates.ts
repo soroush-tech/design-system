@@ -1,12 +1,12 @@
-import { APP_PACKAGE, DESIGN_SYSTEM_PACKAGE } from '../designSystemPackage'
+import { APP_PACKAGE, CORE_PACKAGE } from '../designSystemPackage'
 
 /** The first line of every file init writes: a second run finds its own files by it. */
 export const MARKER = `// Set up by ${APP_PACKAGE} init.`
 
 // What init wrote under the names it had earlier: an app set up then still owns such files. The
-// first is the component library's name, which the marker had until the umbrella took over.
+// first is the component library's former name, which the marker had.
 const FORMER_MARKERS = [
-  `// Set up by ${DESIGN_SYSTEM_PACKAGE} init.`,
+  '// Set up by @soroush.design/react-components init.',
   '// Set up by @soroush.tech/design-system init.',
 ]
 
@@ -24,9 +24,9 @@ const THEMING_DOCS = 'https://docs.soroush.design/react/theme/'
 const AUGMENTATION_STUB = `
 // To add tokens of your own, declare them here, then give them values in each theme:
 //
-// import type { PaletteEntry } from '${APP_PACKAGE}/theme'
+// import type { PaletteEntry } from '${CORE_PACKAGE}/theme'
 //
-// declare module '${APP_PACKAGE}/theme' {
+// declare module '${CORE_PACKAGE}/theme' {
 //   interface ThemePalette {
 //     brand: PaletteEntry
 //   }
@@ -40,7 +40,7 @@ const AUGMENTATION_STUB = `
 export function createThemesSource({ isTypeScript }: { isTypeScript: boolean }): string {
   return `${MARKER} Your themes: change any value, or add a theme.
 // Every token is listed at ${THEMING_DOCS}
-import { baseTheme, createTheme } from '${APP_PACKAGE}/theme'
+import { baseTheme, createTheme } from '${CORE_PACKAGE}/theme'
 ${isTypeScript ? AUGMENTATION_STUB : ''}
 const themes = {
   light: createTheme(baseTheme, {
@@ -134,8 +134,8 @@ export function createProvidersSource({
     : `{ children, scheme = '${scheme}' }`
   return `${MARKER} The app's root renders inside Providers.
 import { createElement } from 'react'
-${typeImport}import { Global, globalStyles } from '${APP_PACKAGE}/engine'
-import { ThemeProvider } from '${APP_PACKAGE}/theme'
+${typeImport}import { Global, ThemeProvider } from '${APP_PACKAGE}'
+import { globalStyles } from '${APP_PACKAGE}/engine'
 import themes from '${themesImport}'
 
 /** Gives every component its theme, and draws the page's base styles. */

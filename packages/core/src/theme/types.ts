@@ -228,7 +228,7 @@ export interface DefaultBreakpoints {
  * Add, rename or remove breakpoints by augmenting this interface: `true` adds a name, `false`
  * removes a default one.
  *
- *   declare module '@soroush.design/react-components/theme' {
+ *   declare module '@soroush.design/core/theme' {
  *     interface BreakpointOverrides { mobile: true; tablet: true; xs: false; sm: false }
  *   }
  */

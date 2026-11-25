@@ -1,6 +1,6 @@
 # Packages
 
-Conventions for everything under `packages/` - the workspace's shared code. Most packages are framework-agnostic tooling; `react-components` (`@soroush.design/react-components`) is the React component library, `react-hooks` its hooks, `react-theme` its theme and styling, and `react-markdown` a companion React library that builds on it (a headless markdown editor/renderer). The component packages follow [`react-components/design-system.md`](./react-components/design-system.md) for component conventions - the `react-markdown` package's specifics are in [`react-markdown/markdown.md`](./react-markdown/markdown.md). Each folder is its own pnpm package, globbed by `packages/*` in `pnpm-workspace.yaml` and consumed by apps (and by each other) via `workspace:*`.
+Conventions for everything under `packages/` - the workspace's shared code. Most packages are framework-agnostic tooling; `react` (`@soroush.design/react`) is the React design system - the components, the theme's provider and hooks, and the styling system - `react-hooks` its hooks, and `react-markdown` a companion React library that builds on it (a headless markdown editor/renderer). The component packages follow [`react/design-system.md`](./react/design-system.md) for component conventions - the `react-markdown` package's specifics are in [`react-markdown/markdown.md`](./react-markdown/markdown.md). Each folder is its own pnpm package, globbed by `packages/*` in `pnpm-workspace.yaml` and consumed by apps (and by each other) via `workspace:*`.
 
 For a plain-English overview of what currently lives here, see [`README.md`](./README.md).
 
@@ -10,12 +10,12 @@ For a plain-English overview of what currently lives here, see [`README.md`](./R
 
 `packages/` is for **shared, app-agnostic code** - framework-agnostic tooling (lint config, Vite plugins), shared schemas, generic utilities.
 
-| Belongs in `packages/`                              | Belongs elsewhere                                             |
-| --------------------------------------------------- | ------------------------------------------------------------- |
-| A Vite plugin reusable across builds                | App-specific sections/pages/hooks → `apps/web/src/`           |
-| The shared oxlint base                              | App-specific composed UI → `apps/web/src/common\|section`     |
-| UI primitives (`Flex`, `View`) → `react-components` | A single-consumer, app-coupled component → keep it in the app |
-| A schema/util shared by two members or published    | A single-consumer, app-coupled helper → keep it in the app    |
+| Belongs in `packages/`                           | Belongs elsewhere                                             |
+| ------------------------------------------------ | ------------------------------------------------------------- |
+| A Vite plugin reusable across builds             | App-specific sections/pages/hooks → `apps/web/src/`           |
+| The shared oxlint base                           | App-specific composed UI → `apps/web/src/common\|section`     |
+| UI primitives (`Flex`, `View`) → `react`         | A single-consumer, app-coupled component → keep it in the app |
+| A schema/util shared by two members or published | A single-consumer, app-coupled helper → keep it in the app    |
 
 **A package is justified only when** it is (a) reused by more than one member, or (b) intended to be published on its own. Until then, keep the code in the app - don't pre-extract.
 
@@ -23,7 +23,7 @@ For a plain-English overview of what currently lives here, see [`README.md`](./R
 
 ## Folder structure
 
-Directory name == package name **minus its scope**: `@soroush.design/react-theme` is `packages/react-theme`, and the unscoped `soroush.design` is `packages/soroush.design`.
+Directory name == package name **minus its scope**: `@soroush.design/react-markdown` is `packages/react-markdown`.
 
 ```
 packages/
@@ -46,115 +46,136 @@ Keep the **public API in `index.ts`** (the single entry); extract internal helpe
 
 ## Naming & scope
 
-- Every package is scoped **`@soroush.design/*`**, private ones included (`@soroush.design/docs-content`, `story-demo`, `lab`, `umbrella-gen`, and the docs app `@soroush.design/docs`). The exceptions: the family umbrella, whose name is the unscoped **`soroush.design`**; **`@soroush.tech/ui-spec`**, which keeps its name and is not edited; and **`@soroush.tech/eslint-config`**, which keeps its name because `ui-spec` lists it as a `workspace:*` dev dependency and renaming it would edit `ui-spec`. A new package takes the `@soroush.design` scope (apps are not - `apps/web` stays `@soroush/web`).
+- Every package is scoped **`@soroush.design/*`**, private ones included (`@soroush.design/docs-content`, `story-demo`, `lab`, `contract`, and the docs app `@soroush.design/docs`). The exceptions: **`@soroush.tech/ui-spec`**, which keeps its name and is not edited; and **`@soroush.tech/eslint-config`**, which keeps its name because `ui-spec` lists it as a `workspace:*` dev dependency and renaming it would edit `ui-spec`. A new package takes the `@soroush.design` scope (apps are not - `apps/web` stays `@soroush/web`).
 - A Vite plugin's internal `name` field **must equal its package name minus the scope** (`vite-plugin-watch`), so build logs read `[vite-plugin-watch]`. Keep the directory, package name, and plugin `name` in sync.
 
 ---
 
 ## The `soroush.design` family
 
-The layout the UI packages move to ([#114](https://github.com/soroush-tech/design-system/issues/114)). The component library, the hooks library, the theme library and the markdown library have their new names, `@soroush.design/react-components`, `@soroush.design/react-hooks`, `@soroush.design/react-theme` and `@soroush.design/react-markdown`; the other UI packages keep the names they have today until their step of the plan, and a new UI package follows these rules from the start.
+The layout of the UI packages ([#114](https://github.com/soroush-tech/design-system/issues/114),
+[#157](https://github.com/soroush-tech/design-system/issues/157)). A package is separate only when it
+is **shared by platforms**, **brings third-party dependencies** an app should not be forced to
+install, or is **meant to be used without the design system**. Packages never re-export each other,
+so every name has one path.
 
-### Three levels
+| Package                          | Holds                                                                                                                      | An app writes                                  |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| `@soroush.design/core`           | What every platform shares and needs no framework: the theme, tokens, `createTheme`, `baseTheme`, breakpoints, the catalog | `@soroush.design/core/theme`                   |
+| `@soroush.design/react-hooks`    | General hooks, one subpath each, usable without the design system                                                          | `@soroush.design/react-hooks/useDebounce`      |
+| `@soroush.design/react`          | The components (one subpath each) and the styling system: `ThemeProvider`, `useTheme`, `styled`, `Global`, ...             | `@soroush.design/react/Button`, `.../useTheme` |
+| `@soroush.design/react-markdown` | The markdown editor and renderer, with its third-party libraries; a peer of `@soroush.design/react`                        | `@soroush.design/react-markdown/Editor`        |
 
-The code lives in **library** packages. A **platform umbrella** points at the libraries of one platform. The **family umbrella** points at the platforms. An umbrella holds no code of its own.
+A scope on npm has one level, so a package of a platform is named `@soroush.design/<platform>-<name>`,
+never `@soroush.design/react/markdown`. Later packages repeat the pattern (`react-charts`,
+`react-native`, `vue`). `@soroush.design/styled-system`, `@soroush.design/mcp` and
+`@soroush.design/cli` are outside it.
 
-| Level    | Package                                                                        | An app writes                                       |
-| -------- | ------------------------------------------------------------------------------ | --------------------------------------------------- |
-| Family   | `soroush.design`                                                               | `soroush.design/react/Button`                       |
-| Platform | `@soroush.design/react`, `@soroush.design/react-native`, `@soroush.design/vue` | `@soroush.design/react/Button`                      |
-| Library  | `@soroush.design/<platform>-<library>`                                         | `@soroush.design/react-components` - the lean route |
-| Shared   | `@soroush.design/core`                                                         | no framework: tokens, `createTheme`, the catalog    |
-
-A scope on npm has one level, so a library is named `@soroush.design/react-markdown`, never `@soroush.design/react/markdown`. The nesting an app sees comes from subpaths on the umbrellas.
-
-### The libraries of a platform
-
-Shown for React. React Native and Vue repeat the pattern (`@soroush.design/react-native-theme`, `@soroush.design/vue-hooks`, ...). A library depends only on the ones above it in this table, and on `core`.
-
-| Library            | Subpath on the platform         | Holds                                                                                                                                            |
-| ------------------ | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `react-hooks`      | `/hooks`                        | Hooks tied to no component and no theme                                                                                                          |
-| `react-theme`      | `/theme`                        | `ThemeProvider`, the hooks that read the theme, the theme's types, and the configured `styled`, `css`, `keyframes`, `Global` with the base reset |
-| `react-components` | `/Button`, `/TextInput`, ...    | The components                                                                                                                                   |
-| `react-markdown`   | `/markdown`, `/markdown/Editor` | The markdown editor and renderer                                                                                                                 |
-| `react-charts`     | `/charts`                       | Charts                                                                                                                                           |
-
-**A new library is justified by what it depends on**, not by size: `markdown` brings an editor and a diagram library, `charts` a charting library, and an app that wants buttons should not install either. Components are **not** split into a package each - subpath imports already load only what is used. A split by group (data tables, date pickers) is decided case by case.
+**A new package is justified by what it depends on**, not by size: `react-markdown` brings an editor
+and a diagram library, and an app that wants buttons should not install either. Components are
+**not** split into a package each - subpath imports already load only what is used.
 
 ### The core
 
-`@soroush.design/core` holds what every platform shares and that needs **no framework**: the theme (the token scales, `baseTheme`, the `Theme` types, `createTheme`, `themeDefault`, `spacing`) at `/theme`, the breakpoint and container-query helpers at `/breakpoints`, the pure utilities at `/utils`, and the catalog at `/catalog`; the behaviour logic follows. The platform libraries (React, React Native, Vue) depend on it as a real dependency - `workspace:^`, never bundled - and import it by its subpaths (`@soroush.design/core/catalog`), one per area.
+`@soroush.design/core` holds what every platform shares and that needs **no framework**: the theme
+(the token scales, `baseTheme`, the `Theme` types, `createTheme`, `themeDefault`, `spacing`) at
+`/theme`, the breakpoint and container-query helpers at `/breakpoints`, the pure utilities at
+`/utils`, and the catalog at `/catalog`. The platform packages depend on it as a real dependency -
+`workspace:^`, never bundled - and import it by its subpaths (`@soroush.design/core/catalog`), one
+per area.
 
-- **The rule: no framework import; a test enforces it.** The core has no `dependencies` and no `peerDependencies`, its `tsconfig` has no DOM library, and a test loads it in plain Node with `react`, `react-native`, `vue` and `@umber-style/*` mocked to throw, then reads the built files and fails on any import that is not one of its own chunks. A platform-neutral thing that needs a framework type or a DOM read does not move here until that is split from it.
-- **The core describes; a platform names.** Data is platform-neutral: a catalog entry holds the `subpath` a component is served from, not the package. A platform library re-exports the core's data and adds the facts that are its own - the React component library's `/catalog` adds `module` (`@soroush.design/react-components/<subpath>`) to each entry and keeps every other field as the core wrote it. A library's test holds its result to the core's data, and its built output imports the core instead of copying it.
-- **A platform composes its `Theme` on top of the core's.** The core's `Theme` and every scale (`ThemePalette`, `ThemeSpace`, ...) are open interfaces with no framework type in them: `typography.element` is a tag name, a `string`. A platform library declares `interface Theme extends CoreTheme { components?: ... }` for what names its framework - the typing of `theme.components` (owner states, slots, `styleOverrides`) and any field typed by a framework type - and re-exports the core's theme with `export * from '@soroush.design/core/theme'`, which its own `Theme` shadows. It re-types `baseTheme` as its `Theme` (`export const baseTheme: Theme = coreBaseTheme`, the same object), so `createTheme(baseTheme, ...)`, generic over the theme it is given, returns the platform's type. An app's `declare module` may name the core, the platform library or its umbrella: each reaches the same interface. Types a component's public props use are imported from `@soroush.design/core/theme`, not through the library's barrel, which the declaration build cannot flatten.
-- **Publish the core before the libraries.** A library depends on it, and `scripts/prerelease-versions.mjs` orders a run dependencies-first.
+- **The rule: no framework import; a test enforces it.** The core has no `dependencies` and no
+  `peerDependencies`, its `tsconfig` has no DOM library, and a test loads it in plain Node with
+  `react`, `react-native`, `vue` and `@umber-style/*` mocked to throw, then reads the built files and
+  fails on any import that is not one of its own chunks.
+- **The core describes; a platform names.** Data is platform-neutral: a catalog entry holds the
+  `subpath` a component is served from, not the package. The React package's `/catalog` adds `module`
+  (`@soroush.design/react/<subpath>`) to each entry and keeps every other field as the core wrote it.
+- **A platform composes its `Theme` on top of the core's.** The core's `Theme` and every scale are
+  open interfaces with no framework type in them. The React package declares
+  `interface Theme extends CoreTheme { components?: ... }` for what names its framework - the typing
+  of `theme.components` (owner states, slots, `styleOverrides`) - and uses it inside; it does not
+  re-export the core. An app imports the theme from `@soroush.design/core/theme` and augments it
+  there.
+- **Publish the core before the packages that use it.** `scripts/prerelease-versions.mjs` orders a
+  run dependencies-first.
 
-### The theme library
+### The React package
 
-`@soroush.design/react-theme` holds `ThemeProvider`, `LayoutProvider`, `useTheme`, `useDefaultProps` and `withTheme`, the `Theme` type that composes the core's with `theme.components`, and the styling the components are written in: the configured `styled`, `css` and `keyframes`, `Global` with the base reset, the style cache, `useStyle` and the engine configuration. An app builds its own components on it with no component library installed.
+`@soroush.design/react` holds the components and the styling system they are written in: root and
+one subpath each for `ThemeProvider`, `LayoutProvider`, `useTheme`, `useDefaultProps`,
+`useMediaQuery`, `withTheme`, `styled`, `css`, `keyframes`, `Global`, `useStyle`, `withStyles` and
+`StylesConsumer`; `/engine` for server-rendering setup; `/catalog` and `/testing`; and one subpath
+for every component. The public paths and the exact names of each are the contract in
+`packages/contract` (`exports/react.json`), checked by its tests.
 
-- **Entry points.** `.` holds everything; `/theme`, `/style` and `/engine` hold the same names by area - the three the component library has had - so the library re-exports each one for one, and an app's imports do not change.
-- **The component library depends on it and never bundles it** (`workspace:^`; two copies are two React contexts and two engine configurations). Its `/theme`, `/style` and `/engine` are re-exports of the theme library's, and its source imports a name from the package that owns it - core names from `@soroush.design/core/...`, theme names from `@soroush.design/react-theme/...` - never through its own barrel. A bundler builds a namespace object for a barrel that `export *`s a package, and the object lacks the starred names (`theme_exports.themeDefault` threw at run time once). `src/externalOwnership.test.ts` reads the library's build and fails on such a read.
-- **The engine is configured by a function** (`configureEngine()`), which the theme library's `styled` calls before its first use. An app that imports only `styled` gets the prefix, the value repair and the raw theme keys.
-- **`ThemeComponents` is open, and starts empty.** It names components, which the theme library cannot import, so each library adds its own: the folder of a component holds, in its `index.ts`, `declare module '@soroush.design/react-theme/theme' { interface ThemeComponents { Button?: ComponentConfig<ButtonOwnerState, 'root' | 'label'> } }`, and the owner-state types it names (`ButtonOwnerState`) stay in the library, exported from its `/theme`. The block is in the component's entry point on purpose: the declaration build keeps it in what that entry's `.d.ts` imports, so an app that imports `@soroush.design/react-components/Button` has `theme.components.Button` typed, and one that imports another entry point does not. An app that installs only the theme library sees `components` empty and untyped, which is correct. A new component with a `name` for `theme.components` adds its block to its folder's `index.ts`; a type test per umbrella and library holds it.
+- **One copy.** The theme provider, the engine configuration and the style cache are defined once in
+  the build and shared by every entry point; the package depends on the core, the hooks and the
+  style-prop package by name and never bundles them. `src/externalOwnership.test.ts` reads the build
+  and fails on a second copy, and on a core name read off a namespace object. A bundler builds a
+  namespace object for a barrel that `export *`s a package, and the object lacks the starred names
+  (`theme_exports.themeDefault` threw at run time once): source imports a core name from
+  `@soroush.design/core/...`, never through a barrel of the package.
+- **The engine is configured by a function** (`configureEngine()`), which every entry point of the
+  styling system calls before its first use. An app that imports only `keyframes` gets the prefix,
+  the value repair and the raw theme keys. `src/entries/entries.test.ts` holds each entry to it.
+- **A component's theme types are plain types next to it.** `<Name>/<Name>.types.ts` holds
+  `<Name>OwnerState` (the resolved props its styled elements receive), `<Name>Slot` (the slot names
+  it uses with `styled(..., { name, slot })`) and `<Name>ThemeConfig`
+  (`ComponentConfig<<Name>OwnerState, <Name>Slot>`), and the folder's `index.ts` exports them.
+  `src/theme/components.ts` is **generated** from those files (`pnpm gen:theme-components`; the
+  pre-commit hook and CI run it with `--check`) and holds the plain `ThemeComponents` interface. No
+  component declares into another module, and a test fails when a `styled(..., { name })` has no key
+  or uses a slot its `Slot` type lacks. An app checks its looks with `satisfies ThemeComponents`.
+- **A package that adds components** - `react-markdown` - extends `ThemeComponents` with one
+  `declare module '@soroush.design/react'` block, and the core's `Theme` with its own keys, in a types
+  file every entry of the package imports, so an app that imports any entry has them typed.
+- **No command line.** The package has no `bin` and does not depend on `@soroush.design/cli`: an app
+  runs `npx @soroush.design/cli init`, and never installs the command line.
 
 ### Subpath names
 
-- A component of the main library sits directly under the platform and keeps its own name, capitalised: `/Button`, `/TextInput`.
-- A library uses a lowercase name: `/markdown`, `/charts`, `/theme`, `/hooks`.
-- A library's own components go under it: `/markdown/Editor`.
-- A library is never named after a component of the main library, so two paths never differ only by case.
-- **The docs route of a thing is its import path**: `soroush.design/react/Button` is documented at `/react/Button/`, and `soroush.design/react/markdown/Editor` at `/react/markdown/Editor/`. A new subpath needs its page, and a test fails naming the one that is missing - see the Routes section of `apps/docs/docs-app.md`.
-
-```ts
-// ✗ a scope has one level - this is not a package
-import { Editor } from '@soroush.design/react/markdown-editor'
-// ✗ a library's component at the top of the platform
-import { Editor } from '@soroush.design/react/Editor'
-// ✓
-import { Editor } from '@soroush.design/react/markdown/Editor'
-```
+- A component of the React package sits directly under it and keeps its own name, capitalised:
+  `/Button`, `/TextInput`. A name of the styling system keeps its own name too: `/ThemeProvider`,
+  `/useTheme`, `/styled`.
+- A different package is a different package name: `@soroush.design/react-markdown/Editor`.
+- **The docs route of a thing is its import path under the platform**: `@soroush.design/react/Button`
+  is documented at `/react/Button/`, `@soroush.design/react-hooks/useDebounce` at
+  `/react/hooks/useDebounce/` and `@soroush.design/react-markdown/Editor` at
+  `/react/markdown/Editor/`. A test fails naming a subpath that has no page - see the Routes section
+  of `apps/docs/docs-app.md`. The URLs never change once indexed.
 
 ### Where a hook lives
 
 Ask what the hook is about:
 
-| The hook...            | It lives in             | An app imports it from      |
-| ---------------------- | ----------------------- | --------------------------- |
-| belongs to a component | that component's folder | the component's entry point |
-| reads the theme        | the theme library       | `/theme`                    |
-| is tied to nothing     | the hooks library       | `/hooks`                    |
+| The hook...            | It lives in                   | An app imports it from                    |
+| ---------------------- | ----------------------------- | ----------------------------------------- |
+| belongs to a component | that component's folder       | the component's entry point               |
+| reads the theme        | `@soroush.design/react`       | `@soroush.design/react/useTheme`          |
+| is tied to nothing     | `@soroush.design/react-hooks` | `@soroush.design/react-hooks/useDebounce` |
 
-```ts
-// ✓ a component's behaviour, exported with the component
-import { NumberInput, useHoldRepeat } from 'soroush.design/react/NumberInput'
-// ✓ needs the theme
-import { useTheme } from 'soroush.design/react/theme'
-// ✓ useful in an app with none of our components
-import { useMergedRefs, useEventCallback } from 'soroush.design/react/hooks'
-```
-
-- The test for the hooks library: **would someone want it without the component?** A hook that sits in one component's folder and is imported by others belongs there.
-- A hook exported from a component is public API: its signature is reviewed before it is exported, and it has its own tests and docs, not only its component's.
-- A hook in the hooks library says whether it needs a browser; one that does not is shared with the React Native library, not written again.
+- The test for the hooks package: **would someone want it without the component?** A hook that sits in
+  one component's folder and is imported by others belongs there.
+- A hook exported from a component is public API: its signature is reviewed before it is exported,
+  and it has its own tests and docs, not only its component's.
+- A hook in the hooks package says whether it needs a browser; one that does not is shared with the
+  React Native package, not written again.
 
 ### Packaging rules
 
-- **Aliases are generated.** Every subpath on both umbrella levels comes from the library packages by a script, and CI fails when they drift. Nobody writes an umbrella's `exports` by hand.
-- **Frameworks are optional peers** of the umbrellas (`react`, `react-native`, `vue`), and so is any dependency with native code: installing an umbrella must not download a framework the app does not use, nor make a native build link a module it does not need.
-- **The theme library exists once in an app.** The other libraries depend on it by a version range and never bundle it; two copies are two contexts, and components that do not see the app's theme.
-- **The styling engine is configured in the theme library**, by a function the library calls - not by a module imported for its effect, which a bundler drops from a package marked `"sideEffects": false`.
-- **An app can take the lean route.** Every library works installed alone, without an umbrella.
-- **An app imports from the umbrella; libraries import each other by their real names.** The docs, the starters, `init`, the READMEs and the MCP content all write `@soroush.design/react/...`, so splitting a library later changes no import of an app. A library, private ones such as `story-demo` and `lab` included, imports the library it builds on by its own name and never the umbrella: the umbrella depends on the libraries, so the reverse is a cycle.
-- **An umbrella is generated whole.** `src/` holds one file per entry point, each a line of `export * from '<library>/<subpath>'` (plus `export { default } from` where the target has a default export). The `exports` and `publishConfig.exports` of package.json are written beside them. Both are committed, like the plugin references, and `pnpm gen:umbrellas --check` fails in the pre-commit hook and in CI when they drift. One generator, `@soroush.design/umbrella-gen`, writes both umbrellas: an umbrella is a list of sources in its `libraries.ts`, each mounted under a prefix or merged at the top, and the platform umbrella's sources are libraries while the family umbrella's are the platform umbrellas. The generator reads what each library _publishes_ (`publishConfig.exports`): an entry a library serves only in the workspace never reaches the umbrella.
-- **Registering a library on an umbrella** is one line in the umbrella's `libraries.ts` - `{ package: '@soroush.design/react-components' }` merges it at the top (`/Button`), `{ package: '...', under: 'markdown' }` mounts it under a lowercase name (`/markdown`, `/markdown/Editor`) - plus the library in the umbrella's `dependencies` as `workspace:^`. A library with heavy dependencies (`markdown`) is `optional: true` instead: the umbrella lists it in `peerDependencies` with an explicit range and `peerDependenciesMeta` `optional`, and in `devDependencies` as `workspace:*` for the generator and the tests, so an app installs it only when it imports its entry points; without it, those imports fail with a module-not-found error naming the library. Run `pnpm gen:umbrellas`. Two libraries that claim the same subpath, or two that differ only by case, fail the generator with both package names, unless one **omits** it: `omit: ['./style', './engine']` on the component library's line leaves those two entry points to the theme library, which serves them (the generator fails when an omitted entry point is not one the library publishes, or when no other library serves it). The theme library's own `.` and `./theme` are omitted too: the umbrella's root is the component library's, and its `/theme` is the component library's, which adds the typing of the components (owner states, `TabsVariants`) to the theme library's names. The family umbrella is the same list one level up (next paragraph).
-- **The family umbrella** (`soroush.design`, in `packages/soroush.design`: the folder is the package name minus its scope, and it has none) points at the platform umbrellas: `{ package: '@soroush.design/react', under: 'react' }` mounts every entry point of `@soroush.design/react` under `/react` (`soroush.design/react/Button`, `soroush.design/react/markdown/Editor`; the platform's root is `soroush.design/react`). It has **no root entry point** - an app imports a platform, never the family - so its `exports` start at `./react` and it has no `main`, `module` or `types`. Its entries come from the platform umbrella's own export map, so a library registered on the platform reaches the family with one `pnpm gen:umbrellas`, and the pre-commit hook and CI fail when it has not. **Adding a platform** (`@soroush.design/react-native`, `@soroush.design/vue`) is one line in `packages/soroush.design/libraries.ts` (`{ package: '@soroush.design/vue', under: 'vue' }`), the platform in `dependencies` as `workspace:^`, its framework as an optional peer `peerDependencies` entry of the family, and `pnpm gen:umbrellas`. A platform umbrella is a **dependency** of the family, never an optional peer: it holds no code but its re-exports, its own framework is an optional peer of that umbrella, so it brings no framework, and an app that installs `soroush.design` and React has what it needs, with no warning about React Native or Vue; making a platform optional later would be a breaking change for the apps that rely on it. The family's `test:types` holds the theme typing through the extra hop (`type-tests/family-name`, `platform-name`, `no-augmentation`).
-- **An unscoped package** is handled where tooling reads names: the Codecov flag is `name.split('/').pop()` (`soroush.design`, the directory's name), the release tag is `<name>@<version>` (`soroush.design@0.1.0`), the docs' release-notes heading accepts a scope or none, and `--filter soroush.design` selects it. npm trusted publishing is set up per package by the owner, so the first publish of a new name needs that step before the workflow can run.
-- **An umbrella's tests are not in `src/`**, which holds only generated files: they are in `test/` and `scripts/`. v8 reports a file of re-exports as empty, so its coverage is a test that imports every entry point and compares its names with the library's, a test that no file of `src/` is not generated, and a test of the build: each file in `dist/` imports its library and holds none of it. A file with real code in `src/` counts toward the 100% and fails it.
-- **Theme typing goes through an umbrella unchanged.** `/theme` is a plain `export *`, and TypeScript merges `declare module '@soroush.design/react/theme' { interface ThemePalette { ... } }` into the library's own interface, so the line can name the umbrella or the library, and both reach `useTheme`, `styled` and the props of every component. Nothing is declared in the umbrella. Each umbrella has a type test for each form (`type-tests/`), one program per form, because an augmentation in one program leaks into every file of it. The interfaces are the core's and reach the umbrella through three re-exports (core, theme library, component library, umbrella); `type-tests/core-name` holds the form that names the core and `type-tests/theme-name` the one that names the theme library.
-- **New packages start at `0.1.0`**, with release notes written for that version: what the package is and how to move to it, not a list of changes against a package it replaces.
+- **Frameworks are peers**: the React package and `react-markdown` list `react` and `react-dom`, and
+  any dependency with native code is an optional peer, so installing a package does not make a
+  native build link a module it does not need.
+- **The theme exists once in an app.** The packages depend on each other by a version range and never
+  bundle each other; two copies are two contexts, and components that do not see the app's theme.
+- **An app imports from the packages by their real names.** The docs, the starters, `init`, the
+  READMEs and the MCP content all write `@soroush.design/react/...`, and `@soroush.design/core/theme`
+  for the theme.
+- **`core`, `react-hooks`, `react` and `react-markdown` share one version**, published together in
+  dependency order.
+- **New packages start at `0.1.0`**, with release notes written for that version: what the package is
+  and how to use it, not a list of changes against a package it replaces.
 
 ---
 
@@ -201,7 +222,7 @@ Internal-only packages stay `"private": true` and consume source directly. To ma
   ```
 
 - Declare the host framework as a **`peerDependency`** (e.g. `vite`); never bundle the peer.
-- A peer on a **sibling package** (react-markdown on react-components) is an explicit range covering every
+- A peer on a **sibling package** (react-markdown on react) is an explicit range covering every
   version line it supports - `"^0.1.0"` (below 1.0.0 a caret covers one minor, so list each
   minor: `"^0.1.0 || ^0.2.0"`) - widened deliberately when a new line lands,
   never `workspace:^`. pnpm freezes `workspace:^` to `^<the sibling's version at publish time>`,
@@ -262,5 +283,5 @@ npm deprecate '@soroush.design/<name>@<badrange>' 'Broken exports; use >=<fixed>
 
 ## Linting & types
 
-- Each package gets a minimal `.oxlintrc.json` extending one of the three configs in `packages/eslint-config/` - `.oxlintrc.json` (base), `.oxlintrc.react.json`, or `.oxlintrc.storybook.json` - plus its own `env` (node, browser, serviceworker). Tooling packages stay React-free and extend the base; React-shipping packages (`react-components`, `react-markdown`) extend the storybook layer. The React and Storybook plugins are declared once in `eslint-config`, not per package.
+- Each package gets a minimal `.oxlintrc.json` extending one of the three configs in `packages/eslint-config/` - `.oxlintrc.json` (base), `.oxlintrc.react.json`, or `.oxlintrc.storybook.json` - plus its own `env` (node, browser, serviceworker). Tooling packages stay React-free and extend the base; React-shipping packages (`react`, `react-markdown`) extend the storybook layer. The React and Storybook plugins are declared once in `eslint-config`, not per package.
 - `tsconfig.json` uses bundler resolution and `noEmit`. It is **not** referenced by the root solution `tsconfig.json`: packages are typechecked in isolation via `pnpm -r typecheck` and never pulled into the app's TS graph (so a backend/tooling package's types can't leak into the React/DOM build).
