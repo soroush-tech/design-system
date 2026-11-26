@@ -83,7 +83,7 @@ describe('LayoutProvider', () => {
     const { result } = renderHook(() => useTheme(), {
       wrapper: ({ children }) => <LayoutProvider layout={page}>{children}</LayoutProvider>,
     })
-    expect(result.current.palette).toBe(baseTheme.palette)
+    expect(result.current.palette).toStrictEqual(baseTheme.palette)
     expect(result.current.layout.lg?.content?.maxWidth).toBe('1376px')
   })
 

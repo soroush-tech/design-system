@@ -306,7 +306,7 @@
   "dependencies": {
     "@soroush.design/core": "workspace:^",
     "csstype": "^3.2.3",
-    "@umber-style/is-prop-valid": "^0.5.0"
+    "@umber-style/is-prop-valid": "^0.7.0"
   },
   "peerDependencies": {
     "prop-types": "^15.8.1"

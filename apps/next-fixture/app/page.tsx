@@ -1,3 +1,4 @@
+import NextLink from 'next/link'
 import { Card } from '@soroush.design/react/Card'
 import { CircularProgress } from '@soroush.design/react/CircularProgress'
 import { Flex } from '@soroush.design/react/Flex'
@@ -9,12 +10,16 @@ import { View } from '@soroush.design/react/View'
 import { Button } from '@soroush.design/react/Button'
 import { switchScheme } from './actions'
 import { Counter } from './Counter'
+import { Later } from './Later'
 
 // A server component page: the static components render here with the theme the app registered,
 // and the interactive ones (`Button`, `Tabs`, `Counter`) are client components it renders.
 export default function Page() {
   return (
     <View as="main" p={4}>
+      <NextLink href="/other" data-testid="to-other">
+        Other
+      </NextLink>
       <Typography variant="h3" data-testid="title">
         Server components
       </Typography>
@@ -37,6 +42,7 @@ export default function Page() {
       </Tabs>
       <Flex gap={2} mt={3}>
         <Counter />
+        <Later />
         <form action={switchScheme}>
           <Button type="submit" variant="outlined" data-testid="switch">
             Switch theme
