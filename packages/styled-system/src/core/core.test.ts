@@ -25,6 +25,14 @@ describe('merge', () => {
     expect(merge({ a: { x: 1 } }, { a: { y: 2 } })).toEqual({ a: { x: 1, y: 2 } })
   })
 
+  it('never changes its arguments, which may be objects of a shared theme', () => {
+    const fromTheme = Object.freeze({ color: 'red' })
+    expect(merge({ a: fromTheme }, { a: { padding: 4 } })).toEqual({
+      a: { color: 'red', padding: 4 },
+    })
+    expect(fromTheme).toEqual({ color: 'red' })
+  })
+
   it('skips when the left value is falsy or the right value is not an object', () => {
     expect(merge({ a: 0 }, { a: { y: 2 } })).toEqual({ a: { y: 2 } })
     expect(merge({ a: { x: 1 } }, { a: 5 })).toEqual({ a: 5 })

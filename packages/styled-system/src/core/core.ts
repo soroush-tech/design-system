@@ -82,7 +82,7 @@ export const merge = (a: StyleObject, b: StyleObject): StyleObject => {
   for (const key in a) {
     if (!a[key] || typeof b[key] !== 'object') continue
     Object.assign(result, {
-      [key]: Object.assign(a[key] as object, b[key] as object),
+      [key]: { ...(a[key] as object), ...(b[key] as object) },
     })
   }
   return result
