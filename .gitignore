@@ -39,6 +39,7 @@ packages/cli/templates/*/js/
 storybook-static
 test-results
 .vitest-attachments
+.vitest/
 __screenshots__/
 
 # Local artifacts
