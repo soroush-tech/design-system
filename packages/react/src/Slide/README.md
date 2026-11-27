@@ -5,7 +5,7 @@ Slides one child in from an edge of the window and back out. The child holds a `
 Client component: its entry carries `'use client'`, so a server component can import and render it.
 
 ```tsx
-import { Slide } from '@soroush.design/react/Slide'
+import { Slide } from '@gild-ui/react/Slide'
 
 ;<Slide isShown={isOpen}>
   <Paper p={3}>Content</Paper>

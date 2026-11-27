@@ -1,6 +1,6 @@
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
-import { packageDir } from '@soroush.design/docs-content/node'
+import { packageDir } from '@gild-ui/docs-content/node'
 import type { TokenScale } from '../types'
 
 type Leaf = string | number

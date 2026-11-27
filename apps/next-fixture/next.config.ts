@@ -2,11 +2,7 @@ import type { NextConfig } from 'next'
 
 const config: NextConfig = {
   // The workspace packages export TypeScript source: Next compiles them with the app.
-  transpilePackages: [
-    '@soroush.design/core',
-    '@soroush.design/react',
-    '@soroush.design/react-hooks',
-  ],
+  transpilePackages: ['@gild-ui/core', '@gild-ui/react', '@gild-ui/hooks'],
   reactStrictMode: true,
   // Next writes an AGENTS.md of its own into the app in development.
   agentRules: false,

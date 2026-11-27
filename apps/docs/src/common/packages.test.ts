@@ -1,12 +1,12 @@
 import { describe, it, expect } from 'vitest'
-import { sections } from '@soroush.design/docs-content'
+import { sections } from '@gild-ui/docs-content'
 import { allComponents } from 'src/common/nav'
 import { PACKAGES, sourceUrlOf } from './packages'
 
 // The MCP server and the command line are published under their own scope.
 const NPM_NAMES = {
-  react: '@soroush.design/react',
-  markdown: '@soroush.design/react-markdown',
+  react: '@gild-ui/react',
+  markdown: '@gild-ui/react-markdown',
   'styled-system': '@soroush.tech/styled-system',
   mcp: '@soroush.design/mcp',
   'ui-spec': '@soroush.tech/ui-spec',

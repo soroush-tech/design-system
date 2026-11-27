@@ -1,7 +1,7 @@
 # New-app checklist
 
 Reference wiring: a Next.js App Router app on React 19, with server components. The pages and the
-root layout are server components; the design system's static components render on the server with
+root layout are server components; Gild UI's static components render on the server with
 the app's theme, and its interactive components are client components that a server component can
 import and render.
 
@@ -10,15 +10,15 @@ import and render.
 ```jsonc
 // package.json
 "dependencies": {
-  "@soroush.design/core": "^0.1.0",
-  "@soroush.design/react": "^0.1.0",
+  "@gild-ui/core": "^0.1.0",
+  "@gild-ui/react": "^0.1.0",
   "react": "^19.2.8",
   "react-dom": "^19.2.8"
 }
 ```
 
 The styling engine (UmberStyle, the `@umber-style/*` packages) comes in as a dependency
-of the design system - don't add it directly. React 19.2 or later is required.
+of Gild UI - don't add it directly. React 19.2 or later is required.
 
 ## 2. Theme
 
@@ -52,8 +52,8 @@ first HTML already has it, and gives it to `ThemeProvider`, which declares the t
 on the page:
 
 ```tsx
-import { Global } from '@soroush.design/react/Global'
-import { ThemeProvider } from '@soroush.design/react/ThemeProvider'
+import { Global } from '@gild-ui/react/Global'
+import { ThemeProvider } from '@gild-ui/react/ThemeProvider'
 import { cookies } from 'next/headers'
 import Providers from './providers'
 import { themes } from '@/theme'

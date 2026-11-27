@@ -19,7 +19,7 @@ export const USAGE = `Usage: ${BIN} <command> [options]
 
 Commands:
   init            set up ${APP_PACKAGE} in the React app in this folder
-  create [name]   start a new app on the design system, in a new folder
+  create [name]   start a new app on Gild UI, in a new folder
 
 Each shows every change first, and writes nothing until you say yes.
 For a command's options, run it with --help: ${BIN} create --help
@@ -31,7 +31,7 @@ const [defaultFramework, ...otherFrameworks] = Object.keys(STARTERS)
 export const HELP: Readonly<Record<string, string>> = {
   init: `Usage: ${BIN} init [options]
 
-Sets the design system up in the React app in this folder, or in a workspace's root that holds
+Sets Gild UI up in the React app in this folder, or in a workspace's root that holds
 one app. It shows every change first, and writes nothing until you say yes.
 
 Options:
@@ -46,7 +46,7 @@ Example:
 `,
   create: `Usage: ${BIN} create [name] [options]
 
-Starts a new app on the design system in ./<name>, my-app when it is not given: a new folder, or
+Starts a new app on Gild UI in ./<name>, my-app when it is not given: a new folder, or
 an empty one. Its package.json takes the name in lowercase: testApp is test-app. It asks for what
 the options do not say, shows every file first, and writes nothing until you say yes.
 
@@ -170,7 +170,7 @@ function findValueRefusal(
 
 /**
  * Reads the command line and runs the command, for `designSystem`: the package of
- * `@soroush.design/react`, whose peer range for React `init` checks the app against.
+ * `@gild-ui/react`, whose peer range for React `init` checks the app against.
  * Returns the exit code: 130 when the person stops it at a question, which is before anything is
  * written.
  */

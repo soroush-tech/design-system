@@ -100,8 +100,8 @@ describe('the React Router starter', () => {
       test: 'vitest run',
     })
     expect(packageJson.dependencies).toEqual({
-      '@soroush.design/core': '^0.1.0',
-      '@soroush.design/react': '^0.1.0',
+      '@gild-ui/core': '^0.1.0',
+      '@gild-ui/react': '^0.1.0',
       react: devDependencies.react,
       'react-dom': devDependencies['react-dom'],
       'react-router': devDependencies['react-router'],

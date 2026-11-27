@@ -1,6 +1,6 @@
 'use client'
 
-import { Button } from '@soroush.design/react/Button'
+import { Button } from '@gild-ui/react/Button'
 import { useState } from 'react'
 
 export function Counter() {

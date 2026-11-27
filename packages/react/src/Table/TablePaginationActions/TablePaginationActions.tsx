@@ -4,7 +4,7 @@ import { type HTMLAttributes } from 'react'
 import { PaginationItem, type PaginationItemSize } from '../../Pagination'
 import { styled } from '../../style/styled'
 import { useTheme } from '../../theme/hooks/useTheme'
-import { themeDefault } from '@soroush.design/core/theme'
+import { themeDefault } from '@gild-ui/core/theme'
 
 export type TablePaginationActionType = 'first' | 'previous' | 'next' | 'last'
 

@@ -11,7 +11,7 @@ const contractDir = join(dirname(fileURLToPath(import.meta.url)), '..')
 const packagesDir = join(contractDir, '..')
 
 /** The packages with an export list. */
-export const LISTED = ['core', 'react-hooks', 'react', 'react-markdown']
+export const LISTED = ['core', 'hooks', 'react', 'react-markdown']
 
 /** The packages whose build the checks read, dependencies first. */
 export const BUILT = LISTED

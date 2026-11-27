@@ -1,6 +1,6 @@
 // What the app checks its components against: a misspelt owner-state field, slot or default prop
 // is an error. Needs no registered theme.
-import type { ThemeComponents } from '@soroush.design/react'
+import type { ThemeComponents } from '@gild-ui/react'
 
 export const ownerState = {
   Tabs: {

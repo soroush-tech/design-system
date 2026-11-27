@@ -1,6 +1,6 @@
-import { Button } from '@soroush.design/react/Button'
-import { Flex } from '@soroush.design/react/Flex'
-import { Typography } from '@soroush.design/react/Typography'
+import { Button } from '@gild-ui/react/Button'
+import { Flex } from '@gild-ui/react/Flex'
+import { Typography } from '@gild-ui/react/Typography'
 import { useCounter } from '../../state/counter'
 
 /** A count, held in a zustand store, src/state/counter, and the button that adds to it. */

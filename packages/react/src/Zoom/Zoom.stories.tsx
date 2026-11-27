@@ -7,7 +7,7 @@ import {
   transitionArgTypes,
   transitionControls,
 } from '../utils/test/storiesTransition'
-import { zoomCatalog } from '@soroush.design/core/catalog/entries'
+import { zoomCatalog } from '@gild-ui/core/catalog/entries'
 import { Zoom } from './Zoom'
 
 const meta: Meta<typeof Zoom> = {

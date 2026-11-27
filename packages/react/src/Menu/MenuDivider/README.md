@@ -6,8 +6,8 @@ A line between groups of rows in a [`MenuList`](../MenuList/README.md), rendered
 Client component: its entry carries `'use client'`, so a server component can import and render it.
 
 ```tsx
-import { MenuDivider, MenuList } from '@soroush.design/react/Menu'
-import { MenuItem } from '@soroush.design/react/MenuItem'
+import { MenuDivider, MenuList } from '@gild-ui/react/Menu'
+import { MenuItem } from '@gild-ui/react/MenuItem'
 
 ;<MenuList aria-label="Edit">
   <MenuItem>Cut</MenuItem>

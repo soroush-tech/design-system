@@ -1,11 +1,11 @@
 {
   "react": {
     "dir": "react",
-    "npm": "@soroush.design/react"
+    "npm": "@gild-ui/react"
   },
   "markdown": {
     "dir": "react-markdown",
-    "npm": "@soroush.design/react-markdown"
+    "npm": "@gild-ui/react-markdown"
   },
   "styled-system": {
     "dir": null,

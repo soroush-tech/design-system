@@ -78,7 +78,7 @@ export const renderTokens = (bundle: ContentBundle, scale?: string): string => {
     return `Unknown scale "${scale}". Available: ${bundle.tokens.map((item) => item.name).join(', ')}.`
   }
   return [
-    `Theme tokens from \`baseTheme\` (@soroush.design/react ${bundle.version}).`,
+    `Theme tokens from \`baseTheme\` (@gild-ui/react ${bundle.version}).`,
     'Reference them through the theme - never hardcode the literal value.',
     '',
     ...scales.flatMap((item) => [
@@ -106,7 +106,7 @@ export const createMcpServer = (bundle: ContentBundle = content): McpServer => {
     'list_components',
     {
       description:
-        'List every component in the @soroush.tech design system with its category, one-line summary, and exact subpath import. Start here when building UI with this library.',
+        'List every component in Gild UI with its category, one-line summary, and exact subpath import. Start here when building UI with this library.',
       inputSchema: {
         package: z
           .enum(['design-system', 'markdown'])

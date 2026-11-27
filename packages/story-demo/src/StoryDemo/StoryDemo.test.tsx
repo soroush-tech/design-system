@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { ThemeProvider } from '@soroush.design/react'
-import { createTheme, baseTheme } from '@soroush.design/core/theme'
-import { syntaxDark } from '@soroush.design/react-markdown/CodeBlock'
+import { ThemeProvider } from '@gild-ui/react'
+import { createTheme, baseTheme } from '@gild-ui/core/theme'
+import { syntaxDark } from '@gild-ui/react-markdown/CodeBlock'
 import * as sampleStories from '../utils/__fixtures__/Sample.stories'
 import sampleRaw from '../utils/__fixtures__/Sample.stories.tsx?raw'
 import { StoryDemo, type StoriesModule } from './StoryDemo'
@@ -72,7 +72,7 @@ describe('StoryDemo', () => {
     renderDemo({ storyName: 'Default' })
     fireEvent.click(screen.getByRole('button', { name: 'Expand code' }))
     let code = await editorText()
-    expect(code).toContain("import { Sample } from '@soroush.design/react/Sample'")
+    expect(code).toContain("import { Sample } from '@gild-ui/react/Sample'")
     expect(code).toContain('export default function Demo()')
     fireEvent.click(screen.getByRole('button', { name: 'Collapse code' }))
     code = await editorText()
@@ -152,9 +152,9 @@ describe('StoryDemo', () => {
       .mockImplementation(function (this: HTMLFormElement) {})
     renderDemo({
       storyName: 'Default',
-      versions: { '@soroush.design/react': '^1.0.0' },
+      versions: { '@gild-ui/react': '^1.0.0' },
       reactVersion: '^19.2.8',
-      packageName: '@soroush.design/react',
+      packageName: '@gild-ui/react',
     })
     await screen.findByTestId('live-editor')
     fireEvent.click(screen.getByRole('button', { name: 'Edit in CodeSandbox' }))

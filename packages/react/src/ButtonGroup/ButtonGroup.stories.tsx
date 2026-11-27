@@ -9,7 +9,7 @@ import { Flex } from '../Flex'
 import { Button } from '../Button'
 import { exampleArgs } from '../utils/test/renderExample'
 import { ButtonGroup } from './ButtonGroup'
-import { buttonGroupCatalog } from '@soroush.design/core/catalog/entries'
+import { buttonGroupCatalog } from '@gild-ui/core/catalog/entries'
 
 const meta: Meta<typeof ButtonGroup> = {
   title: 'Theme/ButtonGroup',

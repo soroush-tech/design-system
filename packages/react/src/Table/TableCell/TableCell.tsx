@@ -12,7 +12,7 @@ import { styled } from '../../style/styled'
 import { type Theme } from '../../theme/themes'
 import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
 import { space, typography, border, system, get } from '@soroush.tech/styled-system'
-import { themeDefault } from '@soroush.design/core/theme'
+import { themeDefault } from '@gild-ui/core/theme'
 
 /** Cell type - inherited from the enclosing section, overridable per cell. */
 export type TableCellVariant = TableSection

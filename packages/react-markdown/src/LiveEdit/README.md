@@ -27,7 +27,7 @@ component.
 ## Usage
 
 ```tsx
-import { LiveEdit } from '@soroush.design/react-markdown/LiveEdit'
+import { LiveEdit } from '@gild-ui/react-markdown/LiveEdit'
 
 <LiveEdit value={source} onChange={setSource} />
 

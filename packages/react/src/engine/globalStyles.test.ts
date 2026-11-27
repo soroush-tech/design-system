@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { baseTheme } from '../theme/themes'
-import { createTheme } from '@soroush.design/core/theme'
+import { createTheme } from '@gild-ui/core/theme'
 import { globalStyles } from './globalStyles'
 
 describe('globalStyles', () => {

@@ -5,7 +5,7 @@
 // 2. runs the built cli's `create` in a temp folder, through its own `main`, with an Io whose
 //    install first points the new app at those tarballs;
 // 3. typechecks (TypeScript) and builds the app, checks that the build prerendered its pages,
-//    serves the build, and checks the HTML: the design system's styles and the starter's content
+//    serves the build, and checks the HTML: Gild UI's styles and the starter's content
 //    on `/` and `/about`, and the 404 page. With `--sample-data`, the list of sample items and the
 //    page of each, too. An SPA's HTML is the same shell on every path: its pages render in the
 //    browser.
@@ -36,7 +36,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 
 // The React package an app depends on and imports from, whose React range `create` reads, and the
 // command line that runs `create`: built, never packed, since an app does not install it.
-const APP_PACKAGE = '@soroush.design/react'
+const APP_PACKAGE = '@gild-ui/react'
 const CLI_PACKAGE = '@soroush.design/cli'
 const APP = 'smokeApp'
 
@@ -76,7 +76,7 @@ const SERVER_ENTRY = isAstro ? 'dist/server/entry.mjs' : 'dist/server/index.mjs'
 // Where the build writes the pages and their files: Vike's client build, Astro's dist - its
 // client folder, for a server - or Vite's dist, for an SPA.
 const PAGES_DIR = (isAstro && !isServer) || isSpa ? 'dist' : 'dist/client'
-// The design system's styles are drawn with the cache key `soroush` in every starter. Vike's
+// Gild UI's styles are drawn with the cache key `soroush` in every starter. Vike's
 // renderer writes them as `<style data-umber>` elements, one for the base styles and one for the
 // classes. An Astro island is rendered by React alone, which writes one
 // `<style data-precedence data-href>` element in front of it: its `data-href` lists the base styles

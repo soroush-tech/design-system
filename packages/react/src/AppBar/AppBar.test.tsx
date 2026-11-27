@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { ThemeProvider } from '../theme/ThemeProvider'
 import { baseTheme } from '../theme/themes'
-import { createTheme } from '@soroush.design/core/theme'
+import { createTheme } from '@gild-ui/core/theme'
 
 // A second theme with a different surface value - proves tokens resolve per-theme.
 const light = createTheme(baseTheme, { background: { paper: '#F3F3F3' } })

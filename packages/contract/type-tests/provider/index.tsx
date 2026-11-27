@@ -1,5 +1,5 @@
 // The provider takes one of the registered themes and rejects an object with a key no theme has.
-import { ThemeProvider } from '@soroush.design/react/ThemeProvider'
+import { ThemeProvider } from '@gild-ui/react/ThemeProvider'
 import { themes } from '../shared/themes'
 
 export const Ok = () => (

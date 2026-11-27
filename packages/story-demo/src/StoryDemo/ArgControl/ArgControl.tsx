@@ -1,10 +1,10 @@
 import type { ReactNode } from 'react'
-import { Flex } from '@soroush.design/react/Flex'
-import { NativeSelect } from '@soroush.design/react/NativeSelect'
-import { Switch } from '@soroush.design/react/Switch'
-import { TextInput } from '@soroush.design/react/TextInput'
-import { ToggleButton } from '@soroush.design/react/ToggleButton'
-import { Typography } from '@soroush.design/react/Typography'
+import { Flex } from '@gild-ui/react/Flex'
+import { NativeSelect } from '@gild-ui/react/NativeSelect'
+import { Switch } from '@gild-ui/react/Switch'
+import { TextInput } from '@gild-ui/react/TextInput'
+import { ToggleButton } from '@gild-ui/react/ToggleButton'
+import { Typography } from '@gild-ui/react/Typography'
 import type { ControlModel, ControlOption } from '../../utils/controlsFor'
 
 export interface ArgControlProps {

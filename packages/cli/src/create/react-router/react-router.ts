@@ -1,4 +1,4 @@
-// The React Router starter: a single-page React app on the design system, in React Router's data
+// The React Router starter: a single-page React app on Gild UI, in React Router's data
 // mode on Vite. Its files are the templates in templates/react-router/ (see templates/templates.md);
 // this module adds what is computed: package.json, from the libraries picked, and the themes and
 // Providers `init` writes too.

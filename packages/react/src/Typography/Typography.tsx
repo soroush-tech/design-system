@@ -20,7 +20,7 @@ import {
   layout,
   typography,
 } from '@soroush.tech/styled-system'
-import type { TypographyVariant } from '@soroush.design/core/theme'
+import type { TypographyVariant } from '@gild-ui/core/theme'
 
 export type { TypographyVariant }
 

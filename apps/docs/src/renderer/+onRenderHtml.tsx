@@ -3,7 +3,7 @@ import { escapeInject, dangerouslySkipEscape } from 'vike/server'
 import { createInstance } from '@umber-style/server/create-instance'
 import { Bootstrap } from '../common/Bootstrap'
 import type { OnRenderHtmlSync } from 'vike/types'
-import { styleCache } from '@soroush.design/react/engine'
+import { styleCache } from '@gild-ui/react/engine'
 import faviconUrl from 'src/assets/soroush_logo.svg'
 import { buildHead } from './buildHead'
 

@@ -117,9 +117,9 @@ describe('createNodeIo', () => {
 
 describe('toWindowsCommandLine', () => {
   it('quotes each argument, so cmd.exe reads a caret as itself', () => {
-    expect(
-      toWindowsCommandLine('pnpm', ['add', '@soroush.design/react@^0.1.0', '--ignore-scripts'])
-    ).toBe('pnpm "add" "@soroush.design/react@^0.1.0" "--ignore-scripts"')
+    expect(toWindowsCommandLine('pnpm', ['add', '@gild-ui/react@^0.1.0', '--ignore-scripts'])).toBe(
+      'pnpm "add" "@gild-ui/react@^0.1.0" "--ignore-scripts"'
+    )
   })
 
   it('refuses anything cmd.exe could read as syntax', () => {

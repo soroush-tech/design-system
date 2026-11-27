@@ -3,11 +3,11 @@ import ReactMarkdown, { type Components, type Options } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeHighlight from 'rehype-highlight'
 import rehypeSlug from 'rehype-slug'
-import { styled } from '@soroush.design/react'
-import { Quote, type QuoteProps } from '@soroush.design/react/Quote'
-import { Checkbox, type CheckboxProps } from '@soroush.design/react/Checkbox'
-import { Image, type ImageProps } from '@soroush.design/react/Image'
-import { Link, type LinkProps } from '@soroush.design/react/Link'
+import { styled } from '@gild-ui/react'
+import { Quote, type QuoteProps } from '@gild-ui/react/Quote'
+import { Checkbox, type CheckboxProps } from '@gild-ui/react/Checkbox'
+import { Image, type ImageProps } from '@gild-ui/react/Image'
+import { Link, type LinkProps } from '@gild-ui/react/Link'
 import {
   Table,
   TableBody,
@@ -20,9 +20,9 @@ import {
   type TableHeadProps,
   type TableProps,
   type TableRowProps,
-} from '@soroush.design/react/Table'
-import { Typography, type TypographyProps } from '@soroush.design/react/Typography'
-import { View, type ViewProps } from '@soroush.design/react/View'
+} from '@gild-ui/react/Table'
+import { Typography, type TypographyProps } from '@gild-ui/react/Typography'
+import { View, type ViewProps } from '@gild-ui/react/View'
 import { CodeBlock, type CodeBlockProps } from '../CodeBlock'
 import { Mermaid, type MermaidProps } from '../Mermaid'
 import { MERMAID_LANGUAGE, isMermaidBlock, mermaidSource } from './mermaidBlock'

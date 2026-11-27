@@ -1,6 +1,6 @@
 import { useEffect, useId, useState } from 'react'
-import type { Theme } from '@soroush.design/core/theme'
-import { useTheme } from '@soroush.design/react'
+import type { Theme } from '@gild-ui/core/theme'
+import { useTheme } from '@gild-ui/react'
 import { CodeBlock } from '../CodeBlock'
 import { DiagramViewer, type DiagramViewerProps } from './DiagramViewer'
 

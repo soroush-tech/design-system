@@ -1,7 +1,7 @@
 import NextLink from 'next/link'
-import { Paper } from '@soroush.design/react/Paper'
-import { Typography } from '@soroush.design/react/Typography'
-import { View } from '@soroush.design/react/View'
+import { Paper } from '@gild-ui/react/Paper'
+import { Typography } from '@gild-ui/react/Typography'
+import { View } from '@gild-ui/react/View'
 
 export default function OtherPage() {
   return (

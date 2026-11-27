@@ -1,6 +1,6 @@
-import { baseTheme, createTheme, defineThemes } from '@soroush.design/core/theme'
-import type { ThemeComponents } from '@soroush.design/react'
-import { registerBaseTheme } from '@soroush.design/react/ThemeProvider'
+import { baseTheme, createTheme, defineThemes } from '@gild-ui/core/theme'
+import type { ThemeComponents } from '@gild-ui/react'
+import { registerBaseTheme } from '@gild-ui/react/ThemeProvider'
 
 // The app's one theme module. The root layout (a server component) and the client components import
 // it, so the server and the browser each hold the same `components` and `defaults`.
@@ -35,7 +35,7 @@ export const themes = defineThemes({ light, dark }, {
   },
 } satisfies ThemeComponents)
 
-declare module '@soroush.design/core/theme' {
+declare module '@gild-ui/core/theme' {
   interface Register {
     themes: typeof themes
   }

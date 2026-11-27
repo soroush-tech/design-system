@@ -9,7 +9,7 @@ callbacks still fire.
 Client component: its entry carries `'use client'`, so a server component can import and render it.
 
 ```tsx
-import { Collapse } from '@soroush.design/react/Collapse'
+import { Collapse } from '@gild-ui/react/Collapse'
 
 ;<Collapse isShown={isOpen}>
   <p>Content that opens and closes.</p>

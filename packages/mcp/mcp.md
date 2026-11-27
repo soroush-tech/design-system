@@ -1,6 +1,6 @@
 # AI surface
 
-How the design system reaches AI coding tools: an MCP server on two transports, an
+How Gild UI reaches AI coding tools: an MCP server on two transports, an
 `llms.txt` on the docs site, and two skills (house style and WCAG accessibility), installed with
 `npx skills add` for any agent or as part of a Claude Code plugin. All of them are generated from the same repo sources,
 so none of them can drift from the library they describe.
@@ -22,7 +22,7 @@ For the consumer-facing view - how to connect and what the tools do - see
 | Accessibility (WCAG) skill           | `plugins/.../skills/wcag/`                  | The plugin, and `npx skills add soroush-tech/design-system` |
 | Shared registry and README splitting | `packages/docs-content/`                    | Private workspace package                                   |
 
-`@soroush.design/docs-content` is the seam. It owns the component taxonomy and the
+`@gild-ui/docs-content` is the seam. It owns the component taxonomy and the
 `splitReadme` / `stripReadmeChrome` / `kebabCase` helpers, and `apps/docs/src/common/nav.ts`
 re-exports it. The docs site, `llms.txt`, and the MCP server therefore all describe one
 library from one registry - which is the whole point of the package existing.

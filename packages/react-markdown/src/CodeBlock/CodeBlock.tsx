@@ -1,10 +1,10 @@
 import { useRef, type ReactNode } from 'react'
-import { styled } from '@soroush.design/react'
-import type { Theme } from '@soroush.design/core/theme'
-import { View, type ViewProps } from '@soroush.design/react/View'
-import { Button } from '@soroush.design/react/Button'
-import { Icon } from '@soroush.design/react/Icon'
-import { useCopyToClipboard } from '@soroush.design/react-hooks/useCopyToClipboard'
+import { styled } from '@gild-ui/react'
+import type { Theme } from '@gild-ui/core/theme'
+import { View, type ViewProps } from '@gild-ui/react/View'
+import { Button } from '@gild-ui/react/Button'
+import { Icon } from '@gild-ui/react/Icon'
+import { useCopyToClipboard } from '@gild-ui/hooks/useCopyToClipboard'
 
 // Maps highlight.js token classes to the theme's `syntax` tokens. Descendant
 // selectors are required because `rehype-highlight` emits `<span class="hljs-*">`

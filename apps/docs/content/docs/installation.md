@@ -2,7 +2,7 @@
 
 ## Start a new app
 
-To start a new app on the design system - a Vike app, prerendered at build time, that then moves
+To start a new app on Gild UI - a Vike app, prerendered at build time, that then moves
 between pages with no reload - in TypeScript or JavaScript:
 
 ```sh
@@ -18,7 +18,7 @@ and a page for each. Its options are in the
 ## Set it up with one command
 
 In a client-rendered React app - built with Vite, webpack, Rspack, Parcel or Create React App,
-in TypeScript or JavaScript - one command sets the design system up:
+in TypeScript or JavaScript - one command sets Gild UI up:
 
 ```sh
 npx @soroush.design/cli init
@@ -31,7 +31,7 @@ It shows every change before it makes one, and writes nothing until you say yes:
   `registerBaseTheme`;
 - `src/theme/Providers` - the `ThemeProvider` with the base page styles;
 - your root - what it renders is wrapped in `<Providers>`;
-- the install of `@soroush.design/react` and `@soroush.design/core`, with your own package manager.
+- the install of `@gild-ui/react` and `@gild-ui/core`, with your own package manager.
 
 It runs in a git repository with no uncommitted change, never overwrites a file, and takes back
 every change if a write fails. Run in a workspace's root, it sets up the one app in it. Add
@@ -43,10 +43,10 @@ and React Router apps are not supported by `init` yet: set those up by hand, bel
 
 ## Or set it up by hand
 
-Install the design system and its peer dependencies:
+Install Gild UI and its peer dependencies:
 
 ```sh
-npm i @soroush.design/react @soroush.design/core react react-dom
+npm i @gild-ui/react @gild-ui/core react react-dom
 ```
 
 React 19.2 or later is required.
@@ -56,9 +56,9 @@ React 19.2 or later is required.
 Every component reads its colors, spacing, and typography from the theme. Wrap your app once:
 
 ```tsx
-import { ThemeProvider } from '@soroush.design/react'
-import { registerBaseTheme } from '@soroush.design/react/ThemeProvider'
-import { baseTheme, createTheme, defineThemes } from '@soroush.design/core/theme'
+import { ThemeProvider } from '@gild-ui/react'
+import { registerBaseTheme } from '@gild-ui/react/ThemeProvider'
+import { baseTheme, createTheme, defineThemes } from '@gild-ui/core/theme'
 
 export const themes = defineThemes(
   {
@@ -71,7 +71,7 @@ export const themes = defineThemes(
 // The theme the app starts in, for server components, which have no provider above them.
 registerBaseTheme(themes.dark)
 
-declare module '@soroush.design/core/theme' {
+declare module '@gild-ui/core/theme' {
   interface Register {
     themes: typeof themes
   }

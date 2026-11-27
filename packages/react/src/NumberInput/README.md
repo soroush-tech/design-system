@@ -11,7 +11,7 @@ Every label is yours - the buttons' (`incrementLabel`, `decrementLabel`) - so th
 language of its own.
 
 ```tsx
-import { NumberInput } from '@soroush.design/react/NumberInput'
+import { NumberInput } from '@gild-ui/react/NumberInput'
 
 ;<NumberInput
   aria-label="Quantity"
@@ -120,7 +120,7 @@ useHoldRepeat(action: () => void, options?: UseHoldRepeatOptions): { start: () =
 `action` is the one called, so it needs no memoizing.
 
 ```tsx
-import { useHoldRepeat } from '@soroush.design/react/NumberInput'
+import { useHoldRepeat } from '@gild-ui/react/NumberInput'
 
 function More({ onStep }: { onStep: () => void }) {
   const { start, stop } = useHoldRepeat(onStep, { delay: 300 })

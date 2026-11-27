@@ -1,4 +1,4 @@
-import { StoryDemo } from '@soroush.design/story-demo/StoryDemo'
+import { StoryDemo } from '@gild-ui/story-demo/StoryDemo'
 import { demoByPath, demoReactVersion, demoVersions } from 'src/demos/registry'
 import { APP_PACKAGE } from 'src/common/packageVersions'
 import { loadDemoScope } from 'src/demos/scopeLoader'
@@ -15,7 +15,7 @@ export interface MdxStoryDemoProps {
 /** MDX-facing StoryDemo: looks the story up in the registry so content files import nothing. */
 export function MdxStoryDemo({ of, title, description }: Readonly<MdxStoryDemoProps>) {
   const entry = demoByPath.get(of)
-  if (!entry) throw new Error(`Unknown demo "${of}" - no such story in the design system`)
+  if (!entry) throw new Error(`Unknown demo "${of}" - no such story in Gild UI`)
   return (
     <StoryDemo
       stories={entry.stories}

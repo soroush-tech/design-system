@@ -4,7 +4,7 @@ import * as root from './index'
 import * as engine from './engine'
 import { ThemeProvider } from './theme/ThemeProvider'
 import { baseTheme } from './theme/themes'
-import { createTheme } from '@soroush.design/core/theme'
+import { createTheme } from '@gild-ui/core/theme'
 import { styled } from './style/styled'
 import { useTheme } from './theme/hooks/useTheme'
 

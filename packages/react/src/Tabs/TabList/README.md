@@ -6,7 +6,7 @@ tab to its `TabPanel` - the tab `aria-controls` its panel, and the panel is name
 Client component: its entry carries `'use client'`, so a server component can import and render it.
 
 ```tsx
-import { Tab, TabContext, TabList, TabPanel } from '@soroush.design/react/Tabs'
+import { Tab, TabContext, TabList, TabPanel } from '@gild-ui/react/Tabs'
 
 const [value, setValue] = useState('1')
 

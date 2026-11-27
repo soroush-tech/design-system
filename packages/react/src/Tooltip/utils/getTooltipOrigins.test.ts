@@ -4,7 +4,7 @@ import {
   resolveTooltipPlacement,
   type FixedTooltipPlacement,
 } from './getTooltipOrigins'
-import { tooltipPlacementValues } from '@soroush.design/core/catalog/entries'
+import { tooltipPlacementValues } from '@gild-ui/core/catalog/entries'
 
 describe('getTooltipOrigins', () => {
   it('puts a tooltip above, centred, by default of its side', () => {

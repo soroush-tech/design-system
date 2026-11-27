@@ -10,7 +10,7 @@ import {
   snackbarCatalog,
   snackbarHorizontalValues,
   snackbarVerticalValues,
-} from '@soroush.design/core/catalog/entries'
+} from '@gild-ui/core/catalog/entries'
 import { Snackbar, type SnackbarProps } from './Snackbar'
 
 const meta: Meta<typeof Snackbar> = {

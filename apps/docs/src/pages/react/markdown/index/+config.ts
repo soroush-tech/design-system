@@ -5,5 +5,5 @@ export default {
   prerender: sectionPrerender('markdown'),
   title: 'Markdown',
   description:
-    'Overview of @soroush.design/react-markdown: the editor, preview, and code-rendering companion components.',
+    'Overview of @gild-ui/react-markdown: the editor, preview, and code-rendering companion components.',
 } satisfies Config

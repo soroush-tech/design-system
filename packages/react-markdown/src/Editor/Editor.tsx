@@ -6,11 +6,11 @@ import {
   type KeyboardEvent,
   type SyntheticEvent,
 } from 'react'
-import { Flex } from '@soroush.design/react/Flex'
-import { styled } from '@soroush.design/react'
-import { useTheme } from '@soroush.design/react'
-import { themeDefault } from '@soroush.design/core/theme'
-import { Typography } from '@soroush.design/react/Typography'
+import { Flex } from '@gild-ui/react/Flex'
+import { styled } from '@gild-ui/react'
+import { useTheme } from '@gild-ui/react'
+import { themeDefault } from '@gild-ui/core/theme'
+import { Typography } from '@gild-ui/react/Typography'
 
 // Named styled root - theme-customizable via
 // `theme.components.MarkdownEditor.styleOverrides.root`.
@@ -21,7 +21,7 @@ import {
   type TextInputSize,
   type TextInputTextColor,
   type TextInputVariant,
-} from '@soroush.design/react/TextInput'
+} from '@gild-ui/react/TextInput'
 import { applyAction } from '../utils/applyAction'
 import { MarkdownContext, type MarkdownSelection } from '../MarkdownContext'
 import type { LinePrefixAction } from '../const'

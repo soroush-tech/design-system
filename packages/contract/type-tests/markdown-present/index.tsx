@@ -1,7 +1,7 @@
 // With any markdown entry imported, its slots and keys are typed - one block, loaded by every entry.
-import '@soroush.design/react-markdown/Preview'
-import type { ThemeComponents } from '@soroush.design/react'
-import { useTheme } from '@soroush.design/react/useTheme'
+import '@gild-ui/react-markdown/Preview'
+import type { ThemeComponents } from '@gild-ui/react'
+import { useTheme } from '@gild-ui/react/useTheme'
 
 export const components = {
   MarkdownEditor: { styleOverrides: { root: { padding: 8 } } },

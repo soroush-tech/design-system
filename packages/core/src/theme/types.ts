@@ -4,7 +4,7 @@
 // module - or against the platform library that re-exports it, which reaches the same
 // interface:
 //
-//   declare module '@soroush.design/core/theme' {
+//   declare module '@gild-ui/core/theme' {
 //     interface ThemePalette { brand: PaletteEntry }   // new palette color
 //     interface ThemeBackground { tertiary: string }   // new background token
 //     interface Theme { elevations: Record<string, string> }  // whole new scale
@@ -228,7 +228,7 @@ export interface DefaultBreakpoints {
  * Add, rename or remove breakpoints by augmenting this interface: `true` adds a name, `false`
  * removes a default one.
  *
- *   declare module '@soroush.design/core/theme' {
+ *   declare module '@gild-ui/core/theme' {
  *     interface BreakpointOverrides { mobile: true; tablet: true; xs: false; sm: false }
  *   }
  */

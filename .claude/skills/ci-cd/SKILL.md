@@ -21,7 +21,7 @@ deliberate act with required, human-written notes, never triggered by a push or 
 
 **No workflow deploys docs.** `docs.soroush.tech` is frozen: it documents the former package and
 is served by GitHub Pages from the `docs-dist` branch, which nothing may write to - no deploy, no
-URL change, no new version. `ci.yml` only builds the docs app. The new `soroush.design` docs site
+URL change, no new version. `ci.yml` only builds the docs app. The new Gild UI docs site (`gild-ui.soroush.design`)
 (Cloudflare Pages) gets its deploy with #147.
 
 ## Action pinning convention - the load-bearing rule

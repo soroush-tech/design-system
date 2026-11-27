@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react'
-import { View } from '@soroush.design/react/View'
+import { View } from '@gild-ui/react/View'
 import { Header } from '../components/Header'
 import { SchemeSwitch } from '../components/SchemeSwitch'
 import { Providers } from '../theme/Providers'

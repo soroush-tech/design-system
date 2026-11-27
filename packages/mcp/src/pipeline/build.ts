@@ -1,4 +1,4 @@
-import { loadPackageFile } from '@soroush.design/docs-content/node'
+import { loadPackageFile } from '@gild-ui/docs-content/node'
 import type { ContentBundle } from '../types'
 import { buildComponents } from './components'
 import { buildDocs } from './docs'

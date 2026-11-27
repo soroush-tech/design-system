@@ -7,7 +7,7 @@ theme shadow. Where it floats is the page's: no position is built in.
 Server component: it renders in a React Server Component, with no client code.
 
 ```tsx
-import { Fab } from '@soroush.design/react/Fab'
+import { Fab } from '@gild-ui/react/Fab'
 
 ;<Fab aria-label="Add" onClick={add}>
   <Icon name="add" color="inherit" />

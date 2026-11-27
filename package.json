@@ -4,10 +4,10 @@
   "license": "MIT",
   "type": "module",
   "lockstep": [
-    "@soroush.design/core",
-    "@soroush.design/react-hooks",
-    "@soroush.design/react",
-    "@soroush.design/react-markdown"
+    "@gild-ui/core",
+    "@gild-ui/hooks",
+    "@gild-ui/react",
+    "@gild-ui/react-markdown"
   ],
   "packageManager": "pnpm@10.13.1",
   "scripts": {
@@ -27,8 +27,8 @@
     "test:coverage": "pnpm -r test:coverage",
     "format": "oxfmt",
     "format:check": "oxfmt --check",
-    "storybook": "pnpm --filter @soroush.design/react storybook",
-    "build:storybook": "pnpm --filter @soroush.design/react build:storybook",
+    "storybook": "pnpm --filter @gild-ui/react storybook",
+    "build:storybook": "pnpm --filter @gild-ui/react build:storybook",
     "smoke:create": "node scripts/smoke-create.mjs"
   },
   "devDependencies": {

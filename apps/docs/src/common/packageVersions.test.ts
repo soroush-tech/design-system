@@ -9,9 +9,9 @@ import {
 
 describe('packageVersions', () => {
   it('names the package an app installs and imports from, with its own version', () => {
-    expect(APP_PACKAGE).toBe('@soroush.design/react')
+    expect(APP_PACKAGE).toBe('@gild-ui/react')
     expect(APP_PACKAGE_VERSION).toMatch(/^\d+\.\d+\.\d+/)
-    expect(CORE_PACKAGE).toBe('@soroush.design/core')
+    expect(CORE_PACKAGE).toBe('@gild-ui/core')
     expect(CORE_PACKAGE_VERSION).toMatch(/^\d+\.\d+\.\d+/)
   })
 

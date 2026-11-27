@@ -1,6 +1,6 @@
 'use client'
 
-import { clamp, roundToPrecision } from '@soroush.design/core/utils'
+import { clamp, roundToPrecision } from '@gild-ui/core/utils'
 
 export interface HoverValueParams {
   /** How far along the rating's width the pointer is, in pixels - from its start edge. */

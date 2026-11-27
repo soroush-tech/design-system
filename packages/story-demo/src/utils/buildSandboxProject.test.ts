@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest'
 import { buildSandboxProject } from './buildSandboxProject'
 
-const SOURCE = "import { Button } from '@soroush.design/react/Button'\n<Button />"
+const SOURCE = "import { Button } from '@gild-ui/react/Button'\n<Button />"
 const OPTIONS = {
-  versions: { '@soroush.design/react': '^1.2.3' },
+  versions: { '@gild-ui/react': '^1.2.3' },
   reactVersion: '^19.2.8',
 }
 
@@ -22,7 +22,7 @@ describe('buildSandboxProject', () => {
     }
     expect(manifest.name).toBe('basic-button-group-demo')
     expect(manifest.main).toBe('src/index.tsx')
-    expect(manifest.dependencies['@soroush.design/react']).toBe('^1.2.3')
+    expect(manifest.dependencies['@gild-ui/react']).toBe('^1.2.3')
     expect(manifest.dependencies.react).toBe('^19.2.8')
     expect(manifest.dependencies['react-dom']).toBe('^19.2.8')
     expect(manifest.devDependencies.typescript).toBe('latest')
@@ -33,11 +33,9 @@ describe('buildSandboxProject', () => {
       buildSandboxProject('Basic', SOURCE, { ...OPTIONS, language: 'ts', packageName })[
         'src/index.tsx'
       ].content as string
-    expect(entry()).toContain("import { ThemeProvider } from '@soroush.design/react'")
-    expect(entry('@soroush.design/other')).toContain(
-      "import { ThemeProvider } from '@soroush.design/other'"
-    )
-    expect(entry()).toContain("from '@soroush.design/core/theme'")
+    expect(entry()).toContain("import { ThemeProvider } from '@gild-ui/react'")
+    expect(entry('@gild-ui/other')).toContain("import { ThemeProvider } from '@gild-ui/other'")
+    expect(entry()).toContain("from '@gild-ui/core/theme'")
   })
 
   it('assembles a plain JavaScript project when language is js', () => {

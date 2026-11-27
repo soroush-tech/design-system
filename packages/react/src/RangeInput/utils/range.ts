@@ -1,7 +1,7 @@
 'use client'
 
 import type { ReactNode } from 'react'
-import { clamp, addExact, snapToStep } from '@soroush.design/core/utils'
+import { clamp, addExact, snapToStep } from '@gild-ui/core/utils'
 
 /** A tick on the rail, with a label under it when it has one. */
 export interface Mark {

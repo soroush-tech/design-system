@@ -28,7 +28,7 @@ export const ensureBuilt = (
 ): string[] => {
   const stale = names.filter((name) => isStale(join(root, name)))
   for (const name of stale) {
-    exec('pnpm', ['--filter', `@soroush.design/${name}`, 'build'], {
+    exec('pnpm', ['--filter', `@gild-ui/${name}`, 'build'], {
       cwd: root,
       stdio: 'inherit',
       shell: true,

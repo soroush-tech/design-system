@@ -9,7 +9,7 @@ import { Flex } from '../../Flex'
 import { Typography } from '../../Typography'
 import { exampleArgs } from '../../utils/test/renderExample'
 import { TablePaginationActions } from './TablePaginationActions'
-import { tablePaginationActionsCatalog } from '@soroush.design/core/catalog/entries'
+import { tablePaginationActionsCatalog } from '@gild-ui/core/catalog/entries'
 
 const meta: Meta<typeof TablePaginationActions> = {
   title: 'Theme/Table/TablePaginationActions',

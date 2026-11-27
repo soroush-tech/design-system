@@ -5,7 +5,7 @@ Grows one child in from a little smaller, fading as it does, and shrinks it out.
 Client component: its entry carries `'use client'`, so a server component can import and render it.
 
 ```tsx
-import { Grow } from '@soroush.design/react/Grow'
+import { Grow } from '@gild-ui/react/Grow'
 
 ;<Grow isShown={isOpen}>
   <Paper p={3}>Content</Paper>

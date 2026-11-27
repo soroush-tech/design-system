@@ -1,5 +1,5 @@
-import { Typography } from '@soroush.design/react/Typography'
-import { View } from '@soroush.design/react/View'
+import { Typography } from '@gild-ui/react/Typography'
+import { View } from '@gild-ui/react/View'
 import { Layout } from 'src/common/Layout'
 
 export default function Page() {

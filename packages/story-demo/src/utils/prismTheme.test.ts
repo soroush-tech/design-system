@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { syntaxDark } from '@soroush.design/react-markdown/CodeBlock'
+import { syntaxDark } from '@gild-ui/react-markdown/CodeBlock'
 import { prismTheme } from './prismTheme'
 
 describe('prismTheme', () => {

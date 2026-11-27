@@ -17,11 +17,11 @@ describe('openInCodeSandbox', () => {
       target = this.target
       parameters = (this.querySelector('input[name="parameters"]') as HTMLInputElement).value
     })
-    openInCodeSandbox(
-      'Basic button group',
-      "import { Button } from '@soroush.design/react/Button'",
-      { language: 'ts', versions: {}, reactVersion: '^19.2.8' }
-    )
+    openInCodeSandbox('Basic button group', "import { Button } from '@gild-ui/react/Button'", {
+      language: 'ts',
+      versions: {},
+      reactVersion: '^19.2.8',
+    })
     expect(submitSpy).toHaveBeenCalledOnce()
     expect(action).toBe(SANDBOX_DEFINE_URL)
     expect(target).toBe('_blank')

@@ -2,7 +2,7 @@ import { renderHook } from '@testing-library/react'
 import { useTheme } from './hooks/useTheme'
 import { afterEach, describe, it, expect, vi } from 'vitest'
 import type { ReactNode } from 'react'
-import { createTheme } from '@soroush.design/core/theme'
+import { createTheme } from '@gild-ui/core/theme'
 import { baseTheme } from './themes'
 import { ThemeProvider } from './ThemeProvider'
 

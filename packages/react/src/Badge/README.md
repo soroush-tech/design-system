@@ -8,7 +8,7 @@ shows no badge, unless `shouldShowZero`.
 Server component: it renders in a React Server Component, with no client code.
 
 ```tsx
-import { Badge } from '@soroush.design/react/Badge'
+import { Badge } from '@gild-ui/react/Badge'
 
 ;<Badge badgeContent={4} badgeLabel="4 unread">
   <Button>Inbox</Button>

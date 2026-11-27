@@ -23,7 +23,7 @@ contract. The deep-dive docs are authoritative - read the matching one before bu
   incubator; promoted into design-system once stable).
 - **Markdown-rendering component** -> `packages/react-markdown/src/<Name>/`.
 - **Docs-site-only component** (chrome, doc rendering) -> `apps/docs/src/common/<Name>/`.
-- **Shared React hook** -> `packages/react-hooks/src/useX.ts` (flat file + `useX.test.ts`, one
+- **Shared React hook** -> `packages/hooks/src/useX.ts` (flat file + `useX.test.ts`, one
   subpath export per hook). App-only hooks -> `apps/docs/src/hooks/useX.ts`, flat.
 - **Non-UI tool** (vite plugin, node util) -> its own `packages/<name>/` per packages.md.
 
@@ -38,7 +38,7 @@ src/ComponentName/
   ComponentName.types.ts    <- its theme types: ComponentNameOwnerState, ...Slot, ...ThemeConfig
   README.md                 <- prop reference (token tables, styled-system props, Examples)
   ComponentName.mdx         <- optional hand-authored docs page; overrides the automatic
-                               README+demos page on docs.soroush.design
+                               README+demos page on gild-ui.soroush.design
   ComponentName.stories.tsx <- design-system only (lab ships no storybook yet)
   ComponentName.test.tsx    <- unit tests, 100% coverage
 ```
@@ -90,9 +90,9 @@ extract siblings (with co-located tests) only when it grows unwieldy. Required f
 
 ## Imports
 
-- Components ship on subpaths: an app or another package imports `@soroush.design/react/Button`; the root carries `styled`, `css`, `useTheme`. Never
+- Components ship on subpaths: an app or another package imports `@gild-ui/react/Button`; the root carries `styled`, `css`, `useTheme`. Never
   deep-import another package's internals.
 - App code uses the `src/`, `content/`, and `packages/` aliases - never relative `../../`.
   The one exception: Vike `+route.ts`/`+config.ts` run at config time without aliases and
   import their helpers relatively.
-- Package directory name == package name minus the `@soroush.design/` scope.
+- Package directory name == package name minus its scope (`@gild-ui/`, or `@soroush.design/` for the cli and the mcp server).

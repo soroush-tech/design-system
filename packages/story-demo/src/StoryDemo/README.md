@@ -57,9 +57,9 @@ The `react` / `react-dom` pin for the sandbox `package.json`. Default: `` `lates
 ### `packageName`
 
 The npm package that the stories' relative imports are rewritten to, and that the CodeSandbox
-entry takes `ThemeProvider` from. The docs app passes `@soroush.design/react`, so the code
+entry takes `ThemeProvider` from. The docs app passes `@gild-ui/react`, so the code
 it shows is the code an app writes. Default:
-`` `@soroush.design/react` ``.
+`` `@gild-ui/react` ``.
 
 ## Controls
 
@@ -71,7 +71,7 @@ selects and inputs show the argType's `table.defaultValue.summary`.
 ## Examples
 
 ```tsx
-import { StoryDemo } from '@soroush.design/story-demo/StoryDemo'
+import { StoryDemo } from '@gild-ui/story-demo/StoryDemo'
 import * as buttonStories from 'packages/react/src/Button/Button.stories'
 import buttonSource from 'packages/react/src/Button/Button.stories.tsx?raw'
 
@@ -81,7 +81,7 @@ import buttonSource from 'packages/react/src/Button/Button.stories.tsx?raw'
   storyName="Variants"
   title="Variants"
   scope={() => import('./scope').then((module) => module.demoScope)}
-  versions={{ '@soroush.design/react': '^1.3.3' }}
+  versions={{ '@gild-ui/react': '^1.3.3' }}
   reactVersion="^19.2.8"
 />
 ```

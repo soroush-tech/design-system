@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { renderToString } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
-import { createTheme, defineThemes } from '@soroush.design/core/theme'
+import { createTheme, defineThemes } from '@gild-ui/core/theme'
 import { styled } from '../style/styled'
 import { baseTheme } from './themes'
 import { useDefaultProps } from './hooks/useDefaultProps'

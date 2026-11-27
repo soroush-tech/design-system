@@ -9,7 +9,7 @@ import type { SelectColor, SelectSize } from '../../Select'
 import type { FormControlProps } from '../../FormControl'
 import type { AppBarSize } from '../../AppBar'
 import { baseTheme, type CSSObject } from '../../theme/themes'
-import { space, typography } from '@soroush.design/core/theme'
+import { space, typography } from '@gild-ui/core/theme'
 import {
   radii,
   sizes,
@@ -20,90 +20,90 @@ import {
   fonts,
   fontWeights,
   avatar,
-} from '@soroush.design/core/theme'
+} from '@gild-ui/core/theme'
 
 // Value lists owned by the components' catalogs (`X/X.catalog.ts`), under their story names.
 export {
   buttonVariantValues as buttonVariantTokens,
   buttonShapeValues as buttonShapeTokens,
   buttonLoadingPositionValues as buttonLoadingPositionTokens,
-} from '@soroush.design/core/catalog/entries'
-export { cardVariantValues as cardVariantTokens } from '@soroush.design/core/catalog/entries'
-export { selectVariantValues as selectVariantTokens } from '@soroush.design/core/catalog/entries'
+} from '@gild-ui/core/catalog/entries'
+export { cardVariantValues as cardVariantTokens } from '@gild-ui/core/catalog/entries'
+export { selectVariantValues as selectVariantTokens } from '@gild-ui/core/catalog/entries'
 export {
   tableSizeValues as tableSizeTokens,
   tableCellPaddingValues as tableCellPaddingTokens,
-} from '@soroush.design/core/catalog/entries'
+} from '@gild-ui/core/catalog/entries'
 export {
   tableCellVariantValues as tableCellVariantTokens,
   tableCellAlignValues as tableCellAlignTokens,
-} from '@soroush.design/core/catalog/entries'
-export { appBarPositionValues as positionTokens } from '@soroush.design/core/catalog/entries'
-export { avatarVariantValues as avatarVariantTokens } from '@soroush.design/core/catalog/entries'
+} from '@gild-ui/core/catalog/entries'
+export { appBarPositionValues as positionTokens } from '@gild-ui/core/catalog/entries'
+export { avatarVariantValues as avatarVariantTokens } from '@gild-ui/core/catalog/entries'
 export {
   flexDirectionValues as flexDirectionTokens,
   flexJustifyContentValues as flexJustifyContentTokens,
   flexAlignItemsValues as flexAlignItemsTokens,
   flexAlignContentValues as flexAlignContentTokens,
   flexWrapValues as flexWrapTokens,
-} from '@soroush.design/core/catalog/entries'
+} from '@gild-ui/core/catalog/entries'
 export {
   gridAutoFlowValues as gridAutoFlowTokens,
   gridJustifyContentValues as gridJustifyContentTokens,
   gridAlignItemsValues as gridAlignItemsTokens,
   gridAlignContentValues as gridAlignContentTokens,
   gridJustifyItemsValues as gridJustifyItemsTokens,
-} from '@soroush.design/core/catalog/entries'
-export { imageObjectFitValues as objectFitTokens } from '@soroush.design/core/catalog/entries'
+} from '@gild-ui/core/catalog/entries'
+export { imageObjectFitValues as objectFitTokens } from '@gild-ui/core/catalog/entries'
 export {
   linkUnderlineValues as linkUnderlineTokens,
   linkTargetValues as linkTargetTokens,
-} from '@soroush.design/core/catalog/entries'
-export { typographyAlignValues as alignTokens } from '@soroush.design/core/catalog/entries'
+} from '@gild-ui/core/catalog/entries'
+export { typographyAlignValues as alignTokens } from '@gild-ui/core/catalog/entries'
 export {
   skeletonVariantValues as skeletonVariantTokens,
   skeletonAnimationValues as skeletonAnimationTokens,
-} from '@soroush.design/core/catalog/entries'
+} from '@gild-ui/core/catalog/entries'
 export {
   circularProgressVariantValues as circularProgressVariantTokens,
   circularProgressEasingValues as circularProgressEasingTokens,
-} from '@soroush.design/core/catalog/entries'
+} from '@gild-ui/core/catalog/entries'
 export {
   linearProgressVariantValues as linearProgressVariantTokens,
   linearProgressEasingValues as linearProgressEasingTokens,
-} from '@soroush.design/core/catalog/entries'
-export { drawerAnchorValues as anchorTokens } from '@soroush.design/core/catalog/entries'
-export { modalScrollValues as modalScrollTokens } from '@soroush.design/core/catalog/entries'
-export { breadcrumbsSeparatorValues as breadcrumbsSeparatorTokens } from '@soroush.design/core/catalog/entries'
+} from '@gild-ui/core/catalog/entries'
+export { drawerAnchorValues as anchorTokens } from '@gild-ui/core/catalog/entries'
+export { modalScrollValues as modalScrollTokens } from '@gild-ui/core/catalog/entries'
+export { breadcrumbsSeparatorValues as breadcrumbsSeparatorTokens } from '@gild-ui/core/catalog/entries'
 export {
   numberInputSpinButtonsValues as numberInputSpinButtonsTokens,
   numberInputVariantValues as numberInputVariantTokens,
-} from '@soroush.design/core/catalog/entries'
+} from '@gild-ui/core/catalog/entries'
 export {
   rangeInputOrientationValues as rangeInputOrientationTokens,
   rangeInputTrackValues as rangeInputTrackTokens,
   rangeInputValueLabelValues as rangeInputValueLabelTokens,
-} from '@soroush.design/core/catalog/entries'
-export { ratingPrecisionValues as ratingPrecisionTokens } from '@soroush.design/core/catalog/entries'
-export { transitionEasingValues as transitionEasingTokens } from '@soroush.design/core/catalog/entries'
-export { collapseOrientationValues as collapseOrientationTokens } from '@soroush.design/core/catalog/entries'
-export { slideDirectionValues as slideDirectionTokens } from '@soroush.design/core/catalog/entries'
-export { menuItemRoleValues as menuItemRoleTokens } from '@soroush.design/core/catalog/entries'
-export { menuAlignValues as menuAlignTokens } from '@soroush.design/core/catalog/entries'
+} from '@gild-ui/core/catalog/entries'
+export { ratingPrecisionValues as ratingPrecisionTokens } from '@gild-ui/core/catalog/entries'
+export { transitionEasingValues as transitionEasingTokens } from '@gild-ui/core/catalog/entries'
+export { collapseOrientationValues as collapseOrientationTokens } from '@gild-ui/core/catalog/entries'
+export { slideDirectionValues as slideDirectionTokens } from '@gild-ui/core/catalog/entries'
+export { menuItemRoleValues as menuItemRoleTokens } from '@gild-ui/core/catalog/entries'
+export { menuAlignValues as menuAlignTokens } from '@gild-ui/core/catalog/entries'
 export {
   tabsVariantValues as tabsVariantTokens,
   tabsOrientationValues as tabsOrientationTokens,
   tabsOverflowBehaviorValues as tabsOverflowBehaviorTokens,
   tabsScrollButtonsValues as tabsScrollButtonsTokens,
-} from '@soroush.design/core/catalog/entries'
-export { tabIconPositionValues as tabIconPositionTokens } from '@soroush.design/core/catalog/entries'
-export { tabScrollDirectionValues as tabScrollDirectionTokens } from '@soroush.design/core/catalog/entries'
-export { pressableFeedbackValues as pressableFeedbackTokens } from '@soroush.design/core/catalog/entries'
+} from '@gild-ui/core/catalog/entries'
+export { tabIconPositionValues as tabIconPositionTokens } from '@gild-ui/core/catalog/entries'
+export { tabScrollDirectionValues as tabScrollDirectionTokens } from '@gild-ui/core/catalog/entries'
+export { pressableFeedbackValues as pressableFeedbackTokens } from '@gild-ui/core/catalog/entries'
 export {
   switchVariantValues as switchVariantTokens,
   switchEdgeValues as switchEdgeTokens,
-} from '@soroush.design/core/catalog/entries'
-export { textInputVariantValues as textInputVariantTokens } from '@soroush.design/core/catalog/entries'
+} from '@gild-ui/core/catalog/entries'
+export { textInputVariantValues as textInputVariantTokens } from '@gild-ui/core/catalog/entries'
 
 const objectKeys = <T extends object>(obj: T) => Object.keys(obj) as Array<keyof T>
 

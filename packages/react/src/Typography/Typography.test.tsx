@@ -2,7 +2,7 @@ import { screen } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { baseTheme } from '../theme/themes'
-import { typography, fonts } from '@soroush.design/core/theme'
+import { typography, fonts } from '@gild-ui/core/theme'
 import { Typography, type TypographyVariant, type TextColorToken } from '../Typography'
 import { toPx } from '../utils/test/toPx'
 

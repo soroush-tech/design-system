@@ -1,5 +1,5 @@
 // The root: the styling system and the theme's hooks. Each name is also an entry point of its own
-// (`@soroush.design/react/useTheme`), which configures the engine on its own.
+// (`@gild-ui/react/useTheme`), which configures the engine on its own.
 export * from './entries/ThemeProvider'
 export * from './entries/LayoutProvider'
 export * from './entries/useTheme'

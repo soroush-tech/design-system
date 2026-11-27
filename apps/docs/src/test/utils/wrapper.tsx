@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import type { ReactNode } from 'react'
 import { render, type RenderOptions } from '@testing-library/react'
-import { ThemeProvider } from '@soroush.design/react'
+import { ThemeProvider } from '@gild-ui/react'
 import { dark } from 'src/theme/themes'
 
 // Tests render under the app's brand dark theme, mirroring the production default.

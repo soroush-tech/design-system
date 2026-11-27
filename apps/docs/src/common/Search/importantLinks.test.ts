@@ -5,7 +5,7 @@ import { importantLinksFor } from './importantLinks'
 const hrefs = (path: string) => importantLinksFor(sectionFor(path)).map((entry) => entry.href)
 
 describe('importantLinksFor', () => {
-  it('starts the design system with how to install it, then how to use it', () => {
+  it('starts Gild UI with how to install it, then how to use it', () => {
     const links = hrefs('/react/')
     expect(links.slice(0, 3)).toEqual([
       '/react/installation/',

@@ -1,5 +1,5 @@
 import type { Theme } from '../theme/themes'
-import { themeDefault } from '@soroush.design/core/theme'
+import { themeDefault } from '@gild-ui/core/theme'
 import { get } from '@soroush.tech/styled-system'
 
 /** The least width of a field that does not fill its row: `theme.defaults.inputMinWidth`, else `'12rem'`. */

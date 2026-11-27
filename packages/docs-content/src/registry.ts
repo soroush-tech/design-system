@@ -191,7 +191,7 @@ export const sitePath = (pkg: DocsSection, path: string): string => `/${sections
 
 /**
  * Where a component's page is in its section. The route is the import path: `/Button/` for
- * `@soroush.design/react/Button`, and a member of a family under the entry it is imported from,
+ * `@gild-ui/react/Button`, and a member of a family under the entry it is imported from,
  * `/Table/TableCell/`.
  */
 export const componentPagePath = (item: ComponentNavItem): string =>
@@ -216,11 +216,11 @@ export const componentLinkPath = (item: ComponentNavItem, section = ''): string 
 /** The subpath a component is imported from - a member's is its family's. */
 export const importSubpathOf = (item: ComponentNavItem): string => item.family ?? item.name
 
-/** The React package: what an app imports every component of the design system from. */
-export const IMPORT_PACKAGE = '@soroush.design/react'
+/** The React package: what an app imports every component of Gild UI from. */
+export const IMPORT_PACKAGE = '@gild-ui/react'
 
 /** The markdown package, which a markdown component is imported from. */
-export const MARKDOWN_PACKAGE = '@soroush.design/react-markdown'
+export const MARKDOWN_PACKAGE = '@gild-ui/react-markdown'
 
 /** The package an app imports a component from: its own, so the line on a page is the real one. */
 export const importPackageOf = (item: ComponentNavItem): string =>
@@ -255,10 +255,10 @@ export const categoryOf = (item: ComponentNavItem): string | undefined =>
 
 /**
  * The lowercase pages of the React package, each with the file of its `docs/` that is its page:
- * `/react/engine/` documents `@soroush.design/react/engine`. `catalog`, `engine` and `testing` are
+ * `/react/engine/` documents `@gild-ui/react/engine`. `catalog`, `engine` and `testing` are
  * entry points; `style`, `theme` and `utils` are pages whose URLs are indexed, and which stay,
  * though the names they document are entry points of their own now (`stylingEntries`) or live in
- * `@soroush.design/core` (`utils`). `routes.test.ts` holds this list to the package's entry points.
+ * `@gild-ui/core` (`utils`). `routes.test.ts` holds this list to the package's entry points.
  */
 export const entryGuides: Record<string, string> = {
   catalog: 'catalog.md',
@@ -270,7 +270,7 @@ export const entryGuides: Record<string, string> = {
 }
 
 /**
- * The names of the styling system, each an entry point of `@soroush.design/react` (`/useTheme`,
+ * The names of the styling system, each an entry point of `@gild-ui/react` (`/useTheme`,
  * `/styled`, ...), with the page that documents it: the theme's or the style's.
  */
 export const stylingEntries: Record<string, 'theme' | 'style'> = {
@@ -290,7 +290,7 @@ export const stylingEntries: Record<string, 'theme' | 'style'> = {
 }
 
 /**
- * The hooks of the hooks library (`@soroush.design/react-hooks`, `@soroush.design/react-hooks/useDebounce`),
+ * The hooks of the hooks library (`@gild-ui/hooks`, `@gild-ui/hooks/useDebounce`),
  * documented under the platform: the page of `useDebounce` is `/react/hooks/useDebounce/`, the
  * `## useDebounce` section of the library's README. `registry.test.ts` holds the list to the
  * library's entry points and README.

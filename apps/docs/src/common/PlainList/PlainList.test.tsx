@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { ThemeProvider } from '@soroush.design/react'
+import { ThemeProvider } from '@gild-ui/react'
 import { dark } from 'src/theme/themes'
 import { PlainList } from './PlainList'
 

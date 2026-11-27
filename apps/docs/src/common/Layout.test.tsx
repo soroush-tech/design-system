@@ -20,7 +20,7 @@ const renderLayout = (sidebar?: React.ReactNode, urlPathname = '/react/', hasToc
 describe('Layout', () => {
   it('renders the navbar, the content, and the footer', () => {
     renderLayout()
-    expect(screen.getByRole('link', { name: 'SOROUSH.DESIGN' })).toHaveAttribute('href', '/')
+    expect(screen.getByRole('link', { name: 'Gild UI' })).toHaveAttribute('href', '/')
     expect(screen.getByTestId('content')).toHaveTextContent('page content')
     expect(screen.getByRole('contentinfo')).toHaveTextContent('SOROUSH.TECH')
   })

@@ -1,6 +1,6 @@
 # My App
 
-A [Vike](https://vike.dev) app on the [@soroush.tech design system](https://docs.soroush.design):
+A [Vike](https://vike.dev) app on [Gild UI](https://gild-ui.soroush.design):
 every page prerendered to HTML at build time, with its styles, and no JavaScript in the browser.
 
 - `npm run dev` starts it, `npm run build` builds it, and `npm run preview` serves the build.
@@ -13,4 +13,4 @@ every page prerendered to HTML at build time, with its styles, and no JavaScript
 - [Vitest](https://vitest.dev) and [Testing Library](https://testing-library.com): `npm run test` runs `src/pages/index/Page.test.tsx`, which checks the title.
 
 Fonts: the theme names Space Grotesk and JetBrains Mono, and does not load them. See
-https://docs.soroush.design/react/installation/#fonts
+https://gild-ui.soroush.design/react/installation/#fonts

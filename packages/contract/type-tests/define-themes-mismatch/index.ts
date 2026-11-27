@@ -1,5 +1,5 @@
 // `dark` lacks the `brand` color `light` has: `defineThemes` rejects the pair, on its own line.
-import { baseTheme, createTheme, defineThemes } from '@soroush.design/core/theme'
+import { baseTheme, createTheme, defineThemes } from '@gild-ui/core/theme'
 
 const light = createTheme(baseTheme, {
   palette: {

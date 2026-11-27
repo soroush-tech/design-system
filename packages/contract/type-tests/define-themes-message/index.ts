@@ -1,6 +1,6 @@
 // The same pair as `define-themes-mismatch`, with no suppression: the program must fail, and
 // `expect-errors.txt` holds what its output must say, naming the theme and the key.
-import { baseTheme, createTheme, defineThemes } from '@soroush.design/core/theme'
+import { baseTheme, createTheme, defineThemes } from '@gild-ui/core/theme'
 
 const light = createTheme(baseTheme, {
   palette: {

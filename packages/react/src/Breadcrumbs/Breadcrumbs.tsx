@@ -13,7 +13,7 @@ import {
 import { alpha, styled } from '../style/styled'
 import { get } from '@soroush.tech/styled-system'
 import { useDefaultProps } from '../theme/hooks/useDefaultProps'
-import { themeDefault } from '@soroush.design/core/theme'
+import { themeDefault } from '@gild-ui/core/theme'
 import { Icon, type IconProps } from '../Icon'
 import { Typography, type TypographyProps, type TypographyVariant } from '../Typography'
 

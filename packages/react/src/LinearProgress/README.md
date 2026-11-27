@@ -50,7 +50,7 @@ Default: `4`.
 
 ### `value` / `min` / `max`
 
-`value` drives the primary bar for the `"determinate"` variant. It is clamped to `[min, max]` via `clamp` of `@soroush.design/core/utils` before rendering.
+`value` drives the primary bar for the `"determinate"` variant. It is clamped to `[min, max]` via `clamp` of `@gild-ui/core/utils` before rendering.
 
 | Prop    | Default                     |
 | ------- | --------------------------- |

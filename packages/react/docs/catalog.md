@@ -1,20 +1,20 @@
 # The component catalog
 
-`@soroush.design/react/catalog` describes every component as data, for tools that place
+`@gild-ui/react/catalog` describes every component as data, for tools that place
 and write components rather than render them: a design tool's component palette, a page's
 source writer, a generator. It ships with the package and is versioned with it, so a tool reads
 the catalog of the version it installed instead of keeping a copy that drifts.
 
 ```ts
-import { catalog } from '@soroush.design/react/catalog'
+import { catalog } from '@gild-ui/react/catalog'
 
-catalog.components.Select.module // '@soroush.design/react/Select'
+catalog.components.Select.module // '@gild-ui/react/Select'
 catalog.components.Select.example // { component: 'Select', props: { placeholder: ... }, children: [...] }
 catalog.components.Select.options.color // { scale: 'palette', default: 'primary' }
 catalog.styleScales.p // 'space'
 ```
 
-The data is `@soroush.design/core`'s - it needs no framework - and this library's `/catalog` adds the
+The data is `@gild-ui/core`'s - it needs no framework - and this library's `/catalog` adds the
 `module` each component is imported from. It is pure data. It loads in plain Node - no DOM, no React, no styling engine - and survives
 `JSON.stringify` unchanged.
 
@@ -49,7 +49,7 @@ writes into source: `{ component: 'MenuItem', props: { value: 'web' }, children:
 
 ## Adding a component's entry
 
-Each component's entry lives in `@soroush.design/core`, in `packages/core/src/catalog/entries/ComponentName.ts`:
+Each component's entry lives in `@gild-ui/core`, in `packages/core/src/catalog/entries/ComponentName.ts`:
 
 ```ts
 import { defineCatalogEntry } from '../defineCatalogEntry'
@@ -76,7 +76,7 @@ export const switchCatalog = defineCatalogEntry({
   library adds its module.
 - Its stories read their `args` from the example - `args: exampleArgs(switchCatalog.example)`
   (`src/utils/test/renderExample.tsx`) - and their option lists from the `*Values` arrays
-  (`@soroush.design/core/catalog/entries`, which `utils/test/storiesOptions.ts` re-exports
+  (`@gild-ui/core/catalog/entries`, which `utils/test/storiesOptions.ts` re-exports
   under the stories' names), so a story and the catalog can't disagree.
 
 The core's `catalog.test.ts` holds the catalog to the docs: every component the docs list has an

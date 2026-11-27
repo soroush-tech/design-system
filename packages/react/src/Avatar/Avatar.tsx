@@ -7,7 +7,7 @@ import { createShouldForwardProp, props } from '@soroush.tech/styled-system/shou
 import { system, variant as styledVariant } from '@soroush.tech/styled-system'
 import { useTheme } from '../theme/hooks/useTheme'
 import { Flex, type FlexProps } from '../Flex'
-import { themeDefault } from '@soroush.design/core/theme'
+import { themeDefault } from '@gild-ui/core/theme'
 
 export type AvatarVariant = 'circular' | 'rounded' | 'square'
 export type AvatarSize = keyof Theme['avatar']

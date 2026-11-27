@@ -5,7 +5,7 @@ Fades one child in and out by its opacity. The child holds a `ref` and takes a `
 Client component: its entry carries `'use client'`, so a server component can import and render it.
 
 ```tsx
-import { Fade } from '@soroush.design/react/Fade'
+import { Fade } from '@gild-ui/react/Fade'
 
 ;<Fade isShown={isOpen}>
   <Paper p={3}>Content</Paper>

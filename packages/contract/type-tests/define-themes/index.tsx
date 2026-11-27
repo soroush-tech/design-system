@@ -1,8 +1,8 @@
 // The registered themes reach every component and hook: a color or a look the theme adds is
 // accepted, a misspelling of one is not, and a custom token is typed.
-import { Button } from '@soroush.design/react/Button'
-import { Tabs } from '@soroush.design/react/Tabs'
-import { useTheme } from '@soroush.design/react/useTheme'
+import { Button } from '@gild-ui/react/Button'
+import { Tabs } from '@gild-ui/react/Tabs'
+import { useTheme } from '@gild-ui/react/useTheme'
 import '../shared/themes'
 
 export const Screen = () => {

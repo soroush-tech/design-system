@@ -1,4 +1,4 @@
-import { View } from '@soroush.design/react/View'
+import { View } from '@gild-ui/react/View'
 import { Outlet } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
 import { schemeChanged, type RootState } from '../state/store'

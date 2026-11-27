@@ -1,7 +1,7 @@
 # Command line
 
-`@soroush.design/cli` is the command line of the [`@soroush.tech`](https://docs.soroush.design)
-design system. It has two commands: `create` starts a new app on the design system - a working
+`@soroush.design/cli` is the command line of the [`@soroush.tech`](https://gild-ui.soroush.design)
+design system. It has two commands: `create` starts a new app on Gild UI - a working
 boilerplate with the theme, the providers and a few pages in place - and `init` sets the design
 system up in an existing React app.
 
@@ -134,7 +134,7 @@ installed, wired in, and with an example of its use - and each choice shows in t
   `src/state/counter`, or with Redux Toolkit two slices of `src/state/store`, whose provider wraps
   every page - in `PageShell` in a Vike app, in `src/main` in a React Router one.
 - **React Hook Form + Zod** (`react-hook-form`): a `/form` page, linked from the header, whose two
-  fields - the design system's `TextInput` - a Zod schema checks. Once they pass, it sends them
+  fields - Gild UI's `TextInput` - a Zod schema checks. Once they pass, it sends them
   through the data library, or to `src/data/api` with msw alone, and shows what came back.
 
 Every app has its tests, whatever it is asked: **Vitest + Testing Library** on jsdom, and
@@ -150,7 +150,7 @@ and a test checks the greeting it gives.
   `src/components/Header`, an app bar that sticks to the top: the title, the links, and the light
   and dark switch (`src/components/SchemeSwitch`). On a phone, the links take a row of their own.
 - `src/theme/themes` holds a `light` and a `dark` theme, as `init` writes them: make them your own.
-- `src/pages/+onRenderHtml` and `+onRenderClient` render the pages with the design system's
+- `src/pages/+onRenderHtml` and `+onRenderClient` render the pages with Gild UI's
   style cache. There is no renderer package to install.
 - `npm run dev` starts it, `npm run build` builds it, and `npm run preview` serves the build.
 
@@ -197,7 +197,7 @@ With sample data pages, it also shows how data gets onto a page, with no data li
   with no page, and a page that fails, show `src/pages/ErrorPage` in the layout.
 - `src/main` creates the router with `createBrowserRouter` and renders it in `index.html`'s
   `#root`. With msw, it starts the mock API first.
-- `src/components/RouterLink` is the design system's `Link` for a page of the app: a click moves
+- `src/components/RouterLink` is Gild UI's `Link` for a page of the app: a click moves
   to it with no reload, and a click that opens a new tab still does.
 - With sample data pages, `/items` and `/items/<id>` read `src/data/items` in their route's
   `loader`, which the router runs before it shows the page - an unknown id shows the error page.
@@ -206,7 +206,7 @@ With sample data pages, it also shows how data gets onto a page, with no data li
   build. A host serves `dist/` once it answers every path with `index.html`.
 
 The switch does not remember the scheme across a reload, and the theme's fonts are not loaded: see
-the [fonts guide](https://docs.soroush.design/react/installation/#fonts).
+the [fonts guide](https://gild-ui.soroush.design/react/installation/#fonts).
 
 ## Set up an existing app: `init`
 
@@ -216,7 +216,7 @@ Run it in your app's folder, or in a workspace's root that holds one app:
 npx @soroush.design/cli init
 ```
 
-It installs `@soroush.design/react`, the version the command line was released next to, and checks
+It installs `@gild-ui/react`, the version the command line was released next to, and checks
 your React against its range.
 
 | Option            | What it does                                 |
@@ -235,7 +235,7 @@ App), in TypeScript or JavaScript:
 - It writes `src/theme/themes` (a `light` and a `dark` theme, each a `createTheme(baseTheme,
   {...})` call you edit) and `src/theme/Providers` (`ThemeProvider` with the base page styles).
 - It wraps what your root renders in `<Providers>`.
-- It installs `@soroush.design/react` with your own package manager.
+- It installs `@gild-ui/react` with your own package manager.
 
 It is careful with your app:
 
@@ -246,9 +246,9 @@ It is careful with your app:
   `createRoot(...).render(` or `ReactDOM.render(` call. Otherwise it prints the lines to add.
 - When a write fails, it takes back every change it made. The install runs last, with no scripts.
 - A second run finds its own files and changes nothing, and an app that already has
-  `@soroush.design/react` gets no install.
-- It checks your React against the design system's peer range, and never upgrades React.
+  `@gild-ui/react` gets no install.
+- It checks your React against Gild UI's peer range, and never upgrades React.
 - It reaches no network but the install.
 
 Next.js, Vike and React Router apps are refused for now, with a pointer to the
-[setup guide](https://docs.soroush.design/react/installation/).
+[setup guide](https://gild-ui.soroush.design/react/installation/).

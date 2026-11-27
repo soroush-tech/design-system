@@ -1,9 +1,9 @@
-import { Typography } from '@soroush.design/react/Typography'
+import { Typography } from '@gild-ui/react/Typography'
 import { DocsNav } from 'src/common/DocsNav/DocsNav'
 import { Layout } from 'src/common/Layout'
 import { Readme } from 'src/common/Readme/Readme'
 
-const SOURCE = `The style-prop engine under the design system: responsive props, theme scales and
+const SOURCE = `The style-prop engine under Gild UI: responsive props, theme scales and
 variants for any component of yours. It lives in its own repository, with its own docs and releases.
 
 \`\`\`sh

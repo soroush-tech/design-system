@@ -7,7 +7,7 @@ import { styled } from '../style/styled'
 import { type Theme } from '../theme/themes'
 import { get, space } from '@soroush.tech/styled-system'
 import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
-import { themeDefault, type PaletteColor } from '@soroush.design/core/theme'
+import { themeDefault, type PaletteColor } from '@gild-ui/core/theme'
 
 export type CheckboxColor = PaletteColor
 export type CheckboxSize = keyof Theme['sizes']

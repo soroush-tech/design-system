@@ -28,7 +28,7 @@ import { getNextEnabledIndex, getEdgeEnabledIndex } from './utils/getNextEnabled
 import { isOptionSelected, type SelectValue } from './utils/isOptionSelected'
 import { computeNextValue } from './utils/computeNextValue'
 import { resolveDisplayLabel } from './utils/resolveDisplayLabel'
-import { themeDefault } from '@soroush.design/core/theme'
+import { themeDefault } from '@gild-ui/core/theme'
 import { getFocusRing, getInputMinWidth } from '../utils/inputStyles'
 
 export type { SelectValue }

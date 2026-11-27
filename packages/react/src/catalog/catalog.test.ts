@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { catalog as core } from '@soroush.design/core/catalog'
+import { catalog as core } from '@gild-ui/core/catalog'
 import { baseTheme } from '../theme/themes'
 import { catalog } from './index'
 import { DESIGN_SYSTEM_SCALES, readStyleScales } from './styleScales'
@@ -18,7 +18,7 @@ describe('catalog', () => {
     for (const entry of entries) {
       const { subpath, ...neutral } = core.components[entry.name]
       const { module, ...rest } = entry
-      expect(module).toBe(`@soroush.design/react/${subpath}`)
+      expect(module).toBe(`@gild-ui/react/${subpath}`)
       expect(rest).toEqual(neutral)
     }
   })
@@ -30,7 +30,7 @@ describe('catalog', () => {
   })
 
   it.each(entries)("names $name's module, which the package exports, and its category", (entry) => {
-    const subpath = entry.module.replace('@soroush.design/react', '.')
+    const subpath = entry.module.replace('@gild-ui/react', '.')
     expect(pkg.exports[subpath]).toBeDefined()
     expect(catalog.categories.map((category) => category.label)).toContain(entry.category)
   })

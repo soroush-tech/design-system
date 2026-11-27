@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react'
 import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
-import { ThemeProvider } from '@soroush.design/react'
-import { createTheme, baseTheme } from '@soroush.design/core/theme'
-import { syntaxDark } from '@soroush.design/react-markdown/CodeBlock'
+import { ThemeProvider } from '@gild-ui/react'
+import { createTheme, baseTheme } from '@gild-ui/core/theme'
+import { syntaxDark } from '@gild-ui/react-markdown/CodeBlock'
 import type { ControlModel } from '../../utils/controlsFor'
 import { ControlsPanel } from './ControlsPanel'
 

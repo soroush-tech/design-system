@@ -12,7 +12,7 @@ import type {
  * result, and the types of every library that reads it - React, React Native, Vue - follow:
  *
  *   export const themes = defineThemes({ light, dark }, components)
- *   declare module '@soroush.design/core/theme' { interface Register { themes: typeof themes } }
+ *   declare module '@gild-ui/core/theme' { interface Register { themes: typeof themes } }
  *
  * The block holds no key of its own: what the theme VALUES add - a palette color, a size, a look in
  * `components.X.variants` - is what the types accept.

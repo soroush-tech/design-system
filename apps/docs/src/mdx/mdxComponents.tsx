@@ -1,8 +1,8 @@
 import type { MDXComponents } from 'mdx/types'
-import { Checkbox } from '@soroush.design/react/Checkbox'
-import { Image } from '@soroush.design/react/Image'
-import { Link } from '@soroush.design/react/Link'
-import { Quote } from '@soroush.design/react/Quote'
+import { Checkbox } from '@gild-ui/react/Checkbox'
+import { Image } from '@gild-ui/react/Image'
+import { Link } from '@gild-ui/react/Link'
+import { Quote } from '@gild-ui/react/Quote'
 import {
   Table,
   TableBody,
@@ -10,10 +10,10 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-} from '@soroush.design/react/Table'
-import { Typography } from '@soroush.design/react/Typography'
-import { View } from '@soroush.design/react/View'
-import { CodeBlock } from '@soroush.design/react-markdown/CodeBlock'
+} from '@gild-ui/react/Table'
+import { Typography } from '@gild-ui/react/Typography'
+import { View } from '@gild-ui/react/View'
+import { CodeBlock } from '@gild-ui/react-markdown/CodeBlock'
 import { MdxReadme } from './MdxReadme'
 
 /**

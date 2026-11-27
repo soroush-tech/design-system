@@ -1,5 +1,5 @@
-import { View } from '@soroush.design/react/View'
-import { Preview } from '@soroush.design/react-markdown/Preview'
+import { View } from '@gild-ui/react/View'
+import { Preview } from '@gild-ui/react-markdown/Preview'
 import type { DocsSection } from 'src/common/nav'
 import { releaseNotesFor } from './utils/releaseNotesFor'
 import { titleByVersion } from './utils/titleByVersion'

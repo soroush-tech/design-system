@@ -8,8 +8,8 @@ import { createShouldForwardProp, props } from '@soroush.tech/styled-system/shou
 import { get, space } from '@soroush.tech/styled-system'
 import { useDefaultProps } from '../theme/hooks/useDefaultProps'
 import { Icon } from '../Icon'
-import { themeDefault } from '@soroush.design/core/theme'
-import { getShapeRadius, type Shape } from '@soroush.design/core/utils'
+import { themeDefault } from '@gild-ui/core/theme'
+import { getShapeRadius, type Shape } from '@gild-ui/core/utils'
 
 export type ChipVariant = 'contained' | 'outlined' | 'text'
 export type ChipColor = keyof Theme['palette']

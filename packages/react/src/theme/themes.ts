@@ -1,5 +1,5 @@
 import type { CSSObject as EngineCSSObject } from '@umber-style/react'
-import { baseTheme as coreBaseTheme } from '@soroush.design/core/theme'
+import { baseTheme as coreBaseTheme } from '@gild-ui/core/theme'
 import type { ThemeComponents } from './components'
 
 export type { ThemeComponents }
@@ -9,7 +9,7 @@ import type {
   Register,
   RegisteredTheme,
   Theme as CoreTheme,
-} from '@soroush.design/core/theme'
+} from '@gild-ui/core/theme'
 
 /** Design-system's own style-object shape - the engine stays an internal implementation detail. */
 export type CSSObject = EngineCSSObject

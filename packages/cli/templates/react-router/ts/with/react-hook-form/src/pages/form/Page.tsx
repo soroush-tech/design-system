@@ -10,10 +10,10 @@ import { Controller, useForm } from 'react-hook-form'
 import useSWRMutation from 'swr/mutation'
 // @endif
 import { z } from 'zod'
-import { Button } from '@soroush.design/react/Button'
-import { Flex } from '@soroush.design/react/Flex'
-import { TextInput } from '@soroush.design/react/TextInput'
-import { Typography } from '@soroush.design/react/Typography'
+import { Button } from '@gild-ui/react/Button'
+import { Flex } from '@gild-ui/react/Flex'
+import { TextInput } from '@gild-ui/react/TextInput'
+import { Typography } from '@gild-ui/react/Typography'
 // @if tanstack-query || swr || msw
 import { sendMessage } from '../../data/api'
 // @endif

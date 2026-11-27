@@ -6,7 +6,7 @@ import { createShouldForwardProp, props } from '@soroush.tech/styled-system/shou
 import { space, layout } from '@soroush.tech/styled-system'
 import type { ButtonColor } from '../Button'
 import { clamp } from '../utils'
-import { themeDefault } from '@soroush.design/core/theme'
+import { themeDefault } from '@gild-ui/core/theme'
 
 export type CircularProgressVariant = 'indeterminate' | 'determinate'
 export type CircularProgressColor = ButtonColor | 'inherit'

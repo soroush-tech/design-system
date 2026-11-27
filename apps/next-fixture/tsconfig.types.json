@@ -4,10 +4,10 @@
     "plugins": [],
     "incremental": false,
     "paths": {
-      "@soroush.design/core/*": ["../../packages/core/dist/*.d.mts"],
-      "@soroush.design/react-hooks/*": ["../../packages/react-hooks/dist/*.d.mts"],
-      "@soroush.design/react": ["../../packages/react/dist/index.d.mts"],
-      "@soroush.design/react/*": ["../../packages/react/dist/*.d.mts"]
+      "@gild-ui/core/*": ["../../packages/core/dist/*.d.mts"],
+      "@gild-ui/hooks/*": ["../../packages/hooks/dist/*.d.mts"],
+      "@gild-ui/react": ["../../packages/react/dist/index.d.mts"],
+      "@gild-ui/react/*": ["../../packages/react/dist/*.d.mts"]
     }
   },
   "include": ["next-env.d.ts", "app/**/*.ts", "app/**/*.tsx", "e2e/**/*.ts", "*.ts"]

@@ -6,7 +6,7 @@ import { system, layout, space } from '@soroush.tech/styled-system'
 import { useTheme } from '../theme/hooks/useTheme'
 import { type TextColorToken } from '../Typography'
 import { icons, type IconName } from './icons'
-import { themeDefault, type ThemeIconSizes } from '@soroush.design/core/theme'
+import { themeDefault, type ThemeIconSizes } from '@gild-ui/core/theme'
 
 export interface IconProps
   extends

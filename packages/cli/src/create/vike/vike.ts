@@ -1,4 +1,4 @@
-// The Vike starter: a React app on the design system, rendered as the developer picks. Its files
+// The Vike starter: a React app on Gild UI, rendered as the developer picks. Its files
 // are the templates in templates/vike/ (see templates/templates.md); this module adds what is
 // computed: package.json, from the libraries picked, and the themes and Providers `init` writes
 // too. The Vike wiring here is the one `init` reuses for an existing Vike app (#80).

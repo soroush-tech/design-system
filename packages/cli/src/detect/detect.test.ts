@@ -18,7 +18,7 @@ import {
   satisfiesRange,
 } from './detect'
 
-// The design system's own folder in this workspace.
+// Gild UI's own folder in this workspace.
 const DESIGN_SYSTEM_FOLDER = join(process.cwd(), '../react')
 
 describe('readText and readPackageJson', () => {
@@ -122,7 +122,7 @@ describe('satisfiesRange', () => {
     expect(satisfiesRange('18.3.0', '^18.2.5')).toBe(true)
   })
 
-  it("reads the design system's peer range, and throws on a shape it does not read", () => {
+  it("reads Gild UI's peer range, and throws on a shape it does not read", () => {
     const { peerDependencies } = readPackageJson(DESIGN_SYSTEM_FOLDER)!
     expect(satisfiesRange('19.2.8', peerDependencies!.react)).toBe(true)
     expect(() => satisfiesRange('19.0.0', '>=18')).toThrow('init cannot read the range >=18')

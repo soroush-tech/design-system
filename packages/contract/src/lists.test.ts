@@ -68,14 +68,14 @@ describe('the lists of the contract', () => {
 
   it.each(LISTED)('%s is sorted, without duplicates, and named for its package', (name) => {
     const list = read(name)
-    expect(list.package).toBe(`@soroush.design/${name}`)
+    expect(list.package).toBe(`@gild-ui/${name}`)
     for (const { values, types } of Object.values(list.entries)) {
       expect(values).toEqual([...new Set(values)].sort())
       expect(types).toEqual([...new Set(types)].sort())
     }
   })
 
-  it('@soroush.design/react has no entry point the owner removed', () => {
+  it('@gild-ui/react has no entry point the owner removed', () => {
     const entries = Object.keys(read('react').entries)
     for (const removed of ['./theme', './style', './utils']) expect(entries).not.toContain(removed)
     expect(
@@ -83,10 +83,10 @@ describe('the lists of the contract', () => {
     ).toBe(false)
   })
 
-  it('the paths program imports the root and every subpath of @soroush.design/react', () => {
+  it('the paths program imports the root and every subpath of @gild-ui/react', () => {
     const program = readFileSync(join(contractDir, 'type-tests', 'paths', 'index.ts'), 'utf8')
     for (const entry of Object.keys(read('react').entries)) {
-      expect(program).toContain(`'@soroush.design/react${entry === '.' ? '' : entry.slice(1)}'`)
+      expect(program).toContain(`'@gild-ui/react${entry === '.' ? '' : entry.slice(1)}'`)
     }
   })
 })

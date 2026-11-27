@@ -10,7 +10,7 @@ import {
 import { View } from '../View'
 import { exampleArgs } from '../utils/test/renderExample'
 import { Flex } from './Flex'
-import { flexCatalog } from '@soroush.design/core/catalog/entries'
+import { flexCatalog } from '@gild-ui/core/catalog/entries'
 
 const meta: Meta<typeof Flex> = {
   title: 'Theme/Flex',

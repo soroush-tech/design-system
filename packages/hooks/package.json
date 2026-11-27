@@ -1,7 +1,7 @@
 {
-  "name": "@soroush.design/react-hooks",
+  "name": "@gild-ui/hooks",
   "version": "0.1.0",
-  "description": "The React hooks of the soroush.design family that belong to no component and no theme - copy to the clipboard, a stable event callback, merged refs, a controlled-or-not value, a debounced value.",
+  "description": "The React hooks of the Gild UI family that belong to no component and no theme - copy to the clipboard, a stable event callback, merged refs, a controlled-or-not value, a debounced value.",
   "keywords": [
     "react",
     "hooks",
@@ -12,14 +12,14 @@
   ],
   "author": "Masoud Soroush <masoud@soroush.tech>",
   "license": "MIT",
-  "homepage": "https://docs.soroush.design/react/hooks/",
+  "homepage": "https://gild-ui.soroush.design/react/hooks/",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/soroush-tech/design-system.git",
-    "directory": "packages/react-hooks"
+    "url": "git+https://github.com/soroush-tech/gild-ui.git",
+    "directory": "packages/hooks"
   },
   "bugs": {
-    "url": "https://github.com/soroush-tech/design-system/issues"
+    "url": "https://github.com/soroush-tech/gild-ui/issues"
   },
   "type": "module",
   "sideEffects": false,

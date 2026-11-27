@@ -9,7 +9,7 @@ built-in English.
 Client component: its entry carries `'use client'`, so a server component can import and render it.
 
 ```tsx
-import { Tooltip } from '@soroush.design/react/Tooltip'
+import { Tooltip } from '@gild-ui/react/Tooltip'
 
 ;<Tooltip title="Save the page" placement="bottom" hasArrow>
   <IconButton aria-label="Save">...</IconButton>

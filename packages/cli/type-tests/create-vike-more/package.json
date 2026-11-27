@@ -11,8 +11,8 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@soroush.design/react": "^0.1.0",
-    "@soroush.design/core": "^0.1.0",
+    "@gild-ui/react": "^0.1.0",
+    "@gild-ui/core": "^0.1.0",
     "@umber-style/server": "^0.8.0",
     "swr": "^2.5.1",
     "@reduxjs/toolkit": "^2.14.0",

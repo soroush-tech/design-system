@@ -64,10 +64,10 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 
 ## Critical conventions
 
-- **Design-system imports:** Consumers - `@soroush.design/react-markdown` included - import UI primitives and the styling system from `@soroush.design/react` (`@soroush.design/react/X` for a component, the root for `styled`, `css`, `ThemeProvider`, `useTheme`, ...), the theme (`baseTheme`, `createTheme`, `defineThemes`, the `Theme` type) from `@soroush.design/core/theme`, hooks from `@soroush.design/react-hooks/X`, and the style-prop functions from `@soroush.tech/styled-system`. Markdown is `@soroush.design/react-markdown/X`. No package re-exports another.
+- **Design-system imports:** Consumers - `@gild-ui/react-markdown` included - import UI primitives and the styling system from `@gild-ui/react` (`@gild-ui/react/X` for a component, the root for `styled`, `css`, `ThemeProvider`, `useTheme`, ...), the theme (`baseTheme`, `createTheme`, `defineThemes`, the `Theme` type) from `@gild-ui/core/theme`, hooks from `@gild-ui/hooks/X`, and the style-prop functions from `@soroush.tech/styled-system`. Markdown is `@gild-ui/react-markdown/X`. No package re-exports another.
 - **Theme tokens:** The design-system ships a single hex-inlined `baseTheme` - the **only** place hex values are allowed in the package - for its tests, stories, and npm consumers. Everything else styles through theme tokens; consumers build brand themes with `createTheme(baseTheme, ...)`.
 - **SSR guard:** Never import browser-only APIs at module top level - guard with `typeof window !== 'undefined'` or move into effects. These packages are consumed by SSR apps.
-- **Styled-system:** Use `Flex`, `View`, `Typography` over raw `div`/`p` for layout, from `@soroush.design/react`.
+- **Styled-system:** Use `Flex`, `View`, `Typography` over raw `div`/`p` for layout, from `@gild-ui/react`.
 - **Test placement:** Co-located next to source. Unit → `*.test.ts(x)` (vitest). Integration → `*.spec.ts(x)` (vitest). Real-browser tier → `*.browser.test.ts(x)` (vitest + Chromium, only for what jsdom can't run).
 - **Lint:** `pnpm lint` runs `oxlint --deny-warnings` - any warning fails. Formatting is not
   linted; `oxfmt` owns it, via `pnpm format` and the `format:check` gate in CI.
@@ -84,8 +84,8 @@ Read the relevant doc before working in that area:
 | Markdown package      | `packages/react-markdown/markdown.md` | Companion component library - **follows design-system.md verbatim** + packages.md; theme-slot augmentation, lazy mermaid |
 | Theming/customization | `packages/react/docs/`                | `theming.md` (createTheme, defaults, augmentation) · `customization.md` (`theme.components`)                             |
 | Packages              | `packages/packages.md`                | Workspace packages: structure, default-export, tsdown + `publishConfig` publishing, 100% coverage, licensing             |
-| Docs app              | `apps/docs/docs-app.md`               | The docs.soroush.design Vike SSG app: content pipeline, demos, versioned sections, e2e-only pages                        |
-| Command line          | `packages/cli/cli.md`                 | `init`: detect, plan, apply; its safety rules, and how the design system's bin runs it                                   |
+| Docs app              | `apps/docs/docs-app.md`               | The gild-ui.soroush.design Vike SSG app: content pipeline, demos, versioned sections, e2e-only pages                     |
+| Command line          | `packages/cli/cli.md`                 | `init`: detect, plan, apply; its safety rules, and how Gild UI's bin runs it                                             |
 | AI surface            | `packages/mcp/mcp.md`                 | The MCP server, llms.txt, and the Claude Code plugin: what they serve, and the generated files that must not drift       |
 | Generative-UI spec    | `packages/ui-spec/ui-spec.md`         | A2UI v1.0 catalogs, the behavior document, the validators: vendored files that stay unedited, closed finding codes       |
 

@@ -1,6 +1,6 @@
 import { createInstance } from '@umber-style/server/create-instance'
 import { renderToString } from 'react-dom/server'
-import { styleCache } from '@soroush.design/react/engine'
+import { styleCache } from '@gild-ui/react/engine'
 import { dangerouslySkipEscape, escapeInject } from 'vike/server'
 import type { OnRenderHtmlSync } from 'vike/types'
 import { PageShell } from './PageShell'

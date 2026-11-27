@@ -302,12 +302,12 @@ jobs:
 
       - name: Run Unit Tests
         run: |
-          pnpm --filter @soroush.design/react exec vitest run --project=unit
-          pnpm --filter @soroush.design/react-markdown test
+          pnpm --filter @gild-ui/react exec vitest run --project=unit
+          pnpm --filter @gild-ui/react-markdown test
 
-  # The apps `create` starts (packages/cli): the design system and the cli are packed from this
+  # The apps `create` starts (packages/cli): Gild UI and the cli are packed from this
   # checkout, an app is created on them, then typechecked, built and served, and its server HTML
-  # checked for the design system's styles. One row per language, each with another package
+  # checked for Gild UI's styles. One row per language, each with another package
   # manager.
   create-smoke:
     needs: [prepare, lint]
@@ -509,8 +509,8 @@ jobs:
       - name: Build the packages the fixture uses
         run: >-
           ${{ needs.prepare.outputs.runner }}
-          --filter @soroush.design/core --filter @soroush.design/react-hooks
-          --filter @soroush.design/react build
+          --filter @gild-ui/core --filter @gild-ui/hooks
+          --filter @gild-ui/react build
 
       - name: Check types
         run: ${{ needs.prepare.outputs.runner }} --filter @soroush.design/next-fixture test:types

@@ -38,12 +38,7 @@ describe('planInit', () => {
     expect(plan.edits[0].after).toContain("import { Providers } from './theme/Providers.ts'")
     expect(plan.install).toEqual({
       command: 'pnpm',
-      args: [
-        'add',
-        '@soroush.design/react@^0.1.0',
-        '@soroush.design/core@^0.1.0',
-        '--ignore-scripts',
-      ],
+      args: ['add', '@gild-ui/react@^0.1.0', '@gild-ui/core@^0.1.0', '--ignore-scripts'],
       env: {},
     })
     expect(plan.skips).toEqual([])
@@ -122,7 +117,7 @@ describe('planInit', () => {
       },
     ])
     expect(plan.manual).toEqual([
-      'Set up the theme by hand: https://docs.soroush.design/react/installation/',
+      'Set up the theme by hand: https://gild-ui.soroush.design/react/installation/',
     ])
     // The package is still installed.
     expect(plan.install).toBeDefined()
@@ -172,7 +167,7 @@ describe('planInit', () => {
 it('asks a Parcel app to read package exports, and edits no bundler config', () => {
   const plan = planInit(createFacts({ needsParcelPackageExports: true }))
   expect(plan.manual).toEqual([
-    'Parcel finds @soroush.design/core/theme and the subpaths of @soroush.design/react only once it reads package exports. Add to package.json: "@parcel/resolver-default": { "packageExports": true }',
+    'Parcel finds @gild-ui/core/theme and the subpaths of @gild-ui/react only once it reads package exports. Add to package.json: "@parcel/resolver-default": { "packageExports": true }',
   ])
   expect(plan.edits.map((edit) => edit.path)).toEqual(['src/main.tsx'])
 })
@@ -181,18 +176,13 @@ describe('createInstallCommand', () => {
   it("uses the app's package manager and runs no scripts", () => {
     expect(createInstallCommand({ name: 'npm', isYarnBerry: false }, '0.1.0')).toEqual({
       command: 'npm',
-      args: [
-        'install',
-        '@soroush.design/react@^0.1.0',
-        '@soroush.design/core@^0.1.0',
-        '--ignore-scripts',
-      ],
+      args: ['install', '@gild-ui/react@^0.1.0', '@gild-ui/core@^0.1.0', '--ignore-scripts'],
       env: {},
     })
     expect(createInstallCommand({ name: 'yarn', isYarnBerry: false }, '0.1.0').args).toEqual([
       'add',
-      '@soroush.design/react@^0.1.0',
-      '@soroush.design/core@^0.1.0',
+      '@gild-ui/react@^0.1.0',
+      '@gild-ui/core@^0.1.0',
       '--ignore-scripts',
     ])
     expect(createInstallCommand({ name: 'bun', isYarnBerry: false }, '0.1.0').command).toBe('bun')
@@ -201,14 +191,14 @@ describe('createInstallCommand', () => {
   it('turns scripts off for Yarn 2 and later through its setting, which takes no flag', () => {
     expect(createInstallCommand({ name: 'yarn', isYarnBerry: true }, '0.1.0')).toEqual({
       command: 'yarn',
-      args: ['add', '@soroush.design/react@^0.1.0', '@soroush.design/core@^0.1.0'],
+      args: ['add', '@gild-ui/react@^0.1.0', '@gild-ui/core@^0.1.0'],
       env: { YARN_ENABLE_SCRIPTS: 'false' },
     })
   })
 
   it('pins a prerelease exactly', () => {
     expect(createInstallCommand({ name: 'npm', isYarnBerry: false }, '0.1.0-alpha.1').args[1]).toBe(
-      '@soroush.design/react@0.1.0-alpha.1'
+      '@gild-ui/react@0.1.0-alpha.1'
     )
   })
 })

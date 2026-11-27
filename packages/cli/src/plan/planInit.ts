@@ -44,16 +44,16 @@ export interface InitFacts {
   /** A Parcel app that does not read package exports yet. */
   needsParcelPackageExports: boolean
   packageManager: PackageManager
-  /** The version of the design system the app gets. */
+  /** The version of Gild UI the app gets. */
   version: string
   scheme: Scheme
   /** A file's content, by its path from the app's root, or `undefined` when there is none. */
   readFile: (path: string) => string | undefined
 }
 
-const SETUP_DOCS = 'https://docs.soroush.design/react/installation/'
+const SETUP_DOCS = 'https://gild-ui.soroush.design/react/installation/'
 
-/** The command that adds the design system with the app's own package manager, running no scripts. */
+/** The command that adds Gild UI with the app's own package manager, running no scripts. */
 export function createInstallCommand(
   { name, isYarnBerry }: PackageManager,
   version: string

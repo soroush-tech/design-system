@@ -5,10 +5,10 @@ import { TableContext } from '../TableContext'
 import type { SpaceProps, BorderProps } from '@soroush.tech/styled-system'
 import { styled } from '../../style/styled'
 import { type Theme } from '../../theme/themes'
-import { type PaletteColor } from '@soroush.design/core/theme'
+import { type PaletteColor } from '@gild-ui/core/theme'
 import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
 import { space, border, system } from '@soroush.tech/styled-system'
-import { themeDefault } from '@soroush.design/core/theme'
+import { themeDefault } from '@gild-ui/core/theme'
 
 /** Palette color driving the hover/selected shading - a `theme.palette` key. */
 export type TableRowColor = PaletteColor

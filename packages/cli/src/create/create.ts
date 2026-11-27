@@ -514,7 +514,7 @@ function formatHeadline({
 }
 
 /**
- * Starts a new app on the design system, in a new or empty folder in `io.cwd`: asks what it is
+ * Starts a new app on Gild UI, in a new or empty folder in `io.cwd`: asks what it is
  * not told, plans with the starter, shows the plan, and writes and installs only after a yes.
  * Returns the exit code.
  */

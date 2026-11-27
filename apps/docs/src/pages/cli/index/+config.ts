@@ -5,5 +5,5 @@ export default {
   prerender: sectionPrerender('cli'),
   title: 'Command line',
   description:
-    'npx @soroush.design/cli init sets the design system up in an existing React app, showing every change first.',
+    'npx @soroush.design/cli init sets Gild UI up in an existing React app, showing every change first.',
 } satisfies Config

@@ -1,6 +1,6 @@
 # __TITLE__
 
-An [Astro](https://astro.build) app on the [@soroush.tech design system](https://docs.soroush.design):
+An [Astro](https://astro.build) app on [Gild UI](https://gild-ui.soroush.design):
 <!-- @if ssr -->
 every page is rendered on the server, on each request, with its styles, and its parts are
 React islands that hydrate in the browser. Astro's client router moves between pages with no
@@ -27,7 +27,7 @@ React parts render at build time only.
   `src/theme/scheme.ts`, not context.
 - The home page's counter is an island of its own, which renders in the browser only
   (`client:only`), so the count it shows is the one in memory, not the build's.
-- `src/layouts/Layout.astro` keeps the design system's styles as the client router moves
+- `src/layouts/Layout.astro` keeps Gild UI's styles as the client router moves
   between pages.
 <!-- @endif -->
 - `src/theme/themes.ts` holds the light and the dark theme: make them your own.
@@ -87,4 +87,4 @@ React parts render at build time only.
 <!-- @endif -->
 
 Fonts: the theme names Space Grotesk and JetBrains Mono, and does not load them. See
-https://docs.soroush.design/react/installation/#fonts
+https://gild-ui.soroush.design/react/installation/#fonts

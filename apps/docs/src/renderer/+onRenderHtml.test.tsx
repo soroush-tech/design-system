@@ -14,7 +14,7 @@ vi.mock('vike/server', () => ({
   dangerouslySkipEscape: (s: string) => s,
 }))
 vi.mock('../common/Bootstrap', () => ({ Bootstrap: () => null }))
-vi.mock('@soroush.design/react/engine', () => ({ styleCache: { key: 'soroush' } }))
+vi.mock('@gild-ui/react/engine', () => ({ styleCache: { key: 'soroush' } }))
 
 import { onRenderHtml } from './+onRenderHtml'
 import { createInstance } from '@umber-style/server/create-instance'
@@ -60,7 +60,7 @@ describe('+onRenderHtml', () => {
 
   it('injects the default site title when there is no page meta', async () => {
     const result = (await onRenderHtml({} as never)) as unknown as { __html: string }
-    expect(result.__html).toContain('<title data-mh>SOROUSH.DESIGN</title>')
+    expect(result.__html).toContain('<title data-mh>Gild UI</title>')
   })
 
   it('injects page SEO meta from pageContext config and url', async () => {
@@ -69,9 +69,9 @@ describe('+onRenderHtml', () => {
       urlPathname: '/about',
     }
     const result = (await onRenderHtml(pageContext as never)) as unknown as { __html: string }
-    expect(result.__html).toContain('<title data-mh>About · SOROUSH.DESIGN</title>')
+    expect(result.__html).toContain('<title data-mh>About · Gild UI</title>')
     expect(result.__html).toContain(
-      '<link rel="canonical" href="https://docs.soroush.design/about/" data-mh />'
+      '<link rel="canonical" href="https://gild-ui.soroush.design/about/" data-mh />'
     )
   })
 })

@@ -7,5 +7,5 @@ export default {
   prerender: !docsSection(),
   title: 'Packages',
   description:
-    'The @soroush.tech packages: the design system, markdown, styled-system, the MCP server and the UI spec - with their docs, npm pages and source.',
+    'The @soroush.tech packages: Gild UI, markdown, styled-system, the MCP server and the UI spec - with their docs, npm pages and source.',
 } satisfies Config

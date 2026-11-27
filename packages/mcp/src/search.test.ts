@@ -10,15 +10,15 @@ const bundle: ContentBundle = {
       name: 'Button',
       slug: 'button',
       pkg: 'design-system',
-      packageName: '@soroush.design/react',
+      packageName: '@gild-ui/react',
       category: 'Inputs & forms',
-      importPath: "import { Button } from '@soroush.design/react/Button'",
+      importPath: "import { Button } from '@gild-ui/react/Button'",
       summary: 'Renders as a button.',
       intro:
         'A pressable control used across forms, toolbars, dialogs, cards and page headers, appearing just about everywhere in the app.',
       api: '## Props\n\nvariant, color, size.',
       examples: '',
-      url: 'https://docs.soroush.design/react/Button/',
+      url: 'https://gild-ui.soroush.design/react/Button/',
     },
   ],
   docs: [

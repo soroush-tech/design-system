@@ -1,5 +1,5 @@
-import { Global } from '@soroush.design/react/Global'
-import { ThemeProvider } from '@soroush.design/react/ThemeProvider'
+import { Global } from '@gild-ui/react/Global'
+import { ThemeProvider } from '@gild-ui/react/ThemeProvider'
 import { StyleRegistry } from '@umber-style/react/next'
 import { cookies } from 'next/headers'
 import type { ReactNode } from 'react'

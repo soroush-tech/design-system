@@ -9,9 +9,9 @@ menu's own box in the DOM, so focus moving inside it is still focus inside the m
 Client component: its entry carries `'use client'`, so a server component can import and render it.
 
 ```tsx
-import { Menu, MenuDivider } from '@soroush.design/react/Menu'
-import { MenuItem } from '@soroush.design/react/MenuItem'
-import { Button } from '@soroush.design/react/Button'
+import { Menu, MenuDivider } from '@gild-ui/react/Menu'
+import { MenuItem } from '@gild-ui/react/MenuItem'
+import { Button } from '@gild-ui/react/Button'
 
 ;<Menu trigger={<Button variant="text">main</Button>} onSelect={run}>
   <MenuItem value="new">New branch...</MenuItem>

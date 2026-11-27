@@ -1,5 +1,5 @@
 // With no registration the colors are the built-in ones; the error names a color that is not.
-import { Button } from '@soroush.design/react/Button'
+import { Button } from '@gild-ui/react/Button'
 
 export const Screen = () => (
   <>

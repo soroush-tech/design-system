@@ -1,5 +1,5 @@
 import { act, renderHook } from '@testing-library/react'
-import { useTheme } from '@soroush.design/react'
+import { useTheme } from '@gild-ui/react'
 import { describe, it, expect } from 'vitest'
 import type { ReactNode } from 'react'
 import { dark, light } from 'src/theme/themes'

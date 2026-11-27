@@ -19,7 +19,7 @@ import { useFormControl } from '../FormControl'
 import { FormControlContext } from '../FormControl/FormControlContext'
 import { Icon } from '../Icon'
 import { useRating } from './hooks/useRating'
-import { roundToPrecision } from '@soroush.design/core/utils'
+import { roundToPrecision } from '@gild-ui/core/utils'
 
 export interface RatingProps extends SpaceProps<Theme> {
   /** The rating - `null` for none. Controlled with `onChange`. */

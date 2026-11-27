@@ -1,18 +1,18 @@
-# @soroush.design/react-hooks
+# @gild-ui/hooks
 
-[![npm version](https://img.shields.io/npm/v/@soroush.design/react-hooks.svg?cacheSeconds=86400)](https://www.npmjs.com/package/@soroush.design/react-hooks)
-[![coverage](https://codecov.io/gh/soroush-tech/design-system/branch/main/graph/badge.svg?flag=react-hooks)](https://app.codecov.io/gh/soroush-tech/design-system?flags%5B0%5D=react-hooks)
-[![license](https://img.shields.io/npm/l/@soroush.design/react-hooks.svg?cacheSeconds=86400)](./LICENSE)
+[![npm version](https://img.shields.io/npm/v/@gild-ui/hooks.svg?cacheSeconds=86400)](https://www.npmjs.com/package/@gild-ui/hooks)
+[![coverage](https://codecov.io/gh/soroush-tech/design-system/branch/main/graph/badge.svg?flag=hooks)](https://app.codecov.io/gh/soroush-tech/design-system?flags%5B0%5D=hooks)
+[![license](https://img.shields.io/npm/l/@gild-ui/hooks.svg?cacheSeconds=86400)](./LICENSE)
 
 React hooks that belong to no component and no theme: a stable event callback, merged refs, a
 value that is controlled or not, a debounced value or callback, and copy to the clipboard. They
 are useful in an app with none of our components, and the components are built on them.
 
 ```sh
-npm i @soroush.design/react-hooks
+npm i @gild-ui/hooks
 ```
 
-Each hook has an entry point of its own, `@soroush.design/react-hooks/useDebounce`, so an app loads only
+Each hook has an entry point of its own, `@gild-ui/hooks/useDebounce`, so an app loads only
 what it imports, and the root exports them all. The package depends on nothing of ours and has one peer, `react`.
 
 Every hook below says whether it needs a browser. A hook that does not touches no DOM API, so it
@@ -28,7 +28,7 @@ uncontrolled needs no branch. `undefined` leaves the control uncontrolled; `null
 Needs a browser: no.
 
 ```ts
-import { useControlled } from '@soroush.design/react-hooks/useControlled'
+import { useControlled } from '@gild-ui/hooks/useControlled'
 
 function useControlled<T>(params: {
   /** The controlled value; `undefined` leaves the control uncontrolled. */
@@ -65,7 +65,7 @@ importing it and rendering on the server are safe, and `copy` does nothing where
 missing (an insecure page) or the write is rejected.
 
 ```ts
-import { useCopyToClipboard } from '@soroush.design/react-hooks/useCopyToClipboard'
+import { useCopyToClipboard } from '@gild-ui/hooks/useCopyToClipboard'
 
 function useCopyToClipboard(resetMs?: number): {
   copied: boolean
@@ -89,7 +89,7 @@ the pause of a search box.
 Needs a browser: no. It uses timers only, and renders on the server as the value it is given.
 
 ```ts
-import { useDebounce } from '@soroush.design/react-hooks/useDebounce'
+import { useDebounce } from '@gild-ui/hooks/useDebounce'
 
 function useDebounce<T>(value: T, delayMs?: number): T
 ```
@@ -115,7 +115,7 @@ change is an event rather than a value: saving on the pause of typing.
 Needs a browser: no. It uses timers only.
 
 ```ts
-import { useDebouncedCallback } from '@soroush.design/react-hooks/useDebouncedCallback'
+import { useDebouncedCallback } from '@gild-ui/hooks/useDebouncedCallback'
 
 function useDebouncedCallback<Args extends unknown[]>(
   callback: (...args: Args) => void,
@@ -138,7 +138,7 @@ after the effect.
 Needs a browser: no.
 
 ```ts
-import { useEventCallback } from '@soroush.design/react-hooks/useEventCallback'
+import { useEventCallback } from '@gild-ui/hooks/useEventCallback'
 
 function useEventCallback<Args extends unknown[], Return>(
   fn: (...args: Args) => Return
@@ -162,7 +162,7 @@ and keeps its identity while the refs are the same.
 Needs a browser: no. It only combines refs; attaching them is React's.
 
 ```ts
-import { useMergedRefs } from '@soroush.design/react-hooks/useMergedRefs'
+import { useMergedRefs } from '@gild-ui/hooks/useMergedRefs'
 
 function useMergedRefs<T>(refA: Ref<T> | undefined, refB: Ref<T> | undefined): RefCallback<T> | null
 ```

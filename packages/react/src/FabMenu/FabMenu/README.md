@@ -8,7 +8,7 @@ out of the tree while it is closed. Where it floats is the page's: no position i
 Client component: its entry carries `'use client'`, so a server component can import and render it.
 
 ```tsx
-import { FabMenu, FabMenuItem } from '@soroush.design/react/FabMenu'
+import { FabMenu, FabMenuItem } from '@gild-ui/react/FabMenu'
 
 ;<FabMenu aria-label="Create">
   <FabMenuItem icon={<Icon name="add" color="inherit" />} onClick={newDocument}>

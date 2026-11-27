@@ -12,9 +12,7 @@ test.describe('without JavaScript, on a phone-width window', () => {
 
     await page.getByRole('button', { name: 'Open navigation' }).click()
     await expect(drawer).toBeVisible()
-    await expect(
-      drawer.getByRole('navigation', { name: 'Design system documentation' })
-    ).toBeVisible()
+    await expect(drawer.getByRole('navigation', { name: 'Gild UI documentation' })).toBeVisible()
 
     await page.keyboard.press('Escape')
     await expect(drawer).toBeHidden()

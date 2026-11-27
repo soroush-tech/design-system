@@ -1,14 +1,14 @@
-// Set up by @soroush.design/react init. Your themes: change any value, or add a theme.
-// Every token is listed at https://docs.soroush.design/react/theme/
-import { baseTheme, createTheme, defineThemes } from '@soroush.design/core/theme'
-import type { ThemeComponents } from '@soroush.design/react'
-import { registerBaseTheme } from '@soroush.design/react/ThemeProvider'
+// Set up by @gild-ui/react init. Your themes: change any value, or add a theme.
+// Every token is listed at https://gild-ui.soroush.design/react/theme/
+import { baseTheme, createTheme, defineThemes } from '@gild-ui/core/theme'
+import type { ThemeComponents } from '@gild-ui/react'
+import { registerBaseTheme } from '@gild-ui/react/ThemeProvider'
 
 // To add tokens of your own, declare them here, then give them values in each theme:
 //
-// import type { PaletteEntry } from '@soroush.design/core/theme'
+// import type { PaletteEntry } from '@gild-ui/core/theme'
 //
-// declare module '@soroush.design/core/theme' {
+// declare module '@gild-ui/core/theme' {
 //   interface ThemePalette {
 //     brand: PaletteEntry
 //   }
@@ -79,7 +79,7 @@ const themes = defineThemes(
 // same object the provider gets, so the components and defaults match.
 registerBaseTheme(themes.light)
 
-declare module '@soroush.design/core/theme' {
+declare module '@gild-ui/core/theme' {
   interface Register {
     themes: typeof themes
   }

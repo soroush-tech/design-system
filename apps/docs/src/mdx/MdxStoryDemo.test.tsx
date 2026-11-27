@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { screen } from '@testing-library/react'
-import type { StoriesModule } from '@soroush.design/story-demo/StoryDemo'
+import type { StoriesModule } from '@gild-ui/story-demo/StoryDemo'
 import { renderWithTheme } from 'src/test/utils/wrapper'
 import { MdxStoryDemo } from './MdxStoryDemo'
 
@@ -21,7 +21,7 @@ vi.mock('src/demos/registry', () => {
   const entry = { path: 'Widget/Basic', title: 'Basic widget', stories, source, storyName: 'Basic' }
   return {
     demoByPath: new Map([[entry.path, entry]]),
-    demoVersions: { '@soroush.design/react': '^1.0.0' },
+    demoVersions: { '@gild-ui/react': '^1.0.0' },
     demoReactVersion: '^19.2.8',
   }
 })

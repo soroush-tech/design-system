@@ -1,4 +1,4 @@
-import { sections, type ComponentNavItem } from '@soroush.design/docs-content'
+import { sections, type ComponentNavItem } from '@gild-ui/docs-content'
 import type { DocsSection } from 'src/common/nav'
 import { PACKAGE_VERSIONS } from 'src/common/packageVersions'
 
@@ -27,7 +27,7 @@ const githubOf = (id: DocsSection) => {
 export const PACKAGES: PackageInfo[] = [
   {
     id: 'react',
-    name: 'Design System',
+    name: 'Gild UI for React',
     description:
       'The components: layout, inputs, feedback, navigation and overlays, with a theme to match your brand.',
     version: PACKAGE_VERSIONS.react,
@@ -79,7 +79,7 @@ export const PACKAGES: PackageInfo[] = [
     id: 'cli',
     name: 'Command line',
     description:
-      'Sets the design system up in an existing React app with one command, showing every change first.',
+      'Sets Gild UI up in an existing React app with one command, showing every change first.',
     version: PACKAGE_VERSIONS.cli,
     npm: npmOf('cli'),
     github: githubOf('cli'),

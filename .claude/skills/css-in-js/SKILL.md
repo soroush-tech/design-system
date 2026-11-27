@@ -33,7 +33,7 @@ import { system, variant, compose, layout, color } from '@soroush.tech/styled-sy
 import { createShouldForwardProp } from '@soroush.tech/styled-system/should-forward-prop'
 ```
 
-An app or another package imports the same names from `@soroush.design/react` (`styled`, `css`, `keyframes`, `Global`, `useTheme`) and `@soroush.tech/styled-system`. `packages/react/src/style/` (`engine.ts`, `styled.ts`), `src/theme/engine.ts` and `src/engine/` are the seam to the styling engine: nothing else imports it.
+An app or another package imports the same names from `@gild-ui/react` (`styled`, `css`, `keyframes`, `Global`, `useTheme`) and `@soroush.tech/styled-system`. `packages/react/src/style/` (`engine.ts`, `styled.ts`), `src/theme/engine.ts` and `src/engine/` are the seam to the styling engine: nothing else imports it.
 
 ---
 

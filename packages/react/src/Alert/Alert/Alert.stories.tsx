@@ -9,7 +9,7 @@ import {
   alertCatalog,
   alertSeverityValues,
   alertVariantValues,
-} from '@soroush.design/core/catalog/entries'
+} from '@gild-ui/core/catalog/entries'
 import { Alert } from './Alert'
 
 const meta: Meta<typeof Alert> = {

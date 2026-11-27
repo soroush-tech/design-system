@@ -1,8 +1,8 @@
 import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react'
-import { alpha, styled } from '@soroush.design/react'
+import { alpha, styled } from '@gild-ui/react'
 import { get } from '@soroush.tech/styled-system'
-import { Typography } from '@soroush.design/react/Typography'
-import { View } from '@soroush.design/react/View'
+import { Typography } from '@gild-ui/react/Typography'
+import { View } from '@gild-ui/react/View'
 import { PlainList } from 'src/common/PlainList/PlainList'
 
 interface Heading {

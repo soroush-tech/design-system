@@ -10,11 +10,11 @@
 // degrade to `any` instead of erroring: every style prop disappears, and a
 // `Pick<LayoutProps, ...>` turns into required members. scripts/check-dts.mjs catches
 // that shape anywhere in the build; this file pins the consumer-visible symptom.
-import type { GridProps } from '@soroush.design/react/Grid'
-import type { ImageProps } from '@soroush.design/react/Image'
-import type { SkeletonProps } from '@soroush.design/react/Skeleton'
-import type { TextInputProps } from '@soroush.design/react/TextInput'
-import type { TypographyProps } from '@soroush.design/react/Typography'
+import type { GridProps } from '@gild-ui/react/Grid'
+import type { ImageProps } from '@gild-ui/react/Image'
+import type { SkeletonProps } from '@gild-ui/react/Skeleton'
+import type { TextInputProps } from '@gild-ui/react/TextInput'
+import type { TypographyProps } from '@gild-ui/react/Typography'
 
 // Style props are optional: a `Pick<LayoutProps<Theme>, ...>` degraded to `Pick<any, ...>`
 // would make width / minWidth / maxWidth required here.

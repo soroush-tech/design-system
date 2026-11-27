@@ -10,7 +10,7 @@ import { Flex } from '../Flex'
 import { Typography } from '../Typography'
 import { exampleArgs } from '../utils/test/renderExample'
 import { Avatar } from './Avatar'
-import { avatarCatalog } from '@soroush.design/core/catalog/entries'
+import { avatarCatalog } from '@gild-ui/core/catalog/entries'
 
 const DEMO_IMG = '/soroush.svg'
 

@@ -5,16 +5,16 @@
 Every component ships on its own subpath, so bundlers tree-shake by construction:
 
 ```tsx
-import { Button } from '@soroush.design/react/Button'
-import { Flex } from '@soroush.design/react/Flex'
-import { Typography } from '@soroush.design/react/Typography'
+import { Button } from '@gild-ui/react/Button'
+import { Flex } from '@gild-ui/react/Flex'
+import { Typography } from '@gild-ui/react/Typography'
 ```
 
 The barrel export carries the styling functions (`styled`, `css`, `alpha`). The theme, `createTheme` and the `Theme` type are the core package's:
 
 ```tsx
-import { styled, css } from '@soroush.design/react'
-import { createTheme, type Theme } from '@soroush.design/core/theme'
+import { styled, css } from '@gild-ui/react'
+import { createTheme, type Theme } from '@gild-ui/core/theme'
 ```
 
 ## Style props

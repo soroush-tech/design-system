@@ -1,7 +1,7 @@
 // The theme file of an app on the final shape: two themes, one set of component looks, and the
 // one registration line. Programs that need a registered theme import it.
-import { baseTheme, createTheme, defineThemes } from '@soroush.design/core/theme'
-import type { ThemeComponents } from '@soroush.design/react'
+import { baseTheme, createTheme, defineThemes } from '@gild-ui/core/theme'
+import type { ThemeComponents } from '@gild-ui/react'
 
 const light = createTheme(baseTheme, {
   palette: {
@@ -31,7 +31,7 @@ export const themes = defineThemes({ light, dark }, {
   },
 } satisfies ThemeComponents)
 
-declare module '@soroush.design/core/theme' {
+declare module '@gild-ui/core/theme' {
   interface Register {
     themes: typeof themes
   }

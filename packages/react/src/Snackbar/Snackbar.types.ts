@@ -1,9 +1,4 @@
-import type {
-  ThemeBackground,
-  ThemeRadii,
-  ThemeText,
-  ThemeZOrder,
-} from '@soroush.design/core/theme'
+import type { ThemeBackground, ThemeRadii, ThemeText, ThemeZOrder } from '@gild-ui/core/theme'
 import type { ComponentConfig } from '../theme/themes'
 
 /** The corner shapes of a control or a surface. */

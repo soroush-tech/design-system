@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useControlled } from '@soroush.design/react-hooks/useControlled'
+import { useControlled } from '@gild-ui/hooks/useControlled'
 
 export type TransferListValue = string | number
 

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { Typography } from '@soroush.design/react/Typography'
+import { Typography } from '@gild-ui/react/Typography'
 import { fetchGreeting } from '../data/api'
 import { withIsland } from '../theme/Island'
 

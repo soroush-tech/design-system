@@ -13,7 +13,7 @@ import { Flex } from '../Flex'
 import { View } from '../View'
 import { exampleArgs } from '../utils/test/renderExample'
 import { Card } from './Card'
-import { cardCatalog } from '@soroush.design/core/catalog/entries'
+import { cardCatalog } from '@gild-ui/core/catalog/entries'
 
 const meta: Meta<typeof Card> = {
   title: 'Theme/Card',

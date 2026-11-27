@@ -7,24 +7,24 @@ Monorepo for the `@soroush.tech` UI libraries, extracted from [`soroush-tech/cor
 | Package                                                                        | Description                                                                                          |
 | ------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------- |
 | [`@soroush.tech/styled-system`](https://github.com/soroush-tech/styled-system) | Style-prop system, in its own repository: responsive style functions, `system()`, theme-aware scales |
-| [`@soroush.design/react`](packages/react)                                      | The React design system: the components, the theme provider and hooks, `styled`                      |
-| [`@soroush.design/core`](packages/core)                                        | What the platforms share and that needs no framework: the theme and the catalog                      |
-| [`@soroush.design/react-markdown`](packages/react-markdown)                    | Markdown editor and renderer for the React design system, with its own libraries                     |
-| [`@soroush.design/cli`](packages/cli)                                          | The command line: `init` sets the design system up in an existing React app                          |
+| [`@gild-ui/react`](packages/react)                                             | Gild UI for React: the components, the theme provider and hooks, `styled`                            |
+| [`@gild-ui/core`](packages/core)                                               | What the platforms share and that needs no framework: the theme and the catalog                      |
+| [`@gild-ui/react-markdown`](packages/react-markdown)                           | Markdown editor and renderer for Gild UI for React, with its own libraries                           |
+| [`@soroush.design/cli`](packages/cli)                                          | The command line: `init` sets Gild UI up in an existing React app                                    |
 | [`@soroush.design/mcp`](packages/mcp)                                          | MCP server exposing the components, READMEs, and tokens to AI coding tools                           |
 | [`@soroush.tech/ui-spec`](packages/ui-spec)                                    | Generative-UI spec on A2UI v1.0: catalogs, a behavior schema, and validators                         |
-| [`@soroush.design/react-hooks`](packages/react-hooks)                          | React hooks that belong to no component and no theme                                                 |
-| [`@soroush.design/lab`](packages/lab)                                          | Incubator for components heading into the design system (private, internal)                          |
-| [`@soroush.design/story-demo`](packages/story-demo)                            | Renders CSF3 stories as interactive docs demos (private, internal)                                   |
-| [`@soroush.design/docs-content`](packages/docs-content)                        | Component registry and README parsing shared by the docs app and MCP server                          |
-| [`@soroush.design/contract`](packages/contract)                                | The final public shape as export lists and type tests (private, internal)                            |
+| [`@gild-ui/hooks`](packages/hooks)                                             | React hooks that belong to no component and no theme                                                 |
+| [`@gild-ui/lab`](packages/lab)                                                 | Incubator for components heading into Gild UI (private, internal)                                    |
+| [`@gild-ui/story-demo`](packages/story-demo)                                   | Renders CSF3 stories as interactive docs demos (private, internal)                                   |
+| [`@gild-ui/docs-content`](packages/docs-content)                               | Component registry and README parsing shared by the docs app and MCP server                          |
+| [`@gild-ui/contract`](packages/contract)                                       | The final public shape as export lists and type tests (private, internal)                            |
 | [`@soroush.tech/eslint-config`](packages/eslint-config)                        | Shared oxlint config and custom lint plugins (private, internal)                                     |
 
 See [`packages/packages.md`](packages/packages.md) for workspace-package conventions.
 
 ## Use it with AI tools
 
-The design system is readable by AI coding tools, from the same sources the docs site
+Gild UI is readable by AI coding tools, from the same sources the docs site
 renders - component READMEs, the live token contract, and the guides. Both routes below work
 with any coding agent:
 
@@ -45,7 +45,7 @@ claude plugin install soroush-design-system@soroush-tech
 ```
 
 `npx -y @soroush.design/mcp` runs the same server locally over stdio, and
-[docs.soroush.design/llms.txt](https://docs.soroush.design/llms.txt) serves a
+[gild-ui.soroush.design/llms.txt](https://gild-ui.soroush.design/llms.txt) serves a
 machine-readable index. See [`packages/mcp/mcp.md`](packages/mcp/mcp.md) for how it is
 built and kept in sync.
 

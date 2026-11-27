@@ -14,7 +14,7 @@ export type Rendering = 'isomorphic' | 'ssr' | 'spa' | 'ssg'
 /** The renderings, in the order create offers them. The first is the default. */
 export const RENDERINGS: readonly Rendering[] = ['isomorphic', 'ssr', 'spa', 'ssg']
 
-/** What a starter is told: everything the developer chose, and the design system to install. */
+/** What a starter is told: everything the developer chose, and Gild UI to install. */
 export interface StarterFacts {
   /** The app's folder, as it was typed. */
   name: string
@@ -29,7 +29,7 @@ export interface StarterFacts {
   scheme: Scheme
   /** Adds the pages that read sample data. */
   hasSampleData: boolean
-  /** The version of the design system the app gets. */
+  /** The version of Gild UI the app gets. */
   version: string
 }
 

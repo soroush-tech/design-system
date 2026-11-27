@@ -8,7 +8,7 @@ import {
 import { Flex } from '../../Flex'
 import { exampleArgs } from '../../utils/test/renderExample'
 import { PaginationItem } from './PaginationItem'
-import { paginationItemCatalog } from '@soroush.design/core/catalog/entries'
+import { paginationItemCatalog } from '@gild-ui/core/catalog/entries'
 
 const meta: Meta<typeof PaginationItem> = {
   title: 'Theme/Pagination/PaginationItem',

@@ -1,17 +1,17 @@
-# @soroush.design/core
+# @gild-ui/core
 
-[![npm version](https://img.shields.io/npm/v/@soroush.design/core.svg?cacheSeconds=86400)](https://www.npmjs.com/package/@soroush.design/core)
+[![npm version](https://img.shields.io/npm/v/@gild-ui/core.svg?cacheSeconds=86400)](https://www.npmjs.com/package/@gild-ui/core)
 [![coverage](https://codecov.io/gh/soroush-tech/design-system/branch/main/graph/badge.svg?flag=core)](https://app.codecov.io/gh/soroush-tech/design-system?flags%5B0%5D=core)
-[![license](https://img.shields.io/npm/l/@soroush.design/core.svg?cacheSeconds=86400)](./LICENSE)
+[![license](https://img.shields.io/npm/l/@gild-ui/core.svg?cacheSeconds=86400)](./LICENSE)
 
-What every platform of the soroush.design family shares and that needs no framework. The React,
+What every platform of the Gild UI family shares and that needs no framework. The React,
 React Native and Vue libraries build on it, and an app installs it to write its own theme with
 `createTheme` and `defineThemes`. It holds the theme
 (the tokens, `baseTheme`, `createTheme`), the breakpoint and container-query helpers, the pure
 utilities, and the component catalog.
 
 ```sh
-npm i @soroush.design/core
+npm i @gild-ui/core
 ```
 
 It has no dependencies. It imports no React, React Native, Vue, DOM API or styling engine, and a
@@ -24,7 +24,7 @@ One theme, read by every platform: the token scales (`palette`, `space`, `radii`
 defaults. It imports no framework: a platform library composes its own `Theme` on top of this one.
 
 ```ts
-import { baseTheme, createTheme } from '@soroush.design/core/theme'
+import { baseTheme, createTheme } from '@gild-ui/core/theme'
 
 const brand = createTheme(baseTheme, { palette: { primary: { main: '#0a7' } } })
 brand.palette.primary.main // '#0a7'
@@ -40,9 +40,9 @@ Every scale is an open interface: declare it again to add a token, and the keys 
 platform's components.
 
 ```ts
-import type { PaletteEntry } from '@soroush.design/core/theme'
+import type { PaletteEntry } from '@gild-ui/core/theme'
 
-declare module '@soroush.design/core/theme' {
+declare module '@gild-ui/core/theme' {
   interface ThemePalette {
     brand: PaletteEntry
   }
@@ -51,14 +51,14 @@ declare module '@soroush.design/core/theme' {
 
 ## Breakpoints
 
-`@soroush.design/core/breakpoints` holds the helpers behind `theme.breakpoints`:
+`@gild-ui/core/breakpoints` holds the helpers behind `theme.breakpoints`:
 `createMediaHelpers` and `createContainerQueries` return `up`, `down`, `only`, `between` and `not`
 as range-syntax `@media` or `@container` rules, and `withBreakpointHelpers` attaches them to a
 scale. They are pure string functions; `@soroush.tech/styled-system` has a copy of its own.
 
 ## Utilities
 
-`@soroush.design/core/utils` holds pure helpers: `clamp`, `alpha`, `luminance`,
+`@gild-ui/core/utils` holds pure helpers: `clamp`, `alpha`, `luminance`,
 `generateBoxShadow`, `getAnchorRel`, `getShapeRadius`, `getSurfaceRadius` and the step arithmetic
 of `precision`.
 
@@ -69,7 +69,7 @@ design tool's palette, a page's source writer, a generator. It loads in plain No
 `JSON.stringify` unchanged.
 
 ```ts
-import { catalog } from '@soroush.design/core/catalog'
+import { catalog } from '@gild-ui/core/catalog'
 
 catalog.components.Select.subpath // 'Select'
 catalog.components.Select.example // { component: 'Select', props: { placeholder: ... }, children: [...] }
@@ -98,14 +98,14 @@ An entry says where a component lives inside a platform library, not which packa
 library re-exports the catalog and adds its own facts. The React component library adds `module`:
 
 ```ts
-import { catalog } from '@soroush.design/react/catalog'
+import { catalog } from '@gild-ui/react/catalog'
 
-catalog.components.Select.module // '@soroush.design/react/Select'
+catalog.components.Select.module // '@gild-ui/react/Select'
 ```
 
 ### The entries
 
-`@soroush.design/core/catalog/entries` exports each component's entry as it is written
+`@gild-ui/core/catalog/entries` exports each component's entry as it is written
 (`selectCatalog`) and the lists of values its props take (`selectVariantValues`), for the stories and
 demos of a platform library, which read their option lists from the same arrays so that a story and
 the catalog cannot disagree.

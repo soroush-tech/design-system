@@ -5,7 +5,7 @@ import { Flex } from '../../Flex'
 import { Typography } from '../../Typography'
 import { exampleArgs } from '../../utils/test/renderExample'
 import { Sidebar } from './Sidebar'
-import { sidebarCatalog } from '@soroush.design/core/catalog/entries'
+import { sidebarCatalog } from '@gild-ui/core/catalog/entries'
 import { SidebarItem } from '../SidebarItem'
 
 const meta: Meta<typeof Sidebar> = {

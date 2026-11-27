@@ -7,13 +7,13 @@ import {
   type ReactNode,
   type WheelEvent,
 } from 'react'
-import { styled, useStyleValue, type LiveValue } from '@soroush.design/react'
-import { View } from '@soroush.design/react/View'
-import { Flex } from '@soroush.design/react/Flex'
-import { Grid } from '@soroush.design/react/Grid'
-import { Button } from '@soroush.design/react/Button'
-import { Icon, type IconName } from '@soroush.design/react/Icon'
-import { Modal } from '@soroush.design/react/Modal'
+import { styled, useStyleValue, type LiveValue } from '@gild-ui/react'
+import { View } from '@gild-ui/react/View'
+import { Flex } from '@gild-ui/react/Flex'
+import { Grid } from '@gild-ui/react/Grid'
+import { Button } from '@gild-ui/react/Button'
+import { Icon, type IconName } from '@gild-ui/react/Icon'
+import { Modal } from '@gild-ui/react/Modal'
 
 const MIN_SCALE = 0.2
 const MAX_SCALE = 5

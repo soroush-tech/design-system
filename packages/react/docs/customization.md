@@ -5,8 +5,8 @@ Customize one component for the whole app - default prop values, per-slot CSS, a
 Component customization is set once for all your themes, by `defineThemes(themes, components)`; `createTheme` builds tokens only and does not accept `components` (the error says to use `defineThemes`). Check `components` where you write it with `satisfies ThemeComponents`: it types `ownerState`, the slot names and the default props.
 
 ```ts
-import { baseTheme, createTheme, defineThemes } from '@soroush.design/core/theme'
-import type { ThemeComponents } from '@soroush.design/react'
+import { baseTheme, createTheme, defineThemes } from '@gild-ui/core/theme'
+import type { ThemeComponents } from '@gild-ui/react'
 
 const light = createTheme(baseTheme, { name: 'light', colorScheme: 'light' })
 const dark = createTheme(baseTheme, { name: 'dark' })
@@ -33,7 +33,7 @@ export const themes = defineThemes({ light, dark }, {
   },
 } satisfies ThemeComponents)
 
-declare module '@soroush.design/core/theme' {
+declare module '@gild-ui/core/theme' {
   interface Register {
     themes: typeof themes
   }
@@ -70,7 +70,7 @@ Slot names (`root`, `label`, `icon`, ...) are typed per component in `ThemeCompo
 
 Extra variant entries matched by props: an entry applies when every key in its `props` equals the render prop. Matching runs on the component's root slot only.
 
-**New variant values** are the `variant` of your own entries: once the themes are registered (see [theming.md](./theming.md#defining-and-registering-your-themes)), `variant="dashed"` typechecks on `Button` because the registered `components.Button.variants` has it - there is nothing else to declare. (Without the registration, widen the type yourself: `declare module '@soroush.design/core/theme' { interface ButtonVariants { dashed: true } }`.) A look needs its `variants` entry: without one the button renders unstyled.
+**New variant values** are the `variant` of your own entries: once the themes are registered (see [theming.md](./theming.md#defining-and-registering-your-themes)), `variant="dashed"` typechecks on `Button` because the registered `components.Button.variants` has it - there is nothing else to declare. (Without the registration, widen the type yourself: `declare module '@gild-ui/core/theme' { interface ButtonVariants { dashed: true } }`.) A look needs its `variants` entry: without one the button renders unstyled.
 
 ## Slot props - customizing composed sub-elements
 
@@ -100,10 +100,10 @@ So a composed slot is customizable at three levels: **props** (`defaultProps.tit
 The mechanism is infrastructure, not just configuration. Create your roots with this package's `styled` and register the name:
 
 ```ts
-import { styled } from '@soroush.design/react'
-import type { ComponentConfig } from '@soroush.design/react'
+import { styled } from '@gild-ui/react'
+import type { ComponentConfig } from '@gild-ui/react'
 
-declare module '@soroush.design/react' {
+declare module '@gild-ui/react' {
   interface ThemeComponents {
     MyWidget?: ComponentConfig<{ tone?: 'calm' | 'loud' }, 'root' | 'handle'>
   }
@@ -127,7 +127,7 @@ Your widget now honors `theme.components.MyWidget.styleOverrides` / `.variants` 
 
 ## The development check
 
-In development, `ThemeProvider` checks the active theme's `components` against the catalog and warns once per distinct problem, naming the path: a component the design system lacks, a slot a component has not (`components.Tabs.styleOverrides.indicater is not a slot of Tabs (root, list, indicator, ...)`), a default prop or a look's prop the component does not take, a default value outside the values the catalog lists. It runs only when `process.env.NODE_ENV !== 'production'` and is removed from a production build. The check is a pure function, `validateThemeComponents(components)` from `@soroush.design/core/catalog`, which returns the problems as `{ path, message }`, for a tool that edits themes.
+In development, `ThemeProvider` checks the active theme's `components` against the catalog and warns once per distinct problem, naming the path: a component Gild UI lacks, a slot a component has not (`components.Tabs.styleOverrides.indicater is not a slot of Tabs (root, list, indicator, ...)`), a default prop or a look's prop the component does not take, a default value outside the values the catalog lists. It runs only when `process.env.NODE_ENV !== 'production'` and is removed from a production build. The check is a pure function, `validateThemeComponents(components)` from `@gild-ui/core/catalog`, which returns the problems as `{ path, message }`, for a tool that edits themes.
 
 ## Runtime cost
 

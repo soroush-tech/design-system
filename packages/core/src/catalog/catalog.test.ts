@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { componentCategories } from '@soroush.design/docs-content'
+import { componentCategories } from '@gild-ui/docs-content'
 import { catalog, type ExampleNode } from './index'
 import { catalogSources } from './sources'
 

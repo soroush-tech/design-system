@@ -3,7 +3,7 @@ import { renderToString } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 import { ThemeProvider } from './theme/ThemeProvider'
 import { baseTheme } from './theme/themes'
-import { createTheme } from '@soroush.design/core/theme'
+import { createTheme } from '@gild-ui/core/theme'
 import { styled } from './style/styled'
 
 const Badge = styled('span')(({ theme }) => ({

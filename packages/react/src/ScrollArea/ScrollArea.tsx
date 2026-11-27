@@ -7,7 +7,7 @@ import { type Theme } from '../theme/themes'
 import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
 import { get, system, space } from '@soroush.tech/styled-system'
 import { useDefaultProps } from '../theme/hooks/useDefaultProps'
-import { useMergedRefs } from '@soroush.design/react-hooks/useMergedRefs'
+import { useMergedRefs } from '@gild-ui/hooks/useMergedRefs'
 import { useScrollThumb, type ScrollAxis } from './hooks/useScrollThumb'
 
 /** Which ways it scrolls. */

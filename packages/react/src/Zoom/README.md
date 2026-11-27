@@ -5,7 +5,7 @@ Zooms one child in from nothing and out to nothing. The child holds a `ref` and 
 Client component: its entry carries `'use client'`, so a server component can import and render it.
 
 ```tsx
-import { Zoom } from '@soroush.design/react/Zoom'
+import { Zoom } from '@gild-ui/react/Zoom'
 
 ;<Zoom isShown={isOpen}>
   <Paper p={3}>Content</Paper>

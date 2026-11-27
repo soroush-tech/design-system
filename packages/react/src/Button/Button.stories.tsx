@@ -2,7 +2,7 @@ import { css, keyframes } from '@umber-style/css'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { fn } from 'storybook/test'
 import { m, p } from '../utils/test/storiesArgs'
-import { baseTheme } from '@soroush.design/core/theme'
+import { baseTheme } from '@gild-ui/core/theme'
 import {
   borderRadiiTokens,
   buttonColorTokens,
@@ -15,7 +15,7 @@ import { Flex } from '../Flex'
 import { Typography } from '../Typography'
 import { exampleArgs } from '../utils/test/renderExample'
 import { Button } from './Button'
-import { buttonCatalog } from '@soroush.design/core/catalog/entries'
+import { buttonCatalog } from '@gild-ui/core/catalog/entries'
 
 const meta: Meta<typeof Button> = {
   title: 'Theme/Button',

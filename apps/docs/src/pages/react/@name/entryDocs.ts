@@ -1,4 +1,4 @@
-import { entryGuides } from '@soroush.design/docs-content'
+import { entryGuides } from '@gild-ui/docs-content'
 
 // The page of each entry point that is not a component: a file of the component library's docs.
 const docs = import.meta.glob('packages/react/docs/*.md', {

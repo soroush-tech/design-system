@@ -3,7 +3,7 @@
 Provides exactly **one** theme to the tree - a thin wrapper over the engine's provider plus the optional `defaults` merge. It has no opinion about how many themes you have or how you switch between them: mode toggling is app state, not the provider's (see [`docs/theming.md`](../../docs/theming.md)).
 
 ```tsx
-import { ThemeProvider } from '@soroush.design/react'
+import { ThemeProvider } from '@gild-ui/react'
 
 // Zero-config: the built-in dark theme.
 <ThemeProvider>{app}</ThemeProvider>
@@ -40,7 +40,7 @@ The web app's reference implementation is `apps/web/src/theme/ThemeModeProvider.
 ## registerBaseTheme - the theme of server components
 
 A server component has no provider above it to read. `registerBaseTheme(theme)` (from
-`@soroush.design/react/ThemeProvider`) gives the engine the app's base theme once, at module level, and
+`@gild-ui/react/ThemeProvider`) gives the engine the app's base theme once, at module level, and
 `useTheme()`, `useDefaultProps` and every component's styles read it there: `components` and `defaults`
 as real values, the tokens as CSS variables, so the page's theme (light or dark) decides their
 colors. Call it in the module that defines the app's themes, which the root layout and a client

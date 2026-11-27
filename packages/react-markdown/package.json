@@ -1,7 +1,7 @@
 {
-  "name": "@soroush.design/react-markdown",
+  "name": "@gild-ui/react-markdown",
   "version": "0.1.0",
-  "description": "A markdown editor and renderer for @soroush.design/react - Control, Toolbar, Editor, Preview, LiveEdit, CodeBlock and a themed, zoomable diagram viewer.",
+  "description": "A markdown editor and renderer for @gild-ui/react - Control, Toolbar, Editor, Preview, LiveEdit, CodeBlock and a themed, zoomable diagram viewer.",
   "keywords": [
     "markdown",
     "editor",
@@ -14,14 +14,14 @@
   ],
   "author": "Masoud Soroush <masoud@soroush.tech>",
   "license": "MIT",
-  "homepage": "https://docs.soroush.design/react/markdown/",
+  "homepage": "https://gild-ui.soroush.design/react/markdown/",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/soroush-tech/design-system.git",
+    "url": "git+https://github.com/soroush-tech/gild-ui.git",
     "directory": "packages/react-markdown"
   },
   "bugs": {
-    "url": "https://github.com/soroush-tech/design-system/issues"
+    "url": "https://github.com/soroush-tech/gild-ui/issues"
   },
   "type": "module",
   "sideEffects": false,
@@ -144,8 +144,8 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@soroush.design/core": "workspace:^",
-    "@soroush.design/react-hooks": "workspace:^",
+    "@gild-ui/core": "workspace:^",
+    "@gild-ui/hooks": "workspace:^",
     "mermaid": "^12.3.0",
     "react-markdown": "^10.1.0",
     "rehype-highlight": "^7.0.2",
@@ -157,12 +157,12 @@
     "unified": "^11.0.5"
   },
   "peerDependencies": {
-    "@soroush.design/react": "workspace:^",
+    "@gild-ui/react": "workspace:^",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },
   "devDependencies": {
-    "@soroush.design/react": "workspace:*",
+    "@gild-ui/react": "workspace:*",
     "@soroush.tech/eslint-config": "workspace:*",
     "@storybook/react-vite": "^10.6.7",
     "@testing-library/jest-dom": "^7.0.1",

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { Flex } from '@soroush.design/react/Flex'
+import { Flex } from '@gild-ui/react/Flex'
 import { Control } from '../Control'
 import { Editor } from '../Editor'
 import { Toolbar } from './Toolbar'

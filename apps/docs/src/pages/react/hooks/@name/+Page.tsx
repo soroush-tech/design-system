@@ -1,5 +1,5 @@
-import readme from 'packages/react-hooks/README.md?raw'
-import { hookImportLine, hookSection } from '@soroush.design/docs-content'
+import readme from 'packages/hooks/README.md?raw'
+import { hookImportLine, hookSection } from '@gild-ui/docs-content'
 import { DocPage } from 'src/common/DocPage/DocPage'
 import { usePageContext } from 'src/hooks/usePageContext'
 

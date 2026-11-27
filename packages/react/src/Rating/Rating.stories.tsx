@@ -7,8 +7,8 @@ import { FormLabel } from '../FormLabel'
 import { Typography } from '../Typography'
 import { View } from '../View'
 import { ThemeProvider } from '../theme/ThemeProvider'
-import { baseTheme } from '@soroush.design/core/theme'
-import type { ThemeComponents } from '@soroush.design/react'
+import { baseTheme } from '@gild-ui/core/theme'
+import type { ThemeComponents } from '@gild-ui/react'
 import { m, p } from '../utils/test/storiesArgs'
 import {
   buttonColorTokens,
@@ -16,7 +16,7 @@ import {
   textInputSizeTokens,
 } from '../utils/test/storiesOptions'
 import { exampleArgs } from '../utils/test/renderExample'
-import { ratingCatalog } from '@soroush.design/core/catalog/entries'
+import { ratingCatalog } from '@gild-ui/core/catalog/entries'
 import { Rating, type RatingProps } from './Rating'
 
 const meta: Meta<typeof Rating> = {

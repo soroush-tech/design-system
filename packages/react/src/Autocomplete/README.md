@@ -10,7 +10,7 @@ yours: no built-in English.
 Client component: its entry carries `'use client'`, so a server component can import and render it.
 
 ```tsx
-import { Autocomplete } from '@soroush.design/react/Autocomplete'
+import { Autocomplete } from '@gild-ui/react/Autocomplete'
 
 ;<Autocomplete
   options={['Berlin', 'Lisbon', 'Oslo']}

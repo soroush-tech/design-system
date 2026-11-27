@@ -4,7 +4,7 @@ import { buttonColorTokens, tableSizeTokens } from '../../utils/test/storiesOpti
 import { Icon } from '../../Icon'
 import { exampleArgs } from '../../utils/test/renderExample'
 import { ToggleButton } from './ToggleButton'
-import { toggleButtonCatalog } from '@soroush.design/core/catalog/entries'
+import { toggleButtonCatalog } from '@gild-ui/core/catalog/entries'
 
 const meta: Meta<typeof ToggleButton> = {
   title: 'Theme/ToggleButton/ToggleButton',

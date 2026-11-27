@@ -10,7 +10,7 @@ describe('releaseNotesFor', () => {
     const notes = releaseNotesFor('react')
     expect(notes.map((note) => note.version)).toEqual(['0.1.0'])
     expect(notes[0].version).toBe(PACKAGE_VERSIONS.react)
-    expect(notes[0].body.startsWith('## @soroush.design/react@0.1.0')).toBe(true)
+    expect(notes[0].body.startsWith('## @gild-ui/react@0.1.0')).toBe(true)
   })
 
   it('fails, naming the section and its folder, when a section has no notes', () => {
@@ -35,7 +35,7 @@ describe('releaseNotesFor', () => {
 
   it('scopes to the requested package', () => {
     for (const note of releaseNotesFor('markdown')) {
-      expect(note.body).toContain('@soroush.design/react-markdown@')
+      expect(note.body).toContain('@gild-ui/react-markdown@')
     }
   })
 })
@@ -50,7 +50,7 @@ describe('ReleaseNotes', () => {
   it('trims the package name of the component library, under the soroush.design scope', () => {
     renderWithTheme(<ReleaseNotes pkg="react" />)
     expect(screen.getByRole('heading', { name: 'v0.1.0' })).toBeInTheDocument()
-    expect(screen.queryByRole('heading', { name: /@soroush\.design\/react@/ })).toBeNull()
+    expect(screen.queryByRole('heading', { name: /@gild-ui\/react@/ })).toBeNull()
   })
 
   it('trims the package name of a release of the MCP server, under its own scope', () => {

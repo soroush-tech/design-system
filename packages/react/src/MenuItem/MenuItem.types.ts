@@ -1,4 +1,4 @@
-import type { ThemeText, ThemeColor, ThemeSize } from '@soroush.design/core/theme'
+import type { ThemeText, ThemeColor, ThemeSize } from '@gild-ui/core/theme'
 import type { ComponentConfig } from '../theme/themes'
 
 /** The defaults a theme may set for every `MenuItem` - a list's own values win. */

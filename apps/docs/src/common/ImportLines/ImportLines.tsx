@@ -1,5 +1,5 @@
-import { CodeBlock } from '@soroush.design/react-markdown/CodeBlock'
-import type { ImportLine } from '@soroush.design/docs-content'
+import { CodeBlock } from '@gild-ui/react-markdown/CodeBlock'
+import type { ImportLine } from '@gild-ui/docs-content'
 
 export interface ImportLinesProps {
   line: ImportLine

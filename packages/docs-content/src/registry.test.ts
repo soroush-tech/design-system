@@ -91,7 +91,7 @@ describe('component registry', () => {
   })
 
   it('every hook of the hooks library has an entry point and a README section, and the reverse', () => {
-    const folder = join(repoRoot(), 'packages', 'react-hooks')
+    const folder = join(repoRoot(), 'packages', 'hooks')
     const { exports } = JSON.parse(readFileSync(join(folder, 'package.json'), 'utf8')) as {
       exports: Record<string, string>
     }
@@ -128,10 +128,10 @@ describe('component registry', () => {
   })
 
   it('imports a component from its own package, so the line on a page is the real one', () => {
-    expect(IMPORT_PACKAGE).toBe('@soroush.design/react')
-    expect(importPackageOf(componentBySlug.get('button')!)).toBe('@soroush.design/react')
+    expect(IMPORT_PACKAGE).toBe('@gild-ui/react')
+    expect(importPackageOf(componentBySlug.get('button')!)).toBe('@gild-ui/react')
     expect(importSubpathOf(componentBySlug.get('button')!)).toBe('Button')
-    expect(importPackageOf(componentBySlug.get('preview')!)).toBe('@soroush.design/react-markdown')
+    expect(importPackageOf(componentBySlug.get('preview')!)).toBe('@gild-ui/react-markdown')
     expect(importSubpathOf(componentBySlug.get('preview')!)).toBe('Preview')
     expect(importSubpathOf(componentBySlug.get('menu-list')!)).toBe('Menu')
   })

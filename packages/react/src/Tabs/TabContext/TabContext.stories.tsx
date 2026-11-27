@@ -7,7 +7,7 @@ import { exampleArgs } from '../../utils/test/renderExample'
 import { Tab } from '../Tab'
 import { TabList } from '../TabList'
 import { TabPanel } from '../TabPanel'
-import { tabContextCatalog } from '@soroush.design/core/catalog/entries'
+import { tabContextCatalog } from '@gild-ui/core/catalog/entries'
 import { TabContext, type TabContextProps } from './TabContext'
 
 const panelValues = ['layers', 'assets', 'history']

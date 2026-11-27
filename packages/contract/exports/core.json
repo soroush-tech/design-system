@@ -1,5 +1,5 @@
 {
-  "package": "@soroush.design/core",
+  "package": "@gild-ui/core",
   "entries": {
     "./breakpoints": {
       "values": [

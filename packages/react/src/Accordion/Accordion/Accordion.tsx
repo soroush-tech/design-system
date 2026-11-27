@@ -15,10 +15,10 @@ import { type Theme } from '../../theme/themes'
 import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
 import { get, space } from '@soroush.tech/styled-system'
 import { useDefaultProps } from '../../theme/hooks/useDefaultProps'
-import { themeDefault } from '@soroush.design/core/theme'
-import { getSurfaceRadius } from '@soroush.design/core/utils'
+import { themeDefault } from '@gild-ui/core/theme'
+import { getSurfaceRadius } from '@gild-ui/core/utils'
 import { Collapse, type CollapseProps } from '../../Collapse'
-import { useControlled } from '@soroush.design/react-hooks/useControlled'
+import { useControlled } from '@gild-ui/hooks/useControlled'
 import {
   AccordionContext,
   AccordionGroupContext,

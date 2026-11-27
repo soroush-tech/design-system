@@ -11,7 +11,7 @@ import { Flex } from '../../Flex'
 import type { MenuItemData } from '../MenuItems'
 import { Typography } from '../../Typography'
 import { exampleArgs } from '../../utils/test/renderExample'
-import { contextMenuCatalog } from '@soroush.design/core/catalog/entries'
+import { contextMenuCatalog } from '@gild-ui/core/catalog/entries'
 import { ContextMenu } from './ContextMenu'
 
 const meta: Meta<typeof ContextMenu> = {

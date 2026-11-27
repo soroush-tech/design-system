@@ -1,17 +1,17 @@
 // Type-level test: consumer-style theme augmentation against the PUBLISHED d.ts.
 // Runs via `pnpm test:types` (builds dist first, then typechecks this isolated
-// program). Guards two things: the `declare module '@soroush.design/core/theme'`
+// program). Guards two things: the `declare module '@gild-ui/core/theme'`
 // block survives tsdown's d.ts chunking, and consumer augmentations widen the
 // scale unions that component props derive from.
-import type { ComponentConfig, LayoutProviderProps, ThemeComponents } from '@soroush.design/react'
-import type { Theme, PaletteEntry, SizeEntry, ThemeOverride } from '@soroush.design/core/theme'
-import { baseTheme, createTheme } from '@soroush.design/core/theme'
-import type { ButtonColor, ButtonVariant } from '@soroush.design/react/Button'
-import type { CheckboxSize } from '@soroush.design/react/Checkbox'
-import type { GridProps } from '@soroush.design/react/Grid'
-import type { ViewBackgroundToken, ViewProps } from '@soroush.design/react/View'
+import type { ComponentConfig, LayoutProviderProps, ThemeComponents } from '@gild-ui/react'
+import type { Theme, PaletteEntry, SizeEntry, ThemeOverride } from '@gild-ui/core/theme'
+import { baseTheme, createTheme } from '@gild-ui/core/theme'
+import type { ButtonColor, ButtonVariant } from '@gild-ui/react/Button'
+import type { CheckboxSize } from '@gild-ui/react/Checkbox'
+import type { GridProps } from '@gild-ui/react/Grid'
+import type { ViewBackgroundToken, ViewProps } from '@gild-ui/react/View'
 
-declare module '@soroush.design/core/theme' {
+declare module '@gild-ui/core/theme' {
   interface ThemePalette {
     brand: PaletteEntry
   }
@@ -39,7 +39,7 @@ declare module '@soroush.design/core/theme' {
   }
 }
 
-declare module '@soroush.design/react' {
+declare module '@gild-ui/react' {
   interface ThemeComponents {
     MyWidget?: ComponentConfig<{ mood?: 'calm' | 'loud' }, 'root' | 'handle'>
   }

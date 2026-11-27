@@ -1,5 +1,5 @@
 import readme from 'packages/mcp/README.md?raw'
-import { Typography } from '@soroush.design/react/Typography'
+import { Typography } from '@gild-ui/react/Typography'
 import { DocsNav } from 'src/common/DocsNav/DocsNav'
 import { Layout } from 'src/common/Layout'
 import { Readme } from 'src/common/Readme/Readme'

@@ -6,10 +6,10 @@
   "extends": "./create-react-router-more/tsconfig.json",
   "compilerOptions": {
     "paths": {
-      "@soroush.design/react": ["../../react/dist/index.d.mts"],
-      "@soroush.design/react/*": ["../../react/dist/*.d.mts"],
-      "@soroush.design/core/*": ["../../core/dist/*.d.mts"],
-      "@soroush.design/react-hooks/*": ["../../react-hooks/dist/*.d.mts"]
+      "@gild-ui/react": ["../../react/dist/index.d.mts"],
+      "@gild-ui/react/*": ["../../react/dist/*.d.mts"],
+      "@gild-ui/core/*": ["../../core/dist/*.d.mts"],
+      "@gild-ui/hooks/*": ["../../hooks/dist/*.d.mts"]
     }
   }
 }

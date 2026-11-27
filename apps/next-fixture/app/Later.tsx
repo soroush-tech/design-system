@@ -1,7 +1,7 @@
 'use client'
 
-import { Button } from '@soroush.design/react/Button'
-import { Paper } from '@soroush.design/react/Paper'
+import { Button } from '@gild-ui/react/Button'
+import { Paper } from '@gild-ui/react/Paper'
 import { useState } from 'react'
 
 /** A client component that mounts after a click, so its classes are new to the document. */

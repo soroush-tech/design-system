@@ -8,8 +8,8 @@ import { NumberInput } from '../NumberInput'
 import { Typography } from '../Typography'
 import { View } from '../View'
 import { ThemeProvider } from '../theme/ThemeProvider'
-import { baseTheme } from '@soroush.design/core/theme'
-import type { ThemeComponents } from '@soroush.design/react'
+import { baseTheme } from '@gild-ui/core/theme'
+import type { ThemeComponents } from '@gild-ui/react'
 import { height, m, maxWidth, minWidth, p, width } from '../utils/test/storiesArgs'
 import {
   buttonColorTokens,
@@ -19,7 +19,7 @@ import {
   textInputSizeTokens,
 } from '../utils/test/storiesOptions'
 import { exampleArgs } from '../utils/test/renderExample'
-import { rangeInputCatalog } from '@soroush.design/core/catalog/entries'
+import { rangeInputCatalog } from '@gild-ui/core/catalog/entries'
 import { RangeInput, type RangeInputProps } from './RangeInput'
 
 const meta: Meta<typeof RangeInput> = {

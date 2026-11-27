@@ -7,7 +7,7 @@ import { type Theme } from '../../theme/themes'
 import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
 import { get, space } from '@soroush.tech/styled-system'
 import { useDefaultProps } from '../../theme/hooks/useDefaultProps'
-import { getSurfaceRadius } from '@soroush.design/core/utils'
+import { getSurfaceRadius } from '@gild-ui/core/utils'
 import { Icon, type IconName } from '../../Icon'
 
 export type AlertSeverity = 'success' | 'info' | 'warning' | 'error'

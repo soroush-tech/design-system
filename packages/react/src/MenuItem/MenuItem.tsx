@@ -20,7 +20,7 @@ import { createShouldForwardProp } from '@soroush.tech/styled-system/should-forw
 import { get } from '@soroush.tech/styled-system'
 import { useDefaultProps } from '../theme/hooks/useDefaultProps'
 import { useTheme } from '../theme/hooks/useTheme'
-import { themeDefault } from '@soroush.design/core/theme'
+import { themeDefault } from '@gild-ui/core/theme'
 import {
   useMenuListContext,
   type MenuItemValue,

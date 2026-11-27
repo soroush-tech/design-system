@@ -8,7 +8,7 @@ export function data({ routeParams }: PageContext): HeadMeta {
     return {
       meta: socialMeta({
         title: routeParams.name[0].toUpperCase() + routeParams.name.slice(1),
-        description: `What @soroush.design/react/${routeParams.name} exports and how to use it.`,
+        description: `What @gild-ui/react/${routeParams.name} exports and how to use it.`,
       }),
     }
   }

@@ -9,8 +9,8 @@ Client component: its entry carries `'use client'`, so a server component can im
 
 ```tsx
 import { useState } from 'react'
-import { Popover } from '@soroush.design/react/Popover'
-import { Button } from '@soroush.design/react/Button'
+import { Popover } from '@gild-ui/react/Popover'
+import { Button } from '@gild-ui/react/Button'
 
 function Example() {
   const [anchor, setAnchor] = useState<HTMLElement | null>(null)

@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { css, keyframes } from '@umber-style/css'
-import * as theme from '@soroush.design/core/theme'
-import * as styling from '@soroush.design/react'
-import * as storiesOptions from '@soroush.design/react/utils/test/storiesOptions'
+import * as theme from '@gild-ui/core/theme'
+import * as styling from '@gild-ui/react'
+import * as storiesOptions from '@gild-ui/react/utils/test/storiesOptions'
 // The stories' shared toggle helpers (`ColorSwatchRows`) render inside their demos.
-import * as storiesToggle from '@soroush.design/react/utils/test/storiesToggle'
+import * as storiesToggle from '@gild-ui/react/utils/test/storiesToggle'
 // ...and the transitions' `TransitionToggle`. The package does not export it, so it is read
 // from its source, as the stories modules are.
 import * as storiesTransition from 'packages/react/src/utils/test/storiesTransition'
@@ -19,7 +19,7 @@ const componentModules = requireMatches(
   }) as Record<string, Record<string, unknown>>
 )
 
-// Every component's catalog entry, in `@soroush.design/core`: the stories read their option values
+// Every component's catalog entry, in `@gild-ui/core`: the stories read their option values
 // from it (`chipVariantValues`, `snackbarVerticalValues`), so a demo that lists them needs them in
 // scope too.
 const catalogModules = requireMatches(

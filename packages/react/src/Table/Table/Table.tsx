@@ -5,7 +5,7 @@ import { TableContext, type TableCellPadding } from '../TableContext'
 import type { SpaceProps, LayoutProps, BorderProps } from '@soroush.tech/styled-system'
 import { styled } from '../../style/styled'
 import { type Theme } from '../../theme/themes'
-import { type PaletteColor } from '@soroush.design/core/theme'
+import { type PaletteColor } from '@gild-ui/core/theme'
 import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
 import { space, layout, border, system, get } from '@soroush.tech/styled-system'
 

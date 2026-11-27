@@ -1,6 +1,6 @@
 # Packages
 
-Conventions for everything under `packages/` - the workspace's shared code. Most packages are framework-agnostic tooling; `react` (`@soroush.design/react`) is the React design system - the components, the theme's provider and hooks, and the styling system - `react-hooks` its hooks, and `react-markdown` a companion React library that builds on it (a headless markdown editor/renderer). The component packages follow [`react/design-system.md`](./react/design-system.md) for component conventions - the `react-markdown` package's specifics are in [`react-markdown/markdown.md`](./react-markdown/markdown.md). Each folder is its own pnpm package, globbed by `packages/*` in `pnpm-workspace.yaml` and consumed by apps (and by each other) via `workspace:*`.
+Conventions for everything under `packages/` - the workspace's shared code. Most packages are framework-agnostic tooling; `react` (`@gild-ui/react`) is Gild UI for React - the components, the theme's provider and hooks, and the styling system - `hooks` its hooks, and `react-markdown` a companion React library that builds on it (a headless markdown editor/renderer). The component packages follow [`react/design-system.md`](./react/design-system.md) for component conventions - the `react-markdown` package's specifics are in [`react-markdown/markdown.md`](./react-markdown/markdown.md). Each folder is its own pnpm package, globbed by `packages/*` in `pnpm-workspace.yaml` and consumed by apps (and by each other) via `workspace:*`.
 
 For a plain-English overview of what currently lives here, see [`README.md`](./README.md).
 
@@ -23,7 +23,7 @@ For a plain-English overview of what currently lives here, see [`README.md`](./R
 
 ## Folder structure
 
-Directory name == package name **minus its scope**: `@soroush.design/react-markdown` is `packages/react-markdown`.
+Directory name == package name **minus its scope**: `@gild-ui/react-markdown` is `packages/react-markdown`.
 
 ```
 packages/
@@ -46,29 +46,29 @@ Keep the **public API in `index.ts`** (the single entry); extract internal helpe
 
 ## Naming & scope
 
-- Every package is scoped **`@soroush.design/*`**, private ones included (`@soroush.design/docs-content`, `story-demo`, `lab`, `contract`, and the docs app `@soroush.design/docs`). The exceptions: **`@soroush.tech/ui-spec`**, which keeps its name and is not edited; and **`@soroush.tech/eslint-config`**, which keeps its name because `ui-spec` lists it as a `workspace:*` dev dependency and renaming it would edit `ui-spec`. A new package takes the `@soroush.design` scope (apps are not - `apps/web` stays `@soroush/web`).
+- The UI packages are scoped **`@gild-ui/*`**, private ones included (`@gild-ui/docs-content`, `story-demo`, `lab`, `contract`). The command line and the MCP server stay `@soroush.design/cli` and `@soroush.design/mcp`, and so does the docs app, `@soroush.design/docs`. The exceptions: **`@soroush.tech/ui-spec`**, which keeps its name and is not edited; and **`@soroush.tech/eslint-config`**, which keeps its name because `ui-spec` lists it as a `workspace:*` dev dependency and renaming it would edit `ui-spec`. A new UI package takes the `@gild-ui` scope (apps are not - `apps/web` stays `@soroush/web`).
 - A Vite plugin's internal `name` field **must equal its package name minus the scope** (`vite-plugin-watch`), so build logs read `[vite-plugin-watch]`. Keep the directory, package name, and plugin `name` in sync.
 
 ---
 
-## The `soroush.design` family
+## The Gild UI family
 
 The layout of the UI packages ([#114](https://github.com/soroush-tech/design-system/issues/114),
 [#157](https://github.com/soroush-tech/design-system/issues/157)). A package is separate only when it
 is **shared by platforms**, **brings third-party dependencies** an app should not be forced to
-install, or is **meant to be used without the design system**. Packages never re-export each other,
+install, or is **meant to be used without Gild UI**. Packages never re-export each other,
 so every name has one path.
 
-| Package                          | Holds                                                                                                                      | An app writes                                  |
-| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
-| `@soroush.design/core`           | What every platform shares and needs no framework: the theme, tokens, `createTheme`, `baseTheme`, breakpoints, the catalog | `@soroush.design/core/theme`                   |
-| `@soroush.design/react-hooks`    | General hooks, one subpath each, usable without the design system                                                          | `@soroush.design/react-hooks/useDebounce`      |
-| `@soroush.design/react`          | The components (one subpath each) and the styling system: `ThemeProvider`, `useTheme`, `styled`, `Global`, ...             | `@soroush.design/react/Button`, `.../useTheme` |
-| `@soroush.design/react-markdown` | The markdown editor and renderer, with its third-party libraries; a peer of `@soroush.design/react`                        | `@soroush.design/react-markdown/Editor`        |
+| Package                   | Holds                                                                                                                      | An app writes                           |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
+| `@gild-ui/core`           | What every platform shares and needs no framework: the theme, tokens, `createTheme`, `baseTheme`, breakpoints, the catalog | `@gild-ui/core/theme`                   |
+| `@gild-ui/hooks`          | General hooks, one subpath each, usable without Gild UI                                                                    | `@gild-ui/hooks/useDebounce`            |
+| `@gild-ui/react`          | The components (one subpath each) and the styling system: `ThemeProvider`, `useTheme`, `styled`, `Global`, ...             | `@gild-ui/react/Button`, `.../useTheme` |
+| `@gild-ui/react-markdown` | The markdown editor and renderer, with its third-party libraries; a peer of `@gild-ui/react`                               | `@gild-ui/react-markdown/Editor`        |
 
-A scope on npm has one level, so a package of a platform is named `@soroush.design/<platform>-<name>`,
-never `@soroush.design/react/markdown`. Later packages repeat the pattern (`react-charts`,
-`react-native`, `vue`). `@soroush.design/mcp` and `@soroush.design/cli` are outside it.
+A scope on npm has one level, so a package of a platform is named `@gild-ui/<platform>-<name>`,
+never `@gild-ui/react/markdown`. Later packages repeat the pattern (`react-charts`,
+`react-native`, `vue`). `@soroush.design/mcp` and `@soroush.design/cli` are outside it, with the `@soroush.design` scope.
 `@soroush.tech/styled-system` is not a package of this repository: it lives in
 [`soroush-tech/styled-system`](https://github.com/soroush-tech/styled-system), and the packages here
 depend on it from npm.
@@ -79,8 +79,8 @@ and a diagram library, and an app that wants buttons should not install either. 
 
 ### One version: the lockstep set
 
-`@soroush.design/core`, `@soroush.design/react-hooks`, `@soroush.design/react` and
-`@soroush.design/react-markdown` are one product: they share **one version** and are published
+`@gild-ui/core`, `@gild-ui/hooks`, `@gild-ui/react` and
+`@gild-ui/react-markdown` are one product: they share **one version** and are published
 together ([#159](https://github.com/soroush-tech/design-system/issues/159)), so an app never has to
 match a version of one to another. The list is the `lockstep` array of the root `package.json`, the
 one place the guard, the publish workflow and this page agree on. `@soroush.design/mcp`, `@soroush.design/cli` and `@soroush.tech/ui-spec` keep a version of their own.
@@ -97,11 +97,11 @@ one place the guard, the publish workflow and this page agree on. `@soroush.desi
 
 ### The core
 
-`@soroush.design/core` holds what every platform shares and that needs **no framework**: the theme
+`@gild-ui/core` holds what every platform shares and that needs **no framework**: the theme
 (the token scales, `baseTheme`, the `Theme` types, `createTheme`, `themeDefault`, `spacing`) at
 `/theme`, the breakpoint and container-query helpers at `/breakpoints`, the pure utilities at
 `/utils`, and the catalog at `/catalog`. The platform packages depend on it as a real dependency -
-`workspace:^`, never bundled - and import it by its subpaths (`@soroush.design/core/catalog`), one
+`workspace:^`, never bundled - and import it by its subpaths (`@gild-ui/core/catalog`), one
 per area.
 
 - **The rule: no framework import; a test enforces it.** The core has no `dependencies` and no
@@ -110,19 +110,19 @@ per area.
   fails on any import that is not one of its own chunks.
 - **The core describes; a platform names.** Data is platform-neutral: a catalog entry holds the
   `subpath` a component is served from, not the package. The React package's `/catalog` adds `module`
-  (`@soroush.design/react/<subpath>`) to each entry and keeps every other field as the core wrote it.
+  (`@gild-ui/react/<subpath>`) to each entry and keeps every other field as the core wrote it.
 - **A platform composes its `Theme` on top of the core's.** The core's `Theme` and every scale are
   open interfaces with no framework type in them. The React package declares
   `interface Theme extends CoreTheme { components?: ... }` for what names its framework - the typing
   of `theme.components` (owner states, slots, `styleOverrides`) - and uses it inside; it does not
-  re-export the core. An app imports the theme from `@soroush.design/core/theme` and augments it
+  re-export the core. An app imports the theme from `@gild-ui/core/theme` and augments it
   there.
 - **Publish the core before the packages that use it.** `scripts/prerelease-versions.mjs` orders a
   run dependencies-first.
 
 ### The React package
 
-`@soroush.design/react` holds the components and the styling system they are written in: root and
+`@gild-ui/react` holds the components and the styling system they are written in: root and
 one subpath each for `ThemeProvider`, `LayoutProvider`, `useTheme`, `useDefaultProps`,
 `useMediaQuery`, `withTheme`, `styled`, `css`, `keyframes`, `Global`, `useStyle`, `withStyles` and
 `StylesConsumer`; `/engine` for server-rendering setup; `/catalog` and `/testing`; and one subpath
@@ -135,7 +135,7 @@ for every component. The public paths and the exact names of each are the contra
   and fails on a second copy, and on a core name read off a namespace object. A bundler builds a
   namespace object for a barrel that `export *`s a package, and the object lacks the starred names
   (`theme_exports.themeDefault` threw at run time once): source imports a core name from
-  `@soroush.design/core/...`, never through a barrel of the package.
+  `@gild-ui/core/...`, never through a barrel of the package.
 - **The engine is configured by a function** (`configureEngine()`), which every entry point of the
   styling system calls before its first use. An app that imports only `keyframes` gets the prefix,
   the style memo and the raw theme keys. `src/entries/entries.test.ts` holds each entry to it.
@@ -148,7 +148,7 @@ for every component. The public paths and the exact names of each are the contra
   component declares into another module, and a test fails when a `styled(..., { name })` has no key
   or uses a slot its `Slot` type lacks. An app checks its looks with `satisfies ThemeComponents`.
 - **A package that adds components** - `react-markdown` - extends `ThemeComponents` with one
-  `declare module '@soroush.design/react'` block, and the core's `Theme` with its own keys, in a types
+  `declare module '@gild-ui/react'` block, and the core's `Theme` with its own keys, in a types
   file every entry of the package imports, so an app that imports any entry has them typed.
 - **Server and client components.** The package is used from server components, so each entry is
   one or the other, and the build keeps it where an app's bundler reads it. A component is
@@ -177,10 +177,10 @@ for every component. The public paths and the exact names of each are the contra
 - A component of the React package sits directly under it and keeps its own name, capitalised:
   `/Button`, `/TextInput`. A name of the styling system keeps its own name too: `/ThemeProvider`,
   `/useTheme`, `/styled`.
-- A different package is a different package name: `@soroush.design/react-markdown/Editor`.
-- **The docs route of a thing is its import path under the platform**: `@soroush.design/react/Button`
-  is documented at `/react/Button/`, `@soroush.design/react-hooks/useDebounce` at
-  `/react/hooks/useDebounce/` and `@soroush.design/react-markdown/Editor` at
+- A different package is a different package name: `@gild-ui/react-markdown/Editor`.
+- **The docs route of a thing is its import path under the platform**: `@gild-ui/react/Button`
+  is documented at `/react/Button/`, `@gild-ui/hooks/useDebounce` at
+  `/react/hooks/useDebounce/` and `@gild-ui/react-markdown/Editor` at
   `/react/markdown/Editor/`. A test fails naming a subpath that has no page - see the Routes section
   of `apps/docs/docs-app.md`. The URLs never change once indexed.
 
@@ -188,11 +188,11 @@ for every component. The public paths and the exact names of each are the contra
 
 Ask what the hook is about:
 
-| The hook...            | It lives in                   | An app imports it from                    |
-| ---------------------- | ----------------------------- | ----------------------------------------- |
-| belongs to a component | that component's folder       | the component's entry point               |
-| reads the theme        | `@soroush.design/react`       | `@soroush.design/react/useTheme`          |
-| is tied to nothing     | `@soroush.design/react-hooks` | `@soroush.design/react-hooks/useDebounce` |
+| The hook...            | It lives in             | An app imports it from       |
+| ---------------------- | ----------------------- | ---------------------------- |
+| belongs to a component | that component's folder | the component's entry point  |
+| reads the theme        | `@gild-ui/react`        | `@gild-ui/react/useTheme`    |
+| is tied to nothing     | `@gild-ui/hooks`        | `@gild-ui/hooks/useDebounce` |
 
 - The test for the hooks package: **would someone want it without the component?** A hook that sits in
   one component's folder and is imported by others belongs there.
@@ -209,9 +209,9 @@ Ask what the hook is about:
 - **The theme exists once in an app.** The packages depend on each other by a version range and never
   bundle each other; two copies are two contexts, and components that do not see the app's theme.
 - **An app imports from the packages by their real names.** The docs, the starters, `init`, the
-  READMEs and the MCP content all write `@soroush.design/react/...`, and `@soroush.design/core/theme`
+  READMEs and the MCP content all write `@gild-ui/react/...`, and `@gild-ui/core/theme`
   for the theme.
-- **`core`, `react-hooks`, `react` and `react-markdown` share one version**, published together in
+- **`core`, `hooks`, `react` and `react-markdown` share one version**, published together in
   dependency order.
 - **New packages start at `0.1.0`**, with release notes written for that version: what the package is
   and how to use it, not a list of changes against a package it replaces.
@@ -234,7 +234,7 @@ Ask what the hook is about:
 
   ```ts
   // consumer
-  import watch from '@soroush.design/vite-plugin-watch'
+  import watch from '@gild-ui/vite-plugin-watch'
   ```
 
 - Internal (monorepo) consumption is **TypeScript source**: `exports: { ".": "./src/index.ts" }`, consumed under `moduleResolution: bundler` via `workspace:*`. **No `paths` alias, no build step** for internal use.
@@ -280,7 +280,7 @@ So release **only** one of these two ways:
 
    ```sh
    # bump the version in packages/<name>/package.json first (a version can't be republished)
-   pnpm --filter '@soroush.design/<name>' publish --no-git-checks --otp=<code>
+   pnpm --filter '@gild-ui/<name>' publish --no-git-checks --otp=<code>
    ```
 
    `--no-git-checks` is needed off a clean/main branch; quote the `@scope/name` in PowerShell (a bare `@` is the splat operator). **Do not** `cd packages/<name> && npm publish` - that is the exact thing that ships the broken `./src` exports.
@@ -288,15 +288,15 @@ So release **only** one of these two ways:
 **Verify the published artifact, not just the metadata.** Download the real tarball and confirm `exports` resolves to `dist`:
 
 ```sh
-npm pack '@soroush.design/<name>@<version>'        # downloads from the registry
-tar -xzf soroush.design-<name>-<version>.tgz -O package/package.json | grep -A3 '"exports"'
+npm pack '@gild-ui/<name>@<version>'        # downloads from the registry
+tar -xzf gild-ui-<name>-<version>.tgz -O package/package.json | grep -A3 '"exports"'
 # exports must point at ./dist/*, and the tarball must NOT rely on any ./src file
 ```
 
 If a broken version already went out, you can't overwrite it - **bump, republish with pnpm, then deprecate** the bad ones:
 
 ```sh
-npm deprecate '@soroush.design/<name>@<badrange>' 'Broken exports; use >=<fixed>.' --otp=<code>
+npm deprecate '@gild-ui/<name>@<badrange>' 'Broken exports; use >=<fixed>.' --otp=<code>
 ```
 
 ---

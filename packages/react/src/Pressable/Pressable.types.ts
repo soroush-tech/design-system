@@ -1,4 +1,4 @@
-import type { ThemeColor } from '@soroush.design/core/theme'
+import type { ThemeColor } from '@gild-ui/core/theme'
 import type { ComponentConfig } from '../theme/themes'
 
 /**

@@ -11,7 +11,7 @@ import {
 } from './nav'
 
 // The registry itself - and its lockstep with the README and MDX files on disk - is
-// guarded by @soroush.design/docs-content's own tests. What matters here is that this
+// guarded by @gild-ui/docs-content's own tests. What matters here is that this
 // module turns that registry into a correct rail and sidebar.
 
 afterEach(() => {
@@ -94,7 +94,7 @@ describe('the packages in the rail', () => {
     const [all, ...docs] = item.groups[0].items
     expect(all).toEqual({ label: 'All packages', href: '/packages/' })
     expect(docs.map((entry) => [entry.label, entry.href])).toEqual([
-      ['Design System', '/react/'],
+      ['Gild UI for React', '/react/'],
       ['Markdown', '/react/markdown/'],
       ['Styled System', '/styled-system/'],
       ['MCP server', '/mcp/'],

@@ -1,7 +1,7 @@
-import { baseTheme, createTheme, defineThemes } from '@soroush.design/core/theme'
-import type { ThemeComponents } from '@soroush.design/react'
-import { registerBaseTheme } from '@soroush.design/react/ThemeProvider'
-import { alpha, generateBoxShadow } from '@soroush.design/core/utils'
+import { baseTheme, createTheme, defineThemes } from '@gild-ui/core/theme'
+import type { ThemeComponents } from '@gild-ui/react'
+import { registerBaseTheme } from '@gild-ui/react/ThemeProvider'
+import { alpha, generateBoxShadow } from '@gild-ui/core/utils'
 
 // Brand color ramps. Every app that copies them shares one color set, so change which
 // ramp fills a palette slot, never the ramp values.
@@ -312,7 +312,7 @@ export const { light, dark } = themes
 registerBaseTheme(light)
 
 // Tells every library the themes' colors, sizes and looks.
-declare module '@soroush.design/core/theme' {
+declare module '@gild-ui/core/theme' {
   interface Register {
     themes: typeof themes
   }

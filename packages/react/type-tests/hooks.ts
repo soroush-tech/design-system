@@ -1,7 +1,7 @@
 // Type-level test: a component's hooks and their types are public from its entry point.
 // Runs via `pnpm test:types`, against the built declarations.
-import { useHoldRepeat, type UseHoldRepeatOptions } from '@soroush.design/react/NumberInput'
-import { useAutoHide, type UseAutoHideParams } from '@soroush.design/react/Snackbar'
+import { useHoldRepeat, type UseHoldRepeatOptions } from '@gild-ui/react/NumberInput'
+import { useAutoHide, type UseAutoHideParams } from '@gild-ui/react/Snackbar'
 
 export const options: UseHoldRepeatOptions = { delay: 300, interval: 50 }
 export const hold: ReturnType<typeof useHoldRepeat> = {

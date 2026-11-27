@@ -1,9 +1,9 @@
 {
-  "name": "@soroush.design/lab",
+  "name": "@gild-ui/lab",
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "Incubator for components on their way into @soroush.design/react - APIs here may change without notice.",
+  "description": "Incubator for components on their way into @gild-ui/react - APIs here may change without notice.",
   "exports": {
     ".": "./src/index.ts",
     "./*": "./src/*/index.ts"
@@ -15,11 +15,11 @@
     "test:coverage": "vitest run --coverage"
   },
   "peerDependencies": {
-    "@soroush.design/react": "workspace:^",
+    "@gild-ui/react": "workspace:^",
     "react": "^19.2.8"
   },
   "devDependencies": {
-    "@soroush.design/react": "workspace:*",
+    "@gild-ui/react": "workspace:*",
     "@soroush.tech/eslint-config": "workspace:*",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",

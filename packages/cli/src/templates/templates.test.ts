@@ -22,9 +22,9 @@ describe('createThemesSource', () => {
 
   it('gives a TypeScript app the augmentation stub, as a comment, and the registration; a JavaScript app neither', () => {
     const source = createThemesSource({ isTypeScript: true, scheme: 'light' })
-    expect(source).toContain("// declare module '@soroush.design/core/theme' {")
+    expect(source).toContain("// declare module '@gild-ui/core/theme' {")
     expect(source).toContain(
-      "\ndeclare module '@soroush.design/core/theme' {\n  interface Register {\n    themes: typeof themes\n  }\n}\n"
+      "\ndeclare module '@gild-ui/core/theme' {\n  interface Register {\n    themes: typeof themes\n  }\n}\n"
     )
     expect(createThemesSource({ isTypeScript: false, scheme: 'light' })).not.toContain(
       'declare module'
@@ -33,10 +33,8 @@ describe('createThemesSource', () => {
 
   it('registers the theme the app starts in as the base theme, and types the components in TypeScript only', () => {
     const dark = createThemesSource({ isTypeScript: true, scheme: 'dark' })
-    expect(dark).toContain(
-      "import { registerBaseTheme } from '@soroush.design/react/ThemeProvider'"
-    )
-    expect(dark).toContain("import type { ThemeComponents } from '@soroush.design/react'")
+    expect(dark).toContain("import { registerBaseTheme } from '@gild-ui/react/ThemeProvider'")
+    expect(dark).toContain("import type { ThemeComponents } from '@gild-ui/react'")
     expect(dark).toContain('\nregisterBaseTheme(themes.dark)\n')
     const js = createThemesSource({ isTypeScript: false, scheme: 'light' })
     expect(js).toContain('\nregisterBaseTheme(themes.light)\n')
@@ -75,11 +73,11 @@ describe('createProvidersSource', () => {
 
 describe('isSetUpByInit', () => {
   it('writes the name of the package an app imports from', () => {
-    expect(MARKER).toBe('// Set up by @soroush.design/react init.')
+    expect(MARKER).toBe('// Set up by @gild-ui/react init.')
   })
 
   it('recognises a file that starts with the current marker', () => {
-    expect(isSetUpByInit('// Set up by @soroush.design/react init. Your themes')).toBe(true)
+    expect(isSetUpByInit('// Set up by @gild-ui/react init. Your themes')).toBe(true)
   })
 
   it('recognises a file that starts with the marker of the library, its name before', () => {

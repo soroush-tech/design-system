@@ -30,9 +30,7 @@ describe('ComponentHero', () => {
   it('shows the install and the import of the component, from its package', () => {
     renderHero()
     expect(
-      screen.getByText((text) =>
-        text.includes("import { Button } from '@soroush.design/react/Button'")
-      )
+      screen.getByText((text) => text.includes("import { Button } from '@gild-ui/react/Button'"))
     ).toBeInTheDocument()
   })
 

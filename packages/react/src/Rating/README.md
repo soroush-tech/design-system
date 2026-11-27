@@ -11,7 +11,7 @@ Every label is yours - an item's name (`getLabelText`) and the "no rating" radio
 so the rating carries no language of its own.
 
 ```tsx
-import { Rating } from '@soroush.design/react/Rating'
+import { Rating } from '@gild-ui/react/Rating'
 
 ;<Rating
   aria-label="Quality"

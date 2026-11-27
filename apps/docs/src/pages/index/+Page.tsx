@@ -1,11 +1,11 @@
-import { styled } from '@soroush.design/react'
-import { Button } from '@soroush.design/react/Button'
-import { Card } from '@soroush.design/react/Card'
-import { Flex } from '@soroush.design/react/Flex'
-import { Grid } from '@soroush.design/react/Grid'
-import { Link } from '@soroush.design/react/Link'
-import { Typography } from '@soroush.design/react/Typography'
-import { View } from '@soroush.design/react/View'
+import { styled } from '@gild-ui/react'
+import { Button } from '@gild-ui/react/Button'
+import { Card } from '@gild-ui/react/Card'
+import { Flex } from '@gild-ui/react/Flex'
+import { Grid } from '@gild-ui/react/Grid'
+import { Link } from '@gild-ui/react/Link'
+import { Typography } from '@gild-ui/react/Typography'
+import { View } from '@gild-ui/react/View'
 import { ComponentIllustration } from 'src/common/ComponentCard/ComponentIllustration'
 import { Layout } from 'src/common/Layout'
 import { PACKAGE_VERSIONS } from 'src/common/packageVersions'
@@ -35,7 +35,7 @@ const FEATURES = [
 const PACKAGES = [
   {
     pkg: 'react',
-    name: 'Design System',
+    name: 'Gild UI for React',
     text: 'The components: layout, inputs, feedback, navigation and overlays, with a theme to match your brand.',
   },
   {

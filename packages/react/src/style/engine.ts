@@ -1,5 +1,5 @@
 import { configure } from '@umber-style/react'
-import { baseTheme } from '@soroush.design/core/theme'
+import { baseTheme } from '@gild-ui/core/theme'
 import styleCache from '../engine/styleCache'
 
 let isConfigured = false

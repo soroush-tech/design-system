@@ -1,4 +1,4 @@
-import type { InputVariantKey, ThemeColor, ThemeSize } from '@soroush.design/core/theme'
+import type { InputVariantKey, ThemeColor, ThemeSize } from '@gild-ui/core/theme'
 import type { ComponentConfig } from '../theme/themes'
 
 /** The defaults a theme may set for every `NumberInput` - its button labels give it a language. */

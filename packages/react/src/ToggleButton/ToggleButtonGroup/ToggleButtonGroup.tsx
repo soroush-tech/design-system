@@ -6,7 +6,7 @@ import { ButtonGroup, type ButtonGroupProps } from '../../ButtonGroup'
 import { styled } from '../../style/styled'
 import { type Theme } from '../../theme/themes'
 import { useTheme } from '../../theme/hooks/useTheme'
-import { themeDefault } from '@soroush.design/core/theme'
+import { themeDefault } from '@gild-ui/core/theme'
 
 export interface ToggleButtonGroupProps extends Omit<ButtonGroupProps, 'variant' | 'onChange'> {
   /** Selected value(s) - single when `isExclusive`, array otherwise. Controlled. */

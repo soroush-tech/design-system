@@ -1,4 +1,4 @@
-import type { ThemeBackground, ThemeRadii, ThemeText } from '@soroush.design/core/theme'
+import type { ThemeBackground, ThemeRadii, ThemeText } from '@gild-ui/core/theme'
 import type { ComponentConfig } from '../../theme/themes'
 
 /** The defaults a theme may set for every `Accordion`. */

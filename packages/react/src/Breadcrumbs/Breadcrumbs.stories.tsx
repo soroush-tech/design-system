@@ -9,8 +9,8 @@ import { MenuItem } from '../MenuItem'
 import { Typography } from '../Typography'
 import { View } from '../View'
 import { ThemeProvider } from '../theme/ThemeProvider'
-import { baseTheme } from '@soroush.design/core/theme'
-import type { ThemeComponents } from '@soroush.design/react'
+import { baseTheme } from '@gild-ui/core/theme'
+import type { ThemeComponents } from '@gild-ui/react'
 import { p } from '../utils/test/storiesArgs'
 import {
   breadcrumbsSeparatorTokens,
@@ -18,7 +18,7 @@ import {
   typographyVariantTokens,
 } from '../utils/test/storiesOptions'
 import { exampleArgs } from '../utils/test/renderExample'
-import { breadcrumbsCatalog } from '@soroush.design/core/catalog/entries'
+import { breadcrumbsCatalog } from '@gild-ui/core/catalog/entries'
 import { Breadcrumbs, type BreadcrumbsProps } from './Breadcrumbs'
 
 // The separator control picks a character, or the chevron icon.

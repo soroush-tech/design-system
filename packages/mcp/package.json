@@ -1,7 +1,7 @@
 {
   "name": "@soroush.design/mcp",
   "version": "0.1.4",
-  "description": "MCP server for the @soroush.tech design system - serves the component inventory, every component README, and the theme token contract to AI coding tools.",
+  "description": "MCP server for Gild UI - serves the component inventory, every component README, and the theme token contract to AI coding tools.",
   "keywords": [
     "mcp",
     "model-context-protocol",
@@ -14,14 +14,14 @@
   ],
   "author": "Masoud Soroush <masoud@soroush.tech>",
   "license": "MIT",
-  "homepage": "https://docs.soroush.design/mcp/",
+  "homepage": "https://gild-ui.soroush.design/mcp/",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/soroush-tech/design-system.git",
+    "url": "git+https://github.com/soroush-tech/gild-ui.git",
     "directory": "packages/mcp"
   },
   "bugs": {
-    "url": "https://github.com/soroush-tech/design-system/issues"
+    "url": "https://github.com/soroush-tech/gild-ui/issues"
   },
   "type": "module",
   "sideEffects": false,
@@ -74,7 +74,7 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
-    "@soroush.design/docs-content": "workspace:*",
+    "@gild-ui/docs-content": "workspace:*",
     "@soroush.tech/eslint-config": "workspace:*",
     "@types/node": "^26.6.6",
     "@vitest/coverage-v8": "^5.1.0",

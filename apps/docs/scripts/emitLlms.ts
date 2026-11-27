@@ -4,7 +4,7 @@
 //
 // A post-build script rather than a Vite plugin: vite.config.ts is executed by Node
 // with workspace dependencies left external, and this reads the registry out of
-// @soroush.design/docs-content, whose exports are TypeScript source. Run under tsx.
+// @gild-ui/docs-content, whose exports are TypeScript source. Run under tsx.
 import { writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -22,10 +22,10 @@ import {
   splitReadme,
   stripReadmeChrome,
   type ComponentNavItem,
-} from '@soroush.design/docs-content'
-import { loadPackageFile, loadReadme, loadRepoFile } from '@soroush.design/docs-content/node'
+} from '@gild-ui/docs-content'
+import { loadPackageFile, loadReadme, loadRepoFile } from '@gild-ui/docs-content/node'
 
-const SITE_URL = process.env.VITE_SITE_URL ?? 'https://docs.soroush.design'
+const SITE_URL = process.env.VITE_SITE_URL ?? 'https://gild-ui.soroush.design'
 
 const componentUrl = (item: ComponentNavItem): string =>
   `${SITE_URL}${sitePath(item.pkg, componentPagePath(item))}`
@@ -43,7 +43,7 @@ const firstLine = (markdown: string): string =>
 const link = (item: ComponentNavItem): string =>
   `- [${item.name}](${componentUrl(item)}): ${firstLine(splitReadme(absoluteReadmeLinks(loadReadme(item))).intro)}`
 
-const hooksReadme = (): string => loadRepoFile('packages/react-hooks/README.md')
+const hooksReadme = (): string => loadRepoFile('packages/hooks/README.md')
 
 // A hook's page opens with a paragraph that says what it is, wrapped over several lines.
 const hookSummary = (hook: string): string =>
@@ -55,7 +55,7 @@ const hookLink = (hook: string): string =>
 /** The spec-shaped index: what this is, then links out to everything. */
 export const renderIndex = (): string =>
   [
-    '# soroush design system',
+    '# Gild UI',
     '',
     '> A token-driven React component library built on a typed style-prop engine, with a',
     '> markdown companion library. Every component documents its props, token values, and',

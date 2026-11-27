@@ -8,7 +8,7 @@ import { get, space } from '@soroush.tech/styled-system'
 import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
 import { useTheme } from '../theme/hooks/useTheme'
 import { useFormControl } from '../FormControl'
-import { themeDefault } from '@soroush.design/core/theme'
+import { themeDefault } from '@gild-ui/core/theme'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

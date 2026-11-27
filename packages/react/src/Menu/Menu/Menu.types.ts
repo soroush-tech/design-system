@@ -5,7 +5,7 @@ import type {
   ThemeColor,
   ThemeSize,
   ThemeSpaceKey,
-} from '@soroush.design/core/theme'
+} from '@gild-ui/core/theme'
 import type { ComponentConfig } from '../../theme/themes'
 import type { PaperElevation } from '../../Paper/Paper'
 

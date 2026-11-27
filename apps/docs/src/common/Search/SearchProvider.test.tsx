@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import type { PageContext as VikePageContext } from 'vike/types'
-import { ThemeProvider } from '@soroush.design/react'
+import { ThemeProvider } from '@gild-ui/react'
 import { PageContext } from 'src/common/PageContext'
 import { dark } from 'src/theme/themes'
 import { SearchProvider } from './SearchProvider'
@@ -183,7 +183,7 @@ describe('SearchProvider', () => {
     )
   })
 
-  it('searches the root path as the design system', async () => {
+  it('searches the root path as Gild UI', async () => {
     const user = userEvent.setup()
     renderSearch('')
     await user.click(screen.getByRole('button', { name: 'open search' }))

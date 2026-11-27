@@ -19,12 +19,12 @@ import { alpha, styled } from '../style/styled'
 import { type AppTheme as Theme } from '../theme/themes'
 import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
 import { border, space, layout, typography } from '@soroush.tech/styled-system'
-import { getAnchorRel } from '@soroush.design/core/utils'
-import { themeDefault } from '@soroush.design/core/theme'
+import { getAnchorRel } from '@gild-ui/core/utils'
+import { themeDefault } from '@gild-ui/core/theme'
 import { useDefaultProps } from '../theme/hooks/useDefaultProps'
 import { useTheme } from '../theme/hooks/useTheme'
 import type { ButtonVariant } from './Button.types'
-import type { ThemeColor } from '@soroush.design/core/theme'
+import type { ThemeColor } from '@gild-ui/core/theme'
 
 /** Augmentable via the `ButtonVariants` interface, or defined by a registered theme - style new values through `theme.components.Button.variants`. */
 export type ButtonColor = ThemeColor

@@ -1,4 +1,4 @@
-import type { ThemeText } from '@soroush.design/core/theme'
+import type { ThemeText } from '@gild-ui/core/theme'
 import type { ReactNode } from 'react'
 import type { ComponentConfig } from '../theme/themes'
 

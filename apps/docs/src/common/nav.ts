@@ -10,16 +10,16 @@ import {
   sections,
   type ComponentNavItem,
   type DocsSection,
-} from '@soroush.design/docs-content'
+} from '@gild-ui/docs-content'
 import { PACKAGES } from 'src/common/packages'
 import { sectionPath } from 'src/common/sectionPath'
 
 // The component taxonomy lives in
-// @soroush.design/docs-content, shared with the MCP server so both describe the same
+// @gild-ui/docs-content, shared with the MCP server so both describe the same
 // library. Re-exported here because the app imports them through this module, and
 // guarded against the files on disk by that package's own tests. What stays below is
 // app-specific: turning the registry into the rail, the sidebar groups and the hrefs.
-export * from '@soroush.design/docs-content'
+export * from '@gild-ui/docs-content'
 
 export interface NavItem {
   label: string
@@ -274,7 +274,7 @@ const overviewRail = (pkg: 'mcp' | 'ui-spec' | 'cli'): RailItem[] => [
 
 const SECTIONS: SectionNav[] = (
   [
-    { pkg: 'react', label: 'Design system documentation', rail: reactRail },
+    { pkg: 'react', label: 'Gild UI documentation', rail: reactRail },
     { pkg: 'markdown', label: 'Markdown documentation', rail: markdownRail },
     { pkg: 'styled-system', label: 'Styled-system documentation', rail: styledSystemRail },
     { pkg: 'mcp', label: 'MCP server documentation', rail: overviewRail('mcp') },

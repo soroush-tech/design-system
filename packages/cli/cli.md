@@ -1,6 +1,6 @@
 # Command line
 
-`@soroush.design/cli` holds the design system's command line: `init` sets the design system up in
+`@soroush.design/cli` holds Gild UI's command line: `init` sets Gild UI up in
 an existing app, and `create` starts a new one (RFC #84). This is the contributor's view. The
 user's is [`docs/command-line.md`](./docs/command-line.md), which the docs site's `/cli/` page
 renders; [`README.md`](./README.md) is npm's short page, which points there.
@@ -11,19 +11,19 @@ renders; [`README.md`](./README.md) is npm's short page, which points there.
 | ------------------------------ | ------------------------- | ------------------------------------------------- |
 | `npx @soroush.design/cli init` | `packages/cli/src/bin.ts` | The workspace's React package, read at build time |
 
-An app imports from `@soroush.design/react`, so that is what the command installs, at the version it
+An app imports from `@gild-ui/react`, so that is what the command installs, at the version it
 was released next to: `src/designSystemPackage.ts` reads it from `packages/react/package.json` when
 this package is built, and the bundler keeps only that field. It is a released version, even from
 an alpha cli. `src/bin.ts` reads the package's name and its React peer range the same way.
 
-`@soroush.design/react` has no bin and does not depend on this package: an app installs the React
+`@gild-ui/react` has no bin and does not depend on this package: an app installs the React
 package and never the command line at run time. This package never depends on the package it
 installs, so there is no cycle; its `type-tests` read that package's built types by path. Build
 and publish the React package before this one, so the version it bundles exists on npm.
 
-An app counts as set up when it has `@soroush.design/react` as a dependency.
+An app counts as set up when it has `@gild-ui/react` as a dependency.
 
-Publish this package first: the design system's release names its exact version. CD orders an
+Publish this package first: Gild UI's release names its exact version. CD orders an
 `all` run dependencies-first.
 
 ## Layout
@@ -36,7 +36,7 @@ Publish this package first: the design system's release names its exact version.
   root's edit, the install. It reads files only through `InitFacts.readFile`.
 - `src/apply/` writes the plan, taking every change back when a write fails.
 - `src/templates/` holds the files `init` writes. Each starts with `MARKER`
-  (`// Set up by @soroush.design/react init.`), which is how a second run tells its own files from the
+  (`// Set up by @gild-ui/react init.`), which is how a second run tells its own files from the
   app's. A file that starts with an earlier marker, the former library name or `@soroush.tech/design-system`,
   is still init's own.
 - `src/closing.ts` holds the lines both commands end on: the fonts, and the agent suggestions.
@@ -101,7 +101,7 @@ package's own `devDependencies`), and the themes and `Providers`, which are `ini
 ### The Astro starter
 
 `templates/astro/` writes an Astro app whose React parts are islands. Astro renders an island
-with plain `react-dom/server`, not as a server component, so the design system needs no
+with plain `react-dom/server`, not as a server component, so Gild UI needs no
 `'use client'`, and the styling engine writes each island's styles into its HTML with no
 extraction. Each island is its own React root: each is exported inside `withIsland` (`src/theme/Island`), which
 renders it inside the theme - and the query client and the Redux store, one of each in the
@@ -136,7 +136,7 @@ TypeScript 6 at most, so the starter's TypeScript is this package's `typescript-
 - `ssg/`: `Page` and `Layout` load at build time only, and there is no `+onRenderClient`, so a
   page ships no script; the layout has no scheme switch.
 
-`+onRenderHtml` renders the page with `@umber-style/server` on the design system's `styleCache`, and
+`+onRenderHtml` renders the page with `@umber-style/server` on Gild UI's `styleCache`, and
 puts the styles it used in the head; `+onRenderClient` hydrates it with the same cache. Both
 render `PageShell`, the page inside `+Layout`, which renders `<Providers>`: the providers live in
 the app, so the scheme it holds can switch the theme.
@@ -157,7 +157,7 @@ from `src/routes` with `createBrowserRouter`. Every page is a child of a pathles
 `errorElement`, inside `src/pages/Layout`, so a path with no page (`*`), a loader's 404 and a
 render error all show `ErrorPage` in the layout. The layout renders `<Providers>` and the query
 client, as Vike's `+Layout` does; the Redux store is provided in `src/main`, above the router.
-The design system's `Link` always renders an `<a>`, so `src/components/RouterLink` gives it
+Gild UI's `Link` always renders an `<a>`, so `src/components/RouterLink` gives it
 `useHref` and `useLinkClickHandler` to move with no reload. With the sample data and no data
 library, `items/loader` and `item/loader` read `src/data/items` (`data(..., { status: 404 })` for
 an unknown id); with TanStack Query or SWR there is no loader, the pages query `src/data/api`,
@@ -175,12 +175,12 @@ install; no path outside the app, and no symbolic link.
 ## Tests
 
 - `pnpm test:coverage`: unit tests in Node, 100% coverage.
-- `pnpm test:types`: builds the design system, then typechecks `type-tests/init`, the strictest app
+- `pnpm test:types`: builds Gild UI, then typechecks `type-tests/init`, the strictest app
   `init` writes into, and `type-tests/create-vike`, the TypeScript app the Vike starter writes,
   sample data pages included, under its own `tsconfig.json`. `src/fixture.test.ts` and `src/create/vike/vike.test.ts` keep
   them equal to what the commands write; after a template change, update them with `vitest run -u`.
 - `pnpm smoke:create [--lang ts|js] [--pm npm|pnpm] [--sample-data]`, from the repo's root: packs
-  the design system and the packages it depends on, creates an app on them with the built cli,
+  Gild UI and the packages it depends on, creates an app on them with the built cli,
   typechecks, builds and serves it, and checks its prerendered pages and their HTML for the
   styles. CI's `create-smoke` job runs it in TypeScript with npm and the sample data pages, and in
   JavaScript with pnpm without them.

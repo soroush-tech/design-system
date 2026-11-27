@@ -445,12 +445,12 @@ describe('the Vike starter', () => {
     expect(packageJson.devDependencies.typescript).toBeUndefined()
   })
 
-  it('installs the design system it was given, and the versions this package is tested with', () => {
+  it('installs Gild UI it was given, and the versions this package is tested with', () => {
     const packageJson = JSON.parse(createFiles().get('package.json')!)
     expect(packageJson.name).toBe('my-app')
     expect(packageJson.dependencies).toEqual({
-      '@soroush.design/core': '^0.1.0',
-      '@soroush.design/react': '^0.1.0',
+      '@gild-ui/core': '^0.1.0',
+      '@gild-ui/react': '^0.1.0',
       '@umber-style/server': `^${devDependencies['@umber-style/server']}`,
       react: devDependencies.react,
       'react-dom': devDependencies['react-dom'],
@@ -466,7 +466,7 @@ describe('the Vike starter', () => {
     })
     expect(packageJson.devDependencies.vitest).toBe(devDependencies.vitest)
     const prerelease = JSON.parse(createFiles({ version: '0.1.0-alpha.1' }).get('package.json')!)
-    expect(prerelease.dependencies['@soroush.design/react']).toBe('^0.1.0-alpha.1')
+    expect(prerelease.dependencies['@gild-ui/react']).toBe('^0.1.0-alpha.1')
   })
 
   it('renders <Providers> in +Layout only, starting on the scheme it was given', () => {

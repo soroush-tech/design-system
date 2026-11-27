@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { renderToString } from 'react-dom/server'
 import { LayoutProvider } from './LayoutProvider'
 import { baseTheme, type Theme } from './themes'
-import { type ThemeLayout } from '@soroush.design/core/theme'
+import { type ThemeLayout } from '@gild-ui/core/theme'
 
 type Derive = (outer: Theme) => Theme
 const derives: Derive[] = []

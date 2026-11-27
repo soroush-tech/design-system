@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react'
 import { render } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
-import { ThemeProvider } from '@soroush.design/react'
-import { createTheme, baseTheme } from '@soroush.design/core/theme'
-import { syntaxDark } from '@soroush.design/react-markdown/CodeBlock'
+import { ThemeProvider } from '@gild-ui/react'
+import { createTheme, baseTheme } from '@gild-ui/core/theme'
+import { syntaxDark } from '@gild-ui/react-markdown/CodeBlock'
 import { CodePanel } from './CodePanel'
 
 const theme = createTheme(baseTheme, { syntax: syntaxDark })

@@ -1,7 +1,7 @@
-import { baseTheme, createTheme, defineThemes } from '@soroush.design/core/theme'
-import { registerBaseTheme } from '@soroush.design/react/ThemeProvider'
-import type { ThemeComponents } from '@soroush.design/react'
-import { alpha, generateBoxShadow } from '@soroush.design/core/utils'
+import { baseTheme, createTheme, defineThemes } from '@gild-ui/core/theme'
+import { registerBaseTheme } from '@gild-ui/react/ThemeProvider'
+import type { ThemeComponents } from '@gild-ui/react'
+import { alpha, generateBoxShadow } from '@gild-ui/core/utils'
 import {
   blackAlpha,
   carbonBlack,
@@ -252,7 +252,7 @@ export const { light, dark } = themes
 // (dark, see ThemeModeProvider), the same object, so its components and defaults match.
 registerBaseTheme(dark)
 
-declare module '@soroush.design/core/theme' {
+declare module '@gild-ui/core/theme' {
   interface Register {
     themes: typeof themes
   }

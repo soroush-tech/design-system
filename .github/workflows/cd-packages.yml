@@ -33,9 +33,9 @@ on:
           - all
           - cli
           - core
+          - hooks
           - mcp
           - react
-          - react-hooks
           - react-markdown
           - ui-spec
         # gen:publish-options end

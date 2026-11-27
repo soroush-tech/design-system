@@ -13,7 +13,7 @@ import {
   AccordionActions,
   AccordionDetails,
   AccordionSummary,
-} from '@soroush.design/react/Accordion'
+} from '@gild-ui/react/Accordion'
 
 ;<Accordion>
   <AccordionSummary>Shipping</AccordionSummary>

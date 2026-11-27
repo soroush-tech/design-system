@@ -1,10 +1,10 @@
 # The engine entry
 
-`@soroush.design/react/engine` holds the primitives of the styling engine that an app uses to style the page itself. Most apps need only `Global` and `globalStyles`; the cache pair is for server rendering.
+`@gild-ui/react/engine` holds the primitives of the styling engine that an app uses to style the page itself. Most apps need only `Global` and `globalStyles`; the cache pair is for server rendering.
 
 ```ts
-import { Global } from '@soroush.design/react'
-import { globalStyles, CacheProvider, styleCache, createCache } from '@soroush.design/react/engine'
+import { Global } from '@gild-ui/react'
+import { globalStyles, CacheProvider, styleCache, createCache } from '@gild-ui/react/engine'
 ```
 
 ## `Global` and `globalStyles`
@@ -14,9 +14,9 @@ import { globalStyles, CacheProvider, styleCache, createCache } from '@soroush.d
 `globalStyles(theme)` is the base reset the library owns: box-sizing, margin and table resets, and theme-driven body colors. Compose it into your own styles; the font family, webfont loading and everything else app-specific stay yours.
 
 ```tsx
-import { ThemeProvider } from '@soroush.design/react'
-import { Global } from '@soroush.design/react'
-import { globalStyles } from '@soroush.design/react/engine'
+import { ThemeProvider } from '@gild-ui/react'
+import { Global } from '@gild-ui/react'
+import { globalStyles } from '@gild-ui/react/engine'
 
 ;<ThemeProvider theme={theme}>
   <Global styles={globalStyles} />

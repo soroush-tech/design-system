@@ -10,7 +10,7 @@ import { createShouldForwardProp, props } from '@soroush.tech/styled-system/shou
 import { get, system, space } from '@soroush.tech/styled-system'
 import { useTheme } from '../theme/hooks/useTheme'
 import { inputVariantStyles } from '../utils/inputVariantStyles'
-import { themeDefault } from '@soroush.design/core/theme'
+import { themeDefault } from '@gild-ui/core/theme'
 import { getFocusRing, getInputMinWidth } from '../utils/inputStyles'
 
 export type NativeSelectColor = keyof Theme['palette']

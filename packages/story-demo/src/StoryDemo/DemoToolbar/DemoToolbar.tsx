@@ -1,11 +1,11 @@
-import { Button } from '@soroush.design/react/Button'
-import { Flex } from '@soroush.design/react/Flex'
-import { Icon } from '@soroush.design/react/Icon'
+import { Button } from '@gild-ui/react/Button'
+import { Flex } from '@gild-ui/react/Flex'
+import { Icon } from '@gild-ui/react/Icon'
 import {
   ToggleButton,
   ToggleButtonGroup,
   type ToggleButtonValue,
-} from '@soroush.design/react/ToggleButton'
+} from '@gild-ui/react/ToggleButton'
 
 type Language = 'ts' | 'js'
 

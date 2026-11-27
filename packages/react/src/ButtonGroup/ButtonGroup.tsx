@@ -8,7 +8,7 @@ import { alpha, negate, styled } from '../style/styled'
 import { type Theme } from '../theme/themes'
 import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
 import { get, space } from '@soroush.tech/styled-system'
-import { themeDefault } from '@soroush.design/core/theme'
+import { themeDefault } from '@gild-ui/core/theme'
 
 export type ButtonGroupOrientation = 'horizontal' | 'vertical'
 

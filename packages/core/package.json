@@ -1,7 +1,7 @@
 {
-  "name": "@soroush.design/core",
+  "name": "@gild-ui/core",
   "version": "0.1.0",
-  "description": "What every platform of the soroush.design family shares and that needs no framework - the theme (tokens, base theme, createTheme), breakpoint and container-query helpers, pure utilities, and the catalog: every component as data.",
+  "description": "What every platform of the Gild UI family shares and that needs no framework - the theme (tokens, base theme, createTheme), breakpoint and container-query helpers, pure utilities, and the catalog: every component as data.",
   "keywords": [
     "design-system",
     "theme",
@@ -13,14 +13,14 @@
   ],
   "author": "Masoud Soroush <masoud@soroush.tech>",
   "license": "MIT",
-  "homepage": "https://docs.soroush.design/react/",
+  "homepage": "https://gild-ui.soroush.design/react/",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/soroush-tech/design-system.git",
+    "url": "git+https://github.com/soroush-tech/gild-ui.git",
     "directory": "packages/core"
   },
   "bugs": {
-    "url": "https://github.com/soroush-tech/design-system/issues"
+    "url": "https://github.com/soroush-tech/gild-ui/issues"
   },
   "type": "module",
   "sideEffects": false,
@@ -120,7 +120,7 @@
     "prepublishOnly": "pnpm build"
   },
   "devDependencies": {
-    "@soroush.design/docs-content": "workspace:*",
+    "@gild-ui/docs-content": "workspace:*",
     "@soroush.tech/eslint-config": "workspace:*",
     "@types/node": "^26.6.6",
     "@vitest/coverage-v8": "^5.1.0",

@@ -3,8 +3,8 @@ import type { Meta, StoryObj, Decorator } from '@storybook/react-vite'
 import { border, m, p, position } from '../utils/test/storiesArgs'
 import { appBarSizeTokens, backgroundTokens } from '../utils/test/storiesOptions'
 import { ThemeProvider } from '../theme/ThemeProvider'
-import { baseTheme } from '@soroush.design/core/theme'
-import { createTheme } from '@soroush.design/core/theme'
+import { baseTheme } from '@gild-ui/core/theme'
+import { createTheme } from '@gild-ui/core/theme'
 
 // Story-local light variant - the package ships only `baseTheme`; consumers
 // build their own light themes the same way.

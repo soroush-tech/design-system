@@ -43,8 +43,8 @@ describe('ensureBuilt', () => {
     const exec = vi.fn()
     expect(ensureBuilt(root, ['a', 'b', 'c'], exec as never)).toEqual(['b', 'c'])
     expect(exec.mock.calls.map(([, args]) => args)).toEqual([
-      ['--filter', '@soroush.design/b', 'build'],
-      ['--filter', '@soroush.design/c', 'build'],
+      ['--filter', '@gild-ui/b', 'build'],
+      ['--filter', '@gild-ui/c', 'build'],
     ])
   })
 })

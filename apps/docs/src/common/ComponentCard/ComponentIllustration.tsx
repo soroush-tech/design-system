@@ -1,4 +1,4 @@
-import { styled, useTheme } from '@soroush.design/react'
+import { styled, useTheme } from '@gild-ui/react'
 import { illustrationInk } from 'src/theme/illustrationInk'
 import { illustrations } from './illustrations'
 import { Bar, Box } from './shapes'

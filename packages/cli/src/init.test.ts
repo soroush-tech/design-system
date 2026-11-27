@@ -8,7 +8,7 @@ import { MARKER } from './templates/templates'
 import { createTestApp, createTestIo, APP_VERSION, VITE_ROOT } from './testApp'
 
 const DESIGN_SYSTEM = {
-  name: '@soroush.design/react',
+  name: '@gild-ui/react',
   peerDependencies: { react: '^18.0.0 || ^19.0.0' },
 }
 
@@ -42,18 +42,18 @@ describe('runInit', () => {
         'pnpm',
         [
           'add',
-          `@soroush.design/react@^${APP_VERSION}`,
-          `@soroush.design/core@^${APP_VERSION}`,
+          `@gild-ui/react@^${APP_VERSION}`,
+          `@gild-ui/core@^${APP_VERSION}`,
           '--ignore-scripts',
         ],
         { cwd: root, env: {}, showOutput: true },
       ],
     ])
     const output = getOutput()
-    expect(output).toContain('init will set up @soroush.design/react in test-app:')
+    expect(output).toContain('init will set up @gild-ui/react in test-app:')
     expect(output).toContain('npx skills add soroush-tech/design-system')
     expect(output).toContain('https://mcp.soroush.design/mcp')
-    expect(output).toContain('https://docs.soroush.design/react/installation/#fonts')
+    expect(output).toContain('https://gild-ui.soroush.design/react/installation/#fonts')
     expect(output).toContain('Make the themes your own in src/theme/themes.ts.')
     expect(output).not.toContain('Still left to you')
   })
@@ -73,33 +73,29 @@ describe('runInit', () => {
     const root = createViteApp()
     await runInit(YES, createTestIo(root).io, DESIGN_SYSTEM)
     // A real install lists the package in package.json; the test's install ran nothing.
-    const dependencies = { react: '19.0.0', '@soroush.design/react': '^0.1.0' }
+    const dependencies = { react: '19.0.0', '@gild-ui/react': '^0.1.0' }
     writeFileSync(join(root, 'package.json'), JSON.stringify({ dependencies }))
     const { io, commands, getOutput } = createTestIo(root)
     expect(await runInit(YES, io, DESIGN_SYSTEM)).toBe(0)
-    expect(getOutput()).toBe(
-      'The design system is already set up here: init has nothing to change.\n'
-    )
+    expect(getOutput()).toBe('Gild UI is already set up here: init has nothing to change.\n')
     expect(commands.map(({ command }) => command)).toEqual(['git'])
   })
 
   it('counts an app that has the component library alone as set up, and installs nothing', async () => {
     const root = createViteApp()
     await runInit(YES, createTestIo(root).io, DESIGN_SYSTEM)
-    const dependencies = { react: '19.0.0', '@soroush.design/react': '^0.1.0' }
+    const dependencies = { react: '19.0.0', '@gild-ui/react': '^0.1.0' }
     writeFileSync(join(root, 'package.json'), JSON.stringify({ dependencies }))
     const { io, commands, getOutput } = createTestIo(root)
     expect(await runInit(YES, io, DESIGN_SYSTEM)).toBe(0)
-    expect(getOutput()).toBe(
-      'The design system is already set up here: init has nothing to change.\n'
-    )
+    expect(getOutput()).toBe('Gild UI is already set up here: init has nothing to change.\n')
     expect(commands.map(({ command }) => command)).toEqual(['git'])
   })
 
   it('reports what it skipped even when there is nothing left to change', async () => {
     const root = createViteApp({
       'package.json': JSON.stringify({
-        dependencies: { react: '19.0.0', '@soroush.design/react': '0.1.0' },
+        dependencies: { react: '19.0.0', '@gild-ui/react': '0.1.0' },
       }),
       'src/theme/themes.ts': 'export default {}',
     })
@@ -209,7 +205,7 @@ describe('runInit', () => {
     const refused = createTestIo(app('17.0.2'))
     expect(await runInit(YES, refused.io, DESIGN_SYSTEM)).toBe(1)
     expect(refused.getOutput()).toBe(
-      'This app has React 17.0.2, and the design system needs React ^18.0.0 || ^19.0.0. init changes nothing, and never upgrades React.\n'
+      'This app has React 17.0.2, and Gild UI needs React ^18.0.0 || ^19.0.0. init changes nothing, and never upgrades React.\n'
     )
     expect(existsSync(join(refused.io.cwd, 'src/theme'))).toBe(false)
   })
@@ -258,7 +254,7 @@ describe('runInit', () => {
     })
     expect(await runInit(YES, io, DESIGN_SYSTEM)).toBe(1)
     expect(getOutput()).toContain(
-      `The install failed. The files are written; install the package yourself:\n  pnpm add @soroush.design/react@^${APP_VERSION} @soroush.design/core@^${APP_VERSION} --ignore-scripts`
+      `The install failed. The files are written; install the package yourself:\n  pnpm add @gild-ui/react@^${APP_VERSION} @gild-ui/core@^${APP_VERSION} --ignore-scripts`
     )
     expect(existsSync(join(root, 'src/theme/themes.ts'))).toBe(true)
   })
@@ -266,7 +262,7 @@ describe('runInit', () => {
   it('names what is left to do in the closing message, for an app with no root it can edit', async () => {
     const root = createTestApp({
       'package.json': JSON.stringify({
-        dependencies: { react: '19.0.0', '@soroush.design/react': '0.1.0' },
+        dependencies: { react: '19.0.0', '@gild-ui/react': '0.1.0' },
       }),
       'tsconfig.json': '{}',
     })
@@ -276,7 +272,7 @@ describe('runInit', () => {
     expect(getOutput()).toContain(
       'Still left to you:\n  - init found no file that calls createRoot'
     )
-    expect(getOutput()).toContain('init will set up @soroush.design/react in this app:')
+    expect(getOutput()).toContain('init will set up @gild-ui/react in this app:')
     // Already a dependency: no install.
     expect(commands.map(({ command }) => command)).toEqual(['git'])
   })
@@ -331,7 +327,7 @@ describe('runInit in a workspace', () => {
     expect(await runInit(YES, io, DESIGN_SYSTEM)).toBe(0)
 
     expect(getOutput()).toMatch(
-      /^This is a workspace's root: init sets up the app in apps\/web\.\n\ninit will set up @soroush\.design\/react in @acme\/web:/
+      /^This is a workspace's root: init sets up the app in apps\/web\.\n\ninit will set up @gild-ui\/react in @acme\/web:/
     )
     expect(read(app, 'src/theme/themes.ts').startsWith(MARKER)).toBe(true)
     expect(read(app, 'src/main.tsx')).toContain("import { Providers } from './theme/Providers.ts'")
@@ -341,8 +337,8 @@ describe('runInit in a workspace', () => {
       command: 'pnpm',
       args: [
         'add',
-        `@soroush.design/react@^${APP_VERSION}`,
-        `@soroush.design/core@^${APP_VERSION}`,
+        `@gild-ui/react@^${APP_VERSION}`,
+        `@gild-ui/core@^${APP_VERSION}`,
         '--ignore-scripts',
       ],
       options: { cwd: app, env: {}, showOutput: true },
@@ -377,7 +373,7 @@ describe('runInit in a workspace', () => {
     })
     const { io, getOutput } = createTestIo(root)
     expect(await runInit(YES, io, DESIGN_SYSTEM)).toBe(0)
-    expect(getOutput()).toMatch(/^init will set up @soroush\.design\/react in acme:/)
+    expect(getOutput()).toMatch(/^init will set up @gild-ui\/react in acme:/)
     expect(existsSync(join(root, 'src/theme/themes.ts'))).toBe(true)
   })
 

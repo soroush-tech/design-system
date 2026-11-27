@@ -4,7 +4,7 @@ import { Flex } from '../Flex'
 import { Icon } from '../Icon'
 import { View } from '../View'
 import { exampleArgs } from '../utils/test/renderExample'
-import { tooltipCatalog, tooltipPlacementValues } from '@soroush.design/core/catalog/entries'
+import { tooltipCatalog, tooltipPlacementValues } from '@gild-ui/core/catalog/entries'
 import { Tooltip } from './Tooltip'
 import { TooltipGroup } from './TooltipGroup'
 

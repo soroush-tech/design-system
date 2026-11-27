@@ -43,7 +43,7 @@ const pagination = useTablePagination({ defaultRowsPerPage: 10 })
 ## The hooks
 
 `useTableSort`, `useTablePagination`, and `useTableSelection` live in
-[`@soroush.design/react/Table/hooks/`](https://github.com/soroush-tech/design-system/blob/main/packages/react/src/Table/hooks/README.md) - see that README for their full APIs. In short:
+[`@gild-ui/react/Table/hooks/`](https://github.com/soroush-tech/design-system/blob/main/packages/react/src/Table/hooks/README.md) - see that README for their full APIs. In short:
 
 - **`useTableSort(keys, onChange?)`** - column-keyed entries that spread onto `TableSortLabel`;
   per-column direction memory, always-flip toggle (first click sorts `'desc'`)

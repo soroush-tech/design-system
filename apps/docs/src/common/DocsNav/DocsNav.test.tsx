@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import type { ReactNode } from 'react'
 import type { PageContext as VikePageContext } from 'vike/types'
-import { ThemeProvider } from '@soroush.design/react'
+import { ThemeProvider } from '@gild-ui/react'
 import { PageContext } from 'src/common/PageContext'
 import { componentCategories } from 'src/common/nav'
 import { dark } from 'src/theme/themes'
@@ -95,11 +95,11 @@ describe('DocsNav', () => {
     const user = userEvent.setup()
     renderNav('/react/components/')
     const select = screen.getByRole('combobox', { name: 'Package' })
-    expect(select).toHaveTextContent('Design System')
+    expect(select).toHaveTextContent('Gild UI for React')
     await user.click(select)
     const options = screen.getAllByRole('option')
     expect(options.map((option) => option.textContent)).toEqual([
-      'Design System',
+      'Gild UI for React',
       'Markdown',
       'Styled System',
       'MCP server',

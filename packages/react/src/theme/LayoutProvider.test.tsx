@@ -5,7 +5,7 @@ import { useTheme } from './hooks/useTheme'
 import { LayoutProvider } from './LayoutProvider'
 import { ThemeProvider } from './ThemeProvider'
 import { baseTheme, type Theme } from './themes'
-import { createTheme, type ThemeLayout } from '@soroush.design/core/theme'
+import { createTheme, type ThemeLayout } from '@gild-ui/core/theme'
 import { styled } from '../style/styled'
 
 const Framed = styled('div')(({ theme }) => ({ paddingInline: theme.layout.xs?.content?.margin }))

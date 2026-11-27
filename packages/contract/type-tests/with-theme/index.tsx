@@ -1,6 +1,6 @@
 // A class component cannot call hooks: `withTheme` hands it the registered theme type.
 import { Component } from 'react'
-import { withTheme } from '@soroush.design/react/withTheme'
+import { withTheme } from '@gild-ui/react/withTheme'
 import { themes } from '../shared/themes'
 
 class Chart extends Component<{ title: string; theme: typeof themes.light }> {

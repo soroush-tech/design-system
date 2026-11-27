@@ -6,10 +6,10 @@ import { type PaginationItemType } from '../hooks/usePagination'
 import type { SpaceProps } from '@soroush.tech/styled-system'
 import { alpha, styled } from '../../style/styled'
 import { type Theme } from '../../theme/themes'
-import { type PaletteColor } from '@soroush.design/core/theme'
+import { type PaletteColor } from '@gild-ui/core/theme'
 import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
 import { space, get } from '@soroush.tech/styled-system'
-import { themeDefault } from '@soroush.design/core/theme'
+import { themeDefault } from '@gild-ui/core/theme'
 
 export type PaginationItemColor = PaletteColor
 export type PaginationItemVariant = 'text' | 'outlined'

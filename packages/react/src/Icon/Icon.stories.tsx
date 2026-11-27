@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { textColorTokens } from '../utils/test/storiesOptions'
 import { exampleArgs } from '../utils/test/renderExample'
 import { Icon } from './Icon'
-import { iconCatalog } from '@soroush.design/core/catalog/entries'
+import { iconCatalog } from '@gild-ui/core/catalog/entries'
 import { icons } from './icons'
 
 const iconNames = Object.keys(icons)

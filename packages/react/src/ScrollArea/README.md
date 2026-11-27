@@ -9,7 +9,7 @@ one view toward the pointer, as a native one does.
 Client component: its entry carries `'use client'`, so a server component can import and render it.
 
 ```tsx
-import { ScrollArea } from '@soroush.design/react/ScrollArea'
+import { ScrollArea } from '@gild-ui/react/ScrollArea'
 
 ;<ScrollArea maxHeight={240} aria-label="Notes" tabIndex={0}>
   {notes}

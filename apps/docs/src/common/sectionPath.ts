@@ -1,4 +1,4 @@
-import { sections } from '@soroush.design/docs-content'
+import { sections } from '@gild-ui/docs-content'
 import type { DocsSection } from 'src/common/nav'
 
 /**

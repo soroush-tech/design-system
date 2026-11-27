@@ -17,7 +17,7 @@ import {
   space,
 } from '@soroush.tech/styled-system'
 import { Flex, type FlexProps } from '../Flex'
-import { themeDefault } from '@soroush.design/core/theme'
+import { themeDefault } from '@gild-ui/core/theme'
 
 /** Valid values for the color prop - derived from theme.background keys. */
 export type AppBarColor = keyof Theme['background']

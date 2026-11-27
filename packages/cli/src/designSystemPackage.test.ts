@@ -9,11 +9,11 @@ const read = (folder: string) =>
 
 describe('the package init and create name', () => {
   it('installs the React package, and checks React against it', () => {
-    expect(APP_PACKAGE).toBe('@soroush.design/react')
+    expect(APP_PACKAGE).toBe('@gild-ui/react')
   })
 
   it("names the package the workspace's package.json names", () => {
-    expect(read('react').name).toBe('@soroush.design/react')
+    expect(read('react').name).toBe('@gild-ui/react')
   })
 
   it('bundles the version the workspace has', () => {

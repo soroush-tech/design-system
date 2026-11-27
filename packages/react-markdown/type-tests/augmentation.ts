@@ -1,13 +1,13 @@
 // Type-level test: the markdown package's `theme.components` slots must reach
 // consumers through the PUBLISHED d.ts. Runs via `pnpm test:types` (builds dist
 // first, then typechecks this isolated program). Guards that importing the
-// package barrel pulls in the `declare module '@soroush.design/react'` and
-// `declare module '@soroush.design/core/theme'` augmentations - i.e. they survive tsdown's d.ts
+// package barrel pulls in the `declare module '@gild-ui/react'` and
+// `declare module '@gild-ui/core/theme'` augmentations - i.e. they survive tsdown's d.ts
 // chunking - so
 // `theme.components.MarkdownPreview` and friends type-check for npm consumers.
-import '@soroush.design/react-markdown'
-import type { ThemeComponents } from '@soroush.design/react'
-import type { Theme } from '@soroush.design/core/theme'
+import '@gild-ui/react-markdown'
+import type { ThemeComponents } from '@gild-ui/react'
+import type { Theme } from '@gild-ui/core/theme'
 
 // The three slots the package registers resolve to configurable component slots.
 export const editor: ThemeComponents['MarkdownEditor'] = {

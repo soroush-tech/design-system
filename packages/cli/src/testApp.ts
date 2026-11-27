@@ -92,7 +92,7 @@ export function createTestIo(
 }
 
 /**
- * The version of `@soroush.design/react` in the workspace, read from its package.json: what init
+ * The version of `@gild-ui/react` in the workspace, read from its package.json: what init
  * and create install, as the tests expect it without asking the constant they check.
  */
 export const APP_VERSION: string = JSON.parse(

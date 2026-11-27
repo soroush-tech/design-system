@@ -4,8 +4,8 @@ import type { PaperElevation } from '../Paper'
 import { styled } from '../style/styled'
 import { type Theme } from '../theme/themes'
 import { get, system } from '@soroush.tech/styled-system'
-import { themeDefault } from '@soroush.design/core/theme'
-import { getSurfaceRadius } from '@soroush.design/core/utils'
+import { themeDefault } from '@gild-ui/core/theme'
+import { getSurfaceRadius } from '@gild-ui/core/utils'
 
 export interface MenuPaperProps {
   elevation: PaperElevation

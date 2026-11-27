@@ -2,22 +2,22 @@
 
 # Components
 
-The 99 components shipped by the design system, and when to reach for each.
+The 99 components shipped by Gild UI, and when to reach for each.
 Import every component from its own subpath.
 
 ## Layout & surfaces
 
 - **ScrollArea** - A scrolling area whose scrollbars are drawn **over** its content rather than beside it - so a rounded panel keeps its corner clean - and show only while the pointer is over the area or focus is inside it.
 - **View** - The base layout primitive.
-- **Flex** - Extends [`View`](https://docs.soroush.design/react/View/).
-- **Grid** - Extends [`View`](https://docs.soroush.design/react/View/).
+- **Flex** - Extends [`View`](https://gild-ui.soroush.design/react/View/).
+- **Grid** - Extends [`View`](https://gild-ui.soroush.design/react/View/).
 - **Paper** - An elevated surface primitive that extends `View`.
 - **Card** - A surface component with an optional title, caption, and variant-based visual treatment.
 - **Quote** - A `View` with a fixed 2px primary left border - used for terminal readouts and markdown blockquotes.
 - **AppBar** - Renders as `<header>`.
 - **Drawer** - A panel that slides in from a screen edge.
 - **Sidebar** - A collapsible vertical icon rail.
-- **SidebarItem** - One entry of a [`Sidebar`](https://docs.soroush.design/react/Sidebar/): an icon **pinned to the anchored edge** (it holds its position while the rail opens and closes) plus content shown while the rail is open - the `label` by default, or custom `children` (badges, counts, ...).
+- **SidebarItem** - One entry of a [`Sidebar`](https://gild-ui.soroush.design/react/Sidebar/): an icon **pinned to the anchored edge** (it holds its position while the rail opens and closes) plus content shown while the rail is open - the `label` by default, or custom `children` (badges, counts, ...).
 
 ## Content & data display
 
@@ -59,27 +59,27 @@ Import every component from its own subpath.
 - **RangeInput** - A slider: one value on a range, or two or more thumbs for a range of values.
 - **TransferList** - Two lists, and the buttons that move the checked items from one to the other.
 - **Switch** - A sliding toggle control.
-- **NativeSelect** - Not the recommended select: use [`Select`](https://docs.soroush.design/react/Select/) - and `<Select native>` when you want the platform's own picker, which renders this component for you with the same `MenuItem` children as every other select.
+- **NativeSelect** - Not the recommended select: use [`Select`](https://gild-ui.soroush.design/react/Select/) - and `<Select native>` when you want the platform's own picker, which renders this component for you with the same `MenuItem` children as every other select.
 - **Select** - The select to use for every dropdown choice - always prefer it over `NativeSelect`.
 - **MenuItem** - A row of a list, in one of two roles:
 - **Form** - Renders a `<form>` and provides form-wide field defaults through `FormContext`.
 - **FormControl** - Groups a label, control, and helper text into one accessible field and shares their state through React context.
-- **FormLabel** - A field label built on [`Typography`](https://docs.soroush.design/react/Typography/), rendered as a `<label>`.
-- **FormHelperText** - Helper or error text for a field, built on [`Typography`](https://docs.soroush.design/react/Typography/) and rendered as a `<p>`.
+- **FormLabel** - A field label built on [`Typography`](https://gild-ui.soroush.design/react/Typography/), rendered as a `<label>`.
+- **FormHelperText** - Helper or error text for a field, built on [`Typography`](https://gild-ui.soroush.design/react/Typography/) and rendered as a `<p>`.
 - **Pagination** - Page-number navigation for paging a list of arbitrary items (e.g. a blog index), with ellipsis ranges and optional first/last/prev/next controls.
 - **PaginationItem** - The individual item rendered inside `Pagination`.
 
 ## Navigation & menus
 
 - **Breadcrumbs** - The trail of links from a site's root to the current page, so a page shows where it sits and every ancestor is one click away.
-- **Menu** - A trigger and the [`MenuList`](https://docs.soroush.design/react/Menu/MenuList/) of commands it opens.
-- **ContextMenu** - A [`MenuList`](https://docs.soroush.design/react/Menu/MenuList/) opened by a right-click over its target, at the pointer - or, from the keyboard, by the context-menu key or Shift+F10 at the focused element.
-- **MenuDivider** - A line between groups of rows in a [`MenuList`](https://docs.soroush.design/react/Menu/MenuList/), rendered as `<li role="separator">`.
+- **Menu** - A trigger and the [`MenuList`](https://gild-ui.soroush.design/react/Menu/MenuList/) of commands it opens.
+- **ContextMenu** - A [`MenuList`](https://gild-ui.soroush.design/react/Menu/MenuList/) opened by a right-click over its target, at the pointer - or, from the keyboard, by the context-menu key or Shift+F10 at the focused element.
+- **MenuDivider** - A line between groups of rows in a [`MenuList`](https://gild-ui.soroush.design/react/Menu/MenuList/), rendered as `<li role="separator">`.
 - **MenuItems** - Menu rows from data - for menus that come from a list of commands.
 - **MenuList** - A list of commands, rendered as a semantic `<ul role="menu">`.
-- **NavTree** - A tree of links to the pages of a site: its [`NavGroup`](https://docs.soroush.design/react/NavTree/NavGroup/)s, each with its [`NavLink`](https://docs.soroush.design/react/NavTree/NavLink/)s, and any link of its own.
-- **NavGroup** - A group of a [`NavTree`](https://docs.soroush.design/react/NavTree/): a name over a list of [`NavLink`](https://docs.soroush.design/react/NavTree/NavLink/)s.
-- **NavLink** - A link to a page of the site, a row of a [`NavTree`](https://docs.soroush.design/react/NavTree/): its name, an optional note beside it, and a fill when it is the current page.
+- **NavTree** - A tree of links to the pages of a site: its [`NavGroup`](https://gild-ui.soroush.design/react/NavTree/NavGroup/)s, each with its [`NavLink`](https://gild-ui.soroush.design/react/NavTree/NavLink/)s, and any link of its own.
+- **NavGroup** - A group of a [`NavTree`](https://gild-ui.soroush.design/react/NavTree/): a name over a list of [`NavLink`](https://gild-ui.soroush.design/react/NavTree/NavLink/)s.
+- **NavLink** - A link to a page of the site, a row of a [`NavTree`](https://gild-ui.soroush.design/react/NavTree/): its name, an optional note beside it, and a fill when it is the current page.
 - **Tabs** - A row of tabs.
 - **Tab** - One tab of a `Tabs` row: a label, an icon on any side of it, and - with a `closeLabel` - a close button of its own.
 - **TabContext** - Holds the selected value for a `TabList` and the `TabPanel`s beside it, wherever they sit - the tabs in a toolbar, the panels further down the page.
@@ -118,7 +118,7 @@ Import every component from its own subpath.
 - **Popover** - Positions floating content next to an anchor, portaled above the page.
 - **Pressable** - An unstyled clickable surface: button semantics - keyboard activation, focus ring, disabled state - with none of a button's looks.
 
-## @soroush.design/react-markdown
+## @gild-ui/react-markdown
 
 - **Preview** - Renders a markdown **string** with every element mapped to a design-system primitive - headings, paragraphs, links, lists, GFM task-list checkboxes (`theme/Checkbox`), tables, blockquotes, images, and syntax-highlighted fenced code blocks (`CodeBlock`, via `rehype-highlight`).
 - **Editor** - The source `<textarea>` of the `Markdown` compound.

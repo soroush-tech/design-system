@@ -2,8 +2,8 @@ import type { ReactNode } from 'react'
 import { derivedBy } from './derivedTheme'
 import { EngineThemeProvider as DefaultThemeProvider } from './engine'
 import { baseTheme, type AppTheme, type Theme } from './themes'
-import { validateThemeComponents } from '@soroush.design/core/catalog'
-import { createTheme, type Register, type ThemeDefaults } from '@soroush.design/core/theme'
+import { validateThemeComponents } from '@gild-ui/core/catalog'
+import { createTheme, type Register, type ThemeDefaults } from '@gild-ui/core/theme'
 
 /**
  * Once themes are registered, `T` may have no key the registered themes lack, at any depth: each

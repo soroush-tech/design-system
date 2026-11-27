@@ -5,6 +5,6 @@ import { build } from 'tsdown'
 // the hooks, which the workspace otherwise serves as source. All are built before the suite.
 export default async function setup() {
   await build({ config: true, cwd: resolve('../core'), logLevel: 'silent' })
-  await build({ config: true, cwd: resolve('../react-hooks'), logLevel: 'silent' })
+  await build({ config: true, cwd: resolve('../hooks'), logLevel: 'silent' })
   await build({ config: true, logLevel: 'silent' })
 }

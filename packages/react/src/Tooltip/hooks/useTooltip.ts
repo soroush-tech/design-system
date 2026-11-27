@@ -8,7 +8,7 @@ import {
   type PointerEvent,
   type SyntheticEvent,
 } from 'react'
-import { useControlled } from '@soroush.design/react-hooks/useControlled'
+import { useControlled } from '@gild-ui/hooks/useControlled'
 import { useTheme } from '../../theme/hooks/useTheme'
 import { TooltipGroupContext, getThemeTooltipGroup } from '../TooltipGroupContext'
 

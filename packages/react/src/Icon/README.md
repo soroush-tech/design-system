@@ -5,7 +5,7 @@ Renders a themeable SVG icon from the central registry. Consumers pass a `name`;
 Server component: it renders in a React Server Component, with no client code.
 
 ```tsx
-import { Icon } from '@soroush.design/react/Icon'
+import { Icon } from '@gild-ui/react/Icon'
 ;<Icon name="hub" color="primary" size="2rem" />
 ```
 

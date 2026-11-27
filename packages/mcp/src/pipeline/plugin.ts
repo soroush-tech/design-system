@@ -1,7 +1,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { sections } from '@soroush.design/docs-content'
-import { loadPackageFile, repoRoot } from '@soroush.design/docs-content/node'
+import { sections } from '@gild-ui/docs-content'
+import { loadPackageFile, repoRoot } from '@gild-ui/docs-content/node'
 import { tokenPath } from '../tokenPath'
 import type { ContentBundle } from '../types'
 
@@ -31,7 +31,7 @@ export const renderComponentsReference = (bundle: ContentBundle): string => {
     '',
     '# Components',
     '',
-    `The ${bundle.components.length} components shipped by the design system, and when to reach for each.`,
+    `The ${bundle.components.length} components shipped by Gild UI, and when to reach for each.`,
     'Import every component from its own subpath.',
     '',
     ...[...groups].flatMap(([label, items]) => [

@@ -10,7 +10,7 @@ submenu as more entries) or `{ type: 'divider' }`. It renders the same `MenuItem
 Client component: its entry carries `'use client'`, so a server component can import and render it.
 
 ```tsx
-import { MenuItems, MenuList, type MenuItemData } from '@soroush.design/react/Menu'
+import { MenuItems, MenuList, type MenuItemData } from '@gild-ui/react/Menu'
 
 const items: MenuItemData[] = [
   { value: 'new', label: 'New branch...', shortcut: 'Control+B' },

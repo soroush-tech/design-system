@@ -25,11 +25,11 @@ const run = (command, args, cwd) =>
 // The same checks, written for a loader: `require` in a CommonJS file, `await import` in a module.
 const check = (load) => `
 const assert = ${load === 'require' ? "require('node:assert')" : "(await import('node:assert')).default"}
-const root = ${load === 'require' ? "require('@soroush.design/react')" : "await import('@soroush.design/react')"}
-const provider = ${load === 'require' ? "require('@soroush.design/react/ThemeProvider')" : "await import('@soroush.design/react/ThemeProvider')"}
-const styledEntry = ${load === 'require' ? "require('@soroush.design/react/styled')" : "await import('@soroush.design/react/styled')"}
-const { baseTheme, createTheme } = ${load === 'require' ? "require('@soroush.design/core/theme')" : "await import('@soroush.design/core/theme')"}
-const { Button } = ${load === 'require' ? "require('@soroush.design/react/Button')" : "await import('@soroush.design/react/Button')"}
+const root = ${load === 'require' ? "require('@gild-ui/react')" : "await import('@gild-ui/react')"}
+const provider = ${load === 'require' ? "require('@gild-ui/react/ThemeProvider')" : "await import('@gild-ui/react/ThemeProvider')"}
+const styledEntry = ${load === 'require' ? "require('@gild-ui/react/styled')" : "await import('@gild-ui/react/styled')"}
+const { baseTheme, createTheme } = ${load === 'require' ? "require('@gild-ui/core/theme')" : "await import('@gild-ui/core/theme')"}
+const { Button } = ${load === 'require' ? "require('@gild-ui/react/Button')" : "await import('@gild-ui/react/Button')"}
 const { createElement: h } = ${load === 'require' ? "require('react')" : "await import('react')"}
 const { renderToString } = ${load === 'require' ? "require('react-dom/server')" : "await import('react-dom/server')"}
 
@@ -50,13 +50,13 @@ for (const [, classes] of html.matchAll(/class="([^"]+)"/g)) {
 `
 
 try {
-  for (const name of ['core', 'react-hooks', 'react']) {
+  for (const name of ['core', 'hooks', 'react']) {
     run('pnpm', ['pack', '--pack-destination', tarballs], join(packages, name))
   }
   const overrides = {}
   for (const file of readdirSync(tarballs)) {
-    const name = /^soroush\.design-(.+)-\d+\.\d+\.\d+.*\.tgz$/.exec(file)?.[1]
-    overrides[`@soroush.design/${name}`] = `file:${join(tarballs, file).replaceAll('\\', '/')}`
+    const name = /^gild-ui-(.+)-\d+\.\d+\.\d+.*\.tgz$/.exec(file)?.[1]
+    overrides[`@gild-ui/${name}`] = `file:${join(tarballs, file).replaceAll('\\', '/')}`
   }
   writeFileSync(
     join(app, 'package.json'),
@@ -64,7 +64,7 @@ try {
       name: 'single-copy',
       private: true,
       dependencies: {
-        '@soroush.design/react': overrides['@soroush.design/react'],
+        '@gild-ui/react': overrides['@gild-ui/react'],
         react: '^19.2.8',
         'react-dom': '^19.2.8',
       },
@@ -73,17 +73,15 @@ try {
   )
   run('npm', ['install', '--no-audit', '--no-fund'], app)
 
-  const installed = readdirSync(join(app, 'node_modules', '@soroush.design')).sort()
-  const expected = ['core', 'react', 'react-hooks']
+  const installed = readdirSync(join(app, 'node_modules', '@gild-ui')).sort()
+  const expected = ['core', 'hooks', 'react']
   if (installed.join() !== expected.join()) {
-    throw new Error(
-      `Expected ${expected.join(', ')} under @soroush.design, found ${installed.join(', ')}`
-    )
+    throw new Error(`Expected ${expected.join(', ')} under @gild-ui, found ${installed.join(', ')}`)
   }
 
   for (const name of [
-    '@soroush.design/react',
-    '@soroush.design/core',
+    '@gild-ui/react',
+    '@gild-ui/core',
     '@soroush.tech/styled-system',
     '@umber-style/is-prop-valid',
     '@umber-style/styled',

@@ -2,7 +2,7 @@
 import { getEngine } from '@umber-style/react'
 import { renderToString } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
-import { createTheme } from '@soroush.design/core/theme'
+import { createTheme } from '@gild-ui/core/theme'
 import { styled } from '../style/styled'
 import { baseTheme } from './themes'
 import { useTheme } from './hooks/useTheme'

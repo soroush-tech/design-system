@@ -4,7 +4,7 @@
 //
 //   node render-runner.mjs <appDir> <catalog.json> <iterations> [--bundle <file>]
 //
-// The page module is written into the app (so the app's own `@soroush.design/react/*` and `@soroush.design/core`, react
+// The page module is written into the app (so the app's own `@gild-ui/react/*` and `@gild-ui/core`, react
 // and `@umber-style/server` resolve) and loaded through Vite's SSR loader, which transforms the
 // workspace's TypeScript sources too. With --bundle, one self-contained ESM file of that module
 // is built instead - for a sandboxed benchmark, whose Linux container cannot run the host's
@@ -28,10 +28,10 @@ const source = `
 import { createElement, Fragment } from 'react'
 import { renderToString } from 'react-dom/server'
 import { createInstance } from '@umber-style/server/create-instance'
-import { Global, ThemeProvider } from '@soroush.design/react'
-import { CacheProvider, globalStyles, styleCache } from '@soroush.design/react/engine'
-import { baseTheme } from '@soroush.design/core/theme'
-${subpaths.map((subpath, index) => `import * as m${index} from '@soroush.design/react/${subpath}'`).join('\n')}
+import { Global, ThemeProvider } from '@gild-ui/react'
+import { CacheProvider, globalStyles, styleCache } from '@gild-ui/react/engine'
+import { baseTheme } from '@gild-ui/core/theme'
+${subpaths.map((subpath, index) => `import * as m${index} from '@gild-ui/react/${subpath}'`).join('\n')}
 const modules = { ${subpaths.map((subpath, index) => `${JSON.stringify(subpath)}: m${index}`).join(', ')} }
 const entries = ${JSON.stringify(entries.map(({ name, subpath, example }) => ({ name, subpath, example })))}
 

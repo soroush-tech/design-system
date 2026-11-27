@@ -10,8 +10,8 @@ import {
   splitReadme,
   stripReadmeChrome,
   type ComponentNavItem,
-} from '@soroush.design/docs-content'
-import { loadReadme } from '@soroush.design/docs-content/node'
+} from '@gild-ui/docs-content'
+import { loadReadme } from '@gild-ui/docs-content/node'
 import type { ComponentRecord } from '../types'
 
 export { DOCS_URL }

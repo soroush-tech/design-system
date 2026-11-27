@@ -9,7 +9,7 @@ Client component: its entry carries `'use client'`, so a server component can im
 Every name is yours - the lists' titles and the four buttons' - so it carries no language of its own.
 
 ```tsx
-import { TransferList } from '@soroush.design/react/TransferList'
+import { TransferList } from '@gild-ui/react/TransferList'
 
 ;<TransferList
   items={[

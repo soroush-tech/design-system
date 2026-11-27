@@ -1,4 +1,4 @@
-import { catalog as core } from '@soroush.design/core/catalog'
+import { catalog as core } from '@gild-ui/core/catalog'
 import type { DesignSystemCatalog } from './types'
 
 export type * from './types'
@@ -8,7 +8,7 @@ export type * from './types'
 const components = Object.fromEntries(
   Object.entries(core.components).map(([key, { name, subpath, category, ...entry }]) => [
     key,
-    { ...entry, name, module: `@soroush.design/react/${subpath}`, category },
+    { ...entry, name, module: `@gild-ui/react/${subpath}`, category },
   ])
 ) as DesignSystemCatalog['components']
 
@@ -17,7 +17,7 @@ const components = Object.fromEntries(
  * category, where it is imported from, what a freshly placed one is, its looks as
  * pictures, the props a picker offers and their theme scales, and how its node props and
  * two-way props are written. Pure data: it loads in Node with no DOM, React or styling engine.
- * The data is `@soroush.design/core`'s; this adds the `module` each component is imported from.
+ * The data is `@gild-ui/core`'s; this adds the `module` each component is imported from.
  */
 export const catalog: DesignSystemCatalog = {
   categories: core.categories,

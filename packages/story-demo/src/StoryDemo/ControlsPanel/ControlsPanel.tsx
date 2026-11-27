@@ -1,7 +1,7 @@
-import { Grid } from '@soroush.design/react/Grid'
-import { Paper } from '@soroush.design/react/Paper'
-import { Typography } from '@soroush.design/react/Typography'
-import { View } from '@soroush.design/react/View'
+import { Grid } from '@gild-ui/react/Grid'
+import { Paper } from '@gild-ui/react/Paper'
+import { Typography } from '@gild-ui/react/Typography'
+import { View } from '@gild-ui/react/View'
 import type { ControlModel } from '../../utils/controlsFor'
 import { ArgControl } from '../ArgControl'
 

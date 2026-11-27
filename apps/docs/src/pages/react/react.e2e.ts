@@ -3,11 +3,9 @@ import { test, expect } from '@playwright/test'
 test.describe('react section', () => {
   test('overview renders the README with the sidebar nav', async ({ page }) => {
     await page.goto('/react/')
-    await expect(page).toHaveTitle(/Design System · SOROUSH\.DESIGN/)
-    await expect(page.getByRole('heading', { level: 1, name: 'Design System' })).toBeVisible()
-    await expect(
-      page.getByRole('navigation', { name: 'Design system documentation' })
-    ).toBeVisible()
+    await expect(page).toHaveTitle(/Gild UI for React · Gild UI/)
+    await expect(page.getByRole('heading', { level: 1, name: 'Gild UI for React' })).toBeVisible()
+    await expect(page.getByRole('navigation', { name: 'Gild UI documentation' })).toBeVisible()
   })
 
   test('the search is a page of its own: important links first, matches once a word is typed', async ({
@@ -83,7 +81,7 @@ test.describe('react section', () => {
   test('sidebar navigates to installation', async ({ page }) => {
     await page.goto('/react/')
     await page
-      .getByRole('navigation', { name: 'Design system documentation' })
+      .getByRole('navigation', { name: 'Gild UI documentation' })
       .getByRole('link', { name: 'Installation' })
       .click()
     await expect(page).toHaveURL(/\/react\/installation\//)
@@ -101,9 +99,7 @@ test.describe('react section', () => {
 
   test('the sidebar sits beside the content, not above it', async ({ page }) => {
     await page.goto('/react/Button/')
-    const nav = await page
-      .getByRole('navigation', { name: 'Design system documentation' })
-      .boundingBox()
+    const nav = await page.getByRole('navigation', { name: 'Gild UI documentation' }).boundingBox()
     const heading = await page.getByRole('heading', { level: 1, name: 'Button' }).boundingBox()
     expect(nav && heading && heading.x > nav.x + nav.width).toBe(true)
   })
@@ -291,7 +287,7 @@ test.describe('react section', () => {
     await expect(
       page.getByRole('navigation', { name: 'Button pages' }).getByRole('link', { name: 'Specs' })
     ).toHaveAttribute('aria-current', 'page')
-    await expect(page.getByText(/import \{ Button \} from '@soroush\.design\/react/)).toBeVisible()
+    await expect(page.getByText(/import \{ Button \} from '@gild-ui\/react/)).toBeVisible()
     await expect(page.getByRole('heading', { name: /Button-specific props/ })).toBeVisible()
     await expect(
       page.getByRole('link', { name: 'the implementation of the component' })
@@ -313,7 +309,7 @@ test.describe('react section', () => {
     await page.goto('/react/Table/TableCell/')
     await expect(page.getByRole('heading', { level: 1, name: 'TableCell' })).toBeVisible()
     await expect(
-      page.getByText(/import \{ TableCell \} from '@soroush\.design\/react\/Table'/)
+      page.getByText(/import \{ TableCell \} from '@gild-ui\/react\/Table'/)
     ).toBeVisible()
     await expect(page.getByRole('navigation', { name: 'TableCell pages' })).toHaveCount(0)
   })
@@ -333,11 +329,9 @@ test.describe('react section', () => {
     await page.goto('/react/hooks/useDebounce/')
     await expect(page.getByRole('heading', { level: 1, name: 'useDebounce' })).toBeVisible()
     await expect(page.getByText('Needs a browser: no.')).toBeVisible()
-    await expect(page.getByText('npm i @soroush.design/react-hooks')).toBeVisible()
+    await expect(page.getByText('npm i @gild-ui/hooks')).toBeVisible()
     await expect(
-      page
-        .getByText("import { useDebounce } from '@soroush.design/react-hooks/useDebounce'")
-        .first()
+      page.getByText("import { useDebounce } from '@gild-ui/hooks/useDebounce'").first()
     ).toBeVisible()
   })
 
@@ -345,21 +339,17 @@ test.describe('react section', () => {
     page,
   }) => {
     await page.goto('/react/Button/')
-    await expect(
-      page.getByText("import { Button } from '@soroush.design/react/Button'")
-    ).toBeVisible()
+    await expect(page.getByText("import { Button } from '@gild-ui/react/Button'")).toBeVisible()
     await page.goto('/react/Table/TableCell/')
-    await expect(
-      page.getByText("import { TableCell } from '@soroush.design/react/Table'")
-    ).toBeVisible()
+    await expect(page.getByText("import { TableCell } from '@gild-ui/react/Table'")).toBeVisible()
     await page.goto('/react/markdown/Editor/')
-    await expect(page.getByText('npm i @soroush.design/react-markdown')).toBeVisible()
+    await expect(page.getByText('npm i @gild-ui/react-markdown')).toBeVisible()
     await expect(
-      page.getByText("import { Editor } from '@soroush.design/react-markdown/Editor'")
+      page.getByText("import { Editor } from '@gild-ui/react-markdown/Editor'")
     ).toBeVisible()
     await page.goto('/react/theme/')
     await expect(
-      page.getByText("from '@soroush.design/core/theme'", { exact: false }).first()
+      page.getByText("from '@gild-ui/core/theme'", { exact: false }).first()
     ).toBeVisible()
   })
 
@@ -367,9 +357,7 @@ test.describe('react section', () => {
     page,
   }) => {
     await page.goto('/react/installation/')
-    await expect(
-      page.getByText('npm i @soroush.design/react @soroush.design/core react react-dom')
-    ).toBeVisible()
+    await expect(page.getByText('npm i @gild-ui/react @gild-ui/core react react-dom')).toBeVisible()
     await expect(page.getByText('registerBaseTheme(themes.dark)')).toBeVisible()
   })
 

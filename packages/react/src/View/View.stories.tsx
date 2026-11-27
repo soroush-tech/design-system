@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { View } from './View'
-import { viewCatalog } from '@soroush.design/core/catalog/entries'
+import { viewCatalog } from '@gild-ui/core/catalog/entries'
 import {
   aspectRatio,
   bg,

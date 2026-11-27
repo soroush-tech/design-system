@@ -25,7 +25,7 @@ Default: `"contained"`, overridable via `theme.defaults.buttonVariant` or `theme
 The value union is augmentable - register new values on the `ButtonVariants` interface and style them through `theme.components.Button.variants`:
 
 ```ts
-declare module '@soroush.design/core/theme' {
+declare module '@gild-ui/core/theme' {
   interface ButtonVariants {
     dashed: true
   }

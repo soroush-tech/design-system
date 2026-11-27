@@ -36,13 +36,13 @@ describe('socialMeta', () => {
     })
     expect(tags).toContainEqual({
       property: 'og:image',
-      content: 'https://docs.soroush.design/assets/x.png',
+      content: 'https://gild-ui.soroush.design/assets/x.png',
     })
     expect(tags).toContainEqual({ property: 'og:image:width', content: '1200' })
     expect(tags).toContainEqual({ property: 'og:image:height', content: '630' })
     expect(tags).toContainEqual({
       name: 'twitter:image',
-      content: 'https://docs.soroush.design/assets/x.png',
+      content: 'https://gild-ui.soroush.design/assets/x.png',
     })
     expect(tags).toContainEqual({ name: 'twitter:card', content: 'summary_large_image' })
   })
@@ -65,7 +65,7 @@ describe('pageSocialMeta', () => {
   it('falls back to the site name when the config has no title', () => {
     expect(pageSocialMeta(ctx({}))).toContainEqual({
       property: 'og:title',
-      content: 'SOROUSH.DESIGN',
+      content: 'Gild UI',
     })
   })
 })

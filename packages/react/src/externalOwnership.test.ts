@@ -32,21 +32,18 @@ const owned = async (folder: string, entries: string[]) => {
 
 const hooks = ['useControlled', 'useEventCallback', 'useMergedRefs']
 
-describe.each([['@soroush.design/react-hooks'], ['@soroush.design/core']])(
-  '%s in the built library',
-  (name) => {
-    it('is a dependency, not a peer or a dev dependency', () => {
-      expect((manifest.dependencies as Record<string, string>)[name]).toBe('workspace:^')
-      expect(manifest.peerDependencies).not.toHaveProperty(name)
-      expect(manifest.devDependencies).not.toHaveProperty(name)
-    })
-  }
-)
+describe.each([['@gild-ui/hooks'], ['@gild-ui/core']])('%s in the built library', (name) => {
+  it('is a dependency, not a peer or a dev dependency', () => {
+    expect((manifest.dependencies as Record<string, string>)[name]).toBe('workspace:^')
+    expect(manifest.peerDependencies).not.toHaveProperty(name)
+    expect(manifest.devDependencies).not.toHaveProperty(name)
+  })
+})
 
-describe('@soroush.design/react-hooks in the built library', () => {
+describe('@gild-ui/hooks in the built library', () => {
   it.each([
-    ['.mjs', (name: string) => `from "@soroush.design/react-hooks/${name}"`],
-    ['.cjs', (name: string) => `require("@soroush.design/react-hooks/${name}")`],
+    ['.mjs', (name: string) => `from "@gild-ui/hooks/${name}"`],
+    ['.cjs', (name: string) => `require("@gild-ui/hooks/${name}")`],
   ])('imports each hook by the package name in %s files', (extension, specifier) => {
     const all = read(extension)
     for (const name of hooks) {

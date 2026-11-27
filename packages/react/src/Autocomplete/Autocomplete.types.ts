@@ -6,7 +6,7 @@ import type {
   ThemeZOrder,
   ThemeColor,
   ThemeSize,
-} from '@soroush.design/core/theme'
+} from '@gild-ui/core/theme'
 import type { ComponentConfig } from '../theme/themes'
 
 /** The defaults a theme may set for every `Autocomplete` - its labels give it a language. */

@@ -2,7 +2,7 @@ import type {
   CatalogEntry as CoreCatalogEntry,
   CatalogOption as CoreCatalogOption,
   DesignSystemCatalog as CoreDesignSystemCatalog,
-} from '@soroush.design/core/catalog'
+} from '@gild-ui/core/catalog'
 import type { Theme } from '../theme/themes'
 
 export type {
@@ -11,7 +11,7 @@ export type {
   CatalogVariant,
   ExampleNode,
   JsonValue,
-} from '@soroush.design/core/catalog'
+} from '@gild-ui/core/catalog'
 
 /** A theme scale a prop's values come from - `theme.palette`'s keys for `color`. */
 export type ThemeScale = keyof Theme

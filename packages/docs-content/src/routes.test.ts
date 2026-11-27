@@ -37,10 +37,9 @@ describe('the docs routes are the import paths', () => {
         continue
       }
       const matching = paths.filter((path) => path === `/react/${entry}/`)
-      expect(
-        matching,
-        `@soroush.design/react/${entry} has no docs page at /react/${entry}/`
-      ).toHaveLength(1)
+      expect(matching, `@gild-ui/react/${entry} has no docs page at /react/${entry}/`).toHaveLength(
+        1
+      )
     }
   })
 
@@ -77,7 +76,7 @@ describe('the docs routes are the import paths', () => {
   })
 
   it('gives each package grouped under the platform a page for each of its entry points', () => {
-    expect(entriesOf('react-hooks').sort()).toEqual([...reactHooks].sort())
+    expect(entriesOf('hooks').sort()).toEqual([...reactHooks].sort())
     expect(entriesOf('react-markdown').sort()).toEqual(
       markdownComponents.map(({ name }) => name).sort()
     )

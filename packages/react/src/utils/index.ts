@@ -1,1 +1,1 @@
-export { generateBoxShadow, clamp, luminance, alpha } from '@soroush.design/core/utils'
+export { generateBoxShadow, clamp, luminance, alpha } from '@gild-ui/core/utils'

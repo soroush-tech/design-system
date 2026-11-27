@@ -1,5 +1,5 @@
-// The Astro starter: HTML pages whose parts are React islands drawn with the design system. Astro
-// renders each island as a React root of its own, with plain react-dom/server, so the design system
+// The Astro starter: HTML pages whose parts are React islands drawn with Gild UI. Astro
+// renders each island as a React root of its own, with plain react-dom/server, so Gild UI
 // needs no 'use client' here, and an island's styles are in its HTML. Its files are the templates in
 // templates/astro/ (see templates/templates.md); this module adds what is computed: package.json,
 // and the themes and Providers `init` writes too.

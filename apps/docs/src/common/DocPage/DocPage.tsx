@@ -1,6 +1,6 @@
-import { Typography } from '@soroush.design/react/Typography'
+import { Typography } from '@gild-ui/react/Typography'
 import { DocsNav } from 'src/common/DocsNav/DocsNav'
-import type { ImportLine } from '@soroush.design/docs-content'
+import type { ImportLine } from '@gild-ui/docs-content'
 import { ImportLines } from 'src/common/ImportLines/ImportLines'
 import { Layout } from 'src/common/Layout'
 import { Readme } from 'src/common/Readme/Readme'

@@ -1,9 +1,9 @@
 # The testing entry
 
-`@soroush.design/react/testing` holds helpers for the unit tests of an app that uses the library.
+`@gild-ui/react/testing` holds helpers for the unit tests of an app that uses the library.
 
 ```ts
-import { installPopover } from '@soroush.design/react/testing'
+import { installPopover } from '@gild-ui/react/testing'
 ```
 
 ## `installPopover()`

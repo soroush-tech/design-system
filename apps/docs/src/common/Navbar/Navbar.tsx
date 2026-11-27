@@ -1,13 +1,13 @@
 import type { ReactNode } from 'react'
-import { AppBar } from '@soroush.design/react/AppBar'
-import { Button } from '@soroush.design/react/Button'
-import { DrawerToggle } from '@soroush.design/react/Drawer'
-import { Flex } from '@soroush.design/react/Flex'
-import { Icon } from '@soroush.design/react/Icon'
-import { Link } from '@soroush.design/react/Link'
-import { Typography } from '@soroush.design/react/Typography'
-import { View } from '@soroush.design/react/View'
-import { Chip } from '@soroush.design/lab/Chip'
+import { AppBar } from '@gild-ui/react/AppBar'
+import { Button } from '@gild-ui/react/Button'
+import { DrawerToggle } from '@gild-ui/react/Drawer'
+import { Flex } from '@gild-ui/react/Flex'
+import { Icon } from '@gild-ui/react/Icon'
+import { Link } from '@gild-ui/react/Link'
+import { Typography } from '@gild-ui/react/Typography'
+import { View } from '@gild-ui/react/View'
+import { Chip } from '@gild-ui/lab/Chip'
 import { RailGlyph } from 'src/common/NavRail/RailGlyph'
 import { PACKAGE_VERSIONS } from 'src/common/packageVersions'
 import { useThemeMode } from 'src/theme/useThemeMode'
@@ -47,7 +47,7 @@ export function Navbar({ menuDrawer, onSearch, versionMenu }: Readonly<NavbarPro
           )}
           <Link href="/" color="primary" underline="none">
             <Typography variant="h6" color="primary">
-              SOROUSH.DESIGN
+              Gild UI
             </Typography>
           </Link>
           {versionMenu ?? <Chip>v{PACKAGE_VERSIONS.react}</Chip>}
@@ -56,7 +56,7 @@ export function Navbar({ menuDrawer, onSearch, versionMenu }: Readonly<NavbarPro
           <View display={{ xs: 'none', lg: 'inline-flex' }}>
             <Flex flexDirection="row" gap={3}>
               <Link href="/react/" color="secondary">
-                Design System
+                Gild UI for React
               </Link>
               <Link href="/react/markdown/" color="secondary">
                 Markdown

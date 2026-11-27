@@ -3,8 +3,8 @@ import { styled } from '../style/styled'
 import { type CSSObject, type Theme } from '../theme/themes'
 import { useTheme } from '../theme/hooks/useTheme'
 import { Typography, type TypographyProps } from '../Typography'
-import { themeDefault } from '@soroush.design/core/theme'
-import { getAnchorRel } from '@soroush.design/core/utils'
+import { themeDefault } from '@gild-ui/core/theme'
+import { getAnchorRel } from '@gild-ui/core/utils'
 
 export type LinkUnderline = 'always' | 'hover' | 'none'
 

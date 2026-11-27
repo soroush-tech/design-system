@@ -6,8 +6,8 @@ import {
   type KeyboardEvent,
   type ReactNode,
 } from 'react'
-import { styled } from '@soroush.design/react'
-import { View } from '@soroush.design/react/View'
+import { styled } from '@gild-ui/react'
+import { View } from '@gild-ui/react/View'
 import { MarkdownContext } from '../MarkdownContext'
 import { Preview, type PreviewSlotProps } from '../Preview'
 import { blockToMarkdown } from '../utils/blockToMarkdown'

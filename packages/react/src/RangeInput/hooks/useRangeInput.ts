@@ -9,9 +9,9 @@ import {
   type RefObject,
   type SyntheticEvent,
 } from 'react'
-import { clamp } from '@soroush.design/core/utils'
+import { clamp } from '@gild-ui/core/utils'
 import { isRtl } from '../../utils/isRtl'
-import { useControlled } from '@soroush.design/react-hooks/useControlled'
+import { useControlled } from '@gild-ui/hooks/useControlled'
 import {
   areValuesEqual,
   findClosest,

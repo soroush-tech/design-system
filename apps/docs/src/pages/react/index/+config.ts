@@ -3,7 +3,7 @@ import { sectionPrerender } from '../../../common/sectionRoute'
 
 export default {
   prerender: sectionPrerender('react'),
-  title: 'Design System',
+  title: 'Gild UI for React',
   description:
-    'Overview of @soroush.design/react: the component inventory, theme tokens, and how the pieces fit together.',
+    'Overview of @gild-ui/react: the component inventory, theme tokens, and how the pieces fit together.',
 } satisfies Config

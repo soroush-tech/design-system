@@ -1,8 +1,8 @@
 // @if !ssg
-import { Flex } from '@soroush.design/react/Flex'
-import { Icon } from '@soroush.design/react/Icon'
-import { Switch } from '@soroush.design/react/Switch'
-import { Typography } from '@soroush.design/react/Typography'
+import { Flex } from '@gild-ui/react/Flex'
+import { Icon } from '@gild-ui/react/Icon'
+import { Switch } from '@gild-ui/react/Switch'
+import { Typography } from '@gild-ui/react/Typography'
 
 type Scheme = 'light' | 'dark'
 

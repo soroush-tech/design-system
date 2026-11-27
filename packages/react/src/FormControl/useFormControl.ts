@@ -5,7 +5,7 @@ import { type Theme } from '../theme/themes'
 import { useTheme } from '../theme/hooks/useTheme'
 import { FormContext } from '../Form/FormContext'
 import { FormControlContext } from './FormControlContext'
-import { themeDefault } from '@soroush.design/core/theme'
+import { themeDefault } from '@gild-ui/core/theme'
 
 /** Explicit props a control passes in - always win over context when defined. */
 export interface FormControlOverrides {

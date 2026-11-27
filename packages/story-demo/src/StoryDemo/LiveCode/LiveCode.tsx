@@ -1,6 +1,6 @@
 import { Fragment, useCallback, useMemo, type ReactNode } from 'react'
 import { LiveError, LivePreview, LiveProvider } from 'react-live'
-import { styled, useTheme } from '@soroush.design/react'
+import { styled, useTheme } from '@gild-ui/react'
 import { prepareLiveCode } from '../../utils/prepareLiveCode'
 import { snippetToModule } from '../../utils/snippetToModule'
 import { prismTheme } from '../../utils/prismTheme'

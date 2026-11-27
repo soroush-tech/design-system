@@ -1,8 +1,8 @@
-import { styled } from '@soroush.design/react'
+import { styled } from '@gild-ui/react'
 import { get } from '@soroush.tech/styled-system'
-import { Flex } from '@soroush.design/react/Flex'
-import type { IconName } from '@soroush.design/react/Icon'
-import { Sidebar, SidebarItem } from '@soroush.design/react/Sidebar'
+import { Flex } from '@gild-ui/react/Flex'
+import type { IconName } from '@gild-ui/react/Icon'
+import { Sidebar, SidebarItem } from '@gild-ui/react/Sidebar'
 import { sectionFor, railItemFor, type RailIcon } from 'src/common/nav'
 import { useSearch } from 'src/common/Search/SearchContext'
 import { VersionMenu } from 'src/common/VersionMenu/VersionMenu'
@@ -11,7 +11,7 @@ import { useThemeMode } from 'src/theme/useThemeMode'
 
 const normalize = (path: string): string => (path.endsWith('/') ? path : `${path}/`)
 
-// The design system's icon for each glyph of the rail.
+// Gild UI's icon for each glyph of the rail.
 const ICONS: Record<RailIcon, IconName> = {
   home: 'home',
   dots: 'grid_view',

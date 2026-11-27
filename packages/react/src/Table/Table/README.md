@@ -7,7 +7,7 @@ broadcasts cell config (`size`, `cellPadding`, `hasStickyHeader`) to descendant 
 Client component: its entry carries `'use client'`, so a server component can import and render it.
 
 ```tsx
-import { Table, TableHead, TableBody, TableRow, TableCell } from '@soroush.design/react/Table'
+import { Table, TableHead, TableBody, TableRow, TableCell } from '@gild-ui/react/Table'
 
 ;<Table size="sm" hasStickyHeader>
   <TableHead>...</TableHead>

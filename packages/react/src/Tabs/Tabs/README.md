@@ -8,7 +8,7 @@ carry content of its own before and after the tabs - an icon, a toolbar, a "+" b
 Client component: its entry carries `'use client'`, so a server component can import and render it.
 
 ```tsx
-import { Tab, Tabs } from '@soroush.design/react/Tabs'
+import { Tab, Tabs } from '@gild-ui/react/Tabs'
 
 ;<Tabs value={value} onChange={setValue} textColor="secondary" color="secondary" aria-label="Items">
   <Tab value="one" label="Item One" />
@@ -21,7 +21,7 @@ import { Tab, Tabs } from '@soroush.design/react/Tabs'
 each tab, put the tabs in a `TabContext` as a `TabList` - it links each tab to its `TabPanel`:
 
 ```tsx
-import { Tab, TabContext, TabList, TabPanel } from '@soroush.design/react/Tabs'
+import { Tab, TabContext, TabList, TabPanel } from '@gild-ui/react/Tabs'
 
 ;<TabContext value={value}>
   <TabList onChange={setValue} aria-label="Items">

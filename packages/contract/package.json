@@ -1,9 +1,9 @@
 {
-  "name": "@soroush.design/contract",
+  "name": "@gild-ui/contract",
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "description": "The final public shape of the soroush.design React family as data and type tests, written before the packages are restructured behind it: the export lists and the type-test programs, with the list of those that fail until the restructure lands.",
+  "description": "The final public shape of the Gild UI React family as data and type tests, written before the packages are restructured behind it: the export lists and the type-test programs, with the list of those that fail until the restructure lands.",
   "scripts": {
     "lint": "oxlint --deny-warnings",
     "typecheck": "tsc --noEmit",

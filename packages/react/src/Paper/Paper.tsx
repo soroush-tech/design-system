@@ -5,7 +5,7 @@ import { createShouldForwardProp } from '@soroush.tech/styled-system/should-forw
 import { system } from '@soroush.tech/styled-system'
 import { useTheme } from '../theme/hooks/useTheme'
 import { Flex, type FlexProps } from '../Flex'
-import { themeDefault } from '@soroush.design/core/theme'
+import { themeDefault } from '@gild-ui/core/theme'
 
 export type PaperElevation =
   | 0

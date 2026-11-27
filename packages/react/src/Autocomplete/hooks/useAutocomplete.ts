@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, type ChangeEvent, type KeyboardEvent, type SyntheticEvent } from 'react'
-import { useControlled } from '@soroush.design/react-hooks/useControlled'
+import { useControlled } from '@gild-ui/hooks/useControlled'
 
 /** One value for a single field, a list for `multiple`. */
 export type AutocompleteValue<T, Multiple extends boolean | undefined> = Multiple extends true

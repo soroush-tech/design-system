@@ -14,7 +14,7 @@ import { Typography } from '../Typography'
 import { MenuItem } from '../MenuItem'
 import { exampleArgs } from '../utils/test/renderExample'
 import { Select, type SelectProps, type SelectValue } from './Select'
-import { selectCatalog } from '@soroush.design/core/catalog/entries'
+import { selectCatalog } from '@gild-ui/core/catalog/entries'
 
 const platformItems = [
   <MenuItem key="web" value="web">

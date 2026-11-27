@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { fireEvent, screen, within } from '@testing-library/react'
-import { renderWithTheme } from '@soroush.design/react/utils/test/renderWithTheme'
+import { renderWithTheme } from '@gild-ui/react/utils/test/renderWithTheme'
 import { DiagramViewer } from './DiagramViewer'
 
 const SVG = '<svg data-testid="svg"></svg>'

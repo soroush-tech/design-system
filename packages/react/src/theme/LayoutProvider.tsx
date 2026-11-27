@@ -3,8 +3,8 @@ import type { ReactNode } from 'react'
 import { derivedBy } from './derivedTheme'
 import { EngineThemeProvider } from './engine'
 import { baseTheme, type Theme } from './themes'
-import { createTheme, type ThemeLayout } from '@soroush.design/core/theme'
-import { deepMerge } from '@soroush.design/core/utils'
+import { createTheme, type ThemeLayout } from '@gild-ui/core/theme'
+import { deepMerge } from '@gild-ui/core/utils'
 
 export interface LayoutProviderProps {
   /**

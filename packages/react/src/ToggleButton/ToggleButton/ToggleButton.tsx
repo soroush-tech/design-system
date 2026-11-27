@@ -8,7 +8,7 @@ import { alpha, styled } from '../../style/styled'
 import { type Theme } from '../../theme/themes'
 import { get } from '@soroush.tech/styled-system'
 import { useTheme } from '../../theme/hooks/useTheme'
-import { themeDefault } from '@soroush.design/core/theme'
+import { themeDefault } from '@gild-ui/core/theme'
 
 export interface ToggleButtonProps extends Omit<
   ButtonProps,

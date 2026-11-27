@@ -1,5 +1,5 @@
-import { sitePath, stripReadmeChrome } from '@soroush.design/docs-content'
-import { loadPackageFile, loadRepoFile } from '@soroush.design/docs-content/node'
+import { sitePath, stripReadmeChrome } from '@gild-ui/docs-content'
+import { loadPackageFile, loadRepoFile } from '@gild-ui/docs-content/node'
 import type { DocRecord } from '../types'
 import { DOCS_URL } from './components'
 
@@ -91,7 +91,7 @@ const GUIDES: DocSource[] = [
   {
     id: 'markdown-overview',
     title: 'Markdown package overview',
-    summary: 'The headless markdown editor and renderer built on the design system.',
+    summary: 'The headless markdown editor and renderer built on Gild UI.',
     read: () => stripReadmeChrome(loadPackageFile('markdown', 'README.md')),
     url: `${DOCS_URL}${sitePath('markdown', '/')}`,
   },
@@ -100,7 +100,7 @@ const GUIDES: DocSource[] = [
     title: 'Hooks',
     summary:
       'The React hooks that belong to no component and no theme, and which of them need a browser.',
-    read: () => stripReadmeChrome(loadRepoFile('packages/react-hooks/README.md')),
+    read: () => stripReadmeChrome(loadRepoFile('packages/hooks/README.md')),
     url: `${DOCS_URL}${sitePath('react', '/hooks/')}`,
   },
 ]

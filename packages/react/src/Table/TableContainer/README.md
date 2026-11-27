@@ -15,4 +15,4 @@ Client component: its entry carries `'use client'`, so a server component can im
 ## Props
 
 Accepts every `View` prop - `bg`, `borderColor`, `borderWidth`, `borderRadius`, spacing, layout,
-position, and `as` (default `'div'`). See `@soroush.design/react/View/README.md`.
+position, and `as` (default `'div'`). See `@gild-ui/react/View/README.md`.

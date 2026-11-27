@@ -1,9 +1,4 @@
-import type {
-  ThemeFonts,
-  ThemeText,
-  ThemeSpaceKey,
-  ThemeTypography,
-} from '@soroush.design/core/theme'
+import type { ThemeFonts, ThemeText, ThemeSpaceKey, ThemeTypography } from '@gild-ui/core/theme'
 import type { ComponentConfig } from '../theme/themes'
 
 /** Card's resolved props / theme-settable defaults. */

@@ -1,8 +1,8 @@
-// Set up by @soroush.design/react init. The app's root renders inside Providers.
+// Set up by @gild-ui/react init. The app's root renders inside Providers.
 import { createElement } from 'react'
 import type { ReactNode } from 'react'
-import { Global, ThemeProvider } from '@soroush.design/react'
-import { globalStyles } from '@soroush.design/react/engine'
+import { Global, ThemeProvider } from '@gild-ui/react'
+import { globalStyles } from '@gild-ui/react/engine'
 import themes from './themes.ts'
 
 /** Gives every component its theme, and draws the page's base styles. */

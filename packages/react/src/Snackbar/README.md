@@ -9,7 +9,7 @@ not stack: the app queues them.
 Client component: its entry carries `'use client'`, so a server component can import and render it.
 
 ```tsx
-import { Snackbar } from '@soroush.design/react/Snackbar'
+import { Snackbar } from '@gild-ui/react/Snackbar'
 
 ;<Snackbar
   isOpen={isOpen}
@@ -65,7 +65,7 @@ useAutoHide(params: UseAutoHideParams): { pause: () => void; resume: () => void 
 | `onHide`         | `() => void` |                    | Called when the time is up.                               |
 
 ```tsx
-import { useAutoHide } from '@soroush.design/react/Snackbar'
+import { useAutoHide } from '@gild-ui/react/Snackbar'
 
 function Toast({ isOpen, close }: { isOpen: boolean; close: () => void }) {
   const { pause, resume } = useAutoHide({ isOpen, duration: 4000, onHide: close })

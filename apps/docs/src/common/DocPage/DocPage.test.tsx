@@ -22,7 +22,7 @@ describe('DocPage', () => {
     renderDocPage({ source: '# Doc Title\n\nBody copy.' })
     // The sidebar renders in the aside and in the mobile drawer; both are hidden at jsdom's width.
     expect(
-      screen.getAllByRole('navigation', { name: 'Design system documentation', hidden: true })
+      screen.getAllByRole('navigation', { name: 'Gild UI documentation', hidden: true })
     ).toHaveLength(2)
     expect(screen.getByRole('heading', { name: 'Doc Title' })).toBeInTheDocument()
     expect(screen.getByText('Body copy.')).toBeInTheDocument()
@@ -30,9 +30,7 @@ describe('DocPage', () => {
 
   it('shows the install and the import of its subject at the top, when it has them', () => {
     renderDocPage({ source: 'Body.', importLine: hookImportLine('useDebounce') })
-    expect(
-      screen.getByText((text) => text.includes('npm i @soroush.design/react-hooks'))
-    ).toBeInTheDocument()
+    expect(screen.getByText((text) => text.includes('npm i @gild-ui/hooks'))).toBeInTheDocument()
   })
 
   it('renders its own title and strips the source chrome when title is given', () => {

@@ -8,7 +8,7 @@ the two, wherever they are in the tree.
 Client component: its entry carries `'use client'`, so a server component can import and render it.
 
 ```tsx
-import { Tab, TabContext, TabList, TabPanel } from '@soroush.design/react/Tabs'
+import { Tab, TabContext, TabList, TabPanel } from '@gild-ui/react/Tabs'
 
 ;<TabContext defaultValue="layers">
   <TabList aria-label="Left panel">

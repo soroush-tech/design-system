@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react'
-import { View } from '@soroush.design/react/View'
+import { View } from '@gild-ui/react/View'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useAtom } from 'jotai'
 import { schemeAtom } from '../state/scheme'

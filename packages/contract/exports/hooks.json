@@ -1,5 +1,5 @@
 {
-  "package": "@soroush.design/react-hooks",
+  "package": "@gild-ui/hooks",
   "entries": {
     ".": {
       "values": [

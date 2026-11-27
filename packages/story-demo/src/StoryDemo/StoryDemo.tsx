@@ -1,8 +1,8 @@
 import { lazy, Suspense, useEffect, useMemo, useState, type ComponentType } from 'react'
 import { composeStory } from '@storybook/react-vite'
-import { Typography } from '@soroush.design/react/Typography'
-import { View } from '@soroush.design/react/View'
-import { useCopyToClipboard } from '@soroush.design/react-hooks/useCopyToClipboard'
+import { Typography } from '@gild-ui/react/Typography'
+import { View } from '@gild-ui/react/View'
+import { useCopyToClipboard } from '@gild-ui/hooks/useCopyToClipboard'
 import { buildDemoModule } from '../utils/buildDemoModule'
 import { controlsFor, controlsInclude, type ControlsAnnotations } from '../utils/controlsFor'
 import { openInCodeSandbox } from '../utils/openInCodeSandbox'
@@ -71,7 +71,7 @@ export function StoryDemo({
   scope = {},
   versions = {},
   reactVersion = 'latest',
-  packageName = '@soroush.design/react',
+  packageName = '@gild-ui/react',
 }: Readonly<StoryDemoProps>) {
   const [language, setLanguage] = useState<Language>('ts')
   const [isExpanded, setIsExpanded] = useState(false)

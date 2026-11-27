@@ -8,8 +8,8 @@ import {
   type SyntheticEvent,
 } from 'react'
 import { isRtl } from '../../utils/isRtl'
-import { useControlled } from '@soroush.design/react-hooks/useControlled'
-import { roundToPrecision } from '@soroush.design/core/utils'
+import { useControlled } from '@gild-ui/hooks/useControlled'
+import { roundToPrecision } from '@gild-ui/core/utils'
 import { getHoverValue } from '../utils/precision'
 
 export interface UseRatingParams {

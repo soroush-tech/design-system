@@ -1,6 +1,6 @@
 # Docs app conventions (apps/docs)
 
-The Vike SSG app served at docs.soroush.design. Architecture mirrors the soroush.tech web
+The Vike SSG app served at gild-ui.soroush.design. Architecture mirrors the soroush.tech web
 app's renderer (critical CSS from the styling engine's cache, managed head tags) with the data layer removed:
 every input is an in-repo glob over `packages/` and `content/` - no remote fetches, no MSW.
 
@@ -9,7 +9,7 @@ every input is an in-repo glob over `packages/` and `content/` - no remote fetch
 Six per-package sections, independently versioned: `/react/`, `/react/markdown/`,
 `/styled-system/`, `/mcp/`, `/ui-spec/` and `/cli/`. A section has an id (`react`, `markdown`, ...: its route
 folder, `DOCS_SECTION` and its key in `versions.json`) and a route, where it is on the site
-(`sectionRoutes.ts` in `@soroush.design/docs-content`). The registry in `src/common/nav.ts` drives the
+(`sectionRoutes.ts` in `@gild-ui/docs-content`). The registry in `src/common/nav.ts` drives the
 sidebars, the component pages, and the drift tests; `sectionFor(pathname)` picks the active section -
 the one with the longest route that holds the path, so `/react/markdown/Editor/` is the markdown
 section's and not React's.
@@ -23,21 +23,21 @@ that repository and its docs - no docs folder, no releases page, and nothing gen
 **A page's route is the import path under its platform.** The route of a thing is the path an app imports it from, with the hooks and the markdown package grouped under `/react/`, and the page's content is that thing's own markdown file. The URLs are
 frozen from the first publish of the site, so no route is renamed after it.
 
-| An app imports                                                             | The docs page                    | Content                                           |
-| -------------------------------------------------------------------------- | -------------------------------- | ------------------------------------------------- |
-| `@soroush.design/react/Button`                                             | `/react/Button/`                 | the component's README and MDX page               |
-| `@soroush.design/react/Table` and its `TableCell`                          | `/react/Table/TableCell/`        | the member's README                               |
-| `@soroush.design/react/useTheme` and the other names of the styling system | `/react/theme/`, `/react/style/` | `docs/theming.md`, `docs/style.md` of the package |
-| `@soroush.design/react/engine`                                             | `/react/engine/`                 | `docs/engine.md` of the package                   |
-| `@soroush.design/react-markdown/Editor`                                    | `/react/markdown/Editor/`        | the markdown package's README                     |
-| `@soroush.design/react-hooks/useDebounce`                                  | `/react/hooks/useDebounce/`      | its section of the hooks README                   |
-| later `@soroush.design/react-native/Button`                                | `/react-native/Button/`          |                                                   |
-| a package of no platform: `@soroush.design/cli`                            | `/cli/`                          | its README and release notes                      |
+| An app imports                                                      | The docs page                    | Content                                           |
+| ------------------------------------------------------------------- | -------------------------------- | ------------------------------------------------- |
+| `@gild-ui/react/Button`                                             | `/react/Button/`                 | the component's README and MDX page               |
+| `@gild-ui/react/Table` and its `TableCell`                          | `/react/Table/TableCell/`        | the member's README                               |
+| `@gild-ui/react/useTheme` and the other names of the styling system | `/react/theme/`, `/react/style/` | `docs/theming.md`, `docs/style.md` of the package |
+| `@gild-ui/react/engine`                                             | `/react/engine/`                 | `docs/engine.md` of the package                   |
+| `@gild-ui/react-markdown/Editor`                                    | `/react/markdown/Editor/`        | the markdown package's README                     |
+| `@gild-ui/hooks/useDebounce`                                        | `/react/hooks/useDebounce/`      | its section of the hooks README                   |
+| later `@gild-ui/react-native/Button`                                | `/react-native/Button/`          |                                                   |
+| a package of no platform: `@soroush.design/cli`                     | `/cli/`                          | its README and release notes                      |
 
 - **The platform is the first segment.** A package that is not part of a platform keeps its
   own name: `/styled-system/...`, `/cli/...`, `/mcp/...`, `/ui-spec/...`, later `/core/...`.
 - **A capitalised segment is a component, exactly as exported**: `/react/Button/`. A lowercase one is
-  an entry point that is not a component (`/react/engine/`), a guide whose URL is indexed (`/react/theme/`, `/react/style/`, `/react/utils/`: the names they document are entry points of their own, or `@soroush.design/core`'s), a package grouped under the platform
+  an entry point that is not a component (`/react/engine/`), a guide whose URL is indexed (`/react/theme/`, `/react/style/`, `/react/utils/`: the names they document are entry points of their own, or `@gild-ui/core`'s), a package grouped under the platform
   (`/react/markdown/`), or a page that is not an entry point at all: the guides
   (`/react/installation/`, `/react/usage/`, `/react/customization/`), `/react/components/` (the
   index of the components) and `/react/releases/`. A guide is never named like an entry point.
@@ -45,7 +45,7 @@ frozen from the first publish of the site, so no route is renamed after it.
   `/react/Button/accessibility/`, the tabs of its page. `specs` and `accessibility` are lowercase, so
   no export takes their path.
 - **A member of a family is under the entry it is imported from**: `TableCell` is exported by
-  `@soroush.design/react/Table`, so its page is `/react/Table/TableCell/`. If the library later
+  `@gild-ui/react/Table`, so its page is `/react/Table/TableCell/`. If the library later
   exports a nested entry point, the path is that import path and nothing else changes.
 - **A lowercase form of a component path redirects to the capitalised page**, because Cloudflare Pages
   tells paths apart by case: `/react/button/` goes to `/react/Button/`. `emitRedirects.ts` writes
@@ -54,9 +54,9 @@ frozen from the first publish of the site, so no route is renamed after it.
   differ only by case are an error.
 - **A path ends in a slash**, as the prerendered `<path>/index.html` does; the host sends the path
   without it to the one with it.
-- **The list of pages is derived, not kept twice.** `docsPages()` in `@soroush.design/docs-content`
-  builds it from the registry; its test holds it to the entry points of `@soroush.design/react`,
-  `react-hooks` and `react-markdown` (their `package.json`): every entry point has exactly one page at its path (the names of the styling system, `stylingEntries` in the registry, are covered by the guide that documents them), and every
+- **The list of pages is derived, not kept twice.** `docsPages()` in `@gild-ui/docs-content`
+  builds it from the registry; its test holds it to the entry points of `@gild-ui/react`,
+  `hooks` and `react-markdown` (their `package.json`): every entry point has exactly one page at its path (the names of the styling system, `stylingEntries` in the registry, are covered by the guide that documents them), and every
   capitalised page is an entry point or an export of one. The built output is held to the same list by
   `routes.e2e.ts` (exact names, the sitemap, no broken link, no link to a path of the former site).
 - **Adding a thing**: a new component is registered in `registry.ts` and has its README and MDX page; a
@@ -92,13 +92,13 @@ frozen from the first publish of the site, so no route is renamed after it.
   `<Component>/<StoryExport>` path at a design-system `*.stories.tsx` export; the
   registry globs every stories module (namespace + `?raw`) so the demo UI - rendering,
   controls, code synthesis, live editing, TS/JS toggle, sandbox export - comes from
-  `@soroush.design/story-demo`'s `StoryDemo`. `src/demos/scope.ts` is the identifier
+  `@gild-ui/story-demo`'s `StoryDemo`. `src/demos/scope.ts` is the identifier
   scope for live-edited code.
 - `vite/sitemapPlugin.ts` - vendored sitemap generator (live builds only).
 
 ## Versioning
 
-The site is docs.soroush.design, the documentation of the `soroush.design` family on Cloudflare Pages
+The site is gild-ui.soroush.design, the documentation of Gild UI on Cloudflare Pages
 (the deploy is [#147](https://github.com/soroush-tech/design-system/issues/147); until it lands CI
 only builds this app, in the `docs` job of `ci.yml`). The former site, docs.soroush.tech, documents
 the former package and is frozen: nothing here refers to it.
@@ -116,7 +116,7 @@ from the section's release tag (`<npm name>@<version>`, found per section from `
 
 - Imports use the `src/`, `content/`, and `packages/` aliases. Never relative `../../`
   (the `+route.ts`/`+config.ts` exception above aside).
-- Design-system imports use per-component subpaths (`@soroush.design/react/Button`).
+- Design-system imports use per-component subpaths (`@gild-ui/react/Button`).
 - All prose content - MDX included - must use ASCII punctuation (the repo-wide `aiwg`
   guard scans it).
 - Never hardcode a section URL - build links with `sectionPath()` (and the path of a component with `componentPagePath()` and its kin) so snapshots stay

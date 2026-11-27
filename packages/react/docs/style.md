@@ -1,15 +1,15 @@
 # The style system
 
-`useStyle`, `withStyles` and `StylesConsumer` (`@soroush.design/react/useStyle`, `/withStyles` and `/StylesConsumer`) resolve a style that is either a plain object or a function of the theme into the `CSSObject` a component applies. It is for styles you write yourself; the components of the library use the same helpers.
+`useStyle`, `withStyles` and `StylesConsumer` (`@gild-ui/react/useStyle`, `/withStyles` and `/StylesConsumer`) resolve a style that is either a plain object or a function of the theme into the `CSSObject` a component applies. It is for styles you write yourself; the components of the library use the same helpers.
 
 ```ts
-import { useStyle, withStyles, StylesConsumer } from '@soroush.design/react'
+import { useStyle, withStyles, StylesConsumer } from '@gild-ui/react'
 ```
 
 A **style input** is a `CSSObject`, or a factory: an object with a `getStyles(theme)` method that returns one. A factory reads the active theme, so its values follow a theme change.
 
 ```tsx
-import type { Theme } from '@soroush.design/core/theme'
+import type { Theme } from '@gild-ui/core/theme'
 
 const card = {
   getStyles: (theme: Theme) => ({ padding: theme.space[2], borderRadius: theme.radii.md }),
@@ -42,7 +42,7 @@ Where a style belongs to a component of the library, change it through `theme.co
 Write these with the functions of the package, not by joining text: a theme token is a reference to a CSS variable, and a hex digit, a minus or a unit glued after it is not valid CSS.
 
 ```tsx
-import { alpha, negate, styled, useStyleValue } from '@soroush.design/react'
+import { alpha, negate, styled, useStyleValue } from '@gild-ui/react'
 
 const Tint = styled('div')(({ theme }) => ({
   // A colour at an opacity: `alpha(color, opacity)`, opacity from 0 to 1. Not `${color}1F`.

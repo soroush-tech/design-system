@@ -1,8 +1,8 @@
 # Markdown package conventions
 
-`@soroush.design/react-markdown` is the markdown package of the React design system, a companion to
-[`@soroush.design/react`](../react); an app writes
-`@soroush.design/react-markdown/Editor`. **Its components follow the design system's
+`@gild-ui/react-markdown` is the markdown package of Gild UI for React, a companion to
+[`@gild-ui/react`](../react); an app writes
+`@gild-ui/react-markdown/Editor`. **Its components follow Gild UI's
 conventions verbatim** - read [`../react/design-system.md`](../react/design-system.md)
 before working here. That doc is the law for: per-component folder structure, prop types derived
 from `Theme` (never manual unions), `styled(...)` naming + `system()` wiring, `shouldForwardProp`,
@@ -28,25 +28,25 @@ sub-component adds `SubName.README.md` + `SubName.stories.tsx` next to its sibli
 - **`LiveEdit`** - a preview you write on directly: `Preview`-rendered blocks are
   `contentEditable`, and each input serializes the edited block's DOM back to markdown
   (rehype-remark) and splices it into the source. Untouched blocks keep their exact source.
-- **`CodeBlock`** - the fenced-code surface (moved here from the design system; `Preview`/`Mermaid`
+- **`CodeBlock`** - the fenced-code surface (moved here from Gild UI; `Preview`/`Mermaid`
   are its only consumers).
 - **`Mermaid` (+ `DiagramViewer`)** - renders ` ```mermaid ` blocks as themed, zoomable diagrams.
 
 ## Markdown-specifics
 
 - **Its own package, a peer of the React package.** An app that never imports it installs no editor or
-  diagram dependencies: `@soroush.design/react` does not depend on it. Its entry points are listed one
+  diagram dependencies: `@gild-ui/react` does not depend on it. Its entry points are listed one
   by one in `exports` and `publishConfig.exports`, and each has a docs page at
   `/react/markdown/<Name>/`; a new one is an entry and a page together. `tsdown.config.ts` builds the
   entries `exports` lists.
-- **The hooks are a dependency.** `@soroush.design/react-hooks` is imported by its name and never
+- **The hooks are a dependency.** `@gild-ui/hooks` is imported by its name and never
   bundled; the React package stays a peer.
 
 - **Theme slots via one augmentation.** Unlike an in-repo design-system component, this package is a
-  _consumer_ of the design system, so it registers its `theme.components` slots (`MarkdownEditor`,
-  `MarkdownPreview`, `MarkdownToolbar`, `CodeBlock`) with one `declare module '@soroush.design/react'`
+  _consumer_ of Gild UI, so it registers its `theme.components` slots (`MarkdownEditor`,
+  `MarkdownPreview`, `MarkdownToolbar`, `CodeBlock`) with one `declare module '@gild-ui/react'`
   block on `ThemeComponents`, and `theme.syntax` and `theme.mermaid` with one on
-  `@soroush.design/core/theme`'s `Theme`, in `src/themeTypes.ts`. Every entry's `index.ts` imports
+  `@gild-ui/core/theme`'s `Theme`, in `src/themeTypes.ts`. Every entry's `index.ts` imports
   that file, so the built declaration of each entry reaches the block: an app that imports any entry
   has the slots and the keys typed. Its own `themeComponents.spec.tsx` locks the wiring
   (design-system's spec covers only design-system components).

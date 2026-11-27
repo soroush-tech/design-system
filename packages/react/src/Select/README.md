@@ -9,8 +9,8 @@ selection, and integrates with `Form` / `FormControl` context exactly like `Nati
 Client component: its entry carries `'use client'`, so a server component can import and render it.
 
 ```tsx
-import { Select } from '@soroush.design/react/Select'
-import { MenuItem } from '@soroush.design/react/MenuItem'
+import { Select } from '@gild-ui/react/Select'
+import { MenuItem } from '@gild-ui/react/MenuItem'
 
 ;<Select variant="outlined" placeholder="Pick a platform" onChange={(value) => console.log(value)}>
   <MenuItem value="web">Web</MenuItem>

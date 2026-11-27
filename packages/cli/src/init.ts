@@ -39,7 +39,7 @@ function formatClosing({ creates, manual }: Plan): string {
   const themesStep = themes ? `\n  - Make the themes your own in ${themes.path}.` : ''
   const steps = manual.map((step) => `  - ${step}`).join('\n')
   const leftToYou = manual.length > 0 ? `\nStill left to you:\n${steps}\n` : ''
-  return `Done: the design system is set up.
+  return `Done: Gild UI is set up.
 ${leftToYou}
 Next:
   - Use a component: import { Button } from '${APP_PACKAGE}/Button'${themesStep}
@@ -63,7 +63,7 @@ function findRefusal(
     return 'init found no React in this app. Add react and react-dom first.'
   }
   if (!satisfiesRange(reactVersion, reactRange)) {
-    return `This app has React ${reactVersion}, and the design system needs React ${reactRange}. init changes nothing, and never upgrades React.`
+    return `This app has React ${reactVersion}, and Gild UI needs React ${reactRange}. init changes nothing, and never upgrades React.`
   }
   return undefined
 }
@@ -197,8 +197,8 @@ function applyAndInstall(plan: Plan, root: string, io: Io, fileSystem: FileSyste
 }
 
 /**
- * Sets up the design system in the app in `io.cwd`: checks, plans, shows the plan, and applies it
- * only after a yes. It installs `@soroush.design/react` and `@soroush.design/core`; `designSystem` is
+ * Sets up Gild UI in the app in `io.cwd`: checks, plans, shows the plan, and applies it
+ * only after a yes. It installs `@gild-ui/react` and `@gild-ui/core`; `designSystem` is
  * the React package, whose peer range for React the app is checked against. Returns the
  * exit code.
  */
@@ -233,7 +233,7 @@ export async function runInit(
 
   if (isPlanEmpty(plan)) {
     const leftovers = plan.skips.length + plan.manual.length > 0 ? `\n${formatPlan(plan)}` : ''
-    io.write(`The design system is already set up here: init has nothing to change.\n${leftovers}`)
+    io.write(`Gild UI is already set up here: init has nothing to change.\n${leftovers}`)
     return 0
   }
   const appName = packageJson.name ?? 'this app'

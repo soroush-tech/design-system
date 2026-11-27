@@ -12,7 +12,7 @@ It is what goes in the panel of a navigation rail - a [`Sidebar`](../../Sidebar/
 with `layout="stacked"` and a `panel` - or in a drawer, or in a column of its own.
 
 ```tsx
-import { NavTree, NavGroup, NavLink } from '@soroush.design/react/NavTree'
+import { NavTree, NavGroup, NavLink } from '@gild-ui/react/NavTree'
 
 ;<nav aria-label="Documentation">
   <NavTree>

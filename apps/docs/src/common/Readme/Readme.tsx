@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
-import { Preview } from '@soroush.design/react-markdown/Preview'
-import { View } from '@soroush.design/react/View'
+import { Preview } from '@gild-ui/react-markdown/Preview'
+import { View } from '@gild-ui/react/View'
 import { rewriteReadmeLinks } from './utils/rewriteReadmeLinks'
-import { stripReadmeChrome } from '@soroush.design/docs-content'
+import { stripReadmeChrome } from '@gild-ui/docs-content'
 
 export interface ReadmeProps {
   /** Raw markdown source (a `?raw` import of a README or docs file). */

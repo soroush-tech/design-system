@@ -1,5 +1,5 @@
 {
-  "name": "@soroush.design/story-demo",
+  "name": "@gild-ui/story-demo",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -22,16 +22,16 @@
     "sucrase": "^3.35.1"
   },
   "peerDependencies": {
-    "@soroush.design/react": "workspace:^",
-    "@soroush.design/react-hooks": "workspace:^",
-    "@soroush.design/react-markdown": "workspace:^",
+    "@gild-ui/react": "workspace:^",
+    "@gild-ui/hooks": "workspace:^",
+    "@gild-ui/react-markdown": "workspace:^",
     "react": "^19.2.8"
   },
   "devDependencies": {
-    "@soroush.design/core": "workspace:*",
-    "@soroush.design/react": "workspace:*",
-    "@soroush.design/react-hooks": "workspace:*",
-    "@soroush.design/react-markdown": "workspace:*",
+    "@gild-ui/core": "workspace:*",
+    "@gild-ui/react": "workspace:*",
+    "@gild-ui/hooks": "workspace:*",
+    "@gild-ui/react-markdown": "workspace:*",
     "@soroush.tech/eslint-config": "workspace:*",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",

@@ -22,7 +22,7 @@ describe('bin', () => {
       ['init', '--yes'],
       expect.objectContaining({ cwd: process.cwd() }),
       {
-        name: '@soroush.design/react',
+        name: '@gild-ui/react',
         peerDependencies: designSystem.peerDependencies,
       }
     )

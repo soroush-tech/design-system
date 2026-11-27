@@ -11,7 +11,7 @@ default.
 Client component: its entry carries `'use client'`, so a server component can import and render it.
 
 ```tsx
-import { NativeSelect } from '@soroush.design/react/NativeSelect'
+import { NativeSelect } from '@gild-ui/react/NativeSelect'
 
 ;<NativeSelect
   variant="outlined"

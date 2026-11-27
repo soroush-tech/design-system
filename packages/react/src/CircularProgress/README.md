@@ -57,7 +57,7 @@ Default: `3.6`.
 
 ### `value` / `min` / `max`
 
-Used by the `"determinate"` variant. `value` is clamped to `[min, max]` via `clamp` of `@soroush.design/core/utils` before rendering.
+Used by the `"determinate"` variant. `value` is clamped to `[min, max]` via `clamp` of `@gild-ui/core/utils` before rendering.
 
 | Prop    | Default                     |
 | ------- | --------------------------- |

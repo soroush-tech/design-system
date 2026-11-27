@@ -1,7 +1,7 @@
 {
-  "name": "@soroush.design/react",
+  "name": "@gild-ui/react",
   "version": "0.1.0",
-  "description": "The React design system: components, the theme's provider and hooks, and the styling system (`styled`, `css`, `keyframes`, `Global`) on the UmberStyle engine, as one package.",
+  "description": "Gild UI for React: components, the theme's provider and hooks, and the styling system (`styled`, `css`, `keyframes`, `Global`) on the UmberStyle engine, as one package.",
   "keywords": [
     "design-system",
     "react",
@@ -13,14 +13,14 @@
   ],
   "author": "Masoud Soroush <masoud@soroush.tech>",
   "license": "MIT",
-  "homepage": "https://docs.soroush.design/react/",
+  "homepage": "https://gild-ui.soroush.design/react/",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/soroush-tech/design-system.git",
+    "url": "git+https://github.com/soroush-tech/gild-ui.git",
     "directory": "packages/react"
   },
   "bugs": {
-    "url": "https://github.com/soroush-tech/design-system/issues"
+    "url": "https://github.com/soroush-tech/gild-ui/issues"
   },
   "type": "module",
   "sideEffects": false,
@@ -927,7 +927,7 @@
     "test": "vitest run",
     "test:storybook": "vitest run --project=storybook",
     "test:coverage": "vitest run --coverage",
-    "test:types": "pnpm --filter @soroush.design/core build && pnpm --filter @soroush.design/react-hooks build && pnpm build && node scripts/check-dts.mjs && node scripts/check-catalog-dist.mjs && tsc -p type-tests/tsconfig.json && node scripts/check-single-copy.mjs",
+    "test:types": "pnpm --filter @gild-ui/core build && pnpm --filter @gild-ui/hooks build && pnpm build && node scripts/check-dts.mjs && node scripts/check-catalog-dist.mjs && tsc -p type-tests/tsconfig.json && node scripts/check-single-copy.mjs",
     "check:dts": "node scripts/check-dts.mjs",
     "check:catalog-dist": "node scripts/check-catalog-dist.mjs",
     "check:single-copy": "node scripts/check-single-copy.mjs",
@@ -936,8 +936,8 @@
     "gen:theme-components": "node scripts/gen-theme-components.mjs"
   },
   "dependencies": {
-    "@soroush.design/core": "workspace:^",
-    "@soroush.design/react-hooks": "workspace:^",
+    "@gild-ui/core": "workspace:^",
+    "@gild-ui/hooks": "workspace:^",
     "@soroush.tech/styled-system": "^6.0.3",
     "@umber-style/cache": "^0.8.0",
     "@umber-style/react": "^0.8.0",

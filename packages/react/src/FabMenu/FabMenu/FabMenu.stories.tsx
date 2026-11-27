@@ -10,7 +10,7 @@ import {
   fabMenuAlignValues,
   fabMenuCatalog,
   fabMenuDirectionValues,
-} from '@soroush.design/core/catalog/entries'
+} from '@gild-ui/core/catalog/entries'
 import { FabMenu, type FabMenuProps } from './FabMenu'
 
 const meta: Meta<typeof FabMenu> = {

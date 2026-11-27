@@ -6,11 +6,7 @@ import { Avatar } from '../Avatar'
 import { m } from '../utils/test/storiesArgs'
 import { exampleArgs } from '../utils/test/renderExample'
 import { buttonColorTokens } from '../utils/test/storiesOptions'
-import {
-  badgeCatalog,
-  badgeOverlapValues,
-  badgeVariantValues,
-} from '@soroush.design/core/catalog/entries'
+import { badgeCatalog, badgeOverlapValues, badgeVariantValues } from '@gild-ui/core/catalog/entries'
 import { Badge } from './Badge'
 
 const meta: Meta<typeof Badge> = {

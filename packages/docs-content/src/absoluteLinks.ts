@@ -1,7 +1,7 @@
 import { allDocComponents, componentLinkPath, docPagePath, sitePath } from './registry'
 
 /** Where the published docs live; component pages hang off this. */
-export const DOCS_URL = 'https://docs.soroush.design'
+export const DOCS_URL = 'https://gild-ui.soroush.design'
 
 /**
  * A link to a file of the component library's docs, from a README (`../../docs/theming.md`) or

@@ -1,4 +1,4 @@
-import { createTheme, defineThemes, type Theme } from '@soroush.design/core/theme'
+import { createTheme, defineThemes, type Theme } from '@gild-ui/core/theme'
 import { baseTheme } from '../../theme/themes'
 import type { ThemeComponents } from '../../theme/themes'
 

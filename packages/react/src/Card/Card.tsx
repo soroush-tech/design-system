@@ -1,7 +1,7 @@
 import { type ReactNode } from 'react'
 import { styled } from '../style/styled'
 import { type Theme, type CSSObject } from '../theme/themes'
-import { themeDefault } from '@soroush.design/core/theme'
+import { themeDefault } from '@gild-ui/core/theme'
 import { useDefaultProps } from '../theme/hooks/useDefaultProps'
 import { useTheme } from '../theme/hooks/useTheme'
 import { Paper, type PaperProps } from '../Paper'

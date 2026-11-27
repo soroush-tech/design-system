@@ -21,7 +21,7 @@ Max 1600px, centered, 20px → 40px gutters at 600px, 48px bottom padding.
 
 ```tsx
 'use client'
-import { styled } from '@soroush.design/react'
+import { styled } from '@gild-ui/react'
 import { TOPBAR_HEIGHT } from './constants'
 
 const MainRoot = styled('main')(({ theme }) => ({
@@ -48,7 +48,7 @@ list rows).
 
 ```tsx
 'use client'
-import { styled } from '@soroush.design/react'
+import { styled } from '@gild-ui/react'
 
 export const PageCard = styled('section', {
   shouldForwardProp: (prop) => prop !== 'flush',
@@ -65,7 +65,7 @@ export const PageCard = styled('section', {
 
 ```tsx
 'use client'
-import { styled } from '@soroush.design/react'
+import { styled } from '@gild-ui/react'
 
 const Root = styled('section')({
   display: 'flex',
@@ -114,7 +114,7 @@ export function PageHeader({
 The `0.35em` tracking is the signature; don't soften it.
 
 ```tsx
-import { styled } from '@soroush.design/react'
+import { styled } from '@gild-ui/react'
 
 export const SectionLabel = styled('h3')(({ theme }) => ({
   margin: 0,
@@ -133,8 +133,8 @@ Ghost by default (10% tint + 25% inset ring), `filled` for emphasis.
 
 ```tsx
 'use client'
-import { alpha, styled } from '@soroush.design/react'
-import type { PaletteColor } from '@soroush.design/core/theme'
+import { alpha, styled } from '@gild-ui/react'
+import type { PaletteColor } from '@gild-ui/core/theme'
 
 const PillRoot = styled('span', {
   shouldForwardProp: (prop) => prop !== 'tone' && prop !== 'filled',
@@ -179,8 +179,8 @@ Pill is for human labels, StatusBadge for enum values. The tone map is the patte
 worth copying: statuses map to palette slots in one table, so adding a status is one line.
 
 ```tsx
-import { styled } from '@soroush.design/react'
-import type { PaletteColor } from '@soroush.design/core/theme'
+import { styled } from '@gild-ui/react'
+import type { PaletteColor } from '@gild-ui/core/theme'
 
 const STATUS_TONE: Record<string, PaletteColor> = {
   PASSED: 'success',
@@ -224,7 +224,7 @@ export function StatusBadge({ status }: { status: string }) {
 Stacks on mobile, 25px-gapped row at 800px.
 
 ```tsx
-import { styled } from '@soroush.design/react'
+import { styled } from '@gild-ui/react'
 
 const Value = styled('div')(({ theme }) => ({
   fontSize: '28px',
@@ -253,8 +253,8 @@ then the rest.
 Built on `Pressable`; active tab is a 3px inset bottom shadow in primary.
 
 ```tsx
-import { styled } from '@soroush.design/react'
-import { Pressable } from '@soroush.design/react/Pressable'
+import { styled } from '@gild-ui/react'
+import { Pressable } from '@gild-ui/react/Pressable'
 
 const Bar = styled('nav')(({ theme }) => ({
   display: 'flex',
@@ -324,7 +324,7 @@ from the pathname, defaulting to the first item.
 
 ```tsx
 import NextLink from 'next/link'
-import { styled } from '@soroush.design/react'
+import { styled } from '@gild-ui/react'
 
 export const NavLink = styled(NextLink)(({ theme }) => ({
   color: theme.text.primary,

@@ -85,7 +85,7 @@ export function findReactVersion(root: string, packageJson: PackageJson): string
 }
 
 /**
- * Whether `version` is in `range`. Only the shape the design system's peer ranges use is read:
+ * Whether `version` is in `range`. Only the shape Gild UI's peer ranges use is read:
  * caret ranges joined by `||`, such as `^18.0.0 || ^19.0.0`. Any other shape throws.
  */
 export function satisfiesRange(version: string, range: string): boolean {
@@ -168,7 +168,7 @@ export function findUnsupportedFramework(packageJson: PackageJson): string | und
 
 /**
  * Whether the app builds with Parcel and has not turned on its reading of package exports, which
- * every subpath of the design system (`/theme`, `/engine`, `/Button`, ...) needs.
+ * every subpath of Gild UI (`/theme`, `/engine`, `/Button`, ...) needs.
  */
 export function needsParcelPackageExports(packageJson: PackageJson): boolean {
   const isParcelApp = getDependency(packageJson, 'parcel') !== undefined

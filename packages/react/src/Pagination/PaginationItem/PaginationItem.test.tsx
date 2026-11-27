@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { fireEvent, screen } from '@testing-library/react'
 import { ThemeProvider } from '../../theme/ThemeProvider'
-import { createTheme } from '@soroush.design/core/theme'
+import { createTheme } from '@gild-ui/core/theme'
 import { baseTheme, type Theme } from '../../theme/themes'
 import { renderWithTheme } from '../../utils/test/renderWithTheme'
 import { PaginationItem, type PaginationItemProps } from './PaginationItem'

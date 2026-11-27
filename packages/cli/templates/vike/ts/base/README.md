@@ -1,6 +1,6 @@
 # __TITLE__
 
-A [Vike](https://vike.dev) app on the [@soroush.tech design system](https://docs.soroush.design):
+A [Vike](https://vike.dev) app on [Gild UI](https://gild-ui.soroush.design):
 <!-- @if isomorphic -->
 prerendered at build time with its styles in the HTML, then moving between pages with no reload.
 <!-- @elif ssr -->
@@ -80,4 +80,4 @@ every page prerendered to HTML at build time, with its styles, and no JavaScript
 <!-- @endif -->
 
 Fonts: the theme names Space Grotesk and JetBrains Mono, and does not load them. See
-https://docs.soroush.design/react/installation/#fonts
+https://gild-ui.soroush.design/react/installation/#fonts

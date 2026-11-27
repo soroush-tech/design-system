@@ -1,11 +1,11 @@
-# @soroush.design/react
+# @gild-ui/react
 
-[![npm version](https://img.shields.io/npm/v/@soroush.design/react.svg?cacheSeconds=86400)](https://www.npmjs.com/package/@soroush.design/react)
-[![npm downloads](https://img.shields.io/npm/dm/@soroush.design/react.svg?cacheSeconds=86400)](https://www.npmjs.com/package/@soroush.design/react)
+[![npm version](https://img.shields.io/npm/v/@gild-ui/react.svg?cacheSeconds=86400)](https://www.npmjs.com/package/@gild-ui/react)
+[![npm downloads](https://img.shields.io/npm/dm/@gild-ui/react.svg?cacheSeconds=86400)](https://www.npmjs.com/package/@gild-ui/react)
 [![coverage](https://codecov.io/gh/soroush-tech/design-system/branch/main/graph/badge.svg?flag=react)](https://app.codecov.io/gh/soroush-tech/design-system?flags%5B0%5D=react)
-[![unpacked size](https://img.shields.io/npm/unpacked-size/@soroush.design/react.svg?cacheSeconds=86400)](https://www.npmjs.com/package/@soroush.design/react)
-[![types included](https://img.shields.io/npm/types/@soroush.design/react.svg?cacheSeconds=86400)](https://www.npmjs.com/package/@soroush.design/react)
-[![license](https://img.shields.io/npm/l/@soroush.design/react.svg?cacheSeconds=86400)](./LICENSE)
+[![unpacked size](https://img.shields.io/npm/unpacked-size/@gild-ui/react.svg?cacheSeconds=86400)](https://www.npmjs.com/package/@gild-ui/react)
+[![types included](https://img.shields.io/npm/types/@gild-ui/react.svg?cacheSeconds=86400)](https://www.npmjs.com/package/@gild-ui/react)
+[![license](https://img.shields.io/npm/l/@gild-ui/react.svg?cacheSeconds=86400)](./LICENSE)
 
 **Your design system. Your tokens. Your rules.**
 A fully typed React component library where nothing is hardcoded - every color, scale, and default belongs to you, not the package.
@@ -15,10 +15,10 @@ Tired of forking a component library just to change a color? Every token here is
 ## Install
 
 ```sh
-npm i @soroush.design/react @soroush.design/core
+npm i @gild-ui/react @gild-ui/core
 ```
 
-`@soroush.design/core` holds the theme your app writes (`createTheme`, `defineThemes`), imported as `@soroush.design/core/theme`. `react` and `react-dom` are peer dependencies, and React 19.2 or later is required. The styling engine (UmberStyle, the `@umber-style/*` packages) is an internal implementation detail - it ships as a regular dependency, not a peer, so you never install it yourself.
+`@gild-ui/core` holds the theme your app writes (`createTheme`, `defineThemes`), imported as `@gild-ui/core/theme`. `react` and `react-dom` are peer dependencies, and React 19.2 or later is required. The styling engine (UmberStyle, the `@umber-style/*` packages) is an internal implementation detail - it ships as a regular dependency, not a peer, so you never install it yourself.
 
 ---
 
@@ -50,7 +50,7 @@ claude plugin marketplace add soroush-tech/design-system
 claude plugin install soroush-design-system@soroush-tech
 ```
 
-Any other tool can read [docs.soroush.design/llms.txt](https://docs.soroush.design/llms.txt).
+Any other tool can read [gild-ui.soroush.design/llms.txt](https://gild-ui.soroush.design/llms.txt).
 See [`@soroush.design/mcp`](../mcp) for the full tool list.
 
 ---
@@ -60,34 +60,34 @@ See [`@soroush.design/mcp`](../mcp) for the full tool list.
 Import components by subpath, the styling system from the root:
 
 ```ts
-import { Typography } from '@soroush.design/react/Typography'
-import { Flex } from '@soroush.design/react/Flex'
+import { Typography } from '@gild-ui/react/Typography'
+import { Flex } from '@gild-ui/react/Flex'
 ```
 
-The styling system comes from the root `@soroush.design/react` - `ThemeProvider`, `LayoutProvider`, `useTheme`, `useDefaultProps`, `useMediaQuery`, `withTheme`, `styled`, `css`, `keyframes`, `Global`, `useStyle`, `withStyles` and `StylesConsumer` - and each name is also an entry point of its own (`@soroush.design/react/useTheme`). The style-prop functions (`space`, `system`, ...) are `@soroush.tech/styled-system`'s, and the theme (`baseTheme`, `createTheme`, the `Theme` type) is `@soroush.design/core/theme`'s: this package re-exports neither.
+The styling system comes from the root `@gild-ui/react` - `ThemeProvider`, `LayoutProvider`, `useTheme`, `useDefaultProps`, `useMediaQuery`, `withTheme`, `styled`, `css`, `keyframes`, `Global`, `useStyle`, `withStyles` and `StylesConsumer` - and each name is also an entry point of its own (`@gild-ui/react/useTheme`). The style-prop functions (`space`, `system`, ...) are `@soroush.tech/styled-system`'s, and the theme (`baseTheme`, `createTheme`, the `Theme` type) is `@gild-ui/core/theme`'s: this package re-exports neither.
 
 ```ts
-import { styled, css } from '@soroush.design/react'
-import { type Theme } from '@soroush.design/core/theme'
+import { styled, css } from '@gild-ui/react'
+import { type Theme } from '@gild-ui/core/theme'
 ```
 
 `ThemeProvider` and the theme-value hooks (`useTheme`, `useDefaultProps`, `withTheme`):
 
 ```ts
-import { ThemeProvider, useTheme } from '@soroush.design/react'
+import { ThemeProvider, useTheme } from '@gild-ui/react'
 ```
 
 Style-computation helpers (`useStyle`, `withStyles`, `StylesConsumer`) - resolving a `StyleInput`/`StyleFactory` into a `CSSObject`:
 
 ```ts
-import { useStyle } from '@soroush.design/react'
+import { useStyle } from '@gild-ui/react'
 ```
 
 `Global` is on the root. The raw engine primitives for building your own global styles - `globalStyles`, and the SSR-only `CacheProvider`/`styleCache` pairing - live at `/engine`:
 
 ```ts
-import { Global } from '@soroush.design/react'
-import { globalStyles, CacheProvider, styleCache } from '@soroush.design/react/engine'
+import { Global } from '@gild-ui/react'
+import { globalStyles, CacheProvider, styleCache } from '@gild-ui/react/engine'
 ```
 
 `Global` (retyped against this package's `Theme`) applies app-wide CSS and should render inside `ThemeProvider` so it resolves against the active theme. `globalStyles(theme)` is the base reset this package owns - box-sizing, margin/table resets, and theme-driven body colors - compose it into your own `Global` styles array alongside your app's own concerns (font-family, webfont loading, and anything else app-specific stay entirely app policy).
@@ -97,7 +97,7 @@ design tool's palette, a source writer) - lives at its own subpath and loads in 
 ([docs](./docs/catalog.md)):
 
 ```ts
-import { catalog } from '@soroush.design/react/catalog'
+import { catalog } from '@gild-ui/react/catalog'
 ```
 
 Server rendering with critical CSS (a Vike or other static or server renderer) is a separate, opt-in concern - that's what `CacheProvider` and its paired `styleCache` instance are for. Give `CacheProvider` the `styleCache` (the cache the library's own engine writes to, so there is one cache on the page), render, then read the CSS of the page from the same cache with `createInstance` from `@umber-style/server/create-instance` (`pnpm add @umber-style/server`): `extractCriticalToChunks(html)` and `constructStyleTagsFromChunks(chunks)` give the `<style data-umber>` tags to put in the head. Next.js App Router apps collect the styles with a registry instead - see `docs/consumer/setup.md`.
@@ -126,15 +126,15 @@ The engine packages are regular dependencies of this package, not peers, on purp
 
 ### Content & data display
 
-| Component    | Purpose                                                                                                                                                                                                                                |
-| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Typography` | Text with variant → element mapping - the reference implementation for all components                                                                                                                                                  |
-| `Link`       | Anchor with theme-aware styling                                                                                                                                                                                                        |
-| `Icon`       | Icon renderer                                                                                                                                                                                                                          |
-| `Image`      | Image with styled-system props                                                                                                                                                                                                         |
-| `Avatar`     | User/entity avatar                                                                                                                                                                                                                     |
-| `Table`      | Compound data table - exports `TableContainer`, `TableHead`, `TableBody`, `TableFooter`, `TableRow`, `TableCell`, `TablePagination`, `TablePaginationActions`, `TableSortLabel`, and `TableControl` from `@soroush.design/react/Table` |
-| `Accordion`  | A heading that opens and closes a region - exports `AccordionSummary`, `AccordionDetails`, `AccordionActions` and `AccordionGroup` from `@soroush.design/react/Accordion`                                                              |
+| Component    | Purpose                                                                                                                                                                                                                         |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Typography` | Text with variant → element mapping - the reference implementation for all components                                                                                                                                           |
+| `Link`       | Anchor with theme-aware styling                                                                                                                                                                                                 |
+| `Icon`       | Icon renderer                                                                                                                                                                                                                   |
+| `Image`      | Image with styled-system props                                                                                                                                                                                                  |
+| `Avatar`     | User/entity avatar                                                                                                                                                                                                              |
+| `Table`      | Compound data table - exports `TableContainer`, `TableHead`, `TableBody`, `TableFooter`, `TableRow`, `TableCell`, `TablePagination`, `TablePaginationActions`, `TableSortLabel`, and `TableControl` from `@gild-ui/react/Table` |
+| `Accordion`  | A heading that opens and closes a region - exports `AccordionSummary`, `AccordionDetails`, `AccordionActions` and `AccordionGroup` from `@gild-ui/react/Accordion`                                                              |
 
 ### Inputs & forms
 
@@ -157,25 +157,25 @@ The engine packages are regular dependencies of this package, not peers, on purp
 
 ### Navigation & menus
 
-| Component     | Purpose                                                                                                                                                                                                                                                                   |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `NavTree`     | A tree of links to the pages of a site - groups of links, which can fold                                                                                                                                                                                                  |
-| `Breadcrumbs` | The trail of links from a site's root to the current page - a long one collapses behind a button that shows it all                                                                                                                                                        |
-| `Menu`        | A trigger and the list of commands it opens - exports `MenuList` (the `role="menu"` list that owns the keyboard), `MenuDivider`, `MenuItems` (rows from data) and `ContextMenu` (the same list, opened at the pointer by a right-click) from `@soroush.design/react/Menu` |
-| `Tabs`        | A row of tabs - exports `Tab`, `TabContext` (holds the value for a `TabList` and its panels), `TabList` (the `Tabs` of a `TabContext`), `TabPanel` (the content a tab shows) and `TabScrollButton` from `@soroush.design/react/Tabs`                                      |
+| Component     | Purpose                                                                                                                                                                                                                                                            |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `NavTree`     | A tree of links to the pages of a site - groups of links, which can fold                                                                                                                                                                                           |
+| `Breadcrumbs` | The trail of links from a site's root to the current page - a long one collapses behind a button that shows it all                                                                                                                                                 |
+| `Menu`        | A trigger and the list of commands it opens - exports `MenuList` (the `role="menu"` list that owns the keyboard), `MenuDivider`, `MenuItems` (rows from data) and `ContextMenu` (the same list, opened at the pointer by a right-click) from `@gild-ui/react/Menu` |
+| `Tabs`        | A row of tabs - exports `Tab`, `TabContext` (holds the value for a `TabList` and its panels), `TabList` (the `Tabs` of a `TabContext`), `TabPanel` (the content a tab shows) and `TabScrollButton` from `@gild-ui/react/Tabs`                                      |
 
 ### Feedback
 
-| Component                            | Purpose                                                                                                                     |
-| ------------------------------------ | --------------------------------------------------------------------------------------------------------------------------- |
-| `FabMenu`                            | A fab that opens a stack of actions from the corner of a page                                                               |
-| `Snackbar`                           | A transient message in a corner of the window, with auto-hide and an action                                                 |
-| `Alert`                              | An inline message with a severity, an icon, a title and an action - exports `AlertTitle` from `@soroush.design/react/Alert` |
-| `Badge`                              | A count or a dot anchored over another element                                                                              |
-| `Chip`                               | A compact tag: a label, an icon or avatar, a click and a delete                                                             |
-| `CircularProgress`, `LinearProgress` | Determinate/indeterminate progress indicators                                                                               |
-| `Skeleton`                           | Loading placeholder with pulse/wave animations                                                                              |
-| `Backdrop`                           | Dimmed overlay behind modal surfaces                                                                                        |
+| Component                            | Purpose                                                                                                              |
+| ------------------------------------ | -------------------------------------------------------------------------------------------------------------------- |
+| `FabMenu`                            | A fab that opens a stack of actions from the corner of a page                                                        |
+| `Snackbar`                           | A transient message in a corner of the window, with auto-hide and an action                                          |
+| `Alert`                              | An inline message with a severity, an icon, a title and an action - exports `AlertTitle` from `@gild-ui/react/Alert` |
+| `Badge`                              | A count or a dot anchored over another element                                                                       |
+| `Chip`                               | A compact tag: a label, an icon or avatar, a click and a delete                                                      |
+| `CircularProgress`, `LinearProgress` | Determinate/indeterminate progress indicators                                                                        |
+| `Skeleton`                           | Loading placeholder with pulse/wave animations                                                                       |
+| `Backdrop`                           | Dimmed overlay behind modal surfaces                                                                                 |
 
 ### Transitions
 
@@ -223,9 +223,9 @@ The theme belongs to you - the package only ships defaults. This section is the 
 `ThemeProvider` provides exactly one theme - the built-in dark theme when you pass nothing. Bring one theme, or as many as you like: switching between them is your state, not the provider's.
 
 ```tsx
-import { ThemeProvider } from '@soroush.design/react'
-import { registerBaseTheme } from '@soroush.design/react/ThemeProvider'
-import { baseTheme, createTheme, defineThemes } from '@soroush.design/core/theme'
+import { ThemeProvider } from '@gild-ui/react'
+import { registerBaseTheme } from '@gild-ui/react/ThemeProvider'
+import { baseTheme, createTheme, defineThemes } from '@gild-ui/core/theme'
 
 // Your themes - written from scratch or extended from the base, gathered by `defineThemes`.
 export const themes = defineThemes(
@@ -246,7 +246,7 @@ const [isDark, setIsDark] = useState(true)
 
 With no theme, `ThemeProvider` provides the built-in dark theme. Themes are not annotated with `Theme`: their own type is what the registration (below) hands to every component.
 
-`createTheme(base, overrides)` (exported from `@soroush.design/core/theme`) is the merge primitive: plain objects recurse, arrays (`shadows`, `fontSizes`) and functions replace wholesale, `undefined` values are ignored - keys are added or replaced, never removed.
+`createTheme(base, overrides)` (exported from `@gild-ui/core/theme`) is the merge primitive: plain objects recurse, arrays (`shadows`, `fontSizes`) and functions replace wholesale, `undefined` values are ignored - keys are added or replaced, never removed.
 
 ### Breakpoints and layout
 
@@ -294,8 +294,8 @@ Two `defaults` objects with the same contents give the same theme, so an inline 
 Customize one component for the whole app - default prop values, per-slot CSS, and new variant values - without wrapping or forking:
 
 ```tsx
-import { baseTheme, createTheme, defineThemes } from '@soroush.design/core/theme'
-import type { ThemeComponents } from '@soroush.design/react'
+import { baseTheme, createTheme, defineThemes } from '@gild-ui/core/theme'
+import type { ThemeComponents } from '@gild-ui/react'
 
 const brand = createTheme(baseTheme, { name: 'brand' })
 
@@ -328,7 +328,7 @@ export const themes = defineThemes({ brand }, {
   },
 } satisfies ThemeComponents)
 
-declare module '@soroush.design/core/theme' {
+declare module '@gild-ui/core/theme' {
   interface Register {
     themes: typeof themes
   }
@@ -341,12 +341,12 @@ Your own components can join the same mechanism: create their roots with this pa
 
 ### Extending tokens (declaration merging)
 
-Every scale is an open interface declared on `@soroush.design/core/theme`, so you can add palette colors, tokens, or whole scales - and every component prop union (`color`, `bg`, `size`, ...) widens automatically:
+Every scale is an open interface declared on `@gild-ui/core/theme`, so you can add palette colors, tokens, or whole scales - and every component prop union (`color`, `bg`, `size`, ...) widens automatically:
 
 ```ts
-import type { PaletteEntry } from '@soroush.design/core/theme'
+import type { PaletteEntry } from '@gild-ui/core/theme'
 
-declare module '@soroush.design/core/theme' {
+declare module '@gild-ui/core/theme' {
   interface ThemePalette {
     brand: PaletteEntry // new palette color
   }

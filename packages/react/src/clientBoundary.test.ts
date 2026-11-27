@@ -59,7 +59,7 @@ const clientEntries = entries.filter((entry) => !serverEntries.includes(entry))
 // What only a client component can use: React's state, effects, refs and context, a portal, our own
 // hooks of those, and what the engine's server build lacks.
 const clientApi = new RegExp(
-  String.raw`\b(?:useState|useEffect|useLayoutEffect|useInsertionEffect|useRef|useReducer|useContext|useSyncExternalStore|useImperativeHandle|useTransition|useDeferredValue|createContext|createPortal|useMediaQuery|useThemeClass|CacheProvider|ThemeContext|ThemeScope)\b|@soroush\.design/react-hooks/`
+  String.raw`\b(?:useState|useEffect|useLayoutEffect|useInsertionEffect|useRef|useReducer|useContext|useSyncExternalStore|useImperativeHandle|useTransition|useDeferredValue|createContext|createPortal|useMediaQuery|useThemeClass|CacheProvider|ThemeContext|ThemeScope)\b|@gild-ui/hooks/`
 )
 const withoutComments = (code: string) =>
   code.replaceAll(/\/\*[\s\S]*?\*\//g, '').replaceAll(/^\s*\/\/.*$/gm, '')

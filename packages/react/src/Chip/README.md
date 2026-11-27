@@ -10,7 +10,7 @@ Client component: its entry carries `'use client'`, so a server component can im
 Every text is yours: the label, and the delete control's name (`deleteLabel`) - no built-in English.
 
 ```tsx
-import { Chip } from '@soroush.design/react/Chip'
+import { Chip } from '@gild-ui/react/Chip'
 
 ;<Chip label="Design" color="primary" />
 ;<Chip label="Design" onClick={open} />

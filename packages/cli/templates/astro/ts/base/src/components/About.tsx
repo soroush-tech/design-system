@@ -1,5 +1,5 @@
-import { Flex } from '@soroush.design/react/Flex'
-import { Typography } from '@soroush.design/react/Typography'
+import { Flex } from '@gild-ui/react/Flex'
+import { Typography } from '@gild-ui/react/Typography'
 import { withIsland } from '../theme/Island'
 
 function About() {

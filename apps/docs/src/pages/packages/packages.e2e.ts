@@ -11,18 +11,24 @@ test.describe('packages', () => {
       .click()
     await expect(page).toHaveURL(/\/packages\/$/)
     await expect(page.getByRole('heading', { level: 1, name: 'Packages' })).toBeVisible()
-    for (const name of ['Design System', 'Markdown', 'Styled System', 'MCP server', 'UI spec']) {
+    for (const name of [
+      'Gild UI for React',
+      'Markdown',
+      'Styled System',
+      'MCP server',
+      'UI spec',
+    ]) {
       await expect(page.locator('main').getByRole('heading', { level: 2, name })).toBeVisible()
     }
     await expect(page.locator('main').getByRole('link', { name: 'npm' }).first()).toHaveAttribute(
       'href',
-      /npmjs\.com\/package\/@soroush\.design\/react/
+      /npmjs\.com\/package\/@gild-ui\/react/
     )
   })
 
   test('the sidebar lists the packages, each opening its docs', async ({ page }) => {
     await page.goto('/packages/')
-    const nav = page.getByRole('navigation', { name: 'Design system documentation' })
+    const nav = page.getByRole('navigation', { name: 'Gild UI documentation' })
     await expect(nav.getByRole('link', { name: 'All packages' })).toHaveAttribute(
       'aria-current',
       'page'

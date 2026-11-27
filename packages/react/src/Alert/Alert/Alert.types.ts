@@ -1,4 +1,4 @@
-import type { ThemeRadii } from '@soroush.design/core/theme'
+import type { ThemeRadii } from '@gild-ui/core/theme'
 import type { ComponentConfig } from '../../theme/themes'
 
 /** The defaults a theme may set for every `Alert` - its `closeLabel` gives it a language. */

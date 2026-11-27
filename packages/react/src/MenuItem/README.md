@@ -13,8 +13,8 @@ Client component: its entry carries `'use client'`, so a server component can im
   click, Enter or Space.
 
 ```tsx
-import { Select } from '@soroush.design/react/Select'
-import { MenuItem } from '@soroush.design/react/MenuItem'
+import { Select } from '@gild-ui/react/Select'
+import { MenuItem } from '@gild-ui/react/MenuItem'
 
 ;<Select placeholder="Pick a platform">
   <MenuItem value="web">Web</MenuItem>
@@ -24,8 +24,8 @@ import { MenuItem } from '@soroush.design/react/MenuItem'
 ```
 
 ```tsx
-import { MenuList } from '@soroush.design/react/Menu'
-import { MenuItem } from '@soroush.design/react/MenuItem'
+import { MenuList } from '@gild-ui/react/Menu'
+import { MenuItem } from '@gild-ui/react/MenuItem'
 
 ;<MenuList aria-label="File" onSelect={run}>
   <MenuItem value="open" startIcon={<Icon name="folder" size="sm" />} shortcut="Control+O">

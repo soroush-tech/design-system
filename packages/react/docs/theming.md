@@ -2,7 +2,7 @@
 
 The theme belongs to you - the package ships defaults, every part is replaceable, and the type system widens with your extensions. This guide covers the full ladder, from using the built-ins to owning every token.
 
-`ThemeProvider`, the hooks that read the theme, the `Theme` type and the configured styling live in `@soroush.design/react`, which an app can also use for its own components, built on the tokens with `styled`. The tokens, `baseTheme` and `createTheme` are `@soroush.design/core`'s, imported from `@soroush.design/core/theme`; each component adds the typing of its own slots to `theme.components`.
+`ThemeProvider`, the hooks that read the theme, the `Theme` type and the configured styling live in `@gild-ui/react`, which an app can also use for its own components, built on the tokens with `styled`. The tokens, `baseTheme` and `createTheme` are `@gild-ui/core`'s, imported from `@gild-ui/core/theme`; each component adds the typing of its own slots to `theme.components`.
 
 ## The ladder
 
@@ -19,9 +19,9 @@ The theme belongs to you - the package ships defaults, every part is replaceable
 `ThemeProvider` provides exactly one theme. The package ships a single complete default - `baseTheme` - and you derive every mode from it; switching (dark/light, or ten brand modes) is your state:
 
 ```tsx
-import { ThemeProvider } from '@soroush.design/react'
-import { registerBaseTheme } from '@soroush.design/react/ThemeProvider'
-import { baseTheme, createTheme, defineThemes } from '@soroush.design/core/theme'
+import { ThemeProvider } from '@gild-ui/react'
+import { registerBaseTheme } from '@gild-ui/react/ThemeProvider'
+import { baseTheme, createTheme, defineThemes } from '@gild-ui/core/theme'
 
 const dark = createTheme(baseTheme, { name: 'dark' /* your palettes */ })
 const light = createTheme(baseTheme, { name: 'light', colorScheme: 'light' /* your palettes */ })
@@ -39,7 +39,7 @@ const [isDark, setIsDark] = useState(true)
 `createTheme(base, overrides)` deep-merges sparse patches onto a base theme:
 
 ```ts
-import { baseTheme, createTheme } from '@soroush.design/core/theme'
+import { baseTheme, createTheme } from '@gild-ui/core/theme'
 
 export const brandDark = createTheme(baseTheme, {
   palette: { primary: { main: '#00ff88' } }, // sibling fields (light/dark/contrastText) survive
@@ -67,8 +67,8 @@ The full key table lives in the [README's Theming section](../README.md#componen
 `defineThemes(themes, components)` collects the themes of an app, one or many, and gives every one the same `components` (see [customization.md](./customization.md)). It returns new objects and changes none of its arguments. Register the result once, and every component, hook and `styled` callback knows what your themes add:
 
 ```ts
-import { baseTheme, createTheme, defineThemes } from '@soroush.design/core/theme'
-import type { ThemeComponents } from '@soroush.design/react'
+import { baseTheme, createTheme, defineThemes } from '@gild-ui/core/theme'
+import type { ThemeComponents } from '@gild-ui/react'
 
 const light = createTheme(baseTheme, {
   palette: { brand: { main: '#0a7a5a', light: '#3d9b80', dark: '#075640', contrastText: '#fff' } },
@@ -83,7 +83,7 @@ export const themes = defineThemes({ light, dark }, {
   Tabs: { variants: [{ props: { variant: 'pill' }, style: { borderRadius: 999 } }] },
 } satisfies ThemeComponents)
 
-declare module '@soroush.design/core/theme' {
+declare module '@gild-ui/core/theme' {
   interface Register {
     themes: typeof themes
   }
@@ -95,7 +95,7 @@ Now `<Button color="brand">` and `<Tabs variant="pill">` typecheck, `<Button col
 **Server components.** A server component has no provider above it to read, so register the theme the app starts in, in the same module, once:
 
 ```ts
-import { registerBaseTheme } from '@soroush.design/react/ThemeProvider'
+import { registerBaseTheme } from '@gild-ui/react/ThemeProvider'
 
 registerBaseTheme(themes.light)
 ```
@@ -114,12 +114,12 @@ Pass the same object to `ThemeProvider`: the tokens are CSS variables, so the pa
 
 ## Extending the type system
 
-Every scale is an open interface owned by `@soroush.design/core/theme` - that module (not the styling engine, an internal implementation detail) is the augmentation surface, and it merges reliably across tsdown's chunked d.ts for every consumer:
+Every scale is an open interface owned by `@gild-ui/core/theme` - that module (not the styling engine, an internal implementation detail) is the augmentation surface, and it merges reliably across tsdown's chunked d.ts for every consumer:
 
 ```ts
-import type { PaletteEntry, SizeEntry } from '@soroush.design/core/theme'
+import type { PaletteEntry, SizeEntry } from '@gild-ui/core/theme'
 
-declare module '@soroush.design/core/theme' {
+declare module '@gild-ui/core/theme' {
   interface ThemePalette {
     brand: PaletteEntry // new palette color
   }
@@ -154,7 +154,7 @@ Two rules: new object-valued keys (like a `PaletteEntry`) must be supplied compl
 `useTheme` returns the active theme, `useDefaultProps(name)` a component's `theme.components[name].defaultProps`, and `withTheme` hands the theme to a class component. For what a style cannot do - render one structure or another - `useMediaQuery(query, { defaultMatches })` answers a media query: `defaultMatches` (false unless given) on the server and in the first render of a hydration, so the HTML of the server and the hydration agree, and the browser's answer at once after. Prefer a CSS media query or a container query from `theme.breakpoints` whenever a style is enough.
 
 ```tsx
-import { useMediaQuery } from '@soroush.design/react'
+import { useMediaQuery } from '@gild-ui/react'
 
 const isWide = useMediaQuery('(min-width: 900px)')
 ```
@@ -164,7 +164,7 @@ const isWide = useMediaQuery('(min-width: 900px)')
 `theme.breakpoints` and `theme.layout` hold the page's layout system: where it changes, how many
 columns it has, its margins and gutters, its side panels and the top bar. Everything responsive is
 CSS - no component measures the window in JavaScript - so a prerendered page lays out the same
-with JavaScript off. The design system ships these as tokens and building blocks (`AppBar`,
+with JavaScript off. Gild UI ships these as tokens and building blocks (`AppBar`,
 `Sidebar`, `Drawer`, `Grid`, `Flex`); each app composes its own pages from them.
 
 ### `theme.breakpoints` - window classes
@@ -318,7 +318,7 @@ one. To use your own names, declare them by augmenting `BreakpointOverrides` (`t
 `false` removes a default) and replace the scale and the layout on the base:
 
 ```ts
-declare module '@soroush.design/core/theme' {
+declare module '@gild-ui/core/theme' {
   interface BreakpointOverrides {
     mobile: true
     tablet: true

@@ -1,4 +1,4 @@
-import type { ThemeColor, ThemeSize, VariantOf, ThemeBackground } from '@soroush.design/core/theme'
+import type { ThemeColor, ThemeSize, VariantOf, ThemeBackground } from '@gild-ui/core/theme'
 import type { ComponentConfig } from '../../theme/themes'
 
 /** The resolved props Tabs' styled elements receive - what `ownerState` exposes. */

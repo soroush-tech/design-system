@@ -3,7 +3,7 @@ import { readdirSync } from 'node:fs'
 import { join } from 'node:path'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-// An app that imports only one name of the styling system - `@soroush.design/react/keyframes`, say -
+// An app that imports only one name of the styling system - `@gild-ui/react/keyframes`, say -
 // must still get the engine configured: the package is free of side effects, so what configures it
 // is a function the entry's own module calls.
 const configure = vi.hoisted(() => vi.fn())

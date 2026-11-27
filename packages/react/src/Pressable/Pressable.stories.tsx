@@ -5,7 +5,7 @@ import { Icon } from '../Icon'
 import { Typography } from '../Typography'
 import { exampleArgs } from '../utils/test/renderExample'
 import { Pressable } from './Pressable'
-import { pressableCatalog } from '@soroush.design/core/catalog/entries'
+import { pressableCatalog } from '@gild-ui/core/catalog/entries'
 
 const meta: Meta<typeof Pressable> = {
   title: 'Theme/Pressable',

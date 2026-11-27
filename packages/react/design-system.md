@@ -13,7 +13,7 @@ How the theme is built, how components are structured, and the conventions every
 | Custom prop→scale mapping | `styled-system` `system()`                                                                                                    |
 | Prop filtering            | `@styled-system/should-forward-prop`                                                                                          |
 | Component stories         | Storybook v10 (`@storybook/react-vite`)                                                                                       |
-| Theme augmentation        | native interfaces owned by `src/theme/themes.ts`, augmentable via `declare module '@soroush.design/core/theme'`               |
+| Theme augmentation        | native interfaces owned by `src/theme/themes.ts`, augmentable via `declare module '@gild-ui/core/theme'`                      |
 
 ---
 
@@ -51,16 +51,16 @@ Each scale is a named, consumer-extensible interface (declared in `src/theme/the
 
 ### Theme augmentation
 
-The entire type layer is declared natively - as plain exported interfaces owned by this package - in `src/theme/themes.ts`. `Theme` is this package's own type, not the engine's: the styling engine is an internal implementation detail (see `src/theme/engine.ts`) and is never part of the public type surface. `declare module '@soroush.design/core/theme'` is the augmentation surface consumers use to extend scales by declaration merging; it survives tsdown's chunked d.ts output the same way augmenting an external module used to (verified by `type-tests/augmentation.ts`).
+The entire type layer is declared natively - as plain exported interfaces owned by this package - in `src/theme/themes.ts`. `Theme` is this package's own type, not the engine's: the styling engine is an internal implementation detail (see `src/theme/engine.ts`) and is never part of the public type surface. `declare module '@gild-ui/core/theme'` is the augmentation surface consumers use to extend scales by declaration merging; it survives tsdown's chunked d.ts output the same way augmenting an external module used to (verified by `type-tests/augmentation.ts`).
 
 ```ts
-import { type Theme } from '@soroush.design/core/theme'
+import { type Theme } from '@gild-ui/core/theme'
 
 type MyColorProp = keyof Theme['text'] // 'inherit' | 'initial' | 'primary' | ...
 type MyBgProp = keyof Theme['background'] // 'backdrop' | 'modal' | 'primary' | ...
 ```
 
-**Consumers of the published package** extend scales by augmenting `@soroush.design/core/theme` (see the README's "Theming" section), build the values with `createTheme(base, overrides)`, and pass the finished theme to `ThemeProvider`'s `theme` prop. `type-tests/augmentation.ts` (run by `pnpm test:types`) verifies this recipe against the real dist d.ts.
+**Consumers of the published package** extend scales by augmenting `@gild-ui/core/theme` (see the README's "Theming" section), build the values with `createTheme(base, overrides)`, and pass the finished theme to `ThemeProvider`'s `theme` prop. `type-tests/augmentation.ts` (run by `pnpm test:types`) verifies this recipe against the real dist d.ts.
 
 **The in-repo app must NOT augment scale interfaces with new keys** - the monorepo consumes package _source_, so a merged required key would fail the `light: Theme` completeness check inside `src/theme/themes.ts`. The app only overrides values (`apps/web/src/theme/themes.ts` via `createTheme`).
 
@@ -70,7 +70,7 @@ type MyBgProp = keyof Theme['background'] // 'backdrop' | 'modal' | 'primary' | 
 
 Full consumer guide: [`docs/customization.md`](./docs/customization.md); theming overview: [`docs/theming.md`](./docs/theming.md).
 
-The engine `styled` (in `packages/react/src/style/styled.ts`, exported from the root and from `@soroush.design/react/styled`) accepts `name`/`slot`/`systemProps` options. A named root reads `theme.components[name]` and appends the matching `styleOverrides[slot]` and `variants` after the component's own styles - but before `systemProps`, so per-instance props always win. Zero-config themes bail out on the first check.
+The engine `styled` (in `packages/react/src/style/styled.ts`, exported from the root and from `@gild-ui/react/styled`) accepts `name`/`slot`/`systemProps` options. A named root reads `theme.components[name]` and appends the matching `styleOverrides[slot]` and `variants` after the component's own styles - but before `systemProps`, so per-instance props always win. Zero-config themes bail out on the first check.
 
 Rules when converting a component:
 
@@ -100,7 +100,7 @@ Rules when converting a component:
 - `color` → `scale: 'text'`
 - `bg` → `scale: 'background'`
 
-**Storybook options** - all option arrays live in `@soroush.design/react/utils/test/storiesOptions.ts` with `satisfies` constraints against `Theme`. Import from there in every story, never hardcode inline. When adding a new component, add its token arrays to `storiesOptions.ts`.
+**Storybook options** - all option arrays live in `@gild-ui/react/utils/test/storiesOptions.ts` with `satisfies` constraints against `Theme`. Import from there in every story, never hardcode inline. When adding a new component, add its token arrays to `storiesOptions.ts`.
 
 **Storybook argType rules:**
 
@@ -126,7 +126,7 @@ This reads the current Typography files and `design-system.md` before generating
 Extend the styled-system prop groups and declare custom props. Derive types from `Theme` - never write manual unions.
 
 ```ts
-import { type Theme } from '@soroush.design/core/theme'
+import { type Theme } from '@gild-ui/core/theme'
 
 // Derive from Theme - stays in sync automatically
 export type TextColorToken  = keyof Theme['text']
@@ -200,10 +200,10 @@ export function MyComponent({ as, ...rest }: MyComponentProps) {
 
 ## Files per Component
 
-Every component lives in its own folder under `@soroush.design/react/`. The folder contains six files plus a barrel index:
+Every component lives in its own folder under `@gild-ui/react/`. The folder contains six files plus a barrel index:
 
 ```
-@soroush.design/react/
+@gild-ui/react/
   ComponentName/
     index.ts               ← export * from './ComponentName'
     ComponentName.tsx      ← component + exported prop types
@@ -213,7 +213,7 @@ Every component lives in its own folder under `@soroush.design/react/`. The fold
     ComponentName.test.tsx ← unit tests
 ```
 
-The `index.ts` barrel means all existing imports (`import { X } from '@soroush.design/react/ComponentName'`) continue to work without changes - Node/TypeScript resolves the folder to its `index.ts` automatically.
+The `index.ts` barrel means all existing imports (`import { X } from '@gild-ui/react/ComponentName'`) continue to work without changes - Node/TypeScript resolves the folder to its `index.ts` automatically.
 
 ### `README.md`
 
@@ -225,7 +225,7 @@ Documents every prop the component accepts. Rules:
 
 ### `ComponentName.mdx`
 
-The component's page on docs.soroush.design, owned by the component rather than the docs
+The component's page on gild-ui.soroush.design, owned by the component rather than the docs
 app. The element map is injected, so the file imports nothing:
 
 ```mdx
@@ -243,7 +243,7 @@ without one fails `nav.test.ts` and the docs prerender.
 
 ### `ComponentName.stories.tsx`
 
-Import all option arrays from `@soroush.design/react/test/utils/storiesOptions.ts`. Never hardcode arrays inline in a story file.
+Import all option arrays from `@gild-ui/react/test/utils/storiesOptions.ts`. Never hardcode arrays inline in a story file.
 
 ```ts
 import {
@@ -252,7 +252,7 @@ import {
   spaceTokens,
   fontWeightTokens,
   // ... others as needed
-} from '@soroush.design/react/utils/test/storiesOptions'
+} from '@gild-ui/react/utils/test/storiesOptions'
 ```
 
 ArgType categories - use exactly these names for consistency across all components:
@@ -277,9 +277,9 @@ Rules:
 
 ### The component's catalog entry
 
-The component's entry in `@soroush.design/react/catalog` - what a tool needs to place and
+The component's entry in `@gild-ui/react/catalog` - what a tool needs to place and
 write it: what a fresh one is, its looks, the props a picker offers and their theme scales, how its
-node props are written. It is platform-neutral data, so it lives in `@soroush.design/core`
+node props are written. It is platform-neutral data, so it lives in `@gild-ui/core`
 (`packages/core/src/catalog/entries/ComponentName.ts`, registered in `sources.ts` there), not beside
 the component. The stories read their `args` from its `example` and their option lists from its
 `*Values` arrays. See [`docs/catalog.md`](./docs/catalog.md).
@@ -312,9 +312,9 @@ Story play functions and a11y checks run in both: `pnpm test:storybook` here (th
 
 ---
 
-## Storybook Options (`@soroush.design/react/utils/test/storiesOptions.ts`)
+## Storybook Options (`@gild-ui/react/utils/test/storiesOptions.ts`)
 
-For props shared across components (`bg`, `opacity`, `p`, `m`, all border props, etc.), `@soroush.design/react/utils/test/storiesArgs.ts` exports pre-built argType objects - import and spread directly into `argTypes` instead of composing from option arrays.
+For props shared across components (`bg`, `opacity`, `p`, `m`, all border props, etc.), `@gild-ui/react/utils/test/storiesArgs.ts` exports pre-built argType objects - import and spread directly into `argTypes` instead of composing from option arrays.
 
 Single source of truth for all option arrays used in Storybook stories. Add new arrays here when building new components. Each array uses `satisfies` to stay in sync with the Theme type - TypeScript will error if a key is missing or misspelled.
 
@@ -326,7 +326,7 @@ export const radiiTokens = ['sm', 'md', 'lg'] satisfies (keyof Theme['radii'])[]
 Import the relevant prop types from the component file to constrain component-specific arrays:
 
 ```ts
-import type { BackgroundToken, TextColorToken } from '@soroush.design/react/Typography'
+import type { BackgroundToken, TextColorToken } from '@gild-ui/react/Typography'
 
 export const backgroundTokens = [...] satisfies BackgroundToken[]
 ```
@@ -350,7 +350,7 @@ Use `/new_theme_component ComponentName` to scaffold all files automatically.
 - [ ] `ComponentName/README.md` - all props documented, no hex codes
 - [ ] `ComponentName/ComponentName.mdx` - the docs-site page (heading + `<Readme part="intro" />` + demos or examples)
 - [ ] `ComponentName/ComponentName.stories.tsx` - imports from `storiesArgs` (shared props) or `storiesOptions` (component-specific), `controls.include` whitelist, argType categories
-- [ ] New token arrays added to `@soroush.design/react/utils/test/storiesOptions.ts` with `satisfies`
+- [ ] New token arrays added to `@gild-ui/react/utils/test/storiesOptions.ts` with `satisfies`
 - [ ] `ComponentName/ComponentName.test.tsx` - prop→CSS, element mapping, HTML passthrough
 - [ ] `packages/core/src/catalog/entries/ComponentName.ts` - the catalog entry, registered in `sources.ts` there; the stories' `args` read from it
 - [ ] No hardcoded hex values in the component - colors read theme tokens only

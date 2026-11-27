@@ -1,12 +1,12 @@
 import { type ReactNode } from 'react'
-import { styled } from '@soroush.design/react'
+import { styled } from '@gild-ui/react'
 import {
   createShouldForwardProp,
   props as systemProps,
 } from '@soroush.tech/styled-system/should-forward-prop'
-import { Drawer } from '@soroush.design/react/Drawer'
-import { Flex } from '@soroush.design/react/Flex'
-import { View } from '@soroush.design/react/View'
+import { Drawer } from '@gild-ui/react/Drawer'
+import { Flex } from '@gild-ui/react/Flex'
+import { View } from '@gild-ui/react/View'
 import { CONTENT_MAX_WIDTH, PANEL_RADIUS, TOC_ROOM, TOC_WIDTH } from 'src/common/layoutSizes'
 import { NavRail } from 'src/common/NavRail/NavRail'
 import { Footer } from 'src/common/Footer/Footer'

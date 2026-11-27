@@ -12,8 +12,8 @@ A `MenuList` renders in place - a menu embedded in a panel or a sidebar. It move
 its rows, but doesn't move focus into itself unless `shouldAutoFocus` is set.
 
 ```tsx
-import { MenuDivider, MenuList } from '@soroush.design/react/Menu'
-import { MenuItem } from '@soroush.design/react/MenuItem'
+import { MenuDivider, MenuList } from '@gild-ui/react/Menu'
+import { MenuItem } from '@gild-ui/react/MenuItem'
 
 ;<MenuList aria-label="Branch" onSelect={(value) => run(value)}>
   <MenuItem value="new" shortcut="Control+B">

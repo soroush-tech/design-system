@@ -1,6 +1,6 @@
 import { fireEvent, screen, within } from '@testing-library/react'
 import { beforeEach, describe, it, expect, vi } from 'vitest'
-import { renderWithTheme } from '@soroush.design/react/utils/test/renderWithTheme'
+import { renderWithTheme } from '@gild-ui/react/utils/test/renderWithTheme'
 import { MarkdownContext, type MarkdownContextValue } from '../MarkdownContext'
 import { HEADING_ACTIONS, MERMAID_DIAGRAMS, TOOLBAR_ACTIONS, mermaidDiagramAction } from '../const'
 import { Toolbar } from './Toolbar'
