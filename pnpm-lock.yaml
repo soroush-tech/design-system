@@ -9,8 +9,8 @@ importers:
   .:
     devDependencies:
       '@soroush.tech/bench':
-        specifier: ^2.2.3
-        version: 2.2.3
+        specifier: ^2.4.0
+        version: 2.4.0
       ai-watermark-guard:
         specifier: ^0.2.0
         version: 0.2.0
@@ -57,11 +57,11 @@ importers:
         specifier: workspace:*
         version: link:../../packages/story-demo
       '@soroush.tech/styled-system':
-        specifier: ^6.0.2
-        version: 6.0.2(prop-types@15.8.1)
+        specifier: ^6.0.3
+        version: 6.0.3(prop-types@15.8.1)
       '@umber-style/css':
-        specifier: ^0.7.0
-        version: 0.7.0
+        specifier: ^0.8.0
+        version: 0.8.0
       react:
         specifier: ^19.3.1
         version: 19.3.1
@@ -115,8 +115,8 @@ importers:
         specifier: ^19.3.0
         version: 19.3.0(@types/react@19.3.0)
       '@umber-style/server':
-        specifier: ^0.7.0
-        version: 0.7.0
+        specifier: ^0.8.0
+        version: 0.8.0
       '@vitejs/plugin-react':
         specifier: ^6.3.0
         version: 6.3.0(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))
@@ -154,8 +154,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/react
       '@umber-style/react':
-        specifier: ^0.7.0
-        version: 0.7.0(next@16.4.6(@playwright/test@1.65.0)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react@19.3.1)
+        specifier: ^0.8.0
+        version: 0.8.0(next@16.4.6(@playwright/test@1.65.0)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react@19.3.1)
       next:
         specifier: 16.4.6
         version: 16.4.6(@playwright/test@1.65.0)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -227,8 +227,8 @@ importers:
         specifier: ^19.3.0
         version: 19.3.0(@types/react@19.3.0)
       '@umber-style/server':
-        specifier: 0.7.0
-        version: 0.7.0
+        specifier: 0.8.0
+        version: 0.8.0
       '@vitejs/plugin-react':
         specifier: ^6.3.0
         version: 6.3.0(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))
@@ -490,17 +490,17 @@ importers:
         specifier: workspace:^
         version: link:../react-hooks
       '@soroush.tech/styled-system':
-        specifier: ^6.0.2
-        version: 6.0.2(prop-types@15.8.1)
+        specifier: ^6.0.3
+        version: 6.0.3(prop-types@15.8.1)
       '@umber-style/cache':
-        specifier: ^0.7.0
-        version: 0.7.0
+        specifier: ^0.8.0
+        version: 0.8.0
       '@umber-style/react':
-        specifier: ^0.7.0
-        version: 0.7.0(next@16.4.6(@playwright/test@1.65.0)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react@19.3.1)
+        specifier: ^0.8.0
+        version: 0.8.0(next@16.4.6(@playwright/test@1.65.0)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react@19.3.1)
       '@umber-style/styled':
-        specifier: ^0.7.0
-        version: 0.7.0(next@16.4.6(@playwright/test@1.65.0)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react@19.3.1)
+        specifier: ^0.8.0
+        version: 0.8.0(next@16.4.6(@playwright/test@1.65.0)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react@19.3.1)
     devDependencies:
       '@soroush.tech/eslint-config':
         specifier: workspace:*
@@ -533,8 +533,8 @@ importers:
         specifier: ^19.3.0
         version: 19.3.0(@types/react@19.3.0)
       '@umber-style/css':
-        specifier: ^0.7.0
-        version: 0.7.0
+        specifier: ^0.8.0
+        version: 0.8.0
       '@vitest/browser-playwright':
         specifier: ^5.1.0
         version: 5.1.0(msw@3.0.5(@types/node@26.6.6)(typescript@7.0.2)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1)))(playwright@1.65.0)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))(vitest@5.1.0)
@@ -2868,13 +2868,13 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@soroush.tech/bench@2.2.3':
-    resolution: {integrity: sha512-5qTaZrq8qr0wMvdynOh/C8gJk4zbfqfTvmFX2xhUZ3FymsCLuyfQXO+Z7tjt37dWL0QSmXve9qCjfBMxtd0wig==}
+  '@soroush.tech/bench@2.4.0':
+    resolution: {integrity: sha512-wc3NWg7gHTQ/BCW7RM3LYylZxYHa4LdGXQ1uenyeqo+B2OT8kx5ptChhyllUB2U6kRBXLM4LkraO2tT6xDyd4Q==}
     engines: {node: '>=24.19.0'}
     hasBin: true
 
-  '@soroush.tech/styled-system@6.0.2':
-    resolution: {integrity: sha512-v6Dj2loNcEe2na7ZXXB2Ow8jd0IGBuZ6L6gDSzB9UHo9goadjdHlFRsjBfc+8Td9/dcOn9NsGbHGJ0MvCHk/NQ==}
+  '@soroush.tech/styled-system@6.0.3':
+    resolution: {integrity: sha512-H7eIqCu7EZSb1629y/x6uTVzFySDYpR3gB2CnYRaMj4+yOTARO269AfR1w94tdJPgGZKihdK0dD/HKmJHHsIMQ==}
     peerDependencies:
       prop-types: ^15.8.1
     peerDependenciesMeta:
@@ -3375,32 +3375,35 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@umber-style/cache@0.7.0':
-    resolution: {integrity: sha512-AVMj/64fBrLkRKhdQg8dlYemmT3RvKUzci9khYanVFr8QDcHf4HmVO48+CJ4xPWtpQYBvyfusQRl13oXL+LeLA==}
+  '@umber-style/cache@0.8.0':
+    resolution: {integrity: sha512-gVcaxOt3vxr/EE+c/uvw4cPzMpKKKvRqCVKRtxCqzc3u3PeP8rL7/ZRaLsImhthkpwU3YTCw/Q6al9WYzvfFcQ==}
 
-  '@umber-style/core@0.7.0':
-    resolution: {integrity: sha512-tdZeELRzcrsviWM7g0drKpmpBGwP8REx8u5uQKfr05x3tGpxOy4KZAEujnyAFhe5azi/sZATjWdDbWGe0ydrrg==}
+  '@umber-style/core@0.8.0':
+    resolution: {integrity: sha512-vbmTF+HgNaQ5qImGQszY3+f4G1pZiQuB8SQgUU+gva7laYWLlYDH7V5ozYHZQo27v/D9E7GGgoHuP6h6gXe9Mw==}
 
-  '@umber-style/css@0.7.0':
-    resolution: {integrity: sha512-xRmml1K0oiu2dvEy6ZMHVIjwoKqn8/r8erOPuuqCQuwbmZkWBH+rKF4lf3YYIAw62zu9oNFqv9kP+lPzM0KlMA==}
+  '@umber-style/css@0.8.0':
+    resolution: {integrity: sha512-agIeEcBdnGVM6D2nyo3mGzMDl4U7/7atflg8+f89dlvu+BrsSueVuNoU8fms66U9fF/EL3ODTC8yN/R9x10Tag==}
 
   '@umber-style/is-prop-valid@0.7.0':
     resolution: {integrity: sha512-GiaqPzWBroBPc2CxQpjE2FM/Aey+gvIbBSLDUUSF5LGQkCZQfrnLo+nvJWcD1YhSv0NFefvG5XiQB0fl5M9iFg==}
 
-  '@umber-style/react@0.7.0':
-    resolution: {integrity: sha512-mBrXVnS3hxXtEfOIbte8J9MMgCCaNKU9LEJRfWU98L4IeGe8Yj2bOBdWrQFWqu2hovcR5SpGMLTu+q00Va59GQ==}
+  '@umber-style/is-prop-valid@0.8.0':
+    resolution: {integrity: sha512-D6eAT2kZ3BxzFyGuHwRxHAHJ3YP0u+KDanL0/xZVyfAa9KPyRs33LzL5Ta3kS2KYT7GsqWQttwGwjyqAQL3B7A==}
+
+  '@umber-style/react@0.8.0':
+    resolution: {integrity: sha512-ivLaNZebw7pC8jkXtq0aaMn2AAXr6lqI8vBHczHb+5FrQLjgdKnMHtloeUNs9iH8EfPaJh6ZKPh9aRFbzWndSA==}
     peerDependencies:
-      next: ^16.4.6
+      next: ^16.3.0
       react: ^19.0.0
     peerDependenciesMeta:
       next:
         optional: true
 
-  '@umber-style/server@0.7.0':
-    resolution: {integrity: sha512-XOIgALcME4isJlwUl0xvi4MKANuZs5KNStVzLDSrPbCAZgLDoz8brpz+VSr43Cxx7/vwlJBz+t8c4ejKMSJ9sg==}
+  '@umber-style/server@0.8.0':
+    resolution: {integrity: sha512-abSwuYIm7Z3BwN8yJn9AfeWzRv1/bqk3ncSCeh2fYqVyGnAwznH9Tr1yWpIXCZrnE0FLZ2rXxkXOl879tGriqg==}
 
-  '@umber-style/styled@0.7.0':
-    resolution: {integrity: sha512-dbVoft4F4QOI08xNHSooOuybMJt2aNgtYHwjY1nwev5yP7DW5XGmWbLKn0jzUYlo/Qu3gO8LD4E72KpqQBU8Pg==}
+  '@umber-style/styled@0.8.0':
+    resolution: {integrity: sha512-nx5JNnqifbqJkX/gdw/g3BJpTtTFDCclMNYO/wLpYCLiq7VFdK227IWxcp5ixQ2zovNNrlpRvDwXOgXebV4mvQ==}
     peerDependencies:
       react: ^19.0.0
 
@@ -8569,9 +8572,9 @@ snapshots:
   '@soroush.tech/ai-watermark-guard-win32-x64@0.2.0':
     optional: true
 
-  '@soroush.tech/bench@2.2.3': {}
+  '@soroush.tech/bench@2.4.0': {}
 
-  '@soroush.tech/styled-system@6.0.2(prop-types@15.8.1)':
+  '@soroush.tech/styled-system@6.0.3(prop-types@15.8.1)':
     dependencies:
       '@umber-style/is-prop-valid': 0.7.0
       csstype: 3.2.3
@@ -9063,35 +9066,37 @@ snapshots:
   '@typescript/typescript-win32-x64@7.0.2':
     optional: true
 
-  '@umber-style/cache@0.7.0':
+  '@umber-style/cache@0.8.0':
     dependencies:
-      '@umber-style/core': 0.7.0
+      '@umber-style/core': 0.8.0
 
-  '@umber-style/core@0.7.0':
+  '@umber-style/core@0.8.0':
     dependencies:
       csstype: 3.2.3
 
-  '@umber-style/css@0.7.0':
+  '@umber-style/css@0.8.0':
     dependencies:
-      '@umber-style/core': 0.7.0
+      '@umber-style/core': 0.8.0
 
   '@umber-style/is-prop-valid@0.7.0': {}
 
-  '@umber-style/react@0.7.0(next@16.4.6(@playwright/test@1.65.0)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react@19.3.1)':
+  '@umber-style/is-prop-valid@0.8.0': {}
+
+  '@umber-style/react@0.8.0(next@16.4.6(@playwright/test@1.65.0)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@umber-style/core': 0.7.0
-      '@umber-style/is-prop-valid': 0.7.0
+      '@umber-style/core': 0.8.0
+      '@umber-style/is-prop-valid': 0.8.0
       react: 19.3.1
     optionalDependencies:
       next: 16.4.6(@playwright/test@1.65.0)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
 
-  '@umber-style/server@0.7.0':
+  '@umber-style/server@0.8.0':
     dependencies:
-      '@umber-style/core': 0.7.0
+      '@umber-style/core': 0.8.0
 
-  '@umber-style/styled@0.7.0(next@16.4.6(@playwright/test@1.65.0)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react@19.3.1)':
+  '@umber-style/styled@0.8.0(next@16.4.6(@playwright/test@1.65.0)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@umber-style/react': 0.7.0(next@16.4.6(@playwright/test@1.65.0)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react@19.3.1)
+      '@umber-style/react': 0.8.0(next@16.4.6(@playwright/test@1.65.0)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react@19.3.1)
       react: 19.3.1
     transitivePeerDependencies:
       - next

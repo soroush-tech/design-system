@@ -8,7 +8,11 @@ const load = async () => ({
   styleCache: (await import('../engine/styleCache')).default,
 })
 
-describe('configureEngine', () => {
+// Each test imports the engine afresh after resetModules; under a loaded machine (the commit hook
+// runs every package at once) that import alone can take more than the default 5 seconds.
+const IMPORT_TIMEOUT_MS = 30_000
+
+describe('configureEngine', { timeout: IMPORT_TIMEOUT_MS }, () => {
   beforeEach(() => {
     vi.resetModules()
     configure.mockClear()
