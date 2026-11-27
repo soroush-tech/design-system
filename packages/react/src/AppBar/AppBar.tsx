@@ -1,6 +1,6 @@
 import { styled } from '../style/styled'
 import { type Theme } from '../theme/themes'
-import { createShouldForwardProp, props } from '@soroush.design/styled-system/should-forward-prop'
+import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
 import {
   border,
   borderTop,
@@ -15,7 +15,7 @@ import {
   system,
   layout,
   space,
-} from '@soroush.design/styled-system'
+} from '@soroush.tech/styled-system'
 import { Flex, type FlexProps } from '../Flex'
 import { themeDefault } from '@soroush.design/core/theme'
 

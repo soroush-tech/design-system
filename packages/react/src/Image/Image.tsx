@@ -6,11 +6,11 @@ import type {
   SpaceProps,
   BackgroundProps,
   PositionProps,
-} from '@soroush.design/styled-system'
+} from '@soroush.tech/styled-system'
 import { styled } from '../style/styled'
 import { type Theme } from '../theme/themes'
-import { createShouldForwardProp, props } from '@soroush.design/styled-system/should-forward-prop'
-import { background, position, system, layout, space } from '@soroush.design/styled-system'
+import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
+import { background, position, system, layout, space } from '@soroush.tech/styled-system'
 
 type Phase = 'initial' | 'without-srcset' | 'fallback' | 'failed'
 

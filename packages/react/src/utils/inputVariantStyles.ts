@@ -1,4 +1,4 @@
-import { variant } from '@soroush.design/styled-system'
+import { variant } from '@soroush.tech/styled-system'
 
 // Shared border/variant rules for the form inputs (TextInput, NativeSelect) so
 // mixed forms look uniform. variant() resolves scale keys: 'sm' → theme.radii.sm,

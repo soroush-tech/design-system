@@ -19,14 +19,7 @@ const IMPORTANT: Record<SectionNav['pkg'], string[]> = {
   mcp: ['Overview', 'Releases'],
   'ui-spec': ['Overview', 'Releases'],
   cli: ['Overview', 'Releases'],
-  'styled-system': [
-    'Overview',
-    'Getting started',
-    'How it works',
-    'Responsive styles',
-    'Theming',
-    'API',
-  ],
+  'styled-system': ['Overview'],
 }
 
 /** The most important pages of a section, in the order its readers want them. */

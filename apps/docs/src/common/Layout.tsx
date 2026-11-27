@@ -3,7 +3,7 @@ import { styled } from '@soroush.design/react'
 import {
   createShouldForwardProp,
   props as systemProps,
-} from '@soroush.design/styled-system/should-forward-prop'
+} from '@soroush.tech/styled-system/should-forward-prop'
 import { Drawer } from '@soroush.design/react/Drawer'
 import { Flex } from '@soroush.design/react/Flex'
 import { View } from '@soroush.design/react/View'

@@ -13,11 +13,11 @@ import type {
   LayoutProps,
   BorderProps,
   TypographyProps,
-} from '@soroush.design/styled-system'
+} from '@soroush.tech/styled-system'
 import { alpha, styled } from '../style/styled'
 import { type Theme } from '../theme/themes'
-import { createShouldForwardProp, props } from '@soroush.design/styled-system/should-forward-prop'
-import { border, space, layout, typography } from '@soroush.design/styled-system'
+import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
+import { border, space, layout, typography } from '@soroush.tech/styled-system'
 import { getAnchorRel } from '@soroush.design/core/utils'
 import { themeDefault, type PaletteColor } from '@soroush.design/core/theme'
 import { useDefaultProps } from '../theme/hooks/useDefaultProps'

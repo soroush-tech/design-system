@@ -1,7 +1,7 @@
 'use client'
 
 import { styled } from '../../style/styled'
-import { get } from '@soroush.design/styled-system'
+import { get } from '@soroush.tech/styled-system'
 
 export interface MenuDividerProps {
   className?: string

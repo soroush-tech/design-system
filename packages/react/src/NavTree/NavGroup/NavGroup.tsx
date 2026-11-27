@@ -2,7 +2,7 @@
 
 import { Children, useId, type HTMLAttributes, type ReactNode } from 'react'
 import { alpha, styled } from '../../style/styled'
-import { get } from '@soroush.design/styled-system'
+import { get } from '@soroush.tech/styled-system'
 import { Typography } from '../../Typography'
 
 export interface NavGroupProps extends Omit<HTMLAttributes<HTMLElement>, 'children'> {

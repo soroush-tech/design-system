@@ -3,12 +3,12 @@
 import { type ButtonHTMLAttributes, type ElementType, type ReactNode } from 'react'
 import { Icon, type IconName } from '../../Icon'
 import { type PaginationItemType } from '../hooks/usePagination'
-import type { SpaceProps } from '@soroush.design/styled-system'
+import type { SpaceProps } from '@soroush.tech/styled-system'
 import { alpha, styled } from '../../style/styled'
 import { type Theme } from '../../theme/themes'
 import { type PaletteColor } from '@soroush.design/core/theme'
-import { createShouldForwardProp, props } from '@soroush.design/styled-system/should-forward-prop'
-import { space, get } from '@soroush.design/styled-system'
+import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
+import { space, get } from '@soroush.tech/styled-system'
 import { themeDefault } from '@soroush.design/core/theme'
 
 export type PaginationItemColor = PaletteColor

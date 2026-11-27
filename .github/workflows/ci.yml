@@ -520,65 +520,12 @@ jobs:
         env:
           CI: true
 
-  # Performance gate: styled-system's bench suite runs in the pinned Docker sandbox
-  # against the last npm release (via soroush-tech/bench-action); any case below the
-  # minimum speed ratio fails the job - and, via ci-ok, the PR.
-  bench:
-    needs: [prepare, lint]
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write # bench-action posts/updates the results comment
-      id-token: write # OIDC token for the branded comment relay (api.bench.soroush.tech)
-    timeout-minutes: 20
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v7
-        with:
-          persist-credentials: false
-
-      - name: Setup pnpm, Node and dependencies
-        uses: ./.github/actions/setup
-        with:
-          node_version: ${{ needs.prepare.outputs.node_version }}
-          manager: ${{ needs.prepare.outputs.manager }}
-          command: ${{ needs.prepare.outputs.command }}
-
-      # The bench file imports a build of this package so the comparison against the npm
-      # release's prebuilt dist is like-for-like. The bench build inlines the core, which the
-      # workspace holds as TypeScript source that plain Node cannot load.
-      - name: Build styled-system
-        run: ${{ needs.prepare.outputs.runner }} --filter @soroush.design/styled-system build:bench
-
-      # Mint a token from the org's GitHub App so the results comment is posted
-      # under the brand bot identity instead of github-actions[bot]. Skipped (and
-      # the gate falls back to GITHUB_TOKEN) when the app isn't configured.
-      - name: Mint bot token
-        id: bot-token
-        if: vars.BENCH_BOT_APP_ID != ''
-        uses: actions/create-github-app-token@v3
-        with:
-          app-id: ${{ vars.BENCH_BOT_APP_ID }}
-          private-key: ${{ secrets.BENCH_BOT_PRIVATE_KEY }}
-          # Scope the minted token to commenting only, instead of inheriting every
-          # permission the app installation has.
-          permission-pull-requests: write
-
-      - name: Run benchmark gate
-        # Our own action, pinned like any other: `v1` is a tag, and a tag moves.
-        uses: soroush-tech/bench-action@b527ad437545189516e36ee3c29f6aeb09c3557e # v1.1.1
-        with:
-          bench-dir: packages/styled-system/bench
-          baseline-case: previous
-          min-ratio: '80'
-          github-token: ${{ steps.bot-token.outputs.token || secrets.GITHUB_TOKEN }}
-
   # Single stable status check for branch protection: fails only if a required
   # job actually failed or was cancelled.
   ci-ok:
     name: ci-ok
     if: always()
-    needs: [prepare, lint, packages, docs, next-fixture, bench, react-range, create-smoke]
+    needs: [prepare, lint, packages, docs, next-fixture, react-range, create-smoke]
     runs-on: ubuntu-latest
     permissions: {}
     timeout-minutes: 5

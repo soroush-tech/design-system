@@ -25,9 +25,7 @@ describe('importantLinksFor', () => {
   it('has links for the markdown and the styled-system sections, from their own pages', () => {
     expect(hrefs('/react/markdown/')[0]).toBe('/react/markdown/')
     expect(hrefs('/react/markdown/')).toContain('/react/markdown/Preview/')
-    expect(hrefs('/styled-system/')[0]).toBe('/styled-system/')
-    for (const href of hrefs('/styled-system/'))
-      expect(href.startsWith('/styled-system/')).toBe(true)
+    expect(hrefs('/styled-system/')).toEqual(['/styled-system/'])
   })
 
   it('skips a page the section does not list', () => {
@@ -36,7 +34,7 @@ describe('importantLinksFor', () => {
   })
 
   it('lists each page once, every one a page the section has', () => {
-    for (const path of ['/react/', '/react/markdown/', '/styled-system/']) {
+    for (const path of ['/react/', '/react/markdown/']) {
       const links = hrefs(path)
       expect(new Set(links).size).toBe(links.length)
       expect(links.length).toBeGreaterThan(3)

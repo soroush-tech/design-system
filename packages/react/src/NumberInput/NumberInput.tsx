@@ -8,11 +8,11 @@ import {
   type PointerEvent,
   type ReactNode,
 } from 'react'
-import type { LayoutProps, SpaceProps } from '@soroush.design/styled-system'
+import type { LayoutProps, SpaceProps } from '@soroush.tech/styled-system'
 import { alpha, styled } from '../style/styled'
 import { type Theme } from '../theme/themes'
-import { createShouldForwardProp, props } from '@soroush.design/styled-system/should-forward-prop'
-import { get, system, space } from '@soroush.design/styled-system'
+import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
+import { get, system, space } from '@soroush.tech/styled-system'
 import { useDefaultProps } from '../theme/hooks/useDefaultProps'
 import { useTheme } from '../theme/hooks/useTheme'
 import { useFormControl } from '../FormControl'

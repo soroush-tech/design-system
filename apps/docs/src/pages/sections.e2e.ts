@@ -22,25 +22,16 @@ test.describe('markdown section', () => {
 })
 
 test.describe('styled-system section', () => {
-  test('overview renders the README', async ({ page }) => {
+  test('is one page that points to the package repository', async ({ page }) => {
     await page.goto('/styled-system/')
     await expect(page.getByRole('heading', { level: 1, name: 'Styled System' })).toBeVisible()
-  })
-
-  test('a docs page and a guide page render from the package docs', async ({ page }) => {
-    await page.goto('/styled-system/docs/responsive-styles/')
-    await expect(page).toHaveTitle(/Responsive styles · SOROUSH\.DESIGN/)
-    await page.goto('/styled-system/docs/guides/spacing/')
-    await expect(page).toHaveTitle(/Spacing · SOROUSH\.DESIGN/)
-  })
-
-  test('the links between the package docs open the pages, not the markdown files', async ({
-    page,
-  }) => {
-    await page.goto('/styled-system/docs/guides/')
-    await page.getByRole('main').getByRole('link', { name: 'Theming' }).click()
-    await expect(page).toHaveURL(/\/styled-system\/docs\/guides\/theming\/$/)
-    await expect(page).toHaveTitle(/Theming/)
+    await expect(page.getByText('npm i @soroush.tech/styled-system')).toBeVisible()
+    await expect(
+      page.getByRole('main').getByRole('link', { name: 'Source on GitHub' })
+    ).toHaveAttribute('href', 'https://github.com/soroush-tech/styled-system')
+    await expect(
+      page.getByRole('main').getByRole('link', { name: 'Documentation' })
+    ).toHaveAttribute('href', 'https://github.com/soroush-tech/styled-system/tree/main/docs')
   })
 })
 

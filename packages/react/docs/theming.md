@@ -206,7 +206,7 @@ const Panel = styled.div(({ theme }) => ({
 ```
 
 Every form, the container queries, the units and the order blocks are written in are covered in
-the styled-system [Breakpoints](https://docs.soroush.design/styled-system/docs/breakpoints/) guide.
+the styled-system [Breakpoints](https://github.com/soroush-tech/styled-system/blob/main/docs/breakpoints.md) guide.
 
 ### `theme.layout` - layout tokens per window class
 

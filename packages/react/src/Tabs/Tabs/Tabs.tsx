@@ -17,11 +17,11 @@ import {
   type ReactNode,
   type Ref,
 } from 'react'
-import type { SpaceProps } from '@soroush.design/styled-system'
+import type { SpaceProps } from '@soroush.tech/styled-system'
 import { alpha, negate, styled } from '../../style/styled'
 import { type AppTheme as Theme } from '../../theme/themes'
-import { createShouldForwardProp, props } from '@soroush.design/styled-system/should-forward-prop'
-import { get, space } from '@soroush.design/styled-system'
+import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
+import { get, space } from '@soroush.tech/styled-system'
 import { useDefaultProps } from '../../theme/hooks/useDefaultProps'
 import { useTheme } from '../../theme/hooks/useTheme'
 import type { TabsVariant } from './Tabs.types'

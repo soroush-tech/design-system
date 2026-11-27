@@ -25,7 +25,6 @@ coverage:
           - react-hooks
           - react-markdown
           - story-demo
-          - styled-system
           - ui-spec
           # gen:codecov-patch-flags end
           # App flags are hand-managed; the docs app is not a package.
@@ -72,9 +71,6 @@ flag_management:
     - name: story-demo
       paths:
         - packages/story-demo/
-    - name: styled-system
-      paths:
-        - packages/styled-system/
     - name: ui-spec
       paths:
         - packages/ui-spec/
@@ -137,10 +133,6 @@ component_management:
       name: story-demo
       paths:
         - packages/story-demo/**
-    - component_id: styled-system
-      name: styled-system
-      paths:
-        - packages/styled-system/**
     - component_id: ui-spec
       name: ui-spec
       paths:

@@ -11,7 +11,7 @@ import {
   type ReactNode,
 } from 'react'
 import { alpha, styled } from '../style/styled'
-import { get } from '@soroush.design/styled-system'
+import { get } from '@soroush.tech/styled-system'
 import { useDefaultProps } from '../theme/hooks/useDefaultProps'
 import { themeDefault } from '@soroush.design/core/theme'
 import { Icon, type IconProps } from '../Icon'

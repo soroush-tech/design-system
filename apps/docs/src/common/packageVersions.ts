@@ -4,7 +4,8 @@ import designSystemPkg from 'packages/react/package.json'
 import markdownPkg from 'packages/react-markdown/package.json'
 import mcpPkg from 'packages/mcp/package.json'
 import reactPkg from 'packages/react/package.json'
-import styledSystemPkg from 'packages/styled-system/package.json'
+// The npm package's manifest, by path: its `exports` do not list it.
+import styledSystemPkg from '../../node_modules/@soroush.tech/styled-system/package.json'
 import uiSpecPkg from 'packages/ui-spec/package.json'
 import type { DocsSection } from 'src/common/nav'
 

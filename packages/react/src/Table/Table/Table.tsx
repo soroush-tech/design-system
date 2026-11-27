@@ -2,12 +2,12 @@
 
 import { useMemo, type ElementType, type TableHTMLAttributes } from 'react'
 import { TableContext, type TableCellPadding } from '../TableContext'
-import type { SpaceProps, LayoutProps, BorderProps } from '@soroush.design/styled-system'
+import type { SpaceProps, LayoutProps, BorderProps } from '@soroush.tech/styled-system'
 import { styled } from '../../style/styled'
 import { type Theme } from '../../theme/themes'
 import { type PaletteColor } from '@soroush.design/core/theme'
-import { createShouldForwardProp, props } from '@soroush.design/styled-system/should-forward-prop'
-import { space, layout, border, system, get } from '@soroush.design/styled-system'
+import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
+import { space, layout, border, system, get } from '@soroush.tech/styled-system'
 
 /** Valid values for the bg prop - derived from theme.background keys. */
 export type TableBackgroundToken = keyof Theme['background']

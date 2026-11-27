@@ -148,11 +148,11 @@ describe('railItemFor', () => {
     expect(railItemFor(section, '/react/elsewhere/').id).toBe('get-started')
   })
 
-  it('tells the styled-system docs from its guides', () => {
+  it('gives the styled-system section one page, its package living in its own repository', () => {
     const styled = sectionFor('/styled-system/')
-    expect(railItemFor(styled, '/styled-system/docs/responsive-styles/').id).toBe('docs')
-    const guide = styled.rail.find((item) => item.id === 'guides')!.groups[0].items[0].href
-    expect(railItemFor(styled, guide).id).toBe('guides')
+    const started = styled.rail.find((item) => item.id === 'get-started')!
+    expect(started.groups[0].items.map((item) => item.href)).toEqual(['/styled-system/'])
+    expect(railItemFor(styled, '/styled-system/').id).toBe('get-started')
   })
 })
 

@@ -65,14 +65,11 @@ describe('DocsNav', () => {
   })
 
   it('renders the styled-system section nav on styled-system paths', () => {
-    renderNav('/styled-system/docs/responsive-styles/')
+    renderNav('/styled-system/')
     expect(
       screen.getByRole('navigation', { name: 'Styled-system documentation' })
     ).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Responsive styles' })).toHaveAttribute(
-      'aria-current',
-      'page'
-    )
+    expect(screen.getByRole('link', { name: 'Overview' })).toHaveAttribute('aria-current', 'page')
   })
 
   it('lists the packages on the packages page, each with its version', () => {

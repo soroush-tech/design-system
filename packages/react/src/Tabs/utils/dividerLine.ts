@@ -2,7 +2,7 @@
 
 import { type AppTheme as Theme } from '../../theme/themes'
 import { negate } from '../../style/styled'
-import { get } from '@soroush.design/styled-system'
+import { get } from '@soroush.tech/styled-system'
 import type { TabsVariant } from '../Tabs/Tabs.types'
 
 /**

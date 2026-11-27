@@ -9,12 +9,9 @@ import {
   reactGuides,
   reactHooks,
   sitePath,
-  styledSystemDocSlug,
-  styledSystemDocs,
-  styledSystemGuides,
   type ComponentNavItem,
 } from './registry'
-import { sectionIds } from './sections'
+import { sectionIds, sections } from './sections'
 
 /** What a page of the site is, for the route map and the checks over it. */
 export type PageKind =
@@ -30,7 +27,6 @@ export type PageKind =
   | 'specs'
   | 'accessibility'
   | 'member'
-  | 'styled-system-doc'
 
 export interface DocsPage {
   /** The page's path, with the trailing slash of its `index.html`. */
@@ -63,7 +59,8 @@ export const docsPages = (hasAccessibility: (item: ComponentNavItem) => boolean)
     page('/packages/', 'packages'),
     ...sectionIds.flatMap((id) => [
       page(sitePath(id, '/'), 'section-index'),
-      page(sitePath(id, '/releases/'), 'releases'),
+      // A package in its own repository keeps its release notes there.
+      ...(sections[id].dir === null ? [] : [page(sitePath(id, '/releases/'), 'releases')]),
     ]),
     ...reactGuides.map((guide) => page(sitePath('react', `/${guide}/`), 'guide')),
     ...Object.keys(entryGuides).map((entry) => page(sitePath('react', `/${entry}/`), 'entry')),
@@ -71,9 +68,6 @@ export const docsPages = (hasAccessibility: (item: ComponentNavItem) => boolean)
     ...reactHooks.map((hook) => page(sitePath('react', `/hooks/${hook}/`), 'hook')),
     ...components(allComponents),
     ...components(markdownComponents),
-    ...[...styledSystemDocs, ...styledSystemGuides].map(({ file }) =>
-      page(sitePath('styled-system', `/docs/${styledSystemDocSlug(file)}/`), 'styled-system-doc')
-    ),
   ]
 }
 

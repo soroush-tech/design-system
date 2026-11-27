@@ -18,7 +18,10 @@ export interface PackageInfo {
 }
 
 const npmOf = (id: DocsSection) => `https://www.npmjs.com/package/${sections[id].npm}`
-const githubOf = (id: DocsSection) => `${GITHUB_TREE}/packages/${sections[id].dir}`
+const githubOf = (id: DocsSection) => {
+  const { dir, repo } = sections[id]
+  return dir === null ? repo! : `${GITHUB_TREE}/packages/${dir}`
+}
 
 /** The packages the docs are about, the ones with a docs section first. */
 export const PACKAGES: PackageInfo[] = [

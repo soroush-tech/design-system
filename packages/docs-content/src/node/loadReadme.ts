@@ -4,9 +4,12 @@ import type { ComponentNavItem } from '../registry'
 import { sections, type DocsSection } from '../sections'
 import { repoRoot } from './repoRoot'
 
-/** Absolute path to the workspace package a docs section describes. */
-export const packageDir = (section: DocsSection): string =>
-  join(repoRoot(), 'packages', sections[section].dir)
+/** Absolute path to the workspace package a docs section describes; fails for a package of another repository. */
+export const packageDir = (section: DocsSection): string => {
+  const { dir } = sections[section]
+  if (dir === null) throw new Error(`The "${section}" package lives in its own repository.`)
+  return join(repoRoot(), 'packages', dir)
+}
 
 /** The raw README source for a registered component. */
 export const loadReadme = (item: ComponentNavItem): string =>

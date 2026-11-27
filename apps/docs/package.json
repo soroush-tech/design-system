@@ -27,7 +27,7 @@
     "@soroush.design/react-hooks": "workspace:*",
     "@soroush.design/react-markdown": "workspace:*",
     "@soroush.design/story-demo": "workspace:*",
-    "@soroush.design/styled-system": "workspace:*",
+    "@soroush.tech/styled-system": "^6.0.2",
     "@umber-style/css": "^0.7.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",

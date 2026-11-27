@@ -13,11 +13,11 @@ import {
   type PaginationItemSize,
   type PaginationItemVariant,
 } from './PaginationItem'
-import type { SpaceProps } from '@soroush.design/styled-system'
+import type { SpaceProps } from '@soroush.tech/styled-system'
 import { styled } from '../style/styled'
 import { type Theme } from '../theme/themes'
-import { createShouldForwardProp, props } from '@soroush.design/styled-system/should-forward-prop'
-import { space } from '@soroush.design/styled-system'
+import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
+import { space } from '@soroush.tech/styled-system'
 
 export type PaginationColor = PaginationItemColor
 export type PaginationVariant = PaginationItemVariant

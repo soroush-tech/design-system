@@ -3,8 +3,8 @@
 import { useContext, type AnchorHTMLAttributes, type ReactNode } from 'react'
 import { alpha, styled } from '../../style/styled'
 import { type Theme } from '../../theme/themes'
-import { createShouldForwardProp } from '@soroush.design/styled-system/should-forward-prop'
-import { get } from '@soroush.design/styled-system'
+import { createShouldForwardProp } from '@soroush.tech/styled-system/should-forward-prop'
+import { get } from '@soroush.tech/styled-system'
 import { Icon } from '../../Icon'
 import { NavTreeContext } from '../NavTreeContext'
 

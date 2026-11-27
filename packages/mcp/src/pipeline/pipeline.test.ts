@@ -156,11 +156,6 @@ describe('doc pipeline', () => {
     expect(docs.find((doc) => doc.id === 'providers')!.body).toContain('```tsx')
   })
 
-  it('includes the styled-system docs and guides under a prefix', () => {
-    expect(docs.some((doc) => doc.id === 'styled-system/api')).toBe(true)
-    expect(docs.some((doc) => doc.id === 'styled-system/guides/spacing')).toBe(true)
-  })
-
   it('serves the url of each page at the route that is its import path', () => {
     const url = (id: string) => docs.find((doc) => doc.id === id)!.url
     expect(url('installation')).toBe('https://docs.soroush.design/react/installation/')
@@ -170,7 +165,6 @@ describe('doc pipeline', () => {
     expect(url('hooks')).toBe('https://docs.soroush.design/react/hooks/')
     expect(docs.find((doc) => doc.id === 'hooks')!.body).toContain('useDebounce')
     expect(url('markdown-overview')).toBe('https://docs.soroush.design/react/markdown/')
-    expect(url('styled-system/api')).toBe('https://docs.soroush.design/styled-system/docs/api/')
   })
 
   it('omits the url for references that have no page on the site', () => {

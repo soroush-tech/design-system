@@ -37,7 +37,6 @@ on:
           - react
           - react-hooks
           - react-markdown
-          - styled-system
           - ui-spec
         # gen:publish-options end
       channel:

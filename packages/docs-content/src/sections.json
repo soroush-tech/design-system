@@ -8,8 +8,9 @@
     "npm": "@soroush.design/react-markdown"
   },
   "styled-system": {
-    "dir": "styled-system",
-    "npm": "@soroush.design/styled-system"
+    "dir": null,
+    "npm": "@soroush.tech/styled-system",
+    "repo": "https://github.com/soroush-tech/styled-system"
   },
   "mcp": {
     "dir": "mcp",

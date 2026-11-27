@@ -1,6 +1,6 @@
 import { useMemo, useRef, useState, type KeyboardEvent } from 'react'
 import { alpha, styled } from '@soroush.design/react'
-import { get } from '@soroush.design/styled-system'
+import { get } from '@soroush.tech/styled-system'
 import { Flex } from '@soroush.design/react/Flex'
 import { Modal } from '@soroush.design/react/Modal'
 import { Paper } from '@soroush.design/react/Paper'

@@ -13,6 +13,10 @@ describe('packageDir', () => {
     expect(packageDir('react').replace(/\\/g, '/')).toMatch(/packages\/react$/)
     expect(packageDir('cli').replace(/\\/g, '/')).toMatch(/packages\/cli$/)
   })
+
+  it('fails for a package that lives in its own repository', () => {
+    expect(() => packageDir('styled-system')).toThrow('its own repository')
+  })
 })
 
 describe('loadReadme', () => {
@@ -31,7 +35,7 @@ describe('loadReadme', () => {
 
 describe('loadPackageFile', () => {
   it('reads a file relative to the package directory', () => {
-    expect(loadPackageFile('styled-system', 'docs/api.md')).toBeTruthy()
+    expect(loadPackageFile('mcp', 'package.json')).toBeTruthy()
   })
 })
 

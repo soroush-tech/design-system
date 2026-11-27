@@ -2,7 +2,7 @@
 
 import type { ReactNode } from 'react'
 import { styled } from '../../style/styled'
-import { createShouldForwardProp } from '@soroush.design/styled-system/should-forward-prop'
+import { createShouldForwardProp } from '@soroush.tech/styled-system/should-forward-prop'
 import { useAccordion } from '../AccordionContext'
 
 export interface AccordionActionsProps {

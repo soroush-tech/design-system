@@ -54,7 +54,7 @@ declare module '@soroush.design/core/theme' {
 `@soroush.design/core/breakpoints` holds the helpers behind `theme.breakpoints`:
 `createMediaHelpers` and `createContainerQueries` return `up`, `down`, `only`, `between` and `not`
 as range-syntax `@media` or `@container` rules, and `withBreakpointHelpers` attaches them to a
-scale. They are pure string functions; `@soroush.design/styled-system` re-exports them.
+scale. They are pure string functions; `@soroush.tech/styled-system` has a copy of its own.
 
 ## Utilities
 

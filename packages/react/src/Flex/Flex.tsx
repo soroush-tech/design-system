@@ -1,14 +1,14 @@
-import type { FlexboxProps } from '@soroush.design/styled-system'
+import type { FlexboxProps } from '@soroush.tech/styled-system'
 import { styled } from '../style/styled'
 import { type Theme } from '../theme/themes'
-import { createShouldForwardProp, props } from '@soroush.design/styled-system/should-forward-prop'
-import { flexbox, space } from '@soroush.design/styled-system'
+import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
+import { flexbox, space } from '@soroush.tech/styled-system'
 import { View, type ViewProps } from '../View'
 
 /** Valid values for the gap prop - derived from theme.space keys. */
 export type GapToken = keyof Theme['space']
 
-// `gap` needs no declaration or wiring here since @soroush.design/styled-system 5.8.0 -
+// `gap` needs no declaration or wiring here since @soroush.tech/styled-system 5.8.0 -
 // it arrives through View's `space` parser and `SpaceProps`.
 /**
  * `layout` puts the flex container on the page frame, as on any View: the theme's margin and

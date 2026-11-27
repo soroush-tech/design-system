@@ -3,7 +3,7 @@
 import { useContext, useEffect, type MouseEvent, type ReactNode } from 'react'
 import { alpha, styled, type AlphaColor } from '../../style/styled'
 import { type Theme } from '../../theme/themes'
-import { get } from '@soroush.design/styled-system'
+import { get } from '@soroush.tech/styled-system'
 import { Flex } from '../../Flex'
 import { Icon, type IconName } from '../../Icon'
 import { Portal } from '../../Portal'

@@ -21,9 +21,6 @@ import {
   reactHooks,
   splitReadme,
   stripReadmeChrome,
-  styledSystemDocSlug,
-  styledSystemDocs,
-  styledSystemGuides,
   type ComponentNavItem,
 } from '@soroush.design/docs-content'
 import { loadPackageFile, loadReadme, loadRepoFile } from '@soroush.design/docs-content/node'
@@ -88,10 +85,10 @@ export const renderIndex = (): string =>
     '',
     '## styled-system',
     '',
-    ...[...styledSystemDocs, ...styledSystemGuides].map(
-      ({ label, file }) =>
-        `- [${label}](${SITE_URL}/styled-system/docs/${styledSystemDocSlug(file)}/)`
-    ),
+    'The style-prop package lives in its own repository.',
+    '',
+    `- [Overview](${SITE_URL}/styled-system/)`,
+    '- [Documentation](https://github.com/soroush-tech/styled-system/tree/main/docs)',
     '',
   ].join('\n')
 

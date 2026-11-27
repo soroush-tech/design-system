@@ -9,7 +9,7 @@ import {
   shadow,
   space,
   typography,
-} from '@soroush.design/styled-system'
+} from '@soroush.tech/styled-system'
 import { baseTheme } from '../theme/themes'
 
 // Reads the scales from the parsers; the catalog holds the same table as data in

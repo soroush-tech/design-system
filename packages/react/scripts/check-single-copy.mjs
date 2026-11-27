@@ -50,7 +50,7 @@ for (const [, classes] of html.matchAll(/class="([^"]+)"/g)) {
 `
 
 try {
-  for (const name of ['styled-system', 'core', 'react-hooks', 'react']) {
+  for (const name of ['core', 'react-hooks', 'react']) {
     run('pnpm', ['pack', '--pack-destination', tarballs], join(packages, name))
   }
   const overrides = {}
@@ -74,14 +74,21 @@ try {
   run('npm', ['install', '--no-audit', '--no-fund'], app)
 
   const installed = readdirSync(join(app, 'node_modules', '@soroush.design')).sort()
-  const expected = ['core', 'react', 'react-hooks', 'styled-system']
+  const expected = ['core', 'react', 'react-hooks']
   if (installed.join() !== expected.join()) {
     throw new Error(
       `Expected ${expected.join(', ')} under @soroush.design, found ${installed.join(', ')}`
     )
   }
 
-  for (const name of ['@soroush.design/react', '@soroush.design/core', 'react']) {
+  for (const name of [
+    '@soroush.design/react',
+    '@soroush.design/core',
+    '@soroush.tech/styled-system',
+    '@umber-style/is-prop-valid',
+    '@umber-style/styled',
+    'react',
+  ]) {
     const copies = run('npm', ['ls', name, '--all', '--parseable'], app)
     const paths = new Set(
       copies

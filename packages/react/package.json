@@ -938,7 +938,7 @@
   "dependencies": {
     "@soroush.design/core": "workspace:^",
     "@soroush.design/react-hooks": "workspace:^",
-    "@soroush.design/styled-system": "workspace:^",
+    "@soroush.tech/styled-system": "^6.0.2",
     "@umber-style/cache": "^0.7.0",
     "@umber-style/react": "^0.7.0",
     "@umber-style/styled": "^0.7.0"

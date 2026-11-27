@@ -7,7 +7,7 @@ import { PACKAGES, sourceUrlOf } from './packages'
 const NPM_NAMES = {
   react: '@soroush.design/react',
   markdown: '@soroush.design/react-markdown',
-  'styled-system': '@soroush.design/styled-system',
+  'styled-system': '@soroush.tech/styled-system',
   mcp: '@soroush.design/mcp',
   'ui-spec': '@soroush.tech/ui-spec',
   cli: '@soroush.design/cli',
@@ -30,8 +30,11 @@ describe('PACKAGES', () => {
     for (const entry of PACKAGES) {
       expect(entry.version).toMatch(/^\d+\.\d+\.\d+$/)
       expect(entry.npm).toBe(`https://www.npmjs.com/package/${NPM_NAMES[entry.id]}`)
+      const { dir, repo } = sections[entry.id]
       expect(entry.github).toBe(
-        `https://github.com/soroush-tech/design-system/tree/main/packages/${sections[entry.id].dir}`
+        dir === null
+          ? repo
+          : `https://github.com/soroush-tech/design-system/tree/main/packages/${dir}`
       )
       expect(entry.description.length).toBeGreaterThan(20)
     }

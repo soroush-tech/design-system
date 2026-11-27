@@ -6,7 +6,7 @@ import { Button, type ButtonProps } from '../../Button'
 import { ButtonGroupContext } from '../../ButtonGroup'
 import { alpha, styled } from '../../style/styled'
 import { type Theme } from '../../theme/themes'
-import { get } from '@soroush.design/styled-system'
+import { get } from '@soroush.tech/styled-system'
 import { useTheme } from '../../theme/hooks/useTheme'
 import { themeDefault } from '@soroush.design/core/theme'
 

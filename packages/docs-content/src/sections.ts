@@ -6,7 +6,7 @@ import { sectionRoutes } from './sectionRoutes'
  * A part of the site that documents a package. Every section is versioned: the live docs, and
  * a frozen snapshot per release.
  */
-export type DocsSection = DocsPackage | 'mcp' | 'ui-spec' | 'cli'
+export type DocsSection = DocsPackage | 'styled-system' | 'mcp' | 'ui-spec' | 'cli'
 
 /**
  * What a docs section stands for. The id keys the section (its `DOCS_SECTION`, its route folder,
@@ -21,8 +21,10 @@ export interface SectionDescription {
    * `react/markdown` for the markdown package, whose pages are grouped under the platform.
    */
   route: string
-  /** The package's folder under `packages/`. */
-  dir: string
+  /** The package's folder under `packages/`; `null` for a package that lives in its own repository. */
+  dir: string | null
+  /** For a package that lives in its own repository, that repository's URL. */
+  repo?: string
   /** The package's name on npm. */
   npm: string
 }

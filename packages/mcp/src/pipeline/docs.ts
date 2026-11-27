@@ -1,10 +1,4 @@
-import {
-  sitePath,
-  styledSystemDocSlug,
-  styledSystemDocs,
-  styledSystemGuides,
-  stripReadmeChrome,
-} from '@soroush.design/docs-content'
+import { sitePath, stripReadmeChrome } from '@soroush.design/docs-content'
 import { loadPackageFile, loadRepoFile } from '@soroush.design/docs-content/node'
 import type { DocRecord } from '../types'
 import { DOCS_URL } from './components'
@@ -109,29 +103,11 @@ const GUIDES: DocSource[] = [
     read: () => stripReadmeChrome(loadRepoFile('packages/react-hooks/README.md')),
     url: `${DOCS_URL}${sitePath('react', '/hooks/')}`,
   },
-  {
-    id: 'styled-system-overview',
-    title: 'Styled-system overview',
-    summary: 'The style-prop engine underneath the design system.',
-    read: () => stripReadmeChrome(loadPackageFile('styled-system', 'README.md')),
-    url: `${DOCS_URL}${sitePath('styled-system', '/')}`,
-  },
 ]
-
-// The styled-system package's own docs and guides, ids prefixed so they never collide
-// with a guide above.
-const styledSystemSources = (): DocSource[] =>
-  [...styledSystemDocs, ...styledSystemGuides].map(({ label, file }) => ({
-    id: `styled-system/${styledSystemDocSlug(file)}`,
-    title: `styled-system: ${label}`,
-    summary: `The styled-system package's "${label}" documentation.`,
-    read: () => loadPackageFile('styled-system', `docs/${file}`),
-    url: `${DOCS_URL}${sitePath('styled-system', `/docs/${styledSystemDocSlug(file)}/`)}`,
-  }))
 
 /** Every guide and reference document the server serves, read from disk. */
 export const buildDocs = (): DocRecord[] =>
-  [...GUIDES, ...styledSystemSources()].map(({ id, title, summary, read, url }) => ({
+  GUIDES.map(({ id, title, summary, read, url }) => ({
     id,
     title,
     summary,

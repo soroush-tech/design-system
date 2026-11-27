@@ -3,7 +3,7 @@
 import { useRef, type ReactNode } from 'react'
 import { styled } from '../style/styled'
 import { type Theme } from '../theme/themes'
-import { createShouldForwardProp } from '@soroush.design/styled-system/should-forward-prop'
+import { createShouldForwardProp } from '@soroush.tech/styled-system/should-forward-prop'
 import { useDefaultProps } from '../theme/hooks/useDefaultProps'
 import { useTheme } from '../theme/hooks/useTheme'
 import {

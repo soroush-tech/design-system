@@ -358,8 +358,8 @@ export default {
 }
 `
   )
-  // The bench is a devDependency of styled-system, whose bin this borrows.
-  const cli = join(repoRoot, 'packages/styled-system/node_modules/@soroush.tech/bench/dist/bin.mjs')
+  // The bench is a devDependency of the repository root.
+  const cli = join(repoRoot, 'node_modules/@soroush.tech/bench/dist/bin.mjs')
   const result = spawnSync(
     process.execPath,
     [

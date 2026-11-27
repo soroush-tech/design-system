@@ -6,7 +6,6 @@ const config: NextConfig = {
     '@soroush.design/core',
     '@soroush.design/react',
     '@soroush.design/react-hooks',
-    '@soroush.design/styled-system',
   ],
   reactStrictMode: true,
   // Next writes an AGENTS.md of its own into the app in development.

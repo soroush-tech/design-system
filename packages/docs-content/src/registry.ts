@@ -1,7 +1,7 @@
 import { kebabCase } from './kebabCase'
 import { sections, type DocsSection } from './sections'
 
-export type DocsPackage = 'react' | 'markdown' | 'styled-system'
+export type DocsPackage = 'react' | 'markdown'
 
 export interface ComponentNavItem {
   /** Workspace package the component belongs to. */
@@ -252,44 +252,6 @@ export const categoryOf = (item: ComponentNavItem): string | undefined =>
   componentCategories.find((category) =>
     category.items.some((entry) => entry === item || entry.name === item.family)
   )?.label
-
-/** The styled-system package's docs files, as (label, file-path-under-docs/) pairs. */
-export const styledSystemDocs: Array<{ label: string; file: string }> = [
-  { label: 'Getting started', file: 'getting-started.md' },
-  { label: 'How it works', file: 'how-it-works.md' },
-  { label: 'Responsive styles', file: 'responsive-styles.md' },
-  { label: 'Breakpoints', file: 'breakpoints.md' },
-  { label: 'API', file: 'api.md' },
-  { label: 'Variants', file: 'variants.md' },
-  { label: 'Custom props', file: 'custom-props.md' },
-  { label: 'css prop', file: 'css.md' },
-  { label: 'Theme specification', file: 'theme-specification.md' },
-  { label: 'Theming', file: 'theming.md' },
-  { label: 'Table', file: 'table.md' },
-  { label: 'TypeScript', file: 'typescript.md' },
-  { label: 'Rationale', file: 'rationale.md' },
-]
-
-export const styledSystemGuides: Array<{ label: string; file: string }> = [
-  { label: 'Guides overview', file: 'guides/index.md' },
-  { label: 'Array props', file: 'guides/array-props.md' },
-  { label: 'Array scales', file: 'guides/array-scales.md' },
-  { label: 'Build a Box', file: 'guides/build-a-box.md' },
-  { label: 'Color modes', file: 'guides/color-modes.md' },
-  { label: 'Component types', file: 'guides/component-types.md' },
-  { label: 'Default values', file: 'guides/default-values.md' },
-  { label: 'Exceptions', file: 'guides/exceptions.md' },
-  { label: 'Migrating', file: 'guides/migrating.md' },
-  { label: 'Removing props from HTML', file: 'guides/removing-props-from-html.md' },
-  { label: 'Scale aliases', file: 'guides/scale-aliases.md' },
-  { label: 'Spacing', file: 'guides/spacing.md' },
-  { label: 'Theming guide', file: 'guides/theming.md' },
-  { label: 'Why powers of two', file: 'guides/why-powers-of-two.md' },
-]
-
-/** Doc-file path (under packages/styled-system/docs/) to its URL segment. */
-export const styledSystemDocSlug = (file: string): string =>
-  file.replace(/\.md$/, '').replace(/\/index$/, '')
 
 /**
  * The lowercase pages of the React package, each with the file of its `docs/` that is its page:

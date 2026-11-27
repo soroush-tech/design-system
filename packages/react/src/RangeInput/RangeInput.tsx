@@ -8,12 +8,12 @@ import {
   type CSSProperties,
   type ReactNode,
 } from 'react'
-import type { LayoutProps, SpaceProps } from '@soroush.design/styled-system'
+import type { LayoutProps, SpaceProps } from '@soroush.tech/styled-system'
 import { alpha, styled, type LiveValue } from '../style/styled'
 import { useLiveValue } from '../style/hooks/useLiveValue'
 import { type Theme } from '../theme/themes'
-import { createShouldForwardProp, props } from '@soroush.design/styled-system/should-forward-prop'
-import { get, system, space } from '@soroush.design/styled-system'
+import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
+import { get, system, space } from '@soroush.tech/styled-system'
 import { useDefaultProps } from '../theme/hooks/useDefaultProps'
 import { useFormControl } from '../FormControl'
 import { useRangeInput, type RangeInputValue } from './hooks/useRangeInput'

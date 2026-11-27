@@ -52,12 +52,12 @@ public, move it into the plugin's `skills/` and add its name to `PUBLIC_SKILLS` 
 `packages/mcp/src/generated/content.ts`, which both bundlers inline. Nothing is read
 from disk at runtime.
 
-| Content           | Source of truth                                                                   |
-| ----------------- | --------------------------------------------------------------------------------- |
-| Component records | `packages/*/src/*/README.md`, split into `intro` / `api` / `examples`             |
-| Token contract    | `baseTheme` in `packages/core/src/theme/baseTheme.ts`, imported and serialized    |
-| Guides            | `packages/react/docs/`, `apps/docs/content/docs/`, `packages/styled-system/docs/` |
-| Consumer refs     | `packages/react/docs/consumer/`                                                   |
+| Content           | Source of truth                                                                |
+| ----------------- | ------------------------------------------------------------------------------ |
+| Component records | `packages/*/src/*/README.md`, split into `intro` / `api` / `examples`          |
+| Token contract    | `baseTheme` in `packages/core/src/theme/baseTheme.ts`, imported and serialized |
+| Guides            | `packages/react/docs/`, `apps/docs/content/docs/`                              |
+| Consumer refs     | `packages/react/docs/consumer/`                                                |
 
 Two consequences worth knowing:
 

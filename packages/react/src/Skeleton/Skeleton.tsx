@@ -1,9 +1,9 @@
 import { type HTMLAttributes } from 'react'
-import type { SpaceProps, PaddingProps } from '@soroush.design/styled-system'
+import type { SpaceProps, PaddingProps } from '@soroush.tech/styled-system'
 import { styled, keyframes } from '../style/styled'
 import { type Theme } from '../theme/themes'
-import { createShouldForwardProp, props } from '@soroush.design/styled-system/should-forward-prop'
-import { system, variant as styledVariant, space } from '@soroush.design/styled-system'
+import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
+import { system, variant as styledVariant, space } from '@soroush.tech/styled-system'
 
 export type SkeletonVariant = 'text' | 'circular' | 'rectangular'
 export type SkeletonAnimation = 'pulse' | 'wave' | false

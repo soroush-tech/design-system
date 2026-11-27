@@ -159,7 +159,7 @@ export const createMcpServer = (bundle: ContentBundle = content): McpServer => {
     'list_docs',
     {
       description:
-        'List the available guides and references: installation, usage, theming, customization, app setup, the layout kit, the brand theme, and the styled-system docs.',
+        'List the available guides and references: installation, usage, theming, customization, app setup, the layout kit, and the brand theme.',
       inputSchema: {},
     },
     () => text(renderDocIndex(bundle))
@@ -170,7 +170,7 @@ export const createMcpServer = (bundle: ContentBundle = content): McpServer => {
     {
       description: 'Get one guide or reference in full, by the id shown in `list_docs`.',
       inputSchema: {
-        id: z.string().describe('Doc id, e.g. "theming" or "styled-system/api".'),
+        id: z.string().describe('Doc id, e.g. "theming" or "hooks".'),
       },
     },
     ({ id }) => {

@@ -12,7 +12,7 @@ import {
 } from 'react'
 import { styled } from '../style/styled'
 import { type Theme } from '../theme/themes'
-import { createShouldForwardProp } from '@soroush.design/styled-system/should-forward-prop'
+import { createShouldForwardProp } from '@soroush.tech/styled-system/should-forward-prop'
 import { useTheme } from '../theme/hooks/useTheme'
 import { Modal, type ModalCloseReason } from '../Modal'
 import { Paper, type PaperProps, type PaperElevation } from '../Paper'

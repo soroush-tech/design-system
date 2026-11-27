@@ -22,7 +22,6 @@ body:
         - react-hooks
         - react-markdown
         - story-demo
-        - styled-system
         - ui-spec
         # gen:issue-areas end
     validations:

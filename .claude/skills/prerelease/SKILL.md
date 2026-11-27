@@ -48,7 +48,7 @@ nobody edits it.
 - The `lockstep` packages (root `package.json`: core, react-hooks, react, react-markdown) share one
   version and publish together: dispatching one of them publishes the set, and a run with only
   some of them fails. Bump all of them and add each one's notes file.
-- Publish dependencies first (`styled-system` before `design-system`): `workspace:^` publishes
+- Publish dependencies first (a package before the ones that depend on it): `workspace:^` publishes
   as `^<sibling's version>`, so a prerelease run points each workspace dependency at its newest
   prerelease on the same channel, and stops with "publish X first" when there is none; a
   stable run stops the same way when the dependency's version isn't on npm. `all`

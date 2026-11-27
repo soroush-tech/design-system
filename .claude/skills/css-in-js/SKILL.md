@@ -17,7 +17,7 @@ Read `packages/react/src/Avatar/Avatar.tsx` before writing any new component - i
 
 ### 0. All engine imports come from the package's own styling system - never from the underlying packages
 
-Inside `packages/react/`, every styling primitive is imported from the package's own modules or from `@soroush.design/styled-system`, never from the engine's packages:
+Inside `packages/react/`, every styling primitive is imported from the package's own modules or from `@soroush.tech/styled-system`, never from the engine's packages:
 
 ```ts
 // ✗
@@ -29,11 +29,11 @@ import shouldForwardProp from '@styled-system/should-forward-prop'
 // ✓ (a component's file: relative paths into the package)
 import { styled, css, keyframes } from '../style/styled'
 import { useTheme } from '../theme/hooks/useTheme'
-import { system, variant, compose, layout, color } from '@soroush.design/styled-system'
-import { createShouldForwardProp } from '@soroush.design/styled-system/should-forward-prop'
+import { system, variant, compose, layout, color } from '@soroush.tech/styled-system'
+import { createShouldForwardProp } from '@soroush.tech/styled-system/should-forward-prop'
 ```
 
-An app or another package imports the same names from `@soroush.design/react` (`styled`, `css`, `keyframes`, `Global`, `useTheme`) and `@soroush.design/styled-system`. `packages/react/src/style/` (`engine.ts`, `styled.ts`), `src/theme/engine.ts` and `src/engine/` are the seam to the styling engine: nothing else imports it.
+An app or another package imports the same names from `@soroush.design/react` (`styled`, `css`, `keyframes`, `Global`, `useTheme`) and `@soroush.tech/styled-system`. `packages/react/src/style/` (`engine.ts`, `styled.ts`), `src/theme/engine.ts` and `src/engine/` are the seam to the styling engine: nothing else imports it.
 
 ---
 

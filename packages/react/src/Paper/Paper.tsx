@@ -1,8 +1,8 @@
 import { type CSSProperties, type ElementType } from 'react'
 import { styled } from '../style/styled'
 import { type Theme } from '../theme/themes'
-import { createShouldForwardProp } from '@soroush.design/styled-system/should-forward-prop'
-import { system } from '@soroush.design/styled-system'
+import { createShouldForwardProp } from '@soroush.tech/styled-system/should-forward-prop'
+import { system } from '@soroush.tech/styled-system'
 import { useTheme } from '../theme/hooks/useTheme'
 import { Flex, type FlexProps } from '../Flex'
 import { themeDefault } from '@soroush.design/core/theme'
@@ -49,7 +49,7 @@ export interface PaperProps extends FlexProps {
   as?: ElementType
 }
 
-// aspectRatio needs no manual wiring since @soroush.design/styled-system 5.8.0 - it
+// aspectRatio needs no manual wiring since @soroush.tech/styled-system 5.8.0 - it
 // arrives through View's `layout` parser and `LayoutProps`.
 const shouldForwardProp = createShouldForwardProp([
   'elevation',

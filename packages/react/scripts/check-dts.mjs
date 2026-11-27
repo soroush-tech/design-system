@@ -4,13 +4,13 @@
 //
 // tsdown flattens the barrel into a `declare namespace index_d_exports { ... }` whenever a
 // component's public props reach for something through it. A namespace cannot carry the
-// barrel's `export * from '@soroush.design/styled-system'` (nor `export type *`), so any name
+// barrel's `export * from '@soroush.tech/styled-system'` (nor `export type *`), so any name
 // arriving only through that star is referenced but never declared. Consumers compile with
 // `skipLibCheck`, which turns the dangling reference into `any` instead of an error: style
 // props silently vanish from a component's props, and a `Pick<LayoutProps, ...>` of them turns
 // required. That shipped in 1.2.0 and 1.3.0.
 //
-// Components import those types straight from `@soroush.design/styled-system` now, which leaves
+// Components import those types straight from `@soroush.tech/styled-system` now, which leaves
 // nothing to route through the namespace. This check keeps it that way without anyone tracking
 // what styled-system exports: it re-derives the answer from the build every time.
 import { readFileSync, readdirSync } from 'node:fs'

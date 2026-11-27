@@ -9,11 +9,11 @@ import {
   type KeyboardEvent,
   type ReactNode,
 } from 'react'
-import type { LayoutProps, SpaceProps } from '@soroush.design/styled-system'
+import type { LayoutProps, SpaceProps } from '@soroush.tech/styled-system'
 import { negate, styled } from '../../style/styled'
 import { type Theme } from '../../theme/themes'
-import { createShouldForwardProp, props } from '@soroush.design/styled-system/should-forward-prop'
-import { space, layout } from '@soroush.design/styled-system'
+import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
+import { space, layout } from '@soroush.tech/styled-system'
 import { useDefaultProps } from '../../theme/hooks/useDefaultProps'
 import { themeDefault } from '@soroush.design/core/theme'
 import { MenuActivationContext } from '../MenuActivationContext'

@@ -3,11 +3,11 @@
 import { useContext, type ButtonHTMLAttributes } from 'react'
 import { TableContext } from '../TableContext'
 import { Icon, type IconName, type IconProps } from '../../Icon'
-import type { SpaceProps } from '@soroush.design/styled-system'
+import type { SpaceProps } from '@soroush.tech/styled-system'
 import { styled } from '../../style/styled'
 import { type Theme } from '../../theme/themes'
-import { createShouldForwardProp, props } from '@soroush.design/styled-system/should-forward-prop'
-import { space, get } from '@soroush.design/styled-system'
+import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
+import { space, get } from '@soroush.tech/styled-system'
 
 export type TableSortLabelDirection = 'asc' | 'desc'
 

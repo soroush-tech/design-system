@@ -31,10 +31,23 @@ describe('sections', () => {
 
   it('names the folder and the npm package that are on disk', () => {
     for (const { id, dir, npm } of Object.values(sections)) {
+      if (dir === null) continue
       expect(existsSync(join(repoRoot(), 'packages', dir)), `${id}: packages/${dir} missing`).toBe(
         true
       )
       expect(manifestOf(dir).name, `${id}: packages/${dir}/package.json`).toBe(npm)
     }
+  })
+
+  it('sends a package of its own repository there, and keeps no folder for it', () => {
+    const external = Object.values(sections).filter(({ dir }) => dir === null)
+    expect(external.map(({ id, npm, repo }) => [id, npm, repo])).toEqual([
+      [
+        'styled-system',
+        '@soroush.tech/styled-system',
+        'https://github.com/soroush-tech/styled-system',
+      ],
+    ])
+    expect(existsSync(join(repoRoot(), 'packages', 'styled-system'))).toBe(false)
   })
 })

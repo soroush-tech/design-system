@@ -8,16 +8,13 @@ import {
   markdownComponents,
   reactHooks,
   sections,
-  styledSystemDocSlug,
-  styledSystemDocs,
-  styledSystemGuides,
   type ComponentNavItem,
   type DocsSection,
 } from '@soroush.design/docs-content'
 import { PACKAGES } from 'src/common/packages'
 import { sectionPath } from 'src/common/sectionPath'
 
-// The component taxonomy and the styled-system doc lists live in
+// The component taxonomy lives in
 // @soroush.design/docs-content, shared with the MCP server so both describe the same
 // library. Re-exported here because the app imports them through this module, and
 // guarded against the files on disk by that package's own tests. What stays below is
@@ -234,9 +231,7 @@ const markdownRail: RailItem[] = [
   },
 ]
 
-const styledSystemDocHref = (file: string): string =>
-  sectionPath('styled-system', `/docs/${styledSystemDocSlug(file)}/`)
-
+// The package lives in its own repository: one page here, and no releases of its own.
 const styledSystemRail: RailItem[] = [
   HOME,
   PACKAGES_ITEM,
@@ -249,42 +244,7 @@ const styledSystemRail: RailItem[] = [
     groups: [
       {
         label: 'Get started',
-        items: [
-          { label: 'Overview', href: sectionPath('styled-system', '/') },
-          { label: 'Releases', href: sectionPath('styled-system', '/releases/') },
-        ],
-      },
-    ],
-  },
-  {
-    id: 'docs',
-    label: 'Docs',
-    icon: 'article',
-    href: styledSystemDocHref(styledSystemDocs[0].file),
-    matches: [sectionPath('styled-system', '/docs/')],
-    groups: [
-      {
-        label: 'Docs',
-        items: styledSystemDocs.map(({ label, file }) => ({
-          label,
-          href: styledSystemDocHref(file),
-        })),
-      },
-    ],
-  },
-  {
-    id: 'guides',
-    label: 'Guides',
-    icon: 'book',
-    href: styledSystemDocHref(styledSystemGuides[0].file),
-    matches: [],
-    groups: [
-      {
-        label: 'Guides',
-        items: styledSystemGuides.map(({ label, file }) => ({
-          label,
-          href: styledSystemDocHref(file),
-        })),
+        items: [{ label: 'Overview', href: sectionPath('styled-system', '/') }],
       },
     ],
   },

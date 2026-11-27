@@ -17,9 +17,6 @@ import {
   memberComponents,
   membersOf,
   reactHooks,
-  styledSystemDocSlug,
-  styledSystemDocs,
-  styledSystemGuides,
 } from './registry'
 import { listComponentReadmes, packageDir } from './node/loadReadme'
 import { repoRoot } from './node/repoRoot'
@@ -107,14 +104,6 @@ describe('component registry', () => {
     expect([...reactHooks].sort()).toEqual(sectionsOfReadme.sort())
   })
 
-  it('every styled-system doc and guide file exists on disk', () => {
-    for (const { file } of [...styledSystemDocs, ...styledSystemGuides]) {
-      expect(existsSync(join(packageDir('styled-system'), 'docs', file)), `${file} missing`).toBe(
-        true
-      )
-    }
-  })
-
   it('slugs are unique across packages', () => {
     expect(componentBySlug.size).toBe(allDocComponents.length)
   })
@@ -164,12 +153,6 @@ describe('component registry', () => {
     expect(componentAccessibilityPath(componentBySlug.get('button')!)).toBe(
       '/Button/accessibility/'
     )
-  })
-
-  it('maps styled-system doc files to URL segments', () => {
-    expect(styledSystemDocSlug('api.md')).toBe('api')
-    expect(styledSystemDocSlug('guides/array-props.md')).toBe('guides/array-props')
-    expect(styledSystemDocSlug('guides/index.md')).toBe('guides')
   })
 
   it('groups every design-system component into exactly one category', () => {

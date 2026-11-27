@@ -96,7 +96,7 @@ describe('NavRail', () => {
     const names = within(rail())
       .getAllByRole('link')
       .map((link) => link.textContent)
-    expect(names).toEqual(['Home', 'Packages', 'Get started', 'Docs', 'Guides'])
+    expect(names).toEqual(['Home', 'Packages', 'Get started'])
   })
 
   it('opens a component of the markdown docs from Components, which has no page of its own', () => {

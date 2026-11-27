@@ -14,6 +14,10 @@ sidebars, the component pages, and the drift tests; `sectionFor(pathname)` picks
 the one with the longest route that holds the path, so `/react/markdown/Editor/` is the markdown
 section's and not React's.
 
+`/styled-system/` is the exception: the package lives in its own repository (`soroush-tech/styled-system`,
+`dir: null` in `sections.json`), so its section is one static page with the install line and the links to
+that repository and its docs - no docs folder, no releases page, and nothing generated from `packages/`.
+
 ## Routes
 
 **A page's route is the import path under its platform.** The route of a thing is the path an app imports it from, with the hooks and the markdown package grouped under `/react/`, and the page's content is that thing's own markdown file. The URLs are

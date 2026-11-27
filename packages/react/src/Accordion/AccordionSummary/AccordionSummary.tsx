@@ -2,8 +2,8 @@
 
 import type { ReactNode } from 'react'
 import { negate, styled } from '../../style/styled'
-import { createShouldForwardProp } from '@soroush.design/styled-system/should-forward-prop'
-import { get } from '@soroush.design/styled-system'
+import { createShouldForwardProp } from '@soroush.tech/styled-system/should-forward-prop'
+import { get } from '@soroush.tech/styled-system'
 import { useDefaultProps } from '../../theme/hooks/useDefaultProps'
 import { Icon } from '../../Icon'
 import { getRegionId, getSummaryId, useAccordion } from '../AccordionContext'

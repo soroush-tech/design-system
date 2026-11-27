@@ -1,6 +1,6 @@
 import type { Theme } from '../theme/themes'
 import { themeDefault } from '@soroush.design/core/theme'
-import { get } from '@soroush.design/styled-system'
+import { get } from '@soroush.tech/styled-system'
 
 /** The least width of a field that does not fill its row: `theme.defaults.inputMinWidth`, else `'12rem'`. */
 export const getInputMinWidth = (theme: Theme) => themeDefault(theme, 'inputMinWidth', '12rem')

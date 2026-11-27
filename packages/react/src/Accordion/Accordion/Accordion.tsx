@@ -9,11 +9,11 @@ import {
   type ReactNode,
   type SyntheticEvent,
 } from 'react'
-import type { SpaceProps } from '@soroush.design/styled-system'
+import type { SpaceProps } from '@soroush.tech/styled-system'
 import { styled } from '../../style/styled'
 import { type Theme } from '../../theme/themes'
-import { createShouldForwardProp, props } from '@soroush.design/styled-system/should-forward-prop'
-import { get, space } from '@soroush.design/styled-system'
+import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
+import { get, space } from '@soroush.tech/styled-system'
 import { useDefaultProps } from '../../theme/hooks/useDefaultProps'
 import { themeDefault } from '@soroush.design/core/theme'
 import { getSurfaceRadius } from '@soroush.design/core/utils'

@@ -112,6 +112,6 @@ describe('content lookups', () => {
     expect(findComponent('Button', bundle)?.name).toBe('Button')
     expect(findComponent('TextInput', bundle)).toBeUndefined()
     expect(findDoc('theming', bundle)?.id).toBe('theming')
-    expect(findDoc('styled-system/api', bundle)).toBeUndefined()
+    expect(findDoc('hooks', bundle)).toBeUndefined()
   })
 })

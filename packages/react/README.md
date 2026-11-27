@@ -64,7 +64,7 @@ import { Typography } from '@soroush.design/react/Typography'
 import { Flex } from '@soroush.design/react/Flex'
 ```
 
-The styling system comes from the root `@soroush.design/react` - `ThemeProvider`, `LayoutProvider`, `useTheme`, `useDefaultProps`, `useMediaQuery`, `withTheme`, `styled`, `css`, `keyframes`, `Global`, `useStyle`, `withStyles` and `StylesConsumer` - and each name is also an entry point of its own (`@soroush.design/react/useTheme`). The style-prop functions (`space`, `system`, ...) are `@soroush.design/styled-system`'s, and the theme (`baseTheme`, `createTheme`, the `Theme` type) is `@soroush.design/core/theme`'s: this package re-exports neither.
+The styling system comes from the root `@soroush.design/react` - `ThemeProvider`, `LayoutProvider`, `useTheme`, `useDefaultProps`, `useMediaQuery`, `withTheme`, `styled`, `css`, `keyframes`, `Global`, `useStyle`, `withStyles` and `StylesConsumer` - and each name is also an entry point of its own (`@soroush.design/react/useTheme`). The style-prop functions (`space`, `system`, ...) are `@soroush.tech/styled-system`'s, and the theme (`baseTheme`, `createTheme`, the `Theme` type) is `@soroush.design/core/theme`'s: this package re-exports neither.
 
 ```ts
 import { styled, css } from '@soroush.design/react'

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { styled, keyframes } from '../style/styled'
-import { createShouldForwardProp } from '@soroush.design/styled-system/should-forward-prop'
+import { createShouldForwardProp } from '@soroush.tech/styled-system/should-forward-prop'
 import { Paper, type PaperElevation } from '../Paper'
 import { FocusTrap } from '../FocusTrap'
 

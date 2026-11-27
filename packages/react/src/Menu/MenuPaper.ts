@@ -3,7 +3,7 @@
 import type { PaperElevation } from '../Paper'
 import { styled } from '../style/styled'
 import { type Theme } from '../theme/themes'
-import { get, system } from '@soroush.design/styled-system'
+import { get, system } from '@soroush.tech/styled-system'
 import { themeDefault } from '@soroush.design/core/theme'
 import { getSurfaceRadius } from '@soroush.design/core/utils'
 

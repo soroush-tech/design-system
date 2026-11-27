@@ -68,8 +68,10 @@ so every name has one path.
 
 A scope on npm has one level, so a package of a platform is named `@soroush.design/<platform>-<name>`,
 never `@soroush.design/react/markdown`. Later packages repeat the pattern (`react-charts`,
-`react-native`, `vue`). `@soroush.design/styled-system`, `@soroush.design/mcp` and
-`@soroush.design/cli` are outside it.
+`react-native`, `vue`). `@soroush.design/mcp` and `@soroush.design/cli` are outside it.
+`@soroush.tech/styled-system` is not a package of this repository: it lives in
+[`soroush-tech/styled-system`](https://github.com/soroush-tech/styled-system), and the packages here
+depend on it from npm.
 
 **A new package is justified by what it depends on**, not by size: `react-markdown` brings an editor
 and a diagram library, and an app that wants buttons should not install either. Components are
@@ -81,8 +83,7 @@ and a diagram library, and an app that wants buttons should not install either. 
 `@soroush.design/react-markdown` are one product: they share **one version** and are published
 together ([#159](https://github.com/soroush-tech/design-system/issues/159)), so an app never has to
 match a version of one to another. The list is the `lockstep` array of the root `package.json`, the
-one place the guard, the publish workflow and this page agree on. `@soroush.design/styled-system`,
-`@soroush.design/mcp`, `@soroush.design/cli` and `@soroush.tech/ui-spec` keep a version of their own.
+one place the guard, the publish workflow and this page agree on. `@soroush.design/mcp`, `@soroush.design/cli` and `@soroush.tech/ui-spec` keep a version of their own.
 
 - **A change to any of them bumps all of them**, with one release-notes file each (an unchanged
   package says so in a line).

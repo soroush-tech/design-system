@@ -7,7 +7,7 @@ description: Build UI with @soroush.design/react - the token-driven React compon
 
 A house style, not just a package. Two layers:
 
-1. **`@soroush.design/react`** (npm, MIT) - UmberStyle + `@soroush.design/styled-system`
+1. **`@soroush.design/react`** (npm, MIT) - UmberStyle + `@soroush.tech/styled-system`
    primitives and components. Ships a _dark, unbranded_ `baseTheme` with raw hex.
 2. **The brand layer** - a `theme.ts` in each app that builds `light` and `dark` via
    `createTheme(baseTheme, ...)` from the shared color ramps, plus a small local

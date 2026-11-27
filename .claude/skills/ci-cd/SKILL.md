@@ -1,6 +1,6 @@
 ---
 name: ci-cd
-description: GitHub Actions CI/CD conventions for this repo - the single CI entry workflow (prepare → lint → packages matrix + bench → ci-ok), the action-pinning rule (version tags for `actions/*`, commit SHAs for everything else including our own org), per-package Codecov flags with tokenless-OIDC uploads, the gen:publish-options marker blocks, and manual npm publishing via cd-packages.yml. Use when adding, editing, or debugging any workflow under .github/workflows/.
+description: GitHub Actions CI/CD conventions for this repo - the single CI entry workflow (prepare → lint → packages matrix → ci-ok), the action-pinning rule (version tags for `actions/*`, commit SHAs for everything else including our own org), per-package Codecov flags with tokenless-OIDC uploads, the gen:publish-options marker blocks, and manual npm publishing via cd-packages.yml. Use when adding, editing, or debugging any workflow under .github/workflows/.
 paths: .github/workflows/**
 metadata:
   internal: true
@@ -30,14 +30,13 @@ Pin every `uses:` by the action's **origin**:
 
 - **GitHub's own** - `actions/*` (checkout, setup-node, cache, github-script) → **version tag**:
   `actions/checkout@v7`.
-- **Everything else, our own org included** (`soroush-tech/bench-action`, `pnpm/action-setup`,
-  `codecov/codecov-action`) → **commit SHA** + `# vX` comment. What SHA-pinning defends against
+- **Everything else, our own org included** (`pnpm/action-setup`, `codecov/codecov-action`) → **commit SHA** + `# vX` comment. What SHA-pinning defends against
   is a tag being moved, and our own tags move like anyone's. The SHA is bumped when the action
   releases - the upgrade is a reviewed line, not a silent one.
 
 ## CI job shape
 
-`prepare` → `lint` → `packages` (matrix) + `bench` → `ci-ok`.
+`prepare` → `lint` → `packages` (matrix) → `ci-ok`.
 
 - **Detect once in `prepare`** (node version from `.nvmrc`, package manager, runner, the package
   matrix), reuse via `needs.prepare.outputs.*`. Never hard-code the node version.
@@ -53,10 +52,6 @@ Pin every `uses:` by the action's **origin**:
   just after the call.
 - Every install runs `--ignore-scripts`: no lifecycle script at install time, anywhere in CI -
   the packages build with tsdown, which needs none.
-- **`bench`** is the styled-system performance gate: builds the package, then
-  `soroush-tech/bench-action` compares against the last npm release; a case below the minimum
-  speed ratio fails the PR via ci-ok. The bot-token mint step is optional - without the
-  `BENCH_BOT_APP_ID` var it falls back to `GITHUB_TOKEN`.
 - **`ci-ok`** is the single branch-protection check: `if: always()`, fails only on a needed
   job's `failure`/`cancelled`. **Add every new job to its `needs`.**
 - Set `timeout-minutes` on every job; matrices use `fail-fast: false`. CI concurrency cancels

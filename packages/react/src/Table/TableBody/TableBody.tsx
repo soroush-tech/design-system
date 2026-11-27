@@ -2,11 +2,11 @@
 
 import { type ElementType, type HTMLAttributes } from 'react'
 import { TableSectionContext } from '../TableSectionContext'
-import type { SpaceProps, BorderProps } from '@soroush.design/styled-system'
+import type { SpaceProps, BorderProps } from '@soroush.tech/styled-system'
 import { styled } from '../../style/styled'
 import { type Theme } from '../../theme/themes'
-import { createShouldForwardProp, props } from '@soroush.design/styled-system/should-forward-prop'
-import { space, border, system } from '@soroush.design/styled-system'
+import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
+import { space, border, system } from '@soroush.tech/styled-system'
 
 /** Valid values for the color prop - derived from theme.text keys. */
 export type TableBodyColorToken = keyof Theme['text']

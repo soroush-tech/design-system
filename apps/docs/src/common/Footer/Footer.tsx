@@ -1,5 +1,5 @@
 import { alpha, styled } from '@soroush.design/react'
-import { get } from '@soroush.design/styled-system'
+import { get } from '@soroush.tech/styled-system'
 import { Flex } from '@soroush.design/react/Flex'
 import { Grid } from '@soroush.design/react/Grid'
 import { Link } from '@soroush.design/react/Link'

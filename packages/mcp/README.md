@@ -45,7 +45,7 @@ npx skills add soroush-tech/design-system
 | `list_components` | `package?`                                       | Every component with its category, summary, and exact subpath import        |
 | `get_component`   | `name`, `part?` (`all`/`intro`/`api`/`examples`) | The component's README - `api` is its props with token values and defaults  |
 | `get_tokens`      | `scale?`                                         | The token contract from `baseTheme`: space, palette, radii, typography, ... |
-| `list_docs`       | -                                                | The guide index: installation, usage, theming, layout kit, styled-system    |
+| `list_docs`       | -                                                | The guide index: installation, usage, theming, layout kit                   |
 | `get_doc`         | `id`                                             | One guide or reference in full                                              |
 | `search_docs`     | `query`                                          | Best matches across components and guides, with snippets                    |
 

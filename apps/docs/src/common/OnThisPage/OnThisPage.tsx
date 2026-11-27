@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { alpha, styled } from '@soroush.design/react'
-import { get } from '@soroush.design/styled-system'
+import { get } from '@soroush.tech/styled-system'
 import { Typography } from '@soroush.design/react/Typography'
 import { View } from '@soroush.design/react/View'
 import { PlainList } from 'src/common/PlainList/PlainList'

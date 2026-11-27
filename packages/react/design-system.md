@@ -95,7 +95,7 @@ Rules when converting a component:
 - `bg?: keyof Theme['background']`
 - Font/space scales → `keyof Theme['fontWeights']` etc.
 
-**Custom props → theme scales** - wire through `system()` (from `@soroush.design/styled-system`, re-exported by the package root) on a `styled` component. Key mappings:
+**Custom props → theme scales** - wire through `system()` (from `@soroush.tech/styled-system`, re-exported by the package root) on a `styled` component. Key mappings:
 
 - `color` → `scale: 'text'`
 - `bg` → `scale: 'background'`

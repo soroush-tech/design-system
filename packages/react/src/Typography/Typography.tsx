@@ -7,10 +7,10 @@ import type {
   FlexboxProps,
   BorderProps,
   PositionProps,
-} from '@soroush.design/styled-system'
+} from '@soroush.tech/styled-system'
 import { styled } from '../style/styled'
 import { type Theme } from '../theme/themes'
-import { createShouldForwardProp, props } from '@soroush.design/styled-system/should-forward-prop'
+import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
 import {
   flexbox,
   border,
@@ -19,7 +19,7 @@ import {
   space,
   layout,
   typography,
-} from '@soroush.design/styled-system'
+} from '@soroush.tech/styled-system'
 import type { TypographyVariant } from '@soroush.design/core/theme'
 
 export type { TypographyVariant }

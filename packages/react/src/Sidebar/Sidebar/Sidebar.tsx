@@ -2,7 +2,7 @@
 
 import { useId, useMemo, useState, type ElementType, type ReactNode } from 'react'
 import { styled } from '../../style/styled'
-import { createShouldForwardProp, props } from '@soroush.design/styled-system/should-forward-prop'
+import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
 import { Flex, type FlexProps } from '../../Flex'
 import {
   SidebarContext,

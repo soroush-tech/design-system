@@ -8,10 +8,10 @@ import type {
   FlexboxProps,
   SpanProps,
   LayoutFrameProps,
-} from '@soroush.design/styled-system'
+} from '@soroush.tech/styled-system'
 import { styled } from '../style/styled'
 import { type Theme } from '../theme/themes'
-import { createShouldForwardProp, props } from '@soroush.design/styled-system/should-forward-prop'
+import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
 import {
   border,
   position,
@@ -21,7 +21,7 @@ import {
   space,
   layout,
   typography,
-} from '@soroush.design/styled-system'
+} from '@soroush.tech/styled-system'
 
 /** Valid values for the color prop - derived from theme.text keys. */
 export type ViewColorToken = keyof Theme['text']
@@ -61,7 +61,7 @@ export interface ViewProps
   order?: FlexboxProps<Theme>['order']
 }
 
-// aspectRatio needs no manual wiring since @soroush.design/styled-system 5.8.0 - it
+// aspectRatio needs no manual wiring since @soroush.tech/styled-system 5.8.0 - it
 // arrives through the `layout` parser and `LayoutProps`.
 const shouldForwardProp = createShouldForwardProp([...props, 'cursor', 'order', 'layout'])
 

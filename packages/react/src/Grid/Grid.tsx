@@ -2,18 +2,18 @@ import type {
   GridProps as SystemGridProps,
   FlexboxProps,
   LayoutGridProps,
-} from '@soroush.design/styled-system'
+} from '@soroush.tech/styled-system'
 import { styled } from '../style/styled'
 import { type Theme } from '../theme/themes'
-import { createShouldForwardProp, props } from '@soroush.design/styled-system/should-forward-prop'
-import { grid, flexbox, layoutGrid, space } from '@soroush.design/styled-system'
+import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
+import { grid, flexbox, layoutGrid, space } from '@soroush.tech/styled-system'
 import { View, type ViewProps } from '../View'
 
 /** Valid values for the gap / columnGap / rowGap props - derived from theme.space keys. */
 export type GapToken = keyof Theme['space']
 
 // gap / columnGap / rowGap need no declaration or wiring here since
-// @soroush.design/styled-system 5.8.0 - they arrive through View's `space` parser
+// @soroush.tech/styled-system 5.8.0 - they arrive through View's `space` parser
 // and `SpaceProps`.
 /**
  * `layout` lays the grid out from `theme.layout` - the theme's columns, gutter and margin per

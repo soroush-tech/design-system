@@ -1,6 +1,6 @@
 import { forwardRef, type ForwardedRef, type ReactNode, type Ref } from 'react'
 import { styled } from '../style/styled'
-import { get, space } from '@soroush.design/styled-system'
+import { get, space } from '@soroush.tech/styled-system'
 import { useDefaultProps } from '../theme/hooks/useDefaultProps'
 import { Button, type ButtonProps } from '../Button'
 
