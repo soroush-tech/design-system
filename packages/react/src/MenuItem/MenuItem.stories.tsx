@@ -10,6 +10,7 @@ import { Icon, type IconName } from '../Icon'
 import { icons } from '../Icon/icons'
 import { MenuList } from '../Menu'
 import { Paper } from '../Paper'
+import { StyleSheet } from '../style/styled'
 import { exampleArgs } from '../utils/test/renderExample'
 import { MenuItem } from './MenuItem'
 import { menuItemCatalog } from '@gild-ui/core/catalog/entries'
@@ -36,6 +37,8 @@ const submenuMapping = {
   ],
   empty: [],
 }
+
+const sheet = StyleSheet.create({ paper: { width: 220 } })
 
 const meta: Meta<typeof MenuItem> = {
   title: 'Theme/MenuItem',
@@ -181,7 +184,7 @@ const meta: Meta<typeof MenuItem> = {
   decorators: [
     // A Select's rows sit in a listbox; a menu row's story brings its own MenuList.
     (Story, { parameters }) => (
-      <Paper elevation={8} p={0} borderRadius="sm" style={{ width: 220 }}>
+      <Paper elevation={8} p={0} borderRadius="sm" style={sheet.paper}>
         {parameters.isInMenu ? (
           <Story />
         ) : (

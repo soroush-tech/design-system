@@ -55,3 +55,7 @@ theme's. Outlined, it is the color as its border and text; with no color (`'defa
 - A chip that only deletes takes the focus, for Backspace and Delete.
 - Name the delete control with `deleteLabel`: an icon alone says nothing.
 - `Autocomplete` shows its multiple values as chips.
+
+## Overrides
+
+`style` takes an entry of `StyleSheet.create`, or a list of them with `false`, `null` and `undefined`, and overrides the CSS of the root. `slotProps` takes, for each slot (`root`, `body`, `label`, `icon`, `avatar`, `deleteIcon`), a `style` of the same kind, a `className`, and `data-*` and `aria-*` attributes. `slotProps.root` and `style` are one channel: `style` is merged after `slotProps.root.style`, so it wins.

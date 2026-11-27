@@ -18,12 +18,14 @@ Client component: its entry carries `'use client'`, so a server component can im
 
 Also accepts every attribute of an HTML element.
 
-| Prop            | Type        | Default | Description                                                                                                 |
-| --------------- | ----------- | ------- | ----------------------------------------------------------------------------------------------------------- |
-| `label`         | `ReactNode` | -       | The group's name - a heading, or the button that folds it.                                                  |
-| `children`      | `ReactNode` | -       | The `NavLink`s of the group.                                                                                |
-| `isCollapsible` | `boolean`   | `false` | The group folds under its label, as a native `details`.                                                     |
-| `isOpen`        | `boolean`   | `false` | Whether a collapsible group is open. The reader can still fold it; a change of the prop opens or closes it. |
+| Prop            | Type                       | Default | Description                                                                                                             |
+| --------------- | -------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `label`         | `ReactNode`                | -       | The group's name - a heading, or the button that folds it.                                                              |
+| `children`      | `ReactNode`                | -       | The `NavLink`s of the group.                                                                                            |
+| `isCollapsible` | `boolean`                  | `false` | The group folds under its label, as a native `details`.                                                                 |
+| `isOpen`        | `boolean`                  | `false` | Whether a collapsible group is open. The reader can still fold it; a change of the prop opens or closes it.             |
+| `style`         | `StyleOverride`            | -       | Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. |
+| `slotProps`     | `{ root?, label?, list? }` | -       | Overrides per slot - `style`, `className`, `data-*` and `aria-*` - for the slots a theme can style.                     |
 
 ## Theming
 

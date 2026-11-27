@@ -1,6 +1,8 @@
 import { type HTMLAttributes } from 'react'
 import type { SpaceProps, LayoutProps, PaddingProps } from '@soroush.tech/styled-system'
 import { styled, keyframes } from '../style/styled'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../style/overrides'
+import type { CircularProgressSlot } from './CircularProgress.types'
 import { type Theme } from '../theme/themes'
 import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
 import { space, layout } from '@soroush.tech/styled-system'
@@ -16,7 +18,7 @@ export type CircularProgressEasing = 'linear' | 'ease' | 'ease-in' | 'ease-out' 
 // that arise when LayoutProps is combined with SVGAttributes.
 export interface CircularProgressProps
   extends
-    HTMLAttributes<HTMLSpanElement>,
+    Omit<HTMLAttributes<HTMLSpanElement>, 'style'>,
     Omit<SpaceProps<Theme>, keyof PaddingProps>,
     LayoutProps<Theme> {
   /** Visual variant - looping animation or value-driven arc. Default: `'indeterminate'`. */
@@ -41,6 +43,10 @@ export interface CircularProgressProps
   easing?: CircularProgressEasing
   /** Renders a faint full-ring track behind the progress arc. Default: `false`. */
   showTrack?: boolean
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<CircularProgressSlot>
 }
 
 const shouldForwardProp = createShouldForwardProp([
@@ -85,12 +91,19 @@ const CircularProgressTrack = styled('circle', {
   opacity: 0.2,
 })
 
+interface CircleStyle extends Pick<CircularProgressProps, 'variant' | 'disableShrink' | 'easing'> {
+  circumference: number
+  /** Where the arc ends, in pixels. */
+  dashOffset: number
+}
+
 const CircularProgressCircle = styled('circle', {
   name: 'CircularProgress',
   slot: 'circle',
   label: 'CircularProgressCircle',
-  shouldForwardProp: (prop) => prop !== 'variant' && prop !== 'disableShrink',
-})<Pick<CircularProgressProps, 'variant' | 'disableShrink'>>(({ variant, disableShrink }) => ({
+  shouldForwardProp: (prop) =>
+    !['variant', 'disableShrink', 'circumference', 'dashOffset', 'easing'].includes(prop),
+})<CircleStyle>(({ variant, disableShrink, circumference, dashOffset, easing }) => ({
   fill: 'none',
   stroke: 'currentColor',
   ...(variant === 'indeterminate'
@@ -99,7 +112,11 @@ const CircularProgressCircle = styled('circle', {
         strokeDashoffset: '0px',
         ...(!disableShrink && { animation: `${dash} 1.4s ease-in-out infinite` }),
       }
-    : {}),
+    : {
+        strokeDasharray: `${circumference}px`,
+        strokeDashoffset: `${dashOffset}px`,
+        transition: `stroke-dashoffset 0.3s ${easing}`,
+      }),
 }))
 
 // ─── Styling functions ────────────────────────────────────────────────────────
@@ -156,20 +173,16 @@ export function CircularProgress({
   spinning = false,
   easing = 'linear',
   showTrack = false,
+  style,
+  className,
+  slotProps,
   ...rest
 }: Readonly<CircularProgressProps>) {
   const r = (VIEWBOX - thickness * 2) / 2
   const circumference = 2 * Math.PI * r
   const normalizedValue = clamp(value ?? min, min, max)
 
-  const circleStyle =
-    variant === 'determinate'
-      ? {
-          strokeDasharray: `${circumference}px`,
-          strokeDashoffset: `${circumference * (1 - normalizedValue / max)}px`,
-          transition: `stroke-dashoffset 0.3s ${easing}`,
-        }
-      : undefined
+  const dashOffset = circumference * (1 - normalizedValue / max)
 
   const ariaProps =
     variant === 'determinate'
@@ -187,20 +200,30 @@ export function CircularProgress({
       easing={easing}
       {...ariaProps}
       {...rest}
+      {...mergeOverrides(slotProps?.root, { style, className })}
     >
       {/* Decorative: the progressbar role and its label are on the root. */}
       <svg viewBox={`0 0 ${VIEWBOX} ${VIEWBOX}`} width="100%" height="100%" aria-hidden="true">
         {showTrack && (
-          <CircularProgressTrack cx={VIEWBOX / 2} cy={VIEWBOX / 2} r={r} strokeWidth={thickness} />
+          <CircularProgressTrack
+            cx={VIEWBOX / 2}
+            cy={VIEWBOX / 2}
+            r={r}
+            strokeWidth={thickness}
+            {...slotProps?.track}
+          />
         )}
         <CircularProgressCircle
           cx={VIEWBOX / 2}
           cy={VIEWBOX / 2}
           r={r}
           strokeWidth={thickness}
-          style={circleStyle}
           variant={variant}
           disableShrink={disableShrink}
+          circumference={circumference}
+          dashOffset={dashOffset}
+          easing={easing}
+          {...slotProps?.circle}
         />
       </svg>
     </CircularProgressRoot>

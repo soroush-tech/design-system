@@ -1,6 +1,8 @@
 import { type ComponentType, type ElementType, type SVGProps } from 'react'
 import type { LayoutProps, SpaceProps } from '@soroush.tech/styled-system'
 import { styled } from '../style/styled'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../style/overrides'
+import type { IconSlot } from './Icon.types'
 import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
 import { system, layout, space } from '@soroush.tech/styled-system'
 import { useTheme } from '../theme/hooks/useTheme'
@@ -10,7 +12,10 @@ import { themeDefault, type ThemeIconSizes } from '@gild-ui/core/theme'
 
 export interface IconProps
   extends
-    Omit<SVGProps<SVGSVGElement>, 'color' | 'ref' | 'width' | 'height' | 'display' | 'overflow'>,
+    Omit<
+      SVGProps<SVGSVGElement>,
+      'color' | 'ref' | 'width' | 'height' | 'display' | 'overflow' | 'style'
+    >,
     LayoutProps,
     SpaceProps {
   /** Registry key of the icon to render. */
@@ -22,6 +27,10 @@ export interface IconProps
    * `'lg'`), or any CSS length. Default: the theme's `iconSize`, else `'lg'`.
    */
   size?: keyof ThemeIconSizes | (string & {}) | number
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<IconSlot>
 }
 
 const shouldForwardProp = createShouldForwardProp([...props])
@@ -39,7 +48,15 @@ const StyledIcon = styled('svg', {
   systemProps: [layout, space, colorSystem],
 })({ fill: 'currentColor' }) as ComponentType<Omit<IconProps, 'name'> & { as?: ElementType }>
 
-export function Icon({ name, color, size, ...rest }: Readonly<IconProps>) {
+export function Icon({
+  name,
+  color,
+  size,
+  style,
+  className,
+  slotProps,
+  ...rest
+}: Readonly<IconProps>) {
   const theme = useTheme()
   // A name of the theme's icon sizes is that size; anything else is a length as it stands.
   const named =
@@ -54,6 +71,7 @@ export function Icon({ name, color, size, ...rest }: Readonly<IconProps>) {
       width={resolvedSize}
       height={resolvedSize}
       aria-hidden
+      {...mergeOverrides(slotProps?.root, { style, className })}
       {...rest}
     />
   )

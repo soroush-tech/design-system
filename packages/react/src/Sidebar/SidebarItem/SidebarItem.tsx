@@ -9,6 +9,8 @@ import { Icon, type IconName } from '../../Icon'
 import { Portal } from '../../Portal'
 import { Pressable, type PressableProps } from '../../Pressable'
 import { Typography } from '../../Typography'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../../style/overrides'
+import type { SidebarItemSlot } from './SidebarItem.types'
 import {
   SidebarContext,
   type SidebarAnchor,
@@ -21,8 +23,12 @@ export type SidebarItemSize = keyof Theme['sizes']
 
 export interface SidebarItemProps extends Omit<
   PressableProps,
-  'children' | 'feedback' | 'activeOpacity' | 'size'
+  'children' | 'feedback' | 'activeOpacity' | 'size' | 'style' | 'slotProps'
 > {
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<SidebarItemSlot>
   /** Icon shown in both the collapsed and open states - pinned to the anchored edge. */
   icon: IconName
   /** Accessible name; also the default visible content while open. */
@@ -234,6 +240,9 @@ export function SidebarItem({
   onSelect,
   onClick,
   isSelected,
+  style,
+  className,
+  slotProps,
   ...rest
 }: Readonly<SidebarItemProps>) {
   const {
@@ -293,6 +302,7 @@ export function SidebarItem({
         })}
         onClick={handleClick}
         {...rest}
+        {...mergeOverrides(slotProps?.root, { style, className })}
       >
         {isStacked ? (
           <Flex as="span" flexDirection="column" alignItems="center" gap={0.5} flexShrink={0}>
@@ -301,6 +311,7 @@ export function SidebarItem({
               color={color}
               isSelected={isSelected}
               itemVariant={resolvedVariant}
+              {...slotProps?.pill}
             >
               <Icon name={icon} size="1.5rem" color="inherit" />
             </SidebarItemPill>

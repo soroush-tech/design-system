@@ -2,6 +2,7 @@ import { screen } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { Flex } from '../Flex'
+import { lastColor, overrides } from '../utils/test/overrides'
 
 describe('Flex', () => {
   describe('children', () => {
@@ -128,5 +129,16 @@ describe('Flex', () => {
         paddingInline: '24px',
       })
     })
+  })
+})
+
+describe('Flex style', () => {
+  it('takes a list of entries, the later one winning, and drops false, null and undefined', () => {
+    renderWithTheme(
+      <Flex data-testid="root" style={[overrides.first, false, null, undefined, overrides.second]}>
+        text
+      </Flex>
+    )
+    expect(lastColor(screen.getByTestId('root'))).toBe('rgb(4, 5, 6)')
   })
 })

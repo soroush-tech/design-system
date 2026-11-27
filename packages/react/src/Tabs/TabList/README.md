@@ -31,3 +31,7 @@ with the chosen tab's value, after the `TabContext` has taken it.
 
 A `Tabs` on its own holds or takes its own value and points at no panel; a `TabList` is how tabs
 join a `TabContext`.
+
+## Overrides
+
+It takes the `style` and `slotProps` of `Tabs`.

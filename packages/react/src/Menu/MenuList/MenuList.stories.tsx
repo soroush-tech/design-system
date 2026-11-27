@@ -12,10 +12,13 @@ import { Icon } from '../../Icon'
 import { MenuDivider } from '../MenuDivider'
 import { MenuItem } from '../../MenuItem'
 import { Paper } from '../../Paper'
+import { StyleSheet } from '../../style/styled'
 import { Typography } from '../../Typography'
 import { exampleArgs } from '../../utils/test/renderExample'
 import { menuListCatalog } from '@gild-ui/core/catalog/entries'
 import { MenuList, type MenuListProps } from './MenuList'
+
+const sheet = StyleSheet.create({ paper: { width: 260 } })
 
 const meta: Meta<typeof MenuList> = {
   title: 'Theme/Menu/MenuList',
@@ -92,7 +95,7 @@ const meta: Meta<typeof MenuList> = {
   },
   decorators: [
     (Story) => (
-      <Paper elevation={8} p={0} borderRadius="sm" style={{ width: 260 }}>
+      <Paper elevation={8} p={0} borderRadius="sm" style={sheet.paper}>
         <Story />
       </Paper>
     ),

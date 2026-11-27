@@ -42,3 +42,7 @@ Also supports `space` props on the root.
 - This design system's buttons are flat (no elevation), so no `shouldDisableElevation` prop exists.
 - A split button (a dropdown-driven action) isn't built in yet: a [`Menu`](../Menu/) wraps its
   trigger in a box of its own, which the group can't join to its buttons.
+
+## Overrides
+
+`style` takes an entry of `StyleSheet.create`, or a list of them with `false`, `null` and `undefined`, and overrides the CSS of the root. `slotProps` takes, for each slot (`root`), a `style` of the same kind, a `className`, and `data-*` and `aria-*` attributes. `slotProps.root` and `style` are one channel: `style` is merged after `slotProps.root.style`, so it wins.

@@ -1,68 +1,109 @@
-# The style system
+# Styling and overriding
 
-`useStyle`, `withStyles` and `StylesConsumer` (`@gild-ui/react/useStyle`, `/withStyles` and `/StylesConsumer`) resolve a style that is either a plain object or a function of the theme into the `CSSObject` a component applies. It is for styles you write yourself; the components of the library use the same helpers.
+There are four ways to change how a component looks. They do different jobs, and each is typed to what actually works, so a wrong one fails at compile time.
 
-```ts
-import { useStyle, withStyles, StylesConsumer } from '@gild-ui/react'
-```
+| Way                                    | For                                                                        | Takes                                                                                          |
+| -------------------------------------- | -------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| Style props (`mt`, `color`, `bg`, ...) | Customising within the design: spacing, colour, size of one instance       | Theme values only, typed from your registered theme                                            |
+| `StyleSheet.create` and `style`        | Overriding the CSS of one instance, or of one slot of it                   | Entries of a sheet, or lists of them. Never a plain object                                     |
+| `styled(Component)`                    | A new component that is the old one with other styles, used in many places | Style objects and functions of the theme and the props                                         |
+| The theme's `components`               | One change for every instance of a component in the app                    | `defaultProps`, `styleOverrides` per slot, `variants`: see [customization](./customization.md) |
 
-A **style input** is a `CSSObject`, or a factory: an object with a `getStyles(theme)` method that returns one. A factory reads the active theme, so its values follow a theme change.
+## Style props
 
-```tsx
-import type { Theme } from '@gild-ui/core/theme'
+Components take the style props of the design system: `m`, `p`, `width`, `color`, `bg`, `borderRadius` and the others. Their values are keys of the registered theme (`color="primary"`, `p={2}`), so they follow a theme change and cannot name a value the theme does not have. Use them first: they are the customisation the design allows.
 
-const card = {
-  getStyles: (theme: Theme) => ({ padding: theme.space[2], borderRadius: theme.radii.md }),
-}
-```
+## `StyleSheet.create` and the `style` prop
 
-## `useStyle(style)`
-
-A hook. Returns the `CSSObject` of a style input, calling `getStyles` with the theme from `ThemeProvider` when the input is a factory.
-
-```tsx
-function Panel() {
-  const styles = useStyle(card)
-  return <View style={styles}>...</View>
-}
-```
-
-## `withStyles(style)(Component)`
-
-A higher-order component. The wrapped component receives the resolved `CSSObject` as its `styles` prop.
-
-## `StylesConsumer`
-
-The same as a render prop, for a class component or a place a hook cannot be called: `<StylesConsumer style={card}>{(styles) => ...}</StylesConsumer>`. The `style` prop takes a factory.
-
-Where a style belongs to a component of the library, change it through `theme.components` instead - see [how to customize](./customization.md).
-
-## `StyleSheet`
-
-`StyleSheet` (`@gild-ui/react/StyleSheet`, also on the root) keeps named styles. Given an object, `StyleSheet.create` returns the entries at once, with no hook, and an entry goes to the `style` prop of a component. There is no `css` prop: `style` takes a sheet entry, a style object, or an array of them, with `false`, `null` and `undefined` dropped, and merges them after the component's own styles into one class. No `style` attribute is rendered, and `style` takes no function: a style that reads the theme is written with `styled`.
+The `style` prop of every component overrides its CSS. It takes an entry of `StyleSheet.create`, or a list of entries with `false`, `null` and `undefined` for a condition that is off. A plain object is a type error: `style={{ padding: 12 }}` does not compile. No `style` attribute is rendered: the entries are merged, in order, into one class that is in a later cascade layer than the component's own styles, so it wins over them, nested `:hover` rules included, and only for what it sets.
 
 ```tsx
 import { StyleSheet } from '@gild-ui/react'
-import { View } from '@gild-ui/react/View'
+import { Button } from '@gild-ui/react/Button'
 
-const styles = StyleSheet.create({
-  box: { padding: 16, '&:hover': { opacity: 0.9 } },
-  active: { outline: '2px solid currentColor' },
+const overrides = StyleSheet.create({
+  danger: { backgroundColor: 'firebrick', borderRadius: 0 },
+  dangerHover: { '&:hover': { backgroundColor: 'darkred' } },
 })
 
-function Box({ isActive }: { isActive?: boolean }) {
-  return <View style={[styles.box, isActive && styles.active]}>...</View>
+function DeleteButton({ isArmed }: { isArmed: boolean }) {
+  return <Button style={[overrides.danger, isArmed && overrides.dangerHover]}>Delete</Button>
 }
 ```
 
-An entry is opaque: pass it on, do not read it.
+Make a sheet once, at module level. An object sheet gives its entries at once, with no hook; it has no theme, so it cannot use tokens, only plain values. A style that reads the theme is a function sheet, and `useStyle` resolves it against the nearest `ThemeProvider`:
+
+```tsx
+import { StyleSheet, useStyle } from '@gild-ui/react'
+
+const themed = StyleSheet.create((theme) => ({
+  card: { padding: theme.space[2], borderRadius: theme.radii.md },
+}))
+
+function Panel() {
+  const styles = useStyle(themed)
+  return <Paper style={styles.card}>...</Paper>
+}
+```
+
+`useStyle` is the resolver of the styling engine, re-exported (`@gild-ui/react/useStyle` and the root). Given a function sheet it returns one entry for each name, for the theme in use; given an object sheet it returns the same entries. An entry is opaque: pass it on, do not read it. The root also exports the types `StyleOverride` (what `style` takes), `SlotOverride` (what a slot takes) and `SlotProps<Slot>`.
+
+### A value that changes on every render
+
+A style entry is made once, so a number that follows a drag or a measure does not belong in a sheet. Give it as a style prop of the component where one exists (`width={...}`), or keep it in a live value: `useStyleValue(initial, unit)` gives the value and a setter. In a style the value is a reference to a CSS variable, so the class is the same for every value and the setter changes the variable without a render. `css()` turns a style that holds it into an entry:
+
+```tsx
+import { css, useStyleValue } from '@gild-ui/react'
+import { useMemo } from 'react'
+
+function Thumb() {
+  const [left, setLeft] = useStyleValue(10, '%')
+  const style = useMemo(() => css({ left: `${left}` }), [left])
+  return <Paper style={style} onPointerMove={(event) => setLeft(event.clientX / 4)} />
+}
+```
+
+`-${value}` and `${color}1F` are not valid for a token or a live value: use `negate(value)` and `alpha(color, opacity)` from the root.
+
+## Slots
+
+A component with parts a theme can style (`<Name>Slot` in its folder) takes `slotProps`, keyed by exactly those slot names. Each slot takes a `style` (as above), a `className`, and `data-*` and `aria-*` attributes, and nothing else: what a component controls (its handlers, its `ref`, its `id`) is not open to a slot. A slot's `style` is merged after the slot's own styles and the theme's, so it wins.
+
+```tsx
+<Tooltip
+  title="Saved"
+  hasArrow
+  slotProps={{ arrow: { style: overrides.danger }, root: { 'data-mark': 'saved' } }}
+>
+  <Button>Save</Button>
+</Tooltip>
+```
+
+The slots of every component are on its Specs page, from the catalog. The slot `root` is the component's root element, the one the `style` prop reaches: `slotProps.root.style` and `style` are the same channel, and when both are given `style` is merged after `slotProps.root.style`, so it wins. Class names of both are joined.
+
+## `styled(Component)`
+
+To use one restyled component in many places, wrap it once. The style objects and the functions of the theme and the props are the ones of `styled`:
+
+```tsx
+import { styled } from '@gild-ui/react'
+import { Button } from '@gild-ui/react/Button'
+
+const DangerButton = styled(Button)(({ theme }) => ({
+  backgroundColor: theme.palette.error.main,
+}))
+```
+
+## The theme's `components`
+
+One change for every instance, set once for the app: see [customization](./customization.md).
 
 ## Values in a style
 
 Write these with the functions of the package, not by joining text: a theme token is a reference to a CSS variable, and a hex digit, a minus or a unit glued after it is not valid CSS.
 
 ```tsx
-import { alpha, negate, styled, useStyleValue } from '@gild-ui/react'
+import { alpha, negate, styled } from '@gild-ui/react'
 
 const Tint = styled('div')(({ theme }) => ({
   // A colour at an opacity: `alpha(color, opacity)`, opacity from 0 to 1. Not `${color}1F`.
@@ -72,4 +113,16 @@ const Tint = styled('div')(({ theme }) => ({
 }))
 ```
 
-`alpha()` is written as `color-mix()`. For a number that changes at runtime, such as a slider's thumb or a pan, `useStyleValue(initial, unit)` gives a value to put in a style and a setter: the style is one class, and the setter changes a CSS variable, so a drag writes no rule and renders no `style` attribute. A style object written in JSX, `style={{ ... }}`, is not allowed in the library's own source.
+`alpha()` is written as `color-mix()`.
+
+## Style factories
+
+`withStyles` and `StylesConsumer` (`@gild-ui/react/withStyles`, `/StylesConsumer`) resolve a factory, an object with a `getStyles(theme)` method, into a `CSSObject` for a class component or a place a hook cannot be called:
+
+```tsx
+import { StylesConsumer } from '@gild-ui/react'
+
+const card = { getStyles: (theme: Theme) => ({ padding: theme.space[2] }) }
+
+<StylesConsumer style={card}>{(styles) => ...}</StylesConsumer>
+```

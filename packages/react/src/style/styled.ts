@@ -18,6 +18,7 @@ export {
   negate,
   StyleSheet,
   subtract,
+  useStyle,
   useStyleValue,
 } from '@umber-style/react'
 export type { AlphaColor, LiveValue } from '@umber-style/react'

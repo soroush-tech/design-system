@@ -169,3 +169,7 @@ When the hidden `<input>` receives keyboard focus, a `2px solid currentColor` ou
 // Form usage
 <Checkbox id="terms" name="terms" required>Accept terms</Checkbox>
 ```
+
+## Overrides
+
+`style` takes an entry of `StyleSheet.create`, or a list of them with `false`, `null` and `undefined`, and overrides the CSS of the root. `slotProps` takes, for each slot (`root`, `input`, `icon`, `label`), a `style` of the same kind, a `className`, and `data-*` and `aria-*` attributes. `slotProps.root` and `style` are one channel: `style` is merged after `slotProps.root.style`, so it wins.

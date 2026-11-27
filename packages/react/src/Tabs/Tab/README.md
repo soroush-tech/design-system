@@ -93,3 +93,7 @@ that is not selected or hovered, so a screen reader still finds it.
 
 The secondary action sits beside the tab, not inside it, and keeps its own keys: in an open menu
 the arrow keys, Home and End move through its rows, not between the tabs.
+
+## Overrides
+
+`style` takes an entry of `StyleSheet.create`, or a list of them with `false`, `null` and `undefined`, and puts it on the root after the component's own styles. `slotProps` takes, for each slot (`root`, `label`, `icon`, `secondaryAction`, `close`), a `style` of the same kind, a `className`, and `data-*` and `aria-*` attributes. On the root, `style` and `className` come after `slotProps.root`, so they win.

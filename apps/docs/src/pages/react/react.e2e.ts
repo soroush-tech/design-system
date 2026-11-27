@@ -353,6 +353,13 @@ test.describe('react section', () => {
     ).toBeVisible()
   })
 
+  test('the specs page of a component lists its slots, from the catalog', async ({ page }) => {
+    await page.goto('/react/Tooltip/specs/')
+    await expect(page.getByRole('heading', { level: 2, name: 'Slots' })).toBeVisible()
+    const table = page.getByRole('table', { name: 'Tooltip slots' })
+    await expect(table.getByRole('cell', { name: 'arrow' })).toBeVisible()
+  })
+
   test('the installation page installs the React package and the theme package', async ({
     page,
   }) => {

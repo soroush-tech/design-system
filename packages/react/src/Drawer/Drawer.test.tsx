@@ -1,3 +1,4 @@
+import { lastColor, overrides } from '../utils/test/overrides'
 import { describe, it, expect, vi, beforeAll, afterAll, afterEach } from 'vitest'
 import { act, cleanup, fireEvent, screen } from '@testing-library/react'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
@@ -173,5 +174,34 @@ describe('Drawer', () => {
       ])
       expect(hidden.map((rule) => rule.style.getPropertyValue('display'))).toEqual(['none'])
     })
+  })
+})
+
+describe('Drawer overrides', () => {
+  const mark = (name: string) => ({
+    className: name,
+    style: overrides.first,
+    'data-mark': name,
+    'aria-details': name,
+  })
+  const expectMarked = (element: Element | null, name: string) => {
+    expect(element).toHaveClass(name)
+    expect(element).toHaveAttribute('data-mark', name)
+    expect(element).toHaveAttribute('aria-details', name)
+    expect(lastColor(element!)).toBe('rgb(1, 2, 3)')
+  }
+
+  it('puts the style, class name and attributes of the root slot on its root', () => {
+    renderDrawer({ slotProps: { root: mark('root') } })
+    expectMarked(getPanel(), 'root')
+  })
+
+  it('lets the style prop win over slotProps.root.style', () => {
+    renderDrawer({
+      style: [false, null, undefined, overrides.second],
+      slotProps: { root: { className: 'slot', style: overrides.first } },
+    })
+    expect(getPanel()).toHaveClass('slot')
+    expect(lastColor(getPanel())).toBe('rgb(4, 5, 6)')
   })
 })

@@ -1,4 +1,6 @@
 import { styled } from '../style/styled'
+import { mergeOverrides, type SlotProps } from '../style/overrides'
+import type { AppBarSlot } from './AppBar.types'
 import { type Theme } from '../theme/themes'
 import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
 import {
@@ -38,6 +40,8 @@ export interface AppBarProps extends Omit<FlexProps, 'position' | 'bg'> {
   size?: AppBarSize
   /** Applies backdrop-filter: blur(theme.blur) + webkit prefix for frosted-glass effect. */
   blur?: boolean
+  /** Overrides for the slots a theme can style (`root`): `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<AppBarSlot>
 }
 
 type AppBarBaseProps = Omit<AppBarProps, 'size' | 'elevation'> & {
@@ -102,6 +106,21 @@ const AppBarBase = styled(Flex, {
   ],
 })<AppBarBaseProps>({ flexShrink: 0, width: '100%' }, elevationVariant, sizeVariants)
 
-export function AppBar({ elevation = 4, size, ...rest }: Readonly<AppBarProps>) {
-  return <AppBarBase as="header" elevation={elevation} size={size} {...rest} />
+export function AppBar({
+  elevation = 4,
+  size,
+  style,
+  className,
+  slotProps,
+  ...rest
+}: Readonly<AppBarProps>) {
+  return (
+    <AppBarBase
+      as="header"
+      elevation={elevation}
+      size={size}
+      {...mergeOverrides(slotProps?.root, { style, className })}
+      {...rest}
+    />
+  )
 }

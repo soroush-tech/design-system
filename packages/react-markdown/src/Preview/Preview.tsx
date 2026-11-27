@@ -1,9 +1,9 @@
-import { createContext, useContext, type ReactNode } from 'react'
+import { createContext, useContext, type CSSProperties, type ReactNode } from 'react'
 import ReactMarkdown, { type Components, type Options } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeHighlight from 'rehype-highlight'
 import rehypeSlug from 'rehype-slug'
-import { styled } from '@gild-ui/react'
+import { StyleSheet, styled, type SlotProps, type StyleOverride } from '@gild-ui/react'
 import { Quote, type QuoteProps } from '@gild-ui/react/Quote'
 import { Checkbox, type CheckboxProps } from '@gild-ui/react/Checkbox'
 import { Image, type ImageProps } from '@gild-ui/react/Image'
@@ -25,7 +25,11 @@ import { Typography, type TypographyProps } from '@gild-ui/react/Typography'
 import { View, type ViewProps } from '@gild-ui/react/View'
 import { CodeBlock, type CodeBlockProps } from '../CodeBlock'
 import { Mermaid, type MermaidProps } from '../Mermaid'
+import { mergeOverrides } from '../utils/mergeOverrides'
 import { MERMAID_LANGUAGE, isMermaidBlock, mermaidSource } from './mermaidBlock'
+
+// A GFM task-list item carries its own checkbox, so it drops the list marker.
+const taskItem = StyleSheet.create({ item: { listStyleType: 'none' } })
 
 const remarkPlugins: Options['remarkPlugins'] = [remarkGfm]
 // Every heading takes an id from its text, the way GitHub names its anchors - so a link to a
@@ -47,9 +51,11 @@ const PreviewRoot = styled(View, { name: 'MarkdownPreview', label: 'MarkdownPrev
 
 /**
  * Per-element prop overrides, merged over the design-system defaults (the caller's props win).
- * Keyed by markdown element - e.g. `slotProps={{ p: { color: 'primary' }, h1: { variant: 'h2' } }}`.
+ * Keyed by markdown element - e.g. `slotProps={{ p: { color: 'primary' }, h1: { variant: 'h2' } }}` -
+ * and by the one slot a theme can style, `root`, which takes a `style`, a `className` and `data-*`
+ * and `aria-*` attributes. No markdown element is named `root`.
  */
-export interface PreviewSlotProps {
+export interface PreviewSlotProps extends SlotProps<'root'> {
   h1?: TypographyProps
   h2?: TypographyProps
   h3?: TypographyProps
@@ -78,6 +84,8 @@ export interface PreviewSlotProps {
   /** Props for a ` ```mermaid ` fence's `Mermaid` renderer - including `diagram` (viewer) props. */
   mermaid?: Omit<MermaidProps, 'chart'>
 }
+
+const alignOf = (style?: CSSProperties) => style?.textAlign as TableCellProps['align']
 
 const EMPTY_SLOT_PROPS: PreviewSlotProps = {}
 
@@ -161,8 +169,7 @@ const components: Components = {
       lineHeight="base"
       variant="body1"
       gutterBottom
-      // GFM task-list items carry their own checkbox, so drop the list marker.
-      style={className?.includes('task-list-item') ? { listStyleType: 'none' } : undefined}
+      style={className?.includes('task-list-item') && taskItem.item}
       {...li}
     >
       {children}
@@ -232,14 +239,14 @@ const components: Components = {
     </TableRow>
   )),
   // th vs td is resolved from the enclosing section via TableSectionContext; the
-  // GFM column alignment arrives as an inline `style` and overrides the default.
+  // GFM column alignment arrives as an inline `style`; it is read as the cell's `align`.
   th: slotted(({ th }, { children, style }) => (
-    <TableCell style={style} {...th}>
+    <TableCell align={alignOf(style)} {...th}>
       {children}
     </TableCell>
   )),
   td: slotted(({ td }, { children, style }) => (
-    <TableCell style={style} {...td}>
+    <TableCell align={alignOf(style)} {...td}>
       {children}
     </TableCell>
   )),
@@ -254,12 +261,14 @@ export interface PreviewProps {
   children: string
   /** Per-element prop overrides, merged over the defaults. */
   slotProps?: PreviewSlotProps
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
 }
 
 /** Renders a markdown string with every element mapped to a design-system primitive. */
-export function Preview({ children, slotProps }: Readonly<PreviewProps>) {
+export function Preview({ children, slotProps, style }: Readonly<PreviewProps>) {
   return (
-    <PreviewRoot>
+    <PreviewRoot {...mergeOverrides(slotProps?.root, { style })}>
       <SlotPropsContext.Provider value={slotProps ?? EMPTY_SLOT_PROPS}>
         <ReactMarkdown
           components={components}

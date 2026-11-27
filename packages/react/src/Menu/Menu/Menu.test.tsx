@@ -10,6 +10,7 @@ import { Tooltip } from '../../Tooltip'
 import { ThemeProvider } from '../../theme/ThemeProvider'
 import { Menu, type MenuProps } from './Menu'
 import { themeWith } from '../../utils/test/themeWith'
+import { lastColor, overrides } from '../../utils/test/overrides'
 
 const renderMenu = (props: Partial<MenuProps> = {}) =>
   renderWithTheme(
@@ -247,58 +248,30 @@ describe('Menu', () => {
     expect(onStep).toHaveBeenCalledWith(-1)
   })
 
-  it('puts the data attributes, class and aria an app gives on the list, and every submenu list, through slotProps.list', () => {
-    let wasPrevented: boolean | undefined
-    const onKeyDown = vi.fn((event: { defaultPrevented: boolean }) => {
-      wasPrevented = event.defaultPrevented
-    })
-    renderWithTheme(
-      <Menu
-        trigger={<Button>main</Button>}
-        isOpen
-        aria-label="Own name"
-        slotProps={{
-          list: {
-            'data-menu': '',
-            'data-keymap-transient': true,
-            className: 'app-menu',
-            'aria-description': 'Branch actions',
-            onKeyDown,
-            // None of these can take the menu's own.
-            ...({ id: 'mine', role: 'list', 'aria-labelledby': 'nobody' } as object),
-          },
-        }}
-      >
-        <MenuItem submenu={[<MenuItem key="leaf">Leaf</MenuItem>]}>Parent</MenuItem>
-      </Menu>
-    )
-    fireEvent.keyDown(row('Parent'), { key: 'ArrowRight' })
-    const [list, submenu] = screen.getAllByRole('menu')
-    for (const element of [list, submenu]) {
-      expect(element).toHaveAttribute('data-menu', '')
-      expect(element).toHaveAttribute('data-keymap-transient', 'true')
-      expect(element).toHaveClass('app-menu')
-      expect(element).toHaveAttribute('aria-description', 'Branch actions')
-    }
-    expect(list).toHaveAttribute('role', 'menu')
-    expect(list.id).not.toBe('mine')
-    expect(list).toHaveAccessibleName('Own name')
-    expect(submenu).toHaveAccessibleName('Parent')
-    // The app's key handler runs before the list's own.
-    fireEvent.keyDown(row('Leaf'), { key: 'ArrowDown' })
-    expect(onKeyDown).toHaveBeenCalled()
-    expect(wasPrevented).toBe(false)
-  })
-
-  it('lets slotProps.list.onKeyDown keep a key from the list by preventing it', () => {
+  it('puts the style, class name and attributes of the root and paper slots on them', () => {
     renderMenu({
       isOpen: true,
-      slotProps: { list: { onKeyDown: (event) => event.preventDefault() } },
+      className: 'own',
+      style: [false, overrides.second],
+      slotProps: {
+        root: { className: 'slot', style: overrides.first, 'data-mark': 'root' },
+        paper: { className: 'sheet', style: overrides.first, 'aria-description': 'Branch actions' },
+      },
     })
-    const first = row('New branch...')
-    first.focus()
-    fireEvent.keyDown(first, { key: 'ArrowDown' })
-    expect(first).toHaveFocus()
+    const root = trigger().parentElement as HTMLElement
+    const paper = screen.getByRole('menu').parentElement as HTMLElement
+    expect(root).toHaveClass('slot', 'own')
+    expect(root).toHaveAttribute('data-mark', 'root')
+    // The style prop is the root's own channel and wins over slotProps.root.style.
+    expect(lastColor(root)).toBe('rgb(4, 5, 6)')
+    expect(paper).toHaveClass('sheet')
+    expect(paper).toHaveAttribute('aria-description', 'Branch actions')
+    expect(lastColor(paper)).toBe('rgb(1, 2, 3)')
+  })
+
+  it('keeps one style as it is, and takes a null or undefined entry in a list', () => {
+    renderMenu({ style: [null, undefined, overrides.first] })
+    expect(lastColor(trigger().parentElement as HTMLElement)).toBe('rgb(1, 2, 3)')
   })
 
   it('leaves Left and Right alone without onStep', () => {

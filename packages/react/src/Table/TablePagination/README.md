@@ -46,3 +46,7 @@ Also accepts `TableCell` styling props (`size`, `cellPadding`, `color`, `bg`, sp
 
 The first/previous/next/last icon-button cluster, exported separately for custom toolbars.
 See [`TablePaginationActions/README.md`](../TablePaginationActions/README.md) for its props and boundary rules.
+
+## Overrides
+
+`style` takes an entry of `StyleSheet.create`, or a list of them with `false`, `null` and `undefined`, and puts it on the root after the component's own styles. `slotProps` takes, for each slot (`root`), a `style` of the same kind, a `className`, and `data-*` and `aria-*` attributes. On the root, `style` and `className` come after `slotProps.root`, so they win.

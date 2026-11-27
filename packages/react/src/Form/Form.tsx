@@ -3,6 +3,8 @@
 import { useMemo, type ReactNode, type SyntheticEvent } from 'react'
 import { type Theme } from '../theme/themes'
 import { styled } from '../style/styled'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../style/overrides'
+import type { FormSlot } from './Form.types'
 import { FormContext } from './FormContext'
 
 // Named styled root - the `<form>` element is theme-customizable via
@@ -24,6 +26,10 @@ export interface FormProps {
   fullWidth?: boolean
   id?: string
   className?: string
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<FormSlot>
   /** Skips native browser validation so field-level validation owns the UX. */
   noValidate?: boolean
   'data-testid'?: string
@@ -43,6 +49,8 @@ export function Form({
   fullWidth,
   id,
   className,
+  style,
+  slotProps,
   noValidate,
   'data-testid': dataTestid,
 }: Readonly<FormProps>) {
@@ -55,7 +63,7 @@ export function Form({
     <FormContext.Provider value={value}>
       <FormRoot
         id={id}
-        className={className}
+        {...mergeOverrides(slotProps?.root, { style, className })}
         noValidate={noValidate}
         onSubmit={onSubmit}
         data-testid={dataTestid}

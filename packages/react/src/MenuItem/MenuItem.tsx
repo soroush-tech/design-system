@@ -26,6 +26,8 @@ import {
   type MenuItemValue,
   type MenuListContextValue,
 } from '../Menu/MenuListContext'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../style/overrides'
+import type { MenuItemSlot } from './MenuItem.types'
 import { Submenu } from './Submenu'
 import { useSubmenu } from './useSubmenu'
 
@@ -90,6 +92,10 @@ export interface MenuItemProps {
   shouldAnnounceSecondaryAction?: boolean
   id?: string
   className?: string
+  /** Overrides the CSS of the row: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<MenuItemSlot>
   'data-testid'?: string
 }
 
@@ -388,6 +394,8 @@ export function MenuItem({
   shouldAnnounceSecondaryAction = false,
   id,
   className,
+  style,
+  slotProps,
   'data-testid': dataTestid,
 }: Readonly<MenuItemProps>) {
   const menu = useMenuListContext()
@@ -468,6 +476,7 @@ export function MenuItem({
   const rootClassName = joinClassNames(className, isFocusVisible && focusVisibleClassName)
 
   const rootProps = {
+    ...mergeOverrides(slotProps?.root, { style, className: rootClassName }),
     as,
     ref: rootRef,
     id,
@@ -484,7 +493,6 @@ export function MenuItem({
     disableGutters,
     divider,
     isMenu,
-    className: rootClassName,
     'data-testid': dataTestid,
     onMouseDown: handleMouseDown,
     onClick: choose,
@@ -496,7 +504,7 @@ export function MenuItem({
     return (
       <MenuItemRoot {...rootProps} role="option" aria-selected={selected}>
         {multiple && (
-          <CheckSlot aria-hidden>
+          <CheckSlot {...slotProps?.check} aria-hidden>
             {selected && <Icon name="check" size="1.125rem" color="inherit" />}
           </CheckSlot>
         )}
@@ -529,11 +537,19 @@ export function MenuItem({
       onKeyUp={handleKeyUp}
       onPointerMove={handlePointerMove}
     >
-      <StartIconSlot aria-hidden>{startIcon ?? getTick(role, selected)}</StartIconSlot>
-      <LabelSlot data-menu-label>{children}</LabelSlot>
-      {shortcut != null && <ShortcutSlot aria-hidden>{shortcut}</ShortcutSlot>}
+      <StartIconSlot {...slotProps?.startIcon} aria-hidden>
+        {startIcon ?? getTick(role, selected)}
+      </StartIconSlot>
+      <LabelSlot {...slotProps?.label} data-menu-label>
+        {children}
+      </LabelSlot>
+      {shortcut != null && (
+        <ShortcutSlot {...slotProps?.shortcut} aria-hidden>
+          {shortcut}
+        </ShortcutSlot>
+      )}
       {hasSubmenu && (
-        <SubmenuIconSlot aria-hidden>
+        <SubmenuIconSlot {...slotProps?.submenuIcon} aria-hidden>
           <Icon name="chevron_right" size="sm" color="inherit" />
         </SubmenuIconSlot>
       )}
@@ -559,10 +575,13 @@ export function MenuItem({
   if (!isEntry) return row
   if (!hasSubmenu) {
     return (
-      <EntrySlot role="none" hasSecondaryAction={hasSecondaryAction}>
+      <EntrySlot {...slotProps?.entry} role="none" hasSecondaryAction={hasSecondaryAction}>
         {noted}
         {hasSecondaryAction && (
-          <SecondaryActionSlot aria-hidden={shouldAnnounceSecondaryAction ? undefined : true}>
+          <SecondaryActionSlot
+            {...slotProps?.secondaryAction}
+            aria-hidden={shouldAnnounceSecondaryAction ? undefined : true}
+          >
             {secondaryAction}
           </SecondaryActionSlot>
         )}
@@ -573,6 +592,7 @@ export function MenuItem({
   const hasRows = Children.toArray(submenu).length > 0
   return (
     <EntrySlot
+      {...slotProps?.entry}
       ref={entryRef}
       role="none"
       hasSecondaryAction={hasSecondaryAction}
@@ -581,7 +601,10 @@ export function MenuItem({
     >
       {noted}
       {hasSecondaryAction && (
-        <SecondaryActionSlot aria-hidden={shouldAnnounceSecondaryAction ? undefined : true}>
+        <SecondaryActionSlot
+          {...slotProps?.secondaryAction}
+          aria-hidden={shouldAnnounceSecondaryAction ? undefined : true}
+        >
           {secondaryAction}
         </SecondaryActionSlot>
       )}

@@ -22,6 +22,8 @@ import { getAnchorRel } from '@gild-ui/core/utils'
 import { themeDefault, type PaletteColor } from '@gild-ui/core/theme'
 import { useDefaultProps } from '../theme/hooks/useDefaultProps'
 import { useTheme } from '../theme/hooks/useTheme'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../style/overrides'
+import type { PressableSlot } from './Pressable.types'
 
 /**
  * Press feedback: `none` leaves the wrapped content untouched, `opacity` dims it
@@ -32,7 +34,7 @@ export type PressableColor = PaletteColor
 
 export interface PressableProps
   extends
-    Omit<ButtonHTMLAttributes<HTMLElement>, 'color'>,
+    Omit<ButtonHTMLAttributes<HTMLElement>, 'color' | 'style'>,
     SpaceProps<Theme>,
     LayoutProps<Theme>,
     BorderProps<Theme>,
@@ -56,6 +58,10 @@ export interface PressableProps
   target?: string
   /** Anchor `rel` - only meaningful when `href` is set. */
   rel?: string
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<PressableSlot>
 }
 
 const shouldForwardProp = createShouldForwardProp([
@@ -178,6 +184,9 @@ export const Pressable = forwardRef<HTMLElement, PressableProps>(function Pressa
     onClick,
     onKeyDown,
     onKeyUp,
+    style,
+    className,
+    slotProps,
     ...rest
   }: Readonly<PressableProps>,
   ref: ForwardedRef<HTMLElement>
@@ -257,6 +266,7 @@ export const Pressable = forwardRef<HTMLElement, PressableProps>(function Pressa
       onClick={handleClick}
       {...shimProps}
       {...rest}
+      {...mergeOverrides(slotProps?.root, { style, className })}
       // The root is typed as its default `div`; `as` may make it any element.
       ref={ref as ForwardedRef<HTMLDivElement>}
     />

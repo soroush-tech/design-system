@@ -22,7 +22,9 @@ import { useDefaultProps } from '../../theme/hooks/useDefaultProps'
 import { useTheme } from '../../theme/hooks/useTheme'
 import type { PaperElevation } from '../../Paper'
 import type { PopoverPosition } from '../../Popover/utils/computePopoverPosition'
-import { MenuList, type MenuListSlotProps } from '../MenuList'
+import { MenuList } from '../MenuList'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../../style/overrides'
+import type { ContextMenuSlot } from './ContextMenu.types'
 import { MenuItem } from '../../MenuItem'
 import { MenuItems, type MenuItemData } from '../MenuItems'
 import { MenuActivationContext } from '../MenuActivationContext'
@@ -73,8 +75,10 @@ export interface ContextMenuProps {
   /** Names the list. */
   'aria-label'?: string
   className?: string
-  /** Props for a part: `list` is the `role="menu"` list - and every submenu's - for the app's `data-*`, class and `aria-*`. The menu's own `role`, `id` and name win. */
-  slotProps?: { list?: MenuListSlotProps }
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. `root` is the box around the target, `paper` the surface of the list. */
+  slotProps?: SlotProps<ContextMenuSlot>
   'data-testid'?: string
 }
 
@@ -130,6 +134,7 @@ export function ContextMenu({
   dense: denseProp,
   'aria-label': ariaLabel,
   className,
+  style,
   slotProps,
   'data-testid': dataTestid,
 }: Readonly<ContextMenuProps>) {
@@ -157,8 +162,8 @@ export function ContextMenu({
 
   const margin = Number.parseFloat(String(theme.space[marginThreshold]))
   const menuContext = useMemo<MenuContextValue>(
-    () => ({ align: 'start', margin, elevation, layer, listProps: slotProps?.list }),
-    [margin, elevation, layer, slotProps?.list]
+    () => ({ align: 'start', margin, elevation, layer }),
+    [margin, elevation, layer]
   )
   useMenuPlacement({
     isOpen,
@@ -230,7 +235,7 @@ export function ContextMenu({
   return (
     <ContextMenuRoot
       ref={rootRef}
-      className={className}
+      {...mergeOverrides(slotProps?.root, { style, className })}
       data-testid={dataTestid}
       onBlur={handleBlur}
     >
@@ -243,6 +248,7 @@ export function ContextMenu({
       )}
       {isOpen && (
         <ContextMenuPaper
+          {...slotProps?.paper}
           ref={surfaceRef}
           elevation={elevation}
           layer={layer}
@@ -253,7 +259,6 @@ export function ContextMenu({
           <MenuContext.Provider value={menuContext}>
             <MenuActivationContext.Provider value={handleActivate}>
               <MenuList
-                {...slotProps?.list}
                 id={listId}
                 aria-label={ariaLabel}
                 shouldAutoFocus

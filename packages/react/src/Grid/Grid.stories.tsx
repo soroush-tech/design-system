@@ -11,6 +11,7 @@ import {
 import { Flex } from '../Flex'
 import { View } from '../View'
 import { Typography } from '../Typography'
+import { StyleSheet } from '../style/styled'
 import { Grid } from './Grid'
 
 const Cell = ({ label }: { label: string }) => (
@@ -21,6 +22,13 @@ const Cell = ({ label }: { label: string }) => (
 
 const MDN_GRID_URL = 'https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Grid_layout'
 const RAW_CSS = `Raw CSS string - grid layout values are structurally varied and can't be reduced to a fixed token set. See the [MDN Grid reference](${MDN_GRID_URL}) for all valid values.`
+
+const areas = StyleSheet.create({
+  header: { gridArea: 'header' },
+  sidebar: { gridArea: 'sidebar' },
+  content: { gridArea: 'content' },
+  footer: { gridArea: 'footer' },
+})
 
 const meta: Meta<typeof Grid> = {
   title: 'Theme/Grid',
@@ -281,16 +289,16 @@ export const NamedAreas: Story = {
       p={2}
       height="300px"
     >
-      <View bg="primary" p={2} borderRadius="sm" style={{ gridArea: 'header' }}>
+      <View bg="primary" p={2} borderRadius="sm" style={areas.header}>
         header
       </View>
-      <View bg="secondary" p={2} borderRadius="sm" style={{ gridArea: 'sidebar' }}>
+      <View bg="secondary" p={2} borderRadius="sm" style={areas.sidebar}>
         sidebar
       </View>
-      <View bg="secondary" p={2} borderRadius="sm" style={{ gridArea: 'content' }}>
+      <View bg="secondary" p={2} borderRadius="sm" style={areas.content}>
         content
       </View>
-      <View bg="primary" p={2} borderRadius="sm" style={{ gridArea: 'footer' }}>
+      <View bg="primary" p={2} borderRadius="sm" style={areas.footer}>
         footer
       </View>
     </Grid>

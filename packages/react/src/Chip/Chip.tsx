@@ -7,6 +7,8 @@ import { type Theme } from '../theme/themes'
 import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
 import { get, space } from '@soroush.tech/styled-system'
 import { useDefaultProps } from '../theme/hooks/useDefaultProps'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../style/overrides'
+import type { ChipSlot } from './Chip.types'
 import { Icon } from '../Icon'
 import { themeDefault } from '@gild-ui/core/theme'
 import { getShapeRadius, type Shape } from '@gild-ui/core/utils'
@@ -46,6 +48,10 @@ export interface ChipProps extends SpaceProps<Theme> {
   /** Stays as it is, off. Default: `false`. */
   disabled?: boolean
   className?: string
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<ChipSlot>
   'data-testid'?: string
 }
 
@@ -198,6 +204,8 @@ export function Chip({
   deleteLabel: deleteLabelProp,
   disabled = false,
   className,
+  style,
+  slotProps,
   'data-testid': dataTestid,
   ...spaceProps
 }: Readonly<ChipProps>) {
@@ -225,7 +233,7 @@ export function Chip({
       shape={shape}
       borderRadius={borderRadius}
       isDisabled={disabled}
-      className={className}
+      {...mergeOverrides(slotProps?.root, { style, className })}
       data-testid={dataTestid}
       {...spaceProps}
     >
@@ -238,10 +246,11 @@ export function Chip({
         isClickable={isClickable}
         onClick={onClick}
         onKeyDown={handleKeyDown}
+        {...slotProps?.body}
       >
-        {avatar ? <ChipAvatar>{avatar}</ChipAvatar> : null}
-        {!avatar && icon ? <ChipIconBox>{icon}</ChipIconBox> : null}
-        <ChipLabel>{label}</ChipLabel>
+        {avatar ? <ChipAvatar {...slotProps?.avatar}>{avatar}</ChipAvatar> : null}
+        {!avatar && icon ? <ChipIconBox {...slotProps?.icon}>{icon}</ChipIconBox> : null}
+        <ChipLabel {...slotProps?.label}>{label}</ChipLabel>
       </ChipBody>
       {isDeletable && (
         <ChipDelete
@@ -250,6 +259,7 @@ export function Chip({
           aria-label={deleteLabel}
           disabled={disabled}
           onClick={onDelete}
+          {...slotProps?.deleteIcon}
         >
           <Icon name="close" size="1em" color="inherit" />
         </ChipDelete>

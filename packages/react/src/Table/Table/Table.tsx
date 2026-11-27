@@ -4,6 +4,8 @@ import { useMemo, type ElementType, type TableHTMLAttributes } from 'react'
 import { TableContext, type TableCellPadding } from '../TableContext'
 import type { SpaceProps, LayoutProps, BorderProps } from '@soroush.tech/styled-system'
 import { styled } from '../../style/styled'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../../style/overrides'
+import type { TableSlot } from './Table.types'
 import { type Theme } from '../../theme/themes'
 import { type PaletteColor } from '@gild-ui/core/theme'
 import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
@@ -24,7 +26,7 @@ export interface TableProps
   extends
     Omit<
       TableHTMLAttributes<HTMLTableElement>,
-      'color' | 'cellPadding' | 'align' | 'width' | 'border'
+      'color' | 'cellPadding' | 'align' | 'width' | 'border' | 'style'
     >,
     SpaceProps<Theme>,
     LayoutProps<Theme>,
@@ -58,6 +60,10 @@ export interface TableProps
   hasEllipsis?: boolean
   /** Default text alignment for every cell - cells with `align="inherit"` (the default) follow it. */
   align?: TableAlign
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<TableSlot>
   as?: ElementType
 }
 
@@ -128,6 +134,9 @@ export function Table({
   align,
   as,
   children,
+  style,
+  className,
+  slotProps,
   ...rest
 }: Readonly<TableProps>) {
   const value = useMemo(
@@ -136,7 +145,12 @@ export function Table({
   )
   return (
     <TableContext.Provider value={value}>
-      <TableBase as={as} tableAlign={align} {...rest}>
+      <TableBase
+        as={as}
+        tableAlign={align}
+        {...mergeOverrides(slotProps?.root, { style, className })}
+        {...rest}
+      >
         {children}
       </TableBase>
     </TableContext.Provider>

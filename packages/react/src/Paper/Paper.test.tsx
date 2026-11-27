@@ -3,6 +3,7 @@ import { describe, it, expect } from 'vitest'
 import { baseTheme } from '../theme/themes'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { Paper } from '../Paper'
+import { describeRootSlot } from '../utils/test/describeRootSlot'
 
 describe('Paper', () => {
   describe('children', () => {
@@ -128,3 +129,13 @@ describe('Paper', () => {
     })
   })
 })
+
+describeRootSlot(
+  'Paper',
+  (props) => (
+    <Paper data-testid="root" {...props}>
+      text
+    </Paper>
+  ),
+  () => screen.getByTestId('root')
+)

@@ -18,18 +18,22 @@
       ],
       "types": [
         "CodeBlockProps",
+        "CodeBlockSlot",
         "ControlProps",
         "DiagramProps",
         "EditorProps",
         "LiveEditProps",
         "MarkdownContextValue",
+        "MarkdownLiveEditSlot",
         "MarkdownSelection",
+        "MarkdownToolbarSlot",
         "MermaidProps",
         "MermaidThemeVariables",
         "PreviewProps",
         "PreviewSlotProps",
         "TablePickerProps",
-        "ThemeSyntax"
+        "ThemeSyntax",
+        "ToolbarProps"
       ]
     },
     "./CodeBlock": {
@@ -58,7 +62,7 @@
     },
     "./Toolbar": {
       "values": ["TablePicker", "Toolbar"],
-      "types": ["TablePickerProps"]
+      "types": ["TablePickerProps", "ToolbarProps"]
     }
   }
 }

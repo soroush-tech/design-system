@@ -4,7 +4,6 @@ import {
   useContext,
   useId,
   useRef,
-  type CSSProperties,
   type MouseEvent,
   type ReactNode,
   type SyntheticEvent,
@@ -20,6 +19,8 @@ import { FormControlContext } from '../FormControl/FormControlContext'
 import { Icon } from '../Icon'
 import { useRating } from './hooks/useRating'
 import { roundToPrecision } from '@gild-ui/core/utils'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../style/overrides'
+import type { RatingSlot } from './Rating.types'
 
 export interface RatingProps extends SpaceProps<Theme> {
   /** The rating - `null` for none. Controlled with `onChange`. */
@@ -59,6 +60,10 @@ export interface RatingProps extends SpaceProps<Theme> {
   /** On the rating's group, which a `FormLabel` names it by. Default: its `FormControl`'s. */
   id?: string
   className?: string
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<RatingSlot>
   'aria-label'?: string
   'aria-labelledby'?: string
   'aria-describedby'?: string
@@ -122,12 +127,14 @@ const RatingItem = styled('label', {
   name: 'Rating',
   slot: 'item',
   label: 'RatingItem',
-  shouldForwardProp: createShouldForwardProp(['color']),
-})<{ color: keyof Theme['palette'] }>(({ theme, color }) => ({
+  shouldForwardProp: createShouldForwardProp(['color', 'partialWidth']),
+})<{ color: keyof Theme['palette']; partialWidth?: string }>(({ theme, color, partialWidth }) => ({
   display: 'block',
   position: 'relative',
   cursor: 'inherit',
   '&:has(input:focus-visible)': focusRing(theme, color),
+  // A step of a fractional item shows just its own part of the icon.
+  ...(partialWidth && { width: partialWidth, overflow: 'hidden', position: 'absolute' }),
 }))
 
 // The "no rating" radio has no item of its own: its ring is drawn round the whole rating.
@@ -212,7 +219,8 @@ interface ItemProps {
   isChecked: boolean
   isInteractive: boolean
   label: string
-  labelStyle?: CSSProperties
+  partialWidth?: string
+  slotProps?: SlotProps<RatingSlot>
   icon: ReactNode
   emptyIcon: ReactNode
   name: string
@@ -230,7 +238,8 @@ function Item({
   isChecked,
   isInteractive,
   label,
-  labelStyle,
+  partialWidth,
+  slotProps,
   icon,
   emptyIcon,
   name,
@@ -241,22 +250,29 @@ function Item({
   state,
 }: Readonly<ItemProps>) {
   const glyph = (
-    <RatingIcon color={color} isFilled={isFilled} isActive={isActive} isError={isError}>
+    <RatingIcon
+      color={color}
+      isFilled={isFilled}
+      isActive={isActive}
+      isError={isError}
+      {...slotProps?.icon}
+    >
       {isFilled ? icon : emptyIcon}
     </RatingIcon>
   )
   if (!isInteractive) {
     return (
-      <RatingItem as="span" color={color} style={labelStyle}>
+      <RatingItem as="span" color={color} partialWidth={partialWidth} {...slotProps?.item}>
         {glyph}
       </RatingItem>
     )
   }
   return (
-    <RatingItem color={color} style={labelStyle}>
+    <RatingItem color={color} partialWidth={partialWidth} {...slotProps?.item}>
       {glyph}
-      <RatingText>{label}</RatingText>
+      <RatingText {...slotProps?.text}>{label}</RatingText>
       <RatingInput
+        {...slotProps?.input}
         type="radio"
         name={name}
         value={itemValue}
@@ -300,6 +316,8 @@ export function Rating({
   name: nameProp,
   id: idProp,
   className,
+  style,
+  slotProps,
   'aria-label': ariaLabel,
   'aria-labelledby': ariaLabelledby,
   'aria-describedby': ariaDescribedby,
@@ -339,7 +357,7 @@ export function Rating({
   })
   const shown = state.displayValue ?? 0
 
-  const renderItem = (itemValue: number, labelStyle?: CSSProperties, isActive = false) => (
+  const renderItem = (itemValue: number, partialWidth?: string, isActive = false) => (
     <Item
       key={itemValue}
       itemValue={itemValue}
@@ -348,7 +366,8 @@ export function Rating({
       isChecked={itemValue === state.rounded}
       isInteractive={isInput}
       label={getLabelText(itemValue)}
-      labelStyle={labelStyle}
+      partialWidth={partialWidth}
+      slotProps={slotProps}
       icon={icon}
       emptyIcon={emptyIcon}
       name={name}
@@ -367,15 +386,12 @@ export function Rating({
     // Below 1, an item holds the steps in it: each label spans just its own part of the icon.
     const steps = Math.round(1 / precision)
     return (
-      <RatingDecimal key={itemValue} isActive={isActive}>
+      <RatingDecimal key={itemValue} isActive={isActive} {...slotProps?.decimal}>
         {Array.from({ length: steps }, (__, step) => {
           const stepValue = roundToPrecision(itemValue - 1 + (step + 1) * precision, precision)!
           const isLast = step === steps - 1
           const width = stepValue === state.displayValue ? `${(step + 1) * precision * 100}%` : '0%'
-          const labelStyle: CSSProperties | undefined = isLast
-            ? undefined
-            : { width, overflow: 'hidden', position: 'absolute' }
-          return renderItem(stepValue, labelStyle)
+          return renderItem(stepValue, isLast ? undefined : width)
         })}
       </RatingDecimal>
     )
@@ -404,7 +420,7 @@ export function Rating({
       isDisabled={fc.disabled}
       isReadOnly={readOnly}
       isInField={isInField}
-      className={className}
+      {...mergeOverrides(slotProps?.root, { style, className })}
       data-testid={dataTestid}
       aria-label={ariaLabel ?? displayLabel}
       {...groupProps}
@@ -412,15 +428,16 @@ export function Rating({
     >
       {items}
       {isInput && !fc.disabled && emptyLabelText !== undefined && (
-        <RatingEmptyLabel color={color}>
+        <RatingEmptyLabel color={color} {...slotProps?.emptyLabel}>
           <RatingInput
+            {...slotProps?.input}
             type="radio"
             name={name}
             value=""
             checked={state.rounded === null}
             onChange={state.handleChange}
           />
-          <RatingText>{emptyLabelText}</RatingText>
+          <RatingText {...slotProps?.text}>{emptyLabelText}</RatingText>
         </RatingEmptyLabel>
       )}
     </RatingRoot>

@@ -9,6 +9,8 @@ import { createShouldForwardProp, props } from '@soroush.tech/styled-system/shou
 import { useTheme } from '../theme/hooks/useTheme'
 import { useFormControl } from '../FormControl'
 import { themeDefault } from '@gild-ui/core/theme'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../style/overrides'
+import type { SwitchSlot } from './Switch.types'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -44,6 +46,10 @@ export interface SwitchProps extends SpaceProps<Theme> {
   required?: boolean
   children?: ReactNode
   className?: string
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<SwitchSlot>
   'aria-label'?: string
   'aria-labelledby'?: string
   'aria-describedby'?: string
@@ -347,6 +353,8 @@ export function Switch({
   required: requiredProp,
   children,
   className,
+  style,
+  slotProps,
   'aria-label': ariaLabel,
   'aria-labelledby': ariaLabelledby,
   'aria-describedby': ariaDescribedby,
@@ -386,11 +394,12 @@ export function Switch({
       variant={variant}
       disabled={disabled}
       edge={edge}
-      className={className}
+      {...mergeOverrides(slotProps?.root, { style, className })}
       data-testid={dataTestid}
       {...spaceProps}
     >
       <HiddenInput
+        {...slotProps?.input}
         type="checkbox"
         role="switch"
         checked={checked}
@@ -404,7 +413,12 @@ export function Switch({
         aria-labelledby={ariaLabelledby}
         aria-describedby={describedBy}
       />
-      <SwitchTrack className="sw-track" size={size} variant={variant} bg={bg}>
+      <SwitchTrack
+        {...mergeOverrides({ className: 'sw-track' }, slotProps?.track)}
+        size={size}
+        variant={variant}
+        bg={bg}
+      >
         {variant === 'inside' && marked && (
           <>
             <span className="sw-track-check">
@@ -415,14 +429,22 @@ export function Switch({
             </span>
           </>
         )}
-        <SwitchThumb className="sw-thumb" size={size} variant={variant}>
+        <SwitchThumb
+          {...mergeOverrides({ className: 'sw-thumb' }, slotProps?.thumb)}
+          size={size}
+          variant={variant}
+        >
           {effectiveIcon != null && <span className="sw-icon">{effectiveIcon}</span>}
           {effectiveCheckedIcon != null && (
             <span className="sw-checked-icon">{effectiveCheckedIcon}</span>
           )}
         </SwitchThumb>
       </SwitchTrack>
-      {children != null && <SwitchLabel textColor={fc.textColor}>{children}</SwitchLabel>}
+      {children != null && (
+        <SwitchLabel textColor={fc.textColor} {...slotProps?.label}>
+          {children}
+        </SwitchLabel>
+      )}
     </SwitchRoot>
   )
 }

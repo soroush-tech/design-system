@@ -1,7 +1,11 @@
 import { screen } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
+import { StyleSheet } from '../style/styled'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { View } from '../View'
+import { lastColor, overrides } from '../utils/test/overrides'
+
+const styles = StyleSheet.create({ half: { opacity: 0.5 } })
 
 describe('View', () => {
   describe('children', () => {
@@ -116,7 +120,7 @@ describe('View', () => {
     })
 
     it('forwards style prop', () => {
-      renderWithTheme(<View style={{ opacity: 0.5 }}>styled</View>)
+      renderWithTheme(<View style={styles.half}>styled</View>)
       expect(screen.getByText('styled')).toHaveStyle({ opacity: '0.5' })
     })
 
@@ -156,5 +160,16 @@ describe('View', () => {
       renderWithTheme(<View layout={{ margin: 0 }}>edge</View>)
       expect(screen.getByText('edge')).toHaveStyle({ paddingInline: '0px' })
     })
+  })
+})
+
+describe('View style', () => {
+  it('takes a list of entries, the later one winning, and drops false, null and undefined', () => {
+    renderWithTheme(
+      <View data-testid="root" style={[overrides.first, false, null, undefined, overrides.second]}>
+        text
+      </View>
+    )
+    expect(lastColor(screen.getByTestId('root'))).toBe('rgb(4, 5, 6)')
   })
 })

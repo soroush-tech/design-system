@@ -53,3 +53,7 @@ The standard and outlined texts are checked against AA in the tests, for each se
 - A `role="alert"` is announced as it appears; use `"status"` for what need not interrupt.
 - The icon is decoration, hidden from assistive technology: the message says the rest.
 - Name the close control with `closeLabel`: an icon alone says nothing.
+
+## Overrides
+
+`style` takes an entry of `StyleSheet.create`, or a list of them with `false`, `null` and `undefined`, and puts it on the root after the component's own styles. `slotProps` takes, for each slot (`root`, `icon`, `message`, `action`, `closeButton`), a `style` of the same kind, a `className`, and `data-*` and `aria-*` attributes. On the root, `style` and `className` come after `slotProps.root`, so they win.

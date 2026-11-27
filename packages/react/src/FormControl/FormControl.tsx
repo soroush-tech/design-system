@@ -3,6 +3,8 @@
 import { useId, useMemo, useState, type ReactNode } from 'react'
 import { type Theme } from '../theme/themes'
 import { styled } from '../style/styled'
+import { mergeOverrides, type SlotProps } from '../style/overrides'
+import type { FormControlSlot } from './FormControl.types'
 import type { ViewProps } from '../View'
 import { Flex, type FlexProps } from '../Flex'
 import { FormControlContext } from './FormControlContext'
@@ -22,6 +24,8 @@ export interface FormControlProps extends Omit<ViewProps, 'color'> {
   fullWidth?: boolean
   color?: keyof Theme['palette']
   textColor?: keyof Theme['text']
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<FormControlSlot>
 }
 
 /**
@@ -39,6 +43,9 @@ export function FormControl({
   fullWidth,
   color,
   textColor,
+  style,
+  className,
+  slotProps,
   ...viewProps
 }: Readonly<FormControlProps>) {
   const generatedId = useId()
@@ -89,6 +96,7 @@ export function FormControl({
         // unless the field fills its row, so they all sit under their label alike.
         flexDirection="column"
         alignItems={fullWidth ? 'stretch' : 'flex-start'}
+        {...mergeOverrides(slotProps?.root, { style, className })}
         {...viewProps}
       >
         {children}

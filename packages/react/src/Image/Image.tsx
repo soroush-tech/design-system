@@ -8,6 +8,8 @@ import type {
   PositionProps,
 } from '@soroush.tech/styled-system'
 import { styled } from '../style/styled'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../style/overrides'
+import type { ImageSlot } from './Image.types'
 import { type Theme } from '../theme/themes'
 import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
 import { background, position, system, layout, space } from '@soroush.tech/styled-system'
@@ -16,7 +18,7 @@ type Phase = 'initial' | 'without-srcset' | 'fallback' | 'failed'
 
 export interface ImageProps
   extends
-    Omit<ImgHTMLAttributes<HTMLImageElement>, 'height' | 'width' | 'color'>,
+    Omit<ImgHTMLAttributes<HTMLImageElement>, 'height' | 'width' | 'color' | 'style'>,
     LayoutProps,
     SpaceProps,
     BackgroundProps,
@@ -29,6 +31,10 @@ export interface ImageProps
   borderRadius?: keyof Theme['radii']
   /** Called once when all image sources are exhausted. */
   onError?: () => void
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<ImageSlot>
 }
 
 const baseShouldForwardProp = createShouldForwardProp([
@@ -55,7 +61,17 @@ const StyledImg = styled('img', {
   systemProps: [layout, space, background, position, objectSystem],
 })() as ComponentType<Omit<ImageProps, 'onError'> & { onError?: () => void }>
 
-export function Image({ src, srcSet, fallback, alt, onError, ...rest }: Readonly<ImageProps>) {
+export function Image({
+  src,
+  srcSet,
+  fallback,
+  alt,
+  onError,
+  style,
+  className,
+  slotProps,
+  ...rest
+}: Readonly<ImageProps>) {
   const [prevSrc, setPrevSrc] = useState(src)
   const [prevSrcSet, setPrevSrcSet] = useState(srcSet)
   const [prevFallback, setPrevFallback] = useState(fallback)
@@ -114,6 +130,7 @@ export function Image({ src, srcSet, fallback, alt, onError, ...rest }: Readonly
       srcSet={resolvedSrcSet}
       alt={alt}
       onError={handleError}
+      {...mergeOverrides(slotProps?.root, { style, className })}
       {...rest}
     />
   )

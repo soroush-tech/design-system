@@ -21,7 +21,7 @@ export interface SubmenuProps {
  */
 export function Submenu({ anchorRef, listId, labelledBy, children }: Readonly<SubmenuProps>) {
   const menu = useMenuContext()
-  const { align, margin, elevation, layer, listProps } = menu
+  const { align, margin, elevation, layer } = menu
   const surfaceRef = useRef<HTMLDivElement>(null)
   const isFlipped = useMenuPlacement({
     isOpen: true,
@@ -41,7 +41,7 @@ export function Submenu({ anchorRef, listId, labelledBy, children }: Readonly<Su
   return (
     <MenuPaper ref={surfaceRef} elevation={elevation} layer={layer} margin={margin}>
       <MenuContext.Provider value={context}>
-        <MenuList {...listProps} id={listId} aria-labelledby={labelledBy} width="100%">
+        <MenuList id={listId} aria-labelledby={labelledBy} width="100%">
           {children}
         </MenuList>
       </MenuContext.Provider>

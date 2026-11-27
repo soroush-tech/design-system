@@ -34,21 +34,23 @@ import { MenuItem } from '@gild-ui/react/MenuItem'
 
 ## Props
 
-| Prop              | Type                                | Default | Description                                                                                  |
-| ----------------- | ----------------------------------- | ------- | -------------------------------------------------------------------------------------------- |
-| `children`        | `ReactNode`                         | -       | `MenuItem` rows and `MenuDivider`s.                                                          |
-| `onSelect`        | `(value: string \| number) => void` | -       | Fired with a row's `value` when a row that has one is chosen.                                |
-| `shouldWrap`      | `boolean`                           | `true`  | Carry the arrow keys past the last row to the first, and back.                               |
-| `shouldAutoFocus` | `boolean`                           | `false` | Focus the checked row, or the first enabled one, on mount; the list itself when it has none. |
-| `color`           | `keyof Theme['palette']`            | -       | Accent color for every row - its focus shading. A row's own `color` wins.                    |
-| `textColor`       | `keyof Theme['text']`               | -       | Base text color for every row. A row's own `textColor` wins.                                 |
-| `size`            | `keyof Theme['sizes']`              | -       | Density token for every row. A row's own `size` wins.                                        |
-| `dense`           | `boolean`                           | -       | Compact vertical padding for every row. A row's own `dense` wins.                            |
-| `onKeyDown`       | `(event) => void`                   | -       | Fired for every key pressed in the list, after its own handling.                             |
-| `aria-label`      | `string`                            | -       | Names the menu.                                                                              |
-| `aria-labelledby` | `string`                            | -       | Names the menu after another element.                                                        |
-| `id`              | `string`                            | -       | DOM id.                                                                                      |
-| `className`       | `string`                            | -       | Class on the list.                                                                           |
+| Prop              | Type                                | Default | Description                                                                                                             |
+| ----------------- | ----------------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `children`        | `ReactNode`                         | -       | `MenuItem` rows and `MenuDivider`s.                                                                                     |
+| `onSelect`        | `(value: string \| number) => void` | -       | Fired with a row's `value` when a row that has one is chosen.                                                           |
+| `shouldWrap`      | `boolean`                           | `true`  | Carry the arrow keys past the last row to the first, and back.                                                          |
+| `shouldAutoFocus` | `boolean`                           | `false` | Focus the checked row, or the first enabled one, on mount; the list itself when it has none.                            |
+| `color`           | `keyof Theme['palette']`            | -       | Accent color for every row - its focus shading. A row's own `color` wins.                                               |
+| `textColor`       | `keyof Theme['text']`               | -       | Base text color for every row. A row's own `textColor` wins.                                                            |
+| `size`            | `keyof Theme['sizes']`              | -       | Density token for every row. A row's own `size` wins.                                                                   |
+| `dense`           | `boolean`                           | -       | Compact vertical padding for every row. A row's own `dense` wins.                                                       |
+| `onKeyDown`       | `(event) => void`                   | -       | Fired for every key pressed in the list, after its own handling.                                                        |
+| `aria-label`      | `string`                            | -       | Names the menu.                                                                                                         |
+| `aria-labelledby` | `string`                            | -       | Names the menu after another element.                                                                                   |
+| `id`              | `string`                            | -       | DOM id.                                                                                                                 |
+| `className`       | `string`                            | -       | Class on the list.                                                                                                      |
+| `style`           | `StyleOverride`                     | -       | Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. |
+| `slotProps`       | `{ root? }`                         | -       | Overrides per slot - `style`, `className`, `data-*` and `aria-*` - for the slots a theme can style.                     |
 
 Plus the styled-system **space** (`m`, `p`, ...) and **layout** (`width`, `maxHeight`, ...)
 props. The list has `0.5` vertical padding and no margin by default.

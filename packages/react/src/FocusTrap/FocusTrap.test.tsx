@@ -3,6 +3,7 @@ import { render, screen, fireEvent, cleanup } from '@testing-library/react'
 import { ThemeProvider } from '../theme/ThemeProvider'
 import { FocusTrap } from './'
 import { themeWith } from '../utils/test/themeWith'
+import { describeRootSlot } from '../utils/test/describeRootSlot'
 
 afterEach(cleanup)
 
@@ -218,3 +219,9 @@ describe('FocusTrap - tab cycling', () => {
     expect(screen.getByTestId('real')).toHaveFocus()
   })
 })
+
+describeRootSlot(
+  'FocusTrap',
+  (props) => <FocusTrap {...props}>text</FocusTrap>,
+  () => screen.getByText('text')
+)

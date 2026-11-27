@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, type ReactNode } from 'react'
 import { styled } from '../style/styled'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../style/overrides'
+import type { FocusTrapSlot } from './FocusTrap.types'
 
 // Named styled root - the trap wrapper is theme-customizable via
 // `theme.components.FocusTrap.styleOverrides.root`. `outline: none` stays the
@@ -23,6 +25,11 @@ export interface FocusTrapProps {
   shouldEnforceFocus?: boolean
   /** Restore focus to the previously focused element when the trap deactivates. */
   shouldRestoreFocus?: boolean
+  className?: string
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<FocusTrapSlot>
 }
 
 const FOCUSABLE_SELECTOR = [
@@ -60,6 +67,9 @@ export function FocusTrap({
   shouldTrapFocus = true,
   shouldEnforceFocus = true,
   shouldRestoreFocus = true,
+  className,
+  style,
+  slotProps,
 }: Readonly<FocusTrapProps>) {
   const rootRef = useRef<HTMLDivElement>(null)
   const previouslyFocused = useRef<HTMLElement | null>(null)
@@ -116,7 +126,11 @@ export function FocusTrap({
   }, [isEnabled, shouldAutoFocus, shouldEnforceFocus, shouldRestoreFocus, shouldTrapFocus])
 
   return (
-    <FocusTrapRoot ref={rootRef} tabIndex={-1}>
+    <FocusTrapRoot
+      ref={rootRef}
+      tabIndex={-1}
+      {...mergeOverrides(slotProps?.root, { style, className })}
+    >
       {children}
     </FocusTrapRoot>
   )

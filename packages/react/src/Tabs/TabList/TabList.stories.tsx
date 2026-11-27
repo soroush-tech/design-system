@@ -20,6 +20,7 @@ import {
   tabsVariant,
 } from '../../utils/test/storiesArgs'
 import { Flex } from '../../Flex'
+import { StyleSheet } from '../../style/styled'
 import { Typography } from '../../Typography'
 import { View } from '../../View'
 import { exampleArgs } from '../../utils/test/renderExample'
@@ -30,6 +31,8 @@ import { tabListCatalog } from '@gild-ui/core/catalog/entries'
 import { TabList } from './TabList'
 
 // A TabList takes every Tabs prop but the value, which its TabContext holds - the same controls.
+const resizable = StyleSheet.create({ horizontal: { resize: 'horizontal' } })
+
 const panelValues = ['layers', 'assets', 'components', 'tokens', 'history']
 
 const meta: Meta<typeof TabList> = {
@@ -134,7 +137,7 @@ export const OverflowMenu: Story = {
   args: { overflowBehavior: 'menu', overflowLabel: 'More panels' },
   render: (args) => (
     <TabContext defaultValue="layers">
-      <View width="18rem" maxWidth="100%" overflow="hidden" style={{ resize: 'horizontal' }}>
+      <View width="18rem" maxWidth="100%" overflow="hidden" style={resizable.horizontal}>
         <TabList {...args}>
           {panelValues.map((value) => (
             <Tab key={value} value={value} label={value[0].toUpperCase() + value.slice(1)} />

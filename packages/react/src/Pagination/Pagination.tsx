@@ -15,6 +15,8 @@ import {
 } from './PaginationItem'
 import type { SpaceProps } from '@soroush.tech/styled-system'
 import { styled } from '../style/styled'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../style/overrides'
+import type { PaginationSlot } from './Pagination.types'
 import { type Theme } from '../theme/themes'
 import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
 import { space } from '@soroush.tech/styled-system'
@@ -26,7 +28,7 @@ export type PaginationSize = PaginationItemSize
 
 export interface PaginationProps
   extends
-    Omit<HTMLAttributes<HTMLElement>, 'color' | 'onChange'>,
+    Omit<HTMLAttributes<HTMLElement>, 'color' | 'onChange' | 'style'>,
     UsePaginationProps,
     SpaceProps<Theme> {
   /** Selected-item color - resolves against `theme.palette`. Default: 'primary', overridable via `theme.defaults.color`. */
@@ -39,6 +41,10 @@ export interface PaginationProps
   size?: PaginationSize
   /** Accessible name per item - important for screen readers. A sensible default is provided. */
   getItemAriaLabel?: (type: PaginationItemType, page: number | null, isSelected: boolean) => string
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<PaginationSlot>
 }
 
 const defaultGetItemAriaLabel = (
@@ -93,6 +99,9 @@ export function Pagination({
   size,
   getItemAriaLabel = defaultGetItemAriaLabel,
   'aria-label': ariaLabel = 'pagination navigation',
+  style,
+  className,
+  slotProps,
   ...rest
 }: Readonly<PaginationProps>) {
   const { items } = usePagination({
@@ -110,8 +119,12 @@ export function Pagination({
   })
 
   return (
-    <PaginationNav aria-label={ariaLabel} {...rest}>
-      <PaginationList>
+    <PaginationNav
+      aria-label={ariaLabel}
+      {...rest}
+      {...mergeOverrides(slotProps?.root, { style, className })}
+    >
+      <PaginationList {...slotProps?.list}>
         {items.map((item, index) => {
           const isEllipsis = item.type === 'start-ellipsis' || item.type === 'end-ellipsis'
           return (

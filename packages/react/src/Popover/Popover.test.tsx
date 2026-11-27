@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest'
 import { createRef } from 'react'
 import { fireEvent, screen } from '@testing-library/react'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
-import { baseTheme } from '../theme/themes'
+import { lastColor, overrides } from '../utils/test/overrides'
 import { Popover, type PopoverActions } from './Popover'
 
 function makeAnchor() {
@@ -64,14 +64,39 @@ describe('Popover', () => {
     expect(onClose).toHaveBeenCalledWith(expect.anything(), 'backdropClick')
   })
 
-  it('applies elevation and paper slot props to the surface', () => {
+  it('puts the style, class name and attributes of the root and positioner slots on them', () => {
     renderWithTheme(
-      <Popover open anchorEl={makeAnchor()} slotProps={{ paper: { bg: 'secondary' } }}>
+      <Popover
+        open
+        anchorEl={makeAnchor()}
+        className="own"
+        style={overrides.second}
+        slotProps={{
+          root: { className: 'slot', style: overrides.first, 'data-mark': 'root' },
+          positioner: { className: 'place', style: overrides.first, 'aria-description': 'Placed' },
+        }}
+      >
         <p>Panel</p>
       </Popover>
     )
     const surface = screen.getByText('Panel').parentElement as HTMLElement
-    expect(surface).toHaveStyle({ backgroundColor: baseTheme.background.secondary })
+    const positioner = surface.parentElement as HTMLElement
+    expect(surface).toHaveClass('slot', 'own')
+    expect(surface).toHaveAttribute('data-mark', 'root')
+    // The style prop wins over slotProps.root.style.
+    expect(lastColor(surface)).toBe('rgb(4, 5, 6)')
+    expect(positioner).toHaveClass('place')
+    expect(positioner).toHaveAttribute('aria-description', 'Placed')
+    expect(lastColor(positioner)).toBe('rgb(1, 2, 3)')
+  })
+
+  it('keeps one style as it is, and takes false in a list', () => {
+    renderWithTheme(
+      <Popover open anchorEl={makeAnchor()} style={[false, overrides.first]}>
+        <p>Panel</p>
+      </Popover>
+    )
+    expect(lastColor(screen.getByText('Panel').parentElement as HTMLElement)).toBe('rgb(1, 2, 3)')
   })
 
   it('positions from anchorPosition and re-positions on resize', () => {

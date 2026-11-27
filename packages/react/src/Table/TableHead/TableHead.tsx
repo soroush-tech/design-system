@@ -4,6 +4,8 @@ import { type ElementType, type HTMLAttributes } from 'react'
 import { TableSectionContext } from '../TableSectionContext'
 import type { SpaceProps, BorderProps } from '@soroush.tech/styled-system'
 import { styled } from '../../style/styled'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../../style/overrides'
+import type { TableHeadSlot } from './TableHead.types'
 import { type Theme } from '../../theme/themes'
 import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
 import { space, border, system } from '@soroush.tech/styled-system'
@@ -19,7 +21,7 @@ export type TableHeadBorderColorToken = keyof Theme['border']
 
 export interface TableHeadProps
   extends
-    Omit<HTMLAttributes<HTMLTableSectionElement>, 'color'>,
+    Omit<HTMLAttributes<HTMLTableSectionElement>, 'color' | 'style'>,
     SpaceProps<Theme>,
     Omit<BorderProps<Theme>, 'borderColor' | 'borderRadius'> {
   /** Resolves against theme.text */
@@ -28,6 +30,10 @@ export interface TableHeadProps
   bg?: TableHeadBackgroundToken
   /** Resolves against theme.border - light · primary · dark */
   borderColor?: TableHeadBorderColorToken
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<TableHeadSlot>
   as?: ElementType
 }
 
@@ -46,10 +52,17 @@ const TableHeadBase = styled('thead', {
   systemProps: [space, border, colorSystem],
 })<TableHeadProps>()
 
-export function TableHead({ as, children, ...rest }: Readonly<TableHeadProps>) {
+export function TableHead({
+  as,
+  children,
+  style,
+  className,
+  slotProps,
+  ...rest
+}: Readonly<TableHeadProps>) {
   return (
     <TableSectionContext.Provider value="head">
-      <TableHeadBase as={as} {...rest}>
+      <TableHeadBase as={as} {...mergeOverrides(slotProps?.root, { style, className })} {...rest}>
         {children}
       </TableHeadBase>
     </TableSectionContext.Provider>

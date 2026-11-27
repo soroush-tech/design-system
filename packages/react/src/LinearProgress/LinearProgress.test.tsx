@@ -4,6 +4,8 @@ import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { baseTheme } from '../theme/themes'
 import { LinearProgress } from '../LinearProgress'
 import { toPx } from '../utils/test/toPx'
+import { describeRootSlot } from '../utils/test/describeRootSlot'
+import { lastColor, overrides } from '../utils/test/overrides'
 
 describe('LinearProgress', () => {
   // ─── element ─────────────────────────────────────────────────────────────────
@@ -374,5 +376,66 @@ describe('LinearProgress', () => {
       renderWithTheme(<LinearProgress aria-label="uploading" />)
       expect(screen.getByRole('progressbar', { name: 'uploading' })).toBeInTheDocument()
     })
+  })
+})
+
+describeRootSlot(
+  'LinearProgress',
+  (props) => <LinearProgress data-testid="root" {...props} />,
+  () => screen.getByTestId('root')
+)
+
+const mark = (name: string) => ({
+  className: `c-${name}`,
+  style: overrides.first,
+  'data-slot': name,
+  'aria-label': name,
+})
+const slotOf = (name: string) => document.querySelector<HTMLElement>(`[data-slot="${name}"]`)!
+const expectMarked = (names: string[]) => {
+  for (const name of names) {
+    expect(slotOf(name)).toHaveClass(`c-${name}`)
+    expect(slotOf(name)).toHaveAttribute('aria-label', name)
+    expect(lastColor(slotOf(name))).toBe('rgb(1, 2, 3)')
+  }
+}
+
+describe('LinearProgress slotProps', () => {
+  it('marks the track, the secondary bar and the bar', () => {
+    renderWithTheme(
+      <LinearProgress
+        slotProps={{ track: mark('track'), secondaryBar: mark('secondaryBar'), bar: mark('bar') }}
+      />
+    )
+    expectMarked(['track', 'secondaryBar', 'bar'])
+  })
+
+  it('marks the dash, and keeps the bar transform beside the style given', () => {
+    renderWithTheme(
+      <LinearProgress
+        variant="determinate"
+        value={40}
+        buffer
+        valueBuffer={70}
+        slotProps={{ dash: mark('dash'), secondaryBar: mark('secondaryBar'), bar: mark('bar') }}
+      />
+    )
+    expectMarked(['dash', 'secondaryBar', 'bar'])
+    expect(slotOf('bar').className).toContain('c-bar')
+  })
+
+  it('marks the traveler and both segments', () => {
+    renderWithTheme(
+      <LinearProgress
+        variant="determinate"
+        value={40}
+        spinning
+        slotProps={{ traveler: mark('traveler'), segment: mark('segment') }}
+      />
+    )
+    expectMarked(['traveler'])
+    const segments = document.querySelectorAll('[data-slot="segment"]')
+    expect(segments).toHaveLength(2)
+    for (const segment of segments) expect(segment).toHaveClass('c-segment')
   })
 })

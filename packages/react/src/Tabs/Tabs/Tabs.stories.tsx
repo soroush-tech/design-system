@@ -29,6 +29,7 @@ import { MenuItem } from '../../MenuItem'
 import { TabPanel } from '../TabPanel'
 import { Typography } from '../../Typography'
 import { Flex } from '../../Flex'
+import { StyleSheet } from '../../style/styled'
 import { View } from '../../View'
 import { Tab, type TabProps } from '../Tab'
 import { TabContext } from '../TabContext'
@@ -40,6 +41,11 @@ import { ThemeProvider } from '../../theme/ThemeProvider'
 import { exampleArgs } from '../../utils/test/renderExample'
 import { tabsCatalog } from '@gild-ui/core/catalog/entries'
 import { Tabs, type TabsProps } from './Tabs'
+
+const resizable = StyleSheet.create({
+  horizontal: { resize: 'horizontal' },
+  vertical: { resize: 'vertical' },
+})
 
 const meta: Meta<typeof Tabs> = {
   title: 'Theme/Tabs/Tabs',
@@ -455,7 +461,7 @@ function OverflowRow(args: Readonly<Partial<TabsProps>>) {
       {...(isVertical ? { height: '16rem', display: 'flex' } : { width: '28rem' })}
       maxWidth="100%"
       overflow="hidden"
-      style={{ resize: isVertical ? 'vertical' : 'horizontal' }}
+      style={isVertical ? resizable.vertical : resizable.horizontal}
     >
       <Tabs
         {...args}

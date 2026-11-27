@@ -5,6 +5,7 @@ import { ThemeProvider } from '../theme/ThemeProvider'
 import { baseTheme } from '../theme/themes'
 import { Card } from './Card'
 import { toPx } from '../utils/test/toPx'
+import { lastColor, overrides } from '../utils/test/overrides'
 import { themeWith } from '../utils/test/themeWith'
 
 describe('Card', () => {
@@ -209,5 +210,56 @@ describe('Card', () => {
       renderWithTheme(<Card aria-label="card surface" data-testid="card" />)
       expect(screen.getByTestId('card')).toHaveAttribute('aria-label', 'card surface')
     })
+  })
+})
+
+describe('Card overrides', () => {
+  const mark = (name: string) => ({
+    className: name,
+    style: overrides.first,
+    'data-mark': name,
+    'aria-details': name,
+  })
+  const expectMarked = (element: HTMLElement, name: string) => {
+    expect(element).toHaveClass(name)
+    expect(element).toHaveAttribute('data-mark', name)
+    expect(element).toHaveAttribute('aria-details', name)
+    expect(lastColor(element)).toBe('rgb(1, 2, 3)')
+  }
+
+  it('puts the style, class name and attributes of each slot on its element', () => {
+    renderWithTheme(
+      <Card
+        data-testid="card"
+        icon="home"
+        title="Title"
+        caption="Caption"
+        slotProps={{
+          root: mark('root'),
+          title: mark('title'),
+          caption: mark('caption'),
+          icon: mark('icon'),
+        }}
+      />
+    )
+    const card = screen.getByTestId('card')
+    expectMarked(card, 'root')
+    expectMarked(screen.getByText('Title'), 'title')
+    expectMarked(screen.getByText('Caption'), 'caption')
+    expectMarked(card.querySelector('.icon') as HTMLElement, 'icon')
+  })
+
+  it('lets the style prop win over slotProps.root.style, and joins the class names', () => {
+    renderWithTheme(
+      <Card
+        data-testid="card"
+        className="own"
+        style={[false, null, undefined, overrides.second]}
+        slotProps={{ root: { className: 'slot', style: overrides.first } }}
+      />
+    )
+    const card = screen.getByTestId('card')
+    expect(card).toHaveClass('slot', 'own')
+    expect(lastColor(card)).toBe('rgb(4, 5, 6)')
   })
 })

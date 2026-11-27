@@ -7,7 +7,7 @@ import {
   type SyntheticEvent,
 } from 'react'
 import { Flex } from '@gild-ui/react/Flex'
-import { styled } from '@gild-ui/react'
+import { styled, type SlotProps, type StyleOverride } from '@gild-ui/react'
 import { useTheme } from '@gild-ui/react'
 import { themeDefault } from '@gild-ui/core/theme'
 import { Typography } from '@gild-ui/react/Typography'
@@ -23,6 +23,7 @@ import {
   type TextInputVariant,
 } from '@gild-ui/react/TextInput'
 import { applyAction } from '../utils/applyAction'
+import { mergeOverrides } from '../utils/mergeOverrides'
 import { MarkdownContext, type MarkdownSelection } from '../MarkdownContext'
 import type { LinePrefixAction } from '../const'
 
@@ -71,6 +72,10 @@ export interface EditorProps {
   disabled?: boolean
   /** Shows a one-line hint about the Tab / focus-release shortcuts under the field. Default: `true`. */
   showShortcutHint?: boolean
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<'root'>
 }
 
 /**
@@ -94,6 +99,8 @@ export function Editor({
   required,
   disabled,
   showShortcutHint = true,
+  style,
+  slotProps,
 }: Readonly<EditorProps>) {
   const context = useContext(MarkdownContext)
   const theme = useTheme()
@@ -169,7 +176,14 @@ export function Editor({
   })
 
   return (
-    <EditorRoot ref={paneRef} flexDirection="column" flex={1} minWidth={0} gap={1}>
+    <EditorRoot
+      ref={paneRef}
+      flexDirection="column"
+      flex={1}
+      minWidth={0}
+      gap={1}
+      {...mergeOverrides(slotProps?.root, { style })}
+    >
       <TextInput
         multiline
         resize

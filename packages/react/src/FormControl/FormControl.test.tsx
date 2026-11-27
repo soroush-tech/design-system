@@ -5,6 +5,7 @@ import { FormHelperText } from '../FormHelperText'
 import { FormLabel } from '../FormLabel'
 import { FormControl } from './FormControl'
 import { useFormControl } from './useFormControl'
+import { describeRootSlot } from '../utils/test/describeRootSlot'
 
 const Probe = () => {
   const fc = useFormControl()
@@ -124,3 +125,13 @@ describe('FormControl', () => {
     expect(screen.getByText('Email')).toHaveAttribute('id', 'mine')
   })
 })
+
+describeRootSlot(
+  'FormControl',
+  (props) => (
+    <FormControl data-testid="root" {...props}>
+      text
+    </FormControl>
+  ),
+  () => screen.getByTestId('root')
+)

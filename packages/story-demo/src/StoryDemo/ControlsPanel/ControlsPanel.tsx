@@ -1,3 +1,4 @@
+import { StyleSheet } from '@gild-ui/react'
 import { Grid } from '@gild-ui/react/Grid'
 import { Paper } from '@gild-ui/react/Paper'
 import { Typography } from '@gild-ui/react/Typography'
@@ -35,6 +36,8 @@ const MANY_OPTIONS = 4
 const isWide = (control: ControlModel): boolean =>
   control.kind === 'inline-radio' && control.options!.length >= MANY_OPTIONS
 
+const wide = StyleSheet.create({ control: { gridColumn: 'span 2' } })
+
 /**
  * The Storybook-style controls section: one interactive control per include-listed
  * arg, driving both the rendered demo and the generated code. Controls sit in a grid of
@@ -64,10 +67,7 @@ export function ControlsPanel({ controls, values, onChange }: Readonly<ControlsP
           )}
           <Grid gridTemplateColumns="repeat(auto-fill, minmax(12rem, 1fr))" gridGap={3}>
             {group.controls.map((control) => (
-              <View
-                key={control.name}
-                style={isWide(control) ? { gridColumn: 'span 2' } : undefined}
-              >
+              <View key={control.name} style={isWide(control) && wide.control}>
                 <ArgControl control={control} value={values[control.name]} onChange={onChange} />
               </View>
             ))}

@@ -4,13 +4,21 @@ import { styled, keyframes } from '../style/styled'
 import { type Theme } from '../theme/themes'
 import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
 import { system, variant as styledVariant, space } from '@soroush.tech/styled-system'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../style/overrides'
+import type { SkeletonSlot } from './Skeleton.types'
 
 export type SkeletonVariant = 'text' | 'circular' | 'rectangular'
 export type SkeletonAnimation = 'pulse' | 'wave' | false
 export type SkeletonRadius = keyof Theme['radii']
 
 export interface SkeletonProps
-  extends HTMLAttributes<HTMLSpanElement>, Omit<SpaceProps<Theme>, keyof PaddingProps> {
+  extends
+    Omit<HTMLAttributes<HTMLSpanElement>, 'style'>,
+    Omit<SpaceProps<Theme>, keyof PaddingProps> {
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<SkeletonSlot>
   /** Shape of the placeholder. Default: `'text'`. */
   variant?: SkeletonVariant
   /** Corner radius - resolves against `theme.radii` (sq · sm · md · lg). Overrides the variant default. */
@@ -128,6 +136,9 @@ export function Skeleton({
   width,
   height,
   children,
+  className,
+  style,
+  slotProps,
   ...rest
 }: Readonly<SkeletonProps>) {
   const hasChildren = children != null && children !== ''
@@ -140,8 +151,9 @@ export function Skeleton({
       width={resolvedWidth}
       height={height}
       {...rest}
+      {...mergeOverrides(slotProps?.root, { style, className })}
     >
-      {hasChildren ? <HiddenContent>{children}</HiddenContent> : null}
+      {hasChildren ? <HiddenContent {...slotProps?.content}>{children}</HiddenContent> : null}
     </SkeletonRoot>
   )
 }

@@ -14,7 +14,9 @@ import { alpha, styled } from '../style/styled'
 import { get } from '@soroush.tech/styled-system'
 import { useDefaultProps } from '../theme/hooks/useDefaultProps'
 import { themeDefault } from '@gild-ui/core/theme'
-import { Icon, type IconProps } from '../Icon'
+import { Icon } from '../Icon'
+import { mergeOverrides, type SlotProps } from '../style/overrides'
+import type { BreadcrumbsSlot } from './Breadcrumbs.types'
 import { Typography, type TypographyProps, type TypographyVariant } from '../Typography'
 
 export interface BreadcrumbsProps extends Omit<TypographyProps, 'children' | 'variant'> {
@@ -34,8 +36,8 @@ export interface BreadcrumbsProps extends Omit<TypographyProps, 'children' | 'va
   expandLabel?: string
   /** An icon of your own in the button, in place of `more_horiz`. */
   slots?: { collapsedIcon?: ElementType }
-  /** Props for the button's icon. */
-  slotProps?: { collapsedIcon?: Partial<Omit<IconProps, 'name'>> & { 'data-testid'?: string } }
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. `root` is merged before `style` and `className`. */
+  slotProps?: SlotProps<BreadcrumbsSlot>
   'data-testid'?: string
 }
 
@@ -128,6 +130,8 @@ export function Breadcrumbs({
   typography,
   slots,
   slotProps,
+  style,
+  className,
   ...rest
 }: Readonly<BreadcrumbsProps>) {
   const dp = useDefaultProps('Breadcrumbs')
@@ -151,7 +155,11 @@ export function Breadcrumbs({
   const crumbs = Children.toArray(children)
     .filter(isValidElement)
     // Children.toArray gave each crumb a key of its own.
-    .map((child) => <BreadcrumbsItem key={child.key}>{child}</BreadcrumbsItem>)
+    .map((child) => (
+      <BreadcrumbsItem key={child.key} {...slotProps?.item}>
+        {child}
+      </BreadcrumbsItem>
+    ))
 
   // Collapsed only when it hides something: before and after covering every crumb shows them all.
   const isCollapsed =
@@ -162,20 +170,21 @@ export function Breadcrumbs({
   const shown = isCollapsed
     ? [
         ...crumbs.slice(0, itemsBeforeCollapse),
-        <BreadcrumbsItem key="collapsed">
+        <BreadcrumbsItem key="collapsed" {...slotProps?.item}>
           <BreadcrumbsCollapsed
             type="button"
             aria-label={expandLabel}
+            {...slotProps?.collapsed}
             onClick={() => {
               shouldFocusRef.current = true
               setIsExpanded(true)
             }}
           >
-            <BreadcrumbsCollapsedIcon>
+            <BreadcrumbsCollapsedIcon {...slotProps?.collapsedIcon}>
               {CollapsedIcon ? (
-                <CollapsedIcon {...slotProps?.collapsedIcon} />
+                <CollapsedIcon />
               ) : (
-                <Icon name="more_horiz" size="sm" color="inherit" {...slotProps?.collapsedIcon} />
+                <Icon name="more_horiz" size="sm" color="inherit" />
               )}
             </BreadcrumbsCollapsedIcon>
           </BreadcrumbsCollapsed>
@@ -185,14 +194,24 @@ export function Breadcrumbs({
     : crumbs
 
   return (
-    <BreadcrumbsRoot as={as} color={color} variant={typography} {...rest}>
-      <BreadcrumbsList ref={listRef}>
+    <BreadcrumbsRoot
+      as={as}
+      color={color}
+      variant={typography}
+      {...rest}
+      {...mergeOverrides(slotProps?.root, { style, className })}
+    >
+      <BreadcrumbsList ref={listRef} {...slotProps?.list}>
         {shown.flatMap((crumb, index) =>
           index === 0
             ? [crumb]
             : [
                 // Keyed by the crumb it comes before - stable as crumbs come and go.
-                <BreadcrumbsSeparator key={`separator-${crumb.key}`} aria-hidden>
+                <BreadcrumbsSeparator
+                  key={`separator-${crumb.key}`}
+                  {...slotProps?.separator}
+                  aria-hidden
+                >
                   {separator}
                 </BreadcrumbsSeparator>,
                 crumb,

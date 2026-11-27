@@ -3,6 +3,8 @@
 import type { MouseEvent, ReactNode } from 'react'
 import type { SpaceProps } from '@soroush.tech/styled-system'
 import { alpha, styled } from '../../style/styled'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../../style/overrides'
+import type { AlertSlot } from './Alert.types'
 import { type Theme } from '../../theme/themes'
 import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
 import { get, space } from '@soroush.tech/styled-system'
@@ -33,6 +35,10 @@ export interface AlertProps extends SpaceProps<Theme> {
   /** Corner radius, resolves against `theme.radii`. Default: `theme.defaults.surfaceRadius`, else square. */
   borderRadius?: keyof Theme['radii']
   className?: string
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<AlertSlot>
   'data-testid'?: string
 }
 
@@ -155,6 +161,8 @@ export function Alert({
   role: roleProp,
   borderRadius: borderRadiusProp,
   className,
+  style,
+  slotProps,
   'data-testid': dataTestid,
   ...spaceProps
 }: Readonly<AlertProps>) {
@@ -169,25 +177,30 @@ export function Alert({
 
   return (
     <AlertRoot
+      {...mergeOverrides(slotProps?.root, { style, className })}
       role={role}
       severity={severity}
       variant={variant}
       borderRadius={borderRadius}
-      className={className}
       data-testid={dataTestid}
       {...spaceProps}
     >
       {icon !== false && (
-        <AlertIcon severity={severity} variant={variant}>
+        <AlertIcon {...slotProps?.icon} severity={severity} variant={variant}>
           {icon ?? <Icon name={iconName} size="1em" color="inherit" />}
         </AlertIcon>
       )}
-      <AlertMessage>{children}</AlertMessage>
+      <AlertMessage {...slotProps?.message}>{children}</AlertMessage>
       {hasAction && (
-        <AlertAction>
+        <AlertAction {...slotProps?.action}>
           {action}
           {onClose && (
-            <AlertClose type="button" aria-label={closeLabel} onClick={onClose}>
+            <AlertClose
+              {...slotProps?.closeButton}
+              type="button"
+              aria-label={closeLabel}
+              onClick={onClose}
+            >
               <Icon name="close" size="1em" color="inherit" />
             </AlertClose>
           )}

@@ -5,6 +5,7 @@ import { baseTheme } from '../theme/themes'
 import { FormControl } from '../FormControl'
 import { Form } from '../Form'
 import { FormHelperText } from './FormHelperText'
+import { describeRootSlot } from '../utils/test/describeRootSlot'
 
 describe('FormHelperText', () => {
   it('renders a paragraph with its text', () => {
@@ -123,3 +124,13 @@ describe('FormHelperText', () => {
     })
   })
 })
+
+describeRootSlot(
+  'FormHelperText',
+  (props) => (
+    <FormHelperText data-testid="root" {...props}>
+      text
+    </FormHelperText>
+  ),
+  () => screen.getByTestId('root')
+)

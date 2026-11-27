@@ -155,3 +155,7 @@ A navigation (`as="nav"`) keeps every tab in the page's tab order instead, as li
   `theme.components.Tabs.variants`.
 - A tab points `aria-controls` at its panel only in a `TabList`, whose `TabContext` is where
   `TabPanel`s live - tabs that hold their own value have no panel to point at.
+
+## Overrides
+
+`style` takes an entry of `StyleSheet.create`, or a list of them with `false`, `null` and `undefined`, and puts it on the root after the component's own styles. `slotProps` takes, for each slot (`root`, `list`, `indicator`, `startContent`, `endContent`, `scrollButton`, `overflowButton`, `overflowClose`), a `style` of the same kind, a `className`, and `data-*` and `aria-*` attributes. On the root, `style` and `className` come after `slotProps.root`, so they win.

@@ -74,3 +74,7 @@ heading), `button`, `content` and `icon`; `AccordionDetails`, `AccordionActions`
 - Closed, the region is `visibility: hidden`, so its content is out of the tab order and has no
   name; open, it is a named `region`.
 - The icon is decoration, hidden from assistive technology; it does not turn under reduced motion.
+
+## Overrides
+
+`style` takes an entry of `StyleSheet.create`, or a list of them with `false`, `null` and `undefined`, and puts it on the root after the component's own styles. `slotProps` takes, for each slot (`root`, `region`), a `style` of the same kind, a `className`, and `data-*` and `aria-*` attributes. On the root, `style` and `className` come after `slotProps.root`, so they win.

@@ -25,3 +25,7 @@ An accordion given `isExpanded` is its owner's, and the group leaves it alone. A
 ## Customization
 
 `theme.components.AccordionGroup` styles the `root`. Its `defaultProps` set `isExclusive` and `variant`.
+
+## Overrides
+
+`style` takes an entry of `StyleSheet.create`, or a list of them with `false`, `null` and `undefined`, and puts it on the root after the component's own styles. `slotProps` takes, for each slot (`root`), a `style` of the same kind, a `className`, and `data-*` and `aria-*` attributes. On the root, `style` and `className` come after `slotProps.root`, so they win.

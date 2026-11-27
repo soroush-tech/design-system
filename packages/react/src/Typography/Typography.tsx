@@ -9,6 +9,7 @@ import type {
   PositionProps,
 } from '@soroush.tech/styled-system'
 import { styled } from '../style/styled'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../style/overrides'
 import { type Theme } from '../theme/themes'
 import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
 import {
@@ -21,6 +22,7 @@ import {
   typography,
 } from '@soroush.tech/styled-system'
 import type { TypographyVariant } from '@gild-ui/core/theme'
+import type { TypographySlot } from './Typography.types'
 
 export type { TypographyVariant }
 
@@ -34,7 +36,7 @@ export type BackgroundToken = keyof Theme['background']
 
 export interface TypographyProps
   extends
-    Omit<HTMLAttributes<HTMLElement>, 'color'>,
+    Omit<HTMLAttributes<HTMLElement>, 'color' | 'style'>,
     SpaceProps<Theme>,
     LayoutProps<Theme>,
     SystemTypographyProps<Theme>,
@@ -45,6 +47,10 @@ export interface TypographyProps
   color?: TextColorToken
   /** Resolves against theme.background */
   bg?: BackgroundToken
+  /** Overrides the CSS of the element: an entry of `StyleSheet.create`, or a list of them. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<TypographySlot>
   opacity?: number
   textTransform?: CSSProperties['textTransform']
   variant?: TypographyVariant
@@ -97,9 +103,23 @@ const TypographyBase = styled('p', {
     noWrap ? { overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } : {}
 )
 
-export function Typography({ variant = 'body1', as, ...rest }: Readonly<TypographyProps>) {
+export function Typography({
+  variant = 'body1',
+  as,
+  style,
+  className,
+  slotProps,
+  ...rest
+}: Readonly<TypographyProps>) {
   const theme = useTheme()
   // The theme holds a tag name; `as` takes any element type.
   const element = as ?? (theme.typography[variant].element as ElementType)
-  return <TypographyBase as={element} variant={variant} {...rest} />
+  return (
+    <TypographyBase
+      as={element}
+      variant={variant}
+      {...mergeOverrides(slotProps?.root, { style, className })}
+      {...rest}
+    />
+  )
 }

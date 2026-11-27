@@ -8,6 +8,7 @@ import { Accordion } from '../Accordion'
 import { AccordionSummary } from '../AccordionSummary'
 import { AccordionActions } from './AccordionActions'
 import { themeWith } from '../../utils/test/themeWith'
+import { lastColor, overrides } from '../../utils/test/overrides'
 
 const withTheme = (theme: Theme) =>
   function Wrapper({ children }: { children: ReactNode }) {
@@ -52,5 +53,52 @@ describe('AccordionActions', () => {
       'An AccordionActions must be inside an Accordion.'
     )
     vi.restoreAllMocks()
+  })
+})
+
+describe('AccordionActions overrides', () => {
+  it('puts the style, class name and attributes of the root slot on its root', () => {
+    renderWithTheme(
+      <Accordion>
+        <AccordionSummary>Title</AccordionSummary>
+        <AccordionActions
+          data-testid="actions"
+          slotProps={{
+            root: {
+              className: 'slot',
+              style: overrides.first,
+              'data-mark': 'a',
+              'aria-label': 'Actions',
+            },
+          }}
+        >
+          Save
+        </AccordionActions>
+      </Accordion>
+    )
+    const actions = screen.getByTestId('actions')
+    expect(actions).toHaveClass('slot')
+    expect(actions).toHaveAttribute('data-mark', 'a')
+    expect(actions).toHaveAttribute('aria-label', 'Actions')
+    expect(lastColor(actions)).toBe('rgb(1, 2, 3)')
+  })
+
+  it('lets the style prop win over slotProps.root.style, and joins the class names', () => {
+    renderWithTheme(
+      <Accordion>
+        <AccordionSummary>Title</AccordionSummary>
+        <AccordionActions
+          data-testid="actions"
+          className="own"
+          style={[false, overrides.second]}
+          slotProps={{ root: { className: 'slot', style: overrides.first } }}
+        >
+          Save
+        </AccordionActions>
+      </Accordion>
+    )
+    const actions = screen.getByTestId('actions')
+    expect(actions).toHaveClass('slot', 'own')
+    expect(lastColor(actions)).toBe('rgb(4, 5, 6)')
   })
 })

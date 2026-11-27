@@ -7,7 +7,6 @@ import {
   useId,
   useRef,
   useState,
-  type CSSProperties,
   type ElementType,
   type ForwardedRef,
   type HTMLAttributes,
@@ -17,6 +16,7 @@ import {
   type SyntheticEvent,
 } from 'react'
 import { styled, subtract, type LiveValue } from '../style/styled'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../style/overrides'
 import { useLiveValue } from '../style/hooks/useLiveValue'
 import { type Theme } from '../theme/themes'
 import { createShouldForwardProp } from '@soroush.tech/styled-system/should-forward-prop'
@@ -34,6 +34,7 @@ import {
   type PlacementContext,
 } from '../utils/useAnchoredPlacement'
 import { useTooltip } from './hooks/useTooltip'
+import type { TooltipSlot } from './Tooltip.types'
 import {
   getTooltipOrigins,
   resolveTooltipPlacement,
@@ -47,20 +48,13 @@ export interface TooltipSlots {
   arrow?: ElementType
 }
 
-type SlotProps = HTMLAttributes<HTMLElement> & { 'data-testid'?: string }
-
-export interface TooltipSlotProps {
-  root?: SlotProps
-  arrow?: SlotProps
-}
-
 /**
  * What a parent that clones its child (a `Menu` with a `Tooltip` for a trigger) hands the tooltip
  * instead: it is not the tooltip's, so it goes on to the child. The tooltip's own props are left out.
  */
 export type TooltipForwardedProps = Omit<
   HTMLAttributes<HTMLElement>,
-  'title' | 'children' | 'className' | 'color'
+  'title' | 'children' | 'className' | 'color' | 'style'
 > & { ref?: Ref<HTMLElement> }
 
 export interface TooltipProps extends TooltipForwardedProps {
@@ -81,8 +75,10 @@ export interface TooltipProps extends TooltipForwardedProps {
   placement?: TooltipPlacement
   /** Swaps the element a part is drawn as - it keeps its styles. `root` is the surface. */
   slots?: TooltipSlots
-  /** Props for a part: they are put first, so the tooltip's own `ref`, `id`, `role`, pointer handlers and the arrow's position win. */
-  slotProps?: TooltipSlotProps
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. `root` is the surface. The arrow's position is the tooltip's. */
+  slotProps?: SlotProps<TooltipSlot>
+  /** Overrides the CSS of the surface: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
   /** Draws an arrow towards the child. Default: `false`. */
   hasArrow?: boolean
   /** How long the pointer or focus rests on the child before it opens, in milliseconds. Default: `100`. */
@@ -254,11 +250,6 @@ const getArrow = ({ anchorRect, surfaceSize, top, left }: AnchoredPlacement): Ar
 const isSameArrow = (a: ArrowState | null, b: ArrowState) =>
   a !== null && a.side === b.side && a.offset === b.offset
 
-// The arrow's position is the tooltip's: a style given to the arrow does not move it.
-const POSITION = new Set(['top', 'right', 'bottom', 'left'])
-const withoutPosition = (style: CSSProperties = {}) =>
-  Object.fromEntries(Object.entries(style).filter(([property]) => !POSITION.has(property)))
-
 type ChildProps = Record<string, unknown> & { ref?: Ref<HTMLElement> }
 
 // What the child already has with what it is handed: a handler of each runs, the child's first, a
@@ -329,6 +320,7 @@ export const Tooltip = forwardRef<HTMLElement, TooltipProps>(function Tooltip(
     bg: bgProp,
     textColor: textColorProp,
     className,
+    style,
     'data-testid': dataTestid,
     ...forwarded
   }: Readonly<TooltipProps>,
@@ -452,7 +444,7 @@ export const Tooltip = forwardRef<HTMLElement, TooltipProps>(function Tooltip(
       {isShown && (
         <Portal>
           <TooltipSurface
-            {...slotProps?.root}
+            {...mergeOverrides(slotProps?.root, { style, className })}
             as={slots?.root}
             ref={surfaceRef}
             id={id}
@@ -462,9 +454,6 @@ export const Tooltip = forwardRef<HTMLElement, TooltipProps>(function Tooltip(
             borderRadius={borderRadius}
             bg={bg}
             textColor={textColor}
-            className={
-              [slotProps?.root?.className, className].filter(Boolean).join(' ') || undefined
-            }
             data-testid={dataTestid ?? slotProps?.root?.['data-testid']}
             {...(isAtPoint || !isInteractive ? {} : surfaceHandlers)}
           >
@@ -473,7 +462,6 @@ export const Tooltip = forwardRef<HTMLElement, TooltipProps>(function Tooltip(
               <TooltipArrow
                 {...slotProps?.arrow}
                 as={slots?.arrow}
-                style={withoutPosition(slotProps?.arrow?.style)}
                 side={arrow.side}
                 offset={arrowOffset}
                 aria-hidden="true"

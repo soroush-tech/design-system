@@ -18,6 +18,13 @@ import { useTheme } from '../theme/hooks/useTheme'
 import { useFormControl } from '../FormControl'
 import { FormControlContext } from '../FormControl/FormControlContext'
 import { Icon, type IconName } from '../Icon'
+import {
+  mergeOverrides,
+  type SlotOverride,
+  type SlotProps,
+  type StyleOverride,
+} from '../style/overrides'
+import type { NumberInputSlot } from './NumberInput.types'
 import { themeDefault } from '@gild-ui/core/theme'
 import { getFocusRing, getInputMinWidth } from '../utils/inputStyles'
 import { inputVariantStyles } from '../utils/inputVariantStyles'
@@ -86,6 +93,10 @@ export interface NumberInputProps
   placeholder?: string
   autoFocus?: boolean
   className?: string
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<NumberInputSlot>
   'aria-label'?: string
   'aria-labelledby'?: string
   'aria-describedby'?: string
@@ -278,6 +289,7 @@ interface SpinButtonProps {
   color: keyof Theme['palette']
   size: keyof Theme['sizes']
   onStep: (direction: 1 | -1) => void
+  slot?: SlotOverride
 }
 
 // The glyph: a plus and a minus beside the field, an up and a down chevron stacked at its end.
@@ -295,6 +307,7 @@ function SpinButton({
   color,
   size,
   onStep,
+  slot,
 }: Readonly<SpinButtonProps>) {
   const hold = useHoldRepeat(() => onStep(direction))
   // A button that goes off under the press - the range's end - gets no release: the repeat ends here.
@@ -305,6 +318,7 @@ function SpinButton({
   const Button = direction === 1 ? NumberInputIncrement : NumberInputDecrement
   return (
     <Button
+      {...slot}
       type="button"
       tabIndex={-1}
       aria-label={label}
@@ -366,6 +380,8 @@ export function NumberInput({
   startContent,
   endContent,
   className,
+  style,
+  slotProps,
   'aria-label': ariaLabel,
   'aria-labelledby': ariaLabelledby,
   'aria-describedby': ariaDescribedby,
@@ -417,6 +433,7 @@ export function NumberInput({
     <SpinButton
       direction={-1}
       label={decrementLabelProp ?? dp.decrementLabel}
+      slot={slotProps?.decrement}
       isDisabled={!field.canDecrement}
       {...buttonProps}
     />
@@ -425,6 +442,7 @@ export function NumberInput({
     <SpinButton
       direction={1}
       label={incrementLabelProp ?? dp.incrementLabel}
+      slot={slotProps?.increment}
       isDisabled={!field.canIncrement}
       {...buttonProps}
     />
@@ -441,17 +459,18 @@ export function NumberInput({
       isDisabled={fc.disabled}
       isFullWidth={fc.fullWidth}
       isInField={isInField}
-      className={className}
+      {...mergeOverrides(slotProps?.root, { style, className })}
       data-testid={dataTestid}
       {...rest}
     >
       {isSide && decrement}
       {startContent != null && (
-        <NumberInputContent edge="start" sizeToken={fc.size}>
+        <NumberInputContent {...slotProps?.content} edge="start" sizeToken={fc.size}>
           {startContent}
         </NumberInputContent>
       )}
       <NumberInputInput
+        {...slotProps?.input}
         ref={inputRef}
         type="text"
         role="spinbutton"
@@ -481,12 +500,12 @@ export function NumberInput({
         <input type="hidden" name={name} value={field.value ?? ''} disabled={fc.disabled} />
       )}
       {endContent != null && (
-        <NumberInputContent edge="end" sizeToken={fc.size}>
+        <NumberInputContent {...slotProps?.content} edge="end" sizeToken={fc.size}>
           {endContent}
         </NumberInputContent>
       )}
       {spinButtons === 'stacked' && (
-        <NumberInputSpinButtons>
+        <NumberInputSpinButtons {...slotProps?.spinButtons}>
           {increment}
           {decrement}
         </NumberInputSpinButtons>

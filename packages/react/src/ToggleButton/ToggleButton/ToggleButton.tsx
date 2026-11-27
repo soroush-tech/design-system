@@ -9,11 +9,17 @@ import { type Theme } from '../../theme/themes'
 import { get } from '@soroush.tech/styled-system'
 import { useTheme } from '../../theme/hooks/useTheme'
 import { themeDefault } from '@gild-ui/core/theme'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../../style/overrides'
+import type { ToggleButtonSlot } from './ToggleButton.types'
 
 export interface ToggleButtonProps extends Omit<
   ButtonProps,
-  'variant' | 'href' | 'target' | 'rel' | 'value' | 'onChange'
+  'variant' | 'href' | 'target' | 'rel' | 'value' | 'onChange' | 'style' | 'slotProps'
 > {
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<ToggleButtonSlot>
   /** The value associated with the button inside a `ToggleButtonGroup`. */
   value: ToggleButtonValue
   /** Active state - inferred from the group's value when omitted. Drives `aria-pressed`. */
@@ -72,6 +78,9 @@ export function ToggleButton({
   onChange,
   onClick,
   type = 'button',
+  style,
+  className,
+  slotProps,
   ...rest
 }: Readonly<ToggleButtonProps>) {
   const group = useContext(ToggleButtonGroupContext)
@@ -98,6 +107,7 @@ export function ToggleButton({
       onClick={handleClick}
       value={value}
       {...rest}
+      {...mergeOverrides(slotProps?.root, { style, className })}
     />
   )
 }

@@ -9,13 +9,15 @@ import { type Theme } from '../theme/themes'
 import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
 import { get, space } from '@soroush.tech/styled-system'
 import { themeDefault } from '@gild-ui/core/theme'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../style/overrides'
+import type { ButtonGroupSlot } from './ButtonGroup.types'
 
 export type ButtonGroupOrientation = 'horizontal' | 'vertical'
 
 export type ButtonGroupRadius = keyof Theme['radii']
 
 export interface ButtonGroupProps
-  extends Omit<HTMLAttributes<HTMLDivElement>, 'color'>, SpaceProps<Theme> {
+  extends Omit<HTMLAttributes<HTMLDivElement>, 'color' | 'style'>, SpaceProps<Theme> {
   /** Visual style for all child buttons. Default: `'outlined'`. */
   variant?: ButtonVariant
   /** Color palette for all child buttons - resolves against `theme.palette`. Default: 'primary', overridable via `theme.defaults.color`. */
@@ -31,6 +33,10 @@ export interface ButtonGroupProps
   /** Group fills its container; children share the width. Default: `false`. */
   fullWidth?: boolean
   as?: ElementType
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<ButtonGroupSlot>
 }
 
 const shouldForwardProp = createShouldForwardProp([...props, 'orientation', 'fullWidth', 'variant'])
@@ -150,6 +156,9 @@ export function ButtonGroup({
   fullWidth = false,
   as,
   children,
+  style,
+  className,
+  slotProps,
   ...rest
 }: Readonly<ButtonGroupProps>) {
   const context = useMemo(
@@ -168,6 +177,7 @@ export function ButtonGroup({
         color={color}
         fullWidth={fullWidth}
         {...rest}
+        {...mergeOverrides(slotProps?.root, { style, className })}
       >
         {children}
       </GroupRoot>

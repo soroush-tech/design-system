@@ -1,3 +1,4 @@
+import { lastColor, overrides } from '../utils/test/overrides'
 import { fireEvent, screen } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
@@ -330,5 +331,53 @@ describe('Checkbox', () => {
       )
       expect(screen.getByTestId('cb')).toHaveStyle({ color: baseTheme.palette.error.main })
     })
+  })
+})
+
+describe('Checkbox overrides', () => {
+  const mark = (name: string) => ({
+    className: name,
+    style: overrides.first,
+    'data-mark': name,
+    'aria-details': name,
+  })
+  const expectMarked = (element: Element | null, name: string) => {
+    expect(element).toHaveClass(name)
+    expect(element).toHaveAttribute('data-mark', name)
+    expect(element).toHaveAttribute('aria-details', name)
+    expect(lastColor(element!)).toBe('rgb(1, 2, 3)')
+  }
+
+  it('puts the style, class name and attributes of each slot on its element', () => {
+    renderWithTheme(
+      <Checkbox
+        data-testid="root"
+        slotProps={{
+          root: mark('root'),
+          input: mark('input'),
+          icon: mark('icon'),
+          label: mark('label'),
+        }}
+      >
+        Accept
+      </Checkbox>
+    )
+    expectMarked(screen.getByTestId('root'), 'root')
+    expectMarked(screen.getByRole('checkbox'), 'input')
+    expectMarked(screen.getByText('Accept').previousElementSibling, 'icon')
+    expectMarked(screen.getByText('Accept'), 'label')
+  })
+
+  it('lets the style prop win over slotProps.root.style, and joins the class names', () => {
+    renderWithTheme(
+      <Checkbox
+        data-testid="root"
+        className="own"
+        style={[false, null, undefined, overrides.second]}
+        slotProps={{ root: { className: 'slot', style: overrides.first } }}
+      />
+    )
+    expect(screen.getByTestId('root')).toHaveClass('slot', 'own')
+    expect(lastColor(screen.getByTestId('root'))).toBe('rgb(4, 5, 6)')
   })
 })

@@ -47,3 +47,7 @@ plus an opaque default background (`theme.background.paper`) so scrolled rows do
 
 - override it with the `bg` prop. Wrap the table in a `TableContainer` with a bounded height to
   see the effect.
+
+## Overrides
+
+`style` takes an entry of `StyleSheet.create`, or a list of them with `false`, `null` and `undefined`, and puts it on the root after the component's own styles. `slotProps` takes, for each slot (`root`), a `style` of the same kind, a `className`, and `data-*` and `aria-*` attributes. On the root, `style` and `className` come after `slotProps.root`, so they win.

@@ -98,3 +98,7 @@ afterAll(() => restore())
 ```
 
 The top layer, clicks outside and focus need a real browser.
+
+## Overrides
+
+`style` takes an entry of `StyleSheet.create`, or a list of them with `false`, `null` and `undefined`, and overrides the CSS of the root. `slotProps` takes, for each slot (`root`), a `style` of the same kind, a `className`, and `data-*` and `aria-*` attributes. `slotProps.root` and `style` are one channel: `style` is merged after `slotProps.root.style`, so it wins.

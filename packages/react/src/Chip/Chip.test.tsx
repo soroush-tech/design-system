@@ -1,3 +1,4 @@
+import { lastColor, overrides } from '../utils/test/overrides'
 import { describe, it, expect, vi } from 'vitest'
 import { fireEvent, render, screen } from '@testing-library/react'
 import type { ReactNode } from 'react'
@@ -267,5 +268,70 @@ describe('Chip', () => {
     renderWithTheme(view({ className: 'extra', m: 1 }))
     expect(root()).toHaveClass('extra')
     expect(root()).toHaveStyle({ margin: baseTheme.space[1] })
+  })
+})
+
+describe('Chip overrides', () => {
+  const mark = (name: string) => ({
+    className: name,
+    style: overrides.first,
+    'data-mark': name,
+    'aria-details': name,
+  })
+  const expectMarked = (element: Element | null, name: string) => {
+    expect(element).toHaveClass(name)
+    expect(element).toHaveAttribute('data-mark', name)
+    expect(element).toHaveAttribute('aria-details', name)
+    expect(lastColor(element!)).toBe('rgb(1, 2, 3)')
+  }
+
+  it('puts the style, class name and attributes of each slot on its element', () => {
+    renderWithTheme(
+      <Chip
+        data-testid="root"
+        label="Tag"
+        icon={<i data-testid="icon" />}
+        onClick={() => {}}
+        onDelete={() => {}}
+        deleteLabel="Remove"
+        slotProps={{
+          root: mark('root'),
+          body: mark('body'),
+          label: mark('label'),
+          icon: mark('icon'),
+          avatar: mark('avatar'),
+          deleteIcon: mark('deleteIcon'),
+        }}
+      />
+    )
+    expectMarked(screen.getByTestId('root'), 'root')
+    expectMarked(screen.getByText('Tag').parentElement, 'body')
+    expectMarked(screen.getByText('Tag'), 'label')
+    expectMarked(screen.getByTestId('icon').parentElement, 'icon')
+    expectMarked(screen.getByLabelText('Remove'), 'deleteIcon')
+  })
+
+  it('puts the avatar slot on the avatar', () => {
+    renderWithTheme(
+      <Chip
+        label="Tag"
+        avatar={<i data-testid="avatar" />}
+        slotProps={{ avatar: mark('avatar') }}
+      />
+    )
+    expectMarked(screen.getByTestId('avatar').parentElement, 'avatar')
+  })
+
+  it('lets the style prop win over slotProps.root.style, and joins the class names', () => {
+    renderWithTheme(
+      <Chip
+        data-testid="root"
+        className="own"
+        style={[false, null, undefined, overrides.second]}
+        slotProps={{ root: { className: 'slot', style: overrides.first } }}
+      />
+    )
+    expect(screen.getByTestId('root')).toHaveClass('slot', 'own')
+    expect(lastColor(screen.getByTestId('root'))).toBe('rgb(4, 5, 6)')
   })
 })

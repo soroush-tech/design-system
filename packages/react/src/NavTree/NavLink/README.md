@@ -18,14 +18,16 @@ Client component: its entry carries `'use client'`, so a server component can im
 
 Also accepts every attribute of an `a` - they win over what `isExternal` sets.
 
-| Prop         | Type                     | Default         | Description                                                             |
-| ------------ | ------------------------ | --------------- | ----------------------------------------------------------------------- |
-| `href`       | `string`                 | -               | Where it goes.                                                          |
-| `children`   | `ReactNode`              | -               | The name of the page.                                                   |
-| `isCurrent`  | `boolean`                | `false`         | The page the reader is on: `aria-current="page"`, filled.               |
-| `note`       | `ReactNode`              | -               | A short note beside the name - a version, a count.                      |
-| `isExternal` | `boolean`                | `false`         | The page is outside the site: a tab of its own, with an arrow after it. |
-| `color`      | `keyof Theme['palette']` | its `NavTree`'s | Color of the pill and the focus ring.                                   |
+| Prop         | Type                       | Default         | Description                                                                                                             |
+| ------------ | -------------------------- | --------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `href`       | `string`                   | -               | Where it goes.                                                                                                          |
+| `children`   | `ReactNode`                | -               | The name of the page.                                                                                                   |
+| `isCurrent`  | `boolean`                  | `false`         | The page the reader is on: `aria-current="page"`, filled.                                                               |
+| `note`       | `ReactNode`                | -               | A short note beside the name - a version, a count.                                                                      |
+| `isExternal` | `boolean`                  | `false`         | The page is outside the site: a tab of its own, with an arrow after it.                                                 |
+| `color`      | `keyof Theme['palette']`   | its `NavTree`'s | Color of the pill and the focus ring.                                                                                   |
+| `style`      | `StyleOverride`            | -               | Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. |
+| `slotProps`  | `{ root?, label?, note? }` | -               | Overrides per slot - `style`, `className`, `data-*` and `aria-*` - for the slots a theme can style.                     |
 
 ## Theming
 

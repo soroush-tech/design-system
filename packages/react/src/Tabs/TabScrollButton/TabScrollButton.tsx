@@ -2,6 +2,8 @@
 
 import { useContext, type MouseEvent, type ReactNode } from 'react'
 import { styled } from '../../style/styled'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../../style/overrides'
+import type { TabScrollButtonSlot } from './TabScrollButton.types'
 import { type Theme } from '../../theme/themes'
 import { createShouldForwardProp } from '@soroush.tech/styled-system/should-forward-prop'
 import { get } from '@soroush.tech/styled-system'
@@ -32,6 +34,10 @@ export interface TabScrollButtonProps {
   /** What it shows. Default: a chevron pointing the way it scrolls. */
   children?: ReactNode
   className?: string
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<TabScrollButtonSlot>
   'data-testid'?: string
 }
 
@@ -100,6 +106,8 @@ export function TabScrollButton({
   onClick,
   children,
   className,
+  style,
+  slotProps,
   'data-testid': dataTestid,
 }: Readonly<TabScrollButtonProps>) {
   const theme = useTheme()
@@ -131,7 +139,7 @@ export function TabScrollButton({
       shouldShowOnMobile={tabs?.shouldShowScrollButtonsOnMobile ?? false}
       divider={divider}
       data-scroll-direction={direction}
-      className={className}
+      {...mergeOverrides(slotProps?.root, { style, className })}
       data-testid={dataTestid}
       onClick={onClick}
     >

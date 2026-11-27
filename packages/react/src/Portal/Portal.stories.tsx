@@ -4,11 +4,16 @@ import { View } from '../View'
 import { Paper } from '../Paper'
 import { Flex } from '../Flex'
 import { Typography } from '../Typography'
+import { StyleSheet } from '../style/styled'
 import { Portal } from './Portal'
 
 // `target` is a story-only arg (Portal's real `container` prop is a node/getter, not a
 // control). It drives where the demo mounts the portaled content.
 type PortalStoryArgs = ComponentProps<typeof Portal> & { target: 'body' | 'container' }
+
+const styles = StyleSheet.create({
+  fixed: { position: 'fixed', top: 16, left: 16, right: 16, zIndex: 1 },
+})
 
 const meta: Meta<PortalStoryArgs> = {
   title: 'Theme/Portal',
@@ -55,15 +60,7 @@ const PortalDemo = ({ target }: PortalStoryArgs) => {
       {/* For the container target, wait for the ref to attach before portaling. */}
       {(target === 'body' || container) && (
         <Portal container={target === 'container' ? container : undefined}>
-          <Paper
-            p={3}
-            mt={2}
-            style={
-              target === 'body'
-                ? { position: 'fixed', top: 16, left: 16, right: 16, zIndex: 1 }
-                : undefined
-            }
-          >
+          <Paper p={3} mt={2} style={target === 'body' && styles.fixed}>
             <Typography color="info" variant="body2" m={0}>
               Portaled to {target === 'body' ? 'document.body' : 'the custom container'}
             </Typography>

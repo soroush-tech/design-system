@@ -5,8 +5,10 @@ import { Icon } from '@gild-ui/react/Icon'
 import { MenuItem } from '@gild-ui/react/MenuItem'
 import { Select } from '@gild-ui/react/Select'
 import { Typography } from '@gild-ui/react/Typography'
-import { styled } from '@gild-ui/react'
+import { styled, type SlotProps, type StyleOverride } from '@gild-ui/react'
 import { useMarkdownContext } from '../MarkdownContext'
+import type { MarkdownToolbarSlot } from '../themeTypes'
+import { mergeOverrides } from '../utils/mergeOverrides'
 import { buildTableSnippet } from '../utils/buildTableSnippet'
 import { groupToolbarActions } from '../utils/groupToolbarActions'
 import {
@@ -59,7 +61,10 @@ const StrikeLabel = styled(Typography, {
 })
 
 /** Renders a button's content: an icon, an emphasis-styled letter, or the plain label. */
-function ActionLabel({ action }: Readonly<{ action: ToolbarAction }>) {
+function ActionLabel({
+  action,
+  slotProps,
+}: Readonly<{ action: ToolbarAction; slotProps?: SlotProps<'strike'> }>) {
   if (action.icon) return <Icon name={action.icon} size="1.1rem" />
   if (action.emphasis === 'bold')
     return (
@@ -75,15 +80,22 @@ function ActionLabel({ action }: Readonly<{ action: ToolbarAction }>) {
     )
   if (action.emphasis === 'strike')
     return (
-      <StrikeLabel as="span" variant="inherit">
+      <StrikeLabel {...slotProps?.strike} as="span" variant="inherit">
         {action.label}
       </StrikeLabel>
     )
   return <>{action.label}</>
 }
 
+export interface ToolbarProps {
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<MarkdownToolbarSlot>
+}
+
 /** Formatting buttons, heading + code-language selects, and the table-size picker. */
-export function Toolbar() {
+export function Toolbar({ style, slotProps }: Readonly<ToolbarProps>) {
   const { dispatch } = useMarkdownContext()
 
   const renderButton = (action: ToolbarAction) => (
@@ -95,12 +107,13 @@ export function Toolbar() {
       aria-label={action.ariaLabel}
       onClick={() => dispatch(action)}
     >
-      <ActionLabel action={action} />
+      <ActionLabel action={action} slotProps={slotProps} />
     </Button>
   )
 
   return (
     <ToolbarRoot
+      {...mergeOverrides(slotProps?.root, { style })}
       flexDirection="row"
       flexWrap="wrap"
       gap={1}
@@ -128,6 +141,7 @@ export function Toolbar() {
         )
       )}
       <TablePicker
+        slotProps={slotProps}
         onSelect={(rows, cols) =>
           dispatch({
             id: 'table',

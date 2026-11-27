@@ -37,3 +37,7 @@ Native button attributes (`onClick`, `aria-label`, `disabled`, ...) and `space` 
 - By default the inactive icon is hidden and revealed (dimmed) on hover or keyboard focus; the
   active column's icon is always fully opaque. Set `shouldHideSortIcon={false}` - per label or
   once on the `Table` - to keep inactive icons permanently visible (dimmed).
+
+## Overrides
+
+`style` takes an entry of `StyleSheet.create`, or a list of them with `false`, `null` and `undefined`, and puts it on the root after the component's own styles. `slotProps` takes, for each slot (`root`, `icon`), a `style` of the same kind, a `className`, and `data-*` and `aria-*` attributes. On the root, `style` and `className` come after `slotProps.root`, so they win.

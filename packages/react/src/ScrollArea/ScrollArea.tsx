@@ -2,13 +2,16 @@
 
 import { useRef, type ReactNode, type Ref, type RefObject } from 'react'
 import type { LayoutProps, SpaceProps } from '@soroush.tech/styled-system'
-import { styled } from '../style/styled'
+import { styled, type LiveValue } from '../style/styled'
+import { useLiveValue } from '../style/hooks/useLiveValue'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../style/overrides'
 import { type Theme } from '../theme/themes'
 import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
 import { get, system, space } from '@soroush.tech/styled-system'
 import { useDefaultProps } from '../theme/hooks/useDefaultProps'
 import { useMergedRefs } from '@gild-ui/hooks/useMergedRefs'
 import { useScrollThumb, type ScrollAxis } from './hooks/useScrollThumb'
+import type { ScrollAreaSlot } from './ScrollArea.types'
 
 /** Which ways it scrolls. */
 export type ScrollAxes = ScrollAxis | 'both'
@@ -35,6 +38,10 @@ export interface ScrollAreaProps
   'aria-label'?: string
   'aria-labelledby'?: string
   className?: string
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<ScrollAreaSlot>
   'data-testid'?: string
 }
 
@@ -108,15 +115,21 @@ const ScrollAreaThumb = styled('div', {
   name: 'ScrollArea',
   slot: 'thumb',
   label: 'ScrollAreaThumb',
-  shouldForwardProp: createShouldForwardProp(['isShown', 'axis']),
-})<{ isShown: boolean; axis: ScrollAxis }>(({ theme, isShown, axis }) => {
+  shouldForwardProp: createShouldForwardProp(['isShown', 'axis', 'start', 'size']),
+})<{ isShown: boolean; axis: ScrollAxis; start: LiveValue; size: LiveValue }>(({
+  theme,
+  isShown,
+  axis,
+  start,
+  size,
+}) => {
   // Centred in the track, whose inner edge is a line.
   const inset = `calc((${theme.space[1.25]} - ${theme.space[0.75]}) / 2 - ${theme.borderWidths.thin})`
   return {
     position: 'absolute',
     ...(axis === 'y'
-      ? { left: inset, width: theme.space[0.75] }
-      : { top: inset, height: theme.space[0.75] }),
+      ? { left: inset, width: theme.space[0.75], top: `${start}`, height: `${size}` }
+      : { top: inset, height: theme.space[0.75], left: `${start}`, width: `${size}` }),
     borderRadius: '9999px',
     backgroundColor: get(theme, 'background.scrollbar'),
     opacity: isShown ? 1 : 0,
@@ -129,13 +142,17 @@ const ScrollAreaThumb = styled('div', {
 function ScrollBar({
   box,
   axis,
-}: Readonly<{ box: RefObject<HTMLDivElement | null>; axis: ScrollAxis }>) {
+  slotProps,
+}: Readonly<{
+  box: RefObject<HTMLDivElement | null>
+  axis: ScrollAxis
+  slotProps?: SlotProps<ScrollAreaSlot>
+}>) {
   const { thumb, onTrackPointerDown, isDragging } = useScrollThumb(box, axis)
+  // The thumb's place follows the scroll: live values, so a scroll writes no rule.
+  const start = useLiveValue(thumb?.start ?? 0, '%')
+  const size = useLiveValue(thumb?.size ?? 0, '%')
   if (thumb === null) return null
-  const place =
-    axis === 'y'
-      ? { top: `${thumb.start}%`, height: `${thumb.size}%` }
-      : { left: `${thumb.start}%`, width: `${thumb.size}%` }
   return (
     <ScrollAreaTrack
       aria-hidden
@@ -143,8 +160,16 @@ function ScrollBar({
       axis={axis}
       isDragging={isDragging}
       onPointerDown={onTrackPointerDown}
+      {...slotProps?.track}
     >
-      <ScrollAreaThumb data-scroll-thumb axis={axis} isShown={isDragging} style={place} />
+      <ScrollAreaThumb
+        data-scroll-thumb
+        axis={axis}
+        isShown={isDragging}
+        start={start}
+        size={size}
+        {...slotProps?.thumb}
+      />
     </ScrollAreaTrack>
   )
 }
@@ -166,6 +191,8 @@ export function ScrollArea({
   'aria-label': ariaLabel,
   'aria-labelledby': ariaLabelledby,
   className,
+  style,
+  slotProps,
   'data-testid': dataTestid,
   ...rest
 }: Readonly<ScrollAreaProps>) {
@@ -174,8 +201,13 @@ export function ScrollArea({
   const box = useRef<HTMLDivElement>(null)
   const mergedRef = useMergedRefs(box, viewportRef)
   return (
-    <ScrollAreaRoot className={className} data-testid={dataTestid} {...rest}>
+    <ScrollAreaRoot
+      {...mergeOverrides(slotProps?.root, { style, className })}
+      data-testid={dataTestid}
+      {...rest}
+    >
       <ScrollAreaViewport
+        {...slotProps?.viewport}
         ref={mergedRef}
         axes={axes}
         data-scroll-viewport
@@ -186,8 +218,8 @@ export function ScrollArea({
       >
         {children}
       </ScrollAreaViewport>
-      {axes !== 'x' && <ScrollBar box={box} axis="y" />}
-      {axes !== 'y' && <ScrollBar box={box} axis="x" />}
+      {axes !== 'x' && <ScrollBar box={box} axis="y" slotProps={slotProps} />}
+      {axes !== 'y' && <ScrollBar box={box} axis="x" slotProps={slotProps} />}
     </ScrollAreaRoot>
   )
 }

@@ -18,6 +18,8 @@ import { useTheme } from '../theme/hooks/useTheme'
 import { inputVariantStyles } from '../utils/inputVariantStyles'
 import { themeDefault } from '@gild-ui/core/theme'
 import { getFocusRing, getInputMinWidth } from '../utils/inputStyles'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../style/overrides'
+import type { TextInputSlot } from './TextInput.types'
 
 export type TextInputColor = keyof Theme['palette']
 export type TextInputTextColor = keyof Theme['text']
@@ -55,7 +57,8 @@ export interface TextInputProps
   /** Native HTML `size` attribute - visible width in character widths. Has no effect with `multiline` or `resize`. */
   inputSize?: number
   /** Extra props spread onto the native element. Explicit top-level props take priority. */
-  inputProps?: InputHTMLAttributes<HTMLInputElement> & TextareaHTMLAttributes<HTMLTextAreaElement>
+  inputProps?: Omit<InputHTMLAttributes<HTMLInputElement>, 'style'> &
+    Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'style'>
   /** Maximum rows before the auto-grow textarea starts scrolling. Only applies when `resize` is set. */
   maxRows?: number | string
   /** Minimum rows for the auto-grow textarea. Only applies when `resize` is set. */
@@ -90,6 +93,10 @@ export interface TextInputProps
   variant?: TextInputVariant
   value?: string | number | readonly string[]
   className?: string
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<TextInputSlot>
   'data-testid'?: string
 }
 
@@ -320,6 +327,8 @@ export function TextInput({
   value,
   variant: variantProp,
   className,
+  style,
+  slotProps,
   'data-testid': dataTestid,
   ...spaceProps
 }: Readonly<TextInputProps>) {
@@ -362,7 +371,7 @@ export function TextInput({
     readOnly,
     onChange,
     value,
-    className: classes?.input,
+    ...mergeOverrides({ className: classes?.input }, slotProps?.input),
     type: isTextarea ? undefined : type,
     rows: isMultiline && rows !== undefined ? Number(rows) : undefined,
     size,
@@ -401,7 +410,7 @@ export function TextInput({
       disabled={disabled}
       fullWidth={fullWidth}
       borderRadius={borderRadius}
-      className={rootClassName}
+      {...mergeOverrides(slotProps?.root, { style, className: rootClassName })}
       data-testid={dataTestid}
       {...spaceProps}
     >

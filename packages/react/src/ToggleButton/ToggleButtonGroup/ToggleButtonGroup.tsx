@@ -7,8 +7,17 @@ import { styled } from '../../style/styled'
 import { type Theme } from '../../theme/themes'
 import { useTheme } from '../../theme/hooks/useTheme'
 import { themeDefault } from '@gild-ui/core/theme'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../../style/overrides'
+import type { ToggleButtonGroupSlot } from './ToggleButtonGroup.types'
 
-export interface ToggleButtonGroupProps extends Omit<ButtonGroupProps, 'variant' | 'onChange'> {
+export interface ToggleButtonGroupProps extends Omit<
+  ButtonGroupProps,
+  'variant' | 'onChange' | 'style' | 'slotProps'
+> {
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<ToggleButtonGroupSlot>
   /** Selected value(s) - single when `isExclusive`, array otherwise. Controlled. */
   value?: ToggleButtonValue | ToggleButtonValue[] | null
   /**
@@ -57,6 +66,9 @@ export function ToggleButtonGroup({
   isExclusive = false,
   color: colorProp,
   children,
+  style,
+  className,
+  slotProps,
   ...rest
 }: Readonly<ToggleButtonGroupProps>) {
   const theme = useTheme()
@@ -79,7 +91,11 @@ export function ToggleButtonGroup({
 
   return (
     <ToggleButtonGroupContext.Provider value={context}>
-      <ToggleButtonGroupRoot color={color} {...rest}>
+      <ToggleButtonGroupRoot
+        color={color}
+        {...rest}
+        {...mergeOverrides(slotProps?.root, { style, className })}
+      >
         {children}
       </ToggleButtonGroupRoot>
     </ToggleButtonGroupContext.Provider>

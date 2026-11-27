@@ -5,6 +5,7 @@ import { baseTheme } from '../theme/themes'
 import { FormControl } from '../FormControl'
 import { Form } from '../Form'
 import { FormLabel } from './FormLabel'
+import { describeRootSlot } from '../utils/test/describeRootSlot'
 
 describe('FormLabel', () => {
   it('renders a label element with its text', () => {
@@ -114,3 +115,13 @@ describe('FormLabel', () => {
     })
   })
 })
+
+describeRootSlot(
+  'FormLabel',
+  (props) => (
+    <FormLabel data-testid="root" {...props}>
+      text
+    </FormLabel>
+  ),
+  () => screen.getByTestId('root')
+)

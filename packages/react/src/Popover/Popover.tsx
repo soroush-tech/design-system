@@ -15,7 +15,9 @@ import { type Theme } from '../theme/themes'
 import { createShouldForwardProp } from '@soroush.tech/styled-system/should-forward-prop'
 import { useTheme } from '../theme/hooks/useTheme'
 import { Modal, type ModalCloseReason } from '../Modal'
-import { Paper, type PaperProps, type PaperElevation } from '../Paper'
+import { Paper, type PaperElevation } from '../Paper'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../style/overrides'
+import type { PopoverSlot } from './Popover.types'
 import { resolveAnchorEl, type PopoverAnchorEl } from './utils/resolveAnchorEl'
 import {
   computePopoverPosition,
@@ -56,8 +58,11 @@ export interface PopoverProps {
   container?: HTMLElement | (() => HTMLElement | null) | null
   /** Ref for imperative actions - currently `updatePosition()`. */
   action?: Ref<PopoverActions>
-  /** Props for the paper slot (the surface). */
-  slotProps?: { paper?: PaperProps }
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. `root` is the surface, `positioner` the placed wrapper around it. */
+  slotProps?: SlotProps<PopoverSlot>
+  /** Overrides the CSS of the surface: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  className?: string
   /** Render the dimmed backdrop. Default: false (an invisible click-away layer via the Modal root). */
   hasBackdrop?: boolean
   /** Disable body scroll-lock. When true, the popover re-positions on scroll. Default: false. */
@@ -122,6 +127,8 @@ export function Popover({
   container,
   action,
   slotProps,
+  style,
+  className,
   hasBackdrop = false,
   disableScrollLock = false,
   disableAriaHidden = false,
@@ -224,8 +231,8 @@ export function Popover({
       portalContainer={container}
       layer={layer}
     >
-      <Positioner ref={positionerRef} isPositioned={isPositioned}>
-        <Surface elevation={elevation} {...slotProps?.paper}>
+      <Positioner ref={positionerRef} isPositioned={isPositioned} {...slotProps?.positioner}>
+        <Surface elevation={elevation} {...mergeOverrides(slotProps?.root, { style, className })}>
           {children}
         </Surface>
       </Positioner>

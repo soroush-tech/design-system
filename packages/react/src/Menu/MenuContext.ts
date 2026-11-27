@@ -5,7 +5,6 @@ import { useTheme } from '../theme/hooks/useTheme'
 import { type Theme } from '../theme/themes'
 import type { PaperElevation } from '../Paper'
 import type { MenuAlign } from './utils/getMenuOrigins'
-import type { MenuListSlotProps } from './MenuList'
 
 /** How a menu's lists are placed and drawn - a submenu opens the way its menu does. */
 export interface MenuContextValue {
@@ -14,8 +13,6 @@ export interface MenuContextValue {
   margin: number
   elevation: PaperElevation
   layer: keyof Theme['zOrder']
-  /** What the app put on the menu's list - a submenu's list takes it too. */
-  listProps?: MenuListSlotProps
 }
 
 /** Set by a `Menu`. */

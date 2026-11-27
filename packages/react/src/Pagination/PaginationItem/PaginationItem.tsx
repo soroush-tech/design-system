@@ -5,6 +5,8 @@ import { Icon, type IconName } from '../../Icon'
 import { type PaginationItemType } from '../hooks/usePagination'
 import type { SpaceProps } from '@soroush.tech/styled-system'
 import { alpha, styled } from '../../style/styled'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../../style/overrides'
+import type { PaginationItemSlot } from './PaginationItem.types'
 import { type Theme } from '../../theme/themes'
 import { type PaletteColor } from '@gild-ui/core/theme'
 import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
@@ -17,7 +19,9 @@ export type PaginationItemShape = 'circular' | 'rounded'
 export type PaginationItemSize = keyof Theme['sizes']
 
 export interface PaginationItemProps
-  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'color' | 'type'>, SpaceProps<Theme> {
+  extends
+    Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'color' | 'type' | 'style'>,
+    SpaceProps<Theme> {
   /** What the item renders - a page number, a nav control, or a non-interactive ellipsis. */
   type?: PaginationItemType
   /** The page number/content for `type="page"`. */
@@ -34,6 +38,10 @@ export interface PaginationItemProps
   size?: PaginationItemSize
   disabled?: boolean
   as?: ElementType
+  /** Overrides the CSS of the item: an entry of `StyleSheet.create`, or a list of them. It wins over the style of the slot it lands on. An ellipsis item draws no `root`, so it lands on `ellipsis`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<PaginationItemSlot>
 }
 
 /** Nav item type → registry icon. */
@@ -175,12 +183,20 @@ export function PaginationItem({
   shape,
   size,
   as,
+  style,
+  className,
+  slotProps,
   ...rest
 }: Readonly<PaginationItemProps>) {
   if (type === 'start-ellipsis' || type === 'end-ellipsis') {
     const { disabled: _disabled, onClick: _onClick, ...ellipsisRest } = rest
     return (
-      <Ellipsis as={as} size={size} {...ellipsisRest}>
+      <Ellipsis
+        as={as}
+        size={size}
+        {...ellipsisRest}
+        {...mergeOverrides(slotProps?.ellipsis, { style, className })}
+      >
         ...
       </Ellipsis>
     )
@@ -197,6 +213,7 @@ export function PaginationItem({
       size={size}
       aria-current={isSelected ? 'page' : undefined}
       {...rest}
+      {...mergeOverrides(slotProps?.root, { style, className })}
     >
       {type === 'page' ? page : <Icon name={NAV_ICONS[type]} size="1.25em" color="inherit" />}
     </ItemRoot>

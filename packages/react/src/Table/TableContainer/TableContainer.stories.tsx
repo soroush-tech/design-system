@@ -19,12 +19,15 @@ import {
   borderColor,
   borderRadius,
 } from '../../utils/test/storiesArgs'
+import { StyleSheet } from '../../style/styled'
 import { Table } from '../Table'
 import { TableHead } from '../TableHead'
 import { TableBody } from '../TableBody'
 import { TableRow } from '../TableRow'
 import { TableCell } from '../TableCell'
 import { TableContainer } from './TableContainer'
+
+const cellOverrides = StyleSheet.create({ noWrap: { whiteSpace: 'nowrap' } })
 
 const columns = Array.from({ length: 12 }, (_, i) => `Metric ${i + 1}`)
 
@@ -94,7 +97,7 @@ export const WideTableScrolls: Story = {
         <TableHead>
           <TableRow>
             {columns.map((column) => (
-              <TableCell key={column} style={{ whiteSpace: 'nowrap' }}>
+              <TableCell key={column} style={cellOverrides.noWrap}>
                 {column}
               </TableCell>
             ))}

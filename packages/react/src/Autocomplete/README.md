@@ -72,3 +72,7 @@ The list of options is drawn in a `Portal`, which renders nothing on the server:
   and `aria-activedescendant` - the focus stays in the field.
 - Options are `role="option"` with `aria-selected`; groups are `role="group"` named by their heading.
 - The indicators are out of the tab order: the keys do what they do.
+
+## Overrides
+
+`style` takes an entry of `StyleSheet.create`, or a list of them with `false`, `null` and `undefined`, and puts it on the root after the component's own styles. `slotProps` takes, for each slot (`root`, `tags`, `input`, `clearIndicator`, `popupIndicator`, `popup`, `listbox`, `group`, `groupLabel`, `groupItems`, `option`, `status`), a `style` of the same kind, a `className`, and `data-*` and `aria-*` attributes. On the root, `style` and `className` come after `slotProps.root`, so they win.

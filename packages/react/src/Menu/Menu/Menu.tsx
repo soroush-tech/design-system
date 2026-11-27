@@ -21,7 +21,9 @@ import { type Theme } from '../../theme/themes'
 import { useDefaultProps } from '../../theme/hooks/useDefaultProps'
 import { useTheme } from '../../theme/hooks/useTheme'
 import type { PaperElevation } from '../../Paper'
-import { MenuList, type MenuListSlotProps } from '../MenuList'
+import { MenuList } from '../MenuList'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../../style/overrides'
+import type { MenuSlot } from './Menu.types'
 import { MenuItem } from '../../MenuItem'
 import { MenuItems, type MenuItemData } from '../MenuItems'
 import { MenuActivationContext } from '../MenuActivationContext'
@@ -90,9 +92,11 @@ export interface MenuProps {
   dense?: boolean
   /** Names the list. Default: the trigger names it (`aria-labelledby`). */
   'aria-label'?: string
-  /** Props for a part: `list` is the `role="menu"` list - and every submenu's - for the app's `data-*`, class and `aria-*`. The menu's own `role`, `id` and name win. */
-  slotProps?: { list?: MenuListSlotProps }
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. `root` is the box around the trigger, `paper` the surface of the list. */
+  slotProps?: SlotProps<MenuSlot>
   className?: string
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
   'data-testid'?: string
 }
 
@@ -161,6 +165,7 @@ export function Menu({
   dense: denseProp,
   'aria-label': ariaLabel,
   className,
+  style,
   slotProps,
   'data-testid': dataTestid,
 }: Readonly<MenuProps>) {
@@ -188,8 +193,8 @@ export function Menu({
 
   const margin = Number.parseFloat(String(theme.space[marginThreshold]))
   const menuContext = useMemo<MenuContextValue>(
-    () => ({ align, margin, elevation, layer, listProps: slotProps?.list }),
-    [align, margin, elevation, layer, slotProps?.list]
+    () => ({ align, margin, elevation, layer }),
+    [align, margin, elevation, layer]
   )
   useMenuPlacement({
     isOpen,
@@ -265,7 +270,12 @@ export function Menu({
   const rows = items ? <MenuItems items={items} /> : children
 
   return (
-    <MenuRoot ref={rootRef} className={className} data-testid={dataTestid} onBlur={handleBlur}>
+    <MenuRoot
+      ref={rootRef}
+      {...mergeOverrides(slotProps?.root, { style, className })}
+      data-testid={dataTestid}
+      onBlur={handleBlur}
+    >
       <MenuTrigger
         element={trigger}
         id={triggerId}
@@ -277,6 +287,7 @@ export function Menu({
       />
       {isOpen && (
         <MenuPaper
+          {...slotProps?.paper}
           ref={surfaceRef}
           elevation={elevation}
           layer={layer}
@@ -287,7 +298,6 @@ export function Menu({
           <MenuContext.Provider value={menuContext}>
             <MenuActivationContext.Provider value={handleActivate}>
               <MenuList
-                {...slotProps?.list}
                 id={listId}
                 aria-label={ariaLabel}
                 aria-labelledby={ariaLabel ? undefined : triggerId}

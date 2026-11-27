@@ -8,6 +8,8 @@ import { type Theme } from '../theme/themes'
 import { get, space } from '@soroush.tech/styled-system'
 import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
 import { themeDefault, type PaletteColor } from '@gild-ui/core/theme'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../style/overrides'
+import type { RadioSlot } from './Radio.types'
 
 export type RadioColor = PaletteColor
 export type RadioSize = keyof Theme['sizes']
@@ -41,6 +43,10 @@ export interface RadioProps extends SpaceProps<Theme> {
   inputProps?: InputHTMLAttributes<HTMLInputElement>
   children?: ReactNode
   className?: string
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<RadioSlot>
   'data-testid'?: string
 }
 
@@ -164,6 +170,8 @@ export function Radio({
   inputProps,
   children,
   className,
+  style,
+  slotProps,
   'data-testid': dataTestid,
   ...spaceProps
 }: Readonly<RadioProps>) {
@@ -186,12 +194,13 @@ export function Radio({
       color={color}
       size={size}
       disabled={disabled}
-      className={className}
+      {...mergeOverrides(slotProps?.root, { style, className })}
       data-testid={dataTestid}
       {...spaceProps}
     >
       <HiddenInput
         {...inputProps}
+        {...slotProps?.input}
         type="radio"
         checked={checked}
         disabled={disabled}
@@ -202,11 +211,15 @@ export function Radio({
         onChange={onChange}
         aria-describedby={describedBy}
       />
-      <RadioIconWrapper size={size}>
+      <RadioIconWrapper size={size} {...slotProps?.icon}>
         <span className="rb-unchecked">{icon ?? <UncheckedIcon />}</span>
         <span className="rb-checked">{checkedIcon ?? <CheckedIcon />}</span>
       </RadioIconWrapper>
-      {children != null && <RadioLabel textColor={fc.textColor}>{children}</RadioLabel>}
+      {children != null && (
+        <RadioLabel textColor={fc.textColor} {...slotProps?.label}>
+          {children}
+        </RadioLabel>
+      )}
     </RadioRoot>
   )
 }

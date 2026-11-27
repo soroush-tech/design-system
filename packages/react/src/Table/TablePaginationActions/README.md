@@ -30,3 +30,7 @@ Client component: its entry carries `'use client'`, so a server component can im
 Boundary rules: backward buttons disable on page 0; forward buttons disable on the last page
 (`ceil(count / rowsPerPage) - 1`); with `count === -1` next stays enabled and last is disabled;
 `rowsPerPage === -1` is a single page holding all rows.
+
+## Overrides
+
+`style` takes an entry of `StyleSheet.create`, or a list of them with `false`, `null` and `undefined`, and puts it on the root after the component's own styles. `slotProps` takes, for each slot (`root`), a `style` of the same kind, a `className`, and `data-*` and `aria-*` attributes. On the root, `style` and `className` come after `slotProps.root`, so they win.

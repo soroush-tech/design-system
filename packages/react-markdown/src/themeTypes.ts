@@ -23,6 +23,13 @@ export interface MermaidThemeVariables {
   [variable: string]: string | number | boolean | undefined
 }
 
+/** The slots of `MarkdownLiveEdit` a theme can style, and `slotProps` can override. */
+export type MarkdownLiveEditSlot = 'root' | 'block'
+/** The slots of `MarkdownToolbar` a theme can style, and `slotProps` can override. */
+export type MarkdownToolbarSlot = 'root' | 'strike' | 'tablePickerCell'
+/** The slots of `CodeBlock` a theme can style, and `slotProps` can override. */
+export type CodeBlockSlot = 'root' | 'surface'
+
 // This package renders through Gild UI's `styled`, so its named roots (`MarkdownEditor`,
 // `MarkdownPreview`, `MarkdownToolbar`, `CodeBlock`) resolve `theme.components` at run time. One
 // block registers their slots on `@gild-ui/react`'s `ThemeComponents` and the two theme keys
@@ -35,17 +42,14 @@ declare module '@gild-ui/react' {
     MarkdownEditor?: import('@gild-ui/react').ComponentConfig
     MarkdownLiveEdit?: import('@gild-ui/react').ComponentConfig<
       Record<string, unknown>,
-      'root' | 'block'
+      MarkdownLiveEditSlot
     >
     MarkdownPreview?: import('@gild-ui/react').ComponentConfig
     MarkdownToolbar?: import('@gild-ui/react').ComponentConfig<
       Record<string, unknown>,
-      'root' | 'strike' | 'tablePickerCell'
+      MarkdownToolbarSlot
     >
-    CodeBlock?: import('@gild-ui/react').ComponentConfig<
-      Record<string, unknown>,
-      'root' | 'surface'
-    >
+    CodeBlock?: import('@gild-ui/react').ComponentConfig<Record<string, unknown>, CodeBlockSlot>
   }
 }
 

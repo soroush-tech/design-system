@@ -1,6 +1,8 @@
 import { type HTMLAttributes } from 'react'
 import type { SpaceProps, LayoutProps, PaddingProps } from '@soroush.tech/styled-system'
 import { styled, keyframes } from '../style/styled'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../style/overrides'
+import type { LinearProgressSlot } from './LinearProgress.types'
 import { type Theme } from '../theme/themes'
 import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
 import { space, layout } from '@soroush.tech/styled-system'
@@ -14,7 +16,7 @@ export type LinearProgressEasing = 'linear' | 'ease' | 'ease-in' | 'ease-out' | 
 
 export interface LinearProgressProps
   extends
-    HTMLAttributes<HTMLSpanElement>,
+    Omit<HTMLAttributes<HTMLSpanElement>, 'style'>,
     Omit<SpaceProps<Theme>, keyof PaddingProps>,
     LayoutProps<Theme> {
   /** Visual variant - looping animation, value-driven bar, or reversed loop. Default: `'indeterminate'`. */
@@ -41,6 +43,10 @@ export interface LinearProgressProps
   showTrack?: boolean
   /** Rounds the bar's corners into a pill shape. Default: `false`. */
   round?: boolean
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<LinearProgressSlot>
 }
 
 const shouldForwardProp = createShouldForwardProp([
@@ -224,6 +230,9 @@ const LinearProgressRoot = styled('span', {
 
 // ─── Public component ─────────────────────────────────────────────────────────
 
+// The bar's own transform, then what the app gave: one style stays as it is.
+const withOwn = <T,>(own: T, style: StyleOverride) => (style ? [own, style] : own)
+
 export function LinearProgress({
   variant = 'indeterminate',
   // undefined resolves to themeDefault(theme, 'color', 'primary') in the styled layer.
@@ -238,6 +247,9 @@ export function LinearProgress({
   easing = 'linear',
   showTrack = true,
   round = false,
+  style,
+  className,
+  slotProps,
   ...rest
 }: Readonly<LinearProgressProps>) {
   const isDeterminate = variant === 'determinate'
@@ -268,19 +280,35 @@ export function LinearProgress({
       thickness={thickness}
       round={round}
       {...ariaProps}
+      {...mergeOverrides(slotProps?.root, { style, className })}
       {...rest}
     >
-      {showTrack && (isBuffer ? <LinearProgressDash /> : <LinearProgressTrack />)}
+      {showTrack &&
+        (isBuffer ? (
+          <LinearProgressDash {...slotProps?.dash} />
+        ) : (
+          <LinearProgressTrack {...slotProps?.track} />
+        ))}
       {(!isDeterminate || isBuffer) && (
-        <LinearProgressBarSecondary buffer={isBuffer} easing={easing} style={bufferBarStyle} />
+        <LinearProgressBarSecondary
+          buffer={isBuffer}
+          easing={easing}
+          {...slotProps?.secondaryBar}
+          style={withOwn(bufferBarStyle, slotProps?.secondaryBar?.style)}
+        />
       )}
       {isSpinning ? (
-        <LinearProgressTraveler easing={easing}>
-          <LinearProgressSegment percent={valuePercent} />
-          <LinearProgressSegment percent={valuePercent} isCopy />
+        <LinearProgressTraveler easing={easing} {...slotProps?.traveler}>
+          <LinearProgressSegment percent={valuePercent} {...slotProps?.segment} />
+          <LinearProgressSegment percent={valuePercent} isCopy {...slotProps?.segment} />
         </LinearProgressTraveler>
       ) : (
-        <LinearProgressBar variant={variant} easing={easing} style={barStyle} />
+        <LinearProgressBar
+          variant={variant}
+          easing={easing}
+          {...slotProps?.bar}
+          style={withOwn(barStyle, slotProps?.bar?.style)}
+        />
       )}
     </LinearProgressRoot>
   )

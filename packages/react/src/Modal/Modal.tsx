@@ -2,6 +2,8 @@
 
 import { type ReactNode } from 'react'
 import { styled } from '../style/styled'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../style/overrides'
+import type { ModalSlot } from './Modal.types'
 import { type Theme } from '../theme/themes'
 import { createShouldForwardProp } from '@soroush.tech/styled-system/should-forward-prop'
 import { View } from '../View'
@@ -43,6 +45,11 @@ export interface ModalProps {
   scroll?: ModalScroll
   /** Stacking layer from `theme.zOrder`. Default: 'modal'. */
   layer?: keyof Theme['zOrder']
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  className?: string
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<ModalSlot>
 }
 
 const shouldForwardProp = createShouldForwardProp(['scroll', 'layer'])
@@ -90,6 +97,9 @@ export function Modal({
   shouldRestoreFocus = true,
   scroll = 'paper',
   layer = 'modal',
+  style,
+  className,
+  slotProps,
 }: Readonly<ModalProps>) {
   const { getRootProps, getBackdropProps } = useModal({
     isOpen,
@@ -107,7 +117,12 @@ export function Modal({
   const { open: _open, ...backdropProps } = getBackdropProps()
 
   const content = (
-    <ModalRoot scroll={scroll} layer={layer} {...getRootProps()}>
+    <ModalRoot
+      scroll={scroll}
+      layer={layer}
+      {...getRootProps()}
+      {...mergeOverrides(slotProps?.root, { style, className })}
+    >
       {hasBackdrop ? <Backdrop {...backdropProps} /> : null}
       <FocusTrap
         isEnabled={isOpen}

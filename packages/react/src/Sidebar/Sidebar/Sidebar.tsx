@@ -4,6 +4,8 @@ import { useId, useMemo, useState, type ElementType, type ReactNode } from 'reac
 import { styled } from '../../style/styled'
 import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
 import { Flex, type FlexProps } from '../../Flex'
+import { mergeOverrides, type SlotProps } from '../../style/overrides'
+import type { SidebarSlot } from './Sidebar.types'
 import {
   SidebarContext,
   type SidebarAnchor,
@@ -60,6 +62,8 @@ export interface SidebarProps extends FlexProps {
    * `aria-controls` anchor.
    */
   panelProps?: Omit<FlexProps, 'children' | 'id'> & { as?: ElementType }
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. The `style` and `className` props are the root's and win over `slotProps.root`. */
+  slotProps?: SlotProps<SidebarSlot>
   /** Accessible name of the navigation landmark - required so multiple navs stay distinguishable. */
   'aria-label': string
 }
@@ -152,6 +156,9 @@ export function Sidebar({
   panel,
   panelWidth = '18rem',
   panelProps,
+  slotProps,
+  style,
+  className,
   'aria-label': ariaLabel,
   ...rest
 }: Readonly<SidebarProps>) {
@@ -185,6 +192,11 @@ export function Sidebar({
   // sits in its own element because its animating width would otherwise clip
   // the panel. Row direction follows `anchor`, putting the panel on the rail's
   // inner side.
+  const panelOverrides = mergeOverrides(
+    { style: panelProps?.style, className: panelProps?.className },
+    slotProps?.panel
+  )
+
   return (
     <SidebarRoot
       as="nav"
@@ -192,6 +204,7 @@ export function Sidebar({
       flexDirection={anchor === 'right' ? 'row-reverse' : 'row'}
       flexShrink={0}
       {...rest}
+      {...mergeOverrides(slotProps?.root, { style, className })}
     >
       <SidebarRail
         flexDirection="column"
@@ -202,11 +215,12 @@ export function Sidebar({
         expandedWidth={expandedWidth}
         collapsedWidth={collapsedWidth}
         stackedWidth={stackedWidth}
+        {...slotProps?.rail}
       >
         <SidebarContext.Provider value={context}>{children}</SidebarContext.Provider>
       </SidebarRail>
       {panel != null && (
-        <SidebarPanelRoot as="section" width={panelWidth} {...panelProps}>
+        <SidebarPanelRoot as="section" width={panelWidth} {...panelProps} {...panelOverrides}>
           {panel}
         </SidebarPanelRoot>
       )}
@@ -217,6 +231,7 @@ export function Sidebar({
           // Unnamed while empty, so an idle panel is not announced as a region.
           aria-label={panelLabel ?? undefined}
           {...panelProps}
+          {...panelOverrides}
           // After the consumer's props: the rail owns these. The ref is the port
           // target and the id is what the selected item's aria-controls points at.
           ref={setPanelNode}

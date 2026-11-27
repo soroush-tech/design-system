@@ -64,7 +64,7 @@ import { Typography } from '@gild-ui/react/Typography'
 import { Flex } from '@gild-ui/react/Flex'
 ```
 
-The styling system comes from the root `@gild-ui/react` - `ThemeProvider`, `LayoutProvider`, `useTheme`, `useDefaultProps`, `useMediaQuery`, `withTheme`, `styled`, `css`, `keyframes`, `Global`, `useStyle`, `withStyles` and `StylesConsumer` - and each name is also an entry point of its own (`@gild-ui/react/useTheme`). The style-prop functions (`space`, `system`, ...) are `@soroush.tech/styled-system`'s, and the theme (`baseTheme`, `createTheme`, the `Theme` type) is `@gild-ui/core/theme`'s: this package re-exports neither.
+The styling system comes from the root `@gild-ui/react` - `ThemeProvider`, `LayoutProvider`, `useTheme`, `useDefaultProps`, `useMediaQuery`, `withTheme`, `styled`, `css`, `keyframes`, `Global`, `StyleSheet`, `useStyle`, `withStyles` and `StylesConsumer` - and each name is also an entry point of its own (`@gild-ui/react/useTheme`). The style-prop functions (`space`, `system`, ...) are `@soroush.tech/styled-system`'s, and the theme (`baseTheme`, `createTheme`, the `Theme` type) is `@gild-ui/core/theme`'s: this package re-exports neither.
 
 ```ts
 import { styled, css } from '@gild-ui/react'
@@ -77,11 +77,13 @@ import { type Theme } from '@gild-ui/core/theme'
 import { ThemeProvider, useTheme } from '@gild-ui/react'
 ```
 
-Style-computation helpers (`useStyle`, `withStyles`, `StylesConsumer`) - resolving a `StyleInput`/`StyleFactory` into a `CSSObject`:
+Overriding a component: its `style` prop takes entries of `StyleSheet.create` only, and `slotProps` takes a `style`, a `className` and `data-*` and `aria-*` attributes for each slot a theme can style. A sheet that reads the theme is resolved with `useStyle`:
 
 ```ts
-import { useStyle } from '@gild-ui/react'
+import { StyleSheet, useStyle } from '@gild-ui/react'
 ```
+
+`withStyles` and `StylesConsumer` resolve a `StyleInput`/`StyleFactory` into a `CSSObject`. See [Styling and overriding](./docs/style.md).
 
 `Global` is on the root. The raw engine primitives for building your own global styles - `globalStyles`, and the SSR-only `CacheProvider`/`styleCache` pairing - live at `/engine`:
 

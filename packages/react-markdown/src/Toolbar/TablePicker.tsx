@@ -1,5 +1,5 @@
 import { useState, type MouseEvent } from 'react'
-import { styled } from '@gild-ui/react'
+import { styled, type SlotProps } from '@gild-ui/react'
 import type { Theme } from '@gild-ui/core/theme'
 import { themeDefault } from '@gild-ui/core/theme'
 import { Button } from '@gild-ui/react/Button'
@@ -22,6 +22,8 @@ const growExtent = (current: number, hovered: number) =>
 export interface TablePickerProps {
   /** Fired with the chosen (rows, cols) when a grid cell is picked. */
   onSelect: (rows: number, cols: number) => void
+  /** Overrides for the grid cells: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<'tablePickerCell'>
 }
 
 // Small square cell whose fill flags whether it falls inside the hovered rectangle.
@@ -45,7 +47,7 @@ const Cell = styled('button', {
 }))
 
 /** A "Table" trigger that opens a hover grid for choosing table dimensions. */
-export function TablePicker({ onSelect }: Readonly<TablePickerProps>) {
+export function TablePicker({ onSelect, slotProps }: Readonly<TablePickerProps>) {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
   const [hover, setHover] = useState({ rows: 0, cols: 0 })
   const [extent, setExtent] = useState(DEFAULT_EXTENT)
@@ -99,6 +101,7 @@ export function TablePicker({ onSelect }: Readonly<TablePickerProps>) {
                   const cols = c + 1
                   return (
                     <Cell
+                      {...slotProps?.tablePickerCell}
                       key={c}
                       type="button"
                       role="gridcell"

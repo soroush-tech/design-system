@@ -11,6 +11,8 @@ import {
 } from 'react'
 import type { SpaceProps } from '@soroush.tech/styled-system'
 import { styled } from '../../style/styled'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../../style/overrides'
+import type { AccordionSlot } from './Accordion.types'
 import { type Theme } from '../../theme/themes'
 import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
 import { get, space } from '@soroush.tech/styled-system'
@@ -60,6 +62,10 @@ export interface AccordionProps extends SpaceProps<Theme> {
   /** The transition that opens and closes the region. Default: `Collapse`. */
   transition?: ComponentType<AccordionTransitionProps>
   className?: string
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<AccordionSlot>
   'data-testid'?: string
 }
 
@@ -107,6 +113,8 @@ export function Accordion({
   textColor: textColorProp,
   transition: Transition = Collapse,
   className,
+  style,
+  slotProps,
   'data-testid': dataTestid,
   ...spaceProps
 }: Readonly<AccordionProps>) {
@@ -148,13 +156,14 @@ export function Accordion({
         borderRadius={borderRadius}
         bg={bg}
         textColor={textColor}
-        className={className}
+        {...mergeOverrides(slotProps?.root, { style, className })}
         data-testid={dataTestid}
         {...spaceProps}
       >
         {summary}
         <Transition isShown={isExpanded} shouldAppear={false}>
           <AccordionRegion
+            {...slotProps?.region}
             role="region"
             id={getRegionId(baseId)}
             aria-labelledby={getSummaryId(baseId)}

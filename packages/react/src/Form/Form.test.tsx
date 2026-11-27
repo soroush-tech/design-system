@@ -5,6 +5,7 @@ import { ThemeProvider } from '../theme/ThemeProvider'
 import { useFormControl } from '../FormControl'
 import { Form } from './Form'
 import { themeWith } from '../utils/test/themeWith'
+import { describeRootSlot } from '../utils/test/describeRootSlot'
 
 const Probe = () => {
   const fc = useFormControl()
@@ -80,3 +81,13 @@ describe('Form', () => {
     expect(form).toHaveAttribute('novalidate')
   })
 })
+
+describeRootSlot(
+  'Form',
+  (props) => (
+    <Form data-testid="root" {...props}>
+      text
+    </Form>
+  ),
+  () => screen.getByTestId('root')
+)

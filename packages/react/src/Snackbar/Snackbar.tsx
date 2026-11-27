@@ -20,6 +20,8 @@ import { Portal, type PortalProps } from '../Portal'
 import { useControlled } from '@gild-ui/hooks/useControlled'
 import type { TransitionProps } from '../utils/useTransition'
 import { useAutoHide } from './hooks/useAutoHide'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../style/overrides'
+import type { SnackbarSlot } from './Snackbar.types'
 
 /** Why a snackbar asks to close. */
 export type SnackbarCloseReason = 'timeout' | 'clickaway' | 'escapeKeyDown'
@@ -69,6 +71,10 @@ export interface SnackbarProps {
   /** Portal target. Default: `document.body`. */
   container?: Exclude<PortalProps['container'], undefined>
   className?: string
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<SnackbarSlot>
   'data-testid'?: string
 }
 
@@ -170,6 +176,8 @@ export function Snackbar({
   textColor: textColorProp,
   container,
   className,
+  style,
+  slotProps,
   'data-testid': dataTestid,
 }: Readonly<SnackbarProps>) {
   const dp = useDefaultProps('Snackbar')
@@ -227,11 +235,12 @@ export function Snackbar({
       <SnackbarRoot
         anchorOrigin={anchorOrigin}
         layer={layer}
-        className={className}
+        {...mergeOverrides(slotProps?.root, { style, className })}
         data-testid={dataTestid}
       >
         <Transition isShown={isOpen} onExited={() => setIsMounted(false)}>
           <SnackbarContent
+            {...slotProps?.content}
             ref={contentRef}
             role="status"
             shape={shape}
@@ -245,8 +254,8 @@ export function Snackbar({
           >
             {children ?? (
               <>
-                <SnackbarMessage>{message}</SnackbarMessage>
-                {action ? <SnackbarAction>{action}</SnackbarAction> : null}
+                <SnackbarMessage {...slotProps?.message}>{message}</SnackbarMessage>
+                {action ? <SnackbarAction {...slotProps?.action}>{action}</SnackbarAction> : null}
               </>
             )}
           </SnackbarContent>

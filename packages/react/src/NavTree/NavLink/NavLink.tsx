@@ -6,9 +6,14 @@ import { type Theme } from '../../theme/themes'
 import { createShouldForwardProp } from '@soroush.tech/styled-system/should-forward-prop'
 import { get } from '@soroush.tech/styled-system'
 import { Icon } from '../../Icon'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../../style/overrides'
+import type { NavLinkSlot } from './NavLink.types'
 import { NavTreeContext } from '../NavTreeContext'
 
-export interface NavLinkProps extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'color'> {
+export interface NavLinkProps extends Omit<
+  AnchorHTMLAttributes<HTMLAnchorElement>,
+  'color' | 'style'
+> {
   /** Where it goes. */
   href: string
   /** The name of the page. */
@@ -21,6 +26,10 @@ export interface NavLinkProps extends Omit<AnchorHTMLAttributes<HTMLAnchorElemen
   isExternal?: boolean
   /** Palette color of the pill - resolves to `theme.palette`. Default: its `NavTree`'s. */
   color?: keyof Theme['palette']
+  /** Overrides the CSS of the link: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<NavLinkSlot>
 }
 
 interface NavLinkRootProps {
@@ -78,6 +87,9 @@ export function NavLink({
   note,
   isExternal = false,
   color,
+  style,
+  className,
+  slotProps,
   ...rest
 }: Readonly<NavLinkProps>) {
   const tree = useContext(NavTreeContext)
@@ -88,9 +100,10 @@ export function NavLink({
       aria-current={isCurrent ? 'page' : undefined}
       {...(isExternal && { target: '_blank', rel: 'noopener noreferrer' })}
       {...rest}
+      {...mergeOverrides(slotProps?.root, { style, className })}
     >
-      <NavLinkName>{children}</NavLinkName>
-      {note != null && <NavLinkNote>{note}</NavLinkNote>}
+      <NavLinkName {...slotProps?.label}>{children}</NavLinkName>
+      {note != null && <NavLinkNote {...slotProps?.note}>{note}</NavLinkNote>}
       {isExternal && <Icon name="external_link" size="0.875rem" color="inherit" />}
     </NavLinkRoot>
   )

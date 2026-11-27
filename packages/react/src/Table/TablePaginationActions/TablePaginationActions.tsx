@@ -3,12 +3,14 @@
 import { type HTMLAttributes } from 'react'
 import { PaginationItem, type PaginationItemSize } from '../../Pagination'
 import { styled } from '../../style/styled'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../../style/overrides'
+import type { TablePaginationActionsSlot } from './TablePaginationActions.types'
 import { useTheme } from '../../theme/hooks/useTheme'
 import { themeDefault } from '@gild-ui/core/theme'
 
 export type TablePaginationActionType = 'first' | 'previous' | 'next' | 'last'
 
-export interface TablePaginationActionsProps extends HTMLAttributes<HTMLDivElement> {
+export interface TablePaginationActionsProps extends Omit<HTMLAttributes<HTMLDivElement>, 'style'> {
   /** Total number of rows; `-1` = unknown (server-side pagination). */
   count: number
   /** Zero-based current page. */
@@ -25,6 +27,10 @@ export interface TablePaginationActionsProps extends HTMLAttributes<HTMLDivEleme
   shouldShowLastButton?: boolean
   /** Button density - resolves against `theme.sizes`. Default: `'sm'`. */
   size?: PaginationItemSize
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<TablePaginationActionsSlot>
 }
 
 const ActionsRoot = styled('div', {
@@ -52,6 +58,9 @@ export function TablePaginationActions({
   shouldShowFirstButton = false,
   shouldShowLastButton = false,
   size: sizeProp,
+  style,
+  className,
+  slotProps,
   ...rest
 }: Readonly<TablePaginationActionsProps>) {
   const theme = useTheme()
@@ -63,7 +72,7 @@ export function TablePaginationActions({
   const isLastDisabled = disabled || count === -1 || page >= lastPage
 
   return (
-    <ActionsRoot {...rest}>
+    <ActionsRoot {...mergeOverrides(slotProps?.root, { style, className })} {...rest}>
       {shouldShowFirstButton && (
         <PaginationItem
           type="first"

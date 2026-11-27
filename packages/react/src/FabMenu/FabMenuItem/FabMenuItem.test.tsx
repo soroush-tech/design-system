@@ -29,6 +29,11 @@ describe('FabMenuItem', () => {
     expect(screen.getByTestId('item')).toHaveStyle({ margin: baseTheme.space[2] })
   })
 
+  it('passes its class name on to its button', () => {
+    inMenu(<FabMenuItem className="own">Document</FabMenuItem>)
+    expect(screen.getByRole('button', { name: 'Document' })).toHaveClass('own')
+  })
+
   it('runs its own onClick before the menu closes', () => {
     const calls: string[] = []
     renderWithTheme(

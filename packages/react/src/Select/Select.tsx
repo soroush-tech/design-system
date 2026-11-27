@@ -16,7 +16,9 @@ import { Popover } from '../Popover'
 import { NativeSelect, type NativeSelectOption } from '../NativeSelect'
 import { type MenuItemProps } from '../MenuItem'
 import type { SpaceProps, LayoutProps } from '@soroush.tech/styled-system'
-import { styled } from '../style/styled'
+import { styled, type LiveValue } from '../style/styled'
+import { useLiveValue } from '../style/hooks/useLiveValue'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../style/overrides'
 import { type Theme } from '../theme/themes'
 import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
 import { get, system, space } from '@soroush.tech/styled-system'
@@ -29,6 +31,8 @@ import { isOptionSelected, type SelectValue } from './utils/isOptionSelected'
 import { computeNextValue } from './utils/computeNextValue'
 import { resolveDisplayLabel } from './utils/resolveDisplayLabel'
 import { themeDefault } from '@gild-ui/core/theme'
+import { getSurfaceRadius } from '@gild-ui/core/utils'
+import type { SelectSlot } from './Select.types'
 import { getFocusRing, getInputMinWidth } from '../utils/inputStyles'
 
 export type { SelectValue }
@@ -89,6 +93,10 @@ export interface SelectProps
   labelId?: string
   'aria-label'?: string
   className?: string
+  /** Overrides the CSS of the root, the trigger: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<SelectSlot>
   'data-testid'?: string
 }
 
@@ -253,6 +261,20 @@ const TriggerValue = styled('span', { name: 'Select', slot: 'value', label: 'Sel
 
 // ─── Popover ──────────────────────────────────────────────────────────────────
 
+// The popover's surface takes the trigger's width as its least, and the field's own look.
+const SelectPopover = styled(Popover, {
+  shouldForwardProp: (prop: string) => !['bg', 'surfaceRadius', 'minWidth'].includes(prop),
+})<{
+  bg: SelectBackgroundToken
+  surfaceRadius?: keyof Theme['radii']
+  minWidth: LiveValue
+}>(({ theme, bg, surfaceRadius, minWidth }) => ({
+  padding: 0,
+  backgroundColor: get(theme, `background.${bg}`),
+  borderRadius: getSurfaceRadius(theme, surfaceRadius),
+  minWidth: `${minWidth}`,
+}))
+
 const ListBox = styled('ul', { name: 'Select', slot: 'listbox', label: 'SelectListbox' })(
   ({ theme }) => ({
     margin: 0,
@@ -297,6 +319,8 @@ export function Select({
   labelId: labelIdProp,
   'aria-label': ariaLabel,
   className,
+  style,
+  slotProps,
   'data-testid': dataTestid,
   ...spaceProps
 }: Readonly<SelectProps>) {
@@ -361,6 +385,8 @@ export function Select({
         id={idProp}
         name={name}
         className={className}
+        style={style}
+        slotProps={{ root: slotProps?.root }}
         data-testid={dataTestid}
         // The accessible name, as on the custom listbox's trigger.
         selectProps={{ 'aria-label': ariaLabel, 'aria-labelledby': labelId }}
@@ -405,6 +431,8 @@ export function Select({
       ariaLabel={ariaLabel}
       ariaDescribedby={fc['aria-describedby']}
       className={className}
+      style={style}
+      slotProps={slotProps}
       dataTestid={dataTestid}
       spaceProps={spaceProps}
     >
@@ -446,6 +474,8 @@ interface NonNativeSelectProps {
   ariaLabel?: string
   ariaDescribedby?: string
   className?: string
+  style?: StyleOverride
+  slotProps?: SlotProps<SelectSlot>
   dataTestid?: string
   spaceProps: SpaceProps<Theme>
 }
@@ -481,12 +511,15 @@ function NonNativeSelect({
   ariaLabel,
   ariaDescribedby,
   className,
+  style,
+  slotProps,
   dataTestid,
   spaceProps,
 }: Readonly<NonNativeSelectProps>) {
   // The trigger element is kept in state (not a ref) so it can drive Popover's
   // `anchorEl` without reading a ref during render.
   const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null)
+  const popoverMinWidth = useLiveValue(anchorEl?.offsetWidth ?? 0, 'px')
   const baseId = useId()
   const listboxId = `${baseId}-listbox`
 
@@ -658,23 +691,25 @@ function NonNativeSelect({
         borderRadius={borderRadius}
         open={open}
         id={id}
-        className={className}
+        {...mergeOverrides(slotProps?.root, { style, className })}
         data-testid={dataTestid}
         onClick={handleTriggerClick}
         onKeyDown={handleKeyDown}
         onBlur={handleBlur}
         {...spaceProps}
       >
-        <ValueArea autoWidth={autoWidth}>
+        <ValueArea autoWidth={autoWidth} {...slotProps?.valueArea}>
           {!autoWidth && (
-            <ValueGhost aria-hidden>
+            <ValueGhost aria-hidden {...slotProps?.valueGhost}>
               {options.map((option) => (
                 <span key={String(option.value)}>{option.label}</span>
               ))}
               {placeholder !== undefined && <span>{placeholder}</span>}
             </ValueGhost>
           )}
-          <TriggerValue>{showPlaceholder ? (placeholder ?? '\u200B') : display}</TriggerValue>
+          <TriggerValue {...slotProps?.value}>
+            {showPlaceholder ? (placeholder ?? '\u200B') : display}
+          </TriggerValue>
         </ValueArea>
         <Icon
           name={iconName ?? (open ? 'expand_less' : 'expand_more')}
@@ -690,7 +725,10 @@ function NonNativeSelect({
           value={Array.isArray(value) ? value.join(',') : String(value)}
         />
       )}
-      <Popover
+      <SelectPopover
+        bg={bg}
+        surfaceRadius={borderRadius}
+        minWidth={popoverMinWidth}
         open={open}
         anchorEl={anchorEl}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
@@ -702,11 +740,9 @@ function NonNativeSelect({
         shouldTrapFocus={false}
         shouldEnforceFocus={false}
         shouldRestoreFocus={false}
-        slotProps={{
-          paper: { p: 0, bg, borderRadius, style: { minWidth: anchorEl?.offsetWidth } },
-        }}
       >
         <ListBox
+          {...slotProps?.listbox}
           role="listbox"
           id={listboxId}
           aria-multiselectable={multiple || undefined}
@@ -715,7 +751,7 @@ function NonNativeSelect({
         >
           {renderedItems}
         </ListBox>
-      </Popover>
+      </SelectPopover>
     </>
   )
 }

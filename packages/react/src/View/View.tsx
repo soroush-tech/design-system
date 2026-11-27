@@ -10,6 +10,8 @@ import type {
   LayoutFrameProps,
 } from '@soroush.tech/styled-system'
 import { styled } from '../style/styled'
+import type { SlotProps, StyleOverride } from '../style/overrides'
+import { withRootOverrides } from '../style/withRootOverrides'
 import { type Theme } from '../theme/themes'
 import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
 import {
@@ -40,7 +42,7 @@ export type ViewBorderRadiusToken = keyof Theme['radii'] | `${number}px`
 
 export interface ViewProps
   extends
-    Omit<HTMLAttributes<HTMLElement>, 'color'>,
+    Omit<HTMLAttributes<HTMLElement>, 'color' | 'style'>,
     SpaceProps<Theme>,
     LayoutProps<Theme>,
     SystemTypographyProps<Theme>,
@@ -48,6 +50,10 @@ export interface ViewProps
     PositionProps<Theme>,
     SpanProps<Theme>,
     LayoutFrameProps<Theme> {
+  /** Overrides the CSS of the element: an entry of `StyleSheet.create`, or a list of them. */
+  style?: StyleOverride
+  /** Overrides for the slot a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<'root'>
   bg?: ViewBackgroundToken
   /** Resolves against theme.border - light · primary · dark */
   borderColor?: ViewBorderColorToken
@@ -74,7 +80,7 @@ const colorSystem = system({
   order: { property: 'order' },
 })
 
-export const View = styled('div', {
+const ViewRoot = styled('div', {
   name: 'View',
   label: 'View',
   shouldForwardProp,
@@ -82,3 +88,5 @@ export const View = styled('div', {
   // add the columns on top of this frame.
   systemProps: [space, layout, typography, border, colorSystem, position, span, layoutFrame],
 })<ViewProps>()
+
+export const View = withRootOverrides(ViewRoot)

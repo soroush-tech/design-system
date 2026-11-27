@@ -1,10 +1,12 @@
 import { useRef, type ReactNode } from 'react'
-import { styled } from '@gild-ui/react'
+import { styled, type SlotProps } from '@gild-ui/react'
 import type { Theme } from '@gild-ui/core/theme'
 import { View, type ViewProps } from '@gild-ui/react/View'
 import { Button } from '@gild-ui/react/Button'
 import { Icon } from '@gild-ui/react/Icon'
 import { useCopyToClipboard } from '@gild-ui/hooks/useCopyToClipboard'
+import { mergeOverrides } from '../utils/mergeOverrides'
+import type { CodeBlockSlot } from '../themeTypes'
 
 // Maps highlight.js token classes to the theme's `syntax` tokens. Descendant
 // selectors are required because `rehype-highlight` emits `<span class="hljs-*">`
@@ -61,13 +63,21 @@ const Wrapper = styled(View, { name: 'CodeBlock', label: 'CodeBlock' })({
 
 export interface CodeBlockProps extends ViewProps {
   children: ReactNode
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<CodeBlockSlot>
 }
 
 /**
  * Fenced-code block: a horizontally scrollable, syntax-highlighted surface with a
  * copy-to-clipboard button that sticks to the top-right while the block is in view.
  */
-export function CodeBlock({ children, ...rest }: Readonly<CodeBlockProps>) {
+export function CodeBlock({
+  children,
+  slotProps,
+  style,
+  className,
+  ...rest
+}: Readonly<CodeBlockProps>) {
   const surfaceRef = useRef<HTMLDivElement>(null)
   const { copied, copy } = useCopyToClipboard()
 
@@ -82,7 +92,12 @@ export function CodeBlock({ children, ...rest }: Readonly<CodeBlockProps>) {
   }
 
   return (
-    <Wrapper my={2} position="relative" {...rest}>
+    <Wrapper
+      my={2}
+      position="relative"
+      {...rest}
+      {...mergeOverrides(slotProps?.root, { style, className })}
+    >
       <View
         position="absolute"
         top="8px"
@@ -109,6 +124,7 @@ export function CodeBlock({ children, ...rest }: Readonly<CodeBlockProps>) {
         </Button>
       </View>
       <CodeSurface
+        {...slotProps?.surface}
         as="pre"
         // Focusable so keyboard users can scroll overflowing lines with the arrow keys.
         tabIndex={0}

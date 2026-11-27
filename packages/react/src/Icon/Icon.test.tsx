@@ -1,8 +1,10 @@
+import { screen } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { Icon } from './Icon'
 import { icons, type IconName } from './icons'
 import { toPx } from '../utils/test/toPx'
+import { describeRootSlot } from '../utils/test/describeRootSlot'
 
 describe('Icon', () => {
   it('renders the named icon as an svg', () => {
@@ -75,3 +77,9 @@ describe('Icon', () => {
     expect(svg?.querySelector('path, circle, rect, line, polyline, polygon')).toBeInTheDocument()
   })
 })
+
+describeRootSlot(
+  'Icon',
+  (props) => <Icon name="close" data-testid="root" {...props} />,
+  () => screen.getByTestId('root')
+)

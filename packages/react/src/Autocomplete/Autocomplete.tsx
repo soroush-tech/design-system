@@ -13,6 +13,8 @@ import {
 } from 'react'
 import type { LayoutProps, SpaceProps } from '@soroush.tech/styled-system'
 import { styled } from '../style/styled'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../style/overrides'
+import type { AutocompleteSlot } from './Autocomplete.types'
 import { type Theme } from '../theme/themes'
 import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
 import { get, system, space } from '@soroush.tech/styled-system'
@@ -119,6 +121,10 @@ export interface AutocompleteProps<T = string, Multiple extends boolean | undefi
   /** Stacking layer of the list, from `theme.zOrder`. Default: `'modal'`. */
   layer?: keyof Theme['zOrder']
   className?: string
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<AutocompleteSlot>
   'aria-label'?: string
   'aria-labelledby'?: string
   'aria-describedby'?: string
@@ -392,14 +398,16 @@ const SelectedTags = <T,>({
   getRemoveLabel,
   onRemove,
   disabled,
+  tagsProps,
 }: Readonly<{
   selected: readonly T[]
   getOptionLabel: (option: T) => string
   getRemoveLabel?: (label: string) => string
   onRemove: (event: React.SyntheticEvent, option: T) => void
   disabled?: boolean
+  tagsProps?: SlotProps<AutocompleteSlot>['tags']
 }>) => (
-  <AutocompleteTags>
+  <AutocompleteTags {...tagsProps}>
     {selected.map((option, index) => {
       const label = getOptionLabel(option)
       return (
@@ -525,6 +533,8 @@ export function Autocomplete<T = string, Multiple extends boolean | undefined = 
   id: idProp,
   layer: layerProp,
   className,
+  style,
+  slotProps,
   'aria-label': ariaLabel,
   'aria-labelledby': ariaLabelledby,
   'aria-describedby': ariaDescribedby,
@@ -608,6 +618,7 @@ export function Autocomplete<T = string, Multiple extends boolean | undefined = 
     const isHighlighted = index === highlight
     return (
       <AutocompleteOption
+        {...slotProps?.option}
         key={index}
         id={optionId(index)}
         role="option"
@@ -630,9 +641,11 @@ export function Autocomplete<T = string, Multiple extends boolean | undefined = 
     return groupOptions(filtered, groupBy).map((group, position) => {
       const groupId = `${baseId}-group-${position}`
       return (
-        <AutocompleteGroup key={groupId} role="presentation">
-          <AutocompleteGroupLabel id={groupId}>{group.label}</AutocompleteGroupLabel>
-          <AutocompleteGroupItems role="group" aria-labelledby={groupId}>
+        <AutocompleteGroup {...slotProps?.group} key={groupId} role="presentation">
+          <AutocompleteGroupLabel {...slotProps?.groupLabel} id={groupId}>
+            {group.label}
+          </AutocompleteGroupLabel>
+          <AutocompleteGroupItems {...slotProps?.groupItems} role="group" aria-labelledby={groupId}>
             {group.rows.map(({ option, index }) => renderRow(option, index))}
           </AutocompleteGroupItems>
         </AutocompleteGroup>
@@ -645,6 +658,7 @@ export function Autocomplete<T = string, Multiple extends boolean | undefined = 
   return (
     <>
       <AutocompleteRoot
+        {...mergeOverrides(slotProps?.root, { style, className })}
         ref={frameRef}
         color={color}
         textColor={fc.textColor}
@@ -654,7 +668,6 @@ export function Autocomplete<T = string, Multiple extends boolean | undefined = 
         isDisabled={fc.disabled}
         isFullWidth={fc.fullWidth}
         isInField={isInField}
-        className={className}
         data-testid={dataTestid}
         onMouseDown={(event) => focusOnFramePress(event, inputRef)}
         {...spaceProps}
@@ -666,9 +679,11 @@ export function Autocomplete<T = string, Multiple extends boolean | undefined = 
             getRemoveLabel={getRemoveLabel}
             onRemove={state.removeOption}
             disabled={fc.disabled}
+            tagsProps={slotProps?.tags}
           />
         ) : null}
         <AutocompleteInput
+          {...slotProps?.input}
           ref={inputRef}
           id={fc.id}
           name={name}
@@ -694,6 +709,7 @@ export function Autocomplete<T = string, Multiple extends boolean | undefined = 
         />
         {clearLabel !== undefined && state.hasClearable && !fc.disabled ? (
           <AutocompleteClear
+            {...slotProps?.clearIndicator}
             type="button"
             tabIndex={-1}
             aria-label={clearLabel}
@@ -703,6 +719,7 @@ export function Autocomplete<T = string, Multiple extends boolean | undefined = 
           </AutocompleteClear>
         ) : null}
         <AutocompletePopupIndicator
+          {...slotProps?.popupIndicator}
           type="button"
           tabIndex={-1}
           {...getIndicatorLabel(isShown, closeLabel, openLabel)}
@@ -720,6 +737,7 @@ export function Autocomplete<T = string, Multiple extends boolean | undefined = 
       {isShown && (
         <Portal>
           <AutocompletePopup
+            {...slotProps?.popup}
             ref={popupRef}
             layer={layer}
             borderRadius={borderRadius}
@@ -728,6 +746,7 @@ export function Autocomplete<T = string, Multiple extends boolean | undefined = 
             onMouseDown={(event) => event.preventDefault()}
           >
             <AutocompleteListbox
+              {...slotProps?.listbox}
               id={listboxId}
               role="listbox"
               aria-multiselectable={multiple === true ? true : undefined}
@@ -737,7 +756,7 @@ export function Autocomplete<T = string, Multiple extends boolean | undefined = 
               {filtered.length > 0 ? (
                 renderRows()
               ) : (
-                <AutocompleteStatus role="presentation">
+                <AutocompleteStatus {...slotProps?.status} role="presentation">
                   {isLoading ? loadingText : noOptionsText}
                 </AutocompleteStatus>
               )}

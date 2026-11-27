@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 import { styled } from '../style/styled'
+import { mergeOverrides, type SlotProps } from '../style/overrides'
+import type { AvatarSlot } from './Avatar.types'
 import { type Theme } from '../theme/themes'
 import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
 import { system, variant as styledVariant } from '@soroush.tech/styled-system'
@@ -32,6 +34,8 @@ export interface AvatarProps extends Omit<FlexProps, OmittedProps> {
   ringColor?: AvatarRingColor
   /** Ring width - resolves against theme.borderWidths. */
   ringWidth?: AvatarRingWidth
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<AvatarSlot>
 }
 
 const shouldForwardProp = createShouldForwardProp([
@@ -101,6 +105,9 @@ export function Avatar({
   ring,
   ringColor: ringColorProp,
   ringWidth: ringWidthProp,
+  style,
+  className,
+  slotProps,
   ...rest
 }: Readonly<AvatarProps>) {
   const theme = useTheme()
@@ -148,10 +155,17 @@ export function Avatar({
       ring={ring}
       ringColor={ring ? ringColor : undefined}
       ringWidth={ring ? ringWidth : undefined}
+      {...mergeOverrides(slotProps?.root, { style, className })}
       {...rest}
     >
       {hasAnyImage && !failed ? (
-        <AvatarImg src={currentSrc} srcSet={currentSrcSet} alt={alt} onError={handleError} />
+        <AvatarImg
+          {...slotProps?.img}
+          src={currentSrc}
+          srcSet={currentSrcSet}
+          alt={alt}
+          onError={handleError}
+        />
       ) : (
         children
       )}

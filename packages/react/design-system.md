@@ -146,6 +146,8 @@ export interface MyComponentProps
 
 Export prop types - Storybook's `storiesOptions.ts` will import and use them in `satisfies` constraints.
 
+Every component that renders an element takes `style?: StyleOverride` and, when it has slots, `slotProps?: SlotProps<NameSlot>` (both from `style/overrides.ts`; `NameSlot` is the union in `Name.types.ts`). Omit React's `style` from the HTML props it extends. `style` goes to the root styled element, and each slot's element takes `{...slotProps?.slot}`; the root merges `mergeOverrides(slotProps?.root, { style, className })`, so the `style` prop wins over `slotProps.root.style`. A component that renders no element of its own (a provider, a transition wrapper) takes neither. See [`docs/style.md`](./docs/style.md).
+
 ### 2. Prop forwarding
 
 Use `createShouldForwardProp` to prevent styled-system props from reaching the DOM:
@@ -291,6 +293,7 @@ Minimum coverage:
 - Children render correctly
 - Each custom prop applies the expected CSS
 - HTML attribute passthrough (`className`, `data-*`, `aria-*`, `onClick`)
+- `style` (an entry, and a list with `false`) and `slotProps` for every slot: its entry, class name and attributes land on the slot's element, and on the root `style` wins over `slotProps.root.style`
 - Variant → element mapping (if applicable)
 
 ---

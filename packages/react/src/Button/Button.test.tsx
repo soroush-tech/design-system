@@ -8,6 +8,7 @@ import { baseTheme } from '../theme/themes'
 import { Button, type ButtonColor, type ButtonVariant, type ButtonSize } from '../Button'
 import type { ButtonShape } from '../Button'
 import { toPx } from '../utils/test/toPx'
+import { lastColor, overrides } from '../utils/test/overrides'
 import { themeWith } from '../utils/test/themeWith'
 
 describe('Button', () => {
@@ -644,5 +645,62 @@ describe('Button', () => {
       )
       expect(screen.getByTestId('btn')).toHaveAttribute('type', 'submit')
     })
+  })
+})
+
+describe('Button overrides', () => {
+  const mark = (name: string) => ({
+    className: name,
+    style: overrides.first,
+    'data-mark': name,
+    'aria-details': name,
+  })
+  const expectMarked = (element: HTMLElement, name: string) => {
+    expect(element).toHaveClass(name)
+    expect(element).toHaveAttribute('data-mark', name)
+    expect(element).toHaveAttribute('aria-details', name)
+    expect(lastColor(element)).toBe('rgb(1, 2, 3)')
+  }
+
+  it('puts the style, class name and attributes of the root, label and icon slots on them', () => {
+    renderWithTheme(
+      <Button
+        startIcon={<i data-testid="start" />}
+        slotProps={{ root: mark('root'), label: mark('label'), icon: mark('icon') }}
+      >
+        Save
+      </Button>
+    )
+    expectMarked(screen.getByRole('button'), 'root')
+    expectMarked(screen.getByText('Save'), 'label')
+    expectMarked(screen.getByTestId('start').parentElement!, 'icon')
+  })
+
+  it('puts the loader slot on the centred loading indicator', () => {
+    renderWithTheme(
+      <Button
+        loading
+        loadingIndicator={<i data-testid="busy" />}
+        slotProps={{ loader: mark('loader') }}
+      >
+        Save
+      </Button>
+    )
+    expectMarked(screen.getByTestId('busy').parentElement!, 'loader')
+  })
+
+  it('lets the style prop win over slotProps.root.style, and joins the class names', () => {
+    renderWithTheme(
+      <Button
+        className="own"
+        style={[false, null, undefined, overrides.second]}
+        slotProps={{ root: { className: 'slot', style: overrides.first } }}
+      >
+        Save
+      </Button>
+    )
+    const button = screen.getByRole('button')
+    expect(button).toHaveClass('slot', 'own')
+    expect(lastColor(button)).toBe('rgb(4, 5, 6)')
   })
 })

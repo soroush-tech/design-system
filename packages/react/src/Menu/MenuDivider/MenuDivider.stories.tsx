@@ -2,9 +2,12 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { MenuItem } from '../../MenuItem'
 import { MenuList } from '../MenuList'
 import { Paper } from '../../Paper'
+import { StyleSheet } from '../../style/styled'
 import { exampleArgs } from '../../utils/test/renderExample'
 import { menuDividerCatalog } from '@gild-ui/core/catalog/entries'
 import { MenuDivider } from './MenuDivider'
+
+const sheet = StyleSheet.create({ paper: { width: 220 } })
 
 const meta: Meta<typeof MenuDivider> = {
   title: 'Theme/Menu/MenuDivider',
@@ -17,7 +20,7 @@ const meta: Meta<typeof MenuDivider> = {
   },
   decorators: [
     (Story) => (
-      <Paper elevation={8} p={0} borderRadius="sm" style={{ width: 220 }}>
+      <Paper elevation={8} p={0} borderRadius="sm" style={sheet.paper}>
         <MenuList aria-label="Edit">
           <MenuItem>Cut</MenuItem>
           <MenuItem>Copy</MenuItem>

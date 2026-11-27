@@ -6,6 +6,7 @@ import { baseTheme, type Theme } from '../theme/themes'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { Tooltip, type TooltipProps } from './Tooltip'
 import { themeWith } from '../utils/test/themeWith'
+import { lastColor, overrides } from '../utils/test/overrides'
 
 const withTheme = (theme: Theme) =>
   function Wrapper({ children }: { children: ReactNode }) {
@@ -856,27 +857,35 @@ describe('Tooltip', () => {
   })
 
   describe('slots', () => {
-    it('puts the props of a slot on its surface and its arrow, the tooltip own props winning', () => {
+    it('puts the style, class name and attributes of a slot on its surface and its arrow', () => {
       renderWithTheme(
         view({
           defaultOpen: true,
           hasArrow: true,
-          slotProps: {
-            root: { className: 'mine', title: 'Surface', id: 'ignored', 'data-testid': 'slot' },
-            arrow: { className: 'point', style: { opacity: 0.5, left: '999px' } },
-          },
           className: 'extra',
+          style: [false, overrides.second],
+          'data-testid': 'surface',
+          slotProps: {
+            root: { className: 'mine', style: overrides.first, 'data-mark': 'root' },
+            arrow: { className: 'point', style: overrides.first, 'aria-description': 'Arrow' },
+          },
         })
       )
       expect(tooltip()).toHaveClass('mine', 'extra')
-      expect(tooltip()).toHaveAttribute('title', 'Surface')
-      expect(tooltip()).toHaveAttribute('data-testid', 'slot')
-      expect(tooltip().id).not.toBe('ignored')
+      expect(tooltip()).toHaveAttribute('data-mark', 'root')
+      expect(tooltip()).toHaveAttribute('data-testid', 'surface')
       expect(tooltip()).toHaveAttribute('role', 'tooltip')
+      // The style prop wins over slotProps.root.style.
+      expect(lastColor(tooltip())).toBe('rgb(4, 5, 6)')
       const arrow = tooltip().querySelector('[aria-hidden="true"]') as HTMLElement
       expect(arrow).toHaveClass('point')
-      expect(arrow).toHaveStyle({ opacity: '0.5' })
-      expect(arrow.style.left).not.toBe('999px')
+      expect(arrow).toHaveAttribute('aria-description', 'Arrow')
+      expect(lastColor(arrow)).toBe('rgb(1, 2, 3)')
+    })
+
+    it('takes the test id of the root slot', () => {
+      renderWithTheme(view({ defaultOpen: true, slotProps: { root: { 'data-testid': 'slot' } } }))
+      expect(tooltip()).toHaveAttribute('data-testid', 'slot')
     })
 
     it('draws its surface and its arrow as the elements given, keeping the styles', () => {

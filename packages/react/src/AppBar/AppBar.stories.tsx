@@ -3,8 +3,14 @@ import type { Meta, StoryObj, Decorator } from '@storybook/react-vite'
 import { border, m, p, position } from '../utils/test/storiesArgs'
 import { appBarSizeTokens, backgroundTokens } from '../utils/test/storiesOptions'
 import { ThemeProvider } from '../theme/ThemeProvider'
+import { StyleSheet } from '../style/styled'
 import { baseTheme } from '@gild-ui/core/theme'
 import { createTheme } from '@gild-ui/core/theme'
+
+const statusStyles = StyleSheet.create({
+  label: { fontSize: '10px', letterSpacing: '0.2em', textTransform: 'uppercase' },
+  value: { fontFamily: 'monospace', fontSize: '12px' },
+})
 
 // Story-local light variant - the package ships only `baseTheme`; consumers
 // build their own light themes the same way.
@@ -246,20 +252,10 @@ export const SiteHeader: Story = {
       <Flex flexDirection="row" alignItems="center" gap={1}>
         <View height="32px" mx={2} width="2px" bg="grid" />
         <Flex flexDirection="column" alignItems="flex-end">
-          <Typography
-            variant="caption"
-            color="secondary"
-            m={0}
-            style={{ fontSize: '10px', letterSpacing: '0.2em', textTransform: 'uppercase' }}
-          >
+          <Typography variant="caption" color="secondary" m={0} style={statusStyles.label}>
             Status
           </Typography>
-          <Typography
-            variant="caption"
-            color="primary"
-            m={0}
-            style={{ fontFamily: 'monospace', fontSize: '12px' }}
-          >
+          <Typography variant="caption" color="primary" m={0} style={statusStyles.value}>
             OPTIMIZED
           </Typography>
         </Flex>

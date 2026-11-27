@@ -13,6 +13,8 @@ import { Checkbox } from '../Checkbox'
 import { Icon } from '../Icon'
 import { Paper } from '../Paper'
 import { Typography } from '../Typography'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../style/overrides'
+import type { TransferListSlot } from './TransferList.types'
 import {
   useTransferList,
   type TransferListItem,
@@ -61,6 +63,10 @@ export interface TransferListProps extends SpaceProps<Theme> {
   /** On the group, which a `FormLabel` names it by. Default: its `FormControl`'s. */
   id?: string
   className?: string
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<TransferListSlot>
   'aria-label'?: string
   'aria-labelledby'?: string
   'aria-describedby'?: string
@@ -184,6 +190,7 @@ interface ListProps {
   textColor?: keyof Theme['text']
   disabled: boolean
   isError: boolean
+  slotProps?: SlotProps<TransferListSlot>
 }
 
 function List({
@@ -198,6 +205,7 @@ function List({
   textColor,
   disabled,
   isError,
+  slotProps,
 }: Readonly<ListProps>) {
   const items = state[side]
   const titleId = `${baseId}-${side}-title`
@@ -206,8 +214,8 @@ function List({
   const isAll = enabledCount > 0 && checkedCount === enabledCount
 
   return (
-    <TransferListList elevation={0} p={0} isError={isError} data-side={side}>
-      <TransferListHeader>
+    <TransferListList elevation={0} p={0} isError={isError} data-side={side} {...slotProps?.list}>
+      <TransferListHeader {...slotProps?.header}>
         {hasSelectAll && (
           <Checkbox
             id={`${baseId}-${side}-all`}
@@ -220,26 +228,30 @@ function List({
             onChange={() => state.toggleAll(side)}
           />
         )}
-        <TransferListTitle id={titleId}>
+        <TransferListTitle id={titleId} {...slotProps?.title}>
           <Typography variant="subtitle2" as="span" color={textColor}>
             {title}
           </Typography>
         </TransferListTitle>
         {hasSelectAll && (
-          <TransferListCount>
+          <TransferListCount {...slotProps?.count}>
             <Typography variant="caption" color={textColor}>
               {getCountLabel(checkedCount, items.length)}
             </Typography>
           </TransferListCount>
         )}
       </TransferListHeader>
-      <TransferListItems role="list" aria-labelledby={title ? titleId : undefined}>
+      <TransferListItems
+        role="list"
+        aria-labelledby={title ? titleId : undefined}
+        {...slotProps?.items}
+      >
         {items.map((item) => {
           // Positioned in the items, not named by value: a value may hold a space, an id may not.
           const position = state.items.indexOf(item)
           const labelId = `${baseId}-${position}-label`
           return (
-            <TransferListRow key={item.value} role="listitem">
+            <TransferListRow key={item.value} role="listitem" {...slotProps?.item}>
               <Checkbox
                 id={`${baseId}-${position}`}
                 aria-labelledby={labelId}
@@ -290,6 +302,8 @@ export function TransferList({
   error: errorProp,
   id: idProp,
   className,
+  style,
+  slotProps,
   'aria-label': ariaLabel,
   'aria-labelledby': ariaLabelledby,
   'aria-describedby': ariaDescribedby,
@@ -324,7 +338,7 @@ export function TransferList({
       id={fc.id}
       role="group"
       isDisabled={fc.disabled}
-      className={className}
+      {...mergeOverrides(slotProps?.root, { style, className })}
       data-testid={dataTestid}
       aria-label={ariaLabel}
       aria-labelledby={ariaLabelledby ?? fc.labelId}
@@ -343,8 +357,9 @@ export function TransferList({
         textColor={fc.textColor}
         disabled={fc.disabled}
         isError={fc.error}
+        slotProps={slotProps}
       />
-      <TransferListControls>
+      <TransferListControls {...slotProps?.controls}>
         {shouldShowMoveAll && (
           <Button
             {...buttonProps}
@@ -352,7 +367,7 @@ export function TransferList({
             disabled={isOff('left', false)}
             onClick={state.moveAllRight}
           >
-            <TransferListIcon>
+            <TransferListIcon {...slotProps?.icon}>
               <Icon name="chevron_right" size="1em" color="inherit" />
               <Icon name="chevron_right" size="1em" color="inherit" />
             </TransferListIcon>
@@ -364,7 +379,7 @@ export function TransferList({
           disabled={isOff('left', true)}
           onClick={state.moveRight}
         >
-          <TransferListIcon>
+          <TransferListIcon {...slotProps?.icon}>
             <Icon name="chevron_right" size="1em" color="inherit" />
           </TransferListIcon>
         </Button>
@@ -374,7 +389,7 @@ export function TransferList({
           disabled={isOff('right', true)}
           onClick={state.moveLeft}
         >
-          <TransferListIcon>
+          <TransferListIcon {...slotProps?.icon}>
             <Icon name="chevron_left" size="1em" color="inherit" />
           </TransferListIcon>
         </Button>
@@ -385,7 +400,7 @@ export function TransferList({
             disabled={isOff('right', false)}
             onClick={state.moveAllLeft}
           >
-            <TransferListIcon>
+            <TransferListIcon {...slotProps?.icon}>
               <Icon name="chevron_left" size="1em" color="inherit" />
               <Icon name="chevron_left" size="1em" color="inherit" />
             </TransferListIcon>
@@ -404,6 +419,7 @@ export function TransferList({
         textColor={fc.textColor}
         disabled={fc.disabled}
         isError={fc.error}
+        slotProps={slotProps}
       />
     </TransferListRoot>
   )

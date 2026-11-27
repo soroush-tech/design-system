@@ -1,3 +1,4 @@
+import { lastColor, overrides } from '../utils/test/overrides'
 import { describe, it, expect, vi } from 'vitest'
 import { fireEvent, render, screen } from '@testing-library/react'
 import type { ReactNode } from 'react'
@@ -293,5 +294,49 @@ describe('Fab', () => {
   it('takes a class name and a test id on its button', () => {
     renderWithTheme(view({ className: 'extra' }))
     expect(fab()).toHaveClass('extra')
+  })
+})
+
+describe('Fab overrides', () => {
+  const mark = (name: string) => ({
+    className: name,
+    style: overrides.first,
+    'data-mark': name,
+    'aria-details': name,
+  })
+  const expectMarked = (element: Element | null, name: string) => {
+    expect(element).toHaveClass(name)
+    expect(element).toHaveAttribute('data-mark', name)
+    expect(element).toHaveAttribute('aria-details', name)
+    expect(lastColor(element!)).toBe('rgb(1, 2, 3)')
+  }
+
+  it('puts the style, class name and attributes of each slot on its element', () => {
+    renderWithTheme(
+      <Fab
+        variant="extended"
+        slotProps={{ root: mark('root'), label: mark('label'), labelText: mark('labelText') }}
+      >
+        Go
+      </Fab>
+    )
+    const text = screen.getByText('Go')
+    expectMarked(screen.getByRole('button'), 'root')
+    expectMarked(text, 'labelText')
+    expectMarked(text.parentElement, 'label')
+  })
+
+  it('lets the style prop win over slotProps.root.style, and joins the class names', () => {
+    renderWithTheme(
+      <Fab
+        aria-label="Add"
+        className="own"
+        style={[false, null, undefined, overrides.second]}
+        slotProps={{ root: { className: 'slot', style: overrides.first } }}
+      />
+    )
+    const fab = screen.getByRole('button')
+    expect(fab).toHaveClass('slot', 'own')
+    expect(lastColor(fab)).toBe('rgb(4, 5, 6)')
   })
 })

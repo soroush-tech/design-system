@@ -23,7 +23,8 @@ import { getAnchorRel } from '@gild-ui/core/utils'
 import { themeDefault } from '@gild-ui/core/theme'
 import { useDefaultProps } from '../theme/hooks/useDefaultProps'
 import { useTheme } from '../theme/hooks/useTheme'
-import type { ButtonVariant } from './Button.types'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../style/overrides'
+import type { ButtonSlot, ButtonVariant } from './Button.types'
 import type { ThemeColor } from '@gild-ui/core/theme'
 
 /** Augmentable via the `ButtonVariants` interface, or defined by a registered theme - style new values through `theme.components.Button.variants`. */
@@ -36,7 +37,7 @@ export type GapToken = keyof Theme['space']
 
 export interface ButtonProps
   extends
-    Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'color'>,
+    Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'color' | 'style'>,
     SpaceProps<Theme>,
     LayoutProps<Theme>,
     BorderProps<Theme>,
@@ -73,6 +74,10 @@ export interface ButtonProps
   target?: string
   /** Anchor `rel` - only meaningful when `href` is set. */
   rel?: string
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<ButtonSlot>
 }
 
 const shouldForwardProp = createShouldForwardProp([
@@ -252,6 +257,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     href,
     target,
     rel,
+    style,
+    className,
+    slotProps,
     ...rest
   }: Readonly<ButtonProps>,
   ref: ForwardedRef<HTMLButtonElement>
@@ -291,12 +299,15 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       disabled={resolvedDisabled}
       aria-busy={loading || undefined}
       {...rest}
+      {...mergeOverrides(slotProps?.root, { style, className })}
       ref={ref}
     >
-      {start != null && <ButtonIcon>{start}</ButtonIcon>}
-      <ButtonLabel invisible={isCenter}>{children}</ButtonLabel>
-      {isCenter && <LoadingCenter>{indicator}</LoadingCenter>}
-      {end != null && <ButtonIcon>{end}</ButtonIcon>}
+      {start != null && <ButtonIcon {...slotProps?.icon}>{start}</ButtonIcon>}
+      <ButtonLabel invisible={isCenter} {...slotProps?.label}>
+        {children}
+      </ButtonLabel>
+      {isCenter && <LoadingCenter {...slotProps?.loader}>{indicator}</LoadingCenter>}
+      {end != null && <ButtonIcon {...slotProps?.icon}>{end}</ButtonIcon>}
     </ButtonRoot>
   )
 })

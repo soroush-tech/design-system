@@ -3,6 +3,7 @@ import { screen } from '@testing-library/react'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { baseTheme } from '../theme/themes'
 import { getStyleRules } from '../utils/test/getStyleRules'
+import { lastColor, overrides } from '../utils/test/overrides'
 import { Button } from '../Button'
 import { ButtonGroup } from './ButtonGroup'
 
@@ -264,5 +265,44 @@ describe('ButtonGroup', () => {
     const group = screen.getByTestId('group')
     expect(group).not.toHaveAttribute('fullWidth')
     expect(group).not.toHaveAttribute('orientation')
+  })
+})
+
+describe('ButtonGroup overrides', () => {
+  const mark = (name: string) => ({
+    className: name,
+    style: overrides.first,
+    'data-mark': name,
+    'aria-details': name,
+  })
+  const expectMarked = (element: HTMLElement, name: string) => {
+    expect(element).toHaveClass(name)
+    expect(element).toHaveAttribute('data-mark', name)
+    expect(element).toHaveAttribute('aria-details', name)
+    expect(lastColor(element)).toBe('rgb(1, 2, 3)')
+  }
+
+  it('puts the style, class name and attributes of the root slot on its root', () => {
+    renderWithTheme(
+      <ButtonGroup slotProps={{ root: mark('root') }}>
+        <Button>One</Button>
+      </ButtonGroup>
+    )
+    expectMarked(screen.getByRole('group'), 'root')
+  })
+
+  it('lets the style prop win over slotProps.root.style, and joins the class names', () => {
+    renderWithTheme(
+      <ButtonGroup
+        className="own"
+        style={[false, null, undefined, overrides.second]}
+        slotProps={{ root: { className: 'slot', style: overrides.first } }}
+      >
+        <Button>One</Button>
+      </ButtonGroup>
+    )
+    const group = screen.getByRole('group')
+    expect(group).toHaveClass('slot', 'own')
+    expect(lastColor(group)).toBe('rgb(4, 5, 6)')
   })
 })

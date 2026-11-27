@@ -5,6 +5,7 @@ import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { baseTheme, type Theme } from '../theme/themes'
 import { ThemeProvider } from '../theme/ThemeProvider'
 import { Breadcrumbs, type BreadcrumbsProps } from './Breadcrumbs'
+import { lastColor, overrides } from '../utils/test/overrides'
 import { themeWith } from '../utils/test/themeWith'
 
 const nine = ['first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth']
@@ -82,21 +83,15 @@ describe('Breadcrumbs', () => {
     expect(list()).toHaveTextContent('firstsecond')
   })
 
-  it('puts an icon of its own in the button, and the props it is given on the icon', () => {
-    function FirstPage(props: { 'data-testid'?: string }) {
-      return <svg data-testid={props['data-testid'] ?? 'first-page'} />
+  it('puts an icon of its own in the button', () => {
+    function FirstPage() {
+      return <svg data-testid="first-page" />
     }
-    const { unmount } = trail(['first', 'second', 'third'], {
+    trail(['first', 'second', 'third'], {
       maxItems: 2,
       slots: { collapsedIcon: FirstPage },
     })
     expect(screen.getByTestId('first-page')).toBeInTheDocument()
-    unmount()
-    trail(['first', 'second', 'third'], {
-      maxItems: 2,
-      slotProps: { collapsedIcon: { 'data-testid': 'collapsed-icon' } },
-    })
-    expect(screen.getByTestId('collapsed-icon').tagName.toLowerCase()).toBe('svg')
   })
 
   it('is a Typography: its color and typography reach the root, and as changes the element', () => {
@@ -157,5 +152,57 @@ describe('Breadcrumbs', () => {
     )
     expect(list()).toHaveTextContent('first-second-third')
     expect(list().parentElement).toHaveStyle({ color: baseTheme.text.secondary })
+  })
+})
+
+describe('Breadcrumbs overrides', () => {
+  const mark = (name: string) => ({
+    className: name,
+    style: overrides.first,
+    'data-mark': name,
+    'aria-details': name,
+  })
+
+  it('puts the style, class name and attributes of each slot on its element', () => {
+    trail(['first', 'second', 'third'], {
+      maxItems: 2,
+      slotProps: {
+        root: mark('root'),
+        list: mark('list'),
+        item: mark('item'),
+        separator: mark('separator'),
+        collapsed: mark('collapsed'),
+        collapsedIcon: mark('icon'),
+      },
+    })
+    const root = list().parentElement!
+    const item = crumbs()[0]!
+    const separator = document.querySelector('[aria-hidden="true"]') as HTMLElement
+    const collapsed = screen.getByRole('button')
+    const icon = collapsed.firstElementChild as HTMLElement
+    for (const [element, name] of [
+      [root, 'root'],
+      [list(), 'list'],
+      [item, 'item'],
+      [separator, 'separator'],
+      [collapsed, 'collapsed'],
+      [icon, 'icon'],
+    ] as const) {
+      expect(element).toHaveClass(name)
+      expect(element).toHaveAttribute('data-mark', name)
+      expect(element).toHaveAttribute('aria-details', name)
+      expect(lastColor(element)).toBe('rgb(1, 2, 3)')
+    }
+  })
+
+  it('lets the style prop win over slotProps.root.style, and joins the class names', () => {
+    trail(['first'], {
+      className: 'own',
+      style: [false, null, undefined, overrides.second],
+      slotProps: { root: { className: 'slot', style: overrides.first } },
+    })
+    const root = list().parentElement!
+    expect(root).toHaveClass('slot', 'own')
+    expect(lastColor(root)).toBe('rgb(4, 5, 6)')
   })
 })

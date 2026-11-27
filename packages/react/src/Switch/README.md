@@ -236,3 +236,17 @@ The hidden input carries `role="switch"` for screen reader semantics. `aria-chec
 In a `Form` it takes the form's `size`, `color` and `disabled` state; in a `FormControl`, the field's
 those too, and its `id`, `required` and helper text as the description - an own prop winning. The neutral `default`
 color is the label's `text.secondary`; the others are the palette's accent.
+
+## Overriding the CSS
+
+`style` takes an entry of `StyleSheet.create`, or a list of entries with `false`, `null` and `undefined` for a condition that is off, and overrides the CSS of the root. A plain style object is a type error.
+
+`slotProps` takes one object for each slot of `Switch` - `root`, `input`, `track`, `thumb`, `label` - the slots `theme.components.Switch` styles. A slot object holds `style` (an entry or a list, as above), `className` and `data-*` and `aria-*` attributes, and nothing else. A slot's `style` is merged after the slot's own styles and the theme's. For the root, `style` and `slotProps.root.style` are one channel: when both are given, `style` comes last and wins, and the class names are joined.
+
+```tsx
+import { StyleSheet } from '@gild-ui/react'
+
+const overrides = StyleSheet.create({ tight: { padding: 0 } })
+
+;<Switch style={overrides.tight} slotProps={{ label: { 'data-testid': 'switch-label' } }} />
+```

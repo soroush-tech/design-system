@@ -67,3 +67,7 @@ An extended fab collapses to a circle - the pattern for a page that scrolls: ext
 
 - A circular fab has no text: name it with `aria-label` or `aria-labelledby`.
 - It is a native `button`: Enter and Space press it, and it takes `Button`'s focus ring.
+
+## Overrides
+
+`style` takes an entry of `StyleSheet.create`, or a list of them with `false`, `null` and `undefined`, and overrides the CSS of the root. `slotProps` takes, for each slot (`root`, `label`, `labelText`), a `style` of the same kind, a `className`, and `data-*` and `aria-*` attributes. `slotProps.root` and `style` are one channel: `style` is merged after `slotProps.root.style`, so it wins.

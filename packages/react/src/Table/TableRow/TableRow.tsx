@@ -4,6 +4,8 @@ import { useContext, type ElementType, type HTMLAttributes } from 'react'
 import { TableContext } from '../TableContext'
 import type { SpaceProps, BorderProps } from '@soroush.tech/styled-system'
 import { styled } from '../../style/styled'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../../style/overrides'
+import type { TableRowSlot } from './TableRow.types'
 import { type Theme } from '../../theme/themes'
 import { type PaletteColor } from '@gild-ui/core/theme'
 import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
@@ -21,7 +23,7 @@ export type TableRowBorderColorToken = keyof Theme['border']
 
 export interface TableRowProps
   extends
-    Omit<HTMLAttributes<HTMLTableRowElement>, 'color'>,
+    Omit<HTMLAttributes<HTMLTableRowElement>, 'color' | 'style'>,
     SpaceProps<Theme>,
     Omit<BorderProps<Theme>, 'borderColor' | 'borderRadius'> {
   /**
@@ -30,6 +32,10 @@ export interface TableRowProps
    * to the enclosing `Table`'s `color`. Default: 'primary', overridable via `theme.defaults.color`.
    */
   color?: TableRowColor
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<TableRowSlot>
   as?: ElementType
   /** Resolves against theme.background */
   bg?: TableRowBackgroundToken
@@ -74,8 +80,14 @@ const TableRowBase = styled('tr', {
   systemProps: [space, border, colorSystem],
 })<TableRowProps>(selectedStyle, hoverStyle)
 
-export function TableRow({ color, ...rest }: Readonly<TableRowProps>) {
+export function TableRow({ color, style, className, slotProps, ...rest }: Readonly<TableRowProps>) {
   // Resolution: explicit prop → enclosing Table's broadcast → 'primary' (in the style fns).
   const table = useContext(TableContext)
-  return <TableRowBase color={color ?? table.color} {...rest} />
+  return (
+    <TableRowBase
+      color={color ?? table.color}
+      {...mergeOverrides(slotProps?.root, { style, className })}
+      {...rest}
+    />
+  )
 }

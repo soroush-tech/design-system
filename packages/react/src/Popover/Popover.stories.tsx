@@ -3,8 +3,14 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Button } from '../Button'
 import { Typography } from '../Typography'
 import { View } from '../View'
+import { StyleSheet } from '../style/styled'
 import { spaceTokens } from '../utils/test/storiesOptions'
 import { Popover, type PopoverProps, type PopoverOrigin } from './Popover'
+
+const sheet = StyleSheet.create({
+  content: { maxWidth: 240 },
+  centered: { minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' },
+})
 
 /** Story-only args: the object origins are split into select boxes for easy tweaking. */
 interface PopoverStoryArgs extends PopoverProps {
@@ -21,7 +27,7 @@ function PopoverDemo(props: Readonly<Partial<PopoverProps>>) {
       <Button onClick={(event) => setAnchor(event.currentTarget)}>Open popover</Button>
       {/* Spread first so the demo's own open/anchorEl/onClose always win over args. */}
       <Popover {...props} open={Boolean(anchor)} anchorEl={anchor} onClose={() => setAnchor(null)}>
-        <View p={3} style={{ maxWidth: 240 }}>
+        <View p={3} style={sheet.content}>
           <Typography variant="body2">
             Portaled content, positioned relative to the button and closed on Escape or an outside
             click.
@@ -51,9 +57,7 @@ function renderDemo({
 
 // Centers the trigger so a popover on any side stays inside the canvas.
 const centeredDecorator = (Story: ComponentType) => (
-  <View
-    style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-  >
+  <View style={sheet.centered}>
     <Story />
   </View>
 )
@@ -155,7 +159,7 @@ const meta: Meta<PopoverStoryArgs> = {
     },
     slotProps: {
       control: false,
-      description: 'Props for the paper slot (the surface) - e.g. `bg`, `p`, `style`.',
+      description: 'Overrides for the slots: `root` (the surface) and `positioner`.',
       table: { category: 'Visual' },
     },
     // ── Positioning ──

@@ -5,6 +5,8 @@ import { styled, keyframes } from '../style/styled'
 import { createShouldForwardProp } from '@soroush.tech/styled-system/should-forward-prop'
 import { Paper, type PaperElevation } from '../Paper'
 import { FocusTrap } from '../FocusTrap'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../style/overrides'
+import type { DrawerSlot } from './Drawer.types'
 
 export type DrawerAnchor = 'left' | 'right' | 'top' | 'bottom'
 
@@ -39,6 +41,10 @@ export interface DrawerProps {
   shouldTrapFocus?: boolean
   /** With JavaScript: return focus to where it was when the drawer closes. Default: true. */
   shouldRestoreFocus?: boolean
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<DrawerSlot>
 }
 
 const slideIn: Record<DrawerAnchor, ReturnType<typeof keyframes>> = {
@@ -118,6 +124,8 @@ export function Drawer({
   shouldAutoFocus = true,
   shouldTrapFocus = true,
   shouldRestoreFocus = true,
+  style,
+  slotProps,
 }: Readonly<DrawerProps>) {
   const panelRef = useRef<HTMLDivElement>(null)
   const [isShown, setIsShown] = useState(false)
@@ -189,6 +197,7 @@ export function Drawer({
       anchor={anchor}
       duration={transitionDuration}
       hasBackdrop={hasBackdrop}
+      {...mergeOverrides(slotProps?.root, { style })}
     >
       <Paper elevation={elevation} width="100%" height="100%" overflow="auto">
         <FocusTrap

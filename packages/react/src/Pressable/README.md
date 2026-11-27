@@ -81,6 +81,8 @@ usual HTML attributes (`onClick`, `aria-*`, `data-*`, ...).
 | `rel`           | `string`                             | -           | Anchor `rel` - only meaningful with `href`.                                                                                           |
 | `type`          | `'button' \| 'submit' \| 'reset'`    | `'button'`  | Emitted only for `as="button"`, so a surface in a form never submits by accident.                                                     |
 | `disabled`      | `boolean`                            | `false`     | Blocks activation, suppresses press feedback, and swaps the cursor. Uses the native attribute on a button, `aria-disabled` elsewhere. |
+| `style`         | `StyleOverride`                      | -           | Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`.               |
+| `slotProps`     | `{ root? }`                          | -           | Overrides per slot - `style`, `className`, `data-*` and `aria-*` - for the slots a theme can style.                                   |
 
 ### Feedback modes
 

@@ -47,3 +47,7 @@ merge - prefer row-level bottom borders over full cell borders when rounding.
 `Table` provides `TableContext` - `{ size, cellPadding, hasStickyHeader, shouldHideSortIcon,
 hasEllipsis, color }` - consumed by `TableCell`, `TableSortLabel`, and `TableRow`. Per-component
 props override the inherited values.
+
+## Overrides
+
+`style` takes an entry of `StyleSheet.create`, or a list of them with `false`, `null` and `undefined`, and puts it on the root after the component's own styles. `slotProps` takes, for each slot (`root`), a `style` of the same kind, a `className`, and `data-*` and `aria-*` attributes. On the root, `style` and `className` come after `slotProps.root`, so they win.

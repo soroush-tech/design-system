@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { fireEvent, screen, within } from '@testing-library/react'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
+import { StyleSheet } from '../style/styled'
 import { Checkbox } from '../Checkbox'
 import { Typography } from '../Typography'
 import {
@@ -302,12 +303,14 @@ describe('Table (integration)', () => {
   })
 })
 
+const cellOverrides = StyleSheet.create({ narrow: { maxWidth: 40 } })
+
 describe('Table (integration) - styling & edge compositions', () => {
   it('flows table-level styling props to a section-less cell', () => {
     renderWithTheme(
       <Table align="right" borderRadius="md" cellPadding="none" hasEllipsis>
         <TableRow>
-          <TableCell style={{ maxWidth: 40 }}>a-very-long-service-name</TableCell>
+          <TableCell style={cellOverrides.narrow}>a-very-long-service-name</TableCell>
         </TableRow>
       </Table>
     )

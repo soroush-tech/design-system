@@ -7,6 +7,7 @@ import { ThemeProvider } from '../../theme/ThemeProvider'
 import type { ReactNode } from 'react'
 import { ContextMenu, type ContextMenuProps } from './ContextMenu'
 import { themeWith } from '../../utils/test/themeWith'
+import { lastColor, overrides } from '../../utils/test/overrides'
 
 const renderMenu = (props: Partial<ContextMenuProps> = {}) =>
   renderWithTheme(
@@ -41,13 +42,23 @@ afterEach(() => {
 })
 
 describe('ContextMenu corners', () => {
-  it('puts the data attributes an app gives on the list, through slotProps.list', () => {
-    renderMenu({ slotProps: { list: { 'data-menu': '', className: 'app-menu' } } })
+  it('puts the style, class name and attributes of the root and paper slots on them', () => {
+    renderMenu({
+      className: 'own',
+      style: overrides.second,
+      slotProps: {
+        root: { className: 'slot', style: overrides.first, 'data-mark': 'root' },
+        paper: { className: 'sheet', style: overrides.first, 'aria-description': 'Canvas menu' },
+      },
+    })
     openAt()
-    const list = screen.getByRole('menu')
-    expect(list).toHaveAttribute('data-menu', '')
-    expect(list).toHaveClass('app-menu')
-    expect(list).toHaveAccessibleName('Canvas')
+    const root = canvas().parentElement as HTMLElement
+    expect(root).toHaveClass('slot', 'own')
+    expect(root).toHaveAttribute('data-mark', 'root')
+    expect(lastColor(root)).toBe('rgb(4, 5, 6)')
+    expect(surface()).toHaveClass('sheet')
+    expect(surface()).toHaveAttribute('aria-description', 'Canvas menu')
+    expect(lastColor(surface())).toBe('rgb(1, 2, 3)')
   })
 
   it('is square by default, and takes a radius of its own', () => {

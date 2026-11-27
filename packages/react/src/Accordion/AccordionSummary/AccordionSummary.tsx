@@ -2,6 +2,8 @@
 
 import type { ReactNode } from 'react'
 import { negate, styled } from '../../style/styled'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../../style/overrides'
+import type { AccordionSummarySlot } from './AccordionSummary.types'
 import { createShouldForwardProp } from '@soroush.tech/styled-system/should-forward-prop'
 import { get } from '@soroush.tech/styled-system'
 import { useDefaultProps } from '../../theme/hooks/useDefaultProps'
@@ -18,6 +20,10 @@ export interface AccordionSummaryProps {
   /** The level of the heading the button sits in. Default: `3`. */
   headingLevel?: AccordionHeadingLevel
   className?: string
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<AccordionSummarySlot>
   'data-testid'?: string
 }
 
@@ -81,14 +87,21 @@ export function AccordionSummary({
   expandIcon,
   headingLevel: headingLevelProp,
   className,
+  style,
+  slotProps,
   'data-testid': dataTestid,
 }: Readonly<AccordionSummaryProps>) {
   const dp = useDefaultProps('AccordionSummary')
   const headingLevel = headingLevelProp ?? dp.headingLevel ?? 3
   const { baseId, isExpanded, disabled, hasGutters, toggle } = useAccordion('AccordionSummary')
   return (
-    <SummaryHeading as={`h${headingLevel}`} className={className} data-testid={dataTestid}>
+    <SummaryHeading
+      as={`h${headingLevel}`}
+      {...mergeOverrides(slotProps?.root, { style, className })}
+      data-testid={dataTestid}
+    >
       <SummaryButton
+        {...slotProps?.button}
         type="button"
         id={getSummaryId(baseId)}
         aria-expanded={isExpanded}
@@ -98,8 +111,8 @@ export function AccordionSummary({
         data-accordion-summary=""
         onClick={toggle}
       >
-        <SummaryContent>{children}</SummaryContent>
-        <SummaryIcon isExpanded={isExpanded} aria-hidden="true">
+        <SummaryContent {...slotProps?.content}>{children}</SummaryContent>
+        <SummaryIcon {...slotProps?.icon} isExpanded={isExpanded} aria-hidden="true">
           {expandIcon ?? <Icon name="expand_more" size="1em" color="inherit" />}
         </SummaryIcon>
       </SummaryButton>

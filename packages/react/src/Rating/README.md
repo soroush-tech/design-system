@@ -88,3 +88,20 @@ press on an item), its `FormHelperText` describes it, and the field's `size`, `c
 - Filled and empty items differ in shape (a solid and an outlined star) as well as color. If color is
   the only difference in your icons, show the value as text too (WCAG 1.4.1).
 - A read-only rating is one image, `role="img"`, named by its rating.
+
+## Overriding the CSS
+
+`style` takes an entry of `StyleSheet.create`, or a list of entries with `false`, `null` and `undefined` for a condition that is off, and overrides the CSS of the root. A plain style object is a type error.
+
+`slotProps` takes one object for each slot of `Rating` - `root`, `item`, `icon`, `decimal`, `input`, `text`, `emptyLabel` - the slots `theme.components.Rating` styles. A slot object holds `style` (an entry or a list, as above), `className` and `data-*` and `aria-*` attributes, and nothing else. A slot's `style` is merged after the slot's own styles and the theme's. For the root, `style` and `slotProps.root.style` are one channel: when both are given, `style` comes last and wins, and the class names are joined.
+
+```tsx
+import { StyleSheet } from '@gild-ui/react'
+
+const overrides = StyleSheet.create({ tight: { padding: 0 } })
+
+;<Rating
+  style={overrides.tight}
+  slotProps={{ emptyLabel: { 'data-testid': 'rating-emptyLabel' } }}
+/>
+```

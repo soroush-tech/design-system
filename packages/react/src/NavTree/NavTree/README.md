@@ -41,10 +41,12 @@ import { NavTree, NavGroup, NavLink } from '@gild-ui/react/NavTree'
 
 Also accepts every `Flex` prop (spacing, layout, ...).
 
-| Prop       | Type                     | Default     | Description                                                                            |
-| ---------- | ------------------------ | ----------- | -------------------------------------------------------------------------------------- |
-| `children` | `ReactNode`              | -           | `NavGroup`s and `NavLink`s.                                                            |
-| `color`    | `keyof Theme['palette']` | `'primary'` | Color of the current page's pill, a hovered link and the focus ring - the group's too. |
+| Prop        | Type                     | Default     | Description                                                                                                             |
+| ----------- | ------------------------ | ----------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `children`  | `ReactNode`              | -           | `NavGroup`s and `NavLink`s.                                                                                             |
+| `color`     | `keyof Theme['palette']` | `'primary'` | Color of the current page's pill, a hovered link and the focus ring - the group's too.                                  |
+| `style`     | `StyleOverride`          | -           | Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. |
+| `slotProps` | `{ root? }`              | -           | Overrides per slot - `style`, `className`, `data-*` and `aria-*` - for the slots a theme can style.                     |
 
 ## Accessibility
 

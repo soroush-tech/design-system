@@ -1,5 +1,7 @@
 import { type CSSProperties, type ElementType } from 'react'
 import { styled } from '../style/styled'
+import { mergeOverrides, type SlotProps } from '../style/overrides'
+import type { PaperSlot } from './Paper.types'
 import { type Theme } from '../theme/themes'
 import { createShouldForwardProp } from '@soroush.tech/styled-system/should-forward-prop'
 import { system } from '@soroush.tech/styled-system'
@@ -47,6 +49,8 @@ export interface PaperProps extends FlexProps {
   borderStyle?: CSSProperties['borderStyle']
   /** Renders the surface as a different element (e.g. 'section'). */
   as?: ElementType
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<PaperSlot>
 }
 
 // aspectRatio needs no manual wiring since @soroush.tech/styled-system 5.8.0 - it
@@ -73,7 +77,16 @@ const PaperRoot = styled(Flex, {
   shouldForwardProp,
 })<PaperProps>(paperSystem)
 
-export function Paper({ elevation = 1, p = 2, bg, borderRadius, ...rest }: Readonly<PaperProps>) {
+export function Paper({
+  elevation = 1,
+  p = 2,
+  bg,
+  borderRadius,
+  style,
+  className,
+  slotProps,
+  ...rest
+}: Readonly<PaperProps>) {
   const theme = useTheme()
   return (
     <PaperRoot
@@ -81,6 +94,7 @@ export function Paper({ elevation = 1, p = 2, bg, borderRadius, ...rest }: Reado
       p={p}
       bg={bg ?? themeDefault(theme, 'surfaceBg', 'paper')}
       borderRadius={borderRadius ?? themeDefault(theme, 'surfaceRadius', 'sq')}
+      {...mergeOverrides(slotProps?.root, { style, className })}
       {...rest}
     />
   )

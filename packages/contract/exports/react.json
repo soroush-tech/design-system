@@ -27,8 +27,11 @@
         "ComponentConfig",
         "LayoutProviderProps",
         "LiveValue",
+        "SlotOverride",
+        "SlotProps",
         "StyleFactory",
         "StyleInput",
+        "StyleOverride",
         "ThemeComponents"
       ]
     },
@@ -361,7 +364,6 @@
         "MenuListOwnerState",
         "MenuListProps",
         "MenuListSlot",
-        "MenuListSlotProps",
         "MenuListThemeConfig",
         "MenuOwnerState",
         "MenuProps",
@@ -795,7 +797,6 @@
         "TooltipPlacement",
         "TooltipProps",
         "TooltipSlot",
-        "TooltipSlotProps",
         "TooltipSlots",
         "TooltipThemeConfig"
       ]
@@ -894,7 +895,7 @@
     },
     "./useStyle": {
       "values": ["useStyle", "useStyleValue"],
-      "types": ["LiveValue", "StyleFactory", "StyleInput"]
+      "types": ["LiveValue"]
     },
     "./useTheme": {
       "values": ["useTheme"],
@@ -902,7 +903,7 @@
     },
     "./withStyles": {
       "values": ["withStyles"],
-      "types": []
+      "types": ["StyleFactory", "StyleInput"]
     },
     "./withTheme": {
       "values": ["withTheme"],

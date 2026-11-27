@@ -146,3 +146,17 @@ other `Flex` props cover the panel as well as the rail rather than stopping at t
 The width animation lives on `rail`, runs 200ms, and honors `prefers-reduced-motion`.
 
 Customize via `theme.components.Sidebar.styleOverrides`.
+
+## Overriding the CSS
+
+`style` takes an entry of `StyleSheet.create`, or a list of entries with `false`, `null` and `undefined` for a condition that is off, and overrides the CSS of the root. A plain style object is a type error.
+
+`slotProps` takes one object for each slot of `Sidebar` - `root`, `rail`, `panel` - the slots `theme.components.Sidebar` styles. A slot object holds `style` (an entry or a list, as above), `className` and `data-*` and `aria-*` attributes, and nothing else. A slot's `style` is merged after the slot's own styles and the theme's. For the root, `style` and `slotProps.root.style` are one channel: when both are given, `style` comes last and wins, and the class names are joined.
+
+```tsx
+import { StyleSheet } from '@gild-ui/react'
+
+const overrides = StyleSheet.create({ tight: { padding: 0 } })
+
+;<Sidebar style={overrides.tight} slotProps={{ panel: { 'data-testid': 'sidebar-panel' } }} />
+```

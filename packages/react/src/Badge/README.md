@@ -44,3 +44,7 @@ It takes the styled-system space props too.
 - `badgeLabel` is a visually hidden text after the child. Over one element it also becomes that
   element's `aria-describedby` (added to what it has), so a button reads "Inbox, 4 unread".
 - No label is rendered for a badge that is not drawn.
+
+## Overrides
+
+`style` takes an entry of `StyleSheet.create`, or a list of them with `false`, `null` and `undefined`, and puts it on the root after the component's own styles. `slotProps` takes, for each slot (`root`, `badge`, `label`), a `style` of the same kind, a `className`, and `data-*` and `aria-*` attributes. On the root, `style` and `className` come after `slotProps.root`, so they win.

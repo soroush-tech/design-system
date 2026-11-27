@@ -4,8 +4,10 @@ import { Children, useId, type HTMLAttributes, type ReactNode } from 'react'
 import { alpha, styled } from '../../style/styled'
 import { get } from '@soroush.tech/styled-system'
 import { Typography } from '../../Typography'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../../style/overrides'
+import type { NavGroupSlot } from './NavGroup.types'
 
-export interface NavGroupProps extends Omit<HTMLAttributes<HTMLElement>, 'children'> {
+export interface NavGroupProps extends Omit<HTMLAttributes<HTMLElement>, 'children' | 'style'> {
   /** The group's name - a heading over its links, or the button that folds it. */
   label: ReactNode
   /** The `NavLink`s of the group - each is put in a list item of the group's list. */
@@ -17,6 +19,10 @@ export interface NavGroupProps extends Omit<HTMLAttributes<HTMLElement>, 'childr
    * prop opens or closes it - open the group that holds the current page. Default: `false`.
    */
   isOpen?: boolean
+  /** Overrides the CSS of the group: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<NavGroupSlot>
 }
 
 const NavGroupRoot = styled('section', { name: 'NavGroup', label: 'NavGroup' })({})
@@ -90,11 +96,14 @@ export function NavGroup({
   children,
   isCollapsible = false,
   isOpen = false,
+  style,
+  className,
+  slotProps,
   ...rest
 }: Readonly<NavGroupProps>) {
   const headingId = useId()
   const list = (
-    <NavGroupList>
+    <NavGroupList {...slotProps?.list}>
       {Children.toArray(children).map((child, index) => (
         // toArray gave each child a key of its own.
         <li key={(child as { key?: string }).key ?? index}>{child}</li>
@@ -103,15 +112,23 @@ export function NavGroup({
   )
   if (isCollapsible) {
     return (
-      <NavGroupDetails open={isOpen} {...rest}>
-        <NavGroupSummary>{label}</NavGroupSummary>
+      <NavGroupDetails
+        open={isOpen}
+        {...rest}
+        {...mergeOverrides(slotProps?.root, { style, className })}
+      >
+        <NavGroupSummary {...slotProps?.label}>{label}</NavGroupSummary>
         {list}
       </NavGroupDetails>
     )
   }
   return (
-    <NavGroupRoot aria-labelledby={headingId} {...rest}>
-      <NavGroupHeading id={headingId} variant="subtitle2" as="h2">
+    <NavGroupRoot
+      aria-labelledby={headingId}
+      {...rest}
+      {...mergeOverrides(slotProps?.root, { style, className })}
+    >
+      <NavGroupHeading {...slotProps?.label} id={headingId} variant="subtitle2" as="h2">
         {label}
       </NavGroupHeading>
       {list}

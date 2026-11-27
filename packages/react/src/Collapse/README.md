@@ -51,3 +51,7 @@ the content and is measured, and the `inner` box. Its `defaultProps` set `orient
 - Nothing moves for a user who asked for less motion.
 - Use `shouldUnmountOnExit` for content that should not exist while it is closed.
 - `Accordion` builds its panel on `Collapse`.
+
+## Overrides
+
+`style` takes an entry of `StyleSheet.create`, or a list of them with `false`, `null` and `undefined`, and overrides the CSS of the root. `slotProps` takes, for each slot (`root`, `wrapper`, `inner`), a `style` of the same kind, a `className`, and `data-*` and `aria-*` attributes. `slotProps.root` and `style` are one channel: `style` is merged after `slotProps.root.style`, so it wins.

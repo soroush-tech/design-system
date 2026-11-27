@@ -6,6 +6,8 @@ import { Typography } from '../../Typography'
 import { TableCell, type TableCellProps } from '../TableCell'
 import { TablePaginationActions, type TablePaginationActionType } from '../TablePaginationActions'
 import { styled } from '../../style/styled'
+import { mergeOverrides, type SlotProps } from '../../style/overrides'
+import type { TablePaginationSlot } from './TablePagination.types'
 
 export interface TablePaginationDisplayedRowsInfo {
   from: number
@@ -40,6 +42,8 @@ export interface TablePaginationProps extends Omit<
   displayedRowsLabel?: (info: TablePaginationDisplayedRowsInfo) => ReactNode
   /** Accessible name per nav button. A sensible default is provided. */
   getItemAriaLabel?: (type: TablePaginationActionType) => string
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. The root is the cell that holds the controls. */
+  slotProps?: SlotProps<TablePaginationSlot>
   as?: ElementType
 }
 
@@ -79,6 +83,9 @@ export function TablePagination({
   getItemAriaLabel = defaultGetItemAriaLabel,
   colSpan = 1000,
   as,
+  style,
+  className,
+  slotProps,
   ...rest
 }: Readonly<TablePaginationProps>) {
   const selectOptions: NativeSelectOption[] = rowsPerPageOptions.map((option) =>
@@ -93,7 +100,13 @@ export function TablePagination({
   const to = rowsPerPage === -1 ? count : boundedTo
 
   return (
-    <TableCell variant="footer" as={as} colSpan={colSpan} {...rest}>
+    <TableCell
+      variant="footer"
+      as={as}
+      colSpan={colSpan}
+      {...mergeOverrides(slotProps?.root, { style, className })}
+      {...rest}
+    >
       <Toolbar>
         {hasRowsPerPageSelector && (
           <Typography variant="caption" color="secondary" as="span">

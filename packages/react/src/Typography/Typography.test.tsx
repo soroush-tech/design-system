@@ -1,10 +1,14 @@
 import { screen } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
+import { StyleSheet } from '../style/styled'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { baseTheme } from '../theme/themes'
 import { typography, fonts } from '@gild-ui/core/theme'
 import { Typography, type TypographyVariant, type TextColorToken } from '../Typography'
 import { toPx } from '../utils/test/toPx'
+import { describeRootSlot } from '../utils/test/describeRootSlot'
+
+const styles = StyleSheet.create({ half: { opacity: 0.5 } })
 
 describe('Typography', () => {
   // ─── children ────────────────────────────────────────────────────────────────
@@ -278,7 +282,7 @@ describe('Typography', () => {
 
   describe('HTML attribute passthrough', () => {
     it('forwards style prop', () => {
-      renderWithTheme(<Typography style={{ opacity: 0.5 }}>styled</Typography>)
+      renderWithTheme(<Typography style={styles.half}>styled</Typography>)
       expect(screen.getByText('styled')).toHaveStyle({ opacity: '0.5' })
     })
 
@@ -293,3 +297,13 @@ describe('Typography', () => {
     })
   })
 })
+
+describeRootSlot(
+  'Typography',
+  (props) => (
+    <Typography data-testid="root" {...props}>
+      text
+    </Typography>
+  ),
+  () => screen.getByTestId('root')
+)

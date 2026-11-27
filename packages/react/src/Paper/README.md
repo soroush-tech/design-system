@@ -44,6 +44,12 @@ const styles = StyleSheet.create({
 
 ---
 
+### `style` and `slotProps`
+
+`style` takes an entry of `StyleSheet.create`, or a list of them, and overrides the surface's CSS. `slotProps.root` takes the same `style`, a `className` and `data-*` / `aria-*` attributes; the `style` prop is merged after `slotProps.root.style`, so it wins.
+
+---
+
 ## Default styles
 
 | Prop           | Default   | Resolves to                 |

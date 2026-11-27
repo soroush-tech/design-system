@@ -3,6 +3,8 @@ import { styled } from '../style/styled'
 import { get, space } from '@soroush.tech/styled-system'
 import { useDefaultProps } from '../theme/hooks/useDefaultProps'
 import { Button, type ButtonProps } from '../Button'
+import { mergeOverrides, type SlotProps } from '../style/overrides'
+import type { FabSlot } from './Fab.types'
 
 export type FabVariant = 'circular' | 'extended'
 
@@ -19,6 +21,7 @@ type FabButtonProps = Omit<
   | 'target'
   | 'rel'
   | 'gap'
+  | 'slotProps'
 >
 
 export type FabProps = FabButtonProps & {
@@ -34,6 +37,8 @@ export type FabProps = FabButtonProps & {
    * fab ignores it. Default: `false`.
    */
   isCollapsed?: boolean
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. `root` is merged before `style` and `className`. */
+  slotProps?: SlotProps<FabSlot>
 }
 
 interface RootStyle {
@@ -149,6 +154,9 @@ export const Fab = forwardRef<HTMLButtonElement, FabProps>(function Fab(
     startIcon,
     isCollapsed = false,
     children,
+    style,
+    className,
+    slotProps,
     ...rest
   }: Readonly<FabProps>,
   ref: ForwardedRef<HTMLButtonElement>
@@ -167,11 +175,14 @@ export const Fab = forwardRef<HTMLButtonElement, FabProps>(function Fab(
       // The room between the icon and the label is the label's own, so it collapses with it.
       gap={isExtended ? 0 : undefined}
       {...rest}
+      {...mergeOverrides(slotProps?.root, { style, className })}
       ref={ref}
     >
       {isExtended ? (
-        <FabLabel isCollapsed={isCollapsed}>
-          <FabLabelText data-fab-label="">{children}</FabLabelText>
+        <FabLabel isCollapsed={isCollapsed} {...slotProps?.label}>
+          <FabLabelText data-fab-label="" {...slotProps?.labelText}>
+            {children}
+          </FabLabelText>
         </FabLabel>
       ) : (
         children

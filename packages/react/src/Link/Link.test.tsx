@@ -3,6 +3,7 @@ import { describe, it, expect } from 'vitest'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { baseTheme } from '../theme/themes'
 import { Link } from '../Link'
+import { describeRootSlot } from '../utils/test/describeRootSlot'
 
 describe('Link', () => {
   describe('element', () => {
@@ -220,3 +221,13 @@ describe('Link', () => {
     })
   })
 })
+
+describeRootSlot(
+  'Link',
+  (props) => (
+    <Link href="#" data-testid="root" {...props}>
+      text
+    </Link>
+  ),
+  () => screen.getByTestId('root')
+)

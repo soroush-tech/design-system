@@ -10,6 +10,8 @@ import {
 import { Icon } from '../../Icon'
 import { Tooltip } from '../../Tooltip'
 import { alpha, negate, styled, type AlphaColor } from '../../style/styled'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../../style/overrides'
+import type { TabSlot } from './Tab.types'
 import { type AppTheme as Theme } from '../../theme/themes'
 import { createShouldForwardProp } from '@soroush.tech/styled-system/should-forward-prop'
 import { get } from '@soroush.tech/styled-system'
@@ -67,6 +69,10 @@ export interface TabProps {
   /** A control of the tab's own after its label - a kebab menu, a badge. */
   secondaryAction?: ReactNode
   className?: string
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<TabSlot>
   'data-testid'?: string
 }
 
@@ -382,13 +388,20 @@ export function Tab({
   closeLabel,
   secondaryAction,
   className,
+  style,
+  slotProps,
   'data-testid': dataTestid,
 }: Readonly<TabProps>) {
   const dp = useDefaultProps('Tab')
   const iconPlacement = icon == null ? undefined : iconPosition
   // Before the label above it or at its start, after it below it or at its end.
   const isIconFirst = iconPlacement === 'top' || iconPlacement === 'start'
-  const iconSlot = icon == null ? null : <IconSlot aria-hidden>{icon}</IconSlot>
+  const iconSlot =
+    icon == null ? null : (
+      <IconSlot {...slotProps?.icon} aria-hidden>
+        {icon}
+      </IconSlot>
+    )
   const isWrapped = isWrappedProp ?? dp.isWrapped ?? false
   const bg = bgProp ?? dp.bg
   const borderRadius = borderRadiusProp ?? dp.borderRadius
@@ -469,11 +482,12 @@ export function Tab({
     <TabRoot
       {...styleProps}
       role="presentation"
-      className={className}
+      {...mergeOverrides(slotProps?.root, { style, className })}
       data-tab-value={String(value)}
       data-tab-selected={isSelected || undefined}
     >
       <TabLabel
+        {...slotProps?.label}
         {...semantics}
         as={element}
         id={tabs.getTabId(value)}
@@ -495,7 +509,9 @@ export function Tab({
         {label}
         {!isIconFirst && iconSlot}
       </TabLabel>
-      {secondaryAction != null && <SecondaryActionSlot>{secondaryAction}</SecondaryActionSlot>}
+      {secondaryAction != null && (
+        <SecondaryActionSlot {...slotProps?.secondaryAction}>{secondaryAction}</SecondaryActionSlot>
+      )}
       {isClosable && (
         // Out of the tab order. The pointer's alone - hidden from assistive technology, with Delete
         // closing the focused tab (`aria-keyshortcuts`) - or, with `shouldAnnounceClose`, a button named
@@ -503,6 +519,7 @@ export function Tab({
         // Its label is shown as a hint, by a tooltip that holds nothing to use - not by a native `title`.
         <Tooltip title={closeLabel} isInteractive={false}>
           <TabClose
+            {...slotProps?.close}
             type="button"
             isAnnounced={tabs.shouldAnnounceClose}
             aria-hidden={tabs.shouldAnnounceClose ? undefined : true}

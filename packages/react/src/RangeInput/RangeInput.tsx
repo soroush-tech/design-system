@@ -1,13 +1,6 @@
 'use client'
 
-import {
-  Fragment,
-  useId,
-  useRef,
-  type ComponentProps,
-  type CSSProperties,
-  type ReactNode,
-} from 'react'
+import { Fragment, useId, useRef, type ComponentProps, type ReactNode } from 'react'
 import type { LayoutProps, SpaceProps } from '@soroush.tech/styled-system'
 import { alpha, styled, type LiveValue } from '../style/styled'
 import { useLiveValue } from '../style/hooks/useLiveValue'
@@ -18,6 +11,8 @@ import { useDefaultProps } from '../theme/hooks/useDefaultProps'
 import { useFormControl } from '../FormControl'
 import { useRangeInput, type RangeInputValue } from './hooks/useRangeInput'
 import { getMarks, valueToPercent, type Mark, type Orientation } from './utils/range'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../style/overrides'
+import type { RangeInputSlot } from './RangeInput.types'
 
 export type { Mark as RangeInputMark } from './utils/range'
 export type RangeInputTrack = 'normal' | false | 'inverted'
@@ -75,6 +70,10 @@ export interface RangeInputProps
   /** On the first thumb's input, which a `FormLabel` targets. Default: its `FormControl`'s. */
   id?: string
   className?: string
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<RangeInputSlot>
   'aria-label'?: string
   'aria-labelledby'?: string
   'aria-describedby'?: string
@@ -179,6 +178,9 @@ interface TrackStyle extends AxisStyle {
   color: keyof Theme['palette']
   isInverted: boolean
   isDragging: boolean
+  /** Where the line starts, and how long it is, in percent along the rail: live values, so a drag writes no rule. */
+  from: LiveValue
+  span: LiveValue
 }
 
 const RangeInputTrack = styled('span', {
@@ -191,8 +193,10 @@ const RangeInputTrack = styled('span', {
     'color',
     'isInverted',
     'isDragging',
+    'from',
+    'span',
   ]),
-})<TrackStyle>(({ theme, size, orientation, color, isInverted, isDragging }) => {
+})<TrackStyle>(({ theme, size, orientation, color, isInverted, isDragging, from, span }) => {
   const thickness = railThickness(theme, size)
   const fill = isInverted ? get(theme, 'border.light') : get(theme, `palette.${color}.main`)
   return {
@@ -203,8 +207,20 @@ const RangeInputTrack = styled('span', {
     transition: isDragging ? 'none' : 'inset 0.1s ease, width 0.1s ease, height 0.1s ease',
     '@media (prefers-reduced-motion: reduce)': { transition: 'none' },
     ...(orientation === 'vertical'
-      ? { insetInlineStart: '50%', width: thickness, marginInlineStart: `calc(${thickness} / -2)` }
-      : { top: '50%', height: thickness, marginTop: `calc(${thickness} / -2)` }),
+      ? {
+          bottom: `${from}`,
+          height: `${span}`,
+          insetInlineStart: '50%',
+          width: thickness,
+          marginInlineStart: `calc(${thickness} / -2)`,
+        }
+      : {
+          insetInlineStart: `${from}`,
+          width: `${span}`,
+          top: '50%',
+          height: thickness,
+          marginTop: `calc(${thickness} / -2)`,
+        }),
   }
 })
 
@@ -213,17 +229,30 @@ const RangeInputTrack = styled('span', {
 interface MarkStyle extends AxisStyle {
   color: keyof Theme['palette']
   isActive: boolean
+  /** Along the rail, from the start edge or the bottom. */
+  percent: number
 }
+
+// The thumbs and marks sit along the rail by percent - from the start edge, or the bottom.
+const place = (orientation: Orientation, percent: number) =>
+  orientation === 'vertical' ? { bottom: `${percent}%` } : { insetInlineStart: `${percent}%` }
 
 const RangeInputMark = styled('span', {
   name: 'RangeInput',
   slot: 'mark',
   label: 'RangeInputMark',
-  shouldForwardProp: createShouldForwardProp(['size', 'orientation', 'color', 'isActive']),
-})<MarkStyle>(({ theme, size, orientation, color, isActive }) => {
+  shouldForwardProp: createShouldForwardProp([
+    'size',
+    'orientation',
+    'color',
+    'isActive',
+    'percent',
+  ]),
+})<MarkStyle>(({ theme, size, orientation, color, isActive, percent }) => {
   const thickness = railThickness(theme, size)
   return {
     position: 'absolute',
+    ...place(orientation, percent),
     pointerEvents: 'none',
     opacity: isActive ? 0.5 : 1,
     backgroundColor: isActive
@@ -251,11 +280,12 @@ const RangeInputMarkLabel = styled('span', {
   name: 'RangeInput',
   slot: 'markLabel',
   label: 'RangeInputMarkLabel',
-  shouldForwardProp: createShouldForwardProp(['size', 'orientation']),
-})<AxisStyle>(({ theme, size, orientation }) => {
+  shouldForwardProp: createShouldForwardProp(['size', 'orientation', 'percent']),
+})<AxisStyle & { percent: number }>(({ theme, size, orientation, percent }) => {
   const thumb = theme.icon[size]
   return {
     position: 'absolute',
+    ...place(orientation, percent),
     pointerEvents: 'none',
     whiteSpace: 'nowrap',
     fontSize: theme.fontSizes[0],
@@ -393,10 +423,6 @@ const RangeInputValueLabel = styled('span', {
   })
 )
 
-// The thumbs and marks sit along the rail by percent - from the start edge, or the bottom.
-const place = (orientation: Orientation, percent: number): CSSProperties =>
-  orientation === 'vertical' ? { bottom: `${percent}%` } : { insetInlineStart: `${percent}%` }
-
 /**
  * @description A slider: one value on a range, or two or more thumbs for a range of values.
  * Each thumb is a visually hidden native `<input type="range">`, so the keys (the arrows, Page,
@@ -430,6 +456,8 @@ export function RangeInput({
   name,
   id: idProp,
   className,
+  style,
+  slotProps,
   'aria-label': ariaLabel,
   'aria-labelledby': ariaLabelledby,
   'aria-describedby': ariaDescribedby,
@@ -486,29 +514,29 @@ export function RangeInput({
     return range.isRange || isInverted ? covered !== isInverted : mark <= values[0]
   }
 
-  const trackStyle: CSSProperties =
-    orientation === 'vertical'
-      ? { bottom: `${trackStart}%`, height: `${trackEnd - trackStart}%` }
-      : { insetInlineStart: `${trackStart}%`, width: `${trackEnd - trackStart}%` }
+  const trackFrom = useLiveValue(trackStart, '%')
+  const trackSpan = useLiveValue(trackEnd - trackStart, '%')
 
   return (
     <RangeInputRoot
       ref={rootRef}
       isDisabled={fc.disabled}
-      className={className}
+      {...mergeOverrides(slotProps?.root, { style, className })}
       data-testid={dataTestid}
       {...axis}
       {...range.rootProps}
       {...rest}
     >
-      <RangeInputRail color={color} isInverted={isInverted} {...axis} />
+      <RangeInputRail color={color} isInverted={isInverted} {...axis} {...slotProps?.rail} />
       {track !== false && (
         <RangeInputTrack
           color={color}
           isInverted={isInverted}
           isDragging={isDragging}
-          style={trackStyle}
+          from={trackFrom}
+          span={trackSpan}
           {...axis}
+          {...slotProps?.track}
         />
       )}
       {marks
@@ -519,14 +547,16 @@ export function RangeInput({
               data-mark={mark.value}
               color={color}
               isActive={isMarkActive(mark.value)}
-              style={place(orientation, valueToPercent(mark.value, min, max))}
+              percent={valueToPercent(mark.value, min, max)}
               {...axis}
+              {...slotProps?.mark}
             />
             {mark.label != null && (
               <RangeInputMarkLabel
                 aria-hidden
-                style={place(orientation, valueToPercent(mark.value, min, max))}
+                percent={valueToPercent(mark.value, min, max)}
                 {...axis}
+                {...slotProps?.markLabel}
               >
                 {mark.label}
               </RangeInputMarkLabel>
@@ -548,6 +578,7 @@ export function RangeInput({
             percent={valueToPercent(thumbValue, min, max)}
             isLastUsed={range.lastUsed === index}
             {...axis}
+            {...slotProps?.thumb}
             {...range.getThumbProps(index)}
           >
             {valueLabel !== 'off' && (
@@ -556,11 +587,13 @@ export function RangeInput({
                 color={color}
                 orientation={orientation}
                 isOpen={isShown}
+                {...slotProps?.valueLabel}
               >
                 {formatValueLabel ? formatValueLabel(scale(thumbValue), index) : scale(thumbValue)}
               </RangeInputValueLabel>
             )}
             <RangeInputInput
+              {...slotProps?.input}
               type="range"
               orientation={orientation}
               data-index={index}

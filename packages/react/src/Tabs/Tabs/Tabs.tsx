@@ -24,7 +24,8 @@ import { createShouldForwardProp, props } from '@soroush.tech/styled-system/shou
 import { get, space } from '@soroush.tech/styled-system'
 import { useDefaultProps } from '../../theme/hooks/useDefaultProps'
 import { useTheme } from '../../theme/hooks/useTheme'
-import type { TabsVariant } from './Tabs.types'
+import type { TabsSlot, TabsVariant } from './Tabs.types'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../../style/overrides'
 import { themeDefault } from '@gild-ui/core/theme'
 import { Icon } from '../../Icon'
 import { Tooltip } from '../../Tooltip'
@@ -136,6 +137,10 @@ export interface TabsProps extends SpaceProps<Theme> {
   'aria-labelledby'?: string
   id?: string
   className?: string
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<TabsSlot>
   'data-testid'?: string
 }
 
@@ -452,6 +457,8 @@ export function Tabs({
   'aria-labelledby': ariaLabelledBy,
   id,
   className,
+  style,
+  slotProps,
   'data-testid': dataTestid,
   ...spaceProps
 }: Readonly<TabsProps>) {
@@ -648,6 +655,7 @@ export function Tabs({
         disabled={scrollButtons === 'always' && !canScroll}
         isHidden={scrollButtons === 'auto' && !canScroll}
         onClick={() => scroll.scrollByView(direction)}
+        slotProps={{ root: slotProps?.scrollButton }}
       />
     )
   }
@@ -682,14 +690,19 @@ export function Tabs({
         bg={bg}
         as={as}
         id={id}
-        className={className}
+        {...mergeOverrides(slotProps?.root, { style, className })}
         data-testid={dataTestid}
         aria-label={isNavigation ? ariaLabel : undefined}
         aria-labelledby={isNavigation ? ariaLabelledBy : undefined}
       >
-        {startContent != null && <StartContent {...styleProps}>{startContent}</StartContent>}
+        {startContent != null && (
+          <StartContent {...slotProps?.startContent} {...styleProps}>
+            {startContent}
+          </StartContent>
+        )}
         {hasScrollButtons && renderScrollButton(-1)}
         <TabsList
+          {...slotProps?.list}
           {...styleProps}
           ref={listRef}
           isCentered={isCentered}
@@ -717,7 +730,12 @@ export function Tabs({
             )
           })}
           {variant === 'underline' && (
-            <TabsIndicator {...styleProps} ref={indicatorRef} aria-hidden />
+            <TabsIndicator
+              {...slotProps?.indicator}
+              {...styleProps}
+              ref={indicatorRef}
+              aria-hidden
+            />
           )}
         </TabsList>
         {hasScrollButtons && renderScrollButton(1)}
@@ -730,7 +748,12 @@ export function Tabs({
                 // The label is shown as a hint by a tooltip, not a native `title`; the tooltip hands
                 // the menu's clone on to the button.
                 <Tooltip title={overflowLabel} isInteractive={false}>
-                  <OverflowButton type="button" {...styleProps} aria-label={overflowLabel}>
+                  <OverflowButton
+                    {...slotProps?.overflowButton}
+                    type="button"
+                    {...styleProps}
+                    aria-label={overflowLabel}
+                  >
                     <Icon name="expand_more" size="sm" color="inherit" />
                   </OverflowButton>
                 </Tooltip>
@@ -747,6 +770,7 @@ export function Tabs({
                       // The pointer's, as a tab's is: a menu owns rows alone, and Delete closes it.
                       <Tooltip title={tab.closeLabel} isInteractive={false}>
                         <OverflowClose
+                          {...slotProps?.overflowClose}
                           type="button"
                           color={selectedColor}
                           aria-hidden={shouldAnnounceClose ? undefined : true}
@@ -766,7 +790,11 @@ export function Tabs({
             </Menu>
           </View>
         )}
-        {endContent != null && <EndContent {...styleProps}>{endContent}</EndContent>}
+        {endContent != null && (
+          <EndContent {...slotProps?.endContent} {...styleProps}>
+            {endContent}
+          </EndContent>
+        )}
       </TabsRoot>
     </TabsContext.Provider>
   )

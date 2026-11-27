@@ -5,6 +5,8 @@ import { TableContext } from '../TableContext'
 import { Icon, type IconName, type IconProps } from '../../Icon'
 import type { SpaceProps } from '@soroush.tech/styled-system'
 import { styled } from '../../style/styled'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../../style/overrides'
+import type { TableSortLabelSlot } from './TableSortLabel.types'
 import { type Theme } from '../../theme/themes'
 import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
 import { space, get } from '@soroush.tech/styled-system'
@@ -12,7 +14,7 @@ import { space, get } from '@soroush.tech/styled-system'
 export type TableSortLabelDirection = 'asc' | 'desc'
 
 export interface TableSortLabelProps
-  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'color'>, SpaceProps<Theme> {
+  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'color' | 'style'>, SpaceProps<Theme> {
   /** Marks the currently-sorted column - shows the icon fully opaque. Default: `false`. */
   isActive?: boolean
   /** Current sort direction - rotates the arrow. Default: `'asc'`. */
@@ -27,6 +29,10 @@ export interface TableSortLabelProps
   iconName?: IconName
   /** Extra props for the sort arrow icon. */
   iconProps?: Omit<IconProps, 'name'>
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<TableSortLabelSlot>
 }
 
 const shouldForwardProp = createShouldForwardProp([...props, 'isActive', 'shouldHideSortIcon'])
@@ -101,6 +107,9 @@ export function TableSortLabel({
   iconProps,
   type = 'button',
   children,
+  style,
+  className,
+  slotProps,
   ...rest
 }: Readonly<TableSortLabelProps>) {
   // Resolution: explicit prop → enclosing Table's context → default (hidden).
@@ -112,6 +121,7 @@ export function TableSortLabel({
       isActive={isActive}
       shouldHideSortIcon={resolvedHideSortIcon}
       type={type}
+      {...mergeOverrides(slotProps?.root, { style, className })}
       {...rest}
     >
       {children}
@@ -123,7 +133,7 @@ export function TableSortLabel({
         isActive={isActive}
         shouldHideSortIcon={resolvedHideSortIcon}
         {...iconProps}
-        className="sort-icon"
+        {...mergeOverrides({ style: iconProps?.style, className: 'sort-icon' }, slotProps?.icon)}
       />
     </SortLabelRoot>
   )

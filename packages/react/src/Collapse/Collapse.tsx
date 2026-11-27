@@ -4,6 +4,8 @@ import { useRef, type ReactNode } from 'react'
 import { styled } from '../style/styled'
 import { type Theme } from '../theme/themes'
 import { createShouldForwardProp } from '@soroush.tech/styled-system/should-forward-prop'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../style/overrides'
+import type { CollapseSlot } from './Collapse.types'
 import { useDefaultProps } from '../theme/hooks/useDefaultProps'
 import { useTheme } from '../theme/hooks/useTheme'
 import {
@@ -35,6 +37,10 @@ export interface CollapseProps extends TransitionCallbacks {
   /** Which way it opens. Default: `'vertical'`. */
   orientation?: CollapseOrientation
   className?: string
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<CollapseSlot>
   'data-testid'?: string
 }
 
@@ -115,6 +121,8 @@ export function Collapse({
   onExiting,
   onExited,
   className,
+  style,
+  slotProps,
   'data-testid': dataTestid,
 }: Readonly<CollapseProps>) {
   const theme = useTheme()
@@ -179,11 +187,13 @@ export function Collapse({
       easing={theme.transitions.easing[easing]}
       orientation={orientation}
       collapsedSize={collapsed}
-      className={className}
+      {...mergeOverrides(slotProps?.root, { style, className })}
       data-testid={dataTestid}
     >
-      <CollapseWrapper ref={wrapperRef} orientation={orientation}>
-        <CollapseInner orientation={orientation}>{children}</CollapseInner>
+      <CollapseWrapper ref={wrapperRef} orientation={orientation} {...slotProps?.wrapper}>
+        <CollapseInner orientation={orientation} {...slotProps?.inner}>
+          {children}
+        </CollapseInner>
       </CollapseWrapper>
     </CollapseRoot>
   )

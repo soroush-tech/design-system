@@ -2,6 +2,7 @@ import { screen, fireEvent, act } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { Image } from '../Image'
+import { describeRootSlot } from '../utils/test/describeRootSlot'
 
 describe('Image', () => {
   describe('source priority', () => {
@@ -188,3 +189,9 @@ describe('Image', () => {
     })
   })
 })
+
+describeRootSlot(
+  'Image',
+  (props) => <Image src="a.png" alt="" data-testid="root" {...props} />,
+  () => screen.getByTestId('root')
+)

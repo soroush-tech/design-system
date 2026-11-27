@@ -8,6 +8,8 @@ import { type Theme } from '../theme/themes'
 import { get, space } from '@soroush.tech/styled-system'
 import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
 import { themeDefault, type PaletteColor } from '@gild-ui/core/theme'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../style/overrides'
+import type { CheckboxSlot } from './Checkbox.types'
 
 export type CheckboxColor = PaletteColor
 export type CheckboxSize = keyof Theme['sizes']
@@ -43,6 +45,10 @@ export interface CheckboxProps extends SpaceProps<Theme> {
   value?: string | number | readonly string[]
   children?: ReactNode
   className?: string
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<CheckboxSlot>
   'aria-label'?: string
   'aria-labelledby'?: string
   'aria-describedby'?: string
@@ -204,6 +210,8 @@ export function Checkbox({
   value,
   children,
   className,
+  style,
+  slotProps,
   'aria-label': ariaLabel,
   'aria-labelledby': ariaLabelledby,
   'aria-describedby': ariaDescribedby,
@@ -237,11 +245,12 @@ export function Checkbox({
       size={size}
       disabled={disabled}
       fullWidth={fullWidth}
-      className={className}
+      {...mergeOverrides(slotProps?.root, { style, className })}
       data-testid={dataTestid}
       {...spaceProps}
     >
       <HiddenInput
+        {...slotProps?.input}
         ref={inputRef}
         type="checkbox"
         checked={checked}
@@ -257,14 +266,18 @@ export function Checkbox({
         aria-labelledby={ariaLabelledby}
         aria-describedby={describedBy}
       />
-      <CheckboxIconWrapper size={size}>
+      <CheckboxIconWrapper size={size} {...slotProps?.icon}>
         <span className="cb-unchecked">{icon ?? <UncheckedIcon />}</span>
         <span className="cb-checked">{checkedIcon ?? <CheckedIcon />}</span>
         <span className="cb-indeterminate">
           <IndeterminateIcon />
         </span>
       </CheckboxIconWrapper>
-      {children != null && <CheckboxLabel textColor={fc.textColor}>{children}</CheckboxLabel>}
+      {children != null && (
+        <CheckboxLabel textColor={fc.textColor} {...slotProps?.label}>
+          {children}
+        </CheckboxLabel>
+      )}
     </CheckboxRoot>
   )
 }

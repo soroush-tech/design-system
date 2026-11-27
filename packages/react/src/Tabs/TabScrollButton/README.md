@@ -41,3 +41,7 @@ row's look - its stretch of the divider in the enclosed look - and hides on narr
 the `Tabs` has `shouldShowScrollButtonsOnMobile`. As a tab's, its own value wins: its `color`,
 then `theme.components.TabScrollButton.defaultProps`, then the row's line - the selected tab's
 color; its `textColor`, then the row's, then the theme's `defaultProps`, then the row's default.
+
+## Overrides
+
+`style` takes an entry of `StyleSheet.create`, or a list of them with `false`, `null` and `undefined`, and puts it on the root after the component's own styles. `slotProps` takes, for each slot (`root`), a `style` of the same kind, a `className`, and `data-*` and `aria-*` attributes. On the root, `style` and `className` come after `slotProps.root`, so they win.

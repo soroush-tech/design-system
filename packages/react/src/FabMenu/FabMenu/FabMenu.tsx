@@ -28,6 +28,8 @@ import { isRtl } from '../../utils/isRtl'
 import { useControlled } from '@gild-ui/hooks/useControlled'
 import { FabMenuContext } from '../FabMenuContext'
 import { useFabMenuLayout } from '../hooks/useFabMenuLayout'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../../style/overrides'
+import type { FabMenuSlot } from './FabMenu.types'
 
 export type FabMenuDirection = 'up' | 'down' | 'left' | 'right'
 export type FabMenuAlign = 'start' | 'end'
@@ -66,6 +68,10 @@ export interface FabMenuProps extends SpaceProps<Theme> {
   /** Size of the trigger, and of the items. Default: `'md'`. */
   size?: keyof Theme['sizes']
   className?: string
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<FabMenuSlot>
   'data-testid'?: string
 }
 
@@ -168,6 +174,8 @@ export function FabMenu({
   color,
   size: sizeProp,
   className,
+  style,
+  slotProps,
   'data-testid': dataTestid,
   ...spaceProps
 }: Readonly<FabMenuProps>) {
@@ -267,7 +275,7 @@ export function FabMenu({
     <FabMenuContext.Provider value={context}>
       <FabMenuRoot
         ref={rootRef}
-        className={className}
+        {...mergeOverrides(slotProps?.root, { style, className })}
         data-testid={dataTestid}
         onKeyDown={handleKeyDown}
         {...spaceProps}
@@ -279,6 +287,7 @@ export function FabMenu({
           align={align}
           maxWidth={layout.maxWidth}
           maxHeight={layout.maxHeight}
+          {...slotProps?.list}
         >
           {items.map((item) => (
             <Zoom

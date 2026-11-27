@@ -6,6 +6,8 @@ import { useDefaultProps } from '../theme/hooks/useDefaultProps'
 import { useTheme } from '../theme/hooks/useTheme'
 import { Paper, type PaperProps } from '../Paper'
 import { Typography, type TypographyProps } from '../Typography'
+import { mergeOverrides, type SlotProps } from '../style/overrides'
+import type { CardSlot } from './Card.types'
 import { Icon, type IconName, type IconProps } from '../Icon'
 
 export type CardVariant = 'paper' | 'bracketBox' | 'interactive'
@@ -53,6 +55,8 @@ export interface CardProps extends Omit<PaperProps, 'title'> {
   iconProps?: Omit<IconProps, 'name'>
   titleProps?: Omit<TypographyProps, 'children'>
   captionProps?: Omit<TypographyProps, 'children'>
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. The `root` is merged before `style` and `className`; `title`, `caption` and `icon` come after `titleProps`, `captionProps` and `iconProps`. */
+  slotProps?: SlotProps<CardSlot>
 }
 
 export function Card({
@@ -65,14 +69,24 @@ export function Card({
   captionProps,
   flexDirection = 'column',
   children,
+  style,
+  className,
+  slotProps,
   ...rest
 }: Readonly<CardProps>) {
   const theme = useTheme()
   const dp = useDefaultProps('Card')
   const variant = variantProp ?? dp.variant ?? themeDefault(theme, 'cardVariant', 'paper')
   return (
-    <CardSurface variant={variant} flexDirection={flexDirection} {...rest}>
-      {icon !== undefined && <CardIcon name={icon} {...dp.iconProps} {...iconProps} />}
+    <CardSurface
+      variant={variant}
+      flexDirection={flexDirection}
+      {...rest}
+      {...mergeOverrides(slotProps?.root, { style, className })}
+    >
+      {icon !== undefined && (
+        <CardIcon name={icon} {...dp.iconProps} {...iconProps} {...slotProps?.icon} />
+      )}
       {title !== undefined &&
         (typeof title === 'string' ? (
           <CardTitle
@@ -82,6 +96,7 @@ export function Card({
             mb={1}
             {...dp.titleProps}
             {...titleProps}
+            {...slotProps?.title}
           >
             {title}
           </CardTitle>
@@ -95,6 +110,7 @@ export function Card({
           mb={5}
           {...dp.captionProps}
           {...captionProps}
+          {...slotProps?.caption}
         >
           {caption}
         </CardCaption>

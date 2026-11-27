@@ -71,3 +71,7 @@ look is `theme.components.Fab`'s.
 - Closed, the actions are `visibility: hidden`: out of the tab order and the accessibility tree.
 - The stack is a disclosure of buttons, not a `menu`: use `Menu` for a list of commands that takes arrow
   keys as its only way in.
+
+## Overrides
+
+`style` takes an entry of `StyleSheet.create`, or a list of them with `false`, `null` and `undefined`, and overrides the CSS of the root. `slotProps` takes, for each slot (`root`, `list`), a `style` of the same kind, a `className`, and `data-*` and `aria-*` attributes. `slotProps.root` and `style` are one channel: `style` is merged after `slotProps.root.style`, so it wins.

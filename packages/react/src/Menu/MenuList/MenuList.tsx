@@ -1,14 +1,6 @@
 'use client'
 
-import {
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  type AriaAttributes,
-  type KeyboardEvent,
-  type ReactNode,
-} from 'react'
+import { useContext, useEffect, useMemo, useRef, type KeyboardEvent, type ReactNode } from 'react'
 import type { LayoutProps, SpaceProps } from '@soroush.tech/styled-system'
 import { negate, styled } from '../../style/styled'
 import { type Theme } from '../../theme/themes'
@@ -16,6 +8,7 @@ import { createShouldForwardProp, props } from '@soroush.tech/styled-system/shou
 import { space, layout } from '@soroush.tech/styled-system'
 import { useDefaultProps } from '../../theme/hooks/useDefaultProps'
 import { themeDefault } from '@gild-ui/core/theme'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../../style/overrides'
 import { MenuActivationContext } from '../MenuActivationContext'
 import {
   MenuListContext,
@@ -26,6 +19,7 @@ import {
 import { getNextRow, type RowStep } from './utils/getNextRow'
 import { getOwnRows, isRowEnabled } from './utils/getOwnRows'
 import { findRowByText } from './utils/findRowByText'
+import type { MenuListSlot } from './MenuList.types'
 
 export type { MenuItemValue } from '../MenuListContext'
 
@@ -49,20 +43,14 @@ export interface MenuListProps extends SpaceProps<Theme>, LayoutProps<Theme> {
   onKeyDown?: (event: KeyboardEvent<HTMLElement>) => void
   id?: string
   className?: string
+  /** Overrides the CSS of the list: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<MenuListSlot>
   'aria-label'?: string
   'aria-labelledby'?: string
   'data-testid'?: string
 }
-
-/**
- * What an app may put on the `role="menu"` list a `Menu` or a `ContextMenu` renders, through
- * `slotProps.list`: its marks (`data-*`), class, `aria-*` and an `onKeyDown`, which runs before the
- * list's own. The list's `role`, `id` and name are the menu's, and win.
- */
-export type MenuListSlotProps = Pick<MenuListProps, 'className' | 'data-testid' | 'onKeyDown'> &
-  Omit<AriaAttributes, 'aria-label' | 'aria-labelledby'> & {
-    [name: `data-${string}`]: string | number | boolean | undefined
-  }
 
 const STEP_BY_KEY: Record<string, RowStep> = {
   ArrowDown: 'next',
@@ -121,6 +109,9 @@ export function MenuList({
   size,
   dense,
   onKeyDown,
+  style,
+  className,
+  slotProps,
   ...rest
 }: Readonly<MenuListProps>) {
   const listRef = useRef<HTMLUListElement>(null)
@@ -188,7 +179,14 @@ export function MenuList({
 
   return (
     <MenuListContext.Provider value={context}>
-      <MenuListRoot {...rest} ref={listRef} role="menu" tabIndex={-1} onKeyDown={handleKeyDown}>
+      <MenuListRoot
+        {...rest}
+        {...mergeOverrides(slotProps?.root, { style, className })}
+        ref={listRef}
+        role="menu"
+        tabIndex={-1}
+        onKeyDown={handleKeyDown}
+      >
         {children}
       </MenuListRoot>
     </MenuListContext.Provider>

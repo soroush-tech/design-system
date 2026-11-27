@@ -5,6 +5,8 @@ import { useFormControl } from '../FormControl'
 import { Icon, type IconName, type IconProps } from '../Icon'
 import type { SpaceProps, LayoutProps } from '@soroush.tech/styled-system'
 import { styled } from '../style/styled'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../style/overrides'
+import type { NativeSelectSlot } from './NativeSelect.types'
 import { type Theme } from '../theme/themes'
 import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
 import { get, system, space } from '@soroush.tech/styled-system'
@@ -55,7 +57,7 @@ export interface NativeSelectProps
   /** Extra props for the dropdown icon. */
   iconProps?: Omit<IconProps, 'name'>
   /** Extra attributes spread onto the native `<select>`. Explicit top-level props take priority. */
-  selectProps?: SelectHTMLAttributes<HTMLSelectElement>
+  selectProps?: Omit<SelectHTMLAttributes<HTMLSelectElement>, 'style'>
   id?: string
   name?: string
   required?: boolean
@@ -69,6 +71,10 @@ export interface NativeSelectProps
    */
   variant?: NativeSelectVariant
   className?: string
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<NativeSelectSlot>
   'data-testid'?: string
 }
 
@@ -293,6 +299,8 @@ export function NativeSelect({
   size: sizeProp,
   variant: variantProp,
   className,
+  style,
+  slotProps,
   'data-testid': dataTestid,
   ...spaceProps
 }: Readonly<NativeSelectProps>) {
@@ -336,12 +344,13 @@ export function NativeSelect({
       disabled={disabled}
       fullWidth={fullWidth}
       borderRadius={borderRadius}
-      className={className}
+      {...mergeOverrides(slotProps?.root, { style, className })}
       data-testid={dataTestid}
       {...spaceProps}
     >
       <StyledNativeSelect
         {...selectProps}
+        {...mergeOverrides({ className: selectProps?.className }, slotProps?.select)}
         id={id}
         name={name}
         disabled={disabled}
@@ -366,7 +375,16 @@ export function NativeSelect({
           </option>
         ))}
       </StyledNativeSelect>
-      <DropdownIcon name={iconName} size={size} color="inherit" {...iconProps} />
+      <DropdownIcon
+        name={iconName}
+        size={size}
+        color="inherit"
+        {...iconProps}
+        {...mergeOverrides(
+          { className: iconProps?.className, style: iconProps?.style },
+          slotProps?.icon
+        )}
+      />
     </NativeSelectRoot>
   )
 }

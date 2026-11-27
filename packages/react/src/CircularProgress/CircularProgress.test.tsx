@@ -1,3 +1,4 @@
+import { lastColor, overrides } from '../utils/test/overrides'
 import { screen } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
@@ -252,5 +253,46 @@ describe('CircularProgress', () => {
       renderWithTheme(<CircularProgress aria-label="uploading" />)
       expect(screen.getByRole('progressbar', { name: 'uploading' })).toBeInTheDocument()
     })
+  })
+})
+
+describe('CircularProgress overrides', () => {
+  const mark = (name: string) => ({
+    className: name,
+    style: overrides.first,
+    'data-mark': name,
+    'aria-details': name,
+  })
+  const expectMarked = (element: Element | null, name: string) => {
+    expect(element).toHaveClass(name)
+    expect(element).toHaveAttribute('data-mark', name)
+    expect(element).toHaveAttribute('aria-details', name)
+    expect(lastColor(element!)).toBe('rgb(1, 2, 3)')
+  }
+
+  it('puts the style, class name and attributes of each slot on its element', () => {
+    renderWithTheme(
+      <CircularProgress
+        showTrack
+        slotProps={{ root: mark('root'), track: mark('track'), circle: mark('circle') }}
+      />
+    )
+    const root = screen.getByRole('progressbar')
+    expectMarked(root, 'root')
+    expectMarked(root.querySelector('circle:first-of-type'), 'track')
+    expectMarked(root.querySelector('circle:last-of-type'), 'circle')
+  })
+
+  it('lets the style prop win over slotProps.root.style, and joins the class names', () => {
+    renderWithTheme(
+      <CircularProgress
+        className="own"
+        style={[false, null, undefined, overrides.second]}
+        slotProps={{ root: { className: 'slot', style: overrides.first } }}
+      />
+    )
+    const root = screen.getByRole('progressbar')
+    expect(root).toHaveClass('slot', 'own')
+    expect(lastColor(root)).toBe('rgb(4, 5, 6)')
   })
 })

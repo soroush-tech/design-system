@@ -74,8 +74,13 @@ export function useTransitionChild(
   })
   if (status === 'unmounted') return null
   const style = getStyle({ status, duration, easing: theme.transitions.easing[easing] })
-  return cloneElement(children as ReactElement<{ style?: CSSProperties; ref?: Ref<HTMLElement> }>, {
+  // A child of ours takes entries of `StyleSheet.create` in its `style`, which a spread would flatten and
+  // lose: they stay in a list, with the transition's own style after. A plain element takes the object.
+  const childStyle = (children.props as { style?: object }).style
+  const isEntry =
+    Array.isArray(childStyle) || (childStyle !== undefined && 'className' in childStyle)
+  return cloneElement(children as ReactElement<{ style?: unknown; ref?: Ref<HTMLElement> }>, {
     ref: ref as Ref<HTMLElement>,
-    style: { ...(children.props as { style?: CSSProperties }).style, ...style },
+    style: isEntry ? [childStyle, style] : { ...childStyle, ...style },
   })
 }

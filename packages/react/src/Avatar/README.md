@@ -168,3 +168,7 @@ Avatar extends `Flex` minus all padding props. Outer spacing (`m`, `mt`, `mr`, `
 // Custom ring color and width
 <Avatar ring ringColor="dark" ringWidth="base" src="/photo.jpg" alt="Jane" />
 ```
+
+## Overrides
+
+`style` takes an entry of `StyleSheet.create`, or a list of them with `false`, `null` and `undefined`, and puts it on the root after the component's own styles. `slotProps` takes, for each slot (`root`, `img`), a `style` of the same kind, a `className`, and `data-*` and `aria-*` attributes. On the root, `style` and `className` come after `slotProps.root`, so they win.

@@ -219,7 +219,7 @@ export const WithDividers: Story = {
 function ControlledSelect(props: Readonly<Partial<SelectProps>>) {
   const [value, setValue] = useState<SelectValue>('web')
   return (
-    <Flex flexDirection="column" gap={2} style={{ maxWidth: 240 }}>
+    <Flex flexDirection="column" gap={2} maxWidth={240}>
       <Typography variant="caption" color="secondary">
         Selected: {String(value)}
       </Typography>

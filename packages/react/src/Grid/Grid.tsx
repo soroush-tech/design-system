@@ -4,6 +4,7 @@ import type {
   LayoutGridProps,
 } from '@soroush.tech/styled-system'
 import { styled } from '../style/styled'
+import { withRootOverrides } from '../style/withRootOverrides'
 import { type Theme } from '../theme/themes'
 import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
 import { grid, flexbox, layoutGrid, space } from '@soroush.tech/styled-system'
@@ -31,9 +32,11 @@ export interface GridProps
 
 const shouldForwardProp = createShouldForwardProp([...props, 'layout'])
 
-export const Grid = styled(View, {
+const GridRoot = styled(View, {
   name: 'Grid',
   label: 'grid',
   shouldForwardProp,
   systemProps: [layoutGrid, grid, flexbox, space],
 })<GridProps>({ display: 'grid' })
+
+export const Grid = withRootOverrides(GridRoot)

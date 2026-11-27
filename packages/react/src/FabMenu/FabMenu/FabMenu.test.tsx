@@ -1,3 +1,4 @@
+import { lastColor, overrides } from '../../utils/test/overrides'
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest'
 import { act, fireEvent, render, screen } from '@testing-library/react'
 import type { ReactNode } from 'react'
@@ -662,5 +663,46 @@ describe('FabMenu', () => {
         document.getElementById(trigger().getAttribute('aria-controls') as string)
       ).toHaveStyle(style)
     })
+  })
+})
+
+describe('FabMenu overrides', () => {
+  const mark = (name: string) => ({
+    className: name,
+    style: overrides.first,
+    'data-mark': name,
+    'aria-details': name,
+  })
+  const expectMarked = (element: Element | null, name: string) => {
+    expect(element).toHaveClass(name)
+    expect(element).toHaveAttribute('data-mark', name)
+    expect(element).toHaveAttribute('aria-details', name)
+    expect(lastColor(element!)).toBe('rgb(1, 2, 3)')
+  }
+
+  it('puts the style, class name and attributes of each slot on its element', () => {
+    renderWithTheme(
+      <FabMenu
+        aria-label="Create"
+        data-testid="root"
+        slotProps={{ root: mark('root'), list: mark('list') }}
+      />
+    )
+    expectMarked(screen.getByTestId('root'), 'root')
+    expectMarked(screen.getByTestId('root').firstElementChild, 'list')
+  })
+
+  it('lets the style prop win over slotProps.root.style, and joins the class names', () => {
+    renderWithTheme(
+      <FabMenu
+        aria-label="Create"
+        data-testid="root"
+        className="own"
+        style={[false, null, undefined, overrides.second]}
+        slotProps={{ root: { className: 'slot', style: overrides.first } }}
+      />
+    )
+    expect(screen.getByTestId('root')).toHaveClass('slot', 'own')
+    expect(lastColor(screen.getByTestId('root'))).toBe('rgb(4, 5, 6)')
   })
 })

@@ -167,7 +167,7 @@ Combine with `color="backdrop"`, which resolves to the theme's pre-composited fr
 
 ### HTML attributes
 
-`AppBar` extends `HTMLAttributes<HTMLElement>` (minus `color`, which is overridden). All standard attributes pass through: `style`, `className`, `onClick`, `data-*`, `aria-*`, etc.
+`AppBar` extends `HTMLAttributes<HTMLElement>` (minus `color`, which is overridden). All standard attributes pass through: `className`, `onClick`, `data-*`, `aria-*`, etc.
 
 ---
 
@@ -198,3 +198,7 @@ Combine with `color="backdrop"`, which resolves to the theme's pre-composited fr
   <Typography variant="h6" color="primary">App</Typography>
 </AppBar>
 ```
+
+## Overrides
+
+`style` takes an entry of `StyleSheet.create`, or a list of them with `false`, `null` and `undefined`, and puts it on the root after the component's own styles. `slotProps` takes, for each slot (`root`), a `style` of the same kind, a `className`, and `data-*` and `aria-*` attributes. On the root, `style` and `className` come after `slotProps.root`, so they win.

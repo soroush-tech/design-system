@@ -6,6 +6,7 @@ import { sectionPath } from 'src/common/sectionPath'
 import { DocsNav } from 'src/common/DocsNav/DocsNav'
 import { Layout } from 'src/common/Layout'
 import { Readme } from 'src/common/Readme/Readme'
+import { SlotsTable } from 'src/common/SlotsTable/SlotsTable'
 import { sections, splitReadme } from '@gild-ui/docs-content'
 import { componentOfRoute, componentPageParts } from 'src/common/componentPage'
 import { ComponentHero } from 'src/common/ComponentHero/ComponentHero'
@@ -54,6 +55,7 @@ export default function Page() {
         </Typography>
       </View>
       <Readme source={api} />
+      <SlotsTable name={name} />
       <View as="section" my={4}>
         <Typography variant="h4" as="h2" id="source-code" gutterBottom>
           Source code

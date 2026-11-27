@@ -5,7 +5,10 @@ import { radioColorTokens, radioSizeTokens } from '../utils/test/storiesOptions'
 import { ColorSwatchRows, WithCheckedState, type ControlledArgs } from '../utils/test/storiesToggle'
 import { Flex } from '../Flex'
 import { Typography } from '../Typography'
+import { styled } from '../style/styled'
 import { Radio } from './Radio'
+
+const Glyph = styled('span')({ fontSize: '1.2em' })
 
 const meta: Meta<typeof Radio> = {
   title: 'Theme/Radio',
@@ -122,19 +125,15 @@ export const Sizes: Story = {
 export const CustomIcons: Story = {
   render: () => (
     <Flex flexDirection="column" gap={2}>
-      <Radio
-        color="primary"
-        icon={<span style={{ fontSize: '1.2em' }}>○</span>}
-        checkedIcon={<span style={{ fontSize: '1.2em' }}>●</span>}
-      >
+      <Radio color="primary" icon={<Glyph>○</Glyph>} checkedIcon={<Glyph>●</Glyph>}>
         Custom icons (unchecked)
       </Radio>
       <Radio
         color="primary"
         checked
         onChange={() => {}}
-        icon={<span style={{ fontSize: '1.2em' }}>○</span>}
-        checkedIcon={<span style={{ fontSize: '1.2em' }}>●</span>}
+        icon={<Glyph>○</Glyph>}
+        checkedIcon={<Glyph>●</Glyph>}
       >
         Custom icons (checked)
       </Radio>

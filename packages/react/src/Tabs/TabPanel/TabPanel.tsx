@@ -3,6 +3,8 @@
 import type { ReactNode } from 'react'
 import type { SpaceProps } from '@soroush.tech/styled-system'
 import { styled } from '../../style/styled'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../../style/overrides'
+import type { TabPanelSlot } from './TabPanel.types'
 import { type Theme } from '../../theme/themes'
 import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
 import { space } from '@soroush.tech/styled-system'
@@ -24,6 +26,10 @@ export interface TabPanelProps extends SpaceProps<Theme> {
   /** The panel's corner radius - resolves against `theme.radii`. */
   borderRadius?: keyof Theme['radii']
   className?: string
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<TabPanelSlot>
   'data-testid'?: string
 }
 
@@ -46,6 +52,8 @@ export function TabPanel({
   children,
   shouldKeepMounted: shouldKeepMountedProp,
   className,
+  style,
+  slotProps,
   'data-testid': dataTestid,
   ...spaceProps
 }: Readonly<TabPanelProps>) {
@@ -63,7 +71,7 @@ export function TabPanel({
       aria-labelledby={getTabId(baseId, value)}
       tabIndex={0}
       hidden={!isSelected}
-      className={className}
+      {...mergeOverrides(slotProps?.root, { style, className })}
       data-testid={dataTestid}
     >
       {isSelected || shouldKeepMounted ? children : null}

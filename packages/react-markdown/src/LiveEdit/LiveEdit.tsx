@@ -6,10 +6,12 @@ import {
   type KeyboardEvent,
   type ReactNode,
 } from 'react'
-import { styled } from '@gild-ui/react'
+import { styled, type SlotProps, type StyleOverride } from '@gild-ui/react'
 import { View } from '@gild-ui/react/View'
 import { MarkdownContext } from '../MarkdownContext'
+import type { MarkdownLiveEditSlot } from '../themeTypes'
 import { Preview, type PreviewSlotProps } from '../Preview'
+import { mergeOverrides } from '../utils/mergeOverrides'
 import { blockToMarkdown } from '../utils/blockToMarkdown'
 import { splitBlocks, type MarkdownBlock } from '../utils/splitBlocks'
 
@@ -55,6 +57,7 @@ interface EditableBlockProps {
   isEditable: boolean
   placeholder?: string
   slotProps?: PreviewSlotProps
+  blockProps?: SlotProps<'block'>['block']
   onEdit: (index: number, element: HTMLElement) => void
   onDone: () => void
 }
@@ -71,6 +74,7 @@ function EditableBlock({
   isEditable,
   placeholder,
   slotProps,
+  blockProps,
   onEdit,
   onDone,
 }: Readonly<EditableBlockProps>) {
@@ -86,6 +90,7 @@ function EditableBlock({
 
   return (
     <LiveEditBlock
+      {...blockProps}
       aria-label="Edit block"
       tabIndex={isEditable ? 0 : undefined}
       contentEditable={isEditable}
@@ -107,8 +112,13 @@ export interface LiveEditProps {
   onChange?: (value: string) => void
   /** Shown inside the (empty) document's first block until something is typed. */
   placeholder?: string
-  /** Per-element prop overrides forwarded to every block's preview. */
-  slotProps?: PreviewSlotProps
+  /**
+   * Per-element prop overrides forwarded to every block's preview, and the two slots a theme can
+   * style: `root` and `block` (each block), taking a `style`, a `className` and `data-*` and `aria-*`.
+   */
+  slotProps?: PreviewSlotProps & SlotProps<MarkdownLiveEditSlot>
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
 }
 
 /**
@@ -126,7 +136,10 @@ export function LiveEdit({
   onChange: onChangeProp,
   placeholder = 'Click to start writing...',
   slotProps,
+  style,
 }: Readonly<LiveEditProps>) {
+  // The blocks' previews take the element props only: `root` and `block` are the editor's own.
+  const { root, block: blockSlot, ...elementProps } = slotProps ?? {}
   const context = useContext(MarkdownContext)
   const value = context?.value ?? valueProp ?? ''
   const onChange = context?.onChange ?? onChangeProp ?? noop
@@ -189,7 +202,7 @@ export function LiveEdit({
   const handleDone = () => resplit(syncedValueRef.current)
 
   return (
-    <LiveEditRoot>
+    <LiveEditRoot {...mergeOverrides(root, { style })}>
       {blocks.map((block, index) => (
         <EditableBlock
           key={`${generation}:${index}`}
@@ -197,7 +210,8 @@ export function LiveEdit({
           source={block.source}
           isEditable={!MERMAID_FENCE.test(block.source)}
           placeholder={placeholder}
-          slotProps={slotProps}
+          slotProps={elementProps}
+          blockProps={blockSlot}
           onEdit={handleEdit}
           onDone={handleDone}
         />
