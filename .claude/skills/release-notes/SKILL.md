@@ -45,6 +45,8 @@ bump decides which sections the notes need.
 
 ## Required contents
 
+A breaking release of the Gild UI family also ships a `migrate` step, and each Breaking item says whether `migrate` handles it or what to do by hand: see the `migrations` skill (`pnpm check:migrations` enforces both).
+
 Every release body **must** have:
 
 1. **A PR or issue reference, as a full link** - `[#<number>](https://github.com/soroush-tech/core/issues/<number>)`

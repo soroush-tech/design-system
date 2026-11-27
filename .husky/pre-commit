@@ -15,6 +15,8 @@ pnpm gen:plugin-refs --check
 pnpm check:release-notes
 # The lockstep packages share one version.
 pnpm check:lockstep
+# A breaking release of the family ships its migrate step.
+pnpm check:migrations
 # `npx skills add` must offer only the public skill; an outside update can undo that.
 pnpm check:skills
 pnpm test

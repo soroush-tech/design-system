@@ -17,6 +17,7 @@
     "gen:plugin-refs": "pnpm --filter @soroush.design/mcp gen -- --plugin",
     "check:release-notes": "node scripts/check-release-notes.mjs",
     "check:lockstep": "node scripts/check-lockstep.mjs",
+    "check:migrations": "node scripts/check-migrations.mjs",
     "check:skills": "node scripts/check-skills.mjs",
     "check:typography": "aiwg --all",
     "deprecate-alpha": "node scripts/deprecate-alpha.mjs",

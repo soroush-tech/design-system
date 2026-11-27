@@ -146,6 +146,11 @@ jobs:
       - name: Check release notes
         run: ${{ needs.prepare.outputs.runner }} run check:release-notes
 
+      # Fail the build if a breaking release of the Gild UI family has no migrate step to reach it
+      # (packages/cli/src/migrate/steps/gild-ui-<version>/, registered, with a fixture).
+      - name: Check migrations
+        run: ${{ needs.prepare.outputs.runner }} run check:migrations
+
       # Fail the build if the lockstep packages (root package.json) differ in version, or one's
       # range on a sibling does not cover it.
       - name: Check lockstep

@@ -27,6 +27,8 @@ nobody edits it.
 
 ## Rules
 
+- A breaking target of the Gild UI family needs its `migrate` step before the first alpha: see the `migrations` skill.
+
 - Pick the target by the semver rule in the [`release-notes`](../release-notes/SKILL.md) skill
   and bump `package.json` to it once, before the first alpha. It stays there through every alpha
   and rc.
