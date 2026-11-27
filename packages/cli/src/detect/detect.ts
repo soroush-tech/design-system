@@ -70,16 +70,23 @@ export function detectPackageManager(
 }
 
 /**
- * The React version the app has installed - in its own node_modules or a workspace's above it -
- * else the lowest its declared range allows. Only node_modules folders are searched: a global
- * folder or NODE_PATH says nothing about the app.
+ * The version of `name` the app has installed - in its own node_modules or a workspace's above it.
+ * Only node_modules folders are searched: a global folder or NODE_PATH says nothing about the app.
+ */
+export function findInstalledVersion(root: string, name: string): string | undefined {
+  for (let directory = root; ; directory = dirname(directory)) {
+    const installed = readPackageJson(join(directory, 'node_modules', name))
+    if (installed) return installed.version
+    if (dirname(directory) === directory) return undefined
+  }
+}
+
+/**
+ * The React version the app has installed, else the lowest its declared range allows.
  */
 export function findReactVersion(root: string, packageJson: PackageJson): string | undefined {
-  for (let directory = root; ; directory = dirname(directory)) {
-    const installed = readPackageJson(join(directory, 'node_modules', 'react'))
-    if (installed) return installed.version
-    if (dirname(directory) === directory) break
-  }
+  const installed = findInstalledVersion(root, 'react')
+  if (installed) return installed
   const match = /(\d+)(?:\.(\d+))?(?:\.(\d+))?/.exec(getDependency(packageJson, 'react') ?? '')
   return match ? `${match[1]}.${match[2] ?? 0}.${match[3] ?? 0}` : undefined
 }
@@ -132,6 +139,24 @@ export function findRootFiles(root: string, folder = '', depth = 0): string[] {
     }
   }
   return found
+}
+
+/**
+ * Every file under the app's folder, by its path from the root, sorted. Hidden folders, the ones
+ * that hold output or dependencies, and symbolic links are not listed.
+ */
+export function listAppFiles(root: string, folder = '', depth = 0): string[] {
+  const found: string[] = []
+  for (const entry of readdirSync(join(root, folder), { withFileTypes: true })) {
+    const path = posix.join(folder, entry.name)
+    if (entry.name.startsWith('.')) continue
+    if (entry.isDirectory() && !SKIPPED_FOLDERS.has(entry.name) && depth < MAX_DEPTH) {
+      found.push(...listAppFiles(root, path, depth + 1))
+    } else if (entry.isFile()) {
+      found.push(path)
+    }
+  }
+  return found.sort()
 }
 
 /** Whether the folder is a workspace's root: pnpm's `pnpm-workspace.yaml`, or a `workspaces` field. */

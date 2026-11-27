@@ -24,29 +24,23 @@ export class ApplyError extends Error {
  * against the file before it is written and read back after.
  */
 export function applyPlan(plan: Plan, root: string, fileSystem: FileSystem = nodeFileSystem): void {
+  applyPlans([plan], root, fileSystem)
+}
+
+/**
+ * Writes several plans one after another, each on what the one before wrote. They share one undo
+ * list: when a write fails in any of them, every change of every plan is taken back. `command`
+ * names the command in the errors.
+ */
+export function applyPlans(
+  plans: readonly Plan[],
+  root: string,
+  fileSystem: FileSystem = nodeFileSystem,
+  command = 'init'
+): void {
   const undoSteps: (() => void)[] = []
   try {
-    for (const file of plan.creates) {
-      const absolute = resolveInside(root, file.path, fileSystem)
-      for (const directory of findMissingDirectories(root, dirname(absolute), fileSystem)) {
-        fileSystem.createDirectory(directory)
-        undoSteps.push(() => fileSystem.removeDirectory(directory))
-      }
-      fileSystem.createFile(absolute, file.content)
-      undoSteps.push(() => fileSystem.removeFile(absolute))
-    }
-    for (const edit of plan.edits) {
-      const absolute = resolveInside(root, edit.path, fileSystem)
-      if (fileSystem.readFile(absolute) !== edit.before) {
-        throw new Error(`${edit.path} changed while init was running`)
-      }
-      // Kept before the write, so a file left half written is restored too.
-      undoSteps.push(() => fileSystem.writeFile(absolute, edit.before))
-      fileSystem.writeFile(absolute, edit.after)
-      if (fileSystem.readFile(absolute) !== edit.after) {
-        throw new Error(`${edit.path} did not read back as init wrote it`)
-      }
-    }
+    for (const plan of plans) writePlan(plan, root, fileSystem, undoSteps, command)
   } catch (error) {
     let isUndone = true
     for (const undo of undoSteps.reverse()) {
@@ -57,5 +51,35 @@ export function applyPlan(plan: Plan, root: string, fileSystem: FileSystem = nod
       }
     }
     throw new ApplyError((error as Error).message, isUndone)
+  }
+}
+
+function writePlan(
+  plan: Plan,
+  root: string,
+  fileSystem: FileSystem,
+  undoSteps: (() => void)[],
+  command: string
+): void {
+  for (const file of plan.creates) {
+    const absolute = resolveInside(root, file.path, fileSystem)
+    for (const directory of findMissingDirectories(root, dirname(absolute), fileSystem)) {
+      fileSystem.createDirectory(directory)
+      undoSteps.push(() => fileSystem.removeDirectory(directory))
+    }
+    fileSystem.createFile(absolute, file.content)
+    undoSteps.push(() => fileSystem.removeFile(absolute))
+  }
+  for (const edit of plan.edits) {
+    const absolute = resolveInside(root, edit.path, fileSystem)
+    if (fileSystem.readFile(absolute) !== edit.before) {
+      throw new Error(`${edit.path} changed while ${command} was running`)
+    }
+    // Kept before the write, so a file left half written is restored too.
+    undoSteps.push(() => fileSystem.writeFile(absolute, edit.before))
+    fileSystem.writeFile(absolute, edit.after)
+    if (fileSystem.readFile(absolute) !== edit.after) {
+      throw new Error(`${edit.path} did not read back as ${command} wrote it`)
+    }
   }
 }

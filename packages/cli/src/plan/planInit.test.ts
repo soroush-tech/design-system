@@ -2,7 +2,13 @@
 import { describe, expect, it } from 'vitest'
 import { MARKER } from '../templates/templates'
 import { VITE_ROOT } from '../testApp'
-import { createInstallCommand, isPlanEmpty, planInit, type InitFacts } from './planInit'
+import {
+  createInstallAllCommand,
+  createInstallCommand,
+  isPlanEmpty,
+  planInit,
+  type InitFacts,
+} from './planInit'
 
 function createFacts(
   overrides: Partial<InitFacts> = {},
@@ -200,5 +206,24 @@ describe('createInstallCommand', () => {
     expect(createInstallCommand({ name: 'npm', isYarnBerry: false }, '0.1.0-alpha.1').args[1]).toBe(
       '@gild-ui/react@0.1.0-alpha.1'
     )
+  })
+})
+
+describe('createInstallAllCommand', () => {
+  it("installs what package.json lists with the app's package manager, running no scripts", () => {
+    expect(createInstallAllCommand({ name: 'npm', isYarnBerry: false })).toEqual({
+      command: 'npm',
+      args: ['install', '--ignore-scripts'],
+      env: {},
+    })
+    expect(createInstallAllCommand({ name: 'pnpm', isYarnBerry: false }).args).toEqual([
+      'install',
+      '--ignore-scripts',
+    ])
+    expect(createInstallAllCommand({ name: 'yarn', isYarnBerry: true })).toEqual({
+      command: 'yarn',
+      args: ['install'],
+      env: { YARN_ENABLE_SCRIPTS: 'false' },
+    })
   })
 })

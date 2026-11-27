@@ -1,13 +1,14 @@
 # Command line
 
 `@soroush.design/cli` is the command line of the [`@soroush.tech`](https://gild-ui.soroush.design)
-design system. It has two commands: `create` starts a new app on Gild UI - a working
-boilerplate with the theme, the providers and a few pages in place - and `init` sets the design
-system up in an existing React app.
+design system. It has three commands: `create` starts a new app on Gild UI - a working
+boilerplate with the theme, the providers and a few pages in place - `init` sets the design
+system up in an existing React app, and `migrate` moves an app to the latest version.
 
 ```sh
 npx @soroush.design/cli create my-app
 npx @soroush.design/cli init
+npx @soroush.design/cli migrate
 ```
 
 Each shows every change first, and writes nothing until you say yes. `--help` after a command
@@ -252,3 +253,36 @@ It is careful with your app:
 
 Next.js, Vike and React Router apps are refused for now, with a pointer to the
 [setup guide](https://gild-ui.soroush.design/react/installation/).
+
+## Move an app forward: `migrate`
+
+Run it in your app's folder:
+
+```sh
+npx @soroush.design/cli migrate
+```
+
+It moves an app from `@soroush.tech/design-system` 2.x, or from any earlier Gild UI version, to
+the latest version the command line knows. It reads the version the app is on - from
+`node_modules`, or from the range in `package.json` - and picks the migration steps from there to
+the target. Each step starts from the exact state it expects, so an app several versions behind
+takes each step in turn.
+
+| Option           | What it does                               |
+| ---------------- | ------------------------------------------ |
+| `-y`, `--yes`    | Apply without asking                       |
+| `--dry-run`      | Show the changes and exit                  |
+| `--to <version>` | Stop at this version instead of the latest |
+| `-h`, `--help`   | Show the options of `migrate`              |
+
+It shows one plan, grouped by step: the dependencies it adds, removes and updates, each file edit
+as a diff, and what only you can decide, each with its file and line. Every step is planned on the
+app as the steps before it will leave it, and nothing is written until you say yes.
+
+- It runs only in a git repository with no uncommitted change, so its changes stand on their
+  own. `--dry-run` needs neither.
+- It applies the steps in order, each step's edits and then its dependencies, and takes back every
+  change if a write fails. It installs once, at the end, with your package manager and no scripts.
+- It prints what is left to you again as a checklist, with the file and line of each item.
+- A second run finds the new version and changes nothing.
+- When no step starts from the version your app is on, it says so, and what to do.

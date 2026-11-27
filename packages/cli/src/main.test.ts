@@ -2,12 +2,14 @@
 import { describe, expect, it, vi } from 'vitest'
 import { runCreate } from './create/create'
 import { runInit } from './init'
+import { runMigrate } from './migrate/migrate'
 import { STARTERS } from './create/starters'
 import { HELP, main, USAGE } from './main'
 import { CancelledError } from './prompt'
 import { createTestIo } from './testApp'
 
 vi.mock('./init', () => ({ runInit: vi.fn(async () => 0) }))
+vi.mock('./migrate/migrate', () => ({ runMigrate: vi.fn(async () => 0) }))
 vi.mock('./create/create', () => ({ runCreate: vi.fn(async () => 0) }))
 
 const DESIGN_SYSTEM = { name: '@gild-ui/react' }
@@ -200,5 +202,47 @@ describe('main', () => {
       code: 1,
       output: '--ts and --js do not go together: give one.\n',
     })
+  })
+
+  it('runs migrate with its options, and describes it', async () => {
+    const { code, io } = await runMain('migrate', '-y', '--dry-run', '--to', '0.1.0')
+    expect(code).toBe(0)
+    expect(runMigrate).toHaveBeenLastCalledWith(
+      { isConfirmed: true, isDryRun: true, to: '0.1.0' },
+      io
+    )
+    await runMain('migrate')
+    expect(runMigrate).toHaveBeenLastCalledWith(
+      { isConfirmed: false, isDryRun: false, to: undefined },
+      expect.anything()
+    )
+    expect(await runMain('migrate', '-h')).toMatchObject({ code: 0, output: HELP.migrate })
+    expect(USAGE).toContain('migrate ')
+    for (const option of ['--to <version>', '--dry-run', '--yes']) {
+      expect(HELP.migrate).toContain(option)
+    }
+    expect(HELP.init).not.toContain('--to')
+  })
+
+  it('refuses an option migrate does not take, and --to elsewhere', async () => {
+    expect(await runMain('migrate', '--force')).toMatchObject({
+      code: 1,
+      output: `--force is an option of init, not of migrate.
+
+${HELP.migrate}`,
+    })
+    expect(await runMain('migrate', '--scheme', 'dark')).toMatchObject({
+      code: 1,
+      output: `--scheme is an option of init and create, not of migrate.
+
+${HELP.migrate}`,
+    })
+    expect(await runMain('init', '--to', '0.1.0')).toMatchObject({
+      code: 1,
+      output: `--to is an option of migrate, not of init.
+
+${HELP.init}`,
+    })
+    expect(await runMain('migrate', 'now')).toMatchObject({ code: 1 })
   })
 })

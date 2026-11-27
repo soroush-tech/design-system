@@ -1,7 +1,8 @@
 # Command line
 
 `@soroush.design/cli` holds Gild UI's command line: `init` sets Gild UI up in
-an existing app, and `create` starts a new one (RFC #84). This is the contributor's view. The
+an existing app, `create` starts a new one (RFC #84), and `migrate` moves an app to the latest
+Gild UI (#137). This is the contributor's view. The
 user's is [`docs/command-line.md`](./docs/command-line.md), which the docs site's `/cli/` page
 renders; [`README.md`](./README.md) is npm's short page, which points there.
 
@@ -39,6 +40,7 @@ Publish this package first: Gild UI's release names its exact version. CD orders
   (`// Set up by @gild-ui/react init.`), which is how a second run tells its own files from the
   app's. A file that starts with an earlier marker, the former library name or `@soroush.tech/design-system`,
   is still init's own.
+- `src/migrate/` runs `migrate`: `migrate.ts` is the runner, `steps/` holds the steps.
 - `src/closing.ts` holds the lines both commands end on: the fonts, and the agent suggestions.
 
 ## How `create` works, and where a starter plugs in
@@ -166,9 +168,46 @@ and msw answers `/api/items`. msw starts with a top-level `await` in `src/main`,
 router. Its fixtures are `type-tests/create-react-router`, `-libraries` (TanStack Query, msw,
 zustand, React Hook Form), `-more` (SWR, Redux Toolkit, React Hook Form) and `-jotai`.
 
+## How `migrate` works, and how to add a step
+
+`migrate` moves an app forward, from `@soroush.tech/design-system` 2.x or any released Gild UI
+version, to the latest version the command line carries (or `--to <version>`). It reuses init's
+safety rules and machinery: `io`, `prompt`, `isApproved`, `detectPackageManager`, `getGitState`,
+`applyPlans` (`applyPlan` for several plans, with one undo list) and the install command.
+
+1. **Detect** (`detectVersion.ts`): the package the app is on, of those the steps start from or
+   end on, newest first, and its version: from `node_modules/<package>/package.json`, or the lowest
+   version of the range in `package.json`, whichever is higher (an install behind `package.json`
+   means the app was moved and not installed yet, which keeps a second run a no-op).
+2. **Chain** (`chain.ts`): the steps ordered by `to.version`; from the app's package and version,
+   the step whose `from` matches, then from where it ends, until the target. No step for the
+   version is a message: already there (exit 0), a version no step starts from, or a `--to` no
+   step ends at (exit 1).
+3. **Plan** (`simulate.ts`): every step's `plan(app)` runs in memory on the app as the steps before
+   it leave it, so step 2 reads step 1's edits; nothing is written between steps. After a step's
+   own changes the runner moves the app to the step's `to`: its package takes `^to.version` in the
+   section the former one was in, and the former one goes. The output (`formatMigration.ts`) is
+   grouped by step: dependencies, creations and edits as diffs, and the report items to decide.
+4. **Apply** (`migrate.ts`): the same gates as `init` (a clean git tree, none on `--dry-run`; no
+   write without a yes, or `--yes`; no terminal and no `--yes` is a preview), then the steps'
+   plans in order with `applyPlans`, one install at the end, and the report items again as a
+   checklist.
+
+A step is `src/migrate/steps/<id>/index.ts` exporting a `MigrationStep` (`step.ts`):
+`{ id, from: { package, range }, to: { package, version }, summary, plan(app) => Change[] }`.
+`range` is a version with `x` (`2.x`, `0.1.x`). `plan` only reads `app` (`packageJson`,
+`readFile`, `listFiles`) and answers with `Change`s: `create`, `edit` (the whole new text),
+`dependency` (`add`, `update`, `remove`; package.json is changed only this way) and `report` (a
+file and line that need a person). To add one: write the folder (with `fixtures/before` and
+`fixtures/after`), import it in `steps/index.ts`, and test it on the fixtures' app. The runner's
+own tests use two steps of a fake package, `src/migrate/testSteps.ts`, never in the registry.
+
+**The rule (#177):** a breaking release of the Gild UI family ships a `migrate` step that
+targets it, so an app on any earlier version reaches the latest by running the steps in order.
+
 ## The rules each change keeps
 
-Each has a test: nothing is written before a yes; a clean git tree unless `--force` (`init`); a
+Each has a test: nothing is written before a yes; a clean git tree unless `--force` (`init`; `migrate` has no `--force`); a
 new or empty folder only, taken away on a failure (`create`); no file is overwritten; an edit is made only to the standard shape and read back; a failed write is undone;
 the install runs last, with the app's own package manager and no scripts; no network but the
 install; no path outside the app, and no symbolic link.

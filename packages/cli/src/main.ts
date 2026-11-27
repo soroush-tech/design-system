@@ -7,6 +7,7 @@ import { RENDERINGS, STARTERS, type Rendering } from './create/starters'
 import { LAYOUTS, type Layout } from './create/workspace'
 import type { PackageJson } from './detect/detect'
 import { runInit } from './init'
+import { runMigrate } from './migrate/migrate'
 import type { Io } from './io'
 import type { PackageManagerName } from './plan/planInit'
 import type { Scheme } from './templates/templates'
@@ -20,6 +21,7 @@ export const USAGE = `Usage: ${BIN} <command> [options]
 Commands:
   init            set up ${APP_PACKAGE} in the React app in this folder
   create [name]   start a new app on Gild UI, in a new folder
+  migrate         move the app in this folder to the latest Gild UI, step by step
 
 Each shows every change first, and writes nothing until you say yes.
 For a command's options, run it with --help: ${BIN} create --help
@@ -43,6 +45,26 @@ Options:
 
 Example:
   ${BIN} init --scheme dark
+`,
+  migrate: `Usage: ${BIN} migrate [options]
+
+Moves the app in this folder forward, from @soroush.tech/design-system 2.x or from an earlier
+Gild UI version to the latest the command line knows: it finds the version the app is on, picks
+the migration steps from there to the target, and shows every change of every step first - the
+dependencies, the file edits, and what only you can decide, with its file and line. It writes
+nothing until you say yes, then applies the steps in order and installs once.
+
+It runs only in a git repository with no uncommitted change. Run it again after: an app that is
+on the latest version has nothing to change.
+
+Options:
+  -y, --yes               apply without asking
+      --dry-run           show the changes and exit
+      --to <version>      stop at this version instead of the latest
+  -h, --help              show this help
+
+Example:
+  ${BIN} migrate --dry-run
 `,
   create: `Usage: ${BIN} create [name] [options]
 
@@ -84,6 +106,7 @@ const OPTIONS = {
   scheme: { type: 'string' },
   help: { type: 'boolean', short: 'h' },
   force: { type: 'boolean' },
+  to: { type: 'string' },
   framework: { type: 'string' },
   title: { type: 'string' },
   ts: { type: 'boolean' },
@@ -99,6 +122,7 @@ const OPTIONS = {
 /** The options only one command takes. */
 const OWN_OPTIONS: Record<string, readonly string[]> = {
   init: ['force'],
+  migrate: ['to'],
   create: [
     'framework',
     'title',
@@ -119,6 +143,9 @@ function findMisuse(command: string, extra: string[], used: string[]): string | 
   for (const [other, options] of others) {
     const option = used.find((name) => options.includes(name))
     if (option) return `--${option} is an option of ${other}, not of ${command}.`
+  }
+  if (command === 'migrate' && used.includes('scheme')) {
+    return '--scheme is an option of init and create, not of migrate.'
   }
   const maxPositionals = command === 'create' ? 1 : 0
   return extra.length > maxPositionals
@@ -250,6 +277,9 @@ async function runCommandLine(
       },
       io
     )
+  }
+  if (command === 'migrate') {
+    return runMigrate({ isConfirmed, isDryRun, to: values.to }, io)
   }
   return runInit(
     { isConfirmed, isDryRun, isForced: Boolean(values.force), scheme },

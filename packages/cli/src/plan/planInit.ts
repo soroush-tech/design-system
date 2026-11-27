@@ -67,6 +67,14 @@ export function createInstallCommand(
   return { command: name, args: [verb, ...specs, '--ignore-scripts'], env: {} }
 }
 
+/** The command that installs what package.json lists, with the app's package manager, running no scripts. */
+export function createInstallAllCommand({ name, isYarnBerry }: PackageManager): InstallCommand {
+  if (name === 'yarn' && isYarnBerry) {
+    return { command: 'yarn', args: ['install'], env: { YARN_ENABLE_SCRIPTS: 'false' } }
+  }
+  return { command: name, args: ['install', '--ignore-scripts'], env: {} }
+}
+
 function describeRootProblem(facts: InitFacts): string {
   if (facts.rootCandidates.length === 0) {
     return 'init found no file that calls createRoot(...).render( or ReactDOM.render(.'

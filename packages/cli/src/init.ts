@@ -154,7 +154,11 @@ async function planWithScheme(facts: InitFacts, canAsk: boolean, io: Io): Promis
 }
 
 /** Whether to apply the plan: never on a dry run or with no terminal, else on --yes or a yes. */
-async function isApproved(options: InitOptions, isPreviewOnly: boolean, io: Io): Promise<boolean> {
+export async function isApproved(
+  options: Pick<InitOptions, 'isConfirmed' | 'isDryRun'>,
+  isPreviewOnly: boolean,
+  io: Io
+): Promise<boolean> {
   if (options.isDryRun) {
     io.write('Dry run: nothing was changed.\n')
     return false

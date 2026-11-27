@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest'
 import { createTestApp, createTestIo, VITE_ROOT } from '../testApp'
 import {
   detectPackageManager,
+  findInstalledVersion,
   findReactVersion,
   findRootFiles,
   findPackageFolder,
@@ -12,6 +13,7 @@ import {
   getDependency,
   getGitState,
   isWorkspaceRoot,
+  listAppFiles,
   needsParcelPackageExports,
   readPackageJson,
   readText,
@@ -104,6 +106,17 @@ describe('findReactVersion', () => {
   })
 })
 
+describe('findInstalledVersion', () => {
+  it("reads a package's installed version, above the app too, and gives undefined when none", () => {
+    const root = createTestApp({
+      'node_modules/@test/a/package.json': JSON.stringify({ name: '@test/a', version: '1.4.0' }),
+    })
+    expect(findInstalledVersion(root, '@test/a')).toBe('1.4.0')
+    expect(findInstalledVersion(join(root, 'apps/web'), '@test/a')).toBe('1.4.0')
+    expect(findInstalledVersion(root, '@test/missing')).toBeUndefined()
+  })
+})
+
 describe('satisfiesRange', () => {
   const range = '^18.0.0 || ^19.0.0'
 
@@ -183,6 +196,30 @@ describe('findRootFiles', () => {
     mkdirSync(join(root, 'src'))
     symlinkSync(elsewhere, join(root, 'src/linked'), 'junction')
     expect(findRootFiles(root)).toEqual([])
+  })
+})
+
+describe('listAppFiles', () => {
+  it('lists every file, sorted, and none in a hidden, output or dependency folder', () => {
+    const root = createTestApp({
+      'src/b.ts': '',
+      'src/a/c.json': '',
+      'readme.md': '',
+      'dist/x.js': '',
+      'node_modules/x/index.js': '',
+      '.cache/y.js': '',
+      '.env': '',
+      'a/b/c/d/e/f/deep.ts': '',
+    })
+    expect(listAppFiles(root)).toEqual(['package.json', 'readme.md', 'src/a/c.json', 'src/b.ts'])
+  })
+
+  it('does not follow a symbolic link', () => {
+    const root = createTestApp()
+    const elsewhere = createTestApp({ 'main.tsx': VITE_ROOT })
+    mkdirSync(join(root, 'src'))
+    symlinkSync(elsewhere, join(root, 'src/linked'), 'junction')
+    expect(listAppFiles(root)).toEqual(['package.json'])
   })
 })
 
