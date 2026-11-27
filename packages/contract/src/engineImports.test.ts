@@ -2,7 +2,7 @@ import { execFileSync } from 'node:child_process'
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { afterAll, describe, expect, it } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { checkEngineImports, findEngineImports, isGuarded } from './engineImports'
 
 describe('isGuarded', () => {
@@ -58,7 +58,20 @@ describe('findEngineImports', () => {
 
 describe('checkEngineImports', () => {
   const root = mkdtempSync(join(tmpdir(), 'engine-imports-'))
-  afterAll(() => rmSync(root, { recursive: true, force: true }))
+  // Inside a commit hook git hands its own repository down (GIT_INDEX_FILE and the like): a git run
+  // in the temporary repository would then write into the index of the commit being made.
+  const inherited = Object.fromEntries(
+    Object.keys(process.env)
+      .filter((name) => name.startsWith('GIT_'))
+      .map((name) => [name, process.env[name]])
+  )
+  beforeAll(() => {
+    for (const name in inherited) delete process.env[name]
+  })
+  afterAll(() => {
+    Object.assign(process.env, inherited)
+    rmSync(root, { recursive: true, force: true })
+  })
 
   it('reads the tracked files, and skips one that is gone', () => {
     const git = (...args: string[]) => execFileSync('git', args, { cwd: root, stdio: 'ignore' })
