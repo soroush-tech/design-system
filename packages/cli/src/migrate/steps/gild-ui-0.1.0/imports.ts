@@ -60,6 +60,18 @@ interface Specifier {
 }
 
 const MAX_WIDTH = 100
+
+/** The length of the line break the text starts with: 2 for `\r\n`, 1 for `\n`, else 0. */
+function lineBreakLength(text: string): number {
+  if (text.startsWith('\r\n')) return 2
+  return text.startsWith('\n') ? 1 : 0
+}
+
+/** The text a specifier built at run time starts with, when it is a string or a template. */
+function startOfText(node: Node): string {
+  if (node.type === 'TemplateLiteral') return node.quasis[0].value.raw
+  return node.type === 'StringLiteral' ? node.value : ''
+}
 const QUOTED_OLD_SPECIFIER = /(['"])(@soroush\.tech\/(?:design-system|markdown|hooks)[^'"\s]*)\1/g
 const MODULE_CALLS = new Set(['mock', 'doMock', 'unmock', 'importActual', 'requireActual'])
 
@@ -151,21 +163,24 @@ export class ImportEditor {
       )
     } else if (rule.kind === 'uniform') {
       this.replaceLiteral(source, rule.to)
-      if (statement.type === 'ImportDeclaration') {
-        const isTypeStatement = statement.importKind === 'type'
-        for (const node of statement.specifiers) {
-          const spec = readSpecifier(node, keyword, isTypeStatement)
-          const imported = spec.type === 'ImportSpecifier' ? spec.imported : 'default'
-          this.locals.set(spec.local, {
-            imported,
-            oldPath: source.value,
-            to: rule.to,
-            isType: spec.isType,
-          })
-        }
-      }
+      if (statement.type === 'ImportDeclaration') this.readLocals(statement, keyword, rule.to)
     } else {
       this.splitStatement(statement, keyword, source)
+    }
+  }
+
+  /** The names an import whose whole path moves to `to` brings in. */
+  private readLocals(statement: ImportDeclaration, keyword: Keyword, to: string): void {
+    const isTypeStatement = statement.importKind === 'type'
+    for (const node of statement.specifiers) {
+      const spec = readSpecifier(node, keyword, isTypeStatement)
+      const imported = spec.type === 'ImportSpecifier' ? spec.imported : 'default'
+      this.locals.set(spec.local, {
+        imported,
+        oldPath: statement.source.value,
+        to,
+        isType: spec.isType,
+      })
     }
   }
 
@@ -277,13 +292,7 @@ export class ImportEditor {
   private startsWithOldPackage(node: Node): boolean {
     let head = node
     while (head.type === 'BinaryExpression') head = head.left
-    const text =
-      head.type === 'TemplateLiteral'
-        ? head.quasis[0].value.raw
-        : head.type === 'StringLiteral'
-          ? head.value
-          : ''
-    return OLD_PACKAGES.some((name) => text.startsWith(name))
+    return OLD_PACKAGES.some((name) => startOfText(head).startsWith(name))
   }
 
   private readSite(literal: StringLiteral, isModuleBlock: boolean): void {
@@ -308,7 +317,7 @@ export class ImportEditor {
    * statement of the file for that module, or becomes one after the last import.
    */
   addImport(module: string, specifier: string, isType = false): void {
-    const name = specifier.split(/\s+as\s+/).pop()!
+    const name = specifier.split(/\s/).pop()!
     const key = `import|${isType}|${module}`
     const existing = this.groups.get(key)
     if (existing?.specs.some((spec) => spec.name === name)) return
@@ -342,7 +351,21 @@ export class ImportEditor {
     const texts = group.specs.map((spec) => spec.text)
     const line = `${head} ${texts.join(', ')} ${tail}`
     if (line.length <= MAX_WIDTH) return line
-    return `${head}\n${texts.map((text) => `  ${text},`).join('\n')}\n${tail}`
+    const body = texts.map((text) => `  ${text},`).join('\n')
+    return `${head}\n${body}\n${tail}`
+  }
+
+  /** The edit that rewrites, merges or removes one statement, when it is one the step owns. */
+  private editStatement(statement: Statement): Edit | undefined {
+    if (!this.owned.has(statement)) return undefined
+    const groups = this.owned.get(statement)!.filter((group) => group.specs.length !== 0)
+    if (groups.length === 0) {
+      // Nothing is left of the statement: its line goes with it.
+      const after = this.text.slice(statement.end!, statement.end! + 2)
+      return { start: statement.start!, end: statement.end! + lineBreakLength(after), text: '' }
+    }
+    const text = groups.map((group) => this.render(group)).join('\n')
+    return { start: statement.start!, end: statement.end!, text }
   }
 
   /** The edits of the file's imports: statements rewritten, merged and removed, and added ones. */
@@ -350,24 +373,13 @@ export class ImportEditor {
     const edits = [...this.edits]
     const kept: Statement[] = []
     for (const statement of this.statements) {
-      const groups = (this.owned.get(statement) ?? [undefined]).filter(
-        (group) => group?.specs.length !== 0
-      )
-      if (this.owned.has(statement) && groups.length === 0) {
-        // Nothing is left of the statement: its line goes with it.
-        const after = this.text.slice(statement.end!, statement.end! + 2)
-        const lineBreak = after.startsWith('\r\n') ? 2 : after.startsWith('\n') ? 1 : 0
-        edits.push({ start: statement.start!, end: statement.end! + lineBreak, text: '' })
-        continue
-      }
-      if (this.owned.has(statement)) {
-        const text = groups.map((group) => this.render(group!)).join('\n')
-        edits.push({ start: statement.start!, end: statement.end!, text })
-      }
-      if (statement.type === 'ImportDeclaration') kept.push(statement)
+      const edit = this.editStatement(statement)
+      if (edit) edits.push(edit)
+      // A statement stays unless nothing is left of it.
+      if (statement.type === 'ImportDeclaration' && edit?.text !== '') kept.push(statement)
     }
     // After the last import that stays; when none does, where the first one was.
-    const last = kept[kept.length - 1]
+    const last = kept.at(-1)
     this.insertAt = last ? last.end! : (this.statements[0]?.start ?? 0)
     const extras = this.extras.filter((group) => group.specs.length > 0)
     if (extras.length > 0) {

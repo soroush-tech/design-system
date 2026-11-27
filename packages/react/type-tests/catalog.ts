@@ -246,12 +246,11 @@ type Problems<Name extends string, E, P> = E extends {
       | (V extends { example: { props: infer VX } } ? BadExampleProps<Name, VX, P> : never)
   : never
 
-type EntriesWithoutProps = Exclude<EntryName, keyof PropsOf>
-type AllProblems =
-  | `${EntriesWithoutProps}: no row in PropsOf`
-  | {
-      [N in keyof PropsOf & EntryName]: Problems<N, Entries[N], PropsOf[N]>
-    }[keyof PropsOf & EntryName]
+/** The problems of one entry: its own, or that it has no row in `PropsOf`. */
+type EntryProblems<N extends EntryName> = N extends keyof PropsOf
+  ? Problems<N, Entries[N], PropsOf[N]>
+  : `${N}: no row in PropsOf`
+type AllProblems = EntryProblems<EntryName>
 
 // Fails, naming a problem (tsc shows the first), unless there are none.
 declare const problems: AllProblems

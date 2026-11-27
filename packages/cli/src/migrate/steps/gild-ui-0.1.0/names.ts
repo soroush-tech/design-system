@@ -26,7 +26,7 @@ export function readNames(root: Node): Set<string> {
   const names = new Set<string>()
   walk(root, (node, ancestors) => {
     if (node.type.startsWith('TS') && !EXPRESSION_WRAPPERS.has(node.type)) return false
-    const parent = ancestors[ancestors.length - 1]
+    const parent = ancestors.at(-1)
     if (node.type !== 'Identifier') return
     const isKey = parent?.type === 'ObjectProperty' && parent.key === node && !parent.computed
     const isMember =

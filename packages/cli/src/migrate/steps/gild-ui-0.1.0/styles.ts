@@ -101,7 +101,8 @@ export class StyleLifter {
   private readonly styleResults = new Set<string>()
   private readonly components = new Set<string>()
   private readonly entries: Entry[] = []
-  private readonly blocks: (string | 'static')[] = []
+  /** The text of each block to add, or `'static'` where the sheet of the static entries goes. */
+  private readonly blocks: string[] = []
   private staticSheet = ''
   private readonly pending: { at: number; text: string }[] = []
 
@@ -139,12 +140,7 @@ export class StyleLifter {
         head.type === 'TaggedTemplateExpression' ||
         head.type === 'MemberExpression'
       ) {
-        head =
-          head.type === 'CallExpression'
-            ? head.callee
-            : head.type === 'MemberExpression'
-              ? head.object
-              : head.tag
+        head = stepToward(head)
       }
       if (head.type === 'Identifier' && head.name === styled) this.components.add(node.id.name)
     })
@@ -173,7 +169,7 @@ export class StyleLifter {
         )
         return
       }
-      const parent = ancestors[ancestors.length - 1]
+      const parent = ancestors.at(-1)!
       const variable =
         parent.type === 'VariableDeclarator' && parent.id.type === 'Identifier'
           ? parent.id.name
@@ -314,9 +310,10 @@ export class StyleLifter {
   collectEdits(at: number): Edit[] {
     const edits = [...this.edits]
     if (this.blocks.length > 0) {
+      const entries = this.entries.map((entry) => `  ${entry.name}: ${entry.object},`).join('\n')
       const sheets = this.blocks.map((block) =>
         block === 'static'
-          ? `const ${this.staticSheet} = StyleSheet.create({\n${this.entries.map((entry) => `  ${entry.name}: ${entry.object},`).join('\n')}\n})`
+          ? `const ${this.staticSheet} = StyleSheet.create({\n${entries}\n})`
           : block
       )
       edits.push({ start: at, end: at, text: `\n\n${sheets.join('\n\n')}` })
@@ -338,13 +335,24 @@ function findComponent(ancestors: readonly Node[]): FunctionNode | undefined {
     }
     const parent = ancestors[index - 1]
     const holder = parent?.type === 'CallExpression' ? ancestors[index - 2] : parent
-    const name =
-      node.type !== 'ArrowFunctionExpression' && node.id
-        ? node.id.name
-        : holder?.type === 'VariableDeclarator' && holder.id.type === 'Identifier'
-          ? holder.id.name
-          : undefined
+    const name = nameOfFunction(node, holder)
     if (name && /^[A-Z]/.test(name)) return node.body.type === 'BlockStatement' ? node : undefined
   }
   return undefined
+}
+
+/** The name a function is known by: its own, or that of the variable it is the value of. */
+function nameOfFunction(node: FunctionNode, holder: Node | undefined): string | undefined {
+  if (node.type !== 'ArrowFunctionExpression' && node.id) return node.id.name
+  return holder?.type === 'VariableDeclarator' && holder.id.type === 'Identifier'
+    ? holder.id.name
+    : undefined
+}
+
+/** One step from a call, a tagged template or a member towards the name it starts with. */
+function stepToward(
+  node: Extract<Node, { type: 'CallExpression' | 'TaggedTemplateExpression' | 'MemberExpression' }>
+): Node {
+  if (node.type === 'CallExpression') return node.callee
+  return node.type === 'MemberExpression' ? node.object : node.tag
 }

@@ -20,7 +20,7 @@ export function buildChain(
   target?: string
 ): ChainResult {
   const ordered = orderSteps(steps)
-  const goal = target ?? ordered[ordered.length - 1].to.version
+  const goal = target ?? ordered.at(-1)!.to.version
   const goalStep = ordered.find((step) => step.to.version === goal)
   if (!goalStep) {
     const versions = ordered.map((step) => step.to.version).join(', ')

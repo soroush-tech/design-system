@@ -405,7 +405,7 @@ const SelectedTags = <T,>({
   getRemoveLabel?: (label: string) => string
   onRemove: (event: React.SyntheticEvent, option: T) => void
   disabled?: boolean
-  tagsProps?: SlotProps<AutocompleteSlot>['tags']
+  tagsProps?: NonNullable<SlotProps<AutocompleteSlot>['tags']>
 }>) => (
   <AutocompleteTags {...tagsProps}>
     {selected.map((option, index) => {

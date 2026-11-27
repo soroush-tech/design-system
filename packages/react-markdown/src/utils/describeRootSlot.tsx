@@ -10,13 +10,10 @@ export const overrides = StyleSheet.create({
 })
 
 const rulesOf = (rules: CSSRuleList): CSSStyleRule[] =>
-  [...rules].flatMap((rule) =>
-    rule instanceof CSSStyleRule
-      ? [rule]
-      : 'cssRules' in rule
-        ? rulesOf(rule.cssRules as CSSRuleList)
-        : []
-  )
+  [...rules].flatMap((rule) => {
+    if (rule instanceof CSSStyleRule) return [rule]
+    return 'cssRules' in rule ? rulesOf(rule.cssRules as CSSRuleList) : []
+  })
 
 /** The colours the rules of the element's classes give it, in sheet order. */
 export const colorsOf = (element: Element): string[] =>
@@ -31,14 +28,21 @@ interface OverrideProps {
   slotProps?: { root?: SlotOverride }
 }
 
+/** A case of the `root` slot tests: `run` draws the component and returns what it shows, `expected` is what it must show. */
+export interface RootSlotCase {
+  name: string
+  run: () => unknown
+  expected: unknown
+}
+
 /** The cases of a component with a `root` slot: `slotProps.root` and `style` on the root. */
-export function describeRootSlot(
-  name: string,
+export const rootSlotCases = (
   render: (props: OverrideProps) => ReactElement,
   root: () => HTMLElement
-) {
-  describe(`${name} overrides`, () => {
-    it('puts the style, class name and attributes of the root slot on the root', () => {
+): RootSlotCase[] => [
+  {
+    name: 'puts the style, class name and attributes of the root slot on the root',
+    run: () => {
       renderWithTheme(
         render({
           slotProps: {
@@ -51,20 +55,39 @@ export function describeRootSlot(
           },
         })
       )
-      expect(root()).toHaveClass('slot')
-      expect(root()).toHaveAttribute('data-mark', 'a')
-      expect(root()).toHaveAttribute('aria-description', 'b')
-      expect(colorsOf(root())).toContain('rgb(1, 2, 3)')
-    })
-
-    it('lets the style prop win over slotProps.root.style', () => {
+      return {
+        slot: root().classList.contains('slot'),
+        mark: root().getAttribute('data-mark'),
+        description: root().getAttribute('aria-description'),
+        hasColor: colorsOf(root()).includes('rgb(1, 2, 3)'),
+      }
+    },
+    expected: { slot: true, mark: 'a', description: 'b', hasColor: true },
+  },
+  {
+    name: 'lets the style prop win over slotProps.root.style',
+    run: () => {
       renderWithTheme(
         render({
           style: [false, null, undefined, overrides.second],
           slotProps: { root: { style: overrides.first } },
         })
       )
-      expect(colorsOf(root()).at(-1)).toBe('rgb(4, 5, 6)')
+      return colorsOf(root()).at(-1)
+    },
+    expected: 'rgb(4, 5, 6)',
+  },
+]
+
+/** `rootSlotCases` as the tests of a component. */
+export function describeRootSlot(
+  name: string,
+  render: (props: OverrideProps) => ReactElement,
+  root: () => HTMLElement
+) {
+  describe(`${name} overrides`, () => {
+    it.each(rootSlotCases(render, root))('$name', ({ run, expected }) => {
+      expect(run()).toEqual(expected)
     })
   })
 }

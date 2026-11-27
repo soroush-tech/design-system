@@ -87,5 +87,7 @@ export function applyEdits(text: string, edits: readonly Edit[]): string {
 }
 
 /** The name an object property is written with: an identifier or a string, else `undefined`. */
-export const nameOfKey = (key: Node): string | undefined =>
-  key.type === 'Identifier' ? key.name : key.type === 'StringLiteral' ? key.value : undefined
+export const nameOfKey = (key: Node): string | undefined => {
+  if (key.type === 'Identifier') return key.name
+  return key.type === 'StringLiteral' ? key.value : undefined
+}

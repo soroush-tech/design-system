@@ -8,8 +8,10 @@ const formatDependency = ({ action, name, range, previous }: AppliedDependency) 
 }
 
 /** A report as a line: where it is, then what to do. */
-export const formatReport = ({ path, line, message }: Report): string =>
-  `${line === undefined ? path : `${path}:${line}`} ${message}`
+export const formatReport = ({ path, line, message }: Report): string => {
+  const place = line === undefined ? path : `${path}:${line}`
+  return `${place} ${message}`
+}
 
 /** One step of the plan, as the developer reads it before saying yes. Ends with a line break. */
 function formatStepPlan({ step, from, plan, dependencies, reports }: StepPlan, order: string) {
@@ -50,5 +52,6 @@ export function formatStepPlans(plans: readonly StepPlan[]): string {
 export function formatChecklist(plans: readonly StepPlan[]): string {
   const reports = plans.flatMap((stepPlan) => stepPlan.reports)
   if (reports.length === 0) return ''
-  return `Still left to you (${reports.length}):\n${reports.map((item) => `  [ ] ${formatReport(item)}`).join('\n')}\n`
+  const items = reports.map((item) => `  [ ] ${formatReport(item)}`).join('\n')
+  return `Still left to you (${reports.length}):\n${items}\n`
 }

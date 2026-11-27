@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import type { ReactElement } from 'react'
 import type { SlotOverride, StyleOverride } from '../../style/overrides'
 import { renderWithTheme } from './renderWithTheme'
-import { lastColor, overrides } from './overrides'
+import { lastColor, overrides, type OverrideCase } from './overrides'
 
 interface OverrideProps {
   style?: StyleOverride
@@ -11,13 +11,13 @@ interface OverrideProps {
 }
 
 /** The cases every component with only a `root` slot shares: `slotProps.root` and `style` on the root. */
-export function describeRootSlot(
-  name: string,
+export const rootSlotCases = (
   render: (props: OverrideProps) => ReactElement,
   root: () => HTMLElement
-) {
-  describe(`${name} overrides`, () => {
-    it('puts the style, class name and attributes of the root slot on the root', () => {
+): OverrideCase[] => [
+  {
+    name: 'puts the style, class name and attributes of the root slot on the root',
+    run: () => {
       renderWithTheme(
         render({
           slotProps: {
@@ -30,13 +30,18 @@ export function describeRootSlot(
           },
         })
       )
-      expect(root()).toHaveClass('slot')
-      expect(root()).toHaveAttribute('data-mark', 'a')
-      expect(root()).toHaveAttribute('aria-description', 'b')
-      expect(lastColor(root())).toBe('rgb(1, 2, 3)')
-    })
-
-    it('lets the style prop win over slotProps.root.style, and joins the class names', () => {
+      return {
+        slot: root().classList.contains('slot'),
+        mark: root().getAttribute('data-mark'),
+        description: root().getAttribute('aria-description'),
+        color: lastColor(root()),
+      }
+    },
+    expected: { slot: true, mark: 'a', description: 'b', color: 'rgb(1, 2, 3)' },
+  },
+  {
+    name: 'lets the style prop win over slotProps.root.style, and joins the class names',
+    run: () => {
       renderWithTheme(
         render({
           className: 'own',
@@ -44,13 +49,32 @@ export function describeRootSlot(
           slotProps: { root: { className: 'slot', style: overrides.first } },
         })
       )
-      expect(root()).toHaveClass('slot', 'own')
-      expect(lastColor(root())).toBe('rgb(4, 5, 6)')
-    })
-
-    it('takes a list of entries for style', () => {
+      return {
+        classes: ['slot', 'own'].filter((name) => root().classList.contains(name)),
+        color: lastColor(root()),
+      }
+    },
+    expected: { classes: ['slot', 'own'], color: 'rgb(4, 5, 6)' },
+  },
+  {
+    name: 'takes a list of entries for style',
+    run: () => {
       renderWithTheme(render({ style: [overrides.first, false, overrides.second] }))
-      expect(lastColor(root())).toBe('rgb(4, 5, 6)')
+      return lastColor(root())
+    },
+    expected: 'rgb(4, 5, 6)',
+  },
+]
+
+/** `rootSlotCases` as the tests of a component. */
+export function describeRootSlot(
+  name: string,
+  render: (props: OverrideProps) => ReactElement,
+  root: () => HTMLElement
+) {
+  describe(`${name} overrides`, () => {
+    it.each(rootSlotCases(render, root))('$name', ({ run, expected }) => {
+      expect(run()).toEqual(expected)
     })
   })
 }

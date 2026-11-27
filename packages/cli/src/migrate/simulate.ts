@@ -3,6 +3,7 @@
 import type { PackageJson } from '../detect/detect'
 import type { Plan, PackageManager } from '../plan/planInit'
 import type { AppVersion, Change, DependencySection, MigrationStep } from './step'
+import { compareText } from '../compareText'
 import { toDeclaredRange } from './versions'
 
 /** A step asked for something it may not. */
@@ -54,31 +55,38 @@ type DependencyChange = Extract<Change, { kind: 'dependency' }>
 const sortKeys = (record: Record<string, string>) =>
   Object.fromEntries(Object.entries(record).sort(([a], [b]) => a.localeCompare(b)))
 
+type PackageSections = Record<DependencySection, Record<string, string> | undefined>
+
+/** Applies one dependency change to the parsed package.json; what it changed, or `undefined`. */
+function applyDependency(
+  json: PackageSections,
+  change: DependencyChange
+): AppliedDependency | undefined {
+  const { name } = change
+  const holders = SECTIONS.filter((section) => json[section]?.[name] !== undefined)
+  if (change.action === 'remove') {
+    if (holders.length === 0) return undefined
+    const previous = json[holders[0]]![name]
+    for (const section of holders) delete json[section]![name]
+    return { action: 'remove', name, previous }
+  }
+  const section =
+    holders[0] ?? (change.action === 'add' ? (change.section ?? 'dependencies') : undefined)
+  if (section === undefined) return undefined
+  const previous = json[section]?.[name]
+  if (previous === change.range) return undefined
+  json[section] = sortKeys({ ...json[section], [name]: change.range })
+  const action = previous === undefined ? 'add' : 'update'
+  return { action, name, range: change.range, previous }
+}
+
 /** Applies the dependency changes to package.json's text, keeping its indent and line breaks. */
 export function editDependencies(
   text: string,
   changes: readonly DependencyChange[]
 ): { text: string; applied: AppliedDependency[] } {
-  const json = JSON.parse(text) as Record<DependencySection, Record<string, string> | undefined>
-  const applied: AppliedDependency[] = []
-  for (const change of changes) {
-    const { name } = change
-    const holders = SECTIONS.filter((section) => json[section]?.[name] !== undefined)
-    if (change.action === 'remove') {
-      if (holders.length === 0) continue
-      applied.push({ action: 'remove', name, previous: json[holders[0]]![name] })
-      for (const section of holders) delete json[section]![name]
-      continue
-    }
-    const section =
-      holders[0] ?? (change.action === 'add' ? (change.section ?? 'dependencies') : undefined)
-    if (section === undefined) continue
-    const previous = json[section]?.[name]
-    if (previous === change.range) continue
-    json[section] = sortKeys({ ...json[section], [name]: change.range })
-    const action = previous === undefined ? 'add' : 'update'
-    applied.push({ action, name, range: change.range, previous })
-  }
+  const json = JSON.parse(text) as PackageSections
+  const applied = changes.flatMap((change) => applyDependency(json, change) ?? [])
   if (applied.length === 0) return { text, applied }
   const indent = /^([ \t]+)"/m.exec(text)?.[1] ?? '  '
   let out = JSON.stringify(json, null, indent) + (text.endsWith('\n') ? '\n' : '')
@@ -92,6 +100,69 @@ function findSection(packageJson: PackageJson, name: string): DependencySection 
     packageJson.devDependencies?.[name] !== undefined &&
     packageJson.dependencies?.[name] === undefined
   return isDevOnly ? 'devDependencies' : 'dependencies'
+}
+
+/** The app as the steps leave it: the files on disk with the changes made so far laid over them. */
+interface Memory {
+  read: (path: string) => string | undefined
+  /** Notes the text a file had before the step touches it. */
+  touch: (path: string) => void
+  write: (path: string, text: string) => void
+}
+
+/** Lays one `create` or `edit` of `step` over the app, or throws when it asks for what it may not. */
+function applyFile(
+  step: MigrationStep,
+  change: Extract<Change, { kind: 'create' | 'edit' }>,
+  memory: Memory
+): void {
+  if (change.kind === 'create') {
+    if (memory.read(change.path) !== undefined) {
+      throw new StepError(step, `creates ${change.path}, which exists.`)
+    }
+    memory.touch(change.path)
+    memory.write(change.path, change.content)
+    return
+  }
+  if (change.path === 'package.json') {
+    throw new StepError(
+      step,
+      'edits package.json: it changes dependencies with dependency changes.'
+    )
+  }
+  if (memory.read(change.path) === undefined) {
+    throw new StepError(step, `edits ${change.path}, which does not exist.`)
+  }
+  memory.touch(change.path)
+  memory.write(change.path, change.after)
+}
+
+/** The files a step created and edited, from the text each had before it. */
+function planFiles(touched: Map<string, string | undefined>, memory: Memory): Plan {
+  const plan: Plan = { creates: [], edits: [], skips: [], manual: [], install: undefined }
+  for (const [path, before] of touched) {
+    const after = memory.read(path)!
+    if (before === undefined) plan.creates.push({ path, content: after })
+    else if (after !== before) plan.edits.push({ path, before, after })
+  }
+  return plan
+}
+
+/** The dependency changes that move the app to the step's package and version. */
+function moveDependencies(step: MigrationStep, packageJson: PackageJson): DependencyChange[] {
+  const moves: DependencyChange[] = [
+    {
+      kind: 'dependency',
+      action: 'add',
+      name: step.to.package,
+      range: toDeclaredRange(step.to.version),
+      section: findSection(packageJson, step.from.package),
+    },
+  ]
+  if (step.from.package !== step.to.package) {
+    moves.push({ kind: 'dependency', action: 'remove', name: step.from.package })
+  }
+  return moves
 }
 
 /**
@@ -114,15 +185,19 @@ export function planChain(
   for (const step of chain) {
     // path -> the text it had before this step, or `undefined` for a file the step creates.
     const touched = new Map<string, string | undefined>()
-    const touch = (path: string) => {
-      if (!touched.has(path)) touched.set(path, read(path))
+    const memory: Memory = {
+      read,
+      touch: (path) => {
+        if (!touched.has(path)) touched.set(path, read(path))
+      },
+      write: (path, text) => overlay.set(path, text),
     }
     const packageJson = JSON.parse(read('package.json')!) as PackageJson
     const changes = step.plan({
       packageJson,
       packageManager,
       readFile: read,
-      listFiles: () => [...new Set([...diskFiles, ...overlay.keys()])].sort(),
+      listFiles: () => [...new Set([...diskFiles, ...overlay.keys()])].sort(compareText),
     })
     const dependencyChanges: DependencyChange[] = []
     const reports: Report[] = []
@@ -131,44 +206,16 @@ export function planChain(
         dependencyChanges.push(change)
       } else if (change.kind === 'report') {
         reports.push({ path: change.path, line: change.line, message: change.message })
-      } else if (change.kind === 'create') {
-        if (read(change.path) !== undefined)
-          throw new StepError(step, `creates ${change.path}, which exists.`)
-        touch(change.path)
-        overlay.set(change.path, change.content)
       } else {
-        if (change.path === 'package.json') {
-          throw new StepError(
-            step,
-            'edits package.json: it changes dependencies with dependency changes.'
-          )
-        }
-        if (read(change.path) === undefined)
-          throw new StepError(step, `edits ${change.path}, which does not exist.`)
-        touch(change.path)
-        overlay.set(change.path, change.after)
+        applyFile(step, change, memory)
       }
     }
-    dependencyChanges.push({
-      kind: 'dependency',
-      action: 'add',
-      name: step.to.package,
-      range: toDeclaredRange(step.to.version),
-      section: findSection(packageJson, step.from.package),
-    })
-    if (step.from.package !== step.to.package) {
-      dependencyChanges.push({ kind: 'dependency', action: 'remove', name: step.from.package })
-    }
-    touch('package.json')
+    dependencyChanges.push(...moveDependencies(step, packageJson))
+    memory.touch('package.json')
     const edited = editDependencies(read('package.json')!, dependencyChanges)
     overlay.set('package.json', edited.text)
 
-    const plan: Plan = { creates: [], edits: [], skips: [], manual: [], install: undefined }
-    for (const [path, before] of touched) {
-      const after = overlay.get(path)!
-      if (before === undefined) plan.creates.push({ path, content: after })
-      else if (after !== before) plan.edits.push({ path, before, after })
-    }
+    const plan = planFiles(touched, memory)
     plans.push({ step, from: current, plan, dependencies: edited.applied, reports })
     current = { package: step.to.package, version: step.to.version }
   }

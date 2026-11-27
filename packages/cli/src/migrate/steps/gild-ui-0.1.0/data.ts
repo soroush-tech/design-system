@@ -2,6 +2,7 @@
 // and Gild UI 0.1.0 (`inventory/`, made for #171). What the step reports reads its text from
 // `inventory.json`, and where an old import goes comes from `imports.json`, so neither can drift
 // from the other.
+import { compareText } from '../../../compareText'
 import importsJson from './inventory/imports.json'
 import inventoryJson from './inventory/inventory.json'
 
@@ -33,7 +34,8 @@ const ITEMS = new Map((inventoryJson as InventoryItem[]).map((item) => [item.id,
 export function inventoryMessage(id: string, detail?: string): string {
   const item = ITEMS.get(id)
   if (!item) throw new Error(`The inventory has no item ${id}.`)
-  return `[${id}] ${detail ? `${detail} ` : ''}${item.how}`
+  const lead = detail ? `${detail} ` : ''
+  return `[${id}] ${lead}${item.how}`
 }
 
 /** The packages the step moves away from, and the ones they become. */
@@ -143,7 +145,7 @@ export const augmentedModule = (specifier: string): string | undefined =>
 export function targetsOfPath(path: string): string[] {
   const rows = [...(PATHS.get(path)?.values() ?? [])]
   const targets = rows.filter((row) => row.to !== null).map((row) => entryOf(row.name, row.to!))
-  return [...new Set(targets)].sort()
+  return [...new Set(targets)].sort(compareText)
 }
 
 /**
@@ -173,8 +175,15 @@ export const PREVIOUS_ENGINE = {
     CacheProvider: 'CacheProvider from @gild-ui/react/engine',
   } as Record<string, string>,
   /** A line that reads what it rendered: its class names and style elements (STY-011). */
-  output:
-    /data-emotion|[[]class[\\^*$|~]?=\s*["']?css-|(?:^|[\s"'`.])css-[0-9a-z]{5,}(?:-[A-Za-z]\w*)?\b/,
+  output: new RegExp(
+    [
+      /data-emotion/,
+      /[[]class[\\^*$|~]?=\s*["']?css-/,
+      /(?:^|[\s"'`.])css-[0-9a-z]{5,}(?:-[A-Za-z]\w*)?\b/,
+    ]
+      .map((pattern) => pattern.source)
+      .join('|')
+  ),
   /** A line that sets it up: the JSX import source and the Babel plugins (DEP-009). */
   settings:
     /@jsxImportSource\s+@emotion|jsxImportSource['"]?\s*[:=]\s*['"]@emotion|@emotion\/babel/,
@@ -182,5 +191,5 @@ export const PREVIOUS_ENGINE = {
 
 /** A file is read only when it can hold something of the inventory: this is what it looks for. */
 export const RELEVANT = new RegExp(
-  `@soroush\\.tech/(?:design-system|markdown|hooks)|${PREVIOUS_ENGINE.scope}|jsxImportSource|data-emotion|css-[0-9a-z]{5,}|useServerInsertedHTML`
+  String.raw`@soroush\.tech/(?:design-system|markdown|hooks)|${PREVIOUS_ENGINE.scope}|jsxImportSource|data-emotion|css-[0-9a-z]{5,}|useServerInsertedHTML`
 )

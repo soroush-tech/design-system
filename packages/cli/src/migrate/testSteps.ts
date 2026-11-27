@@ -22,8 +22,10 @@ export const STEP_TWO: MigrationStep = {
         }
       })
     }
-    changes.push({ kind: 'dependency', action: 'add', name: '@test/helper', range: '^1.0.0' })
-    changes.push({ kind: 'dependency', action: 'remove', name: '@test/old' })
+    changes.push(
+      { kind: 'dependency', action: 'add', name: '@test/helper', range: '^1.0.0' },
+      { kind: 'dependency', action: 'remove', name: '@test/old' }
+    )
     return changes
   },
 }

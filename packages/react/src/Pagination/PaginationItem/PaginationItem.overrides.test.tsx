@@ -3,7 +3,7 @@ import { screen } from '@testing-library/react'
 import { renderWithTheme } from '../../utils/test/renderWithTheme'
 import { describeRootSlot } from '../../utils/test/describeRootSlot'
 import { mark } from '../../utils/test/slotMark'
-import { expectMark } from '../../utils/test/expectMark'
+import { markProblems } from '../../utils/test/markProblems'
 import { PaginationItem } from './PaginationItem'
 
 describeRootSlot(
@@ -15,7 +15,7 @@ describeRootSlot(
 describe('PaginationItem slots', () => {
   it('puts the root slot on the button', () => {
     renderWithTheme(<PaginationItem page={1} slotProps={{ root: mark('root') }} />)
-    expectMark('root')
+    expect(markProblems('root')).toEqual([])
   })
 
   it.each(['start-ellipsis', 'end-ellipsis'] as const)(
@@ -28,7 +28,7 @@ describe('PaginationItem slots', () => {
           slotProps={{ root: mark('root'), ellipsis: mark('ellipsis') }}
         />
       )
-      expectMark('ellipsis')
+      expect(markProblems('ellipsis')).toEqual([])
       expect(document.querySelector('[data-mark="root"]')).toBeNull()
       expect(document.querySelector('[data-mark="ellipsis"]')).toHaveClass('own')
     }

@@ -1,5 +1,6 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { dirname, join, posix } from 'node:path'
+import { compareText } from '../compareText'
 import type { Io } from '../io'
 import type { PackageManager, PackageManagerName } from '../plan/planInit'
 import { isRootSource } from '../plan/rootEdit'
@@ -156,7 +157,7 @@ export function listAppFiles(root: string, folder = '', depth = 0): string[] {
       found.push(path)
     }
   }
-  return found.sort()
+  return found.sort(compareText)
 }
 
 /** Whether the folder is a workspace's root: pnpm's `pnpm-workspace.yaml`, or a `workspaces` field. */

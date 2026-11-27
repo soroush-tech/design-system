@@ -1,9 +1,9 @@
-import { describe, it } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { screen } from '@testing-library/react'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { describeRootSlot } from '../utils/test/describeRootSlot'
 import { mark } from '../utils/test/slotMark'
-import { expectMark } from '../utils/test/expectMark'
+import { markProblems } from '../utils/test/markProblems'
 import { NumberInput } from './NumberInput'
 
 describeRootSlot(
@@ -29,7 +29,7 @@ describe('NumberInput slots', () => {
       />
     )
     for (const slot of ['root', 'input', 'content', 'spinButtons', 'increment', 'decrement']) {
-      expectMark(slot)
+      expect(markProblems(slot)).toEqual([])
     }
   })
 
@@ -40,7 +40,7 @@ describe('NumberInput slots', () => {
         slotProps={{ increment: mark('increment'), decrement: mark('decrement') }}
       />
     )
-    expectMark('increment')
-    expectMark('decrement')
+    expect(markProblems('increment')).toEqual([])
+    expect(markProblems('decrement')).toEqual([])
   })
 })

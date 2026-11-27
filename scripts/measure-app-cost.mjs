@@ -34,7 +34,7 @@ import {
 import { createRequire } from 'node:module'
 import net from 'node:net'
 import os from 'node:os'
-import { dirname, join } from 'node:path'
+import { dirname, isAbsolute, join, relative, resolve as resolvePath } from 'node:path'
 import { performance } from 'node:perf_hooks'
 import { parseArgs } from 'node:util'
 import { fileURLToPath, pathToFileURL } from 'node:url'
@@ -61,7 +61,7 @@ const confined = (path) => {
     process.exit(1)
   }
 }
-const outFile = values.out && confined(values.out)
+if (values.out) confined(values.out) // fail before the measures, not after
 const runs = Number(values.runs)
 const only = new Set(values.only.split(','))
 const apps = []
@@ -158,7 +158,11 @@ const packageFile = (dir, packageName, file) =>
 const killTree = (child) => {
   if (child.exitCode !== null) return
   if (process.platform === 'win32') {
-    const taskkill = join(process.env.SystemRoot ?? 'C:\\Windows', 'System32', 'taskkill.exe')
+    const taskkill = join(
+      process.env.SystemRoot ?? String.raw`C:\Windows`,
+      'System32',
+      'taskkill.exe'
+    )
     spawnSync(taskkill, ['/PID', String(child.pid), '/T', '/F'])
   } else child.kill('SIGKILL')
 }
@@ -483,8 +487,16 @@ try {
 }
 
 const json = `${JSON.stringify(report, null, 2)}\n`
-if (outFile) writeFileSync(outFile, json)
-else process.stdout.write(json)
+if (values.out) {
+  // The report goes only to a file in the repository or in the temp folder.
+  const target = resolvePath(values.out)
+  const inside = [repoRoot, os.tmpdir()].some((base) => {
+    const from = relative(base, target)
+    return !from.startsWith('..') && !isAbsolute(from)
+  })
+  if (!inside) throw new Error(`${values.out} is outside ${repoRoot} and ${os.tmpdir()}`)
+  writeFileSync(target, json)
+} else process.stdout.write(json)
 
 // The table: a row per measure, a column per app, each cell the median (min-max).
 const cell = (stat) => (stat ? `${stat.median} (${stat.min}-${stat.max})` : '-')

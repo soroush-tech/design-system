@@ -1,3 +1,6 @@
+import { existsSync, readdirSync, readFileSync } from 'node:fs'
+import { join } from 'node:path'
+
 /** The part of a package.json the lockstep check reads. */
 export interface Manifest {
   name: string
@@ -74,4 +77,16 @@ export const lockstepRunProblem = (run: string[], names: string[]): string | und
   if (inRun.length === 0 || inRun.length === names.length) return undefined
   const missing = names.filter((name) => !run.includes(name))
   return `${inRun.join(', ')} publish with the whole lockstep set - missing: ${missing.join(', ')}`
+}
+
+/** `checkLockstep` for the repository at `root`: its workspace packages and its root `lockstep` list. */
+export const checkLockstepAt = (root: string): string[] => {
+  const read = (file: string) => JSON.parse(readFileSync(join(root, file), 'utf8'))
+  const manifests = readdirSync(join(root, 'packages'), { withFileTypes: true })
+    .filter(
+      (entry) =>
+        entry.isDirectory() && existsSync(join(root, 'packages', entry.name, 'package.json'))
+    )
+    .map((entry) => read(`packages/${entry.name}/package.json`) as Manifest)
+  return checkLockstep(manifests, read('package.json').lockstep)
 }

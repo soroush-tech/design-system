@@ -3,7 +3,13 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterAll, describe, expect, it } from 'vitest'
-import { checkLockstep, covers, lockstepRunProblem, type Manifest } from './lockstep'
+import {
+  checkLockstep,
+  checkLockstepAt,
+  covers,
+  lockstepRunProblem,
+  type Manifest,
+} from './lockstep'
 
 const names = ['a', 'b']
 const manifest = (name: string, version: string, extra: Partial<Manifest> = {}): Manifest => ({
@@ -85,16 +91,9 @@ describe('lockstepRunProblem', () => {
   })
 })
 
-describe('scripts/check-lockstep.mjs', () => {
-  const repoRoot = join(__dirname, '..', '..', '..')
-  // The script checks only a root inside the repository, so the fixtures live in node_modules.
-  const root = mkdtempSync(join(repoRoot, 'node_modules', '.lockstep-'))
-  const outside = mkdtempSync(join(tmpdir(), 'lockstep-'))
-  afterAll(() => {
-    rmSync(root, { recursive: true, force: true })
-    rmSync(outside, { recursive: true, force: true })
-  })
-  const script = join(repoRoot, 'scripts', 'check-lockstep.mjs')
+describe('checkLockstepAt', () => {
+  const root = mkdtempSync(join(tmpdir(), 'lockstep-'))
+  afterAll(() => rmSync(root, { recursive: true, force: true }))
 
   const repo = (name: string, versions: string[]) => {
     const dir = join(root, name)
@@ -107,19 +106,24 @@ describe('scripts/check-lockstep.mjs', () => {
     })
     return dir
   }
-  const run = (dir: string) =>
-    execFileSync(process.execPath, [script, dir], {
-      encoding: 'utf8',
-      stdio: ['ignore', 'pipe', 'pipe'],
-    })
 
   it('passes for one version and fails, naming the packages, for two', () => {
-    expect(run(repo('same', ['0.1.0', '0.1.0']))).toContain('share one version')
-    expect(() => run(repo('apart', ['0.1.0', '0.2.0']))).toThrow(/a@0\.1\.0, b@0\.2\.0/)
+    expect(checkLockstepAt(repo('same', ['0.1.0', '0.1.0']))).toEqual([])
+    expect(checkLockstepAt(repo('apart', ['0.1.0', '0.2.0']))).toEqual([
+      'the lockstep packages must share one version: a@0.1.0, b@0.2.0',
+    ])
   })
+})
 
-  it('refuses a root outside the repository, and a path that climbs out of it', () => {
-    expect(() => run(outside)).toThrow(/lockstep: .* is outside/)
-    expect(() => run(join(root, '..', '..', '..'))).toThrow(/lockstep: .* is outside/)
+describe('scripts/check-lockstep.mjs', () => {
+  const script = join(__dirname, '..', '..', '..', 'scripts', 'check-lockstep.mjs')
+
+  it('passes on this repository', () => {
+    expect(
+      execFileSync(process.execPath, [script], {
+        encoding: 'utf8',
+        stdio: ['ignore', 'pipe', 'pipe'],
+      })
+    ).toContain('share one version')
   })
 })

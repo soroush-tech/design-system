@@ -1,9 +1,9 @@
-import { describe, it } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { screen } from '@testing-library/react'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { describeRootSlot } from '../utils/test/describeRootSlot'
 import { mark } from '../utils/test/slotMark'
-import { expectMark } from '../utils/test/expectMark'
+import { markProblems } from '../utils/test/markProblems'
 import { MenuList } from '../Menu'
 import { MenuItem } from './MenuItem'
 
@@ -42,7 +42,7 @@ describe('MenuItem slots', () => {
         </MenuItem>
       </MenuList>
     )
-    for (const slot of slots) expectMark(slot)
+    for (const slot of slots) expect(markProblems(slot)).toEqual([])
   })
 
   it('puts the check slot on the leading mark of a row of a multiple select', () => {
@@ -53,8 +53,8 @@ describe('MenuItem slots', () => {
         </MenuItem>
       </ul>
     )
-    expectMark('root')
-    expectMark('check')
+    expect(markProblems('root')).toEqual([])
+    expect(markProblems('check')).toEqual([])
   })
 
   it('puts the entry slot on the entry of a row with a note', () => {
@@ -65,7 +65,7 @@ describe('MenuItem slots', () => {
         </MenuItem>
       </MenuList>
     )
-    expectMark('entry')
+    expect(markProblems('entry')).toEqual([])
   })
 
   it('puts the entry slot on the entry of a row with a control of its own', () => {
@@ -76,6 +76,6 @@ describe('MenuItem slots', () => {
         </MenuItem>
       </MenuList>
     )
-    expectMark('entry')
+    expect(markProblems('entry')).toEqual([])
   })
 })

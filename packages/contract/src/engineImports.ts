@@ -22,8 +22,14 @@ export const guardedPatterns: RegExp[] = [
 ]
 
 /** What an import of the engine looks like in code, a doc's example, a mock, or a manifest. */
-const engineImport =
-  /(?:\bfrom\s*|\bimport\s*\(?\s*|\brequire\(\s*|\bmock\(\s*)['"]@umber-style\/|"@umber-style\/[\w-]+"\s*:/
+const engineImports: RegExp[] = [
+  /\bfrom\s*['"]@umber-style\//,
+  /\bimport\s*['"]@umber-style\//,
+  /\bimport\s*\(\s*['"]@umber-style\//,
+  /\brequire\(\s*['"]@umber-style\//,
+  /\bmock\(\s*['"]@umber-style\//,
+  /"@umber-style\/[\w-]+"\s*:/,
+]
 
 /** Whether `path` (relative to the repository, with `/`) is a file that must not import the engine. */
 export const isGuarded = (path: string): boolean =>
@@ -32,7 +38,9 @@ export const isGuarded = (path: string): boolean =>
 /** The guarded files among `files` that import the engine, one line each. */
 export const findEngineImports = (files: ReadonlyArray<{ path: string; text: string }>): string[] =>
   files
-    .filter(({ path, text }) => isGuarded(path) && engineImport.test(text))
+    .filter(
+      ({ path, text }) => isGuarded(path) && engineImports.some((pattern) => pattern.test(text))
+    )
     .map(({ path }) => `${path} imports @umber-style/*: use @gild-ui/react`)
 
 /** The files git tracks in `root`, relative to it. */

@@ -1,35 +1,46 @@
 import { screen } from '@testing-library/react'
-import { describeSlots } from '../utils/test/describeSlots'
+import { describe, it, expect } from 'vitest'
+import { slotCases } from '../utils/test/slotCases'
 import { MenuItem } from '../MenuItem'
 import { Select, type SelectProps } from './Select'
 
 const root = () => screen.getByRole('combobox')
 const area = () => root().firstElementChild!
 
-describeSlots({
-  name: 'Select',
-  render: (props: Partial<SelectProps>) => (
-    <Select defaultOpen defaultValue={1} {...props}>
-      <MenuItem value={1}>One</MenuItem>
-    </Select>
-  ),
-  root,
-  slots: {
-    root,
-    valueArea: area,
-    valueGhost: () => area().firstElementChild,
-    value: () => area().lastElementChild,
-    listbox: () => screen.getByRole('listbox'),
-  },
+describe('Select overrides', () => {
+  it.each(
+    slotCases({
+      render: (props: Partial<SelectProps>) => (
+        <Select defaultOpen defaultValue={1} {...props}>
+          <MenuItem value={1}>One</MenuItem>
+        </Select>
+      ),
+      root,
+      slots: {
+        root,
+        valueArea: area,
+        valueGhost: () => area().firstElementChild,
+        value: () => area().lastElementChild,
+        listbox: () => screen.getByRole('listbox'),
+      },
+    })
+  )('$name', ({ run, expected }) => {
+    expect(run()).toEqual(expected)
+  })
 })
 
-describeSlots({
-  name: 'Select (native)',
-  render: (props: Partial<SelectProps>) => (
-    <Select native defaultValue={1} {...props}>
-      <MenuItem value={1}>One</MenuItem>
-    </Select>
-  ),
-  root: () => document.querySelector('select')!.parentElement,
-  slots: { root: () => document.querySelector('select')!.parentElement },
+describe('Select (native) overrides', () => {
+  it.each(
+    slotCases({
+      render: (props: Partial<SelectProps>) => (
+        <Select native defaultValue={1} {...props}>
+          <MenuItem value={1}>One</MenuItem>
+        </Select>
+      ),
+      root: () => document.querySelector('select')!.parentElement,
+      slots: { root: () => document.querySelector('select')!.parentElement },
+    })
+  )('$name', ({ run, expected }) => {
+    expect(run()).toEqual(expected)
+  })
 })

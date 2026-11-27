@@ -11,12 +11,12 @@ import {
 } from '../detect/detect'
 import { isApproved } from '../init'
 import type { Io } from '../io'
-import { createInstallAllCommand } from '../plan/planInit'
+import { createInstallAllCommand, type PackageManager } from '../plan/planInit'
 import { detectAppVersion } from './detectVersion'
 import { buildChain, orderSteps } from './chain'
 import { formatChecklist, formatStepPlans } from './formatMigration'
-import { planChain, StepError } from './simulate'
-import type { MigrationStep } from './step'
+import { planChain, StepError, type StepPlan } from './simulate'
+import type { AppVersion, MigrationStep } from './step'
 import { STEPS } from './steps'
 
 export interface MigrateOptions {
@@ -45,6 +45,48 @@ function findGitRefusal(root: string, io: Io): string | undefined {
     return "This folder has uncommitted changes. Commit or stash them first, so migrate's changes stand on their own."
   }
   return undefined
+}
+
+/** Plans the chain on the app in `root`: the plans, or what stopped it, as a message. */
+function planOnDisk(
+  chain: readonly MigrationStep[],
+  root: string,
+  packageManager: PackageManager,
+  detected: AppVersion
+): StepPlan[] | string {
+  const disk = {
+    readFile: (path: string) => readText(join(root, path)),
+    listFiles: () => listAppFiles(root),
+  }
+  try {
+    return planChain(chain, disk, packageManager, detected)
+  } catch (error) {
+    if (!(error instanceof StepError)) throw error
+    return `migrate stopped, and changed nothing: ${error.message}\n`
+  }
+}
+
+/** Writes every plan to the app; `undefined` when it went through, else why it stopped. */
+function applyOnDisk(
+  plans: readonly StepPlan[],
+  root: string,
+  fileSystem: FileSystem
+): string | undefined {
+  try {
+    applyPlans(
+      plans.map(({ plan }) => plan),
+      root,
+      fileSystem,
+      'migrate'
+    )
+    return undefined
+  } catch (error) {
+    const { message, isUndone } = error as ApplyError
+    const outcome = isUndone
+      ? 'Every change it made was taken back.'
+      : 'It could not take back every change: check git status.'
+    return `migrate stopped: ${message}. ${outcome}\n`
+  }
 }
 
 /**
@@ -86,19 +128,12 @@ export async function runMigrate(
   }
 
   const packageManager = detectPackageManager(root, packageJson)
-  let plans
-  try {
-    const disk = {
-      readFile: (path: string) => readText(join(root, path)),
-      listFiles: () => listAppFiles(root),
-    }
-    plans = planChain(result.chain, disk, packageManager, detected)
-  } catch (error) {
-    if (!(error instanceof StepError)) throw error
-    io.write(`migrate stopped, and changed nothing: ${error.message}\n`)
+  const plans = planOnDisk(result.chain, root, packageManager, detected)
+  if (typeof plans === 'string') {
+    io.write(plans)
     return 1
   }
-  const last = result.chain[result.chain.length - 1].to
+  const last = result.chain.at(-1)!.to
   const count = plans.length === 1 ? '1 step' : `${plans.length} steps`
   const note = detected.note ? `${detected.note}\n` : ''
   io.write(
@@ -106,19 +141,9 @@ export async function runMigrate(
   )
   if (!(await isApproved(options, isPreviewOnly, io))) return 0
 
-  try {
-    applyPlans(
-      plans.map(({ plan }) => plan),
-      root,
-      fileSystem,
-      'migrate'
-    )
-  } catch (error) {
-    const { message, isUndone } = error as ApplyError
-    const outcome = isUndone
-      ? 'Every change it made was taken back.'
-      : 'It could not take back every change: check git status.'
-    io.write(`migrate stopped: ${message}. ${outcome}\n`)
+  const stopped = applyOnDisk(plans, root, fileSystem)
+  if (stopped) {
+    io.write(stopped)
     return 1
   }
   const { command, args, env } = createInstallAllCommand(packageManager)

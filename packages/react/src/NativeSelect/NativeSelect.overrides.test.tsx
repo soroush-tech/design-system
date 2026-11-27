@@ -3,7 +3,7 @@ import { screen } from '@testing-library/react'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { describeRootSlot } from '../utils/test/describeRootSlot'
 import { mark } from '../utils/test/slotMark'
-import { expectMark } from '../utils/test/expectMark'
+import { markProblems } from '../utils/test/markProblems'
 import { NativeSelect } from './NativeSelect'
 
 const options = [{ label: 'One', value: 1 }]
@@ -22,7 +22,7 @@ describe('NativeSelect slots', () => {
         slotProps={{ root: mark('root'), select: mark('select'), icon: mark('icon') }}
       />
     )
-    for (const slot of ['root', 'select', 'icon']) expectMark(slot)
+    for (const slot of ['root', 'select', 'icon']) expect(markProblems(slot)).toEqual([])
   })
 
   it('joins the class of selectProps and iconProps with those of the slots', () => {

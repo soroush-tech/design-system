@@ -1,9 +1,9 @@
-import { describe, it } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { screen } from '@testing-library/react'
 import { renderWithTheme } from '../utils/test/renderWithTheme'
 import { describeRootSlot } from '../utils/test/describeRootSlot'
 import { mark } from '../utils/test/slotMark'
-import { expectMark } from '../utils/test/expectMark'
+import { markProblems } from '../utils/test/markProblems'
 import { Pressable } from './Pressable'
 
 describeRootSlot(
@@ -15,6 +15,6 @@ describeRootSlot(
 describe('Pressable slots', () => {
   it('has a root slot only', () => {
     renderWithTheme(<Pressable slotProps={{ root: mark('root') }}>Press</Pressable>)
-    expectMark('root')
+    expect(markProblems('root')).toEqual([])
   })
 })

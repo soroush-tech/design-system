@@ -51,22 +51,29 @@ function planSource(path: string, text: string): FileResult {
   return { after: body, reports, modules: [...imports.modules] }
 }
 
+/** What the step does to one file of the app, and what it learns of the app from it. */
+function planFile(path: string, text: string, facts: AppFacts): Change[] {
+  const isSource = isSourceFile(path)
+  if (isSource) facts.sources.push(text)
+  const result = isSource
+    ? planSource(path, text)
+    : { after: text, reports: detectInText(text), modules: [] }
+  for (const module of result.modules) facts.modules.add(module)
+  const changes: Change[] = []
+  if (result.after !== text) changes.push({ kind: 'edit', path, after: result.after })
+  const reports = [...result.reports].sort((a, b) => a.line - b.line)
+  for (const { line, message } of reports) changes.push({ kind: 'report', path, line, message })
+  return changes
+}
+
 function plan(app: MigrationApp): Change[] {
   const changes: Change[] = []
   const facts: AppFacts = { modules: new Set(), sources: [] }
   for (const path of app.listFiles()) {
-    const isSource = isSourceFile(path)
-    if (!isSource && !CONFIG_FILE.test(path)) continue
+    if (!isSourceFile(path) && !CONFIG_FILE.test(path)) continue
     const text = app.readFile(path)
     if (text === undefined || !RELEVANT.test(text)) continue
-    if (isSource) facts.sources.push(text)
-    const result = isSource
-      ? planSource(path, text)
-      : { after: text, reports: detectInText(text), modules: [] }
-    for (const module of result.modules) facts.modules.add(module)
-    if (result.after !== text) changes.push({ kind: 'edit', path, after: result.after })
-    const reports = [...result.reports].sort((a, b) => a.line - b.line)
-    for (const { line, message } of reports) changes.push({ kind: 'report', path, line, message })
+    changes.push(...planFile(path, text, facts))
   }
   const manifest = planManifest(app.packageJson, app.readFile('package.json')!, facts)
   changes.push(...manifest.changes)

@@ -18,6 +18,8 @@ import {
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const { version } = JSON.parse(readFileSync(join(root, 'packages/react/package.json'), 'utf8'))
 const published = await latestPublished(FAMILY_PACKAGE)
+// What is printed has no control character, so a line of the log cannot be forged.
+const printable = (text) => String(text).replaceAll(/\p{Cc}/gu, '')
 
 if (published === undefined) {
   console.warn(
@@ -29,5 +31,7 @@ if (published === undefined) {
     console.error(problems.map((problem) => `migrations: ${problem}`).join('\n'))
     process.exit(1)
   }
-  console.log(`Migrations: ${version} has the steps it needs (npm has ${published ?? 'nothing'}).`)
+  console.log(
+    `Migrations: ${printable(version)} has the steps it needs (npm has ${printable(published ?? 'nothing')}).`
+  )
 }

@@ -55,7 +55,12 @@ try {
   }
   const overrides = {}
   for (const file of readdirSync(tarballs)) {
-    const name = /^gild-ui-([a-z-]+)-\d+\.\d+\.\d+\S*\.tgz$/.exec(file)?.[1]
+    // gild-ui-<name>-<version>.tgz: the name is every part before the one that starts the version.
+    if (!file.startsWith('gild-ui-') || !file.endsWith('.tgz')) continue
+    const parts = file.slice('gild-ui-'.length, -'.tgz'.length).split('-')
+    const versionAt = parts.findIndex((part) => /^\d+\.\d+\.\d+/.test(part))
+    if (versionAt < 1) continue
+    const name = parts.slice(0, versionAt).join('-')
     overrides[`@gild-ui/${name}`] = `file:${join(tarballs, file).replaceAll('\\', '/')}`
   }
   writeFileSync(

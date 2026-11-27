@@ -137,6 +137,9 @@ describe('latestPublished', () => {
     expect(await latestPublished('p', answer({ status: 200 }, { version: '1.2.3' }))).toBe('1.2.3')
     expect(await latestPublished('p', answer({ status: 404 }))).toBeNull()
     expect(await latestPublished('p', answer({ status: 500 }))).toBeUndefined()
+    expect(
+      await latestPublished('p', answer({ status: 200 }, { version: '1.2.3\nforged line' }))
+    ).toBeUndefined()
     const offline = (async () => {
       throw new Error('offline')
     }) as typeof fetch

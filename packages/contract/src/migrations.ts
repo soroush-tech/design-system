@@ -46,7 +46,9 @@ const checkStep = (files: Files, version: string): string[] => {
   if (files.exists(`${folder}/index.ts`)) {
     const escaped = version.replaceAll('.', String.raw`\.`)
     if (
-      !new RegExp(`to:\\s*\\{[^}]*version:\\s*'${escaped}'`).test(files.read(`${folder}/index.ts`))
+      !new RegExp(String.raw`to:\s*\{[^}]*version:\s*'${escaped}'`).test(
+        files.read(`${folder}/index.ts`)
+      )
     ) {
       problems.push(`${folder}/index.ts does not end on to.version '${version}' (${MENTION})`)
     }
@@ -76,7 +78,7 @@ const checkStep = (files: Files, version: string): string[] => {
 /** The bullets of the notes' Breaking section; `null` when there is no such section. */
 const breakingBullets = (notes: string): string[] | null => {
   const lines = notes.split(/\r?\n/)
-  const start = lines.findIndex((line) => /^#{2,6}\s+.*breaking/i.test(line))
+  const start = lines.findIndex((line) => /^#{2,6}\s/.test(line) && /breaking/i.test(line))
   if (start === -1) return null
   const level = /^#+/.exec(lines[start])![0].length
   const bullets: string[] = []
@@ -134,7 +136,9 @@ export const latestPublished = async (
     })
     if (response.status === 404) return null
     if (!response.ok) return undefined
-    return ((await response.json()) as { version: string }).version
+    const { version } = (await response.json()) as { version: string }
+    // Only a version number is passed on: the callers print it.
+    return /^\d+\.\d+\.\d+[\w.+-]*$/.test(version) ? version : undefined
   } catch {
     return undefined
   }

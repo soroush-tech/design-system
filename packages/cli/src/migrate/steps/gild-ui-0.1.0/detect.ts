@@ -81,22 +81,13 @@ export function detectInSource(text: string, ast: File, imports: ImportEditor): 
   function readCall(node: Extract<Node, { type: 'CallExpression' }>): void {
     const { callee } = node
     if (callee.type === 'Identifier') {
-      if (callee.name === css) add(node, inventoryMessage('STY-002'))
-      if (callee.name === keyframes) add(node, inventoryMessage('STY-003'))
-      if (callee.name === withTheme) add(node, inventoryMessage('CMP-001'))
-      if (callee.name === 'useServerInsertedHTML') add(node, inventoryMessage('STY-007'))
-      if (callee.name === 'createCache') readCreateCache(node)
-      if (EXTRACTORS.has(callee.name)) add(node, inventoryMessage('STY-008'))
-      if (callee.name === 'require' && node.arguments[0]?.type === 'StringLiteral') {
-        readPreviousEngineImport(node.arguments[0].value, node, [], add)
-      }
+      readNamedCall(node, callee.name)
     } else if (
       callee.type === 'MemberExpression' &&
       !callee.computed &&
       callee.property.type === 'Identifier'
     ) {
-      if (callee.property.name === 'withComponent') add(node, inventoryMessage('STY-001'))
-      if (EXTRACTORS.has(callee.property.name)) add(node, inventoryMessage('STY-008'))
+      readMemberCall(node, callee.property.name)
     } else if (
       callee.type === 'CallExpression' &&
       callee.callee.type === 'Identifier' &&
@@ -104,6 +95,25 @@ export function detectInSource(text: string, ast: File, imports: ImportEditor): 
     ) {
       readStyledRoot(node, callee)
     }
+  }
+
+  /** A call of a name: `css(...)`, `withTheme(...)`, `createCache(...)`, `require('...')`. */
+  function readNamedCall(node: Extract<Node, { type: 'CallExpression' }>, name: string): void {
+    if (name === css) add(node, inventoryMessage('STY-002'))
+    if (name === keyframes) add(node, inventoryMessage('STY-003'))
+    if (name === withTheme) add(node, inventoryMessage('CMP-001'))
+    if (name === 'useServerInsertedHTML') add(node, inventoryMessage('STY-007'))
+    if (name === 'createCache') readCreateCache(node)
+    if (EXTRACTORS.has(name)) add(node, inventoryMessage('STY-008'))
+    if (name === 'require' && node.arguments[0]?.type === 'StringLiteral') {
+      readPreviousEngineImport(node.arguments[0].value, node, [], add)
+    }
+  }
+
+  /** A call of a member: `styled.div.withComponent(...)`, `cache.extractCritical(...)`. */
+  function readMemberCall(node: Extract<Node, { type: 'CallExpression' }>, name: string): void {
+    if (name === 'withComponent') add(node, inventoryMessage('STY-001'))
+    if (EXTRACTORS.has(name)) add(node, inventoryMessage('STY-008'))
   }
 
   /** `styled('div')<{ isOpen: boolean }>(...)` with props of its own and no `shouldForwardProp`. */
@@ -177,24 +187,25 @@ export function detectInSource(text: string, ast: File, imports: ImportEditor): 
       if (rootName(expression) !== 'theme') return
       const before = node.quasis[index].value.raw
       const after = node.quasis[index + 1].value.raw
-      if (/-$/.test(before) || /^(?:[0-9a-fA-F]{2}\b|px|rem|em|%)/.test(after))
+      if (before.endsWith('-') || /^(?:[0-9a-fA-F]{2}\b|px|rem|em|%)/.test(after))
         add(node, inventoryMessage('STY-012'))
     })
   }
 
-  function isThemeScale(node: Node): boolean {
-    let head = node
-    while (head.type === 'MemberExpression') {
-      const parent = head
-      head = head.object
-      if (head.type === 'Identifier' && head.name === 'theme') {
-        return parent.property.type === 'Identifier' && THEME_SCALES.has(parent.property.name)
-      }
-    }
-    return false
-  }
-
   return reports
+}
+
+/** Whether a node is `theme.<scale>`, or a member chain that starts there. */
+function isThemeScale(node: Node): boolean {
+  let head = node
+  while (head.type === 'MemberExpression') {
+    const parent = head
+    head = head.object
+    if (head.type === 'Identifier' && head.name === 'theme') {
+      return parent.property.type === 'Identifier' && THEME_SCALES.has(parent.property.name)
+    }
+  }
+  return false
 }
 
 function readPreviousEngineImport(

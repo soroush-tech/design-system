@@ -1,12 +1,18 @@
+import { describe, it, expect } from 'vitest'
 import { screen } from '@testing-library/react'
-import { describeRootSlot } from '../utils/describeRootSlot'
+import { rootSlotCases } from '../utils/describeRootSlot'
 import { Editor } from './Editor'
 
-describeRootSlot(
-  'Editor',
-  (props) => <Editor {...props} />,
-  () =>
-    screen
-      .getByRole('textbox', { name: 'Markdown source' })
-      .closest('[class*="MarkdownEditor"]') as HTMLElement
-)
+describe('Editor overrides', () => {
+  it.each(
+    rootSlotCases(
+      (props) => <Editor {...props} />,
+      () =>
+        screen
+          .getByRole('textbox', { name: 'Markdown source' })
+          .closest('[class*="MarkdownEditor"]') as HTMLElement
+    )
+  )('$name', ({ run, expected }) => {
+    expect(run()).toEqual(expected)
+  })
+})

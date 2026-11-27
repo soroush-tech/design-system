@@ -66,7 +66,7 @@ export class ThemeMigrator {
       )
         return
       const object = node.arguments.find((argument) => argument.type === 'ObjectExpression')
-      if (!object || object.type !== 'ObjectExpression') return
+      if (object?.type !== 'ObjectExpression') return
       const components = object.properties.find(
         (property): property is ObjectProperty =>
           property.type === 'ObjectProperty' && nameOfKey(property.key) === 'components'
@@ -78,7 +78,7 @@ export class ThemeMigrator {
     const moved = this.moveComponents(calls)
     for (const { object, components, ancestors } of calls) {
       if (components && !moved) this.report(components, inventoryMessage('THM-001'))
-      const declarator = ancestors[ancestors.length - 1]
+      const declarator = ancestors.at(-1)!
       if (
         !moved &&
         declarator.type === 'VariableDeclarator' &&
@@ -148,15 +148,15 @@ export class ThemeMigrator {
    * `const themes = { light, dark }` collects.
    */
   private readThemesObject(calls: ThemeCall[]): ((components: string) => Edit[]) | undefined {
-    const parents = calls.map(({ ancestors }) => ancestors[ancestors.length - 1])
+    const parents = calls.map(({ ancestors }) => ancestors.at(-1)!)
     if (parents.every((parent) => parent.type === 'ObjectProperty')) {
-      const holder = calls[0].ancestors[calls[0].ancestors.length - 2]
-      const isOneObject = calls.every(({ ancestors }) => ancestors[ancestors.length - 2] === holder)
+      const holder = calls[0].ancestors.at(-2)!
+      const isOneObject = calls.every(({ ancestors }) => ancestors.at(-2)! === holder)
       if (
         isOneObject &&
         holder.type === 'ObjectExpression' &&
         holder.properties.length === calls.length &&
-        this.isTopLevelConst(calls[0].ancestors[calls[0].ancestors.length - 3])
+        this.isTopLevelConst(calls[0].ancestors.at(-3)!)
       ) {
         return (components) => [
           { start: holder.start!, end: holder.start!, text: 'defineThemes(' },
@@ -282,7 +282,7 @@ export class ThemeMigrator {
     let isRead = false
     walk(this.ast.program, (node, ancestors) => {
       if (node.type !== 'Identifier' || node.name !== name || node.start! >= offset) return
-      const parent = ancestors[ancestors.length - 1]
+      const parent = ancestors.at(-1)!
       const isDeclaration = parent.type === 'VariableDeclarator' && parent.id === node
       const isKey =
         parent.type === 'ObjectProperty' &&
