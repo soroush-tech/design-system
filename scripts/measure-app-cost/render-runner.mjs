@@ -4,9 +4,9 @@
 //
 //   node render-runner.mjs <appDir> <catalog.json> <iterations> [--bundle <file>]
 //
-// The page module is written into the app (so the app's own `@gild-ui/react/*` and `@gild-ui/core`, react
-// and `@umber-style/server` resolve) and loaded through Vite's SSR loader, which transforms the
-// workspace's TypeScript sources too. With --bundle, one self-contained ESM file of that module
+// The page module is written into the app (so the app's own `@gild-ui/react/*`, `@gild-ui/core` and
+// react resolve) and loaded through Vite's SSR loader, which transforms the workspace's TypeScript
+// sources too. With --bundle, one self-contained ESM file of that module
 // is built instead - for a sandboxed benchmark, whose Linux container cannot run the host's
 // node_modules.
 import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
@@ -27,7 +27,7 @@ const subpaths = [...new Set(entries.map((entry) => entry.subpath))]
 const source = `
 import { createElement, Fragment } from 'react'
 import { renderToString } from 'react-dom/server'
-import { createInstance } from '@umber-style/server/create-instance'
+import { styleServer } from '@gild-ui/react/server'
 import { Global, ThemeProvider } from '@gild-ui/react'
 import { CacheProvider, globalStyles, styleCache } from '@gild-ui/react/engine'
 import { baseTheme } from '@gild-ui/core/theme'
@@ -52,7 +52,7 @@ const wrap = (children) =>
 
 /** The full server path of a page: its HTML, then the styles it used. */
 const renderPage = (elements) => {
-  const { extractCriticalToChunks, constructStyleTagsFromChunks } = createInstance(styleCache)
+  const { extractCriticalToChunks, constructStyleTagsFromChunks } = styleServer
   const html = renderToString(wrap(elements))
   const styles = constructStyleTagsFromChunks(extractCriticalToChunks(html))
   return { html, styles }

@@ -59,9 +59,6 @@ importers:
       '@soroush.tech/styled-system':
         specifier: ^6.0.3
         version: 6.0.3(prop-types@15.8.1)
-      '@umber-style/css':
-        specifier: ^0.8.0
-        version: 0.8.0
       react:
         specifier: ^19.3.1
         version: 19.3.1
@@ -114,9 +111,6 @@ importers:
       '@types/react-dom':
         specifier: ^19.3.0
         version: 19.3.0(@types/react@19.3.0)
-      '@umber-style/server':
-        specifier: ^0.8.0
-        version: 0.8.0
       '@vitejs/plugin-react':
         specifier: ^6.3.0
         version: 6.3.0(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))
@@ -153,9 +147,6 @@ importers:
       '@gild-ui/react':
         specifier: workspace:*
         version: link:../../packages/react
-      '@umber-style/react':
-        specifier: ^0.8.0
-        version: 0.8.0(next@16.4.6(@playwright/test@1.65.0)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react@19.3.1)
       next:
         specifier: 16.4.6
         version: 16.4.6(@playwright/test@1.65.0)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -226,9 +217,6 @@ importers:
       '@types/react-dom':
         specifier: ^19.3.0
         version: 19.3.0(@types/react@19.3.0)
-      '@umber-style/server':
-        specifier: 0.8.0
-        version: 0.8.0
       '@vitejs/plugin-react':
         specifier: ^6.3.0
         version: 6.3.0(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))
@@ -534,6 +522,9 @@ importers:
       '@umber-style/react':
         specifier: ^0.8.0
         version: 0.8.0(next@16.4.6(@playwright/test@1.65.0)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react@19.3.1)
+      '@umber-style/server':
+        specifier: ^0.8.0
+        version: 0.8.0
       '@umber-style/styled':
         specifier: ^0.8.0
         version: 0.8.0(next@16.4.6(@playwright/test@1.65.0)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react@19.3.1)
@@ -568,9 +559,6 @@ importers:
       '@types/react-dom':
         specifier: ^19.3.0
         version: 19.3.0(@types/react@19.3.0)
-      '@umber-style/css':
-        specifier: ^0.8.0
-        version: 0.8.0
       '@vitest/browser-playwright':
         specifier: ^5.1.0
         version: 5.1.0(msw@3.0.5(@types/node@26.6.6)(typescript@7.0.2)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1)))(playwright@1.65.0)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))(vitest@5.1.0)
@@ -580,6 +568,9 @@ importers:
       jsdom:
         specifier: ^31.0.0
         version: 31.0.0
+      next:
+        specifier: 16.4.6
+        version: 16.4.6(@playwright/test@1.65.0)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       oxlint:
         specifier: ^1.93.0
         version: 1.93.0
@@ -3380,9 +3371,6 @@ packages:
 
   '@umber-style/core@0.8.0':
     resolution: {integrity: sha512-vbmTF+HgNaQ5qImGQszY3+f4G1pZiQuB8SQgUU+gva7laYWLlYDH7V5ozYHZQo27v/D9E7GGgoHuP6h6gXe9Mw==}
-
-  '@umber-style/css@0.8.0':
-    resolution: {integrity: sha512-agIeEcBdnGVM6D2nyo3mGzMDl4U7/7atflg8+f89dlvu+BrsSueVuNoU8fms66U9fF/EL3ODTC8yN/R9x10Tag==}
 
   '@umber-style/is-prop-valid@0.7.0':
     resolution: {integrity: sha512-GiaqPzWBroBPc2CxQpjE2FM/Aey+gvIbBSLDUUSF5LGQkCZQfrnLo+nvJWcD1YhSv0NFefvG5XiQB0fl5M9iFg==}
@@ -9073,10 +9061,6 @@ snapshots:
   '@umber-style/core@0.8.0':
     dependencies:
       csstype: 3.2.3
-
-  '@umber-style/css@0.8.0':
-    dependencies:
-      '@umber-style/core': 0.8.0
 
   '@umber-style/is-prop-valid@0.7.0': {}
 

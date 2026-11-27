@@ -5,6 +5,7 @@
       "values": [
         "Global",
         "LayoutProvider",
+        "StyleSheet",
         "StylesConsumer",
         "ThemeProvider",
         "alpha",
@@ -602,6 +603,10 @@
         "UseAutoHideParams"
       ]
     },
+    "./StyleSheet": {
+      "values": ["StyleSheet"],
+      "types": []
+    },
     "./StylesConsumer": {
       "values": ["StylesConsumer"],
       "types": []
@@ -856,11 +861,19 @@
       "types": []
     },
     "./engine": {
-      "values": ["CacheProvider", "createCache", "globalStyles", "styleCache"],
+      "values": ["CacheProvider", "globalStyles", "setNonceSource", "styleCache"],
       "types": []
     },
     "./keyframes": {
       "values": ["keyframes"],
+      "types": []
+    },
+    "./next": {
+      "values": ["StyleRegistry"],
+      "types": []
+    },
+    "./server": {
+      "values": ["styleServer"],
       "types": []
     },
     "./styled": {

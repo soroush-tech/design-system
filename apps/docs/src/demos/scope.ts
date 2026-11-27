@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { css, keyframes } from '@umber-style/css'
 import * as theme from '@gild-ui/core/theme'
 import * as styling from '@gild-ui/react'
 import * as storiesOptions from '@gild-ui/react/utils/test/storiesOptions'
@@ -34,7 +33,7 @@ const catalogModules = requireMatches(
 const { default: _react, ...reactExports } = React as typeof React & { default?: unknown }
 
 /** The identifiers available to live-edited demo code; a component wins a name React shares. */
-export const demoScope: Record<string, unknown> = { ...reactExports, React, css, keyframes }
+export const demoScope: Record<string, unknown> = { ...reactExports, React }
 for (const module of [...Object.values(catalogModules), ...Object.values(componentModules)]) {
   Object.assign(demoScope, module)
 }

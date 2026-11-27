@@ -255,7 +255,7 @@ export const categoryOf = (item: ComponentNavItem): string | undefined =>
 
 /**
  * The lowercase pages of the React package, each with the file of its `docs/` that is its page:
- * `/react/engine/` documents `@gild-ui/react/engine`. `catalog`, `engine` and `testing` are
+ * `/react/engine/` documents `@gild-ui/react/engine`. `catalog`, `engine`, `next`, `server` and `testing` are
  * entry points; `style`, `theme` and `utils` are pages whose URLs are indexed, and which stay,
  * though the names they document are entry points of their own now (`stylingEntries`) or live in
  * `@gild-ui/core` (`utils`). `routes.test.ts` holds this list to the package's entry points.
@@ -263,6 +263,8 @@ export const categoryOf = (item: ComponentNavItem): string | undefined =>
 export const entryGuides: Record<string, string> = {
   catalog: 'catalog.md',
   engine: 'engine.md',
+  next: 'next.md',
+  server: 'server.md',
   style: 'style.md',
   testing: 'testing.md',
   theme: 'theming.md',
@@ -283,6 +285,7 @@ export const stylingEntries: Record<string, 'theme' | 'style'> = {
   styled: 'style',
   css: 'style',
   keyframes: 'style',
+  StyleSheet: 'style',
   Global: 'style',
   useStyle: 'style',
   withStyles: 'style',

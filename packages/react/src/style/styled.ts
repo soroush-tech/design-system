@@ -11,7 +11,15 @@ import type { AppTheme as Theme } from '../theme/themes'
 import type { ComponentClass, ComponentProps, ComponentType, JSX, Ref } from 'react'
 import { configureEngine } from './engine'
 
-export { alpha, css, keyframes, negate, subtract, useStyleValue } from '@umber-style/react'
+export {
+  alpha,
+  css,
+  keyframes,
+  negate,
+  StyleSheet,
+  subtract,
+  useStyleValue,
+} from '@umber-style/react'
 export type { AlphaColor, LiveValue } from '@umber-style/react'
 
 // Before the first `styled` call below and in every component file that imports this one.

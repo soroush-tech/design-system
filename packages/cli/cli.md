@@ -136,7 +136,8 @@ TypeScript 6 at most, so the starter's TypeScript is this package's `typescript-
 - `ssg/`: `Page` and `Layout` load at build time only, and there is no `+onRenderClient`, so a
   page ships no script; the layout has no scheme switch.
 
-`+onRenderHtml` renders the page with `@umber-style/server` on Gild UI's `styleCache`, and
+`+onRenderHtml` renders the page with `styleServer` from `@gild-ui/react/server` (Gild UI's
+`styleCache`; no `@umber-style/*` dependency in the app), and
 puts the styles it used in the head; `+onRenderClient` hydrates it with the same cache. Both
 render `PageShell`, the page inside `+Layout`, which renders `<Providers>`: the providers live in
 the app, so the scheme it holds can switch the theme.

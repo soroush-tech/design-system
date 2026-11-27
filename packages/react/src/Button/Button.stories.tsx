@@ -1,4 +1,3 @@
-import { css, keyframes } from '@umber-style/css'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { fn } from 'storybook/test'
 import { m, p } from '../utils/test/storiesArgs'
@@ -11,6 +10,8 @@ import {
   buttonSizeTokens,
   buttonVariantTokens,
 } from '../utils/test/storiesOptions'
+import { keyframes } from '../entries/keyframes'
+import { StyleSheet } from '../entries/StyleSheet'
 import { Flex } from '../Flex'
 import { Typography } from '../Typography'
 import { exampleArgs } from '../utils/test/renderExample'
@@ -308,30 +309,32 @@ const RAINBOW = [
   'hsl(0 100% 50%)',
 ]
 
-// Returns a plain className - no new component needed. Button props handle
+// Returns a plain className (a sheet entry used on its own) - no new component needed. Button props handle
 // shape/typography; only the animated gradient border needs custom CSS.
 // The `&&` selector doubles specificity to beat Button's own variant styles.
-function rainbowBorderClass({
+function rainbowBorder({
   speed = '2s',
   innerBg = baseTheme.background.paper,
   colors = RAINBOW,
 }: { speed?: string; innerBg?: string; colors?: string[] } = {}) {
-  return css({
-    '&&': {
-      textTransform: 'initial',
-      border: '1px solid transparent',
-      borderBottomWidth: '2.5px',
-      background: [
-        `linear-gradient(${innerBg}, ${innerBg}) padding-box`,
-        `linear-gradient(90deg, ${colors.join(', ')}) border-box`,
-      ].join(', '),
-      backgroundSize: '200% auto',
-      animation: `${gradientShift} ${speed} linear infinite`,
-      '&:hover:not(:disabled), &:active:not(:disabled)': {
-        backgroundColor: 'transparent',
+  return StyleSheet.create({
+    rainbow: {
+      '&&': {
+        textTransform: 'initial',
+        border: '1px solid transparent',
+        borderBottomWidth: '2.5px',
+        background: [
+          `linear-gradient(${innerBg}, ${innerBg}) padding-box`,
+          `linear-gradient(90deg, ${colors.join(', ')}) border-box`,
+        ].join(', '),
+        backgroundSize: '200% auto',
+        animation: `${gradientShift} ${speed} linear infinite`,
+        '&:hover:not(:disabled), &:active:not(:disabled)': {
+          backgroundColor: 'transparent',
+        },
       },
     },
-  })
+  }).rainbow.className
 }
 
 export const RainbowBorder: Story = {
@@ -344,7 +347,7 @@ export const RainbowBorder: Story = {
           shape="pill"
           letterSpacing="normal"
           fontWeight="medium"
-          className={rainbowBorderClass()}
+          className={rainbowBorder()}
         >
           Get started
         </Button>
@@ -353,7 +356,7 @@ export const RainbowBorder: Story = {
           shape="pill"
           letterSpacing="normal"
           fontWeight="medium"
-          className={rainbowBorderClass({ speed: '4s' })}
+          className={rainbowBorder({ speed: '4s' })}
         >
           Slow (4s)
         </Button>
@@ -363,7 +366,7 @@ export const RainbowBorder: Story = {
           letterSpacing="normal"
           fontWeight="medium"
           disabled
-          className={rainbowBorderClass()}
+          className={rainbowBorder()}
         >
           Disabled
         </Button>
@@ -374,7 +377,7 @@ export const RainbowBorder: Story = {
           shape="pill"
           letterSpacing="normal"
           fontWeight="medium"
-          className={rainbowBorderClass({
+          className={rainbowBorder({
             colors: [
               baseTheme.palette.primary.main,
               baseTheme.palette.secondary.main,
@@ -389,7 +392,7 @@ export const RainbowBorder: Story = {
           shape="pill"
           letterSpacing="normal"
           fontWeight="medium"
-          className={rainbowBorderClass({
+          className={rainbowBorder({
             colors: [
               baseTheme.palette.error.main,
               baseTheme.palette.warning.main,

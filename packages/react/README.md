@@ -100,11 +100,11 @@ design tool's palette, a source writer) - lives at its own subpath and loads in 
 import { catalog } from '@gild-ui/react/catalog'
 ```
 
-Server rendering with critical CSS (a Vike or other static or server renderer) is a separate, opt-in concern - that's what `CacheProvider` and its paired `styleCache` instance are for. Give `CacheProvider` the `styleCache` (the cache the library's own engine writes to, so there is one cache on the page), render, then read the CSS of the page from the same cache with `createInstance` from `@umber-style/server/create-instance` (`pnpm add @umber-style/server`): `extractCriticalToChunks(html)` and `constructStyleTagsFromChunks(chunks)` give the `<style data-umber>` tags to put in the head. Next.js App Router apps collect the styles with a registry instead - see `docs/consumer/setup.md`.
+Server rendering with critical CSS (a Vike or other static or server renderer) is a separate, opt-in concern - that's what `CacheProvider` and its paired `styleCache` instance are for. Give `CacheProvider` the `styleCache` (the cache the library's own engine writes to, so there is one cache on the page), render, then read the CSS of the page from the same cache with `styleServer` from `@gild-ui/react/server`: `extractCriticalToChunks(html)` and `constructStyleTagsFromChunks(chunks)` give the `<style data-umber>` tags to put in the head ([docs](./docs/server.md)). Next.js App Router apps collect the styles with `StyleRegistry` from `@gild-ui/react/next` instead, which also works under a strict nonce policy ([docs](./docs/next.md), and `docs/consumer/setup.md`).
 
 The cache key and class prefix is `soroush`. Server-rendered style elements carry `data-umber="soroush ..."`, and the live element in the browser is `<style data-style="soroush">`.
 
-The engine packages are regular dependencies of this package, not peers, on purpose: an app installs nothing extra to render the components, and has no version to keep in step. The one package an app adds itself is `@umber-style/server`, and only to extract critical CSS.
+The engine packages are regular dependencies of this package, not peers, on purpose: an app installs nothing extra to render the components, and has no version to keep in step. An app never imports an engine package: what it needs of the engine is exported from this package (`StyleSheet`, `setNonceSource`, `styleCache`, `styleServer`, `StyleRegistry`).
 
 ---
 

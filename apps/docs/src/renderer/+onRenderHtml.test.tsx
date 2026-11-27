@@ -1,11 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
-vi.mock('@umber-style/server/create-instance', () => ({
-  createInstance: vi.fn(() => ({
-    extractCriticalToChunks: vi.fn(() => ({ html: '<div />', styles: [] })),
-    constructStyleTagsFromChunks: vi.fn(() => '<style data-umber="soroush"></style>'),
-  })),
+const styleServer = vi.hoisted(() => ({
+  extractCriticalToChunks: vi.fn(() => ({ html: '<div />', styles: [] })),
+  constructStyleTagsFromChunks: vi.fn(() => '<style data-umber="soroush"></style>'),
 }))
+vi.mock('@gild-ui/react/server', () => ({ styleServer }))
 vi.mock('react-dom/server', () => ({ renderToString: vi.fn(() => '<div id="app" />') }))
 vi.mock('vike/server', () => ({
   escapeInject: (_strings: TemplateStringsArray, ...values: unknown[]) => ({
@@ -14,19 +13,13 @@ vi.mock('vike/server', () => ({
   dangerouslySkipEscape: (s: string) => s,
 }))
 vi.mock('../common/Bootstrap', () => ({ Bootstrap: () => null }))
-vi.mock('@gild-ui/react/engine', () => ({ styleCache: { key: 'soroush' } }))
 
 import { onRenderHtml } from './+onRenderHtml'
-import { createInstance } from '@umber-style/server/create-instance'
 import { renderToString } from 'react-dom/server'
 
 describe('+onRenderHtml', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    vi.mocked(createInstance).mockReturnValue({
-      extractCriticalToChunks: vi.fn(() => ({ html: '<div />', styles: [] })),
-      constructStyleTagsFromChunks: vi.fn(() => '<style data-umber="soroush"></style>'),
-    } as unknown as ReturnType<typeof createInstance>)
   })
 
   it('calls renderToString with Bootstrap', async () => {
@@ -34,23 +27,14 @@ describe('+onRenderHtml', () => {
     expect(renderToString).toHaveBeenCalled()
   })
 
-  it('calls createInstance with the style cache', async () => {
-    await onRenderHtml({} as never)
-    expect(createInstance).toHaveBeenCalledWith({ key: 'soroush' })
-  })
-
   it('extracts critical chunks from the rendered HTML', async () => {
     await onRenderHtml({} as never)
-    expect(
-      vi.mocked(createInstance).mock.results[0].value.extractCriticalToChunks
-    ).toHaveBeenCalledWith('<div id="app" />')
+    expect(styleServer.extractCriticalToChunks).toHaveBeenCalledWith('<div id="app" />')
   })
 
   it('constructs style tags from chunks', async () => {
     await onRenderHtml({} as never)
-    expect(
-      vi.mocked(createInstance).mock.results[0].value.constructStyleTagsFromChunks
-    ).toHaveBeenCalled()
+    expect(styleServer.constructStyleTagsFromChunks).toHaveBeenCalled()
   })
 
   it('returns a defined result from escapeInject', async () => {

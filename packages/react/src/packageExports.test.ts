@@ -29,6 +29,10 @@ const distEntry = (base: string) => ({
   require: { types: `./dist/${base}.d.cts`, default: `./dist/${base}.cjs` },
 })
 
+// The entry that is server only is closed to a browser build: the `browser` condition resolves to
+// nothing, so a bundler for the client fails on the import instead of shipping `@umber-style/server`.
+const BROWSER_CLOSED = new Set(['server'])
+
 describe('package subpath exports', () => {
   it('exposes no wildcard subpath - every entry is explicit', () => {
     expect(pkg.exports['./*']).toBeUndefined()
@@ -37,7 +41,9 @@ describe('package subpath exports', () => {
 
   it.each(componentFolders)('exports ./%s as source and dist subpaths', (name) => {
     expect(pkg.exports[`./${name}`]).toBe(`./src/${name}/index.ts`)
-    expect(pkg.publishConfig.exports[`./${name}`]).toEqual(distEntry(name))
+    expect(pkg.publishConfig.exports[`./${name}`]).toEqual(
+      BROWSER_CLOSED.has(name) ? { browser: null, ...distEntry(name) } : distEntry(name)
+    )
   })
 
   it.each(entryFiles)('exports ./%s from src/entries, as source and dist subpaths', (name) => {

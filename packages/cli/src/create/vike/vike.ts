@@ -34,7 +34,7 @@ function createPackageJson({
     dependencies: {
       [APP_PACKAGE]: toRange(version),
       [CORE_PACKAGE]: toRange(version),
-      ...pickVersions(['@umber-style/server', ...libraryPackages, 'react', 'react-dom', 'vike']),
+      ...pickVersions([...libraryPackages, 'react', 'react-dom', 'vike']),
     },
     devDependencies: pickVersions([
       '@vitejs/plugin-react',

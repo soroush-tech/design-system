@@ -382,7 +382,7 @@ describe('the Vike starter', () => {
     expect(files.get('src/pages/+Layout.tsx')).toContain('<Providers>\n      <Header />')
     expect(files.has('src/components/SchemeSwitch.tsx')).toBe(false)
     expect(files.get('src/pages/about/+Page.tsx')).toContain('a link loads it as a new')
-    expect(JSON.parse(files.get('package.json')!).dependencies['@umber-style/server']).toBeDefined()
+    expect(files.get('src/pages/+onRenderHtml.tsx')).toContain("from '@gild-ui/react/server'")
     expect(
       createFiles({ rendering: 'ssg', isTypeScript: false }).get('src/pages/+Layout.jsx')
     ).toMatch(/^import \{ View \}/)
@@ -451,7 +451,6 @@ describe('the Vike starter', () => {
     expect(packageJson.dependencies).toEqual({
       '@gild-ui/core': '^0.1.0',
       '@gild-ui/react': '^0.1.0',
-      '@umber-style/server': `^${devDependencies['@umber-style/server']}`,
       react: devDependencies.react,
       'react-dom': devDependencies['react-dom'],
       vike: `^${devDependencies.vike}`,

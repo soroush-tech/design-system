@@ -1,11 +1,13 @@
 # The engine entry
 
-`@gild-ui/react/engine` holds the primitives of the styling engine that an app uses to style the page itself. Most apps need only `Global` and `globalStyles`; the cache pair is for server rendering.
+`@gild-ui/react/engine` holds the primitives of the styling engine that an app uses to style the page itself. Most apps need only `Global` and `globalStyles`; the cache provider and the nonce source are for server rendering.
 
 ```ts
 import { Global } from '@gild-ui/react'
-import { globalStyles, CacheProvider, styleCache, createCache } from '@gild-ui/react/engine'
+import { globalStyles, CacheProvider, styleCache, setNonceSource } from '@gild-ui/react/engine'
 ```
+
+An app never imports the engine itself: what it needs from it is exported here and from the other entries of this package, and there is one cache.
 
 ## `Global` and `globalStyles`
 
@@ -24,8 +26,21 @@ import { globalStyles } from '@gild-ui/react/engine'
 </ThemeProvider>
 ```
 
-## `CacheProvider`, `styleCache` and `createCache`
+## `CacheProvider` and `styleCache`
 
-For server rendering and critical-CSS extraction. `styleCache` is the library's own cache; `CacheProvider` makes a cache the one the components write to; `createCache` makes a cache of an app's own, so an app never installs an engine package itself. The one package an app adds for extraction is `@umber-style/server`. Render the page under `<CacheProvider value={styleCache}>` and extract with `createInstance(styleCache)`. `styleCache` is also the cache the library's own engine writes to, so the provider, the extraction and the engine's styles share one cache: a page holds each rule once and a development message is logged once. Without the provider, extraction finds nothing and every styled element sends its own `<style>` element instead. A cache from `createCache` is a cache of the app's own: the components of this package write to `styleCache`, or to the cache a `CacheProvider` gives them.
+For server rendering and critical-CSS extraction. `styleCache` is the library's one cache, and the one its own engine writes to; `CacheProvider` makes a cache the one the components write to. Render the page under `<CacheProvider value={styleCache}>` and extract the styles it used with `styleServer` from [`@gild-ui/react/server`](./server.md). The provider, the extraction and the engine's styles share one cache, so a page holds each rule once and a development message is logged once. Without the provider, extraction finds nothing and every styled element sends its own `<style>` element instead.
 
-An app that does not render on the server does not use these.
+There is no way to make a second cache: a second cache would write each rule twice. An app that does not render on the server does not use these.
+
+## `setNonceSource`
+
+For a strict style policy (`style-src 'nonce-...'` with no `'unsafe-inline'`) on a server that makes a nonce for each request. `setNonceSource(read)` tells the engine where the nonce of the current request is: `read` returns the nonce, or a promise of it, or `undefined`. Call it once, at module level, before the first render.
+
+```ts
+import { setNonceSource } from '@gild-ui/react/engine'
+import { headers } from 'next/headers'
+
+setNonceSource(async () => (await headers()).get('x-nonce') ?? undefined)
+```
+
+The App Router recipe, with the middleware that makes the nonce, is in the setup guide of the package (`docs/consumer/setup.md`): it pairs this with `StyleRegistry` from [`@gild-ui/react/next`](./next.md).

@@ -1,6 +1,6 @@
 import { Global } from '@gild-ui/react/Global'
+import { StyleRegistry } from '@gild-ui/react/next'
 import { ThemeProvider } from '@gild-ui/react/ThemeProvider'
-import { StyleRegistry } from '@umber-style/react/next'
 import { cookies } from 'next/headers'
 import type { ReactNode } from 'react'
 import './nonce'

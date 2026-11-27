@@ -94,6 +94,8 @@
     "./catalog": "./src/catalog/index.ts",
     "./testing": "./src/testing/index.ts",
     "./engine": "./src/engine/index.ts",
+    "./server": "./src/server/index.ts",
+    "./next": "./src/next/index.ts",
     "./utils/test/renderWithTheme": "./src/utils/test/renderWithTheme.tsx",
     "./utils/test/storiesArgs": "./src/utils/test/storiesArgs.ts",
     "./utils/test/storiesOptions": "./src/utils/test/storiesOptions.ts",
@@ -107,6 +109,7 @@
     "./styled": "./src/entries/styled.ts",
     "./css": "./src/entries/css.ts",
     "./keyframes": "./src/entries/keyframes.ts",
+    "./StyleSheet": "./src/entries/StyleSheet.ts",
     "./Global": "./src/entries/Global.ts",
     "./useStyle": "./src/entries/useStyle.ts",
     "./withStyles": "./src/entries/withStyles.ts",
@@ -776,6 +779,27 @@
           "default": "./dist/engine.cjs"
         }
       },
+      "./server": {
+        "browser": null,
+        "import": {
+          "types": "./dist/server.d.mts",
+          "default": "./dist/server.mjs"
+        },
+        "require": {
+          "types": "./dist/server.d.cts",
+          "default": "./dist/server.cjs"
+        }
+      },
+      "./next": {
+        "import": {
+          "types": "./dist/next.d.mts",
+          "default": "./dist/next.mjs"
+        },
+        "require": {
+          "types": "./dist/next.d.cts",
+          "default": "./dist/next.cjs"
+        }
+      },
       "./ThemeProvider": {
         "import": {
           "types": "./dist/ThemeProvider.d.mts",
@@ -866,6 +890,16 @@
           "default": "./dist/keyframes.cjs"
         }
       },
+      "./StyleSheet": {
+        "import": {
+          "types": "./dist/StyleSheet.d.mts",
+          "default": "./dist/StyleSheet.mjs"
+        },
+        "require": {
+          "types": "./dist/StyleSheet.d.cts",
+          "default": "./dist/StyleSheet.cjs"
+        }
+      },
       "./Global": {
         "import": {
           "types": "./dist/Global.d.mts",
@@ -941,14 +975,20 @@
     "@soroush.tech/styled-system": "^6.0.3",
     "@umber-style/cache": "^0.8.0",
     "@umber-style/react": "^0.8.0",
+    "@umber-style/server": "^0.8.0",
     "@umber-style/styled": "^0.8.0"
   },
   "peerDependencies": {
+    "next": "^16.3.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },
+  "peerDependenciesMeta": {
+    "next": {
+      "optional": true
+    }
+  },
   "devDependencies": {
-    "@umber-style/css": "^0.8.0",
     "@soroush.tech/eslint-config": "workspace:*",
     "@storybook/addon-a11y": "^10.6.7",
     "@storybook/addon-docs": "^10.6.7",
@@ -962,6 +1002,7 @@
     "@vitest/browser-playwright": "^5.1.0",
     "@vitest/coverage-v8": "^5.1.0",
     "jsdom": "^31.0.0",
+    "next": "16.4.6",
     "oxlint": "^1.93.0",
     "playwright": "^1.65.0",
     "react": "^19.3.1",

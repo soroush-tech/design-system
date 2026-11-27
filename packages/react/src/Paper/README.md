@@ -35,11 +35,11 @@ Inherited from `View`. CSS `aspect-ratio` for fixed-ratio surfaces. Accepts any 
 CSS `transition` for surface animations, typically used for hover elevation changes. No theme scale - raw CSS.
 
 ```tsx
-<Paper
-  elevation={1}
-  transition="box-shadow 0.3s ease"
-  css={{ '&:hover': { boxShadow: '0 8px 16px rgba(0,0,0,0.1)' } }}
-/>
+const styles = StyleSheet.create({
+  lifted: { '&:hover': { boxShadow: '0 8px 16px rgba(0,0,0,0.1)' } },
+})
+
+<Paper elevation={1} transition="box-shadow 0.3s ease" style={styles.lifted} />
 ```
 
 ---

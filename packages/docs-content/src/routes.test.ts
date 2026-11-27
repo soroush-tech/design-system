@@ -47,7 +47,7 @@ describe('the docs routes are the import paths', () => {
     expect(Object.keys(stylingEntries).sort()).toEqual(
       entries.filter((entry) => entry in stylingEntries).sort()
     )
-    expect(Object.keys(stylingEntries)).toHaveLength(13)
+    expect(Object.keys(stylingEntries)).toHaveLength(14)
   })
 
   it('has no capitalised page that is not an entry point or an export of one', () => {
@@ -64,10 +64,12 @@ describe('the docs routes are the import paths', () => {
 
   it('keeps the lowercase pages whose URLs are indexed, entry point or not', () => {
     const lowercase = entries.filter((entry) => /^[a-z]/.test(entry) && !(entry in stylingEntries))
-    expect(lowercase.sort()).toEqual(['catalog', 'engine', 'testing'])
+    expect(lowercase.sort()).toEqual(['catalog', 'engine', 'next', 'server', 'testing'])
     expect(Object.keys(entryGuides).sort()).toEqual([
       'catalog',
       'engine',
+      'next',
+      'server',
       'style',
       'testing',
       'theme',

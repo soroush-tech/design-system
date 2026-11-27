@@ -41,6 +41,8 @@ export const hookImportLine = (hook: string): ImportLine => importLine(HOOKS_PAC
 export const entryImportLines: Record<string, ImportLine> = {
   catalog: importLine(REACT_PACKAGE, ['catalog'], 'catalog'),
   engine: importLine(REACT_PACKAGE, ['globalStyles'], 'engine'),
+  next: importLine(REACT_PACKAGE, ['StyleRegistry'], 'next'),
+  server: importLine(REACT_PACKAGE, ['styleServer'], 'server'),
   testing: importLine(REACT_PACKAGE, ['installPopover'], 'testing'),
   style: importLine(REACT_PACKAGE, ['styled', 'css']),
   theme: importLine(CORE_PACKAGE, ['baseTheme', 'createTheme', 'defineThemes'], 'theme'),

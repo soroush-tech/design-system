@@ -29,6 +29,7 @@ frozen from the first publish of the site, so no route is renamed after it.
 | `@gild-ui/react/Table` and its `TableCell`                          | `/react/Table/TableCell/`        | the member's README                               |
 | `@gild-ui/react/useTheme` and the other names of the styling system | `/react/theme/`, `/react/style/` | `docs/theming.md`, `docs/style.md` of the package |
 | `@gild-ui/react/engine`                                             | `/react/engine/`                 | `docs/engine.md` of the package                   |
+| `@gild-ui/react/server`, `@gild-ui/react/next`                      | `/react/server/`, `/react/next/` | `docs/server.md`, `docs/next.md` of the package   |
 | `@gild-ui/react-markdown/Editor`                                    | `/react/markdown/Editor/`        | the markdown package's README                     |
 | `@gild-ui/hooks/useDebounce`                                        | `/react/hooks/useDebounce/`      | its section of the hooks README                   |
 | later `@gild-ui/react-native/Button`                                | `/react-native/Button/`          |                                                   |

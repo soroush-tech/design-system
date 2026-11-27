@@ -1,14 +1,13 @@
 import { renderToString } from 'react-dom/server'
 import { escapeInject, dangerouslySkipEscape } from 'vike/server'
-import { createInstance } from '@umber-style/server/create-instance'
 import { Bootstrap } from '../common/Bootstrap'
 import type { OnRenderHtmlSync } from 'vike/types'
-import { styleCache } from '@gild-ui/react/engine'
+import { styleServer } from '@gild-ui/react/server'
 import faviconUrl from 'src/assets/soroush_logo.svg'
 import { buildHead } from './buildHead'
 
 export const onRenderHtml: OnRenderHtmlSync = (pageContext): ReturnType<OnRenderHtmlSync> => {
-  const { extractCriticalToChunks, constructStyleTagsFromChunks } = createInstance(styleCache)
+  const { extractCriticalToChunks, constructStyleTagsFromChunks } = styleServer
   const html = renderToString(<Bootstrap pageContext={pageContext} />)
   const chunks = extractCriticalToChunks(html)
   const styles = constructStyleTagsFromChunks(chunks)

@@ -1,7 +1,5 @@
 import { createCache } from '@umber-style/cache'
 
-export { createCache }
-
 /**
  * The library's own cache, and the one the engine writes to: `configureEngine` gives it to the
  * engine, so a `CacheProvider` over it, the extraction with `createInstance(styleCache)` and the

@@ -23,7 +23,7 @@ A hook. Returns the `CSSObject` of a style input, calling `getStyles` with the t
 ```tsx
 function Panel() {
   const styles = useStyle(card)
-  return <View css={styles}>...</View>
+  return <View style={styles}>...</View>
 }
 ```
 
@@ -36,6 +36,26 @@ A higher-order component. The wrapped component receives the resolved `CSSObject
 The same as a render prop, for a class component or a place a hook cannot be called: `<StylesConsumer style={card}>{(styles) => ...}</StylesConsumer>`. The `style` prop takes a factory.
 
 Where a style belongs to a component of the library, change it through `theme.components` instead - see [how to customize](./customization.md).
+
+## `StyleSheet`
+
+`StyleSheet` (`@gild-ui/react/StyleSheet`, also on the root) keeps named styles. Given an object, `StyleSheet.create` returns the entries at once, with no hook, and an entry goes to the `style` prop of a component. There is no `css` prop: `style` takes a sheet entry, a style object, or an array of them, with `false`, `null` and `undefined` dropped, and merges them after the component's own styles into one class. No `style` attribute is rendered, and `style` takes no function: a style that reads the theme is written with `styled`.
+
+```tsx
+import { StyleSheet } from '@gild-ui/react'
+import { View } from '@gild-ui/react/View'
+
+const styles = StyleSheet.create({
+  box: { padding: 16, '&:hover': { opacity: 0.9 } },
+  active: { outline: '2px solid currentColor' },
+})
+
+function Box({ isActive }: { isActive?: boolean }) {
+  return <View style={[styles.box, isActive && styles.active]}>...</View>
+}
+```
+
+An entry is opaque: pass it on, do not read it.
 
 ## Values in a style
 

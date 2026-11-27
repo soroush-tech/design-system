@@ -26,8 +26,8 @@ describe('each entry of the styling system', () => {
     configure.mockClear()
   })
 
-  it('is the 13 names of the contract', () => {
-    expect(names).toHaveLength(13)
+  it('is the 14 names of the contract', () => {
+    expect(names).toHaveLength(14)
   })
 
   it.each(names)(

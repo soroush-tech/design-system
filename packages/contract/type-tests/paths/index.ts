@@ -2,6 +2,7 @@
 import {
   Global,
   LayoutProvider,
+  StyleSheet,
   StylesConsumer,
   ThemeProvider,
   css,
@@ -74,6 +75,7 @@ import * as SidebarEntry from '@gild-ui/react/Sidebar'
 import * as SkeletonEntry from '@gild-ui/react/Skeleton'
 import * as SlideEntry from '@gild-ui/react/Slide'
 import * as SnackbarEntry from '@gild-ui/react/Snackbar'
+import * as StyleSheetEntry from '@gild-ui/react/StyleSheet'
 import * as StylesConsumerEntry from '@gild-ui/react/StylesConsumer'
 import * as SwitchEntry from '@gild-ui/react/Switch'
 import * as TableEntry from '@gild-ui/react/Table'
@@ -90,6 +92,8 @@ import * as catalogEntry from '@gild-ui/react/catalog'
 import * as cssEntry from '@gild-ui/react/css'
 import * as engineEntry from '@gild-ui/react/engine'
 import * as keyframesEntry from '@gild-ui/react/keyframes'
+import * as nextEntry from '@gild-ui/react/next'
+import * as serverEntry from '@gild-ui/react/server'
 import * as styledEntry from '@gild-ui/react/styled'
 import * as testingEntry from '@gild-ui/react/testing'
 import * as useDefaultPropsEntry from '@gild-ui/react/useDefaultProps'
@@ -154,6 +158,7 @@ export const entries = [
   SkeletonEntry,
   SlideEntry,
   SnackbarEntry,
+  StyleSheetEntry,
   StylesConsumerEntry,
   SwitchEntry,
   TableEntry,
@@ -170,6 +175,8 @@ export const entries = [
   cssEntry,
   engineEntry,
   keyframesEntry,
+  nextEntry,
+  serverEntry,
   styledEntry,
   testingEntry,
   useDefaultPropsEntry,
@@ -182,6 +189,7 @@ export const entries = [
 export const rootNames = [
   Global,
   LayoutProvider,
+  StyleSheet,
   StylesConsumer,
   ThemeProvider,
   css,

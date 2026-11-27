@@ -18,7 +18,8 @@ import and render.
 ```
 
 The styling engine (UmberStyle, the `@umber-style/*` packages) comes in as a dependency
-of Gild UI - don't add it directly. React 19.2 or later is required.
+of Gild UI - don't add it directly, and don't import it: what an app needs of it comes from
+`@gild-ui/react`. React 19.2 or later is required.
 
 ## 2. Theme
 
@@ -53,8 +54,10 @@ on the page:
 
 ```tsx
 import { Global } from '@gild-ui/react/Global'
+import { StyleRegistry } from '@gild-ui/react/next'
 import { ThemeProvider } from '@gild-ui/react/ThemeProvider'
 import { cookies } from 'next/headers'
+import './nonce'
 import Providers from './providers'
 import { themes } from '@/theme'
 
@@ -63,30 +66,32 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en">
       <body>
-        <ThemeProvider theme={themes[scheme]}>
-          <Global
-            styles={(theme) => ({
-              '*, *::before, *::after': { boxSizing: 'border-box' },
-              body: {
-                margin: 0,
-                backgroundColor: theme.background.primary,
-                color: theme.text.initial,
-                fontFamily: theme.fonts.body,
-              },
-            })}
-          />
-          <Providers>
-            <TopBar />
-            {children}
-          </Providers>
-        </ThemeProvider>
+        <StyleRegistry>
+          <ThemeProvider theme={themes[scheme]}>
+            <Global
+              styles={(theme) => ({
+                '*, *::before, *::after': { boxSizing: 'border-box' },
+                body: {
+                  margin: 0,
+                  backgroundColor: theme.background.primary,
+                  color: theme.text.initial,
+                  fontFamily: theme.fonts.body,
+                },
+              })}
+            />
+            <Providers>
+              <TopBar />
+              {children}
+            </Providers>
+          </ThemeProvider>
+        </StyleRegistry>
       </body>
     </html>
   )
 }
 ```
 
-`<ThemeProvider>` wraps everything including the chrome, and `Global` is the reset: `border-box`
+`StyleRegistry` wraps everything, once (see the next section), `<ThemeProvider>` wraps the chrome too, and `Global` is the reset: `border-box`
 everywhere, zero body margin, `background.primary` / `text.initial` / `fonts.body` on `<body>`.
 Route groups then supply their own inner layout (rail + `Main`).
 
@@ -121,21 +126,61 @@ JavaScript of their own. The ones with state, effects, events or a family contex
 that can cross (text, numbers, elements - not functions). A handler goes in a client component of
 your own, as `Counter` does in `apps/next-fixture`.
 
-**No style registry.** Under the App Router the engine sends the styles of client components with
-the HTML too (each styled element renders its own `<style href precedence>`, which React moves to
-the head), so a page is styled before any JavaScript runs. The `useServerInsertedHTML` registry of
-the earlier set-up is not needed, and `CacheProvider` is not used.
+**The style registry, and a strict style policy.** Add `StyleRegistry` from `@gild-ui/react/next`
+once, in the root layout, as above. It collects the styles of each request - of the server components
+and of the client components - and writes them with the HTML, in the head for the first piece of the
+stream and before each later one, so a page is styled before any JavaScript runs. It needs Next.js
+16.3 or later: `next` is an optional peer of `@gild-ui/react`, needed only by an app that imports this
+entry.
+
+A policy whose `style-src` has a nonce and no `'unsafe-inline'` works with it, in three small files.
+The nonce module tells the engine where the nonce of the request is, once, at module level, and the
+layout imports it (the `import './nonce'` above):
+
+```ts
+// app/nonce.ts
+import { setNonceSource } from '@gild-ui/react/engine'
+import { headers } from 'next/headers'
+
+// Where the nonce of a request comes from: the `x-nonce` header that proxy.ts sets.
+setNonceSource(async () => (await headers()).get('x-nonce') ?? undefined)
+```
+
+`proxy.ts` makes a new nonce for each request, puts it in the policy of the response, and passes it
+on in the request headers, which the render reads:
+
+```ts
+// proxy.ts
+import { NextResponse, type NextRequest } from 'next/server'
+
+export function proxy(request: NextRequest) {
+  const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
+  const policy = `style-src 'nonce-${nonce}'; script-src 'self' 'nonce-${nonce}' 'strict-dynamic'`
+  const requestHeaders = new Headers(request.headers)
+  requestHeaders.set('x-nonce', nonce)
+  requestHeaders.set('content-security-policy', policy)
+  const response = NextResponse.next({ request: { headers: requestHeaders } })
+  response.headers.set('content-security-policy', policy)
+  return response
+}
+
+export const config = {
+  matcher: [{ source: '/((?!_next/static|_next/image|favicon.ico).*)' }],
+}
+```
+
+Under this policy the page's `<style>` elements carry the nonce, and no style is blocked. Two notes: `next dev`
+also needs `'unsafe-eval'` in `script-src` (the development server evaluates code; a production
+build does not), and partial prerendering does not support a nonce policy, because a prerendered
+shell cannot know the nonce of a later request.
 
 This set-up is tested by `apps/next-fixture` on Next.js 16.4 with React 19.3, in a production
 build, with JavaScript off (computed styles of the static and the client components, and the theme
-from the cookie) and on (no console error, no hydration warning, a click, the switch).
+from the cookie) and on (no console error, no hydration warning, a click, the switch), and under the
+strict policy above (no console error, no blocked style, a new nonce on every request).
 
 **Limits.**
 
-- A strict Content Security Policy whose `style-src` has a nonce and no `'unsafe-inline'` is not
-  supported with server components yet: the style elements of the server build take their nonce
-  from the engine's configuration, which is set once for the process, not for each request, so the
-  browser blocks them. (The registry set-up this replaces could carry a request's nonce.)
 - A `components` look written as a function is not plain data: a server `ThemeProvider` leaves it
   out of what it sends to client components, warns once in development with the path, and the
   client components take the function from the theme module of the browser's bundle - which is why
