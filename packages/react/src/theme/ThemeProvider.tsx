@@ -51,9 +51,10 @@ const noDefaults: ThemeDefaults = {}
 const known = new Map<string, ThemeDefaults>()
 const sameDefaults = (defaults: ThemeDefaults) => {
   const key = JSON.stringify(defaults)
-  let first = known.get(key)
-  if (!first) known.set(key, (first = defaults))
-  return first
+  const first = known.get(key)
+  if (first) return first
+  known.set(key, defaults)
+  return defaults
 }
 
 // One derived theme for each theme and `defaults`: the engine sees the same object on every
@@ -61,11 +62,10 @@ const sameDefaults = (defaults: ThemeDefaults) => {
 // nothing added is its own derived theme, so the theme the app registered with
 // `registerBaseTheme` is the very object its provider gives the engine (a copy of it makes the
 // engine merge the two again on every render).
-const withDefaults = derivedBy((theme: Theme, defaults: ThemeDefaults) =>
-  defaults === noDefaults && 'up' in theme.breakpoints
-    ? theme
-    : createTheme(theme, defaults === noDefaults ? {} : { defaults })
-)
+const withDefaults = derivedBy((theme: Theme, defaults: ThemeDefaults) => {
+  if (defaults !== noDefaults) return createTheme(theme, { defaults })
+  return 'up' in theme.breakpoints ? theme : createTheme(theme, {})
+})
 
 // The build tool of the app replaces this, so a production build drops the check below; a program
 // that compiles this source without Node's types still knows the name.

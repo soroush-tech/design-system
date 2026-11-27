@@ -9,8 +9,9 @@ import type { SelectColor, SelectSize } from '../../Select'
 import type { FormControlProps } from '../../FormControl'
 import type { AppBarSize } from '../../AppBar'
 import { baseTheme, type CSSObject } from '../../theme/themes'
-import { space, typography } from '@gild-ui/core/theme'
 import {
+  space,
+  typography,
   radii,
   sizes,
   borderWidths,

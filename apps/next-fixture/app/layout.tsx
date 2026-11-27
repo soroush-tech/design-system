@@ -11,7 +11,7 @@ export const metadata = { title: 'Server components', icons: { icon: 'data:,' } 
 
 // A server component: the theme of the page is chosen from the cookie, so the first HTML has it.
 // `StyleRegistry` writes the styles of each request with the nonce proxy.ts gave it.
-export default async function RootLayout({ children }: { children: ReactNode }) {
+export default async function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   const scheme = (await cookies()).get(cookieName)?.value === 'dark' ? 'dark' : 'light'
   return (
     <html lang="en">

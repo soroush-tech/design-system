@@ -27,10 +27,12 @@ export const Accepted = ({ isActive }: { isActive: boolean }) => (
   </>
 )
 
+const plain = { padding: 12 }
+
 export const Refused = () => (
   <>
     {/* @ts-expect-error -- a plain style object is not an entry */}
-    <Editor style={{ padding: 12 }} />
+    <Editor style={plain} />
     {/* @ts-expect-error -- not in a list either */}
     <Preview style={[{ padding: 12 }]}>text</Preview>
     {/* @ts-expect-error -- Toolbar has no slot named header */}

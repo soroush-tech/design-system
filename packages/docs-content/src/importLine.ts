@@ -18,13 +18,16 @@ export const HOOKS_PACKAGE = '@gild-ui/hooks'
 const CORE_PACKAGE = '@gild-ui/core'
 const REACT_PACKAGE = '@gild-ui/react'
 
-const importLine = (npm: string, names: string[], subpath?: string): ImportLine => ({
-  npm,
-  subpath,
-  names,
-  install: `npm i ${npm}`,
-  statement: `import { ${names.join(', ')} } from '${subpath ? `${npm}/${subpath}` : npm}'`,
-})
+const importLine = (npm: string, names: string[], subpath?: string): ImportLine => {
+  const from = subpath ? `${npm}/${subpath}` : npm
+  return {
+    npm,
+    subpath,
+    names,
+    install: `npm i ${npm}`,
+    statement: `import { ${names.join(', ')} } from '${from}'`,
+  }
+}
 
 /** A component's lines: its package, and the entry point it is imported from (a member's is its family's). */
 export const componentImportLine = (item: ComponentNavItem): ImportLine =>

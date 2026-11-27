@@ -21,7 +21,7 @@ export const listPrograms = (dir: string): string[] =>
   readdirSync(dir, { withFileTypes: true })
     .filter((entry) => entry.isDirectory() && existsSync(join(dir, entry.name, 'tsconfig.json')))
     .map((entry) => entry.name)
-    .sort()
+    .toSorted((a, b) => a.localeCompare(b))
 
 /**
  * A program passes when `tsc` exits 0. One with an `expect-errors.txt` passes when `tsc` fails and

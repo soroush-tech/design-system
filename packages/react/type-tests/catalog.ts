@@ -248,7 +248,7 @@ type Problems<Name extends string, E, P> = E extends {
 
 type EntriesWithoutProps = Exclude<EntryName, keyof PropsOf>
 type AllProblems =
-  | (EntriesWithoutProps extends never ? never : `${EntriesWithoutProps}: no row in PropsOf`)
+  | `${EntriesWithoutProps}: no row in PropsOf`
   | {
       [N in keyof PropsOf & EntryName]: Problems<N, Entries[N], PropsOf[N]>
     }[keyof PropsOf & EntryName]

@@ -38,6 +38,7 @@ import { dirname, join } from 'node:path'
 import { performance } from 'node:perf_hooks'
 import { parseArgs } from 'node:util'
 import { fileURLToPath, pathToFileURL } from 'node:url'
+import { confine } from '../packages/contract/src/confine.ts'
 
 const repoRoot = join(dirname(fileURLToPath(import.meta.url)), '..')
 const { values } = parseArgs({
@@ -50,6 +51,17 @@ const { values } = parseArgs({
     out: { type: 'string' },
   },
 })
+// What the arguments name must lie in the repository or in the temp folder, where
+// `smoke-create --keep` leaves its apps: nothing else is read or written.
+const confined = (path) => {
+  try {
+    return confine(path, [repoRoot, os.tmpdir()])
+  } catch (error) {
+    console.error(error.message)
+    process.exit(1)
+  }
+}
+const outFile = values.out && confined(values.out)
 const runs = Number(values.runs)
 const only = new Set(values.only.split(','))
 const apps = []
@@ -69,7 +81,7 @@ if (values.docs) {
 if (values.standalone) {
   apps.push({
     name: 'standalone',
-    dir: values.standalone,
+    dir: confined(values.standalone),
     tsc: [],
     build: [],
     cleanBuild: 'dist',
@@ -103,6 +115,25 @@ const summarizeKeys = (list) =>
   )
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
+/**
+ * Runs `task(run)` for each run from 0 to `times` - 1, each only after the one before it has
+ * finished, and returns the results in order. A measurement never overlaps another one: runs that
+ * overlap compete for the CPU and the port, and distort each other's timings.
+ */
+const inSequence = (times, task) =>
+  Array.from({ length: times }).reduce(
+    async (done, _, run) => [...(await done), await task(run)],
+    Promise.resolve([])
+  )
+
+/** Calls `step` every `ms` until it returns something but `undefined`, and returns that. */
+const poll = async (ms, step) => {
+  const value = await step()
+  if (value !== undefined) return value
+  await sleep(ms)
+  return poll(ms, step)
+}
+
 /** How idle the machine is over one second, in percent. */
 async function idlePercent() {
   const total = () =>
@@ -126,8 +157,10 @@ const packageFile = (dir, packageName, file) =>
 
 const killTree = (child) => {
   if (child.exitCode !== null) return
-  if (process.platform === 'win32') spawnSync('taskkill', ['/PID', String(child.pid), '/T', '/F'])
-  else child.kill('SIGKILL')
+  if (process.platform === 'win32') {
+    const taskkill = join(process.env.SystemRoot ?? 'C:\\Windows', 'System32', 'taskkill.exe')
+    spawnSync(taskkill, ['/PID', String(child.pid), '/T', '/F'])
+  } else child.kill('SIGKILL')
 }
 
 /** Runs a node script to its end, and returns how long it took, with its output. */
@@ -198,13 +231,11 @@ async function startDev(app) {
   let log = ''
   child.stdout.on('data', (chunk) => (log += chunk))
   child.stderr.on('data', (chunk) => (log += chunk))
-  while (!(await canConnect(app.port))) {
-    if (child.exitCode !== null)
-      throw new Error(`the dev server exited:
-${log}`)
+  await poll(5, async () => {
+    if (await canConnect(app.port)) return true
+    if (child.exitCode !== null) throw new Error(`the dev server exited:\n${log}`)
     if (performance.now() - start > 120_000) throw new Error('the dev server never listened')
-    await sleep(5)
-  }
+  })
   return {
     child,
     start,
@@ -218,19 +249,19 @@ ${log}`)
  * dependencies), and refuses connections for a moment.
  */
 async function untilAnswered(ask, start) {
-  for (;;) {
+  const { answer } = await poll(20, async () => {
     try {
-      return await ask()
+      return { answer: await ask() }
     } catch (error) {
       if (performance.now() - start > 120_000) throw new Error(`no answer: ${error}`)
-      await sleep(20)
     }
-  }
+  })
+  return answer
 }
 
 async function stopDev(child, app) {
   killTree(child)
-  while (await canConnect(app.port)) await sleep(50)
+  await poll(50, async () => ((await canConnect(app.port)) ? undefined : true))
 }
 
 /** Vite's dependency pre-bundle only: not the folders other tools keep in `.vite`. */
@@ -257,9 +288,7 @@ async function devRuns(app, browser, isCold) {
     await page.close()
     await stopDev(primer.child, app)
   }
-  const http = []
-  const inBrowser = []
-  for (let run = 0; run < runs; run++) {
+  const http = await inSequence(runs, async () => {
     if (isCold) clearPreBundle(app)
     const dev = await startDev(app)
     const response = await untilAnswered(async () => {
@@ -268,14 +297,15 @@ async function devRuns(app, browser, isCold) {
       return attempt
     }, dev.start)
     if (response.status !== 200) throw new Error(`GET / answered ${response.status}`)
-    http.push({
+    const timing = {
       listenMs: dev.listenMs,
       firstResponseMs: performance.now() - dev.start,
       viteReadyMs: Number(dev.viteReadyMs()),
-    })
+    }
     await stopDev(dev.child, app)
-  }
-  for (let run = 0; run < runs; run++) {
+    return timing
+  })
+  const inBrowser = await inSequence(runs, async () => {
     if (isCold) clearPreBundle(app)
     const dev = await startDev(app)
     const context = await browser.newContext()
@@ -283,13 +313,14 @@ async function devRuns(app, browser, isCold) {
     await untilAnswered(() => page.goto(url, { waitUntil: 'load' }), dev.start)
     const browserLoadMs = performance.now() - dev.start
     await page.locator(app.selector).first().waitFor({ state: 'visible', timeout: 60_000 })
-    inBrowser.push({
+    const timing = {
       browserLoadMs,
       browserFirstComponentVisibleMs: performance.now() - dev.start,
-    })
+    }
     await context.close()
     await stopDev(dev.child, app)
-  }
+    return timing
+  })
   return { ...summarizeKeys(http), ...summarizeKeys(inBrowser) }
 }
 
@@ -378,6 +409,22 @@ export default {
   return { table: readFileSync(join(outDir, 'result.md'), 'utf8') }
 }
 
+// The versions come from files, not from running a program found on PATH: the pnpm the repository
+// pins, and the npm that ships next to this node.
+const pnpmVersion = () =>
+  JSON.parse(readFileSync(join(repoRoot, 'package.json'), 'utf8')).packageManager.replace(
+    /^pnpm@/,
+    ''
+  )
+const npmVersion = () => {
+  const node = dirname(process.execPath)
+  const manifest = [
+    join(node, 'node_modules/npm/package.json'),
+    join(node, '../lib/node_modules/npm/package.json'),
+  ].find((path) => existsSync(path))
+  return manifest ? JSON.parse(readFileSync(manifest, 'utf8')).version : 'unknown'
+}
+
 const workDir = mkdtempSync(join(os.tmpdir(), 'measure-app-cost-'))
 const report = {
   date: new Date().toISOString(),
@@ -387,8 +434,8 @@ const report = {
     memoryGb: round(os.totalmem() / 1e9),
     os: `${os.type()} ${os.release()}`,
     node: process.version,
-    pnpm: spawnSync('pnpm', ['-v'], { encoding: 'utf8', shell: true }).stdout.trim(),
-    npm: spawnSync('npm', ['-v'], { encoding: 'utf8', shell: true }).stdout.trim(),
+    pnpm: pnpmVersion(),
+    npm: npmVersion(),
     idleCpuPercentAtStart: await idlePercent(),
   },
   runs,
@@ -400,7 +447,9 @@ if (only.has('dev')) {
   browser = await chromium.launch()
 }
 try {
-  for (const app of apps) {
+  // One app after the other: their measures must not overlap either.
+  await inSequence(apps.length, async (index) => {
+    const app = apps[index]
     const result = {
       dir: app.dir,
       vite: JSON.parse(readFileSync(packageFile(app.dir, 'vite', 'package.json'), 'utf8')).version,
@@ -426,7 +475,7 @@ try {
       if (values.bench) result.renderBench = await bench(app, workDir)
     }
     report.apps[app.name] = result
-  }
+  })
   report.machine.idleCpuPercentAtEnd = await idlePercent()
 } finally {
   await browser?.close()
@@ -434,7 +483,7 @@ try {
 }
 
 const json = `${JSON.stringify(report, null, 2)}\n`
-if (values.out) writeFileSync(values.out, json)
+if (outFile) writeFileSync(outFile, json)
 else process.stdout.write(json)
 
 // The table: a row per measure, a column per app, each cell the median (min-max).

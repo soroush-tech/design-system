@@ -12,6 +12,69 @@ const isRecord = (value: unknown): value is Record<string, unknown> =>
 
 const list = (names: readonly unknown[]) => names.join(', ')
 
+type Known = (typeof themeComponents)[string]
+type Report = (path: string, message: string) => void
+type NotAProp = (path: string, prop: string) => void
+
+const checkSlots = (name: string, known: Known, styleOverrides: unknown, report: Report) => {
+  if (!isRecord(styleOverrides)) return
+  for (const slot of Object.keys(styleOverrides)) {
+    if (!known.slots.includes(slot))
+      report(
+        `components.${name}.styleOverrides.${slot}`,
+        `is not a slot of ${name} (${list(known.slots)})`
+      )
+  }
+}
+
+/** Whether one of the theme's own looks sets `prop` to `value`: a value the catalog cannot list. */
+const isDefinedByLook = (looks: unknown[], prop: string, value: unknown) =>
+  looks.some((look) => isRecord(look) && isRecord(look.props) && look.props[prop] === value)
+
+const checkDefaults = (
+  where: string,
+  defaultProps: unknown,
+  looks: unknown[],
+  values: Record<string, { values?: readonly unknown[] } | undefined>,
+  notAProp: NotAProp,
+  report: Report
+) => {
+  if (!isRecord(defaultProps)) return
+  for (const [prop, value] of Object.entries(defaultProps)) {
+    const path = `${where}.defaultProps.${prop}`
+    notAProp(path, prop)
+    const listed = values[prop]?.values
+    if (listed && !isDefinedByLook(looks, prop, value) && !listed.includes(value as never))
+      report(path, `is ${JSON.stringify(value)}, not one of ${list(listed)}`)
+  }
+}
+
+const checkLooks = (where: string, looks: unknown[], notAProp: NotAProp) => {
+  looks.forEach((look, index) => {
+    if (isRecord(look) && isRecord(look.props))
+      for (const prop of Object.keys(look.props))
+        notAProp(`${where}.variants[${index}].props.${prop}`, prop)
+  })
+}
+
+const checkComponent = (
+  name: string,
+  known: Known,
+  config: Record<string, unknown>,
+  report: Report
+) => {
+  const where = `components.${name}`
+  const options = catalogSources[name].entry.options
+  const props = known.ownerState && [...known.ownerState, ...Object.keys(options)]
+  const notAProp: NotAProp = (path, prop) => {
+    if (props && !props.includes(prop)) report(path, `is not a prop of ${name} (${list(props)})`)
+  }
+  checkSlots(name, known, config.styleOverrides, report)
+  const looks = Array.isArray(config.variants) ? config.variants : []
+  checkDefaults(where, config.defaultProps, looks, options, notAProp, report)
+  checkLooks(where, looks, notAProp)
+}
+
 /**
  * Checks a theme's `components` against the catalog, for a mistake the types cannot see (a theme
  * whose types were cast away, plain JavaScript, a theme read from a file): a component the design
@@ -21,49 +84,15 @@ const list = (names: readonly unknown[]) => names.join(', ')
  */
 export const validateThemeComponents = (components: unknown): ThemeProblem[] => {
   const problems: ThemeProblem[] = []
-  const report = (path: string, message: string) =>
-    problems.push({ path, message: `${path} ${message}` })
+  const report: Report = (path, message) => problems.push({ path, message: `${path} ${message}` })
   if (!isRecord(components)) return problems
   for (const [name, config] of Object.entries(components)) {
-    const where = `components.${name}`
     const known = themeComponents[name]
     if (!known) {
-      report(where, `is not a component (${list(Object.keys(themeComponents))})`)
-      continue
+      report(`components.${name}`, `is not a component (${list(Object.keys(themeComponents))})`)
+    } else if (isRecord(config)) {
+      checkComponent(name, known, config, report)
     }
-    if (!isRecord(config)) continue
-    const options = catalogSources[name].entry.options
-    const props = known.ownerState && [...known.ownerState, ...Object.keys(options)]
-    const notAProp = (path: string, prop: string) =>
-      props && !props.includes(prop) && report(path, `is not a prop of ${name} (${list(props)})`)
-    if (isRecord(config.styleOverrides)) {
-      for (const slot of Object.keys(config.styleOverrides)) {
-        if (!known.slots.includes(slot))
-          report(
-            `${where}.styleOverrides.${slot}`,
-            `is not a slot of ${name} (${list(known.slots)})`
-          )
-      }
-    }
-    const looks = Array.isArray(config.variants) ? config.variants : []
-    if (isRecord(config.defaultProps)) {
-      for (const [prop, value] of Object.entries(config.defaultProps)) {
-        const path = `${where}.defaultProps.${prop}`
-        notAProp(path, prop)
-        const values = options[prop]?.values
-        // A look the theme's own `variants` define is a value the catalog cannot list.
-        const defined = looks.some(
-          (look) => isRecord(look) && isRecord(look.props) && look.props[prop] === value
-        )
-        if (values && !defined && !values.includes(value as never))
-          report(path, `is ${JSON.stringify(value)}, not one of ${list(values)}`)
-      }
-    }
-    looks.forEach((look, index) => {
-      if (isRecord(look) && isRecord(look.props))
-        for (const prop of Object.keys(look.props))
-          notAProp(`${where}.variants[${index}].props.${prop}`, prop)
-    })
   }
   return problems
 }

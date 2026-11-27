@@ -21,7 +21,8 @@ export const componentOfRoute = ({
 }: Readonly<Record<string, string>>): ComponentNavItem => {
   const item = componentByName.get(member ?? name)
   if (!item || (member !== undefined && item.family !== name)) {
-    throw new Error(`No component for the route "${member ? `${name}/${member}` : name}"`)
+    const route = member ? `${name}/${member}` : name
+    throw new Error(`No component for the route "${route}"`)
   }
   return item
 }

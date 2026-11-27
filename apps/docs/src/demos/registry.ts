@@ -4,7 +4,6 @@ import {
   APP_PACKAGE_VERSION,
   CORE_PACKAGE,
   CORE_PACKAGE_VERSION,
-  COMPONENT_LIBRARY_REACT_RANGE,
 } from 'src/common/packageVersions'
 import { requireMatches } from './requireMatches'
 
@@ -83,4 +82,4 @@ export const demoVersions: Record<string, string> = {
 }
 
 /** The react / react-dom pin for sandbox exports. */
-export const demoReactVersion = COMPONENT_LIBRARY_REACT_RANGE
+export { COMPONENT_LIBRARY_REACT_RANGE as demoReactVersion } from 'src/common/packageVersions'

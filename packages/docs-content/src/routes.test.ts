@@ -109,7 +109,7 @@ describe('the docs routes are the import paths', () => {
       expect(paths).toContain(to)
       expect(paths).not.toContain(from)
     }
-    expect(redirects.length).toBe(paths.filter((path) => path !== path.toLowerCase()).length)
+    expect(redirects).toHaveLength(paths.filter((path) => path !== path.toLowerCase()).length)
   })
 })
 

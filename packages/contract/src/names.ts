@@ -1,6 +1,7 @@
 import { execFileSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
+import { findGit } from './git'
 
 /** The packages that left the `@soroush.design` scope for `@gild-ui`. */
 export const MOVED = [
@@ -50,11 +51,11 @@ export const findFormerNames = (
 ): string[] =>
   files
     .filter((file) => !isHistorical(file, versionOf))
-    .flatMap((file) => (read(file).match(FORMER) ?? []).map((name) => `${file}: ${name}`))
+    .flatMap((file) => [...read(file).matchAll(FORMER)].map(([name]) => `${file}: ${name}`))
 
 /** The tracked files of the repository at `root`. */
 export const trackedFiles = (root: string): string[] =>
-  execFileSync('git', ['ls-files', '-z'], { cwd: root, maxBuffer: 1 << 28 })
+  execFileSync(findGit(), ['ls-files', '-z'], { cwd: root, maxBuffer: 1 << 28 })
     .toString()
     .split('\0')
     .filter(Boolean)

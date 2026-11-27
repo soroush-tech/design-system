@@ -1,6 +1,7 @@
 import { execFileSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
+import { findGit } from './git'
 
 /**
  * The files an app, or a reader of the docs, sees: none of them imports the engine
@@ -36,7 +37,7 @@ export const findEngineImports = (files: ReadonlyArray<{ path: string; text: str
 
 /** The files git tracks in `root`, relative to it. */
 export const trackedFiles = (root: string): string[] =>
-  execFileSync('git', ['ls-files', '-z'], { cwd: root, encoding: 'utf8', maxBuffer: 1 << 28 })
+  execFileSync(findGit(), ['ls-files', '-z'], { cwd: root, encoding: 'utf8', maxBuffer: 1 << 28 })
     .split('\0')
     .filter(Boolean)
 

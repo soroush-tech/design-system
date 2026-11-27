@@ -4,8 +4,7 @@ import { border, m, p, position } from '../utils/test/storiesArgs'
 import { appBarSizeTokens, backgroundTokens } from '../utils/test/storiesOptions'
 import { ThemeProvider } from '../theme/ThemeProvider'
 import { StyleSheet } from '../style/styled'
-import { baseTheme } from '@gild-ui/core/theme'
-import { createTheme } from '@gild-ui/core/theme'
+import { baseTheme, createTheme } from '@gild-ui/core/theme'
 
 const statusStyles = StyleSheet.create({
   label: { fontSize: '10px', letterSpacing: '0.2em', textTransform: 'uppercase' },

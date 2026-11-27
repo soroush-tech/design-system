@@ -31,10 +31,10 @@ describe('defineThemes', () => {
 
   it('types: the themes must share every key, and the message names the theme and the key', () => {
     // @ts-expect-error -- dark lacks the palette.brand that light has
-    defineThemes({ light, dark: createTheme(baseTheme, {}) }, {})
+    expect(defineThemes({ light, dark: createTheme(baseTheme, {}) }, {})).toHaveProperty('light')
     // @ts-expect-error -- light has a palette.brand that dark lacks
-    defineThemes({ dark: createTheme(baseTheme, {}), light }, {})
+    expect(defineThemes({ dark: createTheme(baseTheme, {}), light }, {})).toHaveProperty('dark')
     // @ts-expect-error -- components are not a createTheme override
-    createTheme(baseTheme, { components: {} })
+    expect(createTheme(baseTheme, { components: {} })).toHaveProperty('palette')
   })
 })

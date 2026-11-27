@@ -7,8 +7,7 @@ import {
   type SyntheticEvent,
 } from 'react'
 import { Flex } from '@gild-ui/react/Flex'
-import { styled, type SlotProps, type StyleOverride } from '@gild-ui/react'
-import { useTheme } from '@gild-ui/react'
+import { styled, useTheme, type SlotProps, type StyleOverride } from '@gild-ui/react'
 import { themeDefault } from '@gild-ui/core/theme'
 import { Typography } from '@gild-ui/react/Typography'
 

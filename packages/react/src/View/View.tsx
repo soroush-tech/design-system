@@ -38,7 +38,8 @@ export type ViewBorderColorToken = keyof Theme['border']
 export type ViewBorderWidthToken = keyof Theme['borderWidths']
 
 /** Valid theme tokens for border-radius. Raw CSS pixel values (e.g. '6px', '9999px') are also accepted. */
-export type ViewBorderRadiusToken = keyof Theme['radii'] | `${number}px`
+type ViewRadiusPixels = `${number}px`
+export type ViewBorderRadiusToken = keyof Theme['radii'] | ViewRadiusPixels
 
 export interface ViewProps
   extends

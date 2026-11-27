@@ -1,16 +1,14 @@
 import cliPkg from 'packages/cli/package.json'
 import corePkg from 'packages/core/package.json'
-import designSystemPkg from 'packages/react/package.json'
 import markdownPkg from 'packages/react-markdown/package.json'
 import mcpPkg from 'packages/mcp/package.json'
 import reactPkg from 'packages/react/package.json'
-// The npm package's manifest, by path: its `exports` do not list it.
-import styledSystemPkg from '../../node_modules/@soroush.tech/styled-system/package.json'
+import docsPkg from '../../package.json'
 import uiSpecPkg from 'packages/ui-spec/package.json'
 import type { DocsSection } from 'src/common/nav'
 
 /** The React range the React package supports: its peer dependency. */
-export const COMPONENT_LIBRARY_REACT_RANGE = designSystemPkg.peerDependencies.react
+export const COMPONENT_LIBRARY_REACT_RANGE = reactPkg.peerDependencies.react
 
 /** The package an app installs and imports from. */
 export const APP_PACKAGE = reactPkg.name
@@ -24,9 +22,10 @@ export const CORE_PACKAGE_VERSION = corePkg.version
 
 /** The version of each package this build documents, as it is in its package.json. */
 export const PACKAGE_VERSIONS: Record<DocsSection, string> = {
-  react: designSystemPkg.version,
+  react: reactPkg.version,
   markdown: markdownPkg.version,
-  'styled-system': styledSystemPkg.version,
+  // The version the docs install: the package's manifest is no entry of its `exports`.
+  'styled-system': docsPkg.dependencies['@soroush.tech/styled-system'].replace(/^\^/, ''),
   mcp: mcpPkg.version,
   'ui-spec': uiSpecPkg.version,
   cli: cliPkg.version,

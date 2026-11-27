@@ -6,6 +6,8 @@ export interface ExportList {
   types: string[]
 }
 
+const byName = (a: string, b: string) => a.localeCompare(b)
+
 /** Reads the names each declaration file exports, following re-exports through chunks, with the compiler's own checker. One program serves every file. */
 export const exportsOf = (files: string[]): Record<string, ExportList> => {
   const program = ts.createProgram(files, {
@@ -25,7 +27,7 @@ export const exportsOf = (files: string[]): Record<string, ExportList> => {
       if (target.flags & ts.SymbolFlags.Value) list.values.push(symbol.name)
       if (target.flags & ts.SymbolFlags.Type) list.types.push(symbol.name)
     }
-    lists[file] = { values: list.values.sort(), types: list.types.sort() }
+    lists[file] = { values: list.values.toSorted(byName), types: list.types.toSorted(byName) }
   }
   return lists
 }

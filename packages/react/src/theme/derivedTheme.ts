@@ -10,9 +10,15 @@ export function derivedBy<A extends object, B extends object, Result extends obj
   const results = new WeakMap<A, WeakMap<B, Result>>()
   return (first, second) => {
     let bySecond = results.get(first)
-    if (!bySecond) results.set(first, (bySecond = new WeakMap()))
+    if (!bySecond) {
+      bySecond = new WeakMap()
+      results.set(first, bySecond)
+    }
     let result = bySecond.get(second)
-    if (!result) bySecond.set(second, (result = derive(first, second)))
+    if (!result) {
+      result = derive(first, second)
+      bySecond.set(second, result)
+    }
     return result
   }
 }

@@ -55,7 +55,7 @@ try {
   }
   const overrides = {}
   for (const file of readdirSync(tarballs)) {
-    const name = /^gild-ui-(.+)-\d+\.\d+\.\d+.*\.tgz$/.exec(file)?.[1]
+    const name = /^gild-ui-([a-z-]+)-\d+\.\d+\.\d+\S*\.tgz$/.exec(file)?.[1]
     overrides[`@gild-ui/${name}`] = `file:${join(tarballs, file).replaceAll('\\', '/')}`
   }
   writeFileSync(

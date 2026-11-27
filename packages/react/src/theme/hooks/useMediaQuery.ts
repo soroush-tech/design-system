@@ -1,6 +1,5 @@
 'use client'
 
-import { useMediaQuery as engineUseMediaQuery } from '@umber-style/react'
 import { configureEngine } from '../../style/engine'
 
 // An app may reach the hook without a styled component.
@@ -11,4 +10,4 @@ configureEngine()
  * structure or another. The answer is `defaultMatches` (false unless given) on the server and in the
  * first render of a hydration, and the browser's follows at once.
  */
-export const useMediaQuery = engineUseMediaQuery
+export { useMediaQuery } from '@umber-style/react'

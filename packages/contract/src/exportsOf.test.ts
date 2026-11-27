@@ -36,7 +36,7 @@ describe('exportsOf', () => {
     )
     const lists = exportsOf([chunk, entry])
     expect(lists[entry]).toEqual({
-      values: ['Both', 'Box', 'a', 'default', 'renamed'],
+      values: ['a', 'Both', 'Box', 'default', 'renamed'],
       types: ['Alias', 'Both', 'Box', 'Shape'],
     })
     expect(lists[chunk]).toEqual({ values: ['a'], types: ['Shape'] })
