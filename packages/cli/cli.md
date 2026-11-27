@@ -202,6 +202,15 @@ file and line that need a person). To add one: write the folder (with `fixtures/
 `fixtures/after`), import it in `steps/index.ts`, and test it on the fixtures' app. The runner's
 own tests use two steps of a fake package, `src/migrate/testSteps.ts`, never in the registry.
 
+**The first step, `gild-ui-0.1.0` (#176),** is the model of a large one: `steps/gild-ui-0.1.0/README.md`
+says what it edits and reports. It reads each file with `@babel/parser` (a development dependency
+that `tsdown` bundles, so the command line has none to install) and edits ranges of the original
+text; its report messages and its import map are `inventory/inventory.json` and `imports.json`, so
+they cannot drift; its fixtures (`fixtures/<name>/before`, `after`, `reports.json`) are apps of the
+earlier version, excluded from lint, format, the type check and the coverage of this package, and
+`pnpm test:types` type-checks the `after` of two of them against the built packages. The names of the
+previous engine's packages live in that step's `data.ts` and its fixtures, nowhere else.
+
 **The rule (#177):** a breaking release of the Gild UI family ships a `migrate` step that
 targets it, so an app on any earlier version reaches the latest by running the steps in order.
 

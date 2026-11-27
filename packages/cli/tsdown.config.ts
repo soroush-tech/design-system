@@ -7,6 +7,9 @@ export default defineConfig({
   entry: { index: 'src/index.ts', bin: 'src/bin.ts' },
   format: ['esm'],
   platform: 'node',
+  // The migration step reads source with @babel/parser, a development dependency inlined here, so the
+  // command line installs nothing: listing it says the inlining is on purpose.
+  deps: { onlyBundle: ['@babel/parser'] },
   dts: true,
   clean: true,
 })

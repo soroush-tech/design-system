@@ -1,5 +1,5 @@
 {
   "extends": ["../eslint-config/.oxlintrc.json"],
   "env": { "node": true },
-  "ignorePatterns": ["dist", "coverage", "type-tests/init"]
+  "ignorePatterns": ["dist", "coverage", "type-tests/init", "src/migrate/steps/*/fixtures"]
 }

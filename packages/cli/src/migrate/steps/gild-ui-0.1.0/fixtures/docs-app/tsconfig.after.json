@@ -1,0 +1,41 @@
+{
+  // Gild UI's own types read the files the step wrote: the theme with `defineThemes`, a styled
+  // component file, the providers and the test wrapper. The other files of the docs app import
+  // modules this fixture does not carry (vike, the pages' data), or hold what the step reports and
+  // leaves to the person (an object in `style`).
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "verbatimModuleSyntax": true,
+    "allowImportingTsExtensions": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "jsx": "react-jsx",
+    "types": [],
+    "paths": {
+      "@gild-ui/react": ["../../../../../../../react/dist/index.d.mts"],
+      "@gild-ui/react/*": ["../../../../../../../react/dist/*.d.mts"],
+      "@gild-ui/core/*": ["../../../../../../../core/dist/*.d.mts"],
+      "@gild-ui/hooks/*": ["../../../../../../../hooks/dist/*.d.mts"],
+      "@soroush.tech/styled-system": [
+        "../../../../../../../react/node_modules/@soroush.tech/styled-system/dist/index.d.mts"
+      ],
+      "@soroush.tech/styled-system/*": [
+        "../../../../../../../react/node_modules/@soroush.tech/styled-system/dist/*.d.mts"
+      ],
+      "src/*": ["./after/src/*"]
+    }
+  },
+  "files": [
+    "typecheck.d.ts",
+    "after/src/theme/themes.ts",
+    "after/src/theme/ThemeModeProvider.tsx",
+    "after/src/theme/GlobalStyles.tsx",
+    "after/src/common/OnThisPage/OnThisPage.tsx",
+    "after/src/test/utils/wrapper.tsx"
+  ]
+}

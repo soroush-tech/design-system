@@ -53,7 +53,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "test:types": "pnpm --filter @gild-ui/core build && pnpm --filter @gild-ui/hooks build && pnpm --filter @gild-ui/react build && tsc -p type-tests/init/tsconfig.json && tsc -p type-tests/tsconfig.create-vike.json && tsc -p type-tests/tsconfig.create-vike-ssg.json && tsc -p type-tests/tsconfig.create-vike-ssr.json && tsc -p type-tests/tsconfig.create-vike-libraries.json && tsc -p type-tests/tsconfig.create-vike-jotai.json && tsc -p type-tests/tsconfig.create-vike-more.json && tsc -p type-tests/tsconfig.create-astro-ssg.json && tsc -p type-tests/tsconfig.create-astro-ssr.json && tsc -p type-tests/tsconfig.create-astro-libraries.json && tsc -p type-tests/tsconfig.create-astro-more.json && tsc -p type-tests/tsconfig.create-react-router.json && tsc -p type-tests/tsconfig.create-react-router-libraries.json && tsc -p type-tests/tsconfig.create-react-router-more.json && tsc -p type-tests/tsconfig.create-react-router-jotai.json",
+    "test:types": "pnpm --filter @gild-ui/core build && pnpm --filter @gild-ui/hooks build && pnpm --filter @gild-ui/react build && tsc -p type-tests/init/tsconfig.json && tsc -p src/migrate/steps/gild-ui-0.1.0/fixtures/init-templates/tsconfig.after.json && tsc -p src/migrate/steps/gild-ui-0.1.0/fixtures/docs-app/tsconfig.after.json && tsc -p type-tests/tsconfig.create-vike.json && tsc -p type-tests/tsconfig.create-vike-ssg.json && tsc -p type-tests/tsconfig.create-vike-ssr.json && tsc -p type-tests/tsconfig.create-vike-libraries.json && tsc -p type-tests/tsconfig.create-vike-jotai.json && tsc -p type-tests/tsconfig.create-vike-more.json && tsc -p type-tests/tsconfig.create-astro-ssg.json && tsc -p type-tests/tsconfig.create-astro-ssr.json && tsc -p type-tests/tsconfig.create-astro-libraries.json && tsc -p type-tests/tsconfig.create-astro-more.json && tsc -p type-tests/tsconfig.create-react-router.json && tsc -p type-tests/tsconfig.create-react-router-libraries.json && tsc -p type-tests/tsconfig.create-react-router-more.json && tsc -p type-tests/tsconfig.create-react-router-jotai.json",
     "prepublishOnly": "pnpm build",
     "gen:templates": "node scripts/gen-templates.mjs"
   },
@@ -61,6 +61,8 @@
     "@astrojs/check": "^0.9.12",
     "@astrojs/node": "^11.1.13",
     "@astrojs/react": "^7.1.9",
+    "@babel/parser": "^7.29.13",
+    "@babel/types": "^7.29.11",
     "@hookform/resolvers": "^7.0.6",
     "@reduxjs/toolkit": "^2.14.0",
     "@soroush.tech/eslint-config": "workspace:*",

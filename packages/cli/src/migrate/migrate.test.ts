@@ -164,7 +164,7 @@ describe('runMigrate', () => {
       "There is no package.json in this folder. Run migrate in your app's folder.\n"
     )
     const none = createTestIo(root)
-    expect(await runMigrate(YES, none.io)).toBe(0)
+    expect(await runMigrate(YES, none.io, [])).toBe(0)
     expect(none.getOutput()).toBe(
       'This release of migrate has no steps yet, so it changes nothing.\n'
     )

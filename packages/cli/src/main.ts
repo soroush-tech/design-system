@@ -7,7 +7,6 @@ import { RENDERINGS, STARTERS, type Rendering } from './create/starters'
 import { LAYOUTS, type Layout } from './create/workspace'
 import type { PackageJson } from './detect/detect'
 import { runInit } from './init'
-import { runMigrate } from './migrate/migrate'
 import type { Io } from './io'
 import type { PackageManagerName } from './plan/planInit'
 import type { Scheme } from './templates/templates'
@@ -279,6 +278,8 @@ async function runCommandLine(
     )
   }
   if (command === 'migrate') {
+    // Loaded only for migrate: its steps carry a source parser that init and create do not need.
+    const { runMigrate } = await import('./migrate/migrate')
     return runMigrate({ isConfirmed, isDryRun, to: values.to }, io)
   }
   return runInit(

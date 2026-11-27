@@ -286,3 +286,69 @@ app as the steps before it will leave it, and nothing is written until you say y
 - It prints what is left to you again as a checklist, with the file and line of each item.
 - A second run finds the new version and changes nothing.
 - When no step starts from the version your app is on, it says so, and what to do.
+
+### From `@soroush.tech/design-system` 2.x to Gild UI 0.1.0
+
+The first step, `gild-ui-0.1.0`, moves an app from the design system 2.x, with its companion
+packages `@soroush.tech/markdown` and `@soroush.tech/hooks`, to `@gild-ui/react`, `@gild-ui/core`,
+`@gild-ui/hooks` and `@gild-ui/react-markdown` 0.1.0. The components keep every prop, value and
+default: the work is in the imports, the styling and the theme. Run it in a clean git tree, read
+the plan, and take what it leaves to you from the checklist at the end.
+
+**What the step edits**
+
+- **Imports and paths.** Every name goes to its new module, exactly: a component from
+  `@gild-ui/react/<Component>`, the theme (`createTheme`, `baseTheme`, the token scales and
+  types) from `@gild-ui/core/theme`, helpers from `@gild-ui/core/utils`, and each name of the
+  styling system from an entry of its own (`import { ThemeProvider } from '@gild-ui/react/ThemeProvider'`,
+  likewise `useTheme`, `styled`, `css`, `keyframes`, `Global`, `useStyle`). The style-prop
+  functions the old root re-exported (`space`, `layout`, `get`, ...) come from
+  `@soroush.tech/styled-system`. Aliases, `type` imports and your quotes and semicolons are kept;
+  imports of one module are merged, and one that goes to several is split. The same goes for
+  `export ... from`, `import()`, `require()`, `vi.mock`/`jest.mock`, `import('x').T`,
+  `declare module '...'` and the paths named in comments.
+- **Dependencies.** `@gild-ui/react` takes the place of the design system, in the same section;
+  `@gild-ui/core`, `@gild-ui/hooks`, `@gild-ui/react-markdown` and `@soroush.tech/styled-system`
+  `^6.0.3` are added where an import reaches them; `@soroush.tech/markdown`, `@soroush.tech/hooks`
+  and the previous engine's packages (while no file imports them) are removed; `react` and
+  `react-dom` are raised to `^19.2.8` where lower.
+- **`css` and `style` on a component.** `style` takes only entries of `StyleSheet.create`: a static
+  `css={{ ... }}` or `style={{ ... }}` becomes an entry of one `const styles = StyleSheet.create({
+  ... })` at the top of the file, and `css={(theme) => ({ ... })}` that reads only its theme becomes
+  a function sheet, resolved at the top of its component with `useStyle`. A 2.x
+  `useStyle({ getStyles: (theme) => ({ ... }) })` becomes a function sheet the same way.
+- **The theme.** When every `createTheme` call of a file has the same `components` and the file
+  collects its themes in one place, `components` moves to `defineThemes(themes, components)` and the
+  names you export stay; `Theme['components']` is `ThemeComponents`; `declare module` blocks of the
+  old theme module are the core's.
+
+**What is left to you**, each with its file and line, and the reason from the inventory of
+differences:
+
+- Imports the step cannot place: a namespace or default import of a path whose names are now in
+  several modules, a path built at run time, a name that no longer exists (`TabsVariants`,
+  `ComponentStyle`, `ComponentVariant`, `CardSlotIconProps`, `CardSlotTypographyProps`,
+  `ThemeCustomizationOptions`).
+- Styling that depends on props or state: a `css` or `style` that is not a static object or a
+  theme function, `css` on an element that is not a component, a component without a body to put a
+  hook in. Put the part that does not change in a sheet, and give the part that does to a style prop
+  of the component (`width={...}`) or a live value (`useStyleValue`).
+- The theme: `components` that is not shared by every theme, a theme annotated with `Theme`, an
+  augmentation of `Theme` with `components`, and the registration that types `color="brand"`
+  (`defineThemes` and `declare module '@gild-ui/core/theme' { interface Register ... }`).
+- Server rendering: the registry hook and the critical-style extraction of the old engine, `createCache`
+  and its `nonce`. There is no registry now; the setup guide has the new files. Next.js apps with
+  server components also call `registerBaseTheme`.
+- Calls whose meaning changed: `css` and `keyframes` (no function inside them now), `withTheme`,
+  `.withComponent`, a `styled` tag with props of its own and no `shouldForwardProp`, token
+  arithmetic in a style function (`alpha`, `negate` and `subtract` take its place), the Tooltip
+  arrow's `style`, nested providers and portals.
+- What reads the old output: selectors and tests on class names and style elements, and the old
+  engine's JSX and Babel settings. The command is `npx @soroush.design/cli init` where a script
+  ran `design-system init`.
+- Peer ranges, and React 18 pinned anywhere but the dependencies.
+- Two lists of what no source line shows, to check once the app runs: differences in the output
+  (colours with an opacity, theme tokens as CSS variables, the style elements) and in types.
+
+The step's folder, `src/migrate/steps/gild-ui-0.1.0/`, holds the inventory it works from, the
+fixtures it is tested on (the documentation app of 2.2.0 and the files `init` wrote) and a README.

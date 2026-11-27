@@ -11,6 +11,8 @@
     "packages/core/src/catalog/themeComponents.ts",
     "packages/react/type-tests/slots.ts",
     "packages/cli/templates/*/js/**",
+    "packages/cli/src/migrate/steps/*/fixtures/**",
+    "packages/cli/src/migrate/steps/*/inventory/**",
     "packages/cli/templates/**/README.md"
   ]
 }

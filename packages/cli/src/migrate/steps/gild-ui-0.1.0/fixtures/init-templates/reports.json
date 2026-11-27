@@ -1,0 +1,17 @@
+[
+  {
+    "path": "src/theme/themes.ts",
+    "line": 16,
+    "id": "THM-006"
+  },
+  {
+    "path": "package.json",
+    "line": 10,
+    "id": "CHECK"
+  },
+  {
+    "path": "package.json",
+    "line": 10,
+    "id": "CHECK"
+  }
+]

@@ -10,4 +10,10 @@ describe('the registry', () => {
     expect(new Set(versions).size).toBe(versions.length)
     expect(orderSteps(STEPS)).toHaveLength(STEPS.length)
   })
+
+  it('carries the first step: Gild UI 0.1.0, from the design system 2.x', () => {
+    const step = STEPS.find(({ id }) => id === 'gild-ui-0.1.0')!
+    expect(step.from).toEqual({ package: '@soroush.tech/design-system', range: '2.x' })
+    expect(step.to).toEqual({ package: '@gild-ui/react', version: '0.1.0' })
+  })
 })

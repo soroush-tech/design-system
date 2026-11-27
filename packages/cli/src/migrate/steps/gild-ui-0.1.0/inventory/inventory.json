@@ -1,0 +1,1489 @@
+[
+  {
+    "id": "IMP-COMP",
+    "area": "imports",
+    "from": "@soroush.tech/design-system/<Component> (62 subpaths: Accordion ... Zoom, Menu, Tabs, Table ...)",
+    "to": "@gild-ui/react/<Component> (same name)",
+    "kind": "mechanical",
+    "how": "Import rewrite of the specifier: `@soroush.tech/design-system/X` -> `@gild-ui/react/X`. Every name exported at an old component path is exported at the same path of the new package (0 removed, 0 renamed, 0 changed kind); the new paths only add names (`XOwnerState`, `XSlot`, `XThemeConfig`, `useHoldRepeat`, `useAutoHide`). Also covers `import type`, `export ... from`, `require`, `import()` with a string literal, and `vi.mock`/`jest.mock` specifiers.",
+    "evidence": [
+      "npm @soroush.tech/design-system@2.2.0:package.json:44",
+      "HEAD:packages/react/package.json:32"
+    ],
+    "fixtures": {
+      "total": 196,
+      "files": 59,
+      "byScope": {
+        "docs-app (apps/docs, code)": 94,
+        "docs content (md/mdx fences)": 3,
+        "cli init templates + type-test app": 1,
+        "lab": 2,
+        "story-demo": 29,
+        "mcp + plugin": 7,
+        "markdown package (consumer of design-system)": 60
+      },
+      "samples": [
+        "2.2.0:apps/docs/src/common/ComponentCard/ComponentCard.tsx:1",
+        "2.2.0:apps/docs/src/pages/index/+Page.tsx:2",
+        "2.2.0:apps/docs/src/pages/packages/+Page.tsx:1",
+        "2.2.0:apps/docs/src/common/ComponentCard/ComponentCard.tsx:2"
+      ]
+    }
+  },
+  {
+    "id": "IMP-ROOT-SS",
+    "area": "imports",
+    "from": "@soroush.tech/design-system (root) - the style-prop functions and types it re-exported (`space`, `layout`, `color`, `typography`, `border`, `flexbox`, `grid`, `position`, `compose`, `system`, `variant`, `get`, `createParser`, `breakpointQueries`, `SpaceProps`, `LayoutProps`, ...; 233 names)",
+    "to": "@soroush.tech/styled-system (root)",
+    "kind": "mechanical",
+    "how": "Import rewrite per name: the old root did `export * from '@soroush.tech/styled-system'`; the new `@gild-ui/react` root re-exports nothing of it. Move the specifiers to `@soroush.tech/styled-system`, and add `@soroush.tech/styled-system@^6.0.3` to the app's own dependencies (it was only transitive before: DEP-005). Every name exists at the new package root (233/233 verified with the compiler API).",
+    "evidence": [
+      "2.2.0:packages/design-system/src/index.ts:11",
+      "HEAD:packages/react/src/index.ts:3"
+    ],
+    "fixtures": {
+      "total": 6,
+      "files": 6,
+      "byScope": {
+        "docs-app (apps/docs, code)": 6
+      },
+      "samples": [
+        "2.2.0:apps/docs/src/common/ComponentHero/ComponentHero.tsx:2",
+        "2.2.0:apps/docs/src/common/Footer/Footer.tsx:1",
+        "2.2.0:apps/docs/src/common/NavRail/NavRail.tsx:1",
+        "2.2.0:apps/docs/src/common/OnThisPage/OnThisPage.tsx:2"
+      ]
+    }
+  },
+  {
+    "id": "IMP-ROOT-SP",
+    "area": "imports",
+    "from": "@soroush.tech/design-system (root): `createShouldForwardProp`, `props`",
+    "to": "@soroush.tech/styled-system/should-forward-prop",
+    "kind": "mechanical",
+    "how": "Import rewrite: the old root re-exported these two from the styled-system subpath `should-forward-prop`; import them from there directly. Same functions (STY-005 covers the forwarding behaviour of the engine).",
+    "evidence": [
+      "2.2.0:packages/design-system/src/index.ts:12",
+      "HEAD:packages/react/src/Button/Button.tsx:20"
+    ],
+    "fixtures": {
+      "total": 1,
+      "files": 1,
+      "byScope": {
+        "docs-app (apps/docs, code)": 1
+      },
+      "samples": ["2.2.0:apps/docs/src/common/ComponentHero/ComponentHero.tsx:2"]
+    }
+  },
+  {
+    "id": "IMP-ROOT-STYLING",
+    "area": "imports",
+    "from": "@soroush.tech/design-system (root): `styled`, `css`, `keyframes`",
+    "to": "@gild-ui/react (root; also @gild-ui/react/styled, /css, /keyframes)",
+    "kind": "mechanical",
+    "how": "Import rewrite. The names are kept; their semantics changed with the engine - `css` and `keyframes` are no longer Emotion's (STY-002, STY-003), `styled` keeps its call forms (STY-001).",
+    "evidence": [
+      "2.2.0:packages/design-system/src/index.ts:6",
+      "HEAD:packages/react/src/style/styled.ts:14"
+    ],
+    "fixtures": {
+      "total": 27,
+      "files": 16,
+      "byScope": {
+        "docs-app (apps/docs, code)": 8,
+        "docs content (md/mdx fences)": 2,
+        "lab": 1,
+        "story-demo": 1,
+        "mcp + plugin": 9,
+        "markdown package (consumer of design-system)": 6
+      },
+      "samples": [
+        "2.2.0:apps/docs/src/common/ComponentHero/ComponentHero.tsx:2",
+        "2.2.0:apps/docs/src/common/Footer/Footer.tsx:1",
+        "2.2.0:apps/docs/src/common/NavRail/NavRail.tsx:1",
+        "2.2.0:apps/docs/src/common/OnThisPage/OnThisPage.tsx:2"
+      ]
+    }
+  },
+  {
+    "id": "IMP-ROOT-TYPES",
+    "area": "imports",
+    "from": "@soroush.tech/design-system (root) types: `Theme`, `PaletteColor`, `CSSObject`",
+    "to": "`Theme`, `PaletteColor` -> @gild-ui/core/theme; `CSSObject` -> @gild-ui/react",
+    "kind": "mechanical",
+    "how": "Import rewrite per name. `Theme` loses `components` (THM-002); `CSSObject` is the new engine's type (STY-013).",
+    "evidence": [
+      "2.2.0:packages/design-system/src/index.ts:10",
+      "HEAD:packages/react/src/index.ts:16"
+    ],
+    "fixtures": {
+      "total": 9,
+      "files": 8,
+      "byScope": {
+        "docs-app (apps/docs, code)": 3,
+        "mcp + plugin": 3,
+        "markdown package (consumer of design-system)": 3
+      },
+      "samples": [
+        "2.2.0:apps/docs/src/common/ComponentHero/ComponentHero.tsx:2",
+        "2.2.0:apps/docs/src/theme/GlobalStyles.tsx:5",
+        "2.2.0:apps/docs/src/theme/themes.ts:1",
+        "2.2.0:plugins/soroush-design-system/skills/soroush-design-system/references/layout-kit.md:137"
+      ]
+    }
+  },
+  {
+    "id": "IMP-THEME-CORE",
+    "area": "imports",
+    "from": "@soroush.tech/design-system/theme: `createTheme`, `baseTheme`, `themeDefault`, the token scales (`space`, `radii`, `typography`, ...), `up/down/only/between/not`, `containerQueries`, `Theme*`, `Palette*`, `*Entry`, `Layout*`, `DeepPartial`, `ThemeOverride`, ... (70 names)",
+    "to": "@gild-ui/core/theme",
+    "kind": "mechanical",
+    "how": "Import rewrite per name (the old `./theme` mixed pure tokens and React; the new core has the pure part). Same names, same values: `baseTheme` has 223 leaf keys on both sides, 0 added, 0 removed, 0 changed (basetheme-diff.json).",
+    "evidence": [
+      "npm @soroush.tech/design-system@2.2.0:package.json:634",
+      "HEAD:packages/core/package.json:33"
+    ],
+    "fixtures": {
+      "total": 43,
+      "files": 23,
+      "byScope": {
+        "docs-app (apps/docs, code)": 2,
+        "docs content (md/mdx fences)": 4,
+        "cli init templates + type-test app": 6,
+        "story-demo": 16,
+        "mcp + plugin": 2,
+        "markdown package (consumer of design-system)": 13
+      },
+      "samples": [
+        "2.2.0:apps/docs/src/theme/themes.ts:2",
+        "2.2.0:apps/docs/content/docs/installation.md:17",
+        "2.2.0:apps/docs/content/docs/usage.md:17",
+        "2.2.0:packages/cli/src/templates/templates.ts:13"
+      ]
+    }
+  },
+  {
+    "id": "IMP-THEME-REACT",
+    "area": "imports",
+    "from": "@soroush.tech/design-system/theme: `ThemeProvider`, `LayoutProvider`, `LayoutProviderProps`, `useTheme`, `useDefaultProps`, `withTheme`, `ThemeComponents`, `ComponentConfig`, `CSSObject`",
+    "to": "@gild-ui/react (root; each also at @gild-ui/react/<Name>)",
+    "kind": "mechanical",
+    "how": "Import rewrite per name; split the old import line, the rest of the names go to `@gild-ui/core/theme` (IMP-THEME-CORE). Props of `ThemeProvider` are unchanged (`theme`, `defaults`, `children`); typing changes are THM-009, THM-011, CMP-002.",
+    "evidence": [
+      "2.2.0:packages/design-system/src/theme/index.ts:3",
+      "HEAD:packages/react/src/index.ts:3"
+    ],
+    "fixtures": {
+      "total": 32,
+      "files": 31,
+      "byScope": {
+        "docs-app (apps/docs, code)": 9,
+        "docs content (md/mdx fences)": 1,
+        "cli init templates + type-test app": 2,
+        "story-demo": 10,
+        "mcp + plugin": 1,
+        "markdown package (consumer of design-system)": 9
+      },
+      "samples": [
+        "2.2.0:apps/docs/src/common/ComponentCard/ComponentCard.test.tsx:5",
+        "2.2.0:apps/docs/src/common/DocsNav/DocsNav.test.tsx:6",
+        "2.2.0:apps/docs/src/common/Footer/Footer.test.tsx:3",
+        "2.2.0:apps/docs/src/common/OnThisPage/OnThisPage.test.tsx:6"
+      ]
+    }
+  },
+  {
+    "id": "IMP-THEME-OWNERSTATE",
+    "area": "imports",
+    "from": "@soroush.tech/design-system/theme: `<Component>OwnerState` types (29: ButtonOwnerState, TabsOwnerState, MenuItemOwnerState, ...)",
+    "to": "@gild-ui/react/<Component> (the entry of the component that owns it)",
+    "kind": "mechanical",
+    "how": "Import rewrite per name; the table in imports.json gives the exact entry for each (e.g. `TabOwnerState` -> `@gild-ui/react/Tabs`, `MenuListOwnerState` -> `@gild-ui/react/Menu`). Their `color`/`size`/`variant` fields are typed `ThemeColor`/`ThemeSize`/`ButtonVariant` now (same values with the built-in theme).",
+    "evidence": [
+      "2.2.0:packages/design-system/src/theme/themes.ts:650",
+      "HEAD:packages/react/src/Button/Button.types.ts:8"
+    ],
+    "fixtures": {
+      "total": 0,
+      "files": 0,
+      "byScope": {},
+      "samples": []
+    }
+  },
+  {
+    "id": "IMP-THEME-BREAKPOINTS",
+    "area": "imports",
+    "from": "@soroush.tech/design-system/theme: `withBreakpointHelpers`, `BreakpointHelpers`",
+    "to": "@gild-ui/core/breakpoints",
+    "kind": "mechanical",
+    "how": "Import rewrite per name.",
+    "evidence": [
+      "2.2.0:packages/design-system/src/theme/breakpoints.ts:22",
+      "HEAD:packages/core/src/breakpoints/index.ts:1"
+    ],
+    "fixtures": {
+      "total": 0,
+      "files": 0,
+      "byScope": {},
+      "samples": []
+    }
+  },
+  {
+    "id": "IMP-STYLE",
+    "area": "imports",
+    "from": "@soroush.tech/design-system/style: `useStyle`, `withStyles`, `StylesConsumer`, `StyleFactory`, `StyleInput`",
+    "to": "@gild-ui/react (root; each also at /useStyle, /withStyles, /StylesConsumer)",
+    "kind": "mechanical",
+    "how": "Import rewrite. Same names and call forms; `StyleFactory.getStyles` now returns the engine's `WebStyleObject` (STY-013). `useStyleValue` and `LiveValue` are new.",
+    "evidence": [
+      "npm @soroush.tech/design-system@2.2.0:package.json:654",
+      "HEAD:packages/react/src/entries/useStyle.ts:1"
+    ],
+    "fixtures": {
+      "total": 0,
+      "files": 0,
+      "byScope": {},
+      "samples": []
+    }
+  },
+  {
+    "id": "IMP-ENGINE-GLOBAL",
+    "area": "imports",
+    "from": "@soroush.tech/design-system/engine: `Global`",
+    "to": "@gild-ui/react (root or /Global) - NOT /engine any more",
+    "kind": "mechanical",
+    "how": "Import rewrite per name: `Global` left the engine entry. The rest of the old `./engine` names stay at `@gild-ui/react/engine` (IMP-ENGINE).",
+    "evidence": [
+      "2.2.0:packages/design-system/src/engine/index.ts:1",
+      "HEAD:packages/react/src/engine/index.ts:5"
+    ],
+    "fixtures": {
+      "total": 4,
+      "files": 4,
+      "byScope": {
+        "docs-app (apps/docs, code)": 1,
+        "cli init templates + type-test app": 2,
+        "mcp + plugin": 1
+      },
+      "samples": [
+        "2.2.0:apps/docs/src/theme/GlobalStyles.tsx:8",
+        "2.2.0:packages/cli/src/templates/templates.ts:110",
+        "2.2.0:packages/cli/type-tests/init/src/theme/Providers.ts:4",
+        "2.2.0:plugins/soroush-design-system/skills/soroush-design-system/references/providers.tsx:6"
+      ]
+    }
+  },
+  {
+    "id": "IMP-ENGINE",
+    "area": "imports",
+    "from": "@soroush.tech/design-system/engine: `globalStyles`, `CacheProvider`, `styleCache`, `createCache`",
+    "to": "@gild-ui/react/engine (same path)",
+    "kind": "mechanical",
+    "how": "Import rewrite of the specifier only. The names are kept but are the new engine's: `createCache` takes UmberStyle's options, `CacheProvider`/`styleCache` are used with `@umber-style/server` (STY-007, STY-008, STY-009).",
+    "evidence": [
+      "2.2.0:packages/design-system/src/engine/index.ts:3",
+      "HEAD:packages/react/src/engine/index.ts:2"
+    ],
+    "fixtures": {
+      "total": 7,
+      "files": 6,
+      "byScope": {
+        "docs-app (apps/docs, code)": 4,
+        "cli init templates + type-test app": 2,
+        "mcp + plugin": 1
+      },
+      "samples": [
+        "2.2.0:apps/docs/src/common/Bootstrap.tsx:2",
+        "2.2.0:apps/docs/src/renderer/+onRenderHtml.tsx:6",
+        "2.2.0:apps/docs/src/theme/GlobalStyles.tsx:8",
+        "2.2.0:packages/cli/src/templates/templates.ts:110"
+      ]
+    }
+  },
+  {
+    "id": "IMP-UTILS",
+    "area": "imports",
+    "from": "@soroush.tech/design-system/utils: `alpha`, `clamp`, `luminance`, `generateBoxShadow`",
+    "to": "@gild-ui/core/utils",
+    "kind": "mechanical",
+    "how": "Import rewrite per name. NOTE `alpha` here is the hex helper, kept; the styling system's own `alpha` (`color-mix`, from `@gild-ui/react`) is the one to use inside styles (STY-012).",
+    "evidence": [
+      "npm @soroush.tech/design-system@2.2.0:package.json:704",
+      "HEAD:packages/core/src/utils/index.ts:1"
+    ],
+    "fixtures": {
+      "total": 9,
+      "files": 7,
+      "byScope": {
+        "docs-app (apps/docs, code)": 6,
+        "mcp + plugin": 3
+      },
+      "samples": [
+        "2.2.0:apps/docs/src/common/ComponentHero/ComponentHero.tsx:3",
+        "2.2.0:apps/docs/src/common/Footer/Footer.tsx:7",
+        "2.2.0:apps/docs/src/common/OnThisPage/OnThisPage.tsx:3",
+        "2.2.0:apps/docs/src/common/Search/SearchDialog.tsx:3"
+      ]
+    }
+  },
+  {
+    "id": "IMP-TESTING",
+    "area": "imports",
+    "from": "@soroush.tech/design-system/testing: `installPopover`",
+    "to": "@gild-ui/react/testing",
+    "kind": "mechanical",
+    "how": "Import rewrite.",
+    "evidence": [
+      "npm @soroush.tech/design-system@2.2.0:package.json:644",
+      "HEAD:packages/react/package.json:95"
+    ],
+    "fixtures": {
+      "total": 0,
+      "files": 0,
+      "byScope": {},
+      "samples": []
+    }
+  },
+  {
+    "id": "IMP-CATALOG",
+    "area": "imports",
+    "from": "@soroush.tech/design-system/catalog (`catalog` + 9 types)",
+    "to": "@gild-ui/react/catalog (the platform-neutral data is also at @gild-ui/core/catalog)",
+    "kind": "mechanical",
+    "how": "Import rewrite. Entries gain `slots` and `ownerState`; each entry's `module` value reads `@gild-ui/react/<subpath>` (was `@soroush.tech/design-system/<folder>`): a tool that compares or prints it sees the new package name.",
+    "evidence": [
+      "npm @soroush.tech/design-system@2.2.0:package.json:624",
+      "HEAD:packages/react/src/catalog/index.ts:11"
+    ],
+    "fixtures": {
+      "total": 0,
+      "files": 0,
+      "byScope": {},
+      "samples": []
+    }
+  },
+  {
+    "id": "IMP-MD",
+    "area": "imports",
+    "from": "@soroush.tech/markdown (root) and /CodeBlock /Control /Editor /LiveEdit /Mermaid /Preview /Toolbar",
+    "to": "@gild-ui/react-markdown (same subpaths)",
+    "kind": "mechanical",
+    "how": "Import rewrite of the specifier. All 12 values and 13 types of the root and every subpath are kept (props of its 15 components identical, props-diff.json). The `peerDependencies` entry `@soroush.tech/design-system ^1.3.3 || ^2.0.0` becomes `@gild-ui/react` (DEP-003).",
+    "evidence": [
+      "npm @soroush.tech/markdown@1.3.0:package.json:42",
+      "HEAD:packages/react-markdown/package.json:33"
+    ],
+    "fixtures": {
+      "total": 12,
+      "files": 12,
+      "byScope": {
+        "docs-app (apps/docs, code)": 4,
+        "story-demo": 8
+      },
+      "samples": [
+        "2.2.0:apps/docs/src/common/Readme/Readme.tsx:2",
+        "2.2.0:apps/docs/src/common/ReleaseNotes/ReleaseNotes.tsx:2",
+        "2.2.0:apps/docs/src/mdx/mdxComponents.tsx:16",
+        "2.2.0:apps/docs/src/pages/design-system/api/@name/+Page.tsx:4"
+      ]
+    }
+  },
+  {
+    "id": "IMP-MD-CONTEXT",
+    "area": "imports",
+    "from": "@soroush.tech/markdown/MarkdownContext (reachable only through the `./*` wildcard of 1.3.0)",
+    "to": "@gild-ui/react-markdown (root: `MarkdownContext`, `useMarkdownContext`)",
+    "kind": "mechanical",
+    "how": "Import rewrite to the root: the new package lists its entries and has no wildcard, so there is no `/MarkdownContext` path.",
+    "evidence": [
+      "npm @soroush.tech/markdown@1.3.0:package.json:42",
+      "HEAD:packages/react-markdown/package.json:31"
+    ],
+    "fixtures": {
+      "total": 0,
+      "files": 0,
+      "byScope": {},
+      "samples": []
+    }
+  },
+  {
+    "id": "IMP-HOOKS",
+    "area": "imports",
+    "from": "@soroush.tech/hooks/useCopyToClipboard (private workspace package of 2.2.0, never on npm)",
+    "to": "@gild-ui/hooks/useCopyToClipboard (also /useControlled, /useDebounce, /useDebouncedCallback, /useEventCallback, /useMergedRefs)",
+    "kind": "mechanical",
+    "how": "Import rewrite; only apps inside the old monorepo ever imported it. `useCopyToClipboard`, `COPIED_RESET_MS`, `UseCopyToClipboardResult` are unchanged.",
+    "evidence": [
+      "2.2.0:packages/hooks/package.json:2",
+      "HEAD:packages/react-hooks/package.json:32"
+    ],
+    "fixtures": {
+      "total": 2,
+      "files": 2,
+      "byScope": {
+        "story-demo": 1,
+        "markdown package (consumer of design-system)": 1
+      },
+      "samples": [
+        "2.2.0:packages/story-demo/src/StoryDemo/StoryDemo.tsx:5",
+        "2.2.0:packages/markdown/src/CodeBlock/CodeBlock.tsx:6"
+      ]
+    }
+  },
+  {
+    "id": "IMP-UNTESTED-PATHS",
+    "area": "imports",
+    "from": "@soroush.tech/design-system/utils/test/{renderWithTheme,storiesArgs,storiesOptions,storiesToggle} (in the source `exports` of 2.2.0, not in the published ones)",
+    "to": "@gild-ui/react/utils/test/... (same relative paths, still source-only helpers)",
+    "kind": "mechanical",
+    "how": "Import rewrite for monorepo consumers (docs app, markdown, story-demo, lab); npm consumers of 2.2.0 could not import them.",
+    "evidence": [
+      "2.2.0:packages/design-system/package.json:103",
+      "HEAD:packages/react/package.json:97"
+    ],
+    "fixtures": {
+      "total": 11,
+      "files": 10,
+      "byScope": {
+        "docs-app (apps/docs, code)": 2,
+        "lab": 1,
+        "story-demo": 1,
+        "markdown package (consumer of design-system)": 7
+      },
+      "samples": [
+        "2.2.0:apps/docs/src/demos/scope.ts:4",
+        "2.2.0:apps/docs/src/demos/scope.ts:6",
+        "2.2.0:packages/lab/src/Chip/Chip.test.tsx:3",
+        "2.2.0:packages/story-demo/src/utils/buildDemoModule.test.ts:151"
+      ]
+    }
+  },
+  {
+    "id": "IMP-DYNAMIC",
+    "area": "imports",
+    "from": "a specifier assembled at run time (`import('@soroush.tech/design-system/' + name)`, a template literal, `importSubpathOf(item)`)",
+    "to": "the same string with the new package",
+    "kind": "manual",
+    "how": "The step reports each file and line: a rewrite cannot know the value. The user changes the prefix (and checks the name exists: every component folder name is unchanged).",
+    "evidence": ["2.2.0:apps/docs/src/pages/design-system/api/@name/+Page.tsx:5"],
+    "fixtures": {
+      "total": 1,
+      "files": 1,
+      "byScope": {
+        "docs-app (apps/docs, code)": 1
+      },
+      "samples": ["2.2.0:apps/docs/src/pages/design-system/api/@name/+Page.tsx:27"]
+    }
+  },
+  {
+    "id": "IMP-EMOTION",
+    "area": "imports",
+    "from": "imports of `@emotion/react`, `@emotion/styled`, `@emotion/cache`, `@emotion/css`, `@emotion/server` in the app's own code",
+    "to": "no equivalent import; use the styling system of `@gild-ui/react` (styled, css, keyframes, Global, useStyle) and, for server extraction, `@umber-style/server`",
+    "kind": "manual",
+    "how": "The step reports each import with file and line and names the replacement from STY-014 (`css`/`keyframes`/`Global`/`useTheme`/`ThemeProvider` have equivalents; `jsx`, `ClassNames`, `Interpolation`, `SerializedStyles` do not). 2.2.0 pulled `@emotion/react` and `@emotion/styled` in as dependencies, so apps imported them without declaring them.",
+    "evidence": ["npm @soroush.tech/design-system@2.2.0:package.json:731"],
+    "fixtures": {
+      "total": 9,
+      "files": 7,
+      "byScope": {
+        "docs-app (apps/docs, code)": 3,
+        "story-demo": 5,
+        "mcp + plugin": 1
+      },
+      "samples": [
+        "2.2.0:apps/docs/src/demos/scope.ts:2",
+        "2.2.0:apps/docs/src/renderer/+onRenderHtml.test.tsx:20",
+        "2.2.0:apps/docs/src/renderer/+onRenderHtml.tsx:3",
+        "2.2.0:packages/story-demo/src/utils/buildDemoModule.test.ts:134"
+      ]
+    }
+  },
+  {
+    "id": "EXP-001",
+    "area": "exports",
+    "from": "`ThemeCustomizationOptions` (type, root)",
+    "to": "removed (not exported)",
+    "kind": "manual",
+    "how": "Report file:line. The options object of `styled(tag, { name, slot, systemProps, overridesResolver })` has the same fields; type it with `Parameters<typeof styled>[1]` or drop the annotation.",
+    "evidence": [
+      "2.2.0:packages/design-system/src/style/styled.ts:20",
+      "HEAD:packages/react/src/style/styled.ts:27"
+    ],
+    "fixtures": {
+      "total": 0,
+      "files": 0,
+      "byScope": {},
+      "samples": []
+    }
+  },
+  {
+    "id": "EXP-002",
+    "area": "exports",
+    "from": "`ComponentStyle<OwnerState>`, `ComponentVariant<OwnerState>` (types, /theme)",
+    "to": "removed (declared in the package, not exported)",
+    "kind": "manual",
+    "how": "Report file:line. Replace with `ThemeComponents` (`@gild-ui/react`) and `satisfies ThemeComponents` for a whole `components` object, or the per-component `<Name>ThemeConfig` from the component's entry.",
+    "evidence": [
+      "2.2.0:packages/design-system/src/theme/themes.ts:405",
+      "HEAD:packages/react/src/theme/themes.ts:22"
+    ],
+    "fixtures": {
+      "total": 0,
+      "files": 0,
+      "byScope": {},
+      "samples": []
+    }
+  },
+  {
+    "id": "EXP-003",
+    "area": "exports",
+    "from": "`CardSlotIconProps`, `CardSlotTypographyProps` (types, /theme)",
+    "to": "removed",
+    "kind": "manual",
+    "how": "Report file:line. Use `ComponentProps<typeof Icon>` / `TypographyProps` (`@gild-ui/react/Typography`).",
+    "evidence": ["2.2.0:packages/design-system/src/theme/themes.ts:742"],
+    "fixtures": {
+      "total": 0,
+      "files": 0,
+      "byScope": {},
+      "samples": []
+    }
+  },
+  {
+    "id": "EXP-004",
+    "area": "exports",
+    "from": "`TabsVariants` (augmentable interface, /theme)",
+    "to": "removed: a Tabs look is now declared by the registered theme (`components.Tabs.variants`); `TabsVariant` (`@gild-ui/react/Tabs`) is the resulting union",
+    "kind": "manual",
+    "how": "Report every `declare module '@soroush.tech/design-system/theme' { interface TabsVariants { ... } }` block and import of `TabsVariants`. The user moves each custom look to a `components.Tabs.variants` entry in `defineThemes` and registers the themes (THM-006). `ButtonVariants` stays an augmentable interface at `@gild-ui/core/theme`.",
+    "evidence": [
+      "2.2.0:packages/design-system/src/theme/themes.ts:660",
+      "HEAD:packages/react/src/Tabs/Tabs/Tabs.types.ts:16",
+      "HEAD:packages/core/src/theme/types.ts:412"
+    ],
+    "fixtures": {
+      "total": 0,
+      "files": 0,
+      "byScope": {},
+      "samples": []
+    }
+  },
+  {
+    "id": "CMP-001",
+    "area": "components",
+    "from": "withTheme(Component): `withTheme<P>(C: ComponentType<P & { theme: Theme }>)` returning a component that takes `P`",
+    "to": "`withTheme<P extends { theme: AppTheme }>(C: ComponentType<P>)` returning a component that takes `Omit<P, 'theme'>`",
+    "kind": "manual",
+    "how": "Runtime unchanged (hands the theme as the `theme` prop). The step reports each `withTheme(` call: a class component whose props type did not declare `theme` must declare `theme: Theme` (`useTheme()`'s type) now. Type-level only.",
+    "evidence": [
+      "2.2.0:packages/design-system/src/theme/hoc/withTheme.tsx:5",
+      "HEAD:packages/react/src/theme/hoc/withTheme.tsx:8"
+    ],
+    "fixtures": {
+      "total": 0,
+      "files": 0,
+      "byScope": {},
+      "samples": []
+    }
+  },
+  {
+    "id": "CMP-002",
+    "area": "components",
+    "from": "`useTheme()` and `styled` callbacks typed with the package `Theme` (with `components?`)",
+    "to": "typed `AppTheme`: the theme registered with `Register`, else the package `Theme` (core `Theme` + `components`)",
+    "kind": "manual",
+    "how": "Type-level. Code that reads only built-in keys compiles unchanged; code reading keys it added by `declare module` augmentation compiles unchanged too (augmentation of `@gild-ui/core/theme` is kept: THM-004). Report only on compile errors.",
+    "evidence": [
+      "2.2.0:packages/design-system/src/theme/hooks/useTheme.ts:8",
+      "HEAD:packages/react/src/theme/hooks/useTheme.ts:8"
+    ],
+    "fixtures": null
+  },
+  {
+    "id": "CMP-003",
+    "area": "components",
+    "from": "`TypographyVariantStyle.element: ElementType` (theme.typography[variant].element)",
+    "to": "`element: string`",
+    "kind": "manual",
+    "how": "Type-level: a theme that sets `typography.<variant>.element` to a component (not a tag name) no longer type-checks. Report the `createTheme` call with an `element:` that is not a string literal.",
+    "evidence": [
+      "2.2.0:packages/design-system/src/theme/themes.ts:321",
+      "HEAD:packages/core/src/theme/types.ts:328"
+    ],
+    "fixtures": null
+  },
+  {
+    "id": "CMP-004",
+    "area": "components",
+    "from": "`useDefaultProps(name)` return type `NonNullable<ThemeComponents[N][\"defaultProps\"]>`",
+    "to": "`Partial<NonNullable<ThemeComponents[N][\"$owner\"]>>`",
+    "kind": "manual",
+    "how": "Type-level only; same runtime (`theme.components[name].defaultProps ?? {}`). Report on compile errors.",
+    "evidence": [
+      "2.2.0:packages/design-system/src/theme/hooks/useDefaultProps.ts:4",
+      "HEAD:packages/react/src/theme/hooks/useDefaultProps.ts:4"
+    ],
+    "fixtures": null
+  },
+  {
+    "id": "CMP-005",
+    "area": "components",
+    "from": "`<Tooltip slotProps={{ arrow: { style: { top|right|bottom|left } } }}>`",
+    "to": "those four keys of `slotProps.arrow.style` are dropped (the arrow's place is the tooltip's)",
+    "kind": "manual",
+    "how": "Behaviour change visible in the source: the arrow's own `style` no longer merges position keys. The step searches `slotProps` objects with `arrow` and `style` and reports them; the user moves the offset to `styleOverrides.arrow` or removes it.",
+    "evidence": [
+      "2.2.0:packages/design-system/src/Tooltip/Tooltip.tsx:459",
+      "HEAD:packages/react/src/Tooltip/Tooltip.tsx:259"
+    ],
+    "fixtures": {
+      "total": 0,
+      "files": 0,
+      "byScope": {},
+      "samples": []
+    }
+  },
+  {
+    "id": "CMP-006",
+    "area": "components",
+    "from": "style props order on View-based components: `systemProps: [space, layout, colorSystem, typography, border, ...]` (View, Table, TableCell, TableRow, ...)",
+    "to": "`[space, layout, typography, border, colorSystem, ...]`",
+    "kind": "manual",
+    "how": "Report-only: when two style props write the same CSS property on one element (e.g. `bg` and `background`, `color` and `typography`), the later group wins, and the groups swapped places. Not detectable in user code with certainty; listed so a visual check is done.",
+    "evidence": [
+      "2.2.0:packages/design-system/src/View/View.tsx:84",
+      "HEAD:packages/react/src/View/View.tsx:83"
+    ],
+    "reportOnly": true,
+    "fixtures": null
+  },
+  {
+    "id": "THM-001",
+    "area": "theme",
+    "from": "`createTheme(baseTheme, { ..., components: { Button: { styleOverrides, variants, defaultProps } } })`",
+    "to": "`createTheme` takes tokens only; the components are the second argument of `defineThemes({ light, dark }, components)` and are shared by every theme",
+    "kind": "manual",
+    "how": "The step reports each `createTheme` call with a `components` key (file:line) - a type error in the new package (`ThemeOverrides` types `components` as a message). The user pulls the `components` object out, passes it once to `defineThemes`, and imports the themes from its result. A single-theme app: `defineThemes({ light }, components)`. Checking: `components satisfies ThemeComponents`.",
+    "evidence": [
+      "2.2.0:packages/design-system/docs/consumer/theme.ts:131",
+      "HEAD:packages/core/src/theme/createTheme.ts:33",
+      "HEAD:packages/core/src/theme/defineThemes.ts:82"
+    ],
+    "fixtures": {
+      "total": 5,
+      "files": 3,
+      "byScope": {
+        "docs-app (apps/docs, code)": 2,
+        "mcp + plugin": 2,
+        "markdown package (consumer of design-system)": 1
+      },
+      "samples": [
+        "2.2.0:apps/docs/src/theme/themes.ts:40",
+        "2.2.0:apps/docs/src/theme/themes.ts:143",
+        "2.2.0:plugins/soroush-design-system/skills/soroush-design-system/references/theme.ts:124",
+        "2.2.0:plugins/soroush-design-system/skills/soroush-design-system/references/theme.ts:215"
+      ]
+    }
+  },
+  {
+    "id": "THM-002",
+    "area": "theme",
+    "from": "`Theme['components']` / `Theme` with `components` (the root `Theme` type)",
+    "to": "`@gild-ui/core/theme` `Theme` has no `components`; the typing is `ThemeComponents` (`@gild-ui/react`)",
+    "kind": "mechanical",
+    "how": "Rewrite of the exact text `Theme['components']` -> `ThemeComponents` (import added from `@gild-ui/react`); any other use of `.components` on a `Theme`-typed value is reported (type error: use `useTheme()`'s type, which has it).",
+    "evidence": [
+      "2.2.0:packages/design-system/docs/consumer/theme.ts:105",
+      "HEAD:packages/react/src/theme/themes.ts:69"
+    ],
+    "fixtures": {
+      "total": 1,
+      "files": 1,
+      "byScope": {
+        "mcp + plugin": 1
+      },
+      "samples": [
+        "2.2.0:plugins/soroush-design-system/skills/soroush-design-system/references/theme.ts:105"
+      ]
+    }
+  },
+  {
+    "id": "THM-003",
+    "area": "theme",
+    "from": "`const light: Theme = createTheme(baseTheme, {...})`",
+    "to": "no annotation (it erases the keys the theme adds, and makes the registration below useless)",
+    "kind": "manual",
+    "how": "Only matters when THM-006 is adopted: the guide says not to annotate a theme with `Theme`. The step reports annotated `createTheme` results; removing the annotation is safe but changes inferred types, so the user confirms.",
+    "evidence": [
+      "2.2.0:packages/design-system/docs/consumer/theme.ts:124",
+      "HEAD:packages/react/docs/theming.md:113"
+    ],
+    "fixtures": {
+      "total": 4,
+      "files": 2,
+      "byScope": {
+        "docs-app (apps/docs, code)": 2,
+        "mcp + plugin": 2
+      },
+      "samples": [
+        "2.2.0:apps/docs/src/theme/themes.ts:40",
+        "2.2.0:apps/docs/src/theme/themes.ts:143",
+        "2.2.0:plugins/soroush-design-system/skills/soroush-design-system/references/theme.ts:124",
+        "2.2.0:plugins/soroush-design-system/skills/soroush-design-system/references/theme.ts:215"
+      ]
+    }
+  },
+  {
+    "id": "THM-004",
+    "area": "theme",
+    "from": "`declare module '@soroush.tech/design-system/theme' { interface ThemePalette | ThemeBackground | ThemeSizes | ThemeSpace | BreakpointOverrides | ButtonVariants | Theme ... }`",
+    "to": "`declare module '@gild-ui/core/theme' { ... }` (same interfaces)",
+    "kind": "mechanical",
+    "how": "Rewrite of the module specifier string of every `declare module` block, plus the matching `import type { PaletteEntry } from ...`. Every augmentable interface of the old module is exported by the new one except `TabsVariants` (EXP-004). `interface Theme { components?: ... }` blocks are reported (THM-005).",
+    "evidence": [
+      "2.2.0:packages/design-system/docs/theming.md:63",
+      "HEAD:packages/react/docs/theming.md:86",
+      "2.2.0:packages/cli/src/templates/templates.ts:15"
+    ],
+    "fixtures": {
+      "total": 5,
+      "files": 5,
+      "byScope": {
+        "cli init templates + type-test app": 3,
+        "markdown package (consumer of design-system)": 2
+      },
+      "samples": [
+        "2.2.0:packages/cli/src/templates/templates.test.ts:22",
+        "2.2.0:packages/cli/src/templates/templates.ts:15",
+        "2.2.0:packages/cli/type-tests/init/src/theme/themes.ts:9",
+        "2.2.0:packages/markdown/src/index.ts:43"
+      ]
+    }
+  },
+  {
+    "id": "THM-005",
+    "area": "theme",
+    "from": "augmentation of `Theme` with a `components` key, or of the `ThemeComponents` interface",
+    "to": "no module to augment: each component's `<Name>ThemeConfig` is generated into `ThemeComponents`; the app's own looks are typed by the registered themes",
+    "kind": "manual",
+    "how": "Report the block; the user deletes it and registers the themes (THM-006).",
+    "evidence": [
+      "HEAD:packages/react/release-notes/0.1.0.md:72",
+      "2.2.0:packages/markdown/src/index.ts:42"
+    ],
+    "fixtures": {
+      "total": 9,
+      "files": 3,
+      "byScope": {
+        "markdown package (consumer of design-system)": 9
+      },
+      "samples": [
+        "2.2.0:packages/markdown/src/index.ts:38",
+        "2.2.0:packages/markdown/src/index.ts:44",
+        "2.2.0:packages/markdown/src/themeComponents.spec.tsx:5",
+        "2.2.0:packages/markdown/src/themeComponents.spec.tsx:34"
+      ]
+    }
+  },
+  {
+    "id": "THM-006",
+    "area": "theme",
+    "from": "(2.2.0 types: augmentation only, e.g. `interface ThemePalette { brand: PaletteEntry }` plus a matching override)",
+    "to": "`export const themes = defineThemes({ light, dark }, components)` + `declare module '@gild-ui/core/theme' { interface Register { themes: typeof themes } }`",
+    "kind": "manual",
+    "how": "New capability, optional but the way the typed props (`color=\"brand\"`, `variant=\"pill\"`) are produced now. The step cannot write it for the user (it needs the app's themes); it reports the app's `createTheme` modules and prints the 3-line recipe. Without it components accept the built-in values only, and augmentation blocks (THM-004) keep working.",
+    "evidence": [
+      "HEAD:packages/core/src/theme/register.ts:21",
+      "HEAD:packages/react/docs/theming.md:65"
+    ],
+    "fixtures": null
+  },
+  {
+    "id": "THM-007",
+    "area": "theme",
+    "from": "(none) - `ThemeProvider` was the only place a theme was read, on server and client alike",
+    "to": "`registerBaseTheme(theme)` (`@gild-ui/react/ThemeProvider`), called once in the module that defines the themes, so server components read the app's `components`, `defaults` and tokens",
+    "kind": "manual",
+    "how": "Only for server-rendered apps with server components (Next App Router): report and print the recipe from the setup guide (`registerBaseTheme(light)` as the last line of the theme module, `providers.tsx` that imports it, `ThemeProvider` in the root layout). Client-only apps need nothing.",
+    "evidence": [
+      "HEAD:packages/react/src/theme/registerBaseTheme.ts:16",
+      "HEAD:packages/react/docs/consumer/setup.md:32"
+    ],
+    "fixtures": null
+  },
+  {
+    "id": "THM-008",
+    "area": "theme",
+    "from": "`createTheme(base, overrides)` accepts any DeepPartial<Theme>",
+    "to": "same runtime merge; types: a scale in `palette|sizes|background|text|border|radii|fonts|space` accepts new keys only as whole entries, and `components` is rejected",
+    "kind": "manual",
+    "how": "Report compile errors only (a partial `palette.brand`, for instance). Runtime merge rules are unchanged: objects recurse, arrays and functions replace, `undefined` is ignored.",
+    "evidence": [
+      "2.2.0:packages/design-system/src/theme/utils/createTheme.ts:47",
+      "HEAD:packages/core/src/theme/createTheme.ts:23"
+    ],
+    "fixtures": null
+  },
+  {
+    "id": "THM-009",
+    "area": "theme",
+    "from": "`<ThemeProvider theme={x}>` accepts any `Theme`",
+    "to": "once themes are registered, a `theme` object with a key the registered themes lack is a type error (`Exact<T, AppTheme>`)",
+    "kind": "manual",
+    "how": "Type-level, only after THM-006. Report compile errors.",
+    "evidence": ["HEAD:packages/react/src/theme/ThemeProvider.tsx:13"],
+    "fixtures": null
+  },
+  {
+    "id": "THM-010",
+    "area": "theme",
+    "from": "`theme.components.X.styleOverrides.slot({ theme, ownerState })` where `theme` is the full registered theme",
+    "to": "`theme` in a `components` callback is the built-in `Theme`, not the registered one",
+    "kind": "manual",
+    "how": "Type-level: a callback reading a custom token (`theme.palette.brand`) needs a cast or `useTheme()`. Report compile errors.",
+    "evidence": ["HEAD:packages/react/docs/theming.md:112"],
+    "fixtures": null
+  },
+  {
+    "id": "THM-011",
+    "area": "theme",
+    "from": "theme values in style functions are the literal values (`theme.palette.primary.main` is `#006e17`, `theme.space[2]` a length)",
+    "to": "inside style FUNCTIONS (`styled` callbacks, `Global` styles functions, `components` `styleOverrides`/`variants` callbacks, `systemProps`) the `theme` is a view whose tokens are CSS variable references (`var(--soroush-palette-primary-main)`); `useTheme()` and `useStyle`'s `getStyles(theme)` still give the real values; `breakpoints`, `components`, `defaults`, `transitions`, `sizes`, `typography`, `layout` are real values in both",
+    "kind": "manual",
+    "how": "See STY-012 (the same item seen from the theme side): string concatenation and arithmetic on tokens inside style functions.",
+    "evidence": [
+      "HEAD:packages/react/src/style/engine.ts:19",
+      "HEAD:packages/react/docs/style.md:40",
+      "HEAD:packages/react/src/theme/hooks/useTheme.ts:8"
+    ],
+    "fixtures": {
+      "total": 2,
+      "files": 2,
+      "byScope": {
+        "docs-app (apps/docs, code)": 2
+      },
+      "samples": [
+        "2.2.0:apps/docs/src/common/Footer/Footer.tsx:34",
+        "2.2.0:apps/docs/src/common/Search/SearchDialog.tsx:44"
+      ]
+    }
+  },
+  {
+    "id": "STY-001",
+    "area": "styling",
+    "from": "`styled(tag, { name, slot, systemProps, overridesResolver, shouldForwardProp, label, target })`, `styled.div<P>(...)`, template literals",
+    "to": "same call forms from `@gild-ui/react`, on the new engine",
+    "kind": "manual",
+    "how": "Mostly source-compatible (the file diff of `style/styled.ts` is the engine swap only). The step reports uses of Emotion-only members: `.withComponent(`, `@emotion/babel-plugin`/macro, `label:` used to build selectors, and props functions that return `css` results. Component selectors (`${Other}`) are supported (the styled component is a selector as text).",
+    "evidence": [
+      "2.2.0:packages/design-system/src/style/styled.ts:1",
+      "HEAD:packages/react/src/style/styled.ts:1"
+    ],
+    "fixtures": {
+      "total": 0,
+      "files": 0,
+      "byScope": {},
+      "samples": []
+    }
+  },
+  {
+    "id": "STY-002",
+    "area": "styling",
+    "from": "`css` from the root (Emotion's: `css`...`` with function interpolations, SerializedStyles used in `styled`, the `css` prop)",
+    "to": "`css` from `@gild-ui/react`: one style made once, from styles or a tagged template; \"a function is a TypeError: there are no props\"",
+    "kind": "manual",
+    "how": "Report each `css` call/tagged template (file:line). Static ones keep working; any with `${(props) => ...}` or `${theme => ...}` must move into `styled` callbacks or `useStyle`.",
+    "evidence": [
+      "2.2.0:packages/design-system/src/index.ts:6",
+      "HEAD:packages/react/src/entries/css.ts:1"
+    ],
+    "fixtures": {
+      "total": 1,
+      "files": 1,
+      "byScope": {
+        "docs-app (apps/docs, code)": 1
+      },
+      "samples": ["2.2.0:apps/docs/src/theme/GlobalStyles.tsx:10"]
+    }
+  },
+  {
+    "id": "STY-003",
+    "area": "styling",
+    "from": "`keyframes`...`` (Emotion: a template returning an object with `.name`, usable in `animation:` strings and `css`)",
+    "to": "`keyframes(steps | (theme) => steps | template)` returning the engine's `Keyframes`",
+    "kind": "manual",
+    "how": "Template usage is supported; the step reports each call so the user checks that the value is used as `animation: ${spin} 1s`-style interpolation in `styled`/`css`, not read for `.name`.",
+    "evidence": [
+      "2.2.0:packages/design-system/src/index.ts:6",
+      "HEAD:packages/react/src/entries/keyframes.ts:1"
+    ],
+    "fixtures": {
+      "total": 0,
+      "files": 0,
+      "byScope": {},
+      "samples": []
+    }
+  },
+  {
+    "id": "STY-004",
+    "area": "styling",
+    "from": "`css` JSX prop (works in 2.2.0 only when the app sets `jsxImportSource: \"@emotion/react\"` or the Emotion Babel preset; one README example shows it)",
+    "to": "no `css` prop in the engine: use `styled`, `useStyle` or `css()` + `className`",
+    "kind": "manual",
+    "how": "Report `css={...}` attributes, `/** @jsxImportSource @emotion/react */` pragmas and `jsxImportSource` in tsconfig/Babel/Vite config (remove it). Also: `packages/react/docs/style.md` still shows `<View css={styles}>` - see the question in the report.",
+    "evidence": [
+      "2.2.0:packages/design-system/src/Paper/README.md:39",
+      "HEAD:packages/react/docs/style.md:26",
+      "HEAD:packages/react/src/Paper/README.md:41"
+    ],
+    "fixtures": {
+      "total": 0,
+      "files": 0,
+      "byScope": {},
+      "samples": []
+    }
+  },
+  {
+    "id": "STY-005",
+    "area": "styling",
+    "from": "default DOM-prop filtering of Emotion's `styled` for tags (`@emotion/is-prop-valid`)",
+    "to": "the engine's own filter (`@umber-style/is-prop-valid`); `createShouldForwardProp([...props, ...])` from styled-system is unchanged",
+    "kind": "manual",
+    "how": "Report `styled(` roots with custom props and no `shouldForwardProp`; verify no unknown attribute reaches the DOM (React warns in development). styled-system 6.0.2+ also dropped its peer `@emotion/is-prop-valid`.",
+    "evidence": [
+      "npm @soroush.tech/design-system@2.2.0:package.json:732",
+      "HEAD:packages/react/package.json:944"
+    ],
+    "fixtures": null
+  },
+  {
+    "id": "STY-006",
+    "area": "styling",
+    "from": "`useStyle`, `withStyles`, `StylesConsumer` and `Global` + `globalStyles`",
+    "to": "same API (`Global`'s `styles` is an object or `(theme) => object`; `<Global styles={globalStyles} />` unchanged); `Global` must be inside `ThemeProvider` as before",
+    "kind": "mechanical",
+    "how": "Only the import changes (IMP-STYLE, IMP-ENGINE-GLOBAL, IMP-ENGINE). Nothing else to edit.",
+    "evidence": [
+      "2.2.0:packages/design-system/src/theme/emotion.ts:20",
+      "HEAD:packages/react/docs/engine.md:3"
+    ],
+    "fixtures": {
+      "total": 2,
+      "files": 2,
+      "byScope": {
+        "docs-app (apps/docs, code)": 1,
+        "mcp + plugin": 1
+      },
+      "samples": [
+        "2.2.0:apps/docs/src/theme/GlobalStyles.tsx:36",
+        "2.2.0:plugins/soroush-design-system/skills/soroush-design-system/references/providers.tsx:52"
+      ]
+    }
+  },
+  {
+    "id": "STY-007",
+    "area": "ssr",
+    "from": "Next.js App Router setup of 2.2.0: `Providers` client component with an Emotion registry (`createCache({ key }) ; cache.compat = true ; useServerInsertedHTML`) wrapping `<CacheProvider value={cache}><ThemeProvider theme>`",
+    "to": "no registry (\"no style registry is needed\"): root layout is a server component, `ThemeProvider` from `@gild-ui/react/ThemeProvider`, `providers.tsx` only imports the theme module, which ends with `registerBaseTheme(light)`",
+    "kind": "manual",
+    "how": "The step reports the registry hook (file:line of `useServerInsertedHTML`/`createCache`) and the `Providers` file, and prints the new setup guide (`packages/react/docs/consumer/setup.md`). Deleting the registry is not safe to automate: the file also holds the app's Global styles and layout wiring.",
+    "evidence": [
+      "2.2.0:packages/design-system/docs/consumer/providers.tsx:3",
+      "2.2.0:packages/design-system/docs/consumer/setup.md:34",
+      "HEAD:packages/react/docs/consumer/providers.tsx:3",
+      "HEAD:packages/react/docs/consumer/setup.md:32"
+    ],
+    "fixtures": {
+      "total": 21,
+      "files": 7,
+      "byScope": {
+        "docs-app (apps/docs, code)": 9,
+        "mcp + plugin": 12
+      },
+      "samples": [
+        "2.2.0:apps/docs/src/common/Bootstrap.test.tsx:13",
+        "2.2.0:apps/docs/src/common/Bootstrap.tsx:2",
+        "2.2.0:apps/docs/src/common/Bootstrap.tsx:9",
+        "2.2.0:apps/docs/src/common/Bootstrap.tsx:13"
+      ]
+    }
+  },
+  {
+    "id": "STY-008",
+    "area": "ssr",
+    "from": "critical-CSS extraction with `@emotion/server` (`createEmotionServer(cache).extractCritical`/`createInstance`) over `styleCache`/`CacheProvider` from `/engine` (Vike docs app, Astro, SSG)",
+    "to": "`@umber-style/server`: render under `<CacheProvider value={styleCache}>` and extract with `createInstance(styleCache)`",
+    "kind": "manual",
+    "how": "Report `@emotion/server` imports and `extractCritical*`/`renderStylesToString` calls; the new dependency `@umber-style/server` (^0.8.0) is added by the user (DEP-007).",
+    "evidence": [
+      "2.2.0:packages/design-system/src/engine/index.ts:3",
+      "2.2.0:apps/docs/src/renderer/+onRenderHtml.tsx:3",
+      "HEAD:packages/react/docs/engine.md:29"
+    ],
+    "fixtures": {
+      "total": 2,
+      "files": 2,
+      "byScope": {
+        "docs-app (apps/docs, code)": 2
+      },
+      "samples": [
+        "2.2.0:apps/docs/src/renderer/+onRenderHtml.test.tsx:20",
+        "2.2.0:apps/docs/src/renderer/+onRenderHtml.tsx:3"
+      ]
+    }
+  },
+  {
+    "id": "STY-009",
+    "area": "ssr",
+    "from": "`createCache({ key, nonce, speedy, container, prepend, stylisPlugins })` (Emotion) from `/engine`, with `cache.compat`, `cache.insert` patching",
+    "to": "`createCache` from `@umber-style/cache` (options `key`, `nonce`, `hasStyleMemo`, `hasColorFallbacks`, ...); the library's own `styleCache` has key `soroush`",
+    "kind": "manual",
+    "how": "Report each `createCache(` call and any use of `cache.insert/inserted/compat/registered`. Most apps need none of it any more (STY-007). The library's cache also reads the page's script nonce itself, so a custom `nonce` option is usually deletable (STY-010).",
+    "evidence": [
+      "2.2.0:packages/design-system/src/engine/styleCache.ts:1",
+      "HEAD:packages/react/src/engine/styleCache.ts:22",
+      "2.2.0:packages/design-system/docs/consumer/providers.tsx:5"
+    ],
+    "fixtures": {
+      "total": 21,
+      "files": 7,
+      "byScope": {
+        "docs-app (apps/docs, code)": 9,
+        "mcp + plugin": 12
+      },
+      "samples": [
+        "2.2.0:apps/docs/src/common/Bootstrap.test.tsx:13",
+        "2.2.0:apps/docs/src/common/Bootstrap.tsx:2",
+        "2.2.0:apps/docs/src/common/Bootstrap.tsx:9",
+        "2.2.0:apps/docs/src/common/Bootstrap.tsx:13"
+      ]
+    }
+  },
+  {
+    "id": "STY-010",
+    "area": "ssr",
+    "from": "CSP nonce: `createCache({ key, nonce })`",
+    "to": "the engine reads the page's `script[nonce]` property and puts it on its style element",
+    "kind": "manual",
+    "how": "Report `nonce` options on `createCache`; remove them once the page's scripts carry the nonce.",
+    "evidence": [
+      "2.2.0:packages/design-system/docs/consumer/setup.md:41",
+      "HEAD:packages/react/src/engine/styleCache.ts:26"
+    ],
+    "fixtures": null
+  },
+  {
+    "id": "STY-011",
+    "area": "styling",
+    "from": "tests, CSS and e2e that select Emotion's output: `css-<hash>-<Label>` classes, `[class^=\"css-\"]`, `style[data-emotion]`, helpers that read `data-emotion` ids",
+    "to": "classes `soroush-<hash>` (prefix = cache key); style elements `<style data-style=\"soroush\">` (client), `<style data-precedence=\"soroush\" data-href=...>` or `data-umber-registry` (server); tokens as `--soroush-<scale>-<key>` on `:root`",
+    "kind": "manual",
+    "how": "Report matching selectors/strings (file:line). The user rewrites them to the new prefix or to roles/test ids.",
+    "evidence": [
+      "2.2.0:packages/design-system/docs/consumer/providers.tsx:38",
+      "HEAD:packages/react/src/index.server.test.tsx:23",
+      "HEAD:packages/react/src/style/noValueRepair.spec.tsx:19"
+    ],
+    "fixtures": {
+      "total": 3,
+      "files": 2,
+      "byScope": {
+        "docs-app (apps/docs, code)": 2,
+        "mcp + plugin": 1
+      },
+      "samples": [
+        "2.2.0:apps/docs/src/renderer/+onRenderHtml.test.tsx:6",
+        "2.2.0:apps/docs/src/renderer/+onRenderHtml.test.tsx:28",
+        "2.2.0:plugins/soroush-design-system/skills/soroush-design-system/references/providers.tsx:38"
+      ]
+    }
+  },
+  {
+    "id": "STY-012",
+    "area": "styling",
+    "from": "string/number math on theme values inside style functions: `${theme.palette.primary.main}33` (hex alpha), `-${theme.space[2]}`, `${theme.fontSizes[2]}px`, `theme.space[2] * 2`",
+    "to": "the `theme` of a style function holds CSS variable references: use `alpha(color, 0.2)`, `negate(length)`, `subtract`, `useStyleValue` from `@gild-ui/react`; arithmetic on a reference is not valid CSS (`useTheme()` outside a style function still returns real values)",
+    "kind": "manual",
+    "how": "The step greps template literals that glue a token to a hex pair, a unit or a minus, and arithmetic on `theme.space`/`fontSizes` (heuristic, so it reports; it does not edit). In 2.2.0 the library itself wrote `${main}1F`; 0.1.0 writes `alpha(main, 0.12)` (hex `1F` = 12.2%).",
+    "evidence": [
+      "2.2.0:packages/design-system/src/MenuItem/MenuItem.tsx:169",
+      "HEAD:packages/react/src/MenuItem/MenuItem.tsx:175",
+      "HEAD:packages/react/docs/style.md:40",
+      "HEAD:packages/react/src/style/engine.ts:19"
+    ],
+    "fixtures": {
+      "total": 2,
+      "files": 2,
+      "byScope": {
+        "docs-app (apps/docs, code)": 2
+      },
+      "samples": [
+        "2.2.0:apps/docs/src/common/Footer/Footer.tsx:34",
+        "2.2.0:apps/docs/src/common/Search/SearchDialog.tsx:44"
+      ]
+    }
+  },
+  {
+    "id": "STY-013",
+    "area": "styling",
+    "from": "`CSSObject` of Emotion (`label`, any selector key, loose values)",
+    "to": "`CSSObject` = the engine's `WebStyleObject`: no `label`, selectors typed, values may be `AlphaColor`",
+    "kind": "manual",
+    "how": "Type-level: report compile errors (e.g. `label` keys).",
+    "evidence": [
+      "2.2.0:packages/design-system/src/theme/themes.ts:3",
+      "HEAD:packages/react/src/theme/themes.ts:15"
+    ],
+    "fixtures": {
+      "total": 0,
+      "files": 0,
+      "byScope": {},
+      "samples": []
+    }
+  },
+  {
+    "id": "STY-014",
+    "area": "styling",
+    "from": "direct use of Emotion APIs in the app: `jsx`, `ClassNames`, `Interpolation`, `SerializedStyles`, `useTheme`/`ThemeProvider`/`Global`/`css`/`keyframes` from `@emotion/react`, `styled` from `@emotion/styled`, `createCache`",
+    "to": "replacements: `styled`, `css`, `keyframes`, `Global`, `useTheme`, `ThemeProvider` from `@gild-ui/react`; `createCache`/`CacheProvider` from `@gild-ui/react/engine`; no equivalent for `jsx`/`ClassNames`/`SerializedStyles`",
+    "kind": "manual",
+    "how": "Same detection as IMP-EMOTION; the step prints the replacement table per imported name.",
+    "evidence": [
+      "2.2.0:packages/design-system/src/theme/emotion.ts:15",
+      "HEAD:packages/react/src/theme/engine.ts:21"
+    ],
+    "fixtures": {
+      "total": 7,
+      "files": 5,
+      "byScope": {
+        "docs-app (apps/docs, code)": 1,
+        "story-demo": 5,
+        "mcp + plugin": 1
+      },
+      "samples": [
+        "2.2.0:apps/docs/src/demos/scope.ts:2",
+        "2.2.0:packages/story-demo/src/utils/buildDemoModule.test.ts:134",
+        "2.2.0:packages/story-demo/src/utils/buildDemoModule.test.ts:149",
+        "2.2.0:packages/story-demo/src/utils/inferDependencies.test.ts:8"
+      ]
+    }
+  },
+  {
+    "id": "STY-015",
+    "area": "styling",
+    "from": "every style is a class of one stylesheet, per-render values written as inline `style` in some components",
+    "to": "live values: `useStyleValue` writes one class and changes a CSS variable; the library no longer renders a `style` attribute for them (RangeInput thumbs, LinearProgress bar, Tooltip arrow)",
+    "kind": "manual",
+    "how": "Report-only: code or tests asserting `style=\"left: 40%\"` on those elements must assert the CSS variable / computed style instead.",
+    "evidence": [
+      "2.2.0:packages/design-system/src/RangeInput/RangeInput.tsx:488",
+      "HEAD:packages/react/src/RangeInput/RangeInput.tsx:337",
+      "2.2.0:packages/design-system/src/LinearProgress/LinearProgress.tsx:280",
+      "HEAD:packages/react/src/LinearProgress/LinearProgress.tsx:279"
+    ],
+    "reportOnly": true,
+    "fixtures": null
+  },
+  {
+    "id": "DEP-001",
+    "area": "dependencies",
+    "from": "`@soroush.tech/design-system` `^2.2.0` in dependencies / devDependencies / peerDependencies",
+    "to": "`@gild-ui/react` `^0.1.0` and `@gild-ui/core` `^0.1.0` (core is needed by any app that imports `createTheme`, `baseTheme`, `defineThemes` or the `Theme` types)",
+    "kind": "mechanical",
+    "how": "package.json edit in every workspace package that imports the old name (the step adds `@gild-ui/core` only when an import resolves to it); lockfile left to the user's package manager.",
+    "evidence": [
+      "npm @soroush.tech/design-system@2.2.0:package.json:2",
+      "HEAD:packages/react/package.json:939"
+    ],
+    "fixtures": {
+      "total": 7,
+      "files": 4,
+      "byScope": {
+        "docs-app (apps/docs, code)": 1,
+        "lab": 2,
+        "story-demo": 2,
+        "markdown package (consumer of design-system)": 2
+      },
+      "samples": [
+        "2.2.0:apps/docs/package.json",
+        "2.2.0:packages/lab/package.json",
+        "2.2.0:packages/story-demo/package.json",
+        "2.2.0:packages/markdown/package.json"
+      ]
+    }
+  },
+  {
+    "id": "DEP-002",
+    "area": "dependencies",
+    "from": "`@emotion/react`, `@emotion/styled`, `@emotion/cache`, `@emotion/css`, `@emotion/server` (direct dependencies of the app, or transitive through 2.2.0: `@emotion/cache`, `@emotion/react`, `@emotion/styled`)",
+    "to": "removed; the engine is `@umber-style/*` (a dependency of `@gild-ui/react`, not added by the app)",
+    "kind": "mechanical",
+    "how": "package.json edit: remove each `@emotion/*` entry once no import of it remains (IMP-EMOTION/STY-014 must be empty, else the step reports and leaves it).",
+    "evidence": [
+      "npm @soroush.tech/design-system@2.2.0:package.json:730",
+      "HEAD:packages/react/package.json:942"
+    ],
+    "fixtures": {
+      "total": 3,
+      "files": 2,
+      "byScope": {
+        "docs-app (apps/docs, code)": 2,
+        "story-demo": 1
+      },
+      "samples": ["2.2.0:apps/docs/package.json", "2.2.0:packages/story-demo/package.json"]
+    }
+  },
+  {
+    "id": "DEP-003",
+    "area": "dependencies",
+    "from": "`@soroush.tech/markdown` `^1.3.0` (peer: `@soroush.tech/design-system ^1.3.3 || ^2.0.0`, `react ^18 || ^19`)",
+    "to": "`@gild-ui/react-markdown` `^0.1.0` (peer: `@gild-ui/react`, `react ^19.2.8`, `react-dom ^19.2.8`)",
+    "kind": "mechanical",
+    "how": "package.json edit (dependency name + version; peers of a library that wraps it).",
+    "evidence": [
+      "npm @soroush.tech/markdown@1.3.0:package.json:68",
+      "HEAD:packages/react-markdown/package.json:159"
+    ],
+    "fixtures": {
+      "total": 3,
+      "files": 2,
+      "byScope": {
+        "docs-app (apps/docs, code)": 1,
+        "story-demo": 2
+      },
+      "samples": ["2.2.0:apps/docs/package.json", "2.2.0:packages/story-demo/package.json"]
+    }
+  },
+  {
+    "id": "DEP-004",
+    "area": "dependencies",
+    "from": "`@soroush.tech/hooks` (private workspace package)",
+    "to": "`@gild-ui/hooks` `^0.1.0`",
+    "kind": "mechanical",
+    "how": "package.json edit; workspace consumers only.",
+    "evidence": ["2.2.0:packages/hooks/package.json:3", "HEAD:packages/react-hooks/package.json:2"],
+    "fixtures": {
+      "total": 4,
+      "files": 3,
+      "byScope": {
+        "docs-app (apps/docs, code)": 1,
+        "story-demo": 2,
+        "markdown package (consumer of design-system)": 1
+      },
+      "samples": [
+        "2.2.0:apps/docs/package.json",
+        "2.2.0:packages/story-demo/package.json",
+        "2.2.0:packages/markdown/package.json"
+      ]
+    }
+  },
+  {
+    "id": "DEP-005",
+    "area": "dependencies",
+    "from": "`@soroush.tech/styled-system` as a transitive dependency (`^6.0.1`), reached through the design system's root re-export",
+    "to": "a direct dependency `^6.0.3` of any app that imports style-prop functions or `should-forward-prop` (the new root re-exports nothing); styled-system 6.0.2+ replaced its `@emotion/is-prop-valid` peer with a dependency on `@umber-style/is-prop-valid`",
+    "kind": "mechanical",
+    "how": "package.json edit, added when IMP-ROOT-SS or IMP-ROOT-SP rewrote an import.",
+    "evidence": [
+      "npm @soroush.tech/design-system@2.2.0:package.json:4",
+      "HEAD:packages/react/package.json:941"
+    ],
+    "fixtures": null
+  },
+  {
+    "id": "DEP-006",
+    "area": "dependencies",
+    "from": "peers `react ^18.0.0 || ^19.0.0`, `react-dom ^18.0.0 || ^19.0.0`",
+    "to": "peers `react ^19.2.8`, `react-dom ^19.2.8` (also core: none; hooks: `react ^19.2.8`)",
+    "kind": "manual",
+    "how": "The step reads the app's `react` range and reports below 19.2.8; upgrading React is the user's change (then the version range in package.json is a mechanical edit).",
+    "evidence": [
+      "npm @soroush.tech/design-system@2.2.0:package.json:7",
+      "HEAD:packages/react/package.json:947"
+    ],
+    "fixtures": null
+  },
+  {
+    "id": "DEP-007",
+    "area": "dependencies",
+    "from": "(none) server-side style extraction used `@emotion/server`",
+    "to": "add `@umber-style/server` `^0.8.0` for extraction (non-Next SSR/SSG); Next App Router needs nothing",
+    "kind": "manual",
+    "how": "Reported together with STY-008; the user adds it.",
+    "evidence": ["HEAD:packages/react/docs/engine.md:29"],
+    "fixtures": null
+  },
+  {
+    "id": "DEP-008",
+    "area": "dependencies",
+    "from": "the `design-system` command of the 2.2.0 package (`bin: { \"design-system\": \"./dist/bin.mjs\" }`, `npx @soroush.tech/design-system init`; and its dependency `@soroush.design/cli 0.1.0`)",
+    "to": "the package has no command and installs none; `npx @soroush.design/cli init` / `create` (bin `soroush-design`)",
+    "kind": "manual",
+    "how": "Report package.json scripts and docs that call `design-system init`. Init-written files carry the marker `// Set up by @soroush.tech/design-system init.` (the step can find them by it) and use the old imports, so IMP-* and STY-007 apply to them.",
+    "evidence": [
+      "npm @soroush.tech/design-system@2.2.0:package.json:30",
+      "2.2.0:packages/design-system/src/bin.ts:2",
+      "2.2.0:packages/cli/src/templates/templates.ts:2",
+      "HEAD:packages/react/release-notes/0.1.0.md:98"
+    ],
+    "fixtures": {
+      "total": 0,
+      "files": 0,
+      "byScope": {},
+      "samples": []
+    }
+  },
+  {
+    "id": "DEP-009",
+    "area": "dependencies",
+    "from": "tsconfig/Babel/Vite settings for Emotion (`jsxImportSource: \"@emotion/react\"`, `@emotion/babel-plugin`, `@emotion/babel-preset-css-prop`)",
+    "to": "removed (a React 19 app with the standard `react-jsx` runtime)",
+    "kind": "manual",
+    "how": "Report each config file and line (same detection as STY-004).",
+    "evidence": ["2.2.0:packages/design-system/src/Paper/README.md:39"],
+    "fixtures": {
+      "total": 0,
+      "files": 0,
+      "byScope": {},
+      "samples": []
+    }
+  },
+  {
+    "id": "OUT-001",
+    "area": "output",
+    "from": "class names `css-<hash>` (Emotion's default cache) or `<key>-<hash>` under a custom cache (`dc-` in the init starter)",
+    "to": "`soroush-<hash>` (+ the theme/scope classes `soroush-theme-*`, `soroush-scope`)",
+    "kind": "manual",
+    "how": "Report-only: the step cannot edit a rendered result; it lists the files that assert on it. Same detection as STY-011.",
+    "evidence": [
+      "HEAD:packages/react/src/index.server.test.tsx:23",
+      "HEAD:packages/react/src/style/configuredOnImport.test.tsx:43"
+    ],
+    "reportOnly": true,
+    "fixtures": {
+      "total": 3,
+      "files": 2,
+      "byScope": {
+        "docs-app (apps/docs, code)": 2,
+        "mcp + plugin": 1
+      },
+      "samples": [
+        "2.2.0:apps/docs/src/renderer/+onRenderHtml.test.tsx:6",
+        "2.2.0:apps/docs/src/renderer/+onRenderHtml.test.tsx:28",
+        "2.2.0:plugins/soroush-design-system/skills/soroush-design-system/references/providers.tsx:38"
+      ]
+    }
+  },
+  {
+    "id": "OUT-002",
+    "area": "output",
+    "from": "`<style data-emotion=\"css <ids>\">` elements (inserted at runtime, or by the Next registry / `@emotion/server`)",
+    "to": "`<style data-style=\"soroush\">` on the client; on the server `<style data-precedence=\"soroush\" data-href=\"...\">` (React 19 hoisting) or, from a `StyleRegistry`, `<style data-umber=\"soroush ...\" data-umber-registry>`; the style element carries the page's nonce",
+    "kind": "manual",
+    "how": "Report-only: the step cannot edit a rendered result; it lists the files that assert on it.",
+    "evidence": [
+      "HEAD:packages/react/src/style/noValueRepair.spec.tsx:19",
+      "2.2.0:packages/design-system/docs/consumer/providers.tsx:38"
+    ],
+    "reportOnly": true,
+    "fixtures": {
+      "total": 3,
+      "files": 2,
+      "byScope": {
+        "docs-app (apps/docs, code)": 2,
+        "mcp + plugin": 1
+      },
+      "samples": [
+        "2.2.0:apps/docs/src/renderer/+onRenderHtml.test.tsx:6",
+        "2.2.0:apps/docs/src/renderer/+onRenderHtml.test.tsx:28",
+        "2.2.0:plugins/soroush-design-system/skills/soroush-design-system/references/providers.tsx:38"
+      ]
+    }
+  },
+  {
+    "id": "OUT-003",
+    "area": "output",
+    "from": "theme values inlined as literals in every rule (hex, rem), switching theme = new classes",
+    "to": "every token a CSS variable `--soroush-<scale>-<key>`, declared on `:root` by the outermost `ThemeProvider` (which renders no element); a theme switch rewrites that one rule",
+    "kind": "manual",
+    "how": "Report-only: the step cannot edit a rendered result; it lists the files that assert on it.",
+    "evidence": [
+      "HEAD:packages/react/src/ButtonGroup/ButtonGroup.test.tsx:155",
+      "HEAD:packages/react/release-notes/0.1.0.md:80"
+    ],
+    "reportOnly": true,
+    "fixtures": null
+  },
+  {
+    "id": "OUT-004",
+    "area": "output",
+    "from": "a nested `ThemeProvider` / `LayoutProvider` rendered no element",
+    "to": "a nested provider renders a wrapper (`div` by default) with the theme class and the scope class (`display: contents`); `LayoutProvider` is one of them",
+    "kind": "manual",
+    "how": "Report-only: the step cannot edit a rendered result; it lists the files that assert on it. Selectors like `parent > child` across a nested provider, and `:nth-child` counts, can change.",
+    "evidence": [
+      "2.2.0:packages/design-system/src/theme/LayoutProvider.tsx:3",
+      "HEAD:packages/react/src/theme/LayoutProvider.tsx:4"
+    ],
+    "reportOnly": true,
+    "fixtures": null
+  },
+  {
+    "id": "OUT-005",
+    "area": "output",
+    "from": "`Portal` children rendered as given",
+    "to": "`Portal` children are wrapped in `ThemeScope`, which re-renders the nested provider's wrapper around content moved to `document.body` (nothing under the outermost provider)",
+    "kind": "manual",
+    "how": "Report-only: the step cannot edit a rendered result; it lists the files that assert on it.",
+    "evidence": [
+      "2.2.0:packages/design-system/src/Portal/Portal.tsx:2",
+      "HEAD:packages/react/src/Portal/Portal.tsx:3"
+    ],
+    "reportOnly": true,
+    "fixtures": null
+  },
+  {
+    "id": "OUT-006",
+    "area": "output",
+    "from": "opacity as a hex suffix (`${main}1F`, `#RRGGBBAA`), computed in JS",
+    "to": "`alpha(color, opacity)` written as `color-mix(in srgb, <color> N%, transparent)`, no solid fallback",
+    "kind": "manual",
+    "how": "Report-only: the step cannot edit a rendered result; it lists the files that assert on it. Colours of hovers, outlines and selected states in Tabs, Menu, MenuItem, NumberInput, Breadcrumbs, RangeInput match to the nearest percent; a browser without `color-mix()` drops the tint.",
+    "evidence": [
+      "2.2.0:packages/design-system/src/Tabs/Tab/Tab.tsx:344",
+      "HEAD:packages/react/src/Tabs/Tab/Tab.tsx:350",
+      "HEAD:packages/react/src/engine/styleCache.ts:10"
+    ],
+    "reportOnly": true,
+    "fixtures": null
+  },
+  {
+    "id": "OUT-007",
+    "area": "output",
+    "from": "`theme.text.inherit` = `inherit` written as a CSS variable (took the parent's variable: nothing; only `color` worked, by inheritance)",
+    "to": "the engine writes the keyword itself (`modes: { 'text.inherit': 'raw' }`): `background-color: inherit` etc. now work",
+    "kind": "manual",
+    "how": "Report-only: the step cannot edit a rendered result; it lists the files that assert on it.",
+    "evidence": [
+      "HEAD:packages/react/src/style/engine.ts:16",
+      "HEAD:packages/react/release-notes/0.1.0.md:91"
+    ],
+    "reportOnly": true,
+    "fixtures": null
+  },
+  {
+    "id": "OUT-008",
+    "area": "output",
+    "from": "bundles without module directives",
+    "to": "`'use client'` is on the interactive components (162 source files under packages/react/src), the static ones have none, so a server component can import any of them",
+    "kind": "manual",
+    "how": "Report-only: the step cannot edit a rendered result; it lists the files that assert on it. An app that imported a component into a server component and relied on it failing is not a case; a class component that extended a design-system component is.",
+    "evidence": [
+      "HEAD:packages/react/src/Tooltip/Tooltip.tsx:1",
+      "HEAD:packages/react/release-notes/0.1.0.md:99"
+    ],
+    "reportOnly": true,
+    "fixtures": null
+  }
+]
