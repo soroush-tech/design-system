@@ -19,7 +19,7 @@ const LANDING = [
   'soroush design system - MCP server',
   '',
   `Serving ${content.components.length} components and ${content.docs.length} guides`,
-  `from @soroush.tech/design-system ${content.version}.`,
+  `from @gild-ui/react ${content.version}.`,
   '',
   'Connect (Claude Code):',
   '  claude mcp add --transport http soroush https://mcp.soroush.design/mcp',
@@ -27,7 +27,7 @@ const LANDING = [
   'Or run it locally over stdio:',
   '  npx -y @soroush.design/mcp',
   '',
-  `Docs: https://docs.soroush.tech`,
+  `Docs: https://gild-ui.soroush.design`,
   '',
 ].join('\n')
 

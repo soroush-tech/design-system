@@ -1,8 +1,8 @@
-import { Card } from '@soroush.tech/design-system/Card'
-import { Flex } from '@soroush.tech/design-system/Flex'
-import { Grid } from '@soroush.tech/design-system/Grid'
-import { Link } from '@soroush.tech/design-system/Link'
-import { Typography } from '@soroush.tech/design-system/Typography'
+import { Card } from '@gild-ui/react/Card'
+import { Flex } from '@gild-ui/react/Flex'
+import { Grid } from '@gild-ui/react/Grid'
+import { Link } from '@gild-ui/react/Link'
+import { Typography } from '@gild-ui/react/Typography'
 import { DocsNav } from 'src/common/DocsNav/DocsNav'
 import { Layout } from 'src/common/Layout'
 import { PACKAGES } from 'src/common/packages'
@@ -15,8 +15,8 @@ export default function Page() {
         Packages
       </Typography>
       <Typography variant="body1" color="secondary" gutterBottom>
-        What @soroush.tech publishes: the design system and its two companions have docs here; the
-        MCP server and the UI spec are on npm and GitHub.
+        What @soroush.tech publishes: Gild UI and its two companions have docs here; the MCP server
+        and the UI spec are on npm and GitHub.
       </Typography>
       <Grid gridTemplateColumns={{ xs: '1fr', md: '1fr 1fr' }} gridGap={3} mt={3}>
         {PACKAGES.map((entry) => (

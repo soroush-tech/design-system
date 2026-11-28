@@ -17,8 +17,6 @@ import { createTestIo } from '../testApp'
 import { runCreate, toPackageName, type CreateDependencies, type CreateOptions } from './create'
 import type { Starter, StarterFacts } from './starters'
 
-const DESIGN_SYSTEM = { name: '@soroush.tech/design-system', version: '2.3.0' }
-
 const YES: CreateOptions = {
   name: 'my-app',
   title: undefined,
@@ -33,7 +31,6 @@ const YES: CreateOptions = {
   hasSampleData: undefined,
   isConfirmed: true,
   isDryRun: false,
-  isGit: true,
 }
 const ASK: CreateOptions = { ...YES, name: undefined, isConfirmed: false }
 
@@ -65,11 +62,8 @@ const BARE: Starter = {
 /** A new, empty folder to run create in. */
 const createWorkspace = () => realpathSync(mkdtempSync(join(tmpdir(), 'design-system-create-')))
 
-/** A git that is not inside a repository, and an install that works. */
-const runOutsideGit = (command: string, args: readonly string[]): RunResult =>
-  command === 'git' && args[0] === 'rev-parse'
-    ? { status: 128, stdout: '' }
-    : { status: 0, stdout: '' }
+/** An install that works. */
+const runOutsideGit = (): RunResult => ({ status: 0, stdout: '' })
 
 interface Setup {
   isInteractive?: boolean
@@ -83,7 +77,7 @@ function setUp({ isInteractive, answers, run = runOutsideGit, dependencies }: Se
   const { starter, createFiles } = createTestStarter()
   const test = createTestIo(cwd, { isInteractive, answers, run })
   const create = (options: CreateOptions) =>
-    runCreate(options, test.io, DESIGN_SYSTEM, {
+    runCreate(options, test.io, {
       starters: { test: starter, bare: BARE },
       userAgent: 'npm/11.4.0 node/v24.1.0 linux x64',
       ...dependencies,
@@ -95,7 +89,7 @@ function setUp({ isInteractive, answers, run = runOutsideGit, dependencies }: Se
 const read = (path: string) => readFileSync(path, 'utf8')
 
 describe('runCreate', () => {
-  it('creates the app with --yes: the files, the install, git init, then the closing message', async () => {
+  it('creates the app with --yes: the files, the install, then the closing message', async () => {
     const { cwd, createFiles, create, listCommands, getOutput, test } = setUp()
     expect(await create(YES)).toBe(0)
 
@@ -111,16 +105,10 @@ describe('runCreate', () => {
       libraries: [],
       scheme: 'light',
       hasSampleData: false,
-      version: '2.3.0',
+      version: '0.1.0',
     })
-    expect(listCommands()).toEqual([
-      'npm install --ignore-scripts',
-      'git rev-parse --is-inside-work-tree',
-      'git init',
-    ])
+    expect(listCommands()).toEqual(['npm install --ignore-scripts'])
     expect(test.commands[0].options).toEqual({ cwd: app, env: {}, showOutput: true })
-    expect(test.commands[2].options).toEqual({ cwd: app })
-
     const output = getOutput()
     expect(output).toContain(
       'create will make my-app, a Test app in TypeScript (isomorphic), in ./my-app:'
@@ -189,27 +177,11 @@ Create:
     expect(getOutput()).toContain('  cd my-app\n  pnpm dev')
   })
 
-  it('skips git init inside a repository, and with --no-git', async () => {
-    const inside = setUp({ run: () => ({ status: 0, stdout: 'true\n' }) })
-    expect(await inside.create(YES)).toBe(0)
-    expect(inside.listCommands()).toEqual([
-      'npm install --ignore-scripts',
-      'git rev-parse --is-inside-work-tree',
-    ])
-
-    const noGit = setUp()
-    expect(await noGit.create({ ...YES, isGit: false })).toBe(0)
-    expect(noGit.listCommands()).toEqual(['npm install --ignore-scripts'])
-  })
-
-  it('keeps the app, and says so, when git init fails', async () => {
-    const { cwd, create, getOutput } = setUp({
-      run: (command, args) =>
-        command === 'git' ? { status: null, stdout: '' } : runOutsideGit(command, args),
-    })
+  it('runs no git', async () => {
+    const { create, listCommands, test } = setUp()
     expect(await create(YES)).toBe(0)
-    expect(getOutput()).toContain('git init failed, so the app has no repository.')
-    expect(existsSync(join(cwd, 'my-app/package.json'))).toBe(true)
+    expect(listCommands()).toEqual(['npm install --ignore-scripts'])
+    expect(test.commands.map(({ command }) => command)).not.toContain('git')
   })
 
   it('writes in an empty folder', async () => {
@@ -427,19 +399,14 @@ Create:
       bun: { status: null, stdout: '' },
     }
     const run = (command: string, args: readonly string[]) =>
-      args[0] === '--version' ? versions[command] : runOutsideGit(command, args)
+      args[0] === '--version' ? versions[command] : runOutsideGit()
     const { cwd, create, getOutput, listCommands } = setUp({
       isInteractive: true,
       answers: ['', '', '', 'pnpm', '', '', ''],
       run,
     })
     expect(await create(ASK)).toBe(0)
-    expect(listCommands()).toEqual([
-      'pnpm --version',
-      'pnpm install --ignore-scripts',
-      'git rev-parse --is-inside-work-tree',
-      'git init',
-    ])
+    expect(listCommands()).toEqual(['pnpm --version', 'pnpm install --ignore-scripts'])
     expect(getOutput()).toContain('  pnpm dev')
 
     expect(await create({ ...YES, name: 'other', packageManager: 'bun' })).toBe(1)
@@ -452,7 +419,7 @@ Create:
   it('tells a yarn Berry from a classic yarn by its version', async () => {
     let yarnVersion = '4.5.0'
     const run = (command: string, args: readonly string[]) =>
-      args[0] === '--version' ? { status: 0, stdout: yarnVersion } : runOutsideGit(command, args)
+      args[0] === '--version' ? { status: 0, stdout: yarnVersion } : runOutsideGit()
     const { create, test } = setUp({ run })
     expect(await create({ ...YES, packageManager: 'yarn' })).toBe(0)
     expect(test.commands[1]).toMatchObject({
@@ -462,7 +429,7 @@ Create:
     })
     yarnVersion = '1.22.22'
     expect(await create({ ...YES, name: 'classic', packageManager: 'yarn' })).toBe(0)
-    expect(test.commands.at(-3)).toMatchObject({
+    expect(test.commands.at(-1)).toMatchObject({
       command: 'yarn',
       args: ['install', '--ignore-scripts'],
     })
@@ -594,9 +561,9 @@ Create:
   it('says when it has no starter at all', async () => {
     const cwd = createWorkspace()
     const { io, getOutput } = createTestIo(cwd)
-    expect(await runCreate(YES, io, DESIGN_SYSTEM, { starters: {} })).toBe(1)
+    expect(await runCreate(YES, io, { starters: {} })).toBe(1)
     expect(getOutput()).toBe('create has no starter for any framework. It has: none yet.\n')
-    expect(await runCreate({ ...YES, framework: 'next' }, io, DESIGN_SYSTEM)).toBe(1)
+    expect(await runCreate({ ...YES, framework: 'next' }, io)).toBe(1)
     expect(getOutput()).toContain(
       'create has no starter for next. It has: vike, astro, react-router.'
     )

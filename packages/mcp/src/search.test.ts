@@ -10,15 +10,15 @@ const bundle: ContentBundle = {
       name: 'Button',
       slug: 'button',
       pkg: 'design-system',
-      packageName: '@soroush.tech/design-system',
+      packageName: '@gild-ui/react',
       category: 'Inputs & forms',
-      importPath: "import { Button } from '@soroush.tech/design-system/Button'",
+      importPath: "import { Button } from '@gild-ui/react/Button'",
       summary: 'Renders as a button.',
       intro:
         'A pressable control used across forms, toolbars, dialogs, cards and page headers, appearing just about everywhere in the app.',
       api: '## Props\n\nvariant, color, size.',
       examples: '',
-      url: 'https://docs.soroush.tech/design-system/components/button/',
+      url: 'https://gild-ui.soroush.design/react/Button/',
     },
   ],
   docs: [
@@ -112,6 +112,6 @@ describe('content lookups', () => {
     expect(findComponent('Button', bundle)?.name).toBe('Button')
     expect(findComponent('TextInput', bundle)).toBeUndefined()
     expect(findDoc('theming', bundle)?.id).toBe('theming')
-    expect(findDoc('styled-system/api', bundle)).toBeUndefined()
+    expect(findDoc('hooks', bundle)).toBeUndefined()
   })
 })

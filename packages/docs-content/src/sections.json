@@ -1,0 +1,27 @@
+{
+  "react": {
+    "dir": "react",
+    "npm": "@gild-ui/react"
+  },
+  "markdown": {
+    "dir": "react-markdown",
+    "npm": "@gild-ui/react-markdown"
+  },
+  "styled-system": {
+    "dir": null,
+    "npm": "@soroush.tech/styled-system",
+    "repo": "https://github.com/soroush-tech/styled-system"
+  },
+  "mcp": {
+    "dir": "mcp",
+    "npm": "@soroush.design/mcp"
+  },
+  "ui-spec": {
+    "dir": "ui-spec",
+    "npm": "@soroush.tech/ui-spec"
+  },
+  "cli": {
+    "dir": "cli",
+    "npm": "@soroush.design/cli"
+  }
+}

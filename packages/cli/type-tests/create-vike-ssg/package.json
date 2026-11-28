@@ -11,8 +11,8 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@soroush.tech/design-system": "^2.3.0",
-    "@emotion/server": "^11.11.0",
+    "@gild-ui/react": "^0.1.0",
+    "@gild-ui/core": "^0.1.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "vike": "^0.4.270"

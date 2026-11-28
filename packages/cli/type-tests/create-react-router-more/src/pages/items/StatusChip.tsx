@@ -1,4 +1,4 @@
-import { Chip } from '@soroush.tech/design-system/Chip'
+import { Chip } from '@gild-ui/react/Chip'
 import type { Item } from '../../data/items'
 
 const COLORS = { todo: 'default', doing: 'primary', done: 'success' } as const

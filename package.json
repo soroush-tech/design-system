@@ -3,12 +3,21 @@
   "private": true,
   "license": "MIT",
   "type": "module",
+  "lockstep": [
+    "@gild-ui/core",
+    "@gild-ui/hooks",
+    "@gild-ui/react",
+    "@gild-ui/react-markdown"
+  ],
   "packageManager": "pnpm@10.13.1",
   "scripts": {
     "prepare": "husky",
     "gen:publish-options": "node scripts/gen-publish-options.mjs",
+    "gen:theme-components": "node packages/react/scripts/gen-theme-components.mjs",
     "gen:plugin-refs": "pnpm --filter @soroush.design/mcp gen -- --plugin",
     "check:release-notes": "node scripts/check-release-notes.mjs",
+    "check:lockstep": "node scripts/check-lockstep.mjs",
+    "check:migrations": "node scripts/check-migrations.mjs",
     "check:skills": "node scripts/check-skills.mjs",
     "check:typography": "aiwg --all",
     "deprecate-alpha": "node scripts/deprecate-alpha.mjs",
@@ -19,11 +28,12 @@
     "test:coverage": "pnpm -r test:coverage",
     "format": "oxfmt",
     "format:check": "oxfmt --check",
-    "storybook": "pnpm --filter @soroush.tech/design-system storybook",
-    "build:storybook": "pnpm --filter @soroush.tech/design-system build:storybook",
+    "storybook": "pnpm --filter @gild-ui/react storybook",
+    "build:storybook": "pnpm --filter @gild-ui/react build:storybook",
     "smoke:create": "node scripts/smoke-create.mjs"
   },
   "devDependencies": {
+    "@soroush.tech/bench": "^2.4.0",
     "ai-watermark-guard": "^0.2.0",
     "husky": "^9.1.7",
     "oxfmt": "^0.78.0",

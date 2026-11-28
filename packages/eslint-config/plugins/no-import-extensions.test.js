@@ -26,7 +26,7 @@ describe('local/no-import-extensions', () => {
     }
   )
 
-  it.each(['./y', 'react', '@soroush.tech/design-system/Button', './styles.css', './data.json'])(
+  it.each(['./y', 'react', '@gild-ui/react/Button', './styles.css', './data.json'])(
     'allows %s',
     (value) => {
       expect(visit(value).report).not.toHaveBeenCalled()

@@ -14,7 +14,7 @@ const FACTS: StarterFacts = {
   libraries: [],
   scheme: 'light',
   hasSampleData: true,
-  version: '2.3.0',
+  version: '0.1.0',
 }
 const FIXTURE = '../../../type-tests/create-vike'
 
@@ -382,7 +382,7 @@ describe('the Vike starter', () => {
     expect(files.get('src/pages/+Layout.tsx')).toContain('<Providers>\n      <Header />')
     expect(files.has('src/components/SchemeSwitch.tsx')).toBe(false)
     expect(files.get('src/pages/about/+Page.tsx')).toContain('a link loads it as a new')
-    expect(JSON.parse(files.get('package.json')!).dependencies['@emotion/server']).toBeDefined()
+    expect(files.get('src/pages/+onRenderHtml.tsx')).toContain("from '@gild-ui/react/server'")
     expect(
       createFiles({ rendering: 'ssg', isTypeScript: false }).get('src/pages/+Layout.jsx')
     ).toMatch(/^import \{ View \}/)
@@ -445,12 +445,12 @@ describe('the Vike starter', () => {
     expect(packageJson.devDependencies.typescript).toBeUndefined()
   })
 
-  it('installs the design system it was given, and the versions this package is tested with', () => {
+  it('installs Gild UI it was given, and the versions this package is tested with', () => {
     const packageJson = JSON.parse(createFiles().get('package.json')!)
     expect(packageJson.name).toBe('my-app')
     expect(packageJson.dependencies).toEqual({
-      '@soroush.tech/design-system': '^2.3.0',
-      '@emotion/server': devDependencies['@emotion/server'],
+      '@gild-ui/core': '^0.1.0',
+      '@gild-ui/react': '^0.1.0',
       react: devDependencies.react,
       'react-dom': devDependencies['react-dom'],
       vike: `^${devDependencies.vike}`,
@@ -464,8 +464,8 @@ describe('the Vike starter', () => {
       test: 'vitest run',
     })
     expect(packageJson.devDependencies.vitest).toBe(devDependencies.vitest)
-    const prerelease = JSON.parse(createFiles({ version: '2.3.0-alpha.1' }).get('package.json')!)
-    expect(prerelease.dependencies['@soroush.tech/design-system']).toBe('^2.3.0-alpha.1')
+    const prerelease = JSON.parse(createFiles({ version: '0.1.0-alpha.1' }).get('package.json')!)
+    expect(prerelease.dependencies['@gild-ui/react']).toBe('^0.1.0-alpha.1')
   })
 
   it('renders <Providers> in +Layout only, starting on the scheme it was given', () => {

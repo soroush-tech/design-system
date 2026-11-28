@@ -19,8 +19,10 @@
     "jsx": "react",
     "types": [],
     "paths": {
-      "@soroush.tech/design-system": ["../../../design-system/dist/index.d.mts"],
-      "@soroush.tech/design-system/*": ["../../../design-system/dist/*.d.mts"]
+      "@gild-ui/react": ["../../../react/dist/index.d.mts"],
+      "@gild-ui/react/*": ["../../../react/dist/*.d.mts"],
+      "@gild-ui/core/*": ["../../../core/dist/*.d.mts"],
+      "@gild-ui/hooks/*": ["../../../hooks/dist/*.d.mts"]
     }
   },
   "include": ["src"]

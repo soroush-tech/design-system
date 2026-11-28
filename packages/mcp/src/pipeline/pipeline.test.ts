@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { allDocComponents } from '@soroush.tech/docs-content'
+import { allDocComponents } from '@gild-ui/docs-content'
 import { buildComponents, importPathFor, summarize } from './components'
 import { buildDocs } from './docs'
 import { buildTokens, flatten, themeScaleNames } from './tokens'
@@ -20,7 +20,7 @@ describe('component pipeline', () => {
       expect(component.summary, `${component.name} has no summary`).not.toBe('')
       const subpath = component.family ?? component.name
       expect(component.importPath).toContain(`from '${component.packageName}/${subpath}'`)
-      expect(component.url.startsWith('https://docs.soroush.tech/')).toBe(true)
+      expect(component.url.startsWith('https://gild-ui.soroush.design/')).toBe(true)
     }
   })
 
@@ -41,18 +41,33 @@ describe('component pipeline', () => {
     expect(components.find((c) => c.name === 'Preview')!.category).toBeUndefined()
   })
 
-  it('builds the subpath import for a component', () => {
-    expect(importPathFor(allDocComponents.find((item) => item.name === 'Card')!)).toBe(
-      "import { Card } from '@soroush.tech/design-system/Card'"
+  it("keeps the package value clients send, 'design-system', for the component library", () => {
+    expect(components.find((c) => c.name === 'Button')!.pkg).toBe('design-system')
+    expect(components.find((c) => c.name === 'Preview')!.pkg).toBe('markdown')
+    expect(components.find((c) => c.name === 'Button')!.url).toBe(
+      'https://gild-ui.soroush.design/react/Button/'
+    )
+    expect(components.find((c) => c.name === 'Preview')!.url).toBe(
+      'https://gild-ui.soroush.design/react/markdown/Preview/'
     )
   })
 
-  it("imports a family member from its family's subpath, and points at its API page", () => {
+  it('builds the subpath import for a component', () => {
+    expect(importPathFor(allDocComponents.find((item) => item.name === 'Card')!)).toBe(
+      "import { Card } from '@gild-ui/react/Card'"
+    )
+    const preview = components.find((c) => c.name === 'Preview')!
+    expect(preview.importPath).toBe("import { Preview } from '@gild-ui/react-markdown/Preview'")
+    expect(preview.packageName).toBe('@gild-ui/react-markdown')
+    expect(components.find((c) => c.name === 'Card')!.packageName).toBe('@gild-ui/react')
+  })
+
+  it("imports a family member from its family's subpath, and points at its page under the entry it is imported from", () => {
     const menuList = components.find((c) => c.name === 'MenuList')!
-    expect(menuList.importPath).toBe("import { MenuList } from '@soroush.tech/design-system/Menu'")
+    expect(menuList.importPath).toBe("import { MenuList } from '@gild-ui/react/Menu'")
     expect(menuList.family).toBe('Menu')
     expect(menuList.category).toBe(components.find((c) => c.name === 'Menu')!.category)
-    expect(menuList.url).toBe('https://docs.soroush.tech/design-system/api/menu-list/')
+    expect(menuList.url).toBe('https://gild-ui.soroush.design/react/Menu/MenuList/')
     expect(menuList.api).toContain('|')
   })
 })
@@ -139,9 +154,15 @@ describe('doc pipeline', () => {
     expect(docs.find((doc) => doc.id === 'providers')!.body).toContain('```tsx')
   })
 
-  it('includes the styled-system docs and guides under a prefix', () => {
-    expect(docs.some((doc) => doc.id === 'styled-system/api')).toBe(true)
-    expect(docs.some((doc) => doc.id === 'styled-system/guides/spacing')).toBe(true)
+  it('serves the url of each page at the route that is its import path', () => {
+    const url = (id: string) => docs.find((doc) => doc.id === id)!.url
+    expect(url('installation')).toBe('https://gild-ui.soroush.design/react/installation/')
+    expect(url('theming')).toBe('https://gild-ui.soroush.design/react/theme/')
+    expect(url('customization')).toBe('https://gild-ui.soroush.design/react/customization/')
+    expect(url('design-system-overview')).toBe('https://gild-ui.soroush.design/react/')
+    expect(url('hooks')).toBe('https://gild-ui.soroush.design/react/hooks/')
+    expect(docs.find((doc) => doc.id === 'hooks')!.body).toContain('useDebounce')
+    expect(url('markdown-overview')).toBe('https://gild-ui.soroush.design/react/markdown/')
   })
 
   it('omits the url for references that have no page on the site', () => {

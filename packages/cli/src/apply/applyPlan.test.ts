@@ -4,7 +4,7 @@ import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import type { Plan } from '../plan/planInit'
 import { createTestApp } from '../testApp'
-import { applyPlan, ApplyError } from './applyPlan'
+import { applyPlan, applyPlans, ApplyError } from './applyPlan'
 import {
   findMissingDirectories,
   nodeFileSystem,
@@ -113,6 +113,35 @@ describe('applyPlan', () => {
       'src/theme/themes.ts goes through a symbolic link, which init does not follow'
     )
     expect(existsSync(join(elsewhere, 'theme'))).toBe(false)
+  })
+})
+
+describe('applyPlans', () => {
+  const second = createPlan({
+    creates: [{ path: 'src/more.ts', content: 'more' }],
+    edits: [{ path: 'src/main.tsx', before: 'wrapped root', after: 'wrapped twice' }],
+  })
+
+  it('writes each plan on what the one before wrote, and names the command in an error', () => {
+    const root = createTestApp({ 'src/main.tsx': 'root' })
+    applyPlans([createPlan(), second], root, nodeFileSystem, 'migrate')
+    expect(read(root, 'src/main.tsx')).toBe('wrapped twice')
+    expect(read(root, 'src/more.ts')).toBe('more')
+    const changed = createTestApp({ 'src/main.tsx': 'other' })
+    expect(() => applyPlans([createPlan()], changed, nodeFileSystem, 'migrate')).toThrow(
+      'src/main.tsx changed while migrate was running'
+    )
+  })
+
+  it('takes back the changes of every plan when a write of a later one fails', () => {
+    const root = createTestApp({ 'src/main.tsx': 'root' })
+    // The first plan writes once; the second plan's edit is the second write.
+    expect(() => applyPlans([createPlan(), second], root, failing('writeFile', 2))).toThrow(
+      expect.objectContaining({ isUndone: true })
+    )
+    expect(read(root, 'src/main.tsx')).toBe('root')
+    expect(existsSync(join(root, 'src/theme'))).toBe(false)
+    expect(existsSync(join(root, 'src/more.ts'))).toBe(false)
   })
 })
 

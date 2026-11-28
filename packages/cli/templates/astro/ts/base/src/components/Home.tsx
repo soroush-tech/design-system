@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
-import { Button } from '@soroush.tech/design-system/Button'
-import { Flex } from '@soroush.tech/design-system/Flex'
-import { Typography } from '@soroush.tech/design-system/Typography'
+import { Button } from '@gild-ui/react/Button'
+import { Flex } from '@gild-ui/react/Flex'
+import { Typography } from '@gild-ui/react/Typography'
 import { withIsland } from '../theme/Island'
 
 // @if ssg
@@ -16,12 +16,12 @@ function Home({ children }: { readonly children?: ReactNode }) {
     <Flex gap={2} alignItems="flex-start" px={3} py={4}>
       <Typography variant="h2">__TITLE__</Typography>
       <Typography color="secondary">
-        An Astro app on the design system. Edit src/components/Home.tsx, and make the themes your
-        own in src/theme/themes.ts.
+        An Astro app on Gild UI. Edit src/components/Home.tsx, and make the themes your own in
+        src/theme/themes.ts.
       </Typography>
       {children}
       <Flex flexDirection="row" gap={1}>
-        <Button href="https://docs.soroush.tech">Components</Button>
+        <Button href="https://gild-ui.soroush.design">Components</Button>
         <Button href="https://astro.build" variant="outlined">
           Astro
         </Button>

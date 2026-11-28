@@ -15,24 +15,24 @@ metadata:
 
 ## Vitest projects
 
-Only **design-system** splits into projects (`packages/design-system/vitest.config.ts`):
+Only **design-system** splits into projects (`packages/react/vitest.config.ts`):
 
 - `unit` - jsdom, runs `**/*.{test,spec}.*` (excludes `*.browser.test.*`)
 - `browser` - headless Chromium (Playwright provider), runs only `*.browser.test.*`
 - `storybook` - runs `*.stories.tsx` via the Storybook addon
 
 Scope a run with `--project=unit` (etc.) and pass path filters:
-`pnpm --filter @soroush.tech/design-system exec vitest run --project=unit src/Button`.
+`pnpm --filter @gild-ui/react exec vitest run --project=unit src/Button`.
 The other packages have a single flat vitest config.
 
 ## Commands
 
-| Command                                           | Runs                                      |
-| ------------------------------------------------- | ----------------------------------------- |
-| `pnpm test`                                       | every package, recursively                |
-| `pnpm test:coverage`                              | the same, with coverage - **CI's run**    |
-| `pnpm --filter @soroush.tech/<pkg> test:coverage` | one package                               |
-| `pnpm --filter ... run --if-present test:types`   | d.ts check of the built dist (CI runs it) |
+| Command                                         | Runs                                      |
+| ----------------------------------------------- | ----------------------------------------- |
+| `pnpm test`                                     | every package, recursively                |
+| `pnpm test:coverage`                            | the same, with coverage - **CI's run**    |
+| `pnpm --filter @gild-ui/<pkg> test:coverage`    | one package                               |
+| `pnpm --filter ... run --if-present test:types` | d.ts check of the built dist (CI runs it) |
 
 ## Where coverage output lands
 

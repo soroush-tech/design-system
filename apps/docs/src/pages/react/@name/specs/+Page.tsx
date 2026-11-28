@@ -1,0 +1,73 @@
+import { Link } from '@gild-ui/react/Link'
+import { Typography } from '@gild-ui/react/Typography'
+import { View } from '@gild-ui/react/View'
+import { componentByName, componentPagePath } from 'src/common/nav'
+import { sectionPath } from 'src/common/sectionPath'
+import { DocsNav } from 'src/common/DocsNav/DocsNav'
+import { Layout } from 'src/common/Layout'
+import { Readme } from 'src/common/Readme/Readme'
+import { SlotsTable } from 'src/common/SlotsTable/SlotsTable'
+import { sections, splitReadme } from '@gild-ui/docs-content'
+import { componentOfRoute, componentPageParts } from 'src/common/componentPage'
+import { ComponentHero } from 'src/common/ComponentHero/ComponentHero'
+import { usePageContext } from 'src/hooks/usePageContext'
+
+const REPO_SRC = `https://github.com/soroush-tech/design-system/tree/main/packages/${sections.react.dir}/src`
+
+export default function Page() {
+  const item = componentOfRoute(usePageContext().routeParams)
+  const { name } = item
+  const parts = componentPageParts(item.slug)
+  // A family member has no tabs of its own, so its README stays whole; a component's accessibility
+  // notes are on their own tab.
+  const { intro, api } = splitReadme(item.family ? parts.source : parts.rest)
+  // A family member's demos are under its own heading on its family's page - a PascalCase
+  // name's heading id is the name in lower case.
+  const demosPath = item.family
+    ? `${componentPagePath(componentByName.get(item.family)!)}#${name.toLowerCase()}`
+    : componentPagePath(item)
+  const demosName = item.family ?? name
+  const sourceDir = item ? item.readmePath.replace(/\/README\.md$/, '') : ''
+  return (
+    <Layout
+      sidebar={<DocsNav />}
+      hasToc
+      head={
+        <ComponentHero
+          item={item}
+          lead={parts.lead}
+          active={item.family ? undefined : 'specs'}
+          hasAccessibility={parts.accessibility !== ''}
+        />
+      }
+    >
+      {/* A family member has no page of its own, so what it is and how it composes is here. */}
+      {item.family && <Readme source={intro} stripChrome />}
+      <View as="section" my={4}>
+        <Typography variant="h4" as="h2" id="demos" gutterBottom>
+          Demos
+        </Typography>
+        <Typography variant="body1">
+          For usage examples, visit the component demo page:{' '}
+          <Link href={sectionPath('react', demosPath)} color="primary">
+            {demosName}
+          </Link>
+        </Typography>
+      </View>
+      <Readme source={api} />
+      <SlotsTable name={name} />
+      <View as="section" my={4}>
+        <Typography variant="h4" as="h2" id="source-code" gutterBottom>
+          Source code
+        </Typography>
+        <Typography variant="body1">
+          If this page does not answer your question, have a look at{' '}
+          <Link href={`${REPO_SRC}/${sourceDir}`} color="primary">
+            the implementation of the component
+          </Link>{' '}
+          for more detail.
+        </Typography>
+      </View>
+    </Layout>
+  )
+}

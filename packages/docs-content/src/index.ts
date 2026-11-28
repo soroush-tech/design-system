@@ -1,7 +1,11 @@
 // The isomorphic entry: registry data and pure string helpers, safe in a browser
 // bundle. Filesystem loading lives behind the `./node` subpath.
 export * from './registry'
+export * from './sections'
 export * from './absoluteLinks'
 export * from './kebabCase'
+export * from './hookSection'
 export * from './splitReadme'
 export * from './stripReadmeChrome'
+export * from './routes'
+export * from './importLine'

@@ -1,0 +1,34 @@
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import { bg, p, m, borderRadius } from '../utils/test/storiesArgs'
+import { Typography } from '../Typography'
+import { exampleArgs } from '../utils/test/renderExample'
+import { Quote } from './Quote'
+import { quoteCatalog } from '@gild-ui/core/catalog/entries'
+
+const meta: Meta<typeof Quote> = {
+  title: 'Theme/Quote',
+  component: Quote,
+  tags: ['autodocs'],
+  parameters: {
+    layout: 'padded',
+    controls: { include: ['bg', 'p', 'm', 'borderRadius'] },
+  },
+  args: exampleArgs(quoteCatalog.example),
+  argTypes: { bg, p, m, borderRadius },
+  render: (args) => (
+    <Quote {...args}>
+      <Typography variant="body1" color="secondary" m={0}>
+        A View with a 2px primary left border - for terminal readouts and markdown blockquotes.
+      </Typography>
+    </Quote>
+  ),
+}
+
+export default meta
+type Story = StoryObj<typeof Quote>
+
+export const Default: Story = {}
+
+export const Rounded: Story = {
+  args: { borderRadius: 'md' },
+}

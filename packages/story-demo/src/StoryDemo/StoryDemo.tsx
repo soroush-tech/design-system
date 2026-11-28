@@ -1,8 +1,8 @@
 import { lazy, Suspense, useEffect, useMemo, useState, type ComponentType } from 'react'
 import { composeStory } from '@storybook/react-vite'
-import { Typography } from '@soroush.tech/design-system/Typography'
-import { View } from '@soroush.tech/design-system/View'
-import { useCopyToClipboard } from '@soroush.tech/hooks/useCopyToClipboard'
+import { Typography } from '@gild-ui/react/Typography'
+import { View } from '@gild-ui/react/View'
+import { useCopyToClipboard } from '@gild-ui/hooks/useCopyToClipboard'
 import { buildDemoModule } from '../utils/buildDemoModule'
 import { controlsFor, controlsInclude, type ControlsAnnotations } from '../utils/controlsFor'
 import { openInCodeSandbox } from '../utils/openInCodeSandbox'
@@ -71,7 +71,7 @@ export function StoryDemo({
   scope = {},
   versions = {},
   reactVersion = 'latest',
-  packageName = '@soroush.tech/design-system',
+  packageName = '@gild-ui/react',
 }: Readonly<StoryDemoProps>) {
   const [language, setLanguage] = useState<Language>('ts')
   const [isExpanded, setIsExpanded] = useState(false)
@@ -204,7 +204,7 @@ export function StoryDemo({
             helpersText:
               language === 'js' ? tsToJs(demoModule.helpersText).trimEnd() : demoModule.helpersText,
           })
-    openInCodeSandbox(title, sandboxSource, { language, versions, reactVersion })
+    openInCodeSandbox(title, sandboxSource, { language, versions, reactVersion, packageName })
   }
 
   const toolbar = (

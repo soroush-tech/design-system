@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { View } from '@soroush.tech/design-system/View'
+import { View } from '@gild-ui/react/View'
 import { Header } from '../components/Header'
 import { Providers } from '../theme/Providers'
 

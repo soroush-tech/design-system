@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button } from '@soroush.tech/design-system/Button'
+import { Button } from '@gild-ui/react/Button'
 
 export default function App() {
   return <Button>Themed</Button>

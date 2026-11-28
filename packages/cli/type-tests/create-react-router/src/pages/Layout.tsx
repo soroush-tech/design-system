@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { View } from '@soroush.tech/design-system/View'
+import { View } from '@gild-ui/react/View'
 import { Outlet } from 'react-router'
 import { Header } from '../components/Header'
 import { SchemeSwitch } from '../components/SchemeSwitch'

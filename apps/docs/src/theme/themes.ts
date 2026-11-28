@@ -1,6 +1,7 @@
-import type { Theme } from '@soroush.tech/design-system'
-import { baseTheme, createTheme } from '@soroush.tech/design-system/theme'
-import { alpha, generateBoxShadow } from '@soroush.tech/design-system/utils'
+import { baseTheme, createTheme, defineThemes } from '@gild-ui/core/theme'
+import { registerBaseTheme } from '@gild-ui/react/ThemeProvider'
+import type { ThemeComponents } from '@gild-ui/react'
+import { alpha, generateBoxShadow } from '@gild-ui/core/utils'
 import {
   blackAlpha,
   carbonBlack,
@@ -35,11 +36,12 @@ const darkShadows = Array.from({ length: 25 }, (_, elevation) =>
 )
 
 // The docs' buttons are pills, as the rest of the rounded look.
-const components = { Button: { defaultProps: { shape: 'pill' as const } } }
+const components = {
+  Button: { defaultProps: { shape: 'pill' as const } },
+} satisfies ThemeComponents
 
-export const light: Theme = createTheme(baseTheme, {
+const lightTheme = createTheme(baseTheme, {
   name: 'light',
-  components,
   colorScheme: 'light',
   logoFilter: 'brightness(0)',
   portraitBlend: 'multiply',
@@ -140,9 +142,8 @@ export const light: Theme = createTheme(baseTheme, {
   shadows: lightShadows,
 })
 
-export const dark: Theme = createTheme(baseTheme, {
+const darkTheme = createTheme(baseTheme, {
   name: 'dark',
-  components,
   colorScheme: 'dark',
   logoFilter: 'brightness(0) invert(1)',
   portraitBlend: 'screen',
@@ -243,9 +244,18 @@ export const dark: Theme = createTheme(baseTheme, {
   shadows: darkShadows,
 })
 
-const themes = {
-  light,
-  dark,
+const themes = defineThemes({ light: lightTheme, dark: darkTheme }, components)
+
+export const { light, dark } = themes
+
+// What a server component reads with no provider above it: the theme the provider starts in
+// (dark, see ThemeModeProvider), the same object, so its components and defaults match.
+registerBaseTheme(dark)
+
+declare module '@gild-ui/core/theme' {
+  interface Register {
+    themes: typeof themes
+  }
 }
 
 export default themes

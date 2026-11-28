@@ -1,6 +1,6 @@
 ---
 name: wcag
-description: WCAG 2.2 AA accessibility rules for apps built with @soroush.tech/design-system. Load when fixing a11y violations, checking color contrast, adding ARIA attributes, labeling form controls (Checkbox, Switch, TextInput, icon-only buttons), labeling nav landmarks, or writing accessibility tests and stories.
+description: WCAG 2.2 AA accessibility rules for apps built with @gild-ui/react. Load when fixing a11y violations, checking color contrast, adding ARIA attributes, labeling form controls (Checkbox, Switch, TextInput, icon-only buttons), labeling nav landmarks, or writing accessibility tests and stories.
 ---
 
 # WCAG accessibility
@@ -9,7 +9,7 @@ WCAG 2.2 AA is the target. Four principles: **Perceivable, Operable, Understanda
 (POUR). Automated tools catch about 30% of issues - always verify by hand with the keyboard and a
 screen reader.
 
-The design system already does part of the work: `Button` sets `aria-busy` while `loading`,
+Gild UI already does part of the work: `Button` sets `aria-busy` while `loading`,
 `CircularProgress` and `LinearProgress` carry a default `aria-label="Loading"` (override it by
 passing your own), and `Checkbox` and `Switch` forward `aria-label` / `aria-labelledby` to their
 hidden `<input>`. What is left is how the app uses them.

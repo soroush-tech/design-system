@@ -1,8 +1,8 @@
 // @if !ssg
 import { useState } from 'react'
-import { Button } from '@soroush.tech/design-system/Button'
-import { Flex } from '@soroush.tech/design-system/Flex'
-import { Typography } from '@soroush.tech/design-system/Typography'
+import { Button } from '@gild-ui/react/Button'
+import { Flex } from '@gild-ui/react/Flex'
+import { Typography } from '@gild-ui/react/Typography'
 
 /** A count, held in the component's own state, and the button that adds to it. */
 export function Counter() {

@@ -1,7 +1,7 @@
 {
   "name": "@soroush.design/cli",
-  "version": "0.2.0",
-  "description": "The command line of the @soroush.tech design system: init sets it up in an existing React app, and create starts a new one, each showing every change first.",
+  "version": "0.3.0",
+  "description": "The command line of Gild UI: init sets it up in an existing React app, and create starts a new one, each showing every change first.",
   "keywords": [
     "cli",
     "init",
@@ -11,14 +11,14 @@
   ],
   "author": "Masoud Soroush <masoud@soroush.tech>",
   "license": "MIT",
-  "homepage": "https://docs.soroush.tech",
+  "homepage": "https://gild-ui.soroush.design/cli/",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/soroush-tech/design-system.git",
+    "url": "git+https://github.com/soroush-tech/gild-ui.git",
     "directory": "packages/cli"
   },
   "bugs": {
-    "url": "https://github.com/soroush-tech/design-system/issues"
+    "url": "https://github.com/soroush-tech/gild-ui/issues"
   },
   "type": "module",
   "sideEffects": false,
@@ -53,7 +53,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "test:types": "pnpm --filter @soroush.tech/design-system build && tsc -p type-tests/init/tsconfig.json && tsc -p type-tests/tsconfig.create-vike.json && tsc -p type-tests/tsconfig.create-vike-ssg.json && tsc -p type-tests/tsconfig.create-vike-ssr.json && tsc -p type-tests/tsconfig.create-vike-libraries.json && tsc -p type-tests/tsconfig.create-vike-jotai.json && tsc -p type-tests/tsconfig.create-vike-more.json && tsc -p type-tests/tsconfig.create-astro-ssg.json && tsc -p type-tests/tsconfig.create-astro-ssr.json && tsc -p type-tests/tsconfig.create-astro-libraries.json && tsc -p type-tests/tsconfig.create-astro-more.json && tsc -p type-tests/tsconfig.create-react-router.json && tsc -p type-tests/tsconfig.create-react-router-libraries.json && tsc -p type-tests/tsconfig.create-react-router-more.json && tsc -p type-tests/tsconfig.create-react-router-jotai.json",
+    "test:types": "pnpm --filter @gild-ui/core build && pnpm --filter @gild-ui/hooks build && pnpm --filter @gild-ui/react build && tsc -p type-tests/init/tsconfig.json && tsc -p src/migrate/steps/gild-ui-0.1.0/fixtures/init-templates/tsconfig.after.json && tsc -p src/migrate/steps/gild-ui-0.1.0/fixtures/docs-app/tsconfig.after.json && tsc -p type-tests/tsconfig.create-vike.json && tsc -p type-tests/tsconfig.create-vike-ssg.json && tsc -p type-tests/tsconfig.create-vike-ssr.json && tsc -p type-tests/tsconfig.create-vike-libraries.json && tsc -p type-tests/tsconfig.create-vike-jotai.json && tsc -p type-tests/tsconfig.create-vike-more.json && tsc -p type-tests/tsconfig.create-astro-ssg.json && tsc -p type-tests/tsconfig.create-astro-ssr.json && tsc -p type-tests/tsconfig.create-astro-libraries.json && tsc -p type-tests/tsconfig.create-astro-more.json && tsc -p type-tests/tsconfig.create-react-router.json && tsc -p type-tests/tsconfig.create-react-router-libraries.json && tsc -p type-tests/tsconfig.create-react-router-more.json && tsc -p type-tests/tsconfig.create-react-router-jotai.json",
     "prepublishOnly": "pnpm build",
     "gen:templates": "node scripts/gen-templates.mjs"
   },
@@ -61,7 +61,8 @@
     "@astrojs/check": "^0.9.12",
     "@astrojs/node": "^11.1.13",
     "@astrojs/react": "^7.1.9",
-    "@emotion/server": "^11.11.0",
+    "@babel/parser": "^7.29.13",
+    "@babel/types": "^7.29.11",
     "@hookform/resolvers": "^7.0.6",
     "@reduxjs/toolkit": "^2.14.0",
     "@soroush.tech/eslint-config": "workspace:*",

@@ -3,6 +3,7 @@
   "extends": ["./.oxlintrc.react.json"],
   "jsPlugins": [
     "./plugins/no-import-extensions.js",
+    "./plugins/no-inline-style-object.js",
     {
       "name": "react-hooks-js",
       "specifier": "eslint-plugin-react-hooks"

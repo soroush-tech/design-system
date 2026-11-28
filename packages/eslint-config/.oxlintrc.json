@@ -5,7 +5,7 @@
     "correctness": "off"
   },
   "ignorePatterns": ["dist", "build", "coverage"],
-  "jsPlugins": ["./plugins/no-import-extensions.js"],
+  "jsPlugins": ["./plugins/no-import-extensions.js", "./plugins/no-inline-style-object.js"],
   "rules": {
     "@typescript-eslint/ban-ts-comment": "error",
     "@typescript-eslint/no-array-constructor": "error",
@@ -87,6 +87,18 @@
       "files": ["**/*.ts", "**/*.tsx"],
       "rules": {
         "local/no-import-extensions": "error"
+      }
+    },
+    {
+      "files": ["**/*.tsx"],
+      "rules": {
+        "local-style/no-inline-style-object": "error"
+      }
+    },
+    {
+      "files": ["**/*.test.tsx", "**/*.spec.tsx", "**/*.stories.tsx", "**/utils/test/**"],
+      "rules": {
+        "local-style/no-inline-style-object": "off"
       }
     }
   ]

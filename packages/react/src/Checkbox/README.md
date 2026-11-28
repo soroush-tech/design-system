@@ -1,0 +1,175 @@
+# Checkbox
+
+A binary toggle control. Supports controlled and uncontrolled usage, six semantic color palettes, two sizes, indeterminate state, and custom icons.
+
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
+**Architecture:** the root element is a `<label>` wrapping a visually-hidden `<input type="checkbox">`, an icon span, and optional label text. Clicking anywhere on the root (icon or text) toggles the checkbox. The native input handles all browser behaviour, form submission, and accessibility.
+
+---
+
+## Props
+
+### `checked`
+
+`boolean` - controlled checked state. Must be paired with `onChange`.
+
+---
+
+### `defaultChecked`
+
+`boolean` - initial checked state for uncontrolled usage. Ignored when `checked` is provided.
+
+Default: `false`.
+
+---
+
+### `disabled`
+
+`boolean` - disables the checkbox. Applies `opacity: 0.5` and `cursor: not-allowed`.
+
+Default: `false`.
+
+---
+
+### `color`
+
+Stroke/fill color of the checkbox icon.
+
+| Token         | Dark source                                    | Light source                                 |
+| ------------- | ---------------------------------------------- | -------------------------------------------- |
+| `"default"`   | `theme.text.secondary` (`kineticSurface[400]`) | `theme.text.secondary` (`kineticGreen[800]`) |
+| `"primary"`   | `kineticGreen[500]`                            | `kineticGreen[600]`                          |
+| `"secondary"` | `cyberCyan[500]`                               | `cyberCyan[700]`                             |
+| `"success"`   | `kineticGreen[700]`                            | `kineticGreen[700]`                          |
+| `"error"`     | `neonRed[500]`                                 | `neonRed[700]`                               |
+| `"info"`      | `cyberCyan[500]`                               | `cyberCyan[800]`                             |
+| `"warning"`   | `solarAmber[400]`                              | `solarAmber[500]`                            |
+
+Default: `"default"`.
+
+---
+
+### `textColor`
+
+Text color of the label, from `theme.text`. Default: the `textColor` of its `FormControl` or `Form`, else the control's `color` - so a field's text color reaches the label while the checkbox's mark keeps its own color. Its own slot, `label`, in `theme.components.Checkbox`.
+
+---
+
+### `size`
+
+| Value      | Icon size |
+| ---------- | --------- |
+| `"small"`  | 16px      |
+| `"medium"` | 20px      |
+
+Default: `"medium"`.
+
+---
+
+### `fullWidth`
+
+`boolean` - stretches the root to `width: 100%` (and switches it to `display: flex`).
+
+Default: `false`.
+
+---
+
+### `indeterminate`
+
+`boolean` - displays the indeterminate state (horizontal dash icon). Takes visual priority over `checked`. Also sets the native `input.indeterminate` property (for form APIs) and a `data-indeterminate` attribute (for CSS targeting).
+
+Default: `false`.
+
+---
+
+### `icon`
+
+`ReactNode` - custom icon for the **unchecked** state. Defaults to an outlined square SVG.
+
+---
+
+### `checkedIcon`
+
+`ReactNode` - custom icon for the **checked** state. Defaults to a filled square SVG with a white checkmark. Not used for the `indeterminate` state (which always uses the default dash icon).
+
+---
+
+### `onChange`
+
+`(event: ChangeEvent<HTMLInputElement>) => void` - called when the user toggles the checkbox.
+
+---
+
+### `id`
+
+`string` - forwarded to the underlying `<input>` for external label association (`<label htmlFor="...">`) and form targeting.
+
+---
+
+### `required`
+
+`boolean` - marks the field as required in a form.
+
+---
+
+### `name` / `value`
+
+Standard form field attributes forwarded to the underlying `<input>`.
+
+---
+
+### `children`
+
+`ReactNode` - label text rendered next to the checkbox icon, wrapped in a `<span>`.
+
+---
+
+## Styled-system props
+
+### Space - `theme.space` (margin only)
+
+| Prop                              | Shorthand for  |
+| --------------------------------- | -------------- |
+| `m` `mt` `mr` `mb` `ml` `mx` `my` | margin + sides |
+
+---
+
+## Focus
+
+When the hidden `<input>` receives keyboard focus, a `2px solid currentColor` outline appears on the icon wrapper via the CSS `:has(input:focus-visible)` selector. No JavaScript state is needed.
+
+---
+
+## Examples
+
+```tsx
+// Uncontrolled
+<Checkbox>Accept terms</Checkbox>
+
+// Controlled
+<Checkbox checked={agreed} onChange={(e) => setAgreed(e.target.checked)}>
+  I agree
+</Checkbox>
+
+// Indeterminate (select-all pattern)
+<Checkbox indeterminate={someChecked && !allChecked} checked={allChecked} onChange={handleAll} />
+
+// Colors and sizes
+<Checkbox color="primary" size="small">Small primary</Checkbox>
+<Checkbox color="error">Error state</Checkbox>
+
+// Disabled
+<Checkbox disabled>Cannot change</Checkbox>
+<Checkbox disabled checked onChange={() => {}}>Locked on</Checkbox>
+
+// Custom icons
+<Checkbox icon={<StarOutline />} checkedIcon={<StarFilled />}>Favourite</Checkbox>
+
+// Form usage
+<Checkbox id="terms" name="terms" required>Accept terms</Checkbox>
+```
+
+## Overrides
+
+`style` takes an entry of `StyleSheet.create`, or a list of them with `false`, `null` and `undefined`, and overrides the CSS of the root. `slotProps` takes, for each slot (`root`, `input`, `icon`, `label`), a `style` of the same kind, a `className`, and `data-*` and `aria-*` attributes. `slotProps.root` and `style` are one channel: `style` is merged after `slotProps.root.style`, so it wins.

@@ -1,3 +1,4 @@
+import { APP_PACKAGE } from './designSystemPackage'
 import { parseArgs } from 'node:util'
 import { runCreate } from './create/create'
 import { LIBRARY_NAMES, type Library } from './create/libraries'
@@ -17,8 +18,9 @@ const BIN = 'npx @soroush.design/cli'
 export const USAGE = `Usage: ${BIN} <command> [options]
 
 Commands:
-  init            set up @soroush.tech/design-system in the React app in this folder
-  create [name]   start a new app on the design system, in a new folder
+  init            set up ${APP_PACKAGE} in the React app in this folder
+  create [name]   start a new app on Gild UI, in a new folder
+  migrate         move the app in this folder to the latest Gild UI, step by step
 
 Each shows every change first, and writes nothing until you say yes.
 For a command's options, run it with --help: ${BIN} create --help
@@ -30,22 +32,48 @@ const [defaultFramework, ...otherFrameworks] = Object.keys(STARTERS)
 export const HELP: Readonly<Record<string, string>> = {
   init: `Usage: ${BIN} init [options]
 
-Sets the design system up in the React app in this folder, or in a workspace's root that holds
+Sets Gild UI up in the React app in this folder, or in a workspace's root that holds
 one app. It shows every change first, and writes nothing until you say yes.
 
 Options:
   -y, --yes               apply without asking
       --dry-run           show the changes and exit
-      --force             run outside git, or with uncommitted changes
+      --force             no effect: init checks no git now (kept for older scripts)
       --scheme <name>     the default color scheme: light (the default) or dark
   -h, --help              show this help
 
 Example:
   ${BIN} init --scheme dark
 `,
+  migrate: `Usage: ${BIN} migrate [options]
+
+Moves the app in this folder forward, from @soroush.tech/design-system 2.x or from an earlier
+Gild UI version to the latest the command line knows: it finds the version the app is on, picks
+the migration steps from there to the target, and shows every change of every step first - the
+dependencies, the file edits, and what only you can decide, with its file and line. It writes
+nothing until you say yes, then applies the steps in order and installs once.
+
+It runs no git: committing the result is yours. Run it again after: an app that is on the latest
+version has nothing to change.
+
+Exit codes: 0 applied, nothing left for you; 2 applied, items left for you; 3 nothing to
+migrate; 1 refused, or failed and was taken back (or a wrong command line). With --dry-run: 0
+when there is something to do, 3 when there is not.
+
+Options:
+  -y, --yes               apply without asking
+      --dry-run           show the changes and exit
+      --to <version>      stop at this version instead of the latest
+      --json              print the run as one JSON object on stdout, and nothing else there;
+                          it never asks, so without --yes it is a preview
+  -h, --help              show this help
+
+Example:
+  ${BIN} migrate --dry-run
+`,
   create: `Usage: ${BIN} create [name] [options]
 
-Starts a new app on the design system in ./<name>, my-app when it is not given: a new folder, or
+Starts a new app on Gild UI in ./<name>, my-app when it is not given: a new folder, or
 an empty one. Its package.json takes the name in lowercase: testApp is test-app. It asks for what
 the options do not say, shows every file first, and writes nothing until you say yes.
 
@@ -64,7 +92,7 @@ Options:
       --with <names>      the libraries to add, by comma: ${LIBRARY_NAMES.join(', ')}
       --scheme <name>     the default color scheme: light (the default) or dark
       --sample-data       add a list of sample items, and a page for each
-      --no-git            do not run git init
+      --no-git            no effect: create runs no git (kept for older scripts)
   -h, --help              show this help
 
 Examples:
@@ -83,6 +111,8 @@ const OPTIONS = {
   scheme: { type: 'string' },
   help: { type: 'boolean', short: 'h' },
   force: { type: 'boolean' },
+  to: { type: 'string' },
+  json: { type: 'boolean' },
   framework: { type: 'string' },
   title: { type: 'string' },
   ts: { type: 'boolean' },
@@ -98,6 +128,7 @@ const OPTIONS = {
 /** The options only one command takes. */
 const OWN_OPTIONS: Record<string, readonly string[]> = {
   init: ['force'],
+  migrate: ['to', 'json'],
   create: [
     'framework',
     'title',
@@ -118,6 +149,9 @@ function findMisuse(command: string, extra: string[], used: string[]): string | 
   for (const [other, options] of others) {
     const option = used.find((name) => options.includes(name))
     if (option) return `--${option} is an option of ${other}, not of ${command}.`
+  }
+  if (command === 'migrate' && used.includes('scheme')) {
+    return '--scheme is an option of init and create, not of migrate.'
   }
   const maxPositionals = command === 'create' ? 1 : 0
   return extra.length > maxPositionals
@@ -169,8 +203,9 @@ function findValueRefusal(
 
 /**
  * Reads the command line and runs the command, for `designSystem`: the package of
- * `@soroush.tech/design-system` the command installs. Returns the exit code: 130 when the person
- * stops it at a question, which is before anything is written.
+ * `@gild-ui/react`, whose peer range for React `init` checks the app against.
+ * Returns the exit code: 130 when the person stops it at a question, which is before anything is
+ * written.
  */
 export async function main(
   argv: readonly string[],
@@ -244,15 +279,14 @@ async function runCommandLine(
         hasSampleData: values['sample-data'],
         isConfirmed,
         isDryRun,
-        isGit: !values['no-git'],
       },
-      io,
-      designSystem
+      io
     )
   }
-  return runInit(
-    { isConfirmed, isDryRun, isForced: Boolean(values.force), scheme },
-    io,
-    designSystem
-  )
+  if (command === 'migrate') {
+    // Loaded only for migrate: its steps carry a source parser that init and create do not need.
+    const { runMigrate } = await import('./migrate/migrate')
+    return runMigrate({ isConfirmed, isDryRun, isJson: Boolean(values.json), to: values.to }, io)
+  }
+  return runInit({ isConfirmed, isDryRun, scheme }, io, designSystem)
 }

@@ -1,6 +1,6 @@
 import type { ComponentType, ReactNode } from 'react'
 import { Provider as StoreProvider } from 'react-redux'
-import { ThemeProvider } from '@soroush.tech/design-system/theme'
+import { ThemeProvider } from '@gild-ui/react'
 import { store } from '../state/store'
 import { useScheme } from './scheme'
 import themes from './themes'

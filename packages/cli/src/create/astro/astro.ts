@@ -1,8 +1,9 @@
-// The Astro starter: HTML pages whose parts are React islands drawn with the design system. Astro
-// renders each island as a React root of its own, with plain react-dom/server, so the design system
+// The Astro starter: HTML pages whose parts are React islands drawn with Gild UI. Astro
+// renders each island as a React root of its own, with plain react-dom/server, so Gild UI
 // needs no 'use client' here, and an island's styles are in its HTML. Its files are the templates in
 // templates/astro/ (see templates/templates.md); this module adds what is computed: package.json,
 // and the themes and Providers `init` writes too.
+import { APP_PACKAGE, CORE_PACKAGE } from '../../designSystemPackage'
 import { createProvidersSource, createThemesSource } from '../../templates/templates'
 import type { Starter, StarterFacts, StarterFile } from '../starters'
 import { createTemplateFiles } from '../template/starterFiles'
@@ -37,7 +38,8 @@ function createPackageJson({
       test: 'vitest run',
     },
     dependencies: {
-      '@soroush.tech/design-system': toRange(version),
+      [APP_PACKAGE]: toRange(version),
+      [CORE_PACKAGE]: toRange(version),
       ...pickVersions([
         ...(isServer ? (['@astrojs/node'] as const) : ([] as const)),
         '@astrojs/react',
@@ -65,7 +67,7 @@ function createFiles(facts: StarterFacts): StarterFile[] {
   const x = isTypeScript ? 'ts' : 'js'
   return [
     { path: 'package.json', content: createPackageJson(facts) },
-    { path: `src/theme/themes.${x}`, content: createThemesSource({ isTypeScript }) },
+    { path: `src/theme/themes.${x}`, content: createThemesSource({ isTypeScript, scheme }) },
     {
       path: `src/theme/Providers.${x}`,
       content: createProvidersSource({ isTypeScript, scheme, themesImport: './themes' }),

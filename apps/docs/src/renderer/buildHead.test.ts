@@ -10,7 +10,7 @@ describe('buildHead', () => {
     const head = buildHead(ctx())
 
     it('falls back to the site title', () => {
-      expect(head).toContain('<title data-mh>SOROUSH.DESIGN</title>')
+      expect(head).toContain('<title data-mh>Gild UI</title>')
     })
 
     it('defaults robots to index,follow', () => {
@@ -18,11 +18,13 @@ describe('buildHead', () => {
     })
 
     it('emits canonical, og:url, og:site_name, and referrer', () => {
-      expect(head).toContain('<link rel="canonical" href="https://docs.soroush.tech/" data-mh />')
       expect(head).toContain(
-        '<meta property="og:url" content="https://docs.soroush.tech/" data-mh />'
+        '<link rel="canonical" href="https://gild-ui.soroush.design/" data-mh />'
       )
-      expect(head).toContain('<meta property="og:site_name" content="SOROUSH.DESIGN" data-mh />')
+      expect(head).toContain(
+        '<meta property="og:url" content="https://gild-ui.soroush.design/" data-mh />'
+      )
+      expect(head).toContain('<meta property="og:site_name" content="Gild UI" data-mh />')
       expect(head).toContain(
         '<meta name="referrer" content="strict-origin-when-cross-origin" data-mh />'
       )
@@ -36,14 +38,12 @@ describe('buildHead', () => {
 
   describe('title + robots from config', () => {
     it('renders a suffixed document title', () => {
-      expect(buildHead(ctx({ title: 'About' }))).toContain(
-        '<title data-mh>About · SOROUSH.DESIGN</title>'
-      )
+      expect(buildHead(ctx({ title: 'About' }))).toContain('<title data-mh>About · Gild UI</title>')
     })
 
     it('resolves a function title', () => {
       expect(buildHead(ctx({ title: () => 'Dynamic' }))).toContain(
-        '<title data-mh>Dynamic · SOROUSH.DESIGN</title>'
+        '<title data-mh>Dynamic · Gild UI</title>'
       )
     })
 
@@ -74,16 +74,16 @@ describe('buildHead', () => {
 
   describe('canonical/og:url trailing slash', () => {
     it('keeps a single slash for the home page', () => {
-      expect(buildHead(ctx(undefined, '/'))).toContain('href="https://docs.soroush.tech/"')
+      expect(buildHead(ctx(undefined, '/'))).toContain('href="https://gild-ui.soroush.design/"')
     })
 
     it('appends a trailing slash to other paths', () => {
       const head = buildHead(ctx(undefined, '/about'))
       expect(head).toContain(
-        '<link rel="canonical" href="https://docs.soroush.tech/about/" data-mh />'
+        '<link rel="canonical" href="https://gild-ui.soroush.design/about/" data-mh />'
       )
       expect(head).toContain(
-        '<meta property="og:url" content="https://docs.soroush.tech/about/" data-mh />'
+        '<meta property="og:url" content="https://gild-ui.soroush.design/about/" data-mh />'
       )
     })
   })
@@ -146,7 +146,7 @@ describe('buildHead', () => {
   describe('escaping', () => {
     it('escapes the document title', () => {
       expect(buildHead(ctx({ title: 'A & B <x>' }))).toContain(
-        '<title data-mh>A &amp; B &lt;x&gt; · SOROUSH.DESIGN</title>'
+        '<title data-mh>A &amp; B &lt;x&gt; · Gild UI</title>'
       )
     })
 
@@ -186,7 +186,7 @@ describe('buildHead', () => {
     })
 
     it('defaults to noindex inside a section snapshot build', () => {
-      vi.stubEnv('PUBLIC_ENV__DOCS_SECTION', 'design-system')
+      vi.stubEnv('PUBLIC_ENV__DOCS_SECTION', 'react')
       expect(buildHead(ctx())).toContain('content="noindex,follow"')
     })
   })
@@ -200,15 +200,15 @@ describe('applyHead', () => {
   it('applies the managed tags to document.head', () => {
     applyHead(ctx({ title: 'About', description: 'Who I am.' }, '/about'))
 
-    expect(document.title).toBe('About · SOROUSH.DESIGN')
+    expect(document.title).toBe('About · Gild UI')
     expect(document.querySelector('meta[name="description"]')?.getAttribute('content')).toBe(
       'Who I am.'
     )
     expect(document.querySelector('link[rel="canonical"]')?.getAttribute('href')).toBe(
-      'https://docs.soroush.tech/about/'
+      'https://gild-ui.soroush.design/about/'
     )
     expect(document.querySelector('meta[property="og:url"]')?.getAttribute('content')).toBe(
-      'https://docs.soroush.tech/about/'
+      'https://gild-ui.soroush.design/about/'
     )
     expect(document.querySelector('meta[name="robots"]')?.getAttribute('content')).toBe(
       'index,follow'
@@ -242,6 +242,6 @@ describe('applyHead', () => {
     expect(document.querySelector('meta[property="og:title"]')).toBeNull()
     expect(document.querySelector('script[type="application/ld+json"]')).toBeNull()
     expect(document.querySelectorAll('title[data-mh]')).toHaveLength(1)
-    expect(document.title).toBe('About · SOROUSH.DESIGN')
+    expect(document.title).toBe('About · Gild UI')
   })
 })

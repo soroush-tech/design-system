@@ -1,6 +1,6 @@
 # AI surface
 
-How the design system reaches AI coding tools: an MCP server on two transports, an
+How Gild UI reaches AI coding tools: an MCP server on two transports, an
 `llms.txt` on the docs site, and two skills (house style and WCAG accessibility), installed with
 `npx skills add` for any agent or as part of a Claude Code plugin. All of them are generated from the same repo sources,
 so none of them can drift from the library they describe.
@@ -22,7 +22,7 @@ For the consumer-facing view - how to connect and what the tools do - see
 | Accessibility (WCAG) skill           | `plugins/.../skills/wcag/`                  | The plugin, and `npx skills add soroush-tech/design-system` |
 | Shared registry and README splitting | `packages/docs-content/`                    | Private workspace package                                   |
 
-`@soroush.tech/docs-content` is the seam. It owns the component taxonomy and the
+`@gild-ui/docs-content` is the seam. It owns the component taxonomy and the
 `splitReadme` / `stripReadmeChrome` / `kebabCase` helpers, and `apps/docs/src/common/nav.ts`
 re-exports it. The docs site, `llms.txt`, and the MCP server therefore all describe one
 library from one registry - which is the whole point of the package existing.
@@ -52,12 +52,12 @@ public, move it into the plugin's `skills/` and add its name to `PUBLIC_SKILLS` 
 `packages/mcp/src/generated/content.ts`, which both bundlers inline. Nothing is read
 from disk at runtime.
 
-| Content           | Source of truth                                                                           |
-| ----------------- | ----------------------------------------------------------------------------------------- |
-| Component records | `packages/*/src/*/README.md`, split into `intro` / `api` / `examples`                     |
-| Token contract    | `baseTheme` in `packages/design-system/src/theme/themes.ts`, imported and serialized      |
-| Guides            | `packages/design-system/docs/`, `apps/docs/content/docs/`, `packages/styled-system/docs/` |
-| Consumer refs     | `packages/design-system/docs/consumer/`                                                   |
+| Content           | Source of truth                                                                |
+| ----------------- | ------------------------------------------------------------------------------ |
+| Component records | `packages/*/src/*/README.md`, split into `intro` / `api` / `examples`          |
+| Token contract    | `baseTheme` in `packages/core/src/theme/baseTheme.ts`, imported and serialized |
+| Guides            | `packages/react/docs/`, `apps/docs/content/docs/`                              |
+| Consumer refs     | `packages/react/docs/consumer/`                                                |
 
 Two consequences worth knowing:
 
@@ -84,7 +84,7 @@ Relative links in READMEs (`../View/`) are rewritten to absolute docs URLs by
 The plugin's references are committed because users install the plugin from git and
 never run a build. That makes them driftable, so the check runs in `.husky/pre-commit`
 and in CI's lint job. After changing a component README, a token, or anything under
-`packages/design-system/docs/consumer/`, run:
+`packages/react/docs/consumer/`, run:
 
 ```sh
 pnpm gen:plugin-refs

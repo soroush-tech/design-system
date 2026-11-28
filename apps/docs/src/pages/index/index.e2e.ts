@@ -3,11 +3,11 @@ import { test, expect } from '@playwright/test'
 test.describe('landing page', () => {
   test('renders the hero and the document title', async ({ page }) => {
     await page.goto('/')
-    await expect(page).toHaveTitle(/SOROUSH\.DESIGN/)
+    await expect(page).toHaveTitle(/Gild UI/)
     await expect(
       page.getByRole('heading', { level: 1, name: 'A design system made of tokens, not guesses' })
     ).toBeVisible()
-    await expect(page.getByText('npm i @soroush.tech/design-system')).toBeVisible()
+    await expect(page.getByText('npm i @gild-ui/react @gild-ui/core')).toBeVisible()
   })
 
   test('opens the docs from its buttons and lists the three packages', async ({ page }) => {
@@ -15,13 +15,13 @@ test.describe('landing page', () => {
     const main = page.locator('main')
     await expect(main.getByRole('link', { name: 'Get started' })).toHaveAttribute(
       'href',
-      '/design-system/getting-started/installation/'
+      '/react/installation/'
     )
     await expect(main.getByRole('link', { name: 'Browse components' })).toHaveAttribute(
       'href',
-      '/design-system/components/'
+      '/react/components/'
     )
-    for (const name of ['Design System', 'Markdown', 'Styled System']) {
+    for (const name of ['Gild UI for React', 'Markdown', 'Styled System']) {
       await expect(page.getByRole('link', { name: `${name} documentation` })).toBeVisible()
     }
     await expect(page.getByRole('heading', { level: 3, name: 'Tokens first' })).toBeVisible()

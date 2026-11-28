@@ -1,6 +1,6 @@
 ---
 name: prerelease
-description: How to ship an @soroush.tech/* package through alpha -> rc -> stable on npm with the `channel` dropdown of CD · Packages, so a change is tried in our own apps before it reaches `latest`. Use when releasing a package, publishing an alpha or release candidate from a branch, promoting to stable, or pointing a consumer app at a prerelease.
+description: How to ship a @gild-ui/* package (or @soroush.design/cli, @soroush.design/mcp) through alpha -> rc -> stable on npm with the `channel` dropdown of CD · Packages, so a change is tried in our own apps before it reaches `latest`. Use when releasing a package, publishing an alpha or release candidate from a branch, promoting to stable, or pointing a consumer app at a prerelease.
 paths: packages/**
 metadata:
   internal: true
@@ -27,6 +27,8 @@ nobody edits it.
 
 ## Rules
 
+- A breaking target of the Gild UI family needs its `migrate` step before the first alpha: see the `migrations` skill.
+
 - Pick the target by the semver rule in the [`release-notes`](../release-notes/SKILL.md) skill
   and bump `package.json` to it once, before the first alpha. It stays there through every alpha
   and rc.
@@ -45,7 +47,10 @@ nobody edits it.
 - A prerelease never lands on `latest` - the workflow publishes with `--tag <channel>` and fails
   the run if `latest` ever points at a prerelease. That is also why the
   `check:release-notes` gate keeps passing: it compares `package.json` with `latest` only.
-- Publish dependencies first (`styled-system` before `design-system`): `workspace:^` publishes
+- The `lockstep` packages (root `package.json`: core, hooks, react, react-markdown) share one
+  version and publish together: dispatching one of them publishes the set, and a run with only
+  some of them fails. Bump all of them and add each one's notes file.
+- Publish dependencies first (a package before the ones that depend on it): `workspace:^` publishes
   as `^<sibling's version>`, so a prerelease run points each workspace dependency at its newest
   prerelease on the same channel, and stops with "publish X first" when there is none; a
   stable run stops the same way when the dependency's version isn't on npm. `all`
@@ -61,20 +66,20 @@ nobody edits it.
 2. Wait for CI: `ci-ok` must be green on the branch's latest commit.
 3. The user dispatches **CD · Packages (npm)**: _Use workflow from_ the branch, `package`
    (dependencies first), `channel: alpha`.
-4. In each consumer app: `pnpm add @soroush.tech/<pkg>@alpha`, then test there.
+4. In each consumer app: `pnpm add @gild-ui/<pkg>@alpha`, then test there.
 5. Something wrong: fix, push, wait for green CI, dispatch again - the next `alpha.N` follows.
 
 ## Publish a release candidate
 
 1. Merge the PR (the target and `release-notes/X.Y.Z.md` in it).
 2. Dispatch from `main` with `channel: rc`, dependencies first.
-3. Consumers: `pnpm add @soroush.tech/<pkg>@rc`. A fix is a PR to `main`, then another `rc`.
+3. Consumers: `pnpm add @gild-ui/<pkg>@rc`. A fix is a PR to `main`, then another `rc`.
 
 ## Promote to stable
 
 1. Dispatch from `main` with `channel: stable`, dependencies first - same `package.json`, no
    commit needed.
-2. `npm view @soroush.tech/<pkg> dist-tags`: `latest` is `X.Y.Z`.
+2. `npm view @gild-ui/<pkg> dist-tags`: `latest` is `X.Y.Z`.
 3. Consumers move from the tag to `^X.Y.Z`. The next change needs a new target.
 4. `pnpm deprecate-alpha`: deprecates every alpha whose release is now on npm, in every
    package, pointing each at `^X.Y.Z` (it asks for npm's one-time code; `--dry-run` only lists).

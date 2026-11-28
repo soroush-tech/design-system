@@ -1,7 +1,6 @@
 import { useMemo } from 'react'
 import { Editor } from 'react-live'
-import { styled } from '@soroush.tech/design-system'
-import { useTheme } from '@soroush.tech/design-system/theme'
+import { styled, useTheme } from '@gild-ui/react'
 import { prismTheme } from '../../utils/prismTheme'
 
 export interface CodePanelProps {

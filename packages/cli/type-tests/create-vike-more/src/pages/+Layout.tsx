@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { View } from '@soroush.tech/design-system/View'
+import { View } from '@gild-ui/react/View'
 import { useDispatch, useSelector } from 'react-redux'
 import { schemeChanged, type RootState } from '../state/store'
 import { Header } from '../components/Header'

@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { Button } from '@soroush.tech/design-system/Button'
-import { Flex } from '@soroush.tech/design-system/Flex'
-import { Typography } from '@soroush.tech/design-system/Typography'
+import { Button } from '@gild-ui/react/Button'
+import { Flex } from '@gild-ui/react/Flex'
+import { Typography } from '@gild-ui/react/Typography'
 import { withIsland } from '../theme/Island'
 
 /**

@@ -1,0 +1,42 @@
+{
+  "package": "@gild-ui/hooks",
+  "entries": {
+    ".": {
+      "values": [
+        "COPIED_RESET_MS",
+        "DEBOUNCE_DELAY_MS",
+        "useControlled",
+        "useCopyToClipboard",
+        "useDebounce",
+        "useDebouncedCallback",
+        "useEventCallback",
+        "useMergedRefs"
+      ],
+      "types": ["UseControlledParams", "UseCopyToClipboardResult"]
+    },
+    "./useControlled": {
+      "values": ["useControlled"],
+      "types": ["UseControlledParams"]
+    },
+    "./useCopyToClipboard": {
+      "values": ["COPIED_RESET_MS", "useCopyToClipboard"],
+      "types": ["UseCopyToClipboardResult"]
+    },
+    "./useDebounce": {
+      "values": ["DEBOUNCE_DELAY_MS", "useDebounce"],
+      "types": []
+    },
+    "./useDebouncedCallback": {
+      "values": ["useDebouncedCallback"],
+      "types": []
+    },
+    "./useEventCallback": {
+      "values": ["useEventCallback"],
+      "types": []
+    },
+    "./useMergedRefs": {
+      "values": ["useMergedRefs"],
+      "types": []
+    }
+  }
+}

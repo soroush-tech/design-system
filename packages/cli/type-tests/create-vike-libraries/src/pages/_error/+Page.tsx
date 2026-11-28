@@ -1,6 +1,6 @@
-import { Flex } from '@soroush.tech/design-system/Flex'
-import { Link } from '@soroush.tech/design-system/Link'
-import { Typography } from '@soroush.tech/design-system/Typography'
+import { Flex } from '@gild-ui/react/Flex'
+import { Link } from '@gild-ui/react/Link'
+import { Typography } from '@gild-ui/react/Typography'
 
 /** Shown for a page that does not exist, and when a page fails to render. */
 export default function Page() {

@@ -1,0 +1,283 @@
+import { createContext, useContext, type CSSProperties, type ReactNode } from 'react'
+import ReactMarkdown, { type Components, type Options } from 'react-markdown'
+import remarkGfm from 'remark-gfm'
+import rehypeHighlight from 'rehype-highlight'
+import rehypeSlug from 'rehype-slug'
+import { StyleSheet, styled, type SlotProps, type StyleOverride } from '@gild-ui/react'
+import { Quote, type QuoteProps } from '@gild-ui/react/Quote'
+import { Checkbox, type CheckboxProps } from '@gild-ui/react/Checkbox'
+import { Image, type ImageProps } from '@gild-ui/react/Image'
+import { Link, type LinkProps } from '@gild-ui/react/Link'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  type TableBodyProps,
+  type TableCellProps,
+  type TableHeadProps,
+  type TableProps,
+  type TableRowProps,
+} from '@gild-ui/react/Table'
+import { Typography, type TypographyProps } from '@gild-ui/react/Typography'
+import { View, type ViewProps } from '@gild-ui/react/View'
+import { CodeBlock, type CodeBlockProps } from '../CodeBlock'
+import { Mermaid, type MermaidProps } from '../Mermaid'
+import { mergeOverrides } from '../utils/mergeOverrides'
+import { MERMAID_LANGUAGE, isMermaidBlock, mermaidSource } from './mermaidBlock'
+
+// A GFM task-list item carries its own checkbox, so it drops the list marker.
+const taskItem = StyleSheet.create({ item: { listStyleType: 'none' } })
+
+const remarkPlugins: Options['remarkPlugins'] = [remarkGfm]
+// Every heading takes an id from its text, the way GitHub names its anchors - so a link to a
+// file's `#section` lands on that heading here too. `ignoreMissing` keeps unknown fence
+// languages from throwing - they render unhighlighted.
+const rehypePlugins: Options['rehypePlugins'] = [
+  rehypeSlug,
+  [rehypeHighlight, { ignoreMissing: true }],
+]
+
+// Keeps the content within its (flex-item) column on narrow viewports: shrink to fit,
+// never exceed the container, and break long URLs/tokens instead of overflowing. Wide
+// code blocks and tables keep their own horizontal scroll.
+const PreviewRoot = styled(View, { name: 'MarkdownPreview', label: 'MarkdownPreview' })({
+  minWidth: 0,
+  maxWidth: '100%',
+  overflowWrap: 'break-word',
+})
+
+/**
+ * Per-element prop overrides, merged over the design-system defaults (the caller's props win).
+ * Keyed by markdown element - e.g. `slotProps={{ p: { color: 'primary' }, h1: { variant: 'h2' } }}` -
+ * and by the one slot a theme can style, `root`, which takes a `style`, a `className` and `data-*`
+ * and `aria-*` attributes. No markdown element is named `root`.
+ */
+export interface PreviewSlotProps extends SlotProps<'root'> {
+  h1?: TypographyProps
+  h2?: TypographyProps
+  h3?: TypographyProps
+  h4?: TypographyProps
+  h5?: TypographyProps
+  h6?: TypographyProps
+  p?: TypographyProps
+  strong?: TypographyProps
+  em?: TypographyProps
+  li?: TypographyProps
+  code?: TypographyProps
+  a?: LinkProps
+  ul?: ViewProps
+  ol?: ViewProps
+  hr?: ViewProps
+  blockquote?: QuoteProps
+  img?: ImageProps
+  th?: TableCellProps
+  td?: TableCellProps
+  pre?: CodeBlockProps
+  input?: CheckboxProps
+  table?: TableProps
+  thead?: TableHeadProps
+  tbody?: TableBodyProps
+  tr?: TableRowProps
+  /** Props for a ` ```mermaid ` fence's `Mermaid` renderer - including `diagram` (viewer) props. */
+  mermaid?: Omit<MermaidProps, 'chart'>
+}
+
+const alignOf = (style?: CSSProperties) => style?.textAlign as TableCellProps['align']
+
+const EMPTY_SLOT_PROPS: PreviewSlotProps = {}
+
+// react-markdown treats a new component reference as a new element type and remounts the whole
+// subtree, so the `components` map must be module-static. Each element therefore reads the
+// current slotProps from context instead of closing over a per-render object.
+const SlotPropsContext = createContext<PreviewSlotProps>(EMPTY_SLOT_PROPS)
+
+function slotted<P>(render: (slotProps: PreviewSlotProps, props: P) => ReactNode) {
+  function Slotted(props: P) {
+    return render(useContext(SlotPropsContext), props)
+  }
+  return Slotted
+}
+
+const components: Components = {
+  h1: slotted(({ h1 }, { id, children }) => (
+    <Typography id={id} mt={2} variant="h1" color="primary" gutterBottom {...h1}>
+      {children}
+    </Typography>
+  )),
+  h2: slotted(({ h2 }, { id, children }) => (
+    <Typography id={id} mt={2} variant="h2" color="primary" gutterBottom {...h2}>
+      {children}
+    </Typography>
+  )),
+  h3: slotted(({ h3 }, { id, children }) => (
+    <Typography id={id} mt={2} variant="h3" color="primary" gutterBottom {...h3}>
+      {children}
+    </Typography>
+  )),
+  h4: slotted(({ h4 }, { id, children }) => (
+    <Typography id={id} mt={2} variant="h4" gutterBottom {...h4}>
+      {children}
+    </Typography>
+  )),
+  h5: slotted(({ h5 }, { id, children }) => (
+    <Typography id={id} mt={2} variant="h5" gutterBottom {...h5}>
+      {children}
+    </Typography>
+  )),
+  h6: slotted(({ h6 }, { id, children }) => (
+    <Typography id={id} mt={2} variant="h6" gutterBottom {...h6}>
+      {children}
+    </Typography>
+  )),
+  p: slotted(({ p }, { children }) => (
+    <Typography variant="body1" color="secondary" mb={2} lineHeight="relaxed" {...p}>
+      {children}
+    </Typography>
+  )),
+  a: slotted(({ a }, { href, children }) => (
+    <Link href={href} underline="hover" {...a}>
+      {children}
+    </Link>
+  )),
+  strong: slotted(({ strong }, { children }) => (
+    <Typography as="strong" variant="inherit" fontWeight="extraBold" {...strong}>
+      {children}
+    </Typography>
+  )),
+  em: slotted(({ em }, { children }) => (
+    <Typography as="em" variant="inherit" fontStyle="italic" {...em}>
+      {children}
+    </Typography>
+  )),
+  ul: slotted(({ ul }, { children }) => (
+    <View as="ul" pl={3} mb={2} {...ul}>
+      {children}
+    </View>
+  )),
+  ol: slotted(({ ol }, { children }) => (
+    <View as="ol" pl={3} mb={2} {...ol}>
+      {children}
+    </View>
+  )),
+  li: slotted(({ li }, { children, className }) => (
+    <Typography
+      as="li"
+      color="secondary"
+      lineHeight="base"
+      variant="body1"
+      gutterBottom
+      style={className?.includes('task-list-item') && taskItem.item}
+      {...li}
+    >
+      {children}
+    </Typography>
+  )),
+  // GFM task-list checkbox - the theme Checkbox, read-only (disabled) and brand-coloured.
+  input: slotted(({ input }, { checked }) => (
+    <Checkbox
+      checked={Boolean(checked)}
+      disabled
+      color="primary"
+      size="sm"
+      aria-label="Task item"
+      mr={1}
+      {...input}
+    />
+  )),
+  blockquote: slotted(({ blockquote }, { children }) => (
+    <Quote as="blockquote" pl={3} py={1} my={2} {...blockquote}>
+      {children}
+    </Quote>
+  )),
+  code: slotted(({ code, mermaid }, { className, children }) => {
+    const classes = className ?? ''
+    if (classes.includes(MERMAID_LANGUAGE)) {
+      return <Mermaid chart={mermaidSource(children)} {...mermaid} />
+    }
+    const isBlock = classes.includes('language-')
+    return (
+      <Typography
+        as="code"
+        // Keep the `language-*` class on the DOM so LiveEdit's serializer can
+        // preserve the fence language when a code block is edited in place.
+        className={className}
+        color="initial"
+        variant="inherit"
+        fontFamily="mono"
+        display={isBlock ? 'block' : 'inline'}
+        bg={isBlock ? 'transparent' : 'paper'}
+        px={isBlock ? 0 : 1}
+        borderRadius="sm"
+        {...code}
+      >
+        {children}
+      </Typography>
+    )
+  }),
+  pre: slotted(({ pre }, { children }) =>
+    isMermaidBlock(children) ? children : <CodeBlock {...pre}>{children}</CodeBlock>
+  ),
+  table: slotted(({ table }, { children }) => (
+    <TableContainer my={2}>
+      <Table bg="terminal" borderRadius="md" {...table}>
+        {children}
+      </Table>
+    </TableContainer>
+  )),
+  thead: slotted(({ thead }, { children }) => (
+    <TableHead bg="grid" color="primary" {...thead}>
+      {children}
+    </TableHead>
+  )),
+  tbody: slotted(({ tbody }, { children }) => <TableBody {...tbody}>{children}</TableBody>),
+  tr: slotted(({ tr }, { children }) => (
+    <TableRow isHoverable {...tr}>
+      {children}
+    </TableRow>
+  )),
+  // th vs td is resolved from the enclosing section via TableSectionContext; the
+  // GFM column alignment arrives as an inline `style`; it is read as the cell's `align`.
+  th: slotted(({ th }, { children, style }) => (
+    <TableCell align={alignOf(style)} {...th}>
+      {children}
+    </TableCell>
+  )),
+  td: slotted(({ td }, { children, style }) => (
+    <TableCell align={alignOf(style)} {...td}>
+      {children}
+    </TableCell>
+  )),
+  hr: slotted(({ hr }) => (
+    <View as="hr" my={2} height="1px" bg="grid" width="100%" border="none" {...hr} />
+  )),
+  img: slotted(({ img }, { src, alt }) => <Image src={src} alt={alt} maxWidth="100%" {...img} />),
+}
+
+export interface PreviewProps {
+  /** The markdown source to render. */
+  children: string
+  /** Per-element prop overrides, merged over the defaults. */
+  slotProps?: PreviewSlotProps
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+}
+
+/** Renders a markdown string with every element mapped to a design-system primitive. */
+export function Preview({ children, slotProps, style }: Readonly<PreviewProps>) {
+  return (
+    <PreviewRoot {...mergeOverrides(slotProps?.root, { style })}>
+      <SlotPropsContext.Provider value={slotProps ?? EMPTY_SLOT_PROPS}>
+        <ReactMarkdown
+          components={components}
+          remarkPlugins={remarkPlugins}
+          rehypePlugins={rehypePlugins}
+        >
+          {children}
+        </ReactMarkdown>
+      </SlotPropsContext.Provider>
+    </PreviewRoot>
+  )
+}

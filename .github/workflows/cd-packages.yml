@@ -16,6 +16,10 @@ name: CD · Packages (npm)
 #   rc     - <target>-rc.N under `rc`, from main. A GitHub pre-release.
 #   stable - <target> under `latest`, from main. A GitHub Release.
 # N counts up from what npm already has; a prerelease never touches `latest`.
+#
+# The packages in the root package.json's `lockstep` list share one version and go out together:
+# naming any one of them publishes the whole set, dependencies first, and a run that would
+# publish only some of them fails.
 
 on:
   workflow_dispatch:
@@ -28,10 +32,11 @@ on:
         options:
           - all
           - cli
-          - design-system
-          - markdown
+          - core
+          - hooks
           - mcp
-          - styled-system
+          - react
+          - react-markdown
           - ui-spec
         # gen:publish-options end
       channel:
@@ -109,7 +114,16 @@ jobs:
             test -f "packages/$PKG/package.json" || { echo "::error::Unknown package: $PKG"; exit 1; }
             node -e 'process.exit(require(`./packages/${process.env.PKG}/package.json`).private === true ? 1 : 0)' \
               || { echo "::error::$PKG is private - not publishable"; exit 1; }
-            PKGS="$PKG"
+            # A lockstep package (root package.json) never goes alone: its whole set publishes.
+            PKGS=$(node -e '
+              const { readdirSync, existsSync } = require("node:fs")
+              const set = require("./package.json").lockstep
+              const dirOf = (name) => readdirSync("packages").find(
+                (dir) => existsSync(`packages/${dir}/package.json`) && require(`./packages/${dir}/package.json`).name === name
+              )
+              const own = require(`./packages/${process.env.PKG}/package.json`).name
+              console.log((set.includes(own) ? set.map(dirOf) : [process.env.PKG]).join(" "))
+            ')
           fi
           for pkg in $PKGS; do
             VERSION=$(PKG="$pkg" node -p "require('./packages/'+process.env.PKG+'/package.json').version")
@@ -135,6 +149,10 @@ jobs:
       # install - the packages build with tsdown, which needs none.
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --ignore-scripts
+
+      # The lockstep packages share one version and publish together (packages/packages.md).
+      - name: Check lockstep
+        run: node scripts/check-lockstep.mjs
 
       # Turn the package.json targets into this channel's versions (in this checkout only) and
       # order the run dependencies-first. With `all`, a target already on npm is skipped; a

@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { screen } from '@testing-library/react'
 import { renderWithTheme } from 'src/test/utils/wrapper'
 import { allComponents, componentCategories } from 'src/common/nav'
-import { ThemeProvider } from '@soroush.tech/design-system/theme'
+import { ThemeProvider } from '@gild-ui/react'
 import { dark, light } from 'src/theme/themes'
 import { illustrationInk } from 'src/theme/illustrationInk'
 import { illustrations } from './illustrations'
@@ -15,10 +15,7 @@ const button = allComponents.find((item) => item.name === 'Button')!
 describe('ComponentCard', () => {
   it('links to the component page and names it', () => {
     renderWithTheme(<ComponentCard item={button} />)
-    expect(screen.getByRole('link', { name: 'Button' })).toHaveAttribute(
-      'href',
-      '/design-system/components/button/'
-    )
+    expect(screen.getByRole('link', { name: 'Button' })).toHaveAttribute('href', '/react/Button/')
   })
 
   it('writes the name in the theme initial text color, white in the dark mode', () => {

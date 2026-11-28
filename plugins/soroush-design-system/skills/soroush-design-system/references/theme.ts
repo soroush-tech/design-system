@@ -1,6 +1,7 @@
-import type { Theme } from '@soroush.tech/design-system'
-import { baseTheme, createTheme } from '@soroush.tech/design-system/theme'
-import { alpha, generateBoxShadow } from '@soroush.tech/design-system/utils'
+import { baseTheme, createTheme, defineThemes } from '@gild-ui/core/theme'
+import type { ThemeComponents } from '@gild-ui/react'
+import { registerBaseTheme } from '@gild-ui/react/ThemeProvider'
+import { alpha, generateBoxShadow } from '@gild-ui/core/utils'
 
 // Brand color ramps. Every app that copies them shares one color set, so change which
 // ramp fills a palette slot, never the ramp values.
@@ -102,13 +103,13 @@ const darkShadows = Array.from({ length: 25 }, (_, elevation) =>
 )
 
 // Chromatic-style pill buttons app-wide; label loses the uppercase treatment.
-const components: Theme['components'] = {
+const components = {
   Button: {
     styleOverrides: {
       root: { borderRadius: '3em' },
     },
   },
-}
+} satisfies ThemeComponents
 
 const typographyOverrides = {
   button: {
@@ -121,14 +122,13 @@ const typographyOverrides = {
 } as const
 
 /** Default theme: white surfaces, brand green accents. */
-export const light: Theme = createTheme(baseTheme, {
+const lightTheme = createTheme(baseTheme, {
   name: 'light',
   colorScheme: 'light',
   logoFilter: 'brightness(0)',
   portraitBlend: 'multiply',
   portraitOpacity: 1,
   shadow: { color: carbonBlack[900], opacity: 0.1 },
-  components,
   typography: typographyOverrides,
   palette: {
     default: {
@@ -212,14 +212,13 @@ export const light: Theme = createTheme(baseTheme, {
   shadows: lightShadows,
 })
 
-export const dark: Theme = createTheme(baseTheme, {
+const darkTheme = createTheme(baseTheme, {
   name: 'dark',
   colorScheme: 'dark',
   logoFilter: 'brightness(0) invert(1)',
   portraitBlend: 'screen',
   portraitOpacity: 0.8,
   shadow: { color: carbonBlack[900], opacity: 0.4 },
-  components,
   typography: typographyOverrides,
   palette: {
     default: {
@@ -302,3 +301,19 @@ export const dark: Theme = createTheme(baseTheme, {
   },
   shadows: darkShadows,
 })
+
+export const themes = defineThemes({ light: lightTheme, dark: darkTheme }, components)
+
+export const { light, dark } = themes
+
+// What a server component reads, with no provider above it: its `components` and `defaults`.
+// The module is imported by the root layout and by `providers.tsx`, so the server and the browser
+// each register it.
+registerBaseTheme(light)
+
+// Tells every library the themes' colors, sizes and looks.
+declare module '@gild-ui/core/theme' {
+  interface Register {
+    themes: typeof themes
+  }
+}

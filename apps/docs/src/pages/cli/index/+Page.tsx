@@ -1,5 +1,5 @@
 import readme from 'packages/cli/docs/command-line.md?raw'
-import { Typography } from '@soroush.tech/design-system/Typography'
+import { Typography } from '@gild-ui/react/Typography'
 import { DocsNav } from 'src/common/DocsNav/DocsNav'
 import { Layout } from 'src/common/Layout'
 import { Readme } from 'src/common/Readme/Readme'

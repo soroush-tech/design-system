@@ -1,0 +1,27 @@
+{
+  // The app init wrote at 2.2.0, after the step, against the Gild UI of this repository: the same
+  // strict settings as type-tests/init, reading the packages' built types.
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2023", "DOM"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "verbatimModuleSyntax": true,
+    "allowImportingTsExtensions": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "skipLibCheck": true,
+    "jsx": "react",
+    "types": [],
+    "paths": {
+      "@gild-ui/react": ["../../../../../../../react/dist/index.d.mts"],
+      "@gild-ui/react/*": ["../../../../../../../react/dist/*.d.mts"],
+      "@gild-ui/core/*": ["../../../../../../../core/dist/*.d.mts"],
+      "@gild-ui/hooks/*": ["../../../../../../../hooks/dist/*.d.mts"]
+    }
+  },
+  "include": ["after/src"]
+}

@@ -7,10 +7,16 @@ pnpm exec oxfmt-quick --staged
 # quoted string is how a file stops parsing.
 pnpm exec aiwg --staged --fix
 pnpm gen:publish-options --check
+# ThemeComponents is generated from the component folders.
+pnpm gen:theme-components --check
 # The plugin ships generated references (users install it from git), so they are
 # committed - this fails the commit when they no longer match the repo they describe.
 pnpm gen:plugin-refs --check
 pnpm check:release-notes
+# The lockstep packages share one version.
+pnpm check:lockstep
+# A breaking release of the family ships its migrate step.
+pnpm check:migrations
 # `npx skills add` must offer only the public skill; an outside update can undo that.
 pnpm check:skills
 pnpm test

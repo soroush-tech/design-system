@@ -6,10 +6,7 @@ import { Readme } from './Readme'
 describe('Readme', () => {
   it('renders markdown with links rewritten to site routes', () => {
     renderWithTheme(<Readme source="See [Button](../Button/README.md) for actions." />)
-    expect(screen.getByRole('link', { name: 'Button' })).toHaveAttribute(
-      'href',
-      '/design-system/components/button/'
-    )
+    expect(screen.getByRole('link', { name: 'Button' })).toHaveAttribute('href', '/react/Button/')
   })
 
   it('strips the leading H1 when stripChrome is set', () => {

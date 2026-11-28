@@ -1,6 +1,6 @@
 ---
 name: ci-cd
-description: GitHub Actions CI/CD conventions for this repo - the single CI entry workflow (prepare → lint → packages matrix + bench → ci-ok), the action-pinning rule (version tags for `actions/*`, commit SHAs for everything else including our own org), per-package Codecov flags with tokenless-OIDC uploads, the gen:publish-options marker blocks, and manual npm publishing via cd-packages.yml. Use when adding, editing, or debugging any workflow under .github/workflows/.
+description: GitHub Actions CI/CD conventions for this repo - the single CI entry workflow (prepare → lint → packages matrix → ci-ok), the action-pinning rule (version tags for `actions/*`, commit SHAs for everything else including our own org), per-package Codecov flags with tokenless-OIDC uploads, the gen:publish-options marker blocks, and manual npm publishing via cd-packages.yml. Use when adding, editing, or debugging any workflow under .github/workflows/.
 paths: .github/workflows/**
 metadata:
   internal: true
@@ -19,20 +19,24 @@ metadata:
 One CI entry workflow holding every job; CD is separate and **manual only** - a release is a
 deliberate act with required, human-written notes, never triggered by a push or merge.
 
+**No workflow deploys docs.** `docs.soroush.tech` is frozen: it documents the former package and
+is served by GitHub Pages from the `docs-dist` branch, which nothing may write to - no deploy, no
+URL change, no new version. `ci.yml` only builds the docs app. The new Gild UI docs site (`gild-ui.soroush.design`)
+(Cloudflare Pages) gets its deploy with #147.
+
 ## Action pinning convention - the load-bearing rule
 
 Pin every `uses:` by the action's **origin**:
 
 - **GitHub's own** - `actions/*` (checkout, setup-node, cache, github-script) → **version tag**:
   `actions/checkout@v7`.
-- **Everything else, our own org included** (`soroush-tech/bench-action`, `pnpm/action-setup`,
-  `codecov/codecov-action`) → **commit SHA** + `# vX` comment. What SHA-pinning defends against
+- **Everything else, our own org included** (`pnpm/action-setup`, `codecov/codecov-action`) → **commit SHA** + `# vX` comment. What SHA-pinning defends against
   is a tag being moved, and our own tags move like anyone's. The SHA is bumped when the action
   releases - the upgrade is a reviewed line, not a silent one.
 
 ## CI job shape
 
-`prepare` → `lint` → `packages` (matrix) + `bench` → `ci-ok`.
+`prepare` → `lint` → `packages` (matrix) → `ci-ok`.
 
 - **Detect once in `prepare`** (node version from `.nvmrc`, package manager, runner, the package
   matrix), reuse via `needs.prepare.outputs.*`. Never hard-code the node version.
@@ -48,10 +52,6 @@ Pin every `uses:` by the action's **origin**:
   just after the call.
 - Every install runs `--ignore-scripts`: no lifecycle script at install time, anywhere in CI -
   the packages build with tsdown, which needs none.
-- **`bench`** is the styled-system performance gate: builds the package, then
-  `soroush-tech/bench-action` compares against the last npm release; a case below the minimum
-  speed ratio fails the PR via ci-ok. The bot-token mint step is optional - without the
-  `BENCH_BOT_APP_ID` var it falls back to `GITHUB_TOKEN`.
 - **`ci-ok`** is the single branch-protection check: `if: always()`, fails only on a needed
   job's `failure`/`cancelled`. **Add every new job to its `needs`.**
 - Set `timeout-minutes` on every job; matrices use `fail-fast: false`. CI concurrency cancels
@@ -85,7 +85,7 @@ run `pnpm gen:publish-options` and commit the result.
 Manual dispatch with a `package` and a `channel` input (`alpha` | `rc` | `stable` - see the
 `prerelease` skill): `alpha` runs from any branch whose `ci-ok` passed and publishes
 `<target>-alpha.N` under the `alpha` dist-tag; `rc` and `stable` run from `main` only.
-`scripts/prerelease-versions.mjs` computes the versions in the checkout. npm **Trusted Publishing** (OIDC id-token per run, no
+`scripts/prerelease-versions.mjs` computes the versions in the checkout; the root `package.json`'s `lockstep` packages publish together from one dispatch (`pnpm check:lockstep` guards their versions, in `lint`). npm **Trusted Publishing** (OIDC id-token per run, no
 NPM_TOKEN; `NODE_AUTH_TOKEN` must stay unset). Requires the `cd-packages` environment and the
 npm trusted-publisher config for this repo. Notes come from
 `packages/<pkg>/release-notes/<version>.md` - the run refuses to publish without the file, and

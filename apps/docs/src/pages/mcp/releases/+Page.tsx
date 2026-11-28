@@ -1,4 +1,4 @@
-import { Typography } from '@soroush.tech/design-system/Typography'
+import { Typography } from '@gild-ui/react/Typography'
 import { DocsNav } from 'src/common/DocsNav/DocsNav'
 import { Layout } from 'src/common/Layout'
 import { ReleaseNotes } from 'src/common/ReleaseNotes/ReleaseNotes'

@@ -1,0 +1,388 @@
+import { test, expect } from '@playwright/test'
+
+test.describe('react section', () => {
+  test('overview renders the README with the sidebar nav', async ({ page }) => {
+    await page.goto('/react/')
+    await expect(page).toHaveTitle(/Gild UI for React · Gild UI/)
+    await expect(page.getByRole('heading', { level: 1, name: 'Gild UI for React' })).toBeVisible()
+    await expect(page.getByRole('navigation', { name: 'Gild UI documentation' })).toBeVisible()
+  })
+
+  test('the search is a page of its own: important links first, matches once a word is typed', async ({
+    page,
+  }) => {
+    await page.goto('/react/')
+    await page
+      .getByRole('navigation', { name: 'Primary' })
+      .getByRole('button', { name: 'Search' })
+      .click()
+    const search = page.getByRole('dialog', { name: 'Search the documentation' })
+    await expect(search.getByRole('heading', { name: 'Most important links' })).toBeVisible()
+    await expect(search.getByRole('link', { name: /Installation/ })).toBeVisible()
+    await search.getByRole('searchbox').fill('autocomplete')
+    await search
+      .getByRole('link', { name: /^Autocomplete/ })
+      .first()
+      .click()
+    await expect(page).toHaveURL(/\/react\/Autocomplete\//)
+    // The search it led from is kept for next time.
+    await page
+      .getByRole('navigation', { name: 'Primary' })
+      .getByRole('button', { name: 'Search' })
+      .click()
+    await expect(
+      page.getByRole('dialog', { name: 'Search the documentation' }).getByRole('button', {
+        name: 'autocomplete',
+      })
+    ).toBeVisible()
+  })
+
+  test('the rail shows the version of the docs under the search', async ({ page }) => {
+    await page.goto('/react/')
+    const rail = page.getByRole('navigation', { name: 'Primary' })
+    await expect(rail.getByRole('button', { name: 'Search' })).toBeVisible()
+    await expect(
+      rail.getByRole('button', { name: /Documentation version, v\d+\.\d+\.\d+/ })
+    ).toBeVisible()
+  })
+
+  test('the version menu lists the released versions and opens the one that is chosen', async ({
+    page,
+  }) => {
+    // The deploy writes /versions.json at the domain root; a local build has none, so it is given.
+    await page.route('**/versions.json', (route) =>
+      route.fulfill({ json: { react: ['0.2.0', '0.1.0'] } })
+    )
+    // A snapshot is a build of its own, so its page is given too.
+    await page.route('**/react/0.1.0/', (route) =>
+      route.fulfill({ contentType: 'text/html', body: '<title>0.1.0 snapshot</title>' })
+    )
+    await page.goto('/react/')
+    await page
+      .getByRole('navigation', { name: 'Primary' })
+      .getByRole('button', { name: /Documentation version/ })
+      .click()
+    const menu = page.getByRole('menu', { name: 'Documentation version' })
+    await expect(menu.getByRole('menuitemradio', { name: /^Latest/ })).toHaveAttribute(
+      'aria-checked',
+      'true'
+    )
+    await menu.getByRole('menuitemradio', { name: 'v0.1.0', exact: true }).click()
+    await expect(page).toHaveURL(/\/react\/0\.1\.0\/$/)
+  })
+
+  test('the releases hold the one note of 0.1.0', async ({ page }) => {
+    await page.goto('/react/releases/')
+    await expect(page.getByRole('heading', { level: 1, name: 'Releases' })).toBeVisible()
+    // The page's own headings: the sidebar has h2s too, none is a version.
+    await expect(page.getByRole('heading', { level: 2, name: /^v[0-9]/ })).toHaveText(['v0.1.0'])
+  })
+
+  test('sidebar navigates to installation', async ({ page }) => {
+    await page.goto('/react/')
+    await page
+      .getByRole('navigation', { name: 'Gild UI documentation' })
+      .getByRole('link', { name: 'Installation' })
+      .click()
+    await expect(page).toHaveURL(/\/react\/installation\//)
+    await expect(page.getByRole('heading', { level: 1, name: 'Installation' })).toBeVisible()
+  })
+
+  test('components index lists categories and opens a component page', async ({ page }) => {
+    await page.goto('/react/components/')
+    await expect(page.getByRole('heading', { level: 1, name: 'Components' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Inputs & forms' })).toBeVisible()
+    await page.getByRole('link', { name: 'Button', exact: true }).first().click()
+    await expect(page).toHaveURL(/\/react\/Button\//)
+    await expect(page.getByRole('heading', { level: 1, name: 'Button' })).toBeVisible()
+  })
+
+  test('the sidebar sits beside the content, not above it', async ({ page }) => {
+    await page.goto('/react/Button/')
+    const nav = await page.getByRole('navigation', { name: 'Gild UI documentation' }).boundingBox()
+    const heading = await page.getByRole('heading', { level: 1, name: 'Button' }).boundingBox()
+    expect(nav && heading && heading.x > nav.x + nav.width).toBe(true)
+  })
+
+  test('a component page renders live demos with toggleable source', async ({ page }) => {
+    await page.goto('/react/Button/')
+    await expect(page.getByRole('heading', { name: 'Variants' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Contained' }).first()).toBeVisible()
+    // The collapsed preview snippet is visible before expanding; expand reveals imports.
+    await expect(page.getByText('variant="contained"').first()).toBeVisible()
+    await page.getByRole('button', { name: 'Expand code' }).first().click()
+    await expect(page.getByText(/import \{ Button \}/).first()).toBeVisible()
+    const tabs = page.getByRole('navigation', { name: 'Button pages' })
+    await expect(tabs.getByRole('link', { name: 'Overview' })).toHaveAttribute(
+      'aria-current',
+      'page'
+    )
+    await expect(tabs.getByRole('link', { name: 'Specs' })).toBeVisible()
+  })
+
+  test('a wide window lists the sections of the page in a contents column', async ({ page }) => {
+    await page.setViewportSize({ width: 1600, height: 900 })
+    await page.goto('/react/Button/specs/')
+    const toc = page.getByRole('navigation', { name: 'On this page' })
+    await expect(toc.getByRole('link', { name: 'Button-specific props' })).toBeVisible()
+    await toc.getByRole('link', { name: 'Styled-system props' }).click()
+    await expect(page).toHaveURL(/#styled-system-props$/)
+  })
+
+  test('the head is wider than the content, and the tabs shrink to the content grid when they stick', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 2400, height: 1000 })
+    await page.goto('/react/Button/')
+    const head = page.locator('main header')
+    const tabs = page.getByRole('navigation', { name: 'Button pages' })
+    const headWidth = (await head.boundingBox())!.width
+    // The head is wider than the 1200px grid; in its place, the tabs are as wide as the head.
+    expect(headWidth).toBeGreaterThan(1300)
+    expect((await tabs.boundingBox())!.width).toBeCloseTo(headWidth, 0)
+    // Stuck, they shrink to the grid the content sits in.
+    await page.evaluate(() => window.scrollTo(0, 1500))
+    await expect.poll(async () => Math.round((await tabs.boundingBox())!.width)).toBe(1200)
+  })
+
+  test('a component with accessibility notes has the tab, and the notes are only there', async ({
+    page,
+  }) => {
+    await page.goto('/react/Fab/')
+    const tabs = page.getByRole('navigation', { name: 'Fab pages' })
+    // The notes are not under Overview...
+    await expect(page.getByRole('heading', { level: 2, name: 'Accessibility' })).toHaveCount(0)
+    await tabs.getByRole('link', { name: 'Accessibility' }).click()
+    await expect(page).toHaveURL(/\/react\/Fab\/accessibility\//)
+    // ...they are on their own tab.
+    await expect(page.getByRole('heading', { level: 2, name: 'Accessibility' })).toBeVisible()
+    await expect(tabs.getByRole('link', { name: 'Accessibility' })).toHaveAttribute(
+      'aria-current',
+      'page'
+    )
+  })
+
+  test('the tabs stay at the top of the window, and a tab opens at the tabs', async ({ page }) => {
+    await page.setViewportSize({ width: 1600, height: 900 })
+    await page.goto('/react/Button/')
+    const tabs = page.getByRole('navigation', { name: 'Button pages' })
+    await page.evaluate(() => window.scrollTo(0, 1500))
+    // Stuck, the bar keeps 8px from the top of the window.
+    await expect.poll(async () => (await tabs.boundingBox())?.y).toBe(8)
+    await tabs.getByRole('link', { name: 'Specs' }).click()
+    await expect(page).toHaveURL(/\/react\/Button\/specs\//)
+    // The page is brought to the tabs: the hero above them is scrolled away, and they are in
+    // view near the top - a little below where they stick, so the reader sees which tab is chosen.
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(100)
+    const y = (await tabs.boundingBox())!.y
+    expect(y).toBeGreaterThanOrEqual(8)
+    expect(y).toBeLessThan(120)
+  })
+
+  test('a tab chosen from the head leaves the page at the head, with the tabs full width', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 2400, height: 1000 })
+    await page.goto('/react/Button/')
+    const tabs = page.getByRole('navigation', { name: 'Button pages' })
+    const width = (await tabs.boundingBox())!.width
+    await tabs.getByRole('link', { name: 'Specs' }).click()
+    await expect(page).toHaveURL(/\/react\/Button\/specs\//)
+    expect(await page.evaluate(() => window.scrollY)).toBe(0)
+    expect((await tabs.boundingBox())!.width).toBeCloseTo(width, 0)
+  })
+
+  test('a component without accessibility notes has no such tab', async ({ page }) => {
+    await page.goto('/react/Quote/')
+    const tabs = page.getByRole('navigation', { name: 'Quote pages' })
+    await expect(tabs.getByRole('link', { name: 'Specs' })).toBeVisible()
+    await expect(tabs.getByRole('link', { name: 'Accessibility' })).toHaveCount(0)
+  })
+
+  test('a component page renders its README intro and every story as a demo', async ({ page }) => {
+    await page.goto('/react/ButtonGroup/')
+    await expect(page.getByRole('heading', { level: 1, name: 'ButtonGroup' })).toBeVisible()
+    // The intro comes from the component's README, the demos from its stories file.
+    await expect(page.getByText(/Groups related .*immediate children/).first()).toBeVisible()
+    for (const story of ['Default', 'Variants', 'Sizes And Colors', 'Vertical']) {
+      await expect(page.getByRole('heading', { name: story, exact: true })).toBeVisible()
+    }
+    // The collapsed preview snippet is visible without expanding.
+    await expect(page.getByText("'aria-label': 'Basic button group'").first()).toBeVisible()
+    await page.getByRole('button', { name: 'Expand code' }).first().click()
+    // The typed synthesis imports the component together with its props type.
+    await expect(
+      page.getByText(/import \{ ButtonGroup, type ButtonGroupProps \}/).first()
+    ).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Edit in CodeSandbox' }).first()).toBeVisible()
+  })
+
+  test('controls re-render the demo and rewrite its editable code', async ({ page }) => {
+    await page.goto('/react/ButtonGroup/')
+    const demo = page
+      .locator('section')
+      .filter({ has: page.getByRole('heading', { name: 'Default', exact: true }) })
+    await demo.getByRole('button', { name: 'Controls' }).click()
+    await demo.getByRole('combobox', { name: 'variant' }).selectOption('contained')
+    await expect(demo.getByText("variant: 'contained'").first()).toBeVisible()
+    // The TS view types the args const with the component's props type.
+    await expect(demo.getByText(/Partial<ButtonGroupProps>/).first()).toBeVisible()
+    // The JS view of an args-const preview transpiles per section - a regression here
+    // crashes the page (the const and the JSX would parse as one expression).
+    await demo.getByRole('button', { name: 'JS' }).click()
+    await expect(demo.getByText("variant: 'contained'").first()).toBeVisible()
+    await expect(demo.getByText(/Partial<ButtonGroupProps>/)).toHaveCount(0)
+    await expect(demo.getByRole('button', { name: 'Reset demo' })).toBeVisible()
+  })
+
+  test('the JS toggle shows the example with its types stripped', async ({ page }) => {
+    await page.goto('/react/Button/')
+    const demo = page
+      .locator('section')
+      .filter({ has: page.getByRole('heading', { name: 'Colors', exact: true }) })
+    await expect(demo.getByText('as const').first()).toBeVisible()
+    await demo.getByRole('button', { name: 'JS' }).click()
+    await expect(demo.getByText('as const')).toHaveCount(0)
+    await expect(demo.getByRole('button', { name: 'TS' })).toBeVisible()
+  })
+
+  test('the code is live-editable and reset restores the pristine demo', async ({ page }) => {
+    await page.goto('/react/Button/')
+    const demo = page
+      .locator('section')
+      .filter({ has: page.getByRole('heading', { name: 'Variants', exact: true }) })
+    // The code panel upgrades to the live editor once the runtime loads. Chrome gets
+    // contenteditable="plaintext-only" from use-editable, so match loosely.
+    const editor = demo.locator('[contenteditable]')
+    await expect(editor).toBeVisible()
+    // The live evaluation renders the same demo - and must not trip over the CSP
+    // (live editing requires 'unsafe-eval').
+    await expect(demo.getByRole('button', { name: 'Contained' })).toBeVisible()
+    await expect(demo.getByText(/error/i)).toHaveCount(0)
+    // A stray token at the top of the buffer surfaces a live evaluation error.
+    await editor.click()
+    await page.keyboard.press('Control+Home')
+    await page.keyboard.type('<')
+    await expect(demo.getByText(/error|unexpected/i).first()).toBeVisible()
+    await demo.getByRole('button', { name: 'Reset demo' }).click()
+    await expect(demo.getByText(/error|unexpected/i)).toHaveCount(0)
+    await expect(demo.getByRole('button', { name: 'Contained' })).toBeVisible()
+    // Expanding keeps the buffer editable, now with the full module visible.
+    await demo.getByRole('button', { name: 'Expand code' }).click()
+    await expect(demo.getByText(/import \{ Button \}/).first()).toBeVisible()
+    await expect(editor).toBeVisible()
+  })
+
+  test('a component page without demos renders its README intro', async ({ page }) => {
+    await page.goto('/react/Quote/')
+    await expect(page.getByRole('heading', { level: 1, name: 'Quote' })).toBeVisible()
+    await expect(page.getByText(/blockquote/i).first()).toBeVisible()
+  })
+
+  test('a component specs page shows import, props reference, and source link', async ({
+    page,
+  }) => {
+    await page.goto('/react/Button/specs/')
+    await expect(page.getByRole('heading', { level: 1, name: 'Button' })).toBeVisible()
+    await expect(
+      page.getByRole('navigation', { name: 'Button pages' }).getByRole('link', { name: 'Specs' })
+    ).toHaveAttribute('aria-current', 'page')
+    await expect(page.getByText(/import \{ Button \} from '@gild-ui\/react/)).toBeVisible()
+    await expect(page.getByRole('heading', { name: /Button-specific props/ })).toBeVisible()
+    await expect(
+      page.getByRole('link', { name: 'the implementation of the component' })
+    ).toBeVisible()
+  })
+
+  test('customization pages render the package docs', async ({ page }) => {
+    await page.goto('/react/theme/')
+    await expect(page.getByRole('heading', { level: 1, name: 'Theming' })).toBeVisible()
+    await page.goto('/react/customization/')
+    await expect(
+      page.getByRole('heading', { level: 1, name: /Per-component customization/ })
+    ).toBeVisible()
+  })
+
+  test("a family's member has its page under the entry it is imported from", async ({ page }) => {
+    await page.goto('/react/Table/')
+    await expect(page).toHaveURL(/\/react\/Table\//)
+    await page.goto('/react/Table/TableCell/')
+    await expect(page.getByRole('heading', { level: 1, name: 'TableCell' })).toBeVisible()
+    await expect(
+      page.getByText(/import \{ TableCell \} from '@gild-ui\/react\/Table'/)
+    ).toBeVisible()
+    await expect(page.getByRole('navigation', { name: 'TableCell pages' })).toHaveCount(0)
+  })
+
+  test('an entry point that is not a component has a page at its path', async ({ page }) => {
+    await page.goto('/react/engine/')
+    await expect(page.getByRole('heading', { level: 1, name: 'The engine entry' })).toBeVisible()
+    await page.goto('/react/theme/')
+    await expect(page.getByRole('heading', { level: 1, name: 'Theming' })).toBeVisible()
+  })
+
+  test('the hooks have a page each, under /react/hooks/, and a list of their own', async ({
+    page,
+  }) => {
+    await page.goto('/react/hooks/')
+    await expect(page.getByRole('heading', { level: 1, name: 'Hooks' })).toBeVisible()
+    await page.goto('/react/hooks/useDebounce/')
+    await expect(page.getByRole('heading', { level: 1, name: 'useDebounce' })).toBeVisible()
+    await expect(page.getByText('Needs a browser: no.')).toBeVisible()
+    await expect(page.getByText('npm i @gild-ui/hooks')).toBeVisible()
+    await expect(
+      page.getByText("import { useDebounce } from '@gild-ui/hooks/useDebounce'").first()
+    ).toBeVisible()
+  })
+
+  test('a page shows the install and the import of the package that exports its subject', async ({
+    page,
+  }) => {
+    await page.goto('/react/Button/')
+    await expect(page.getByText("import { Button } from '@gild-ui/react/Button'")).toBeVisible()
+    await page.goto('/react/Table/TableCell/')
+    await expect(page.getByText("import { TableCell } from '@gild-ui/react/Table'")).toBeVisible()
+    await page.goto('/react/markdown/Editor/')
+    await expect(page.getByText('npm i @gild-ui/react-markdown')).toBeVisible()
+    await expect(
+      page.getByText("import { Editor } from '@gild-ui/react-markdown/Editor'")
+    ).toBeVisible()
+    await page.goto('/react/theme/')
+    await expect(
+      page.getByText("from '@gild-ui/core/theme'", { exact: false }).first()
+    ).toBeVisible()
+  })
+
+  test('the specs page of a component lists its slots, from the catalog', async ({ page }) => {
+    await page.goto('/react/Tooltip/specs/')
+    await expect(page.getByRole('heading', { level: 2, name: 'Slots' })).toBeVisible()
+    const table = page.getByRole('table', { name: 'Tooltip slots' })
+    await expect(table.getByRole('cell', { name: 'arrow' })).toBeVisible()
+  })
+
+  test('the installation page installs the React package and the theme package', async ({
+    page,
+  }) => {
+    await page.goto('/react/installation/')
+    await expect(page.getByText('npm i @gild-ui/react @gild-ui/core react react-dom')).toBeVisible()
+    await expect(page.getByText('registerBaseTheme(themes.dark)')).toBeVisible()
+  })
+
+  // Each example runs live once its page has loaded: a name its code uses and the demo scope
+  // lacks shows an error in its place, and a demo that renders itself freezes the page, which
+  // this test then times out on.
+  test('every component page runs its live examples with no error', async ({ page }) => {
+    test.setTimeout(300_000)
+    await page.goto('/react/components/')
+    const paths = await page
+      .locator('main a[href^="/react/"]')
+      .evaluateAll((links) => links.map((link) => link.getAttribute('href')!))
+    const componentPaths = [...new Set(paths)].filter((path) => /^\/react\/[A-Z]\w+\/$/.test(path))
+    expect(componentPaths.length).toBeGreaterThan(40)
+    for (const path of componentPaths) {
+      await page.goto(path)
+      await page.waitForLoadState('networkidle')
+      await expect.soft(page.getByText(/(Reference|Type|Syntax)Error:/), path).toHaveCount(0)
+    }
+  })
+})

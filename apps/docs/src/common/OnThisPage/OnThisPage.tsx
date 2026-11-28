@@ -1,8 +1,9 @@
 import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react'
-import { styled, get } from '@soroush.tech/design-system'
-import { alpha } from '@soroush.tech/design-system/utils'
-import { Typography } from '@soroush.tech/design-system/Typography'
-import { View } from '@soroush.tech/design-system/View'
+import { alpha, styled } from '@gild-ui/react'
+import { get } from '@soroush.tech/styled-system'
+import { Typography } from '@gild-ui/react/Typography'
+import { View } from '@gild-ui/react/View'
+import { PlainList } from 'src/common/PlainList/PlainList'
 
 interface Heading {
   id: string
@@ -154,7 +155,7 @@ export function OnThisPage() {
         On this page
       </Typography>
       {title && <TocTitle href="#">{title}</TocTitle>}
-      <View as="ul" ref={list} m={0} p={0} position="relative" style={{ listStyle: 'none' }}>
+      <PlainList as="ul" ref={list} m={0} p={0} position="relative">
         <Marker ref={marker} aria-hidden />
         {headings.map((heading) => (
           <View as="li" key={heading.id}>
@@ -167,7 +168,7 @@ export function OnThisPage() {
             </TocLink>
           </View>
         ))}
-      </View>
+      </PlainList>
     </View>
   )
 }

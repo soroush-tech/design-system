@@ -1,11 +1,11 @@
 import { allDocComponents } from 'src/common/nav'
 import { Readme } from 'src/common/Readme/Readme'
-import { splitReadme } from '@soroush.tech/docs-content'
+import { splitReadme } from '@gild-ui/docs-content'
 import { splitAccessibility } from 'src/common/readmeText'
 import { readmeForSlug } from './readmeSources'
 
 export interface MdxReadmeProps {
-  /** Component name as in the design system: `ButtonGroup`. */
+  /** Component name as in Gild UI: `ButtonGroup`. */
   of: string
   /** Which README section to render. Default: `full`. */
   part?: 'full' | 'intro' | 'api' | 'examples'

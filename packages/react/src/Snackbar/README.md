@@ -1,0 +1,109 @@
+# Snackbar
+
+A transient message in a corner of the window, through a `Portal`. It hides itself after
+`autoHideDuration` - the clock stops while the pointer or the focus is on it, and starts again for
+`resumeHideDuration` once they leave - and asks to close on Escape and on a click away, `onClose`
+told why. It is a `role="status"`, announced politely, and never takes the focus. Several at once do
+not stack: the app queues them.
+
+Client component: its entry carries `'use client'`, so a server component can import and render it.
+
+```tsx
+import { Snackbar } from '@gild-ui/react/Snackbar'
+
+;<Snackbar
+  isOpen={isOpen}
+  onClose={(_event, reason) => reason !== 'clickaway' && setIsOpen(false)}
+  autoHideDuration={4000}
+  message="Saved"
+  action={<Button variant="text">Undo</Button>}
+/>
+```
+
+## Props
+
+| Prop                       | Type                                                                        | Default                                       | Description                                                            |
+| -------------------------- | --------------------------------------------------------------------------- | --------------------------------------------- | ---------------------------------------------------------------------- |
+| `isOpen`                   | `boolean`                                                                   | -                                             | Whether it is shown. Controlled with `onClose`.                        |
+| `defaultOpen`              | `boolean`                                                                   | `false`                                       | Whether it is shown at first, when uncontrolled.                       |
+| `onClose`                  | `(event, reason: 'timeout' \| 'clickaway' \| 'escapeKeyDown') => void`      | -                                             | Fired when it asks to close, with why.                                 |
+| `autoHideDuration`         | `number`                                                                    | -                                             | How long it stays, in milliseconds. Without it, it stays until closed. |
+| `resumeHideDuration`       | `number`                                                                    | half of `autoHideDuration`                    | How long it stays once the pointer or focus has left it.               |
+| `message`, `action`        | `ReactNode`                                                                 | -                                             | The message, and what sits after it - a button.                        |
+| `children`                 | `ReactNode`                                                                 | -                                             | What it holds in place of the message and the action - an `Alert`.     |
+| `anchorOrigin`             | `{ vertical: 'top' \| 'bottom', horizontal: 'start' \| 'center' \| 'end' }` | `{ vertical: 'bottom', horizontal: 'start' }` | The corner of the window; `start` and `end` swap right to left.        |
+| `transition`               | `ComponentType<TransitionProps>`                                            | `Grow`                                        | The transition that shows and hides it. It must tell `onExited`.       |
+| `layer`                    | `keyof Theme['zOrder']`                                                     | `'snackbar'`                                  | Stacking layer.                                                        |
+| `container`                | `HTMLElement \| (() => HTMLElement \| null)`                                | `document.body`                               | Portal target.                                                         |
+| `shape`                    | `'square' \| 'rounded' \| 'pill'`                                           | `'rounded'`                                   | The corners: none, the radius of `borderRadius`, or a full round.      |
+| `borderRadius`             | `keyof Theme['radii']`                                                      | `theme.defaults.surfaceRadius`, else square   | The radius of a `'rounded'` snackbar; other shapes ignore it.          |
+| `bg`                       | `keyof Theme['background']`                                                 | `'modal'`                                     | Background.                                                            |
+| `textColor`                | `keyof Theme['text']`                                                       | `theme.defaults.textColor`, else `'initial'`  | Text color.                                                            |
+| `className`, `data-testid` |                                                                             |                                               | On the root - the place it sits in.                                    |
+
+## Closing
+
+Controlled, it never closes on its own: it asks - `onClose` is told `'timeout'`, `'escapeKeyDown'` or
+`'clickaway'` - and the owner sets `isOpen`. Uncontrolled, it closes itself on a time out and on
+Escape, but not on a click away. An owner that does not want a click away to close it ignores that
+reason.
+
+## Hooks
+
+`useAutoHide` is the clock of a message that hides itself, for a message of your own: it runs while the
+message is open, stops while the pointer or the focus is on it, and starts again once they leave.
+
+```ts
+useAutoHide(params: UseAutoHideParams): { pause: () => void; resume: () => void }
+```
+
+| Param            | Type         | Default            | Description                                               |
+| ---------------- | ------------ | ------------------ | --------------------------------------------------------- |
+| `isOpen`         | `boolean`    |                    | The clock runs only while it is open.                     |
+| `duration`       | `number`     | none               | How long it stays, in ms - without one, nothing hides it. |
+| `resumeDuration` | `number`     | half of `duration` | How long it stays once the pointer or focus has left.     |
+| `onHide`         | `() => void` |                    | Called when the time is up.                               |
+
+```tsx
+import { useAutoHide } from '@gild-ui/react/Snackbar'
+
+function Toast({ isOpen, close }: { isOpen: boolean; close: () => void }) {
+  const { pause, resume } = useAutoHide({ isOpen, duration: 4000, onHide: close })
+  return (
+    <div onPointerEnter={pause} onPointerLeave={resume} onFocus={pause} onBlur={resume}>
+      Saved
+    </div>
+  )
+}
+```
+
+## Customization
+
+`theme.components.Snackbar` styles the `root` (the fixed place), the `content` (the bar), the `message`
+and the `action`. Its `defaultProps` set `anchorOrigin`, `autoHideDuration`, `resumeHideDuration` and
+`layer`, `shape`, `borderRadius`, `bg` and `textColor`. The `snackbar` key of `theme.zOrder` is its layer.
+
+## Server rendering
+
+The snackbar is drawn in a `Portal`, which renders nothing on the server: it is absent from server-rendered and prerendered HTML, and mounts on the client when it opens (on a click, hover, focus or key, or when the app sets it open). One that starts open, by its open prop, is still closed in the static HTML and opens on hydration. Its trigger renders on the server as usual.
+
+## Accessibility
+
+- `role="status"` is a polite live region: it is read when the user is idle.
+- It never takes the focus, so it never interrupts typing.
+- A message that hides itself cannot be the only way to learn something: for an error that must be
+  read, keep it open or put it in an `Alert`.
+
+## Overriding the CSS
+
+`style` takes an entry of `StyleSheet.create`, or a list of entries with `false`, `null` and `undefined` for a condition that is off, and overrides the CSS of the root. A plain style object is a type error.
+
+`slotProps` takes one object for each slot of `Snackbar` - `root`, `content`, `message`, `action` - the slots `theme.components.Snackbar` styles. A slot object holds `style` (an entry or a list, as above), `className` and `data-*` and `aria-*` attributes, and nothing else. A slot's `style` is merged after the slot's own styles and the theme's. For the root, `style` and `slotProps.root.style` are one channel: when both are given, `style` comes last and wins, and the class names are joined.
+
+```tsx
+import { StyleSheet } from '@gild-ui/react'
+
+const overrides = StyleSheet.create({ tight: { padding: 0 } })
+
+;<Snackbar style={overrides.tight} slotProps={{ action: { 'data-testid': 'snackbar-action' } }} />
+```

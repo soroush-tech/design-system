@@ -1,0 +1,68 @@
+{
+  "package": "@gild-ui/react-markdown",
+  "entries": {
+    ".": {
+      "values": [
+        "CodeBlock",
+        "Control",
+        "Editor",
+        "LiveEdit",
+        "MarkdownContext",
+        "Mermaid",
+        "Preview",
+        "TablePicker",
+        "Toolbar",
+        "syntaxDark",
+        "syntaxLight",
+        "useMarkdownContext"
+      ],
+      "types": [
+        "CodeBlockProps",
+        "CodeBlockSlot",
+        "ControlProps",
+        "DiagramProps",
+        "EditorProps",
+        "LiveEditProps",
+        "MarkdownContextValue",
+        "MarkdownLiveEditSlot",
+        "MarkdownSelection",
+        "MarkdownToolbarSlot",
+        "MermaidProps",
+        "MermaidThemeVariables",
+        "PreviewProps",
+        "PreviewSlotProps",
+        "TablePickerProps",
+        "ThemeSyntax",
+        "ToolbarProps"
+      ]
+    },
+    "./CodeBlock": {
+      "values": ["CodeBlock", "syntaxDark", "syntaxLight"],
+      "types": ["CodeBlockProps", "ThemeSyntax"]
+    },
+    "./Control": {
+      "values": ["Control"],
+      "types": ["ControlProps"]
+    },
+    "./Editor": {
+      "values": ["Editor"],
+      "types": ["EditorProps"]
+    },
+    "./LiveEdit": {
+      "values": ["LiveEdit"],
+      "types": ["LiveEditProps"]
+    },
+    "./Mermaid": {
+      "values": ["Mermaid"],
+      "types": ["DiagramProps", "MermaidProps"]
+    },
+    "./Preview": {
+      "values": ["Preview"],
+      "types": ["PreviewProps", "PreviewSlotProps"]
+    },
+    "./Toolbar": {
+      "values": ["TablePicker", "Toolbar"],
+      "types": ["TablePickerProps", "ToolbarProps"]
+    }
+  }
+}

@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
-import { ThemeProvider, baseTheme } from '@soroush.tech/design-system/theme'
+import { ThemeProvider } from '@gild-ui/react'
+import { baseTheme } from '@gild-ui/core/theme'
 import { DemoFrame } from './DemoFrame'
 
 describe('DemoFrame', () => {

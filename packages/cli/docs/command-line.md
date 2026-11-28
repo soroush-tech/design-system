@@ -1,13 +1,14 @@
 # Command line
 
-`@soroush.design/cli` is the command line of the [`@soroush.tech`](https://docs.soroush.tech)
-design system. It has two commands: `create` starts a new app on the design system - a working
-boilerplate with the theme, the providers and a few pages in place - and `init` sets the design
-system up in an existing React app.
+`@soroush.design/cli` is the command line of the [`@soroush.tech`](https://gild-ui.soroush.design)
+design system. It has three commands: `create` starts a new app on Gild UI - a working
+boilerplate with the theme, the providers and a few pages in place - `init` sets the design
+system up in an existing React app, and `migrate` moves an app to the latest version.
 
 ```sh
 npx @soroush.design/cli create my-app
 npx @soroush.design/cli init
+npx @soroush.design/cli migrate
 ```
 
 Each shows every change first, and writes nothing until you say yes. `--help` after a command
@@ -40,8 +41,8 @@ arrow keys:
 8. Whether to add the sample data pages.
 
 Then it shows every choice, one a line - the ones you picked and the defaults - then every file
-and the install, and writes nothing before a yes. It installs with no scripts, and runs `git init`
-with no commit, unless the folder is already in a repository. When a write or the install fails,
+and the install, and writes nothing before a yes. It installs with no scripts, and runs no git:
+committing the new app is yours. When a write or the install fails,
 it takes the new app away. Ctrl+C at a question stops it with nothing written.
 
 | Option               | What it does                                                      |
@@ -57,7 +58,7 @@ it takes the new app away. Ctrl+C at a question stops it with nothing written.
 | `--with <names>`     | The libraries, by comma: `--with tanstack-query,msw,zustand`      |
 | `--scheme <name>`    | The default color scheme: `light` or `dark`                       |
 | `--sample-data`      | Add the sample data pages                                         |
-| `--no-git`           | Do not run `git init`                                             |
+| `--no-git`           | No effect: `create` runs no git (kept for older scripts)          |
 | `-h`, `--help`       | Show the options of `create`                                      |
 
 ### Repository
@@ -134,7 +135,7 @@ installed, wired in, and with an example of its use - and each choice shows in t
   `src/state/counter`, or with Redux Toolkit two slices of `src/state/store`, whose provider wraps
   every page - in `PageShell` in a Vike app, in `src/main` in a React Router one.
 - **React Hook Form + Zod** (`react-hook-form`): a `/form` page, linked from the header, whose two
-  fields - the design system's `TextInput` - a Zod schema checks. Once they pass, it sends them
+  fields - Gild UI's `TextInput` - a Zod schema checks. Once they pass, it sends them
   through the data library, or to `src/data/api` with msw alone, and shows what came back.
 
 Every app has its tests, whatever it is asked: **Vitest + Testing Library** on jsdom, and
@@ -150,8 +151,8 @@ and a test checks the greeting it gives.
   `src/components/Header`, an app bar that sticks to the top: the title, the links, and the light
   and dark switch (`src/components/SchemeSwitch`). On a phone, the links take a row of their own.
 - `src/theme/themes` holds a `light` and a `dark` theme, as `init` writes them: make them your own.
-- `src/pages/+onRenderHtml` and `+onRenderClient` render the pages with the design system's
-  Emotion cache. There is no renderer package to install.
+- `src/pages/+onRenderHtml` and `+onRenderClient` render the pages with Gild UI's
+  style cache. There is no renderer package to install.
 - `npm run dev` starts it, `npm run build` builds it, and `npm run preview` serves the build.
 
 With sample data pages, it also shows how data gets onto a page, with no data library:
@@ -197,7 +198,7 @@ With sample data pages, it also shows how data gets onto a page, with no data li
   with no page, and a page that fails, show `src/pages/ErrorPage` in the layout.
 - `src/main` creates the router with `createBrowserRouter` and renders it in `index.html`'s
   `#root`. With msw, it starts the mock API first.
-- `src/components/RouterLink` is the design system's `Link` for a page of the app: a click moves
+- `src/components/RouterLink` is Gild UI's `Link` for a page of the app: a click moves
   to it with no reload, and a click that opens a new tab still does.
 - With sample data pages, `/items` and `/items/<id>` read `src/data/items` in their route's
   `loader`, which the router runs before it shows the page - an unknown id shows the error page.
@@ -206,7 +207,7 @@ With sample data pages, it also shows how data gets onto a page, with no data li
   build. A host serves `dist/` once it answers every path with `index.html`.
 
 The switch does not remember the scheme across a reload, and the theme's fonts are not loaded: see
-the [fonts guide](https://docs.soroush.tech/design-system/getting-started/installation/#fonts).
+the [fonts guide](https://gild-ui.soroush.design/react/installation/#fonts).
 
 ## Set up an existing app: `init`
 
@@ -216,16 +217,16 @@ Run it in your app's folder, or in a workspace's root that holds one app:
 npx @soroush.design/cli init
 ```
 
-It installs the design system version the command line was released next to.
-`npx @soroush.tech/design-system init` does the same with the design system version you ask for.
+It installs `@gild-ui/react`, the version the command line was released next to, and checks
+your React against its range.
 
-| Option            | What it does                                 |
-| ----------------- | -------------------------------------------- |
-| `-y`, `--yes`     | Apply without asking                         |
-| `--dry-run`       | Show the changes and exit                    |
-| `--force`         | Run outside git, or with uncommitted changes |
-| `--scheme <name>` | The default color scheme: `light` or `dark`  |
-| `-h`, `--help`    | Show the options of `init`                   |
+| Option            | What it does                                             |
+| ----------------- | -------------------------------------------------------- |
+| `-y`, `--yes`     | Apply without asking                                     |
+| `--dry-run`       | Show the changes and exit                                |
+| `--force`         | No effect: `init` checks no git (kept for older scripts) |
+| `--scheme <name>` | The default color scheme: `light` or `dark`              |
+| `-h`, `--help`    | Show the options of `init`                               |
 
 ### What `init` does
 
@@ -235,19 +236,173 @@ App), in TypeScript or JavaScript:
 - It writes `src/theme/themes` (a `light` and a `dark` theme, each a `createTheme(baseTheme,
   {...})` call you edit) and `src/theme/Providers` (`ThemeProvider` with the base page styles).
 - It wraps what your root renders in `<Providers>`.
-- It installs `@soroush.tech/design-system` with your own package manager.
+- It installs `@gild-ui/react` with your own package manager.
 
 It is careful with your app:
 
 - It shows every change first - the files, each edit as a diff, the install - and writes nothing
   before a yes.
-- It runs only in a git repository with no uncommitted change, unless `--force`.
+- It runs no git: committing is yours.
 - It never overwrites a file, and edits the root only when it has the standard shape: one
   `createRoot(...).render(` or `ReactDOM.render(` call. Otherwise it prints the lines to add.
 - When a write fails, it takes back every change it made. The install runs last, with no scripts.
-- A second run finds its own files and changes nothing.
-- It checks your React against the design system's peer range, and never upgrades React.
+- A second run finds its own files and changes nothing, and an app that already has
+  `@gild-ui/react` gets no install.
+- It checks your React against Gild UI's peer range, and never upgrades React.
 - It reaches no network but the install.
 
 Next.js, Vike and React Router apps are refused for now, with a pointer to the
-[setup guide](https://docs.soroush.tech/design-system/getting-started/installation/).
+[setup guide](https://gild-ui.soroush.design/react/installation/).
+
+## Move an app forward: `migrate`
+
+Run it in your app's folder:
+
+```sh
+npx @soroush.design/cli migrate
+```
+
+It moves an app from `@soroush.tech/design-system` 2.x, or from any earlier Gild UI version, to
+the latest version the command line knows. It reads the version the app is on - from
+`node_modules`, or from the range in `package.json` - and picks the migration steps from there to
+the target. Each step starts from the exact state it expects, so an app several versions behind
+takes each step in turn.
+
+| Option           | What it does                                              |
+| ---------------- | --------------------------------------------------------- |
+| `-y`, `--yes`    | Apply without asking                                      |
+| `--dry-run`      | Show the changes and exit                                 |
+| `--to <version>` | Stop at this version instead of the latest                |
+| `--json`         | Print the run as one JSON object (see the script section) |
+| `-h`, `--help`   | Show the options of `migrate`                             |
+
+It shows one plan, grouped by step: the dependencies it adds, removes and updates, each file edit
+as a diff, and what only you can decide, each with its file and line. Every step is planned on the
+app as the steps before it will leave it, and nothing is written until you say yes.
+
+- It runs no git, so it works in a folder with no repository, and committing its changes is
+  yours.
+- It applies the steps in order, each step's edits and then its dependencies, and takes back every
+  change if a write fails. It installs once, at the end, with your package manager and no scripts.
+- It prints what is left to you again as a checklist, with the file and line of each item.
+- A second run finds the new version and changes nothing.
+- When no step starts from the version your app is on, it says so, and what to do.
+
+### Using `migrate` from a script
+
+`--json` prints one JSON object on stdout and nothing else there, for `--dry-run` (the plan) and
+for a run that applies. It never asks: without `--yes` it is a preview. The install's output is
+not shown.
+
+```json
+{
+  "from": { "package": "@soroush.tech/design-system", "version": "2.9.0" },
+  "to": { "package": "@gild-ui/react", "version": "0.1.0" },
+  "status": "planned",
+  "steps": [
+    {
+      "id": "gild-ui-0.1.0",
+      "summary": "imports move to @gild-ui/*, ...",
+      "dependencies": [
+        { "name": "@gild-ui/react", "to": "^0.1.0", "action": "add" },
+        { "name": "@soroush.tech/design-system", "from": "^2.9.0", "action": "remove" }
+      ],
+      "files": [
+        { "path": "src/App.tsx", "action": "edit" },
+        { "path": "src/theme/sheet.ts", "action": "create" }
+      ],
+      "items": [
+        { "file": "src/App.tsx", "line": 12, "message": "[STY-007] ...", "code": "STY-007" }
+      ]
+    }
+  ],
+  "changedFiles": ["package.json", "src/App.tsx", "src/theme/sheet.ts"],
+  "installed": false,
+  "lockfileChanged": false
+}
+```
+
+- `status` is `planned`, `nothing`, `refused`, `rolledBack` or `applied`. When it is `refused` or
+  `rolledBack`, or `applied` after a failed install, `error` says why: `error.message`, and
+  `error.step`, the id of the step (`install` for the install, `null` when no step is to blame).
+- `from` and `to` are the version the app was on and the one the steps end on; `null` when the
+  command could not tell.
+- Paths are from the app's folder, with `/`. `line` and `code` of an item are stable: the code is
+  an id of the migration guide (`STY-007`) or of a check (`IMP-SPLIT`).
+- `installed` is whether the install ran and succeeded; `lockfileChanged` whether the app's
+  lockfile differs after from before.
+
+| Exit code | When                                                                        |
+| --------- | --------------------------------------------------------------------------- |
+| `0`       | Applied, and nothing is left for a person; or, for a preview, a plan        |
+| `2`       | Applied, and items are left for a person                                    |
+| `3`       | Nothing to migrate: the app is on the target                                |
+| `1`       | Refused, failed and taken back, the install failed, or a wrong command line |
+
+The exit codes are the same without `--json`.
+
+### From `@soroush.tech/design-system` 2.x to Gild UI 0.1.0
+
+The first step, `gild-ui-0.1.0`, moves an app from the design system 2.x, with its companion
+packages `@soroush.tech/markdown` and `@soroush.tech/hooks`, to `@gild-ui/react`, `@gild-ui/core`,
+`@gild-ui/hooks` and `@gild-ui/react-markdown` 0.1.0. The components keep every prop, value and
+default: the work is in the imports, the styling and the theme. Commit first, so its changes stand on
+their own, read the plan, and take what it leaves to you from the checklist at the end.
+
+**What the step edits**
+
+- **Imports and paths.** Every name goes to its new module, exactly: a component from
+  `@gild-ui/react/<Component>`, the theme (`createTheme`, `baseTheme`, the token scales and
+  types) from `@gild-ui/core/theme`, helpers from `@gild-ui/core/utils`, and each name of the
+  styling system from an entry of its own (`import { ThemeProvider } from '@gild-ui/react/ThemeProvider'`,
+  likewise `useTheme`, `styled`, `css`, `keyframes`, `Global`, `useStyle`). The style-prop
+  functions the old root re-exported (`space`, `layout`, `get`, ...) come from
+  `@soroush.tech/styled-system`. Aliases, `type` imports and your quotes and semicolons are kept;
+  imports of one module are merged, and one that goes to several is split. The same goes for
+  `export ... from`, `import()`, `require()`, `vi.mock`/`jest.mock`, `import('x').T`,
+  `declare module '...'` and the paths named in comments.
+- **Dependencies.** `@gild-ui/react` takes the place of the design system, in the same section;
+  `@gild-ui/core`, `@gild-ui/hooks`, `@gild-ui/react-markdown` and `@soroush.tech/styled-system`
+  `^6.0.3` are added where an import reaches them; `@soroush.tech/markdown`, `@soroush.tech/hooks`
+  and the previous engine's packages (while no file imports them) are removed; `react` and
+  `react-dom` are raised to `^19.2.8` where lower.
+- **`css` and `style` on a component.** `style` takes only entries of `StyleSheet.create`: a static
+  `css={{ ... }}` or `style={{ ... }}` becomes an entry of one `const styles = StyleSheet.create({
+  ... })` at the top of the file, and `css={(theme) => ({ ... })}` that reads only its theme becomes
+  a function sheet, resolved at the top of its component with `useStyle`. A 2.x
+  `useStyle({ getStyles: (theme) => ({ ... }) })` becomes a function sheet the same way.
+- **The theme.** When every `createTheme` call of a file has the same `components` and the file
+  collects its themes in one place, `components` moves to `defineThemes(themes, components)` and the
+  names you export stay; `Theme['components']` is `ThemeComponents`; `declare module` blocks of the
+  old theme module are the core's.
+
+**What is left to you**, each with its file and line, and the reason from the inventory of
+differences:
+
+- Imports the step cannot place: a namespace or default import of a path whose names are now in
+  several modules, a path built at run time, a name that no longer exists (`TabsVariants`,
+  `ComponentStyle`, `ComponentVariant`, `CardSlotIconProps`, `CardSlotTypographyProps`,
+  `ThemeCustomizationOptions`).
+- Styling that depends on props or state: a `css` or `style` that is not a static object or a
+  theme function, `css` on an element that is not a component, a component without a body to put a
+  hook in. Put the part that does not change in a sheet, and give the part that does to a style prop
+  of the component (`width={...}`) or a live value (`useStyleValue`).
+- The theme: `components` that is not shared by every theme, a theme annotated with `Theme`, an
+  augmentation of `Theme` with `components`, and the registration that types `color="brand"`
+  (`defineThemes` and `declare module '@gild-ui/core/theme' { interface Register ... }`).
+- Server rendering: the registry hook and the critical-style extraction of the old engine, `createCache`
+  and its `nonce`. There is no registry now; the setup guide has the new files. Next.js apps with
+  server components also call `registerBaseTheme`.
+- Calls whose meaning changed: `css` and `keyframes` (no function inside them now), `withTheme`,
+  `.withComponent`, a `styled` tag with props of its own and no `shouldForwardProp`, token
+  arithmetic in a style function (`alpha`, `negate` and `subtract` take its place), the Tooltip
+  arrow's `style`, nested providers and portals.
+- What reads the old output: selectors and tests on class names and style elements, and the old
+  engine's JSX and Babel settings. The command is `npx @soroush.design/cli init` where a script
+  ran `design-system init`.
+- Peer ranges, and React 18 pinned anywhere but the dependencies.
+- Two lists of what no source line shows, to check once the app runs: differences in the output
+  (colours with an opacity, theme tokens as CSS variables, the style elements) and in types.
+
+The step's folder, `src/migrate/steps/gild-ui-0.1.0/`, holds the inventory it works from, the
+fixtures it is tested on (the documentation app of 2.2.0 and the files `init` wrote) and a README.

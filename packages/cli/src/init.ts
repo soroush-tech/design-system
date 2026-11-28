@@ -1,3 +1,4 @@
+import { APP_PACKAGE, APP_PACKAGE_VERSION } from './designSystemPackage'
 import { existsSync, realpathSync } from 'node:fs'
 import { join } from 'node:path'
 import { applyPlan, type ApplyError } from './apply/applyPlan'
@@ -10,7 +11,6 @@ import {
   findRootFiles,
   findUnsupportedFramework,
   getDependency,
-  getGitState,
   isWorkspaceRoot,
   needsParcelPackageExports,
   readPackageJson,
@@ -28,8 +28,6 @@ export interface InitOptions {
   isConfirmed: boolean
   /** Prints the plan and exits. */
   isDryRun: boolean
-  /** Runs outside git, or in a tree with uncommitted changes. */
-  isForced: boolean
   scheme: Scheme | undefined
 }
 
@@ -38,10 +36,10 @@ function formatClosing({ creates, manual }: Plan): string {
   const themesStep = themes ? `\n  - Make the themes your own in ${themes.path}.` : ''
   const steps = manual.map((step) => `  - ${step}`).join('\n')
   const leftToYou = manual.length > 0 ? `\nStill left to you:\n${steps}\n` : ''
-  return `Done: the design system is set up.
+  return `Done: Gild UI is set up.
 ${leftToYou}
 Next:
-  - Use a component: import { Button } from '@soroush.tech/design-system/Button'${themesStep}
+  - Use a component: import { Button } from '${APP_PACKAGE}/Button'${themesStep}
 ${FONTS_STEP}
 
 ${AGENT_STEPS}`
@@ -62,18 +60,7 @@ function findRefusal(
     return 'init found no React in this app. Add react and react-dom first.'
   }
   if (!satisfiesRange(reactVersion, reactRange)) {
-    return `This app has React ${reactVersion}, and the design system needs React ${reactRange}. init changes nothing, and never upgrades React.`
-  }
-  return undefined
-}
-
-function findGitRefusal(root: string, io: Io): string | undefined {
-  const state = getGitState(root, io)
-  if (state === 'not-a-repository') {
-    return 'This folder is not in a git repository, so init could not show you its changes afterwards. Run git init and commit first, or run again with --force.'
-  }
-  if (state === 'dirty') {
-    return "This folder has uncommitted changes. Commit or stash them first, so init's changes stand on their own, or run again with --force."
+    return `This app has React ${reactVersion}, and Gild UI needs React ${reactRange}. init changes nothing, and never upgrades React.`
   }
   return undefined
 }
@@ -128,7 +115,7 @@ export async function askScheme(io: Io): Promise<Scheme> {
   return (await io.select('Default color scheme', choices)) as Scheme
 }
 
-function collectFacts(app: App, scheme: Scheme | undefined, designSystem: PackageJson): InitFacts {
+function collectFacts(app: App, scheme: Scheme | undefined): InitFacts {
   const { root, packageJson, rootCandidates } = app
   const rootPath = rootCandidates.length === 1 ? rootCandidates[0] : undefined
   return {
@@ -136,10 +123,10 @@ function collectFacts(app: App, scheme: Scheme | undefined, designSystem: Packag
     hasSrcFolder: existsSync(join(root, 'src')),
     root: rootPath ? { path: rootPath, source: readText(join(root, rootPath))! } : undefined,
     rootCandidates,
-    hasDesignSystem: Boolean(getDependency(packageJson, '@soroush.tech/design-system')),
+    hasDesignSystem: Boolean(getDependency(packageJson, APP_PACKAGE)),
     needsParcelPackageExports: needsParcelPackageExports(packageJson),
     packageManager: detectPackageManager(root, packageJson),
-    version: designSystem.version!,
+    version: APP_PACKAGE_VERSION,
     scheme: scheme ?? 'light',
     readFile: (path) => readText(join(root, path)),
   }
@@ -153,7 +140,11 @@ async function planWithScheme(facts: InitFacts, canAsk: boolean, io: Io): Promis
 }
 
 /** Whether to apply the plan: never on a dry run or with no terminal, else on --yes or a yes. */
-async function isApproved(options: InitOptions, isPreviewOnly: boolean, io: Io): Promise<boolean> {
+export async function isApproved(
+  options: Pick<InitOptions, 'isConfirmed' | 'isDryRun'>,
+  isPreviewOnly: boolean,
+  io: Io
+): Promise<boolean> {
   if (options.isDryRun) {
     io.write('Dry run: nothing was changed.\n')
     return false
@@ -176,7 +167,7 @@ function applyAndInstall(plan: Plan, root: string, io: Io, fileSystem: FileSyste
     const { message, isUndone } = error as ApplyError
     const outcome = isUndone
       ? 'Every change it made was taken back.'
-      : 'It could not take back every change: check git status.'
+      : 'It could not take back every change: check the files.'
     io.write(`init stopped: ${message}. ${outcome}\n`)
     return 1
   }
@@ -196,9 +187,10 @@ function applyAndInstall(plan: Plan, root: string, io: Io, fileSystem: FileSyste
 }
 
 /**
- * Sets up the design system in the app in `io.cwd`: checks, plans, shows the plan, and applies it
- * only after a yes. `designSystem` is the package it installs: its version, and the React range it
- * checks the app against. Returns the exit code.
+ * Sets up Gild UI in the app in `io.cwd`: checks, plans, shows the plan, and applies it
+ * only after a yes. It installs `@gild-ui/react` and `@gild-ui/core`; `designSystem` is
+ * the React package, whose peer range for React the app is checked against. Returns the
+ * exit code.
  */
 export async function runInit(
   options: InitOptions,
@@ -219,23 +211,18 @@ export async function runInit(
     return 1
   }
   const isPreviewOnly = options.isDryRun || (!io.isInteractive && !options.isConfirmed)
-  const gitRefusal = isPreviewOnly || options.isForced ? undefined : findGitRefusal(root, io)
-  if (gitRefusal) {
-    io.write(`${gitRefusal}\n`)
-    return 1
-  }
 
-  const facts = collectFacts(app, options.scheme, designSystem)
+  const facts = collectFacts(app, options.scheme)
   const canAsk = !options.scheme && !isPreviewOnly && !options.isConfirmed
   const plan = await planWithScheme(facts, canAsk, io)
 
   if (isPlanEmpty(plan)) {
     const leftovers = plan.skips.length + plan.manual.length > 0 ? `\n${formatPlan(plan)}` : ''
-    io.write(`The design system is already set up here: init has nothing to change.\n${leftovers}`)
+    io.write(`Gild UI is already set up here: init has nothing to change.\n${leftovers}`)
     return 0
   }
   const appName = packageJson.name ?? 'this app'
-  io.write(`init will set up @soroush.tech/design-system in ${appName}:\n\n${formatPlan(plan)}\n`)
+  io.write(`init will set up ${APP_PACKAGE} in ${appName}:\n\n${formatPlan(plan)}\n`)
   if (!(await isApproved(options, isPreviewOnly, io))) return 0
   return applyAndInstall(plan, root, io, fileSystem)
 }

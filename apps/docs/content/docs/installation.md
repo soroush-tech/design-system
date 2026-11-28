@@ -2,7 +2,7 @@
 
 ## Start a new app
 
-To start a new app on the design system - a Vike app, prerendered at build time, that then moves
+To start a new app on Gild UI - a Vike app, prerendered at build time, that then moves
 between pages with no reload - in TypeScript or JavaScript:
 
 ```sh
@@ -18,7 +18,7 @@ and a page for each. Its options are in the
 ## Set it up with one command
 
 In a client-rendered React app - built with Vite, webpack, Rspack, Parcel or Create React App,
-in TypeScript or JavaScript - one command sets the design system up:
+in TypeScript or JavaScript - one command sets Gild UI up:
 
 ```sh
 npx @soroush.design/cli init
@@ -27,12 +27,13 @@ npx @soroush.design/cli init
 It shows every change before it makes one, and writes nothing until you say yes:
 
 - `src/theme/themes` - a `light` and a `dark` theme, each a `createTheme(baseTheme, {...})` call
-  you make your own;
+  you make your own, gathered by `defineThemes`, with the registration of the themes' types and
+  `registerBaseTheme`;
 - `src/theme/Providers` - the `ThemeProvider` with the base page styles;
 - your root - what it renders is wrapped in `<Providers>`;
-- the install of `@soroush.tech/design-system`, with your own package manager.
+- the install of `@gild-ui/react` and `@gild-ui/core`, with your own package manager.
 
-It runs in a git repository with no uncommitted change, never overwrites a file, and takes back
+It runs no git, never overwrites a file, and takes back
 every change if a write fails. Run in a workspace's root, it sets up the one app in it. Add
 `--dry-run` to see the changes and exit. In PowerShell, quote the package name, since `@` starts a
 splat there: `npx '@soroush.design/cli' init`.
@@ -42,33 +43,48 @@ and React Router apps are not supported by `init` yet: set those up by hand, bel
 
 ## Or set it up by hand
 
-Install the design system and its peer dependencies:
+Install Gild UI and its peer dependencies:
 
 ```sh
-npm i @soroush.tech/design-system react react-dom
+npm i @gild-ui/react @gild-ui/core react react-dom
 ```
 
-It works with React 18 and React 19: `react` and `react-dom` `^18.0.0 || ^19.0.0`. Both are tested
-in CI, on 18.0.0 and on 19.
+React 19.2 or later is required.
 
 ### Set up the ThemeProvider
 
 Every component reads its colors, spacing, and typography from the theme. Wrap your app once:
 
 ```tsx
-import { ThemeProvider, baseTheme, createTheme } from '@soroush.tech/design-system/theme'
+import { ThemeProvider } from '@gild-ui/react'
+import { registerBaseTheme } from '@gild-ui/react/ThemeProvider'
+import { baseTheme, createTheme, defineThemes } from '@gild-ui/core/theme'
 
-const theme = createTheme(baseTheme, {
-  // Your brand overrides - palettes, backgrounds, text colors, ...
-})
+export const themes = defineThemes(
+  {
+    light: createTheme(baseTheme, { name: 'light', colorScheme: 'light' }),
+    dark: createTheme(baseTheme, { name: 'dark', colorScheme: 'dark' }),
+  },
+  {}
+)
+
+// The theme the app starts in, for server components, which have no provider above them.
+registerBaseTheme(themes.dark)
+
+declare module '@gild-ui/core/theme' {
+  interface Register {
+    themes: typeof themes
+  }
+}
 
 export function App() {
-  return <ThemeProvider theme={theme}>{/* your app */}</ThemeProvider>
+  return <ThemeProvider theme={themes.dark}>{/* your app */}</ThemeProvider>
 }
 ```
 
-`baseTheme` is a complete dark-schemed default, so an empty override object is a valid start.
-See [Theming](/design-system/customization/theming/) for building light and dark brand themes.
+`baseTheme` is a complete dark-schemed default, so empty overrides are a valid start. The second
+argument of `defineThemes` holds the looks of the components, the same in every theme.
+See [Theming](/react/theme/) for building light and dark brand themes.
 
 ## Fonts
 

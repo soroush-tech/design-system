@@ -41,15 +41,15 @@ afterEach(() => {
 describe('useScrollToHash', () => {
   it("brings the URL's section into view once the page has rendered", () => {
     withSection('rows-from-data')
-    window.history.replaceState(null, '', '/design-system/api/menu-item/#rows-from-data')
-    renderHook(() => useScrollToHash('/design-system/api/menu-item/'))
+    window.history.replaceState(null, '', '/react/MenuItem/specs/#rows-from-data')
+    renderHook(() => useScrollToHash('/react/MenuItem/specs/'))
     expect(scrollIntoView).toHaveBeenCalledTimes(1)
   })
 
   it('holds it in view while the page resizes, then lets go once the page has settled', () => {
     withSection('menulist')
-    window.history.replaceState(null, '', '/design-system/components/menu/#menulist')
-    renderHook(() => useScrollToHash('/design-system/components/menu/'))
+    window.history.replaceState(null, '', '/react/Menu/#menulist')
+    renderHook(() => useScrollToHash('/react/Menu/'))
     resize()
     resize()
     expect(scrollIntoView).toHaveBeenCalledTimes(3)
@@ -72,8 +72,8 @@ describe('useScrollToHash', () => {
     vi.spyOn(bar, 'getBoundingClientRect').mockReturnValue({ height: 136 } as DOMRect)
     document.body.append(bar)
     withSection('submenus')
-    window.history.replaceState(null, '', '/design-system/api/menu-item/#submenus')
-    renderHook(() => useScrollToHash('/design-system/api/menu-item/'))
+    window.history.replaceState(null, '', '/react/MenuItem/specs/#submenus')
+    renderHook(() => useScrollToHash('/react/MenuItem/specs/'))
     expect(document.documentElement.style.scrollPaddingTop).toBe('136px')
   })
 
@@ -87,11 +87,11 @@ describe('useScrollToHash', () => {
 
   it('does it again after a navigation to another page, letting go of the last one', () => {
     withSection('menulist')
-    window.history.replaceState(null, '', '/design-system/components/menu/#menulist')
+    window.history.replaceState(null, '', '/react/Menu/#menulist')
     const { rerender } = renderHook(({ url }) => useScrollToHash(url), {
-      initialProps: { url: '/design-system/components/menu/' },
+      initialProps: { url: '/react/Menu/' },
     })
-    rerender({ url: '/design-system/components/menu/' })
+    rerender({ url: '/react/Menu/' })
     expect(scrollIntoView).toHaveBeenCalledTimes(1)
     rerender({ url: '/design-system/components/tabs/' })
     expect(disconnect).toHaveBeenCalledTimes(1)

@@ -1,0 +1,102 @@
+[
+  {
+    "path": "src/common/Bootstrap.test.tsx",
+    "line": 11,
+    "id": "IMP-SPLIT"
+  },
+  {
+    "path": "src/common/Bootstrap.test.tsx",
+    "line": 12,
+    "id": "IMP-SPLIT"
+  },
+  {
+    "path": "src/common/Footer/Footer.tsx",
+    "line": 34,
+    "id": "STY-012"
+  },
+  {
+    "path": "src/common/Layout.tsx",
+    "line": 79,
+    "id": "STYLE-PROP"
+  },
+  {
+    "path": "src/common/Layout.tsx",
+    "line": 95,
+    "id": "STYLE-PROP"
+  },
+  {
+    "path": "src/common/Search/SearchDialog.tsx",
+    "line": 44,
+    "id": "STY-012"
+  },
+  {
+    "path": "src/demos/scope.ts",
+    "line": 2,
+    "id": "IMP-EMOTION"
+  },
+  {
+    "path": "src/demos/scope.ts",
+    "line": 3,
+    "id": "IMP-SPLIT"
+  },
+  {
+    "path": "src/mdx/mdxComponents.tsx",
+    "line": 52,
+    "id": "STYLE-PROP"
+  },
+  {
+    "path": "src/renderer/+onRenderHtml.test.tsx",
+    "line": 6,
+    "id": "STY-011"
+  },
+  {
+    "path": "src/renderer/+onRenderHtml.test.tsx",
+    "line": 17,
+    "id": "IMP-SPLIT"
+  },
+  {
+    "path": "src/renderer/+onRenderHtml.test.tsx",
+    "line": 20,
+    "id": "STY-008"
+  },
+  {
+    "path": "src/renderer/+onRenderHtml.test.tsx",
+    "line": 28,
+    "id": "STY-011"
+  },
+  {
+    "path": "src/renderer/+onRenderHtml.tsx",
+    "line": 3,
+    "id": "STY-008"
+  },
+  {
+    "path": "src/renderer/+onRenderHtml.tsx",
+    "line": 13,
+    "id": "STY-008"
+  },
+  {
+    "path": "src/renderer/+onRenderHtml.tsx",
+    "line": 14,
+    "id": "STY-008"
+  },
+  {
+    "path": "src/theme/GlobalStyles.tsx",
+    "line": 10,
+    "id": "STY-002"
+  },
+  {
+    "path": "src/theme/themes.ts",
+    "line": 40,
+    "id": "THM-006"
+  },
+  {
+    "path": "package.json",
+    "line": 24,
+    "id": "CHECK"
+  },
+  {
+    "path": "package.json",
+    "line": 24,
+    "id": "CHECK"
+  }
+]

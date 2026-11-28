@@ -2,15 +2,17 @@
 import { describe, expect, it, vi } from 'vitest'
 import { runCreate } from './create/create'
 import { runInit } from './init'
+import { runMigrate } from './migrate/migrate'
 import { STARTERS } from './create/starters'
 import { HELP, main, USAGE } from './main'
 import { CancelledError } from './prompt'
 import { createTestIo } from './testApp'
 
 vi.mock('./init', () => ({ runInit: vi.fn(async () => 0) }))
+vi.mock('./migrate/migrate', () => ({ runMigrate: vi.fn(async () => 0) }))
 vi.mock('./create/create', () => ({ runCreate: vi.fn(async () => 0) }))
 
-const DESIGN_SYSTEM = { name: '@soroush.tech/design-system', version: '2.2.0' }
+const DESIGN_SYSTEM = { name: '@gild-ui/react' }
 
 async function runMain(...argv: string[]) {
   const { io, getOutput } = createTestIo('.')
@@ -23,13 +25,13 @@ describe('main', () => {
     const { code, io } = await runMain('init', '-y', '--dry-run', '--force', '--scheme', 'dark')
     expect(code).toBe(0)
     expect(runInit).toHaveBeenLastCalledWith(
-      { isConfirmed: true, isDryRun: true, isForced: true, scheme: 'dark' },
+      { isConfirmed: true, isDryRun: true, scheme: 'dark' },
       io,
       DESIGN_SYSTEM
     )
     await runMain('init')
     expect(runInit).toHaveBeenLastCalledWith(
-      { isConfirmed: false, isDryRun: false, isForced: false, scheme: undefined },
+      { isConfirmed: false, isDryRun: false, scheme: undefined },
       expect.anything(),
       DESIGN_SYSTEM
     )
@@ -66,16 +68,13 @@ describe('main', () => {
         hasSampleData: true,
         isConfirmed: true,
         isDryRun: true,
-        isGit: false,
       },
-      io,
-      DESIGN_SYSTEM
+      io
     )
     await runMain('create', '--ts')
     expect(runCreate).toHaveBeenLastCalledWith(
-      expect.objectContaining({ name: undefined, isTypeScript: true, isGit: true }),
-      expect.anything(),
-      DESIGN_SYSTEM
+      expect.objectContaining({ name: undefined, isTypeScript: true }),
+      expect.anything()
     )
     await runMain('create')
     expect(runCreate).toHaveBeenLastCalledWith(
@@ -84,8 +83,7 @@ describe('main', () => {
         framework: undefined,
         hasSampleData: undefined,
       }),
-      expect.anything(),
-      DESIGN_SYSTEM
+      expect.anything()
     )
   })
 
@@ -143,8 +141,7 @@ describe('main', () => {
     await runMain('create', '--with', '')
     expect(runCreate).toHaveBeenLastCalledWith(
       expect.objectContaining({ libraries: [] }),
-      expect.anything(),
-      DESIGN_SYSTEM
+      expect.anything()
     )
     expect(await runMain('create', '--with', 'msw,redux')).toMatchObject({
       code: 1,
@@ -157,8 +154,7 @@ describe('main', () => {
     await runMain('create', '--layout', 'standalone')
     expect(runCreate).toHaveBeenLastCalledWith(
       expect.objectContaining({ layout: 'standalone' }),
-      expect.anything(),
-      DESIGN_SYSTEM
+      expect.anything()
     )
     expect(await runMain('create', '--layout', 'monorepo')).toMatchObject({
       code: 1,
@@ -205,5 +201,48 @@ describe('main', () => {
       code: 1,
       output: '--ts and --js do not go together: give one.\n',
     })
+  })
+
+  it('runs migrate with its options, and describes it', async () => {
+    const { code, io } = await runMain('migrate', '-y', '--dry-run', '--json', '--to', '0.1.0')
+    expect(code).toBe(0)
+    expect(runMigrate).toHaveBeenLastCalledWith(
+      { isConfirmed: true, isDryRun: true, isJson: true, to: '0.1.0' },
+      io
+    )
+    await runMain('migrate')
+    expect(runMigrate).toHaveBeenLastCalledWith(
+      { isConfirmed: false, isDryRun: false, isJson: false, to: undefined },
+      expect.anything()
+    )
+    expect(await runMain('migrate', '-h')).toMatchObject({ code: 0, output: HELP.migrate })
+    expect(USAGE).toContain('migrate ')
+    for (const option of ['--to <version>', '--dry-run', '--yes', '--json']) {
+      expect(HELP.migrate).toContain(option)
+    }
+    expect(HELP.init).not.toContain('--to')
+    expect(HELP.init).not.toContain('--json')
+  })
+
+  it('refuses an option migrate does not take, and --to elsewhere', async () => {
+    expect(await runMain('migrate', '--force')).toMatchObject({
+      code: 1,
+      output: `--force is an option of init, not of migrate.
+
+${HELP.migrate}`,
+    })
+    expect(await runMain('migrate', '--scheme', 'dark')).toMatchObject({
+      code: 1,
+      output: `--scheme is an option of init and create, not of migrate.
+
+${HELP.migrate}`,
+    })
+    expect(await runMain('init', '--to', '0.1.0')).toMatchObject({
+      code: 1,
+      output: `--to is an option of migrate, not of init.
+
+${HELP.init}`,
+    })
+    expect(await runMain('migrate', 'now')).toMatchObject({ code: 1 })
   })
 })

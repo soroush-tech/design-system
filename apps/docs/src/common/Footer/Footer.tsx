@@ -1,10 +1,11 @@
-import { styled, get } from '@soroush.tech/design-system'
-import { Flex } from '@soroush.tech/design-system/Flex'
-import { Grid } from '@soroush.tech/design-system/Grid'
-import { Link } from '@soroush.tech/design-system/Link'
-import { Typography } from '@soroush.tech/design-system/Typography'
-import { View } from '@soroush.tech/design-system/View'
-import { alpha } from '@soroush.tech/design-system/utils'
+import { alpha, styled } from '@gild-ui/react'
+import { get } from '@soroush.tech/styled-system'
+import { Flex } from '@gild-ui/react/Flex'
+import { Grid } from '@gild-ui/react/Grid'
+import { Link } from '@gild-ui/react/Link'
+import { Typography } from '@gild-ui/react/Typography'
+import { View } from '@gild-ui/react/View'
+import { PlainList } from 'src/common/PlainList/PlainList'
 import logoUrl from 'src/assets/soroush.svg'
 import { CONTENT_MAX_WIDTH, TOC_ROOM } from 'src/common/layoutSizes'
 import { PACKAGES } from 'src/common/packages'
@@ -31,7 +32,7 @@ const Heading = styled('h2')(({ theme }) => ({
   marginBottom: theme.space[3],
   color: get(theme, 'palette.primary.main'),
   fontFamily: 'inherit',
-  fontSize: `${theme.fontSizes[0]}px`,
+  fontSize: theme.fontSizes[0],
   fontWeight: 400,
   letterSpacing: '0.2em',
   textTransform: 'uppercase',
@@ -50,7 +51,7 @@ function FooterLinks({
   return (
     <View as="nav" aria-label={label}>
       <Heading>{label}</Heading>
-      <View as="ul" m={0} p={0} style={{ listStyle: 'none' }}>
+      <PlainList as="ul" m={0} p={0}>
         {links.map((link) => (
           <View as="li" key={link.href} py={0.75}>
             <Link
@@ -63,7 +64,7 @@ function FooterLinks({
             </Link>
           </View>
         ))}
-      </View>
+      </PlainList>
     </View>
   )
 }

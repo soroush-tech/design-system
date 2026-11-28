@@ -1,4 +1,6 @@
 import type { DocsSection } from 'src/common/nav'
+// Relative, and a file of its own: the `src` alias and the workspace packages are unavailable here.
+import { sectionRoutes } from '../../../../packages/docs-content/src/sectionRoutes'
 
 // These helpers run at Vike config time (in +route.ts / +config.ts), which executes in
 // plain Node - process.env, not import.meta.env. Production builds evaluate them once
@@ -15,14 +17,14 @@ export const docsSection = (): string | undefined => readNodeEnv('DOCS_SECTION')
 
 /**
  * The Vike route string for a section page. On the live site the section owns a URL
- * prefix (`/design-system/components/@name`); in that section's versioned snapshot
- * build the prefix drops - the vite base (`/<pkg>/<version>/`) carries it instead.
+ * prefix (`/react/@name`); in that section's versioned snapshot
+ * build the prefix drops - the vite base (`/<route>/<version>/`) carries it instead.
  */
 export const sectionRoute = (pkg: DocsSection, route: string): string => {
   if (docsSection() === pkg) return route
   // The section overview is `/<pkg>`, not `/<pkg>/` - Vike matches routes exactly.
   const suffix = route === '/' ? '' : route
-  return `/${pkg}${suffix}`
+  return `/${sectionRoutes[pkg]}${suffix}`
 }
 
 /**

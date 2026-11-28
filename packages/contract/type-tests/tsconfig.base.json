@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2023", "DOM"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "strict": true,
+    "skipLibCheck": false,
+    "jsx": "react-jsx",
+    "types": [],
+    "paths": {
+      "@gild-ui/core/*": ["../../core/dist/*.d.mts"],
+      "@gild-ui/hooks": ["../../hooks/dist/index.d.mts"],
+      "@gild-ui/hooks/*": ["../../hooks/dist/*.d.mts"],
+      "@gild-ui/react": ["../../react/dist/index.d.mts"],
+      "@gild-ui/react/*": ["../../react/dist/*.d.mts"],
+      "@gild-ui/react-markdown": ["../../react-markdown/dist/index.d.mts"],
+      "@gild-ui/react-markdown/*": ["../../react-markdown/dist/*.d.mts"]
+    }
+  }
+}

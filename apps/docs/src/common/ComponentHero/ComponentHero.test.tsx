@@ -27,6 +27,13 @@ describe('ComponentHero', () => {
     expect(screen.getByText('A button.')).toBeInTheDocument()
   })
 
+  it('shows the install and the import of the component, from its package', () => {
+    renderHero()
+    expect(
+      screen.getByText((text) => text.includes("import { Button } from '@gild-ui/react/Button'"))
+    ).toBeInTheDocument()
+  })
+
   it('draws the component beside its name', () => {
     const { container } = renderHero()
     expect(container.querySelector('svg')).toHaveAttribute('aria-hidden', 'true')
@@ -42,7 +49,7 @@ describe('ComponentHero', () => {
     const source = screen.getByRole('link', { name: 'Source' })
     expect(source).toHaveAttribute(
       'href',
-      'https://github.com/soroush-tech/design-system/tree/main/packages/design-system/src/Button'
+      'https://github.com/soroush-tech/design-system/tree/main/packages/react/src/Button'
     )
     expect(source).toHaveAttribute('target', '_blank')
     expect(source).toHaveAttribute('rel', 'noopener noreferrer')
@@ -50,13 +57,10 @@ describe('ComponentHero', () => {
 
   it('has an Overview tab and a Specs tab, linked to the component pages', () => {
     renderHero()
-    expect(tabs().getByRole('link', { name: 'Overview' })).toHaveAttribute(
-      'href',
-      '/design-system/components/button/'
-    )
+    expect(tabs().getByRole('link', { name: 'Overview' })).toHaveAttribute('href', '/react/Button/')
     expect(tabs().getByRole('link', { name: 'Specs' })).toHaveAttribute(
       'href',
-      '/design-system/api/button/'
+      '/react/Button/specs/'
     )
   })
 
@@ -67,7 +71,7 @@ describe('ComponentHero', () => {
     renderHero({ hasAccessibility: true })
     expect(tabs().getByRole('link', { name: 'Accessibility' })).toHaveAttribute(
       'href',
-      '/design-system/components/button/accessibility/'
+      '/react/Button/accessibility/'
     )
   })
 

@@ -1,8 +1,9 @@
 import type { MDXComponents } from 'mdx/types'
-import { Checkbox } from '@soroush.tech/design-system/Checkbox'
-import { Image } from '@soroush.tech/design-system/Image'
-import { Link } from '@soroush.tech/design-system/Link'
-import { Quote } from '@soroush.tech/design-system/Quote'
+import { StyleSheet } from '@gild-ui/react'
+import { Checkbox } from '@gild-ui/react/Checkbox'
+import { Image } from '@gild-ui/react/Image'
+import { Link } from '@gild-ui/react/Link'
+import { Quote } from '@gild-ui/react/Quote'
 import {
   Table,
   TableBody,
@@ -10,11 +11,14 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-} from '@soroush.tech/design-system/Table'
-import { Typography } from '@soroush.tech/design-system/Typography'
-import { View } from '@soroush.tech/design-system/View'
-import { CodeBlock } from '@soroush.tech/markdown/CodeBlock'
+} from '@gild-ui/react/Table'
+import { Typography } from '@gild-ui/react/Typography'
+import { View } from '@gild-ui/react/View'
+import { CodeBlock } from '@gild-ui/react-markdown/CodeBlock'
 import { MdxReadme } from './MdxReadme'
+
+// A GFM task-list item carries its own checkbox, so it drops the list marker.
+const taskItem = StyleSheet.create({ item: { listStyleType: 'none' } })
 
 /**
  * Element map for MDX content - mirrors the markdown package's Preview map, so `.mdx`
@@ -48,8 +52,7 @@ export const mdxComponents: MDXComponents = {
       lineHeight="base"
       variant="body1"
       gutterBottom
-      // GFM task-list items carry their own checkbox, so drop the list marker.
-      style={className?.includes('task-list-item') ? { listStyleType: 'none' } : undefined}
+      style={className?.includes('task-list-item') && taskItem.item}
       className={className}
       {...props}
     />

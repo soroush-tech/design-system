@@ -4,7 +4,7 @@ import { prepareLiveCode } from './prepareLiveCode'
 describe('prepareLiveCode', () => {
   it('drops single-line imports and unwraps the default export', () => {
     const code = [
-      "import { Button } from '@soroush.tech/design-system/Button'",
+      "import { Button } from '@gild-ui/react/Button'",
       '',
       'export default function Demo() {',
       '  return <Button>Go</Button>',
@@ -23,7 +23,7 @@ describe('prepareLiveCode', () => {
       'import {',
       '  Button,',
       '  Flex,',
-      "} from '@soroush.tech/design-system'",
+      "} from '@gild-ui/react'",
       '',
       "export const label = 'go'",
       '',
@@ -60,7 +60,7 @@ describe('prepareLiveCode', () => {
 
   it('does not strip an import line inside a template literal', () => {
     const code = [
-      "import { Code } from '@soroush.tech/design-system/Code'",
+      "import { Code } from '@gild-ui/react/Code'",
       '',
       'export default function Demo() {',
       '  const sample = `',
@@ -71,7 +71,7 @@ describe('prepareLiveCode', () => {
     ].join('\n')
     const live = prepareLiveCode(code)
     expect(live).toContain("import { Button } from 'somewhere'")
-    expect(live).not.toContain('@soroush.tech/design-system/Code')
+    expect(live).not.toContain('@gild-ui/react/Code')
     expect(live).toContain('render(<Demo />)')
   })
 })

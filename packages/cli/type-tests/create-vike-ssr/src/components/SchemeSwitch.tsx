@@ -1,7 +1,7 @@
-import { Flex } from '@soroush.tech/design-system/Flex'
-import { Icon } from '@soroush.tech/design-system/Icon'
-import { Switch } from '@soroush.tech/design-system/Switch'
-import { Typography } from '@soroush.tech/design-system/Typography'
+import { Flex } from '@gild-ui/react/Flex'
+import { Icon } from '@gild-ui/react/Icon'
+import { Switch } from '@gild-ui/react/Switch'
+import { Typography } from '@gild-ui/react/Typography'
 
 type Scheme = 'light' | 'dark'
 

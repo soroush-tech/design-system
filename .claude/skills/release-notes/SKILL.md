@@ -1,6 +1,6 @@
 ---
 name: release-notes
-description: How to write and cut a GitHub Release for an @soroush.tech/* package published by cd-packages.yml - notes live in an in-repo file `packages/<pkg>/release-notes/<version>.md`, the semver bump rule, a linked PR/issue reference as an absolute URL (required for feature/fix releases, waived for dependency-bump-only ones which instead list every bump), and the breaking-change, new-API-doc-link, and packaging side-note sections. Use when releasing a package or drafting its release notes.
+description: How to write and cut a GitHub Release for a @gild-ui/* package (or @soroush.design/cli, @soroush.design/mcp) published by cd-packages.yml - notes live in an in-repo file `packages/<pkg>/release-notes/<version>.md`, the semver bump rule, a linked PR/issue reference as an absolute URL (required for feature/fix releases, waived for dependency-bump-only ones which instead list every bump), and the breaking-change, new-API-doc-link, and packaging side-note sections. Use when releasing a package or drafting its release notes.
 paths: packages/**
 metadata:
   internal: true
@@ -44,6 +44,8 @@ bump decides which sections the notes need.
 > is untouched. A backward-compatible dep bump is PATCH.
 
 ## Required contents
+
+A breaking release of the Gild UI family also ships a `migrate` step, and each Breaking item says whether `migrate` handles it or what to do by hand: see the `migrations` skill (`pnpm check:migrations` enforces both).
 
 Every release body **must** have:
 

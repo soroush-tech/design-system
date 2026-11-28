@@ -43,9 +43,9 @@ describe('+onRenderClient', () => {
     await onRenderClient({
       isHydration: false,
       config: { title: 'Components', description: 'Component reference.' },
-      urlPathname: '/design-system/components',
+      urlPathname: '/react/components',
     } as never)
-    expect(document.title).toBe('Components · SOROUSH.DESIGN')
+    expect(document.title).toBe('Components · Gild UI')
     expect(document.querySelector('meta[name="description"]')?.getAttribute('content')).toBe(
       'Component reference.'
     )

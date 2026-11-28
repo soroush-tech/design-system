@@ -1,13 +1,15 @@
-import { Button } from '@soroush.tech/design-system/Button'
-import { Card } from '@soroush.tech/design-system/Card'
-import { Flex } from '@soroush.tech/design-system/Flex'
-import { Grid } from '@soroush.tech/design-system/Grid'
-import { Link } from '@soroush.tech/design-system/Link'
-import { Typography } from '@soroush.tech/design-system/Typography'
-import { View } from '@soroush.tech/design-system/View'
+import { styled } from '@gild-ui/react'
+import { Button } from '@gild-ui/react/Button'
+import { Card } from '@gild-ui/react/Card'
+import { Flex } from '@gild-ui/react/Flex'
+import { Grid } from '@gild-ui/react/Grid'
+import { Link } from '@gild-ui/react/Link'
+import { Typography } from '@gild-ui/react/Typography'
+import { View } from '@gild-ui/react/View'
 import { ComponentIllustration } from 'src/common/ComponentCard/ComponentIllustration'
 import { Layout } from 'src/common/Layout'
 import { PACKAGE_VERSIONS } from 'src/common/packageVersions'
+import { appInstallLine } from 'src/common/nav'
 import { sectionPath } from 'src/common/sectionPath'
 
 // What the library stands for, in four lines - each a card under the hero.
@@ -32,8 +34,8 @@ const FEATURES = [
 
 const PACKAGES = [
   {
-    pkg: 'design-system',
-    name: 'Design System',
+    pkg: 'react',
+    name: 'Gild UI for React',
     text: 'The components: layout, inputs, feedback, navigation and overlays, with a theme to match your brand.',
   },
   {
@@ -47,6 +49,9 @@ const PACKAGES = [
     text: 'The style-prop engine under it all: responsive props, scales and variants for any component of yours.',
   },
 ] as const
+
+// The drawings beside the hero: they take the room the text leaves, up to a width.
+const Showcase = styled(Grid)({ flex: '1 1 22rem' })
 
 // A few of the components, drawn - a first look at what the library has.
 const SHOWCASE = ['Button', 'Tabs', 'Autocomplete', 'RangeInput'] as const
@@ -69,25 +74,18 @@ export default function Page() {
               for every published version.
             </Typography>
             <Flex flexDirection="row" flexWrap="wrap" gap={2}>
-              <Button
-                href={sectionPath('design-system', '/getting-started/installation/')}
-                variant="contained"
-              >
+              <Button href={sectionPath('react', '/installation/')} variant="contained">
                 Get started
               </Button>
-              <Button href={sectionPath('design-system', '/components/')} variant="outlined">
+              <Button href={sectionPath('react', '/components/')} variant="outlined">
                 Browse components
               </Button>
             </Flex>
             <Typography as="code" variant="body2" fontFamily="mono">
-              npm i @soroush.tech/design-system
+              {appInstallLine}
             </Typography>
           </Flex>
-          <Grid
-            gridTemplateColumns="1fr 1fr"
-            gridGap={2}
-            style={{ flex: '1 1 22rem', maxWidth: '34rem' }}
-          >
+          <Showcase gridTemplateColumns="1fr 1fr" gridGap={2} maxWidth="34rem">
             {SHOWCASE.map((name) => (
               <Flex
                 key={name}
@@ -101,7 +99,7 @@ export default function Page() {
                 <ComponentIllustration name={name} />
               </Flex>
             ))}
-          </Grid>
+          </Showcase>
         </Flex>
       </View>
 
@@ -132,10 +130,10 @@ export default function Page() {
             <Link
               key={pkg}
               href={sectionPath(pkg, '/')}
-              style={{ textDecoration: 'none' }}
+              underline="none"
               aria-label={`${name} documentation`}
             >
-              <Card p={3} borderRadius="lg" style={{ height: '100%' }}>
+              <Card p={3} borderRadius="lg" height="100%">
                 <Typography variant="h6" as="h3" gutterBottom>
                   {name}
                 </Typography>

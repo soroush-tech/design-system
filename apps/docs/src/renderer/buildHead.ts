@@ -33,8 +33,8 @@ const isMetaTag = (value: unknown): value is MetaTag => {
   return typeof tag.name === 'string' || typeof tag.property === 'string'
 }
 
-// 'unsafe-inline' styles are required by Emotion's critical-CSS extraction. The docs
-// site fetches nothing off-origin: versions.json is same-origin, images ship in-repo.
+// 'unsafe-inline' styles are required: the engine's style elements are written inline at
+// build time and again at run time. The docs site fetches nothing off-origin: versions.json is same-origin, images ship in-repo.
 const CSP = [
   "default-src 'self'",
   // 'unsafe-eval' is required by the demos' live editing - react-live compiles the

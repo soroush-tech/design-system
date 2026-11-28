@@ -1,13 +1,16 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest'
-import { createProvidersSource, createThemesSource, MARKER } from './templates'
+import { createProvidersSource, createThemesSource, isSetUpByInit, MARKER } from './templates'
 
 describe('createThemesSource', () => {
-  it('default-exports an object of named themes, each createTheme(base, {...literal})', () => {
-    const source = createThemesSource({ isTypeScript: true })
+  it('default-exports defineThemes of named themes, each createTheme(base, {...literal})', () => {
+    const source = createThemesSource({ isTypeScript: true, scheme: 'light' })
     expect(source.startsWith(MARKER)).toBe(true)
-    expect(source).toMatch(/\nconst themes = \{\n {2}light: createTheme\(baseTheme, \{\n/)
-    expect(source).toMatch(/\n {2}dark: createTheme\(baseTheme, \{\n/)
+    expect(source).toMatch(
+      /\nconst themes = defineThemes\(\n {2}\{\n {4}light: createTheme\(baseTheme, \{\n/
+    )
+    expect(source).toMatch(/\n {4}dark: createTheme\(baseTheme, \{\n/)
+    expect(source).toMatch(/\n {2}\},\n {2}\{\} satisfies ThemeComponents\n\)\n/)
     expect(source).toMatch(/\nexport default themes\n$/)
     // Every theme ends with a literal object: no theme is built by a function or from a variable.
     const themeCalls = [...source.matchAll(/createTheme\((\w+), (.)/g)]
@@ -17,11 +20,25 @@ describe('createThemesSource', () => {
     ])
   })
 
-  it('gives a TypeScript app the augmentation stub, as a comment, and a JavaScript app none', () => {
-    expect(createThemesSource({ isTypeScript: true })).toContain(
-      "// declare module '@soroush.tech/design-system/theme' {"
+  it('gives a TypeScript app the augmentation stub, as a comment, and the registration; a JavaScript app neither', () => {
+    const source = createThemesSource({ isTypeScript: true, scheme: 'light' })
+    expect(source).toContain("// declare module '@gild-ui/core/theme' {")
+    expect(source).toContain(
+      "\ndeclare module '@gild-ui/core/theme' {\n  interface Register {\n    themes: typeof themes\n  }\n}\n"
     )
-    expect(createThemesSource({ isTypeScript: false })).not.toContain('declare module')
+    expect(createThemesSource({ isTypeScript: false, scheme: 'light' })).not.toContain(
+      'declare module'
+    )
+  })
+
+  it('registers the theme the app starts in as the base theme, and types the components in TypeScript only', () => {
+    const dark = createThemesSource({ isTypeScript: true, scheme: 'dark' })
+    expect(dark).toContain("import { registerBaseTheme } from '@gild-ui/react/ThemeProvider'")
+    expect(dark).toContain("import type { ThemeComponents } from '@gild-ui/react'")
+    expect(dark).toContain('\nregisterBaseTheme(themes.dark)\n')
+    const js = createThemesSource({ isTypeScript: false, scheme: 'light' })
+    expect(js).toContain('\nregisterBaseTheme(themes.light)\n')
+    expect(js).not.toContain('ThemeComponents')
   })
 })
 
@@ -51,5 +68,31 @@ describe('createProvidersSource', () => {
     expect(source).toContain('{ theme: themes[scheme] }')
     expect(source).toContain("import themes from './themes.js'")
     expect(source).toContain("scheme = 'light'")
+  })
+})
+
+describe('isSetUpByInit', () => {
+  it('writes the name of the package an app imports from', () => {
+    expect(MARKER).toBe('// Set up by @gild-ui/react init.')
+  })
+
+  it('recognises a file that starts with the current marker', () => {
+    expect(isSetUpByInit('// Set up by @gild-ui/react init. Your themes')).toBe(true)
+  })
+
+  it('recognises a file that starts with the marker of the library, its name before', () => {
+    expect(isSetUpByInit('// Set up by @soroush.design/react-components init. Your themes')).toBe(
+      true
+    )
+  })
+
+  it('recognises a file that starts with the marker of the former name, before the library was renamed', () => {
+    expect(isSetUpByInit('// Set up by @soroush.tech/design-system init. Your themes')).toBe(true)
+  })
+
+  it("treats a file with neither marker as the developer's own", () => {
+    expect(isSetUpByInit('export const light = {}')).toBe(false)
+    expect(isSetUpByInit('// Set up by another-package init.')).toBe(false)
+    expect(isSetUpByInit('')).toBe(false)
   })
 })

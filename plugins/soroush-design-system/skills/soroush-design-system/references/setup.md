@@ -1,22 +1,25 @@
 # New-app checklist
 
-Reference wiring: a Next.js App Router app on React 19.
+Reference wiring: a Next.js App Router app on React 19, with server components. The pages and the
+root layout are server components; Gild UI's static components render on the server with
+the app's theme, and its interactive components are client components that a server component can
+import and render.
 
 ## 1. Install
 
 ```jsonc
 // package.json
 "dependencies": {
-  "@soroush.tech/design-system": "^2.2.0",
-  "@emotion/cache": "^11.14.0",
+  "@gild-ui/core": "^0.1.0",
+  "@gild-ui/react": "^0.1.0",
   "react": "^19.2.8",
   "react-dom": "^19.2.8"
 }
 ```
 
-`@emotion/react` and `@emotion/styled` come in as transitive deps of the design
-system - don't add them directly. `@emotion/cache` is direct, only because the
-Next.js SSR registry needs `createCache`.
+The styling engine (UmberStyle, the `@umber-style/*` packages) comes in as a dependency
+of Gild UI - don't add it directly, and don't import it: what an app needs of it comes from
+`@gild-ui/react`. React 19.2 or later is required.
 
 ## 2. Theme
 
@@ -27,39 +30,161 @@ It exports `light` and `dark`. The color ramps at the top (`carbonBlack`,
 app that copies them shares one color set. Change which ramp fills a palette slot if
 the app needs to, never the ramp values.
 
-## 3. Provider
+Its last line, `registerBaseTheme(light)`, is what makes server components themed. A server
+component has no provider above it to read, so `useTheme()` and every component's styles read the
+theme registered once, at module level: its `components` (the looks of the components) and its
+`defaults` are real values there, and its tokens are CSS variables, so which theme the page is in
+(light or dark) decides their colors. Register the theme the app starts in. An app that registers
+nothing renders server components with the library's built-in theme, so nothing fails, but the
+app's own tokens and component styles reach server components only through the registration.
 
-Copy `providers.tsx` to `app/providers.tsx`. Two things it does:
+The module is evaluated on both sides, which is the point: the server (the root layout imports
+it) and the browser (`providers.tsx` imports it) each hold their own copy of the registration.
 
-- **Emotion SSR registry** - collects styles inserted during the server render and
-  re-injects them via `useServerInsertedHTML`, so server markup arrives styled.
-  Without it you get an unstyled flash on every hard navigation.
-- **Global reset** - `border-box` everywhere, zero body margin,
-  `background.primary` / `text.initial` / `fonts.body` on `<body>`.
+## 3. Layout and provider
 
-Change the cache key (`createCache({ key: "dc" })`) to a short app-specific prefix. Under a
-strict Content Security Policy, give the cache the response's nonce too
-(`createCache({ key: "dc", nonce })`) - every style tag Emotion inserts then carries it.
+Copy `providers.tsx` to `app/providers.tsx`. It is a client component that does nothing but
+import the theme, so the browser's bundle (and the server render of client components) registers
+the base theme before any client component below it renders. `components` can hold functions, and a
+function cannot cross from a server component to a client one.
 
-Then in `app/layout.tsx`:
+Then in `app/layout.tsx`, a server component. It reads the page's theme from a cookie, so the
+first HTML already has it, and gives it to `ThemeProvider`, which declares the theme's variables
+on the page:
 
 ```tsx
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+import { Global } from '@gild-ui/react/Global'
+import { StyleRegistry } from '@gild-ui/react/next'
+import { ThemeProvider } from '@gild-ui/react/ThemeProvider'
+import { cookies } from 'next/headers'
+import './nonce'
+import Providers from './providers'
+import { themes } from '@/theme'
+
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const scheme = (await cookies()).get('scheme')?.value === 'dark' ? 'dark' : 'light'
   return (
     <html lang="en">
       <body>
-        <Providers>
-          <TopBar />
-          {children}
-        </Providers>
+        <StyleRegistry>
+          <ThemeProvider theme={themes[scheme]}>
+            <Global
+              styles={(theme) => ({
+                '*, *::before, *::after': { boxSizing: 'border-box' },
+                body: {
+                  margin: 0,
+                  backgroundColor: theme.background.primary,
+                  color: theme.text.initial,
+                  fontFamily: theme.fonts.body,
+                },
+              })}
+            />
+            <Providers>
+              <TopBar />
+              {children}
+            </Providers>
+          </ThemeProvider>
+        </StyleRegistry>
       </body>
     </html>
   )
 }
 ```
 
-`<Providers>` wraps everything including the chrome. Route groups then supply their
-own inner layout (rail + `Main`).
+`StyleRegistry` wraps everything, once (see the next section), `<ThemeProvider>` wraps the chrome too, and `Global` is the reset: `border-box`
+everywhere, zero body margin, `background.primary` / `text.initial` / `fonts.body` on `<body>`.
+Route groups then supply their own inner layout (rail + `Main`).
+
+**Light and dark, with no client code.** A server action writes the cookie, and Next renders the
+page again with the other theme. The switch is a form around a button:
+
+```ts
+// app/actions.ts
+'use server'
+
+import { cookies } from 'next/headers'
+
+export async function switchScheme() {
+  const jar = await cookies()
+  jar.set('scheme', jar.get('scheme')?.value === 'dark' ? 'light' : 'dark')
+}
+```
+
+```tsx
+<form action={switchScheme}>
+  <Button type="submit">Switch theme</Button>
+</form>
+```
+
+**Server and client components.** Import every component from its subpath, in a server component
+too. Each component's README says which it is. The static ones - `Typography`, `View`, `Flex`,
+`Grid`, `Paper`, `Card`, `Skeleton`, `Icon`, `Link`, `Badge`, `AppBar`, `Quote`, the progress
+indicators - are server components: they render on the server with the registered theme and send no
+JavaScript of their own. The ones with state, effects, events or a family context - `Button`,
+`Tabs`, `Menu`, `Table`, the form controls - are client components: their entry starts with
+`'use client'`, so a server component renders them as it renders any client component, with props
+that can cross (text, numbers, elements - not functions). A handler goes in a client component of
+your own, as `Counter` does in `apps/next-fixture`.
+
+**The style registry, and a strict style policy.** Add `StyleRegistry` from `@gild-ui/react/next`
+once, in the root layout, as above. It collects the styles of each request - of the server components
+and of the client components - and writes them with the HTML, in the head for the first piece of the
+stream and before each later one, so a page is styled before any JavaScript runs. It needs Next.js
+16.3 or later: `next` is an optional peer of `@gild-ui/react`, needed only by an app that imports this
+entry.
+
+A policy whose `style-src` has a nonce and no `'unsafe-inline'` works with it, in three small files.
+The nonce module tells the engine where the nonce of the request is, once, at module level, and the
+layout imports it (the `import './nonce'` above):
+
+```ts
+// app/nonce.ts
+import { setNonceSource } from '@gild-ui/react/engine'
+import { headers } from 'next/headers'
+
+// Where the nonce of a request comes from: the `x-nonce` header that proxy.ts sets.
+setNonceSource(async () => (await headers()).get('x-nonce') ?? undefined)
+```
+
+`proxy.ts` makes a new nonce for each request, puts it in the policy of the response, and passes it
+on in the request headers, which the render reads:
+
+```ts
+// proxy.ts
+import { NextResponse, type NextRequest } from 'next/server'
+
+export function proxy(request: NextRequest) {
+  const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
+  const policy = `style-src 'nonce-${nonce}'; script-src 'self' 'nonce-${nonce}' 'strict-dynamic'`
+  const requestHeaders = new Headers(request.headers)
+  requestHeaders.set('x-nonce', nonce)
+  requestHeaders.set('content-security-policy', policy)
+  const response = NextResponse.next({ request: { headers: requestHeaders } })
+  response.headers.set('content-security-policy', policy)
+  return response
+}
+
+export const config = {
+  matcher: [{ source: '/((?!_next/static|_next/image|favicon.ico).*)' }],
+}
+```
+
+Under this policy the page's `<style>` elements carry the nonce, and no style is blocked. Two notes: `next dev`
+also needs `'unsafe-eval'` in `script-src` (the development server evaluates code; a production
+build does not), and partial prerendering does not support a nonce policy, because a prerendered
+shell cannot know the nonce of a later request.
+
+This set-up is tested by `apps/next-fixture` on Next.js 16.4 with React 19.3, in a production
+build, with JavaScript off (computed styles of the static and the client components, and the theme
+from the cookie) and on (no console error, no hydration warning, a click, the switch), and under the
+strict policy above (no console error, no blocked style, a new nonce on every request).
+
+**Limits.**
+
+- A `components` look written as a function is not plain data: a server `ThemeProvider` leaves it
+  out of what it sends to client components, warns once in development with the path, and the
+  client components take the function from the theme module of the browser's bundle - which is why
+  `providers.tsx` imports it.
 
 ## 4. Fonts
 

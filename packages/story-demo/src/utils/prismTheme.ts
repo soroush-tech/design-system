@@ -1,4 +1,4 @@
-import type { ThemeSyntax } from '@soroush.tech/markdown'
+import type { ThemeSyntax } from '@gild-ui/react-markdown'
 
 interface PrismStyleEntry {
   types: string[]

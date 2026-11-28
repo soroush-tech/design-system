@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import designSystemPkg from 'packages/design-system/package.json'
+import { PACKAGE_VERSIONS } from 'src/common/packageVersions'
 import { ThemeModeProvider } from 'src/theme/ThemeModeProvider'
 import { Navbar } from './Navbar'
 
@@ -15,13 +15,13 @@ const renderNavbar = (props?: Parameters<typeof Navbar>[0]) =>
 describe('Navbar', () => {
   it('shows the wordmark and the current design-system version', () => {
     renderNavbar()
-    expect(screen.getByRole('link', { name: 'SOROUSH.DESIGN' })).toHaveAttribute('href', '/')
-    expect(screen.getByText(`v${designSystemPkg.version}`)).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Gild UI' })).toHaveAttribute('href', '/')
+    expect(screen.getByText(`v${PACKAGE_VERSIONS.react}`)).toBeInTheDocument()
   })
 
   it('lays the bar out in one row: the wordmark and version, then the links and the toggle', () => {
     renderNavbar()
-    const brand = screen.getByRole('link', { name: 'SOROUSH.DESIGN' }).parentElement!
+    const brand = screen.getByRole('link', { name: 'Gild UI' }).parentElement!
     const actions = screen.getByRole('button', { name: 'Toggle color scheme' }).parentElement!
     for (const row of [brand.parentElement!, brand, actions]) {
       expect(row).toHaveStyle({ flexDirection: 'row' })

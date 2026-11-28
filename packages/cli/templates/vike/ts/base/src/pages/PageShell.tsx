@@ -1,5 +1,5 @@
 import { StrictMode } from 'react'
-import { CacheProvider, styleCache } from '@soroush.tech/design-system/engine'
+import { CacheProvider, styleCache } from '@gild-ui/react/engine'
 // @if redux-toolkit
 import { Provider as StoreProvider } from 'react-redux'
 // @endif
@@ -10,7 +10,7 @@ import { store } from '../state/store'
 import { PageContextProvider } from './usePageContext'
 
 /**
- * The page inside its +Layout. The Emotion cache is the design system's, so the styles the page
+ * The page inside its +Layout. The style cache is Gild UI's, so the styles the page
  * uses are found where it is drawn, and every component of the page can read its pageContext.
  */
 export function PageShell({ pageContext }: { readonly pageContext: PageContext }) {

@@ -1,6 +1,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { loadPackageFile, repoRoot } from '@soroush.tech/docs-content/node'
+import { sections } from '@gild-ui/docs-content'
+import { loadPackageFile, repoRoot } from '@gild-ui/docs-content/node'
 import { tokenPath } from '../tokenPath'
 import type { ContentBundle } from '../types'
 
@@ -30,7 +31,7 @@ export const renderComponentsReference = (bundle: ContentBundle): string => {
     '',
     '# Components',
     '',
-    `The ${bundle.components.length} components shipped by the design system, and when to reach for each.`,
+    `The ${bundle.components.length} components shipped by Gild UI, and when to reach for each.`,
     'Import every component from its own subpath.',
     '',
     ...[...groups].flatMap(([label, items]) => [
@@ -49,7 +50,7 @@ export const renderTokensReference = (bundle: ContentBundle): string =>
     '',
     '# Token contract',
     '',
-    `Every scale on \`theme\`, serialized from \`baseTheme\` (@soroush.tech/design-system ${bundle.version}).`,
+    `Every scale on \`theme\`, serialized from \`baseTheme\` (${sections.react.npm} ${bundle.version}).`,
     'Reference tokens through the theme; a literal value in a component is a bug.',
     '',
     ...bundle.tokens.flatMap((scale) => [
@@ -71,7 +72,7 @@ const pluginFiles = (bundle: ContentBundle): Array<{ name: string; body: string 
   { name: 'tokens.md', body: renderTokensReference(bundle) },
   ...COPIED.map((name) => ({
     name,
-    body: loadPackageFile('design-system', `docs/consumer/${name}`),
+    body: loadPackageFile('react', `docs/consumer/${name}`),
   })),
 ]
 

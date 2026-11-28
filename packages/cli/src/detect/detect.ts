@@ -1,6 +1,6 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { dirname, join, posix } from 'node:path'
-import type { Io } from '../io'
+import { compareText } from '../compareText'
 import type { PackageManager, PackageManagerName } from '../plan/planInit'
 import { isRootSource } from '../plan/rootEdit'
 
@@ -70,22 +70,29 @@ export function detectPackageManager(
 }
 
 /**
- * The React version the app has installed - in its own node_modules or a workspace's above it -
- * else the lowest its declared range allows. Only node_modules folders are searched: a global
- * folder or NODE_PATH says nothing about the app.
+ * The version of `name` the app has installed - in its own node_modules or a workspace's above it.
+ * Only node_modules folders are searched: a global folder or NODE_PATH says nothing about the app.
+ */
+export function findInstalledVersion(root: string, name: string): string | undefined {
+  for (let directory = root; ; directory = dirname(directory)) {
+    const installed = readPackageJson(join(directory, 'node_modules', name))
+    if (installed) return installed.version
+    if (dirname(directory) === directory) return undefined
+  }
+}
+
+/**
+ * The React version the app has installed, else the lowest its declared range allows.
  */
 export function findReactVersion(root: string, packageJson: PackageJson): string | undefined {
-  for (let directory = root; ; directory = dirname(directory)) {
-    const installed = readPackageJson(join(directory, 'node_modules', 'react'))
-    if (installed) return installed.version
-    if (dirname(directory) === directory) break
-  }
+  const installed = findInstalledVersion(root, 'react')
+  if (installed) return installed
   const match = /(\d+)(?:\.(\d+))?(?:\.(\d+))?/.exec(getDependency(packageJson, 'react') ?? '')
   return match ? `${match[1]}.${match[2] ?? 0}.${match[3] ?? 0}` : undefined
 }
 
 /**
- * Whether `version` is in `range`. Only the shape the design system's peer ranges use is read:
+ * Whether `version` is in `range`. Only the shape Gild UI's peer ranges use is read:
  * caret ranges joined by `||`, such as `^18.0.0 || ^19.0.0`. Any other shape throws.
  */
 export function satisfiesRange(version: string, range: string): boolean {
@@ -96,15 +103,6 @@ export function satisfiesRange(version: string, range: string): boolean {
     const [low, lowMinor, lowPatch] = match.slice(1).map(Number)
     return major === low && (minor > lowMinor || (minor === lowMinor && patch >= lowPatch))
   })
-}
-
-export type GitState = 'clean' | 'dirty' | 'not-a-repository'
-
-/** Whether the app is in a git repository with no uncommitted change. */
-export function getGitState(root: string, io: Pick<Io, 'run'>): GitState {
-  const { status, stdout } = io.run('git', ['status', '--porcelain'], { cwd: root })
-  if (status !== 0) return 'not-a-repository'
-  return stdout.trim() === '' ? 'clean' : 'dirty'
 }
 
 const SKIPPED_FOLDERS = new Set(['node_modules', 'dist', 'build', 'out', 'coverage', 'public'])
@@ -134,6 +132,24 @@ export function findRootFiles(root: string, folder = '', depth = 0): string[] {
   return found
 }
 
+/**
+ * Every file under the app's folder, by its path from the root, sorted. Hidden folders, the ones
+ * that hold output or dependencies, and symbolic links are not listed.
+ */
+export function listAppFiles(root: string, folder = '', depth = 0): string[] {
+  const found: string[] = []
+  for (const entry of readdirSync(join(root, folder), { withFileTypes: true })) {
+    const path = posix.join(folder, entry.name)
+    if (entry.name.startsWith('.')) continue
+    if (entry.isDirectory() && !SKIPPED_FOLDERS.has(entry.name) && depth < MAX_DEPTH) {
+      found.push(...listAppFiles(root, path, depth + 1))
+    } else if (entry.isFile()) {
+      found.push(path)
+    }
+  }
+  return found.sort(compareText)
+}
+
 /** Whether the folder is a workspace's root: pnpm's `pnpm-workspace.yaml`, or a `workspaces` field. */
 export function isWorkspaceRoot(root: string, packageJson: PackageJson): boolean {
   return packageJson.workspaces !== undefined || existsSync(join(root, 'pnpm-workspace.yaml'))
@@ -148,19 +164,6 @@ export function findPackageFolder(root: string, path: string): string {
     if (existsSync(join(root, folder, 'package.json'))) return folder
   }
   return ''
-}
-
-/**
- * The `package.json` of `@soroush.tech/design-system`: the nearest one above `fromFile` that is named
- * for it. Its bin finds itself this way.
- */
-export function readDesignSystemPackage(fromFile: string): PackageJson {
-  for (let directory = dirname(fromFile); ; directory = dirname(directory)) {
-    const packageJson = readPackageJson(directory)
-    if (packageJson?.name === '@soroush.tech/design-system') return packageJson
-    if (dirname(directory) === directory)
-      throw new Error('init cannot find the package.json of @soroush.tech/design-system')
-  }
 }
 
 const UNSUPPORTED_FRAMEWORKS: [string, string][] = [
@@ -181,7 +184,7 @@ export function findUnsupportedFramework(packageJson: PackageJson): string | und
 
 /**
  * Whether the app builds with Parcel and has not turned on its reading of package exports, which
- * every subpath of the design system (`/theme`, `/engine`, `/Button`, ...) needs.
+ * every subpath of Gild UI (`/theme`, `/engine`, `/Button`, ...) needs.
  */
 export function needsParcelPackageExports(packageJson: PackageJson): boolean {
   const isParcelApp = getDependency(packageJson, 'parcel') !== undefined

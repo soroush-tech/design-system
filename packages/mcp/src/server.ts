@@ -78,7 +78,7 @@ export const renderTokens = (bundle: ContentBundle, scale?: string): string => {
     return `Unknown scale "${scale}". Available: ${bundle.tokens.map((item) => item.name).join(', ')}.`
   }
   return [
-    `Theme tokens from \`baseTheme\` (@soroush.tech/design-system ${bundle.version}).`,
+    `Theme tokens from \`baseTheme\` (@gild-ui/react ${bundle.version}).`,
     'Reference them through the theme - never hardcode the literal value.',
     '',
     ...scales.flatMap((item) => [
@@ -106,7 +106,7 @@ export const createMcpServer = (bundle: ContentBundle = content): McpServer => {
     'list_components',
     {
       description:
-        'List every component in the @soroush.tech design system with its category, one-line summary, and exact subpath import. Start here when building UI with this library.',
+        'List every component in Gild UI with its category, one-line summary, and exact subpath import. Start here when building UI with this library.',
       inputSchema: {
         package: z
           .enum(['design-system', 'markdown'])
@@ -159,7 +159,7 @@ export const createMcpServer = (bundle: ContentBundle = content): McpServer => {
     'list_docs',
     {
       description:
-        'List the available guides and references: installation, usage, theming, customization, app setup, the layout kit, the brand theme, and the styled-system docs.',
+        'List the available guides and references: installation, usage, theming, customization, app setup, the layout kit, and the brand theme.',
       inputSchema: {},
     },
     () => text(renderDocIndex(bundle))
@@ -170,7 +170,7 @@ export const createMcpServer = (bundle: ContentBundle = content): McpServer => {
     {
       description: 'Get one guide or reference in full, by the id shown in `list_docs`.',
       inputSchema: {
-        id: z.string().describe('Doc id, e.g. "theming" or "styled-system/api".'),
+        id: z.string().describe('Doc id, e.g. "theming" or "hooks".'),
       },
     },
     ({ id }) => {

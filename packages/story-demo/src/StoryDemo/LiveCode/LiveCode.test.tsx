@@ -1,8 +1,9 @@
 import type { ReactNode } from 'react'
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
-import { ThemeProvider, createTheme, baseTheme } from '@soroush.tech/design-system/theme'
-import { syntaxDark } from '@soroush.tech/markdown/CodeBlock'
+import { ThemeProvider } from '@gild-ui/react'
+import { createTheme, baseTheme } from '@gild-ui/core/theme'
+import { syntaxDark } from '@gild-ui/react-markdown/CodeBlock'
 import { LiveCode } from './LiveCode'
 
 const theme = createTheme(baseTheme, { syntax: syntaxDark })
@@ -36,7 +37,7 @@ describe('LiveCode', () => {
 
   it('evaluates a full module buffer as-is', async () => {
     const code = [
-      "import { Sample } from '@soroush.tech/design-system/Sample'",
+      "import { Sample } from '@gild-ui/react/Sample'",
       '',
       'export default function Demo() {',
       '  return <Sample>full module</Sample>',

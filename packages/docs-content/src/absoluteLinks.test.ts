@@ -3,42 +3,44 @@ import { DOCS_URL, absoluteReadmeLink, absoluteReadmeLinks } from './absoluteLin
 
 describe('absoluteReadmeLink', () => {
   it('resolves a sibling component link, with or without README.md', () => {
-    expect(absoluteReadmeLink('../View/')).toBe(`${DOCS_URL}/design-system/components/view/`)
-    expect(absoluteReadmeLink('../TextInput/README.md')).toBe(
-      `${DOCS_URL}/design-system/components/text-input/`
-    )
+    expect(absoluteReadmeLink('../View/')).toBe(`${DOCS_URL}/react/View/`)
+    expect(absoluteReadmeLink('../TextInput/README.md')).toBe(`${DOCS_URL}/react/TextInput/`)
   })
 
-  it('resolves a component in another package', () => {
-    expect(absoluteReadmeLink('../Preview/')).toBe(`${DOCS_URL}/markdown/components/preview/`)
+  it('resolves a component in another section', () => {
+    expect(absoluteReadmeLink('../Preview/')).toBe(`${DOCS_URL}/react/markdown/Preview/`)
   })
 
   it('resolves the package doc pages', () => {
-    expect(absoluteReadmeLink('../../docs/theming.md')).toBe(
-      `${DOCS_URL}/design-system/customization/theming/`
-    )
+    expect(absoluteReadmeLink('../../docs/theming.md')).toBe(`${DOCS_URL}/react/theme/`)
     expect(absoluteReadmeLink('../../docs/customization.md')).toBe(
-      `${DOCS_URL}/design-system/customization/how-to/`
+      `${DOCS_URL}/react/customization/`
     )
   })
 
-  it('resolves a family member to its API page', () => {
-    expect(absoluteReadmeLink('../MenuList/README.md')).toBe(
-      `${DOCS_URL}/design-system/api/menu-list/`
+  it('resolves the links the docs make to each other and to the README', () => {
+    expect(absoluteReadmeLink('./customization.md')).toBe(`${DOCS_URL}/react/customization/`)
+    expect(absoluteReadmeLink('./catalog.md')).toBe(`${DOCS_URL}/react/catalog/`)
+    expect(absoluteReadmeLink('../README.md#component-defaults')).toBe(
+      `${DOCS_URL}/react/#component-defaults`
     )
+  })
+
+  it('resolves a family member to its page under its entry', () => {
+    expect(absoluteReadmeLink('../MenuList/README.md')).toBe(`${DOCS_URL}/react/Menu/MenuList/`)
     // From outside its family, through the family's folder.
     expect(absoluteReadmeLink('../Menu/MenuItems/README.md')).toBe(
-      `${DOCS_URL}/design-system/api/menu-items/`
+      `${DOCS_URL}/react/Menu/MenuItems/`
     )
   })
 
   it('keeps the section a link ends in', () => {
     expect(absoluteReadmeLink('../../MenuItem/README.md#submenus')).toBe(
-      `${DOCS_URL}/design-system/api/menu-item/#submenus`
+      `${DOCS_URL}/react/MenuItem/specs/#submenus`
     )
-    expect(absoluteReadmeLink('../View/#props')).toBe(`${DOCS_URL}/design-system/api/view/#props`)
+    expect(absoluteReadmeLink('../View/#props')).toBe(`${DOCS_URL}/react/View/specs/#props`)
     expect(absoluteReadmeLink('../../docs/customization.md#slot-props')).toBe(
-      `${DOCS_URL}/design-system/customization/how-to/#slot-props`
+      `${DOCS_URL}/react/customization/#slot-props`
     )
   })
 
@@ -55,8 +57,8 @@ describe('absoluteReadmeLinks', () => {
     const source =
       'See [View](../View/) and [docs](../../docs/theming.md) and [ext](https://x.dev).'
     expect(absoluteReadmeLinks(source)).toBe(
-      `See [View](${DOCS_URL}/design-system/components/view/) and ` +
-        `[docs](${DOCS_URL}/design-system/customization/theming/) and [ext](https://x.dev).`
+      `See [View](${DOCS_URL}/react/View/) and ` +
+        `[docs](${DOCS_URL}/react/theme/) and [ext](https://x.dev).`
     )
   })
 })

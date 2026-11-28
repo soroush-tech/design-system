@@ -1,13 +1,13 @@
 // The shape of the generated content bundle. Declared locally rather than imported
-// from @soroush.tech/docs-content so the published package's .d.ts stays self-contained
+// from @gild-ui/docs-content so the published package's .d.ts stays self-contained
 // (docs-content is a private workspace package and never reaches npm).
 
 export interface ComponentRecord {
   /** PascalCase component name, as exported. */
   name: string
-  /** URL segment on docs.soroush.tech. */
+  /** The component's name in kebab case, which a client may look it up by. */
   slug: string
-  /** Workspace package the component ships from. */
+  /** The package the component ships from: `design-system` or `markdown`, as the tools take it. */
   pkg: string
   /** The npm package a consumer installs. */
   packageName: string

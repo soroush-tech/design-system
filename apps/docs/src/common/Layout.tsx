@@ -1,7 +1,12 @@
-import { type CSSProperties, type ReactNode } from 'react'
-import { Drawer } from '@soroush.tech/design-system/Drawer'
-import { Flex } from '@soroush.tech/design-system/Flex'
-import { View } from '@soroush.tech/design-system/View'
+import { type ReactNode } from 'react'
+import { styled } from '@gild-ui/react'
+import {
+  createShouldForwardProp,
+  props as systemProps,
+} from '@soroush.tech/styled-system/should-forward-prop'
+import { Drawer } from '@gild-ui/react/Drawer'
+import { Flex } from '@gild-ui/react/Flex'
+import { View } from '@gild-ui/react/View'
 import { CONTENT_MAX_WIDTH, PANEL_RADIUS, TOC_ROOM, TOC_WIDTH } from 'src/common/layoutSizes'
 import { NavRail } from 'src/common/NavRail/NavRail'
 import { Footer } from 'src/common/Footer/Footer'
@@ -26,6 +31,20 @@ export interface LayoutProps {
 // The mobile navigation drawer's id - the navbar's menu button opens it through popovertarget,
 // so it works on the prerendered pages with JavaScript off.
 const NAV_DRAWER = 'docs-nav'
+
+// The sidebar's column sticks to the top of the row it is in, whatever the height of its content.
+const SidebarColumn = styled(View)({ alignSelf: 'flex-start' })
+
+// The panel in it, with round corners.
+const SidebarPanel = styled(View)({ borderRadius: PANEL_RADIUS })
+
+// The content column takes what the sidebar and the contents leave.
+const ContentColumn = styled(View)({ flex: '1 1 0' })
+
+// What the head needs to know to line its tabs up with the content: the room beside it.
+const Main = styled(Flex, {
+  shouldForwardProp: createShouldForwardProp([...systemProps, 'layout', 'hasToc']),
+})<{ hasToc?: boolean }>(({ hasToc }) => ({ '--toc-room': hasToc ? TOC_ROOM : '0px' }))
 
 function LayoutFrame({ children, sidebar, hasToc, head }: Readonly<LayoutProps>) {
   const { open } = useSearch()
@@ -58,7 +77,7 @@ function LayoutFrame({ children, sidebar, hasToc, head }: Readonly<LayoutProps>)
             // A View, not a Flex: Flex's own `display: flex` would override the hidden base. The
             // aside is the column that sticks; the panel in it is the sidebar - a ground of its own,
             // with round corners, as M3's, and room around it.
-            <View
+            <SidebarColumn
               as="aside"
               display={{ xs: 'none', lg: 'block' }}
               width="19rem"
@@ -68,31 +87,22 @@ function LayoutFrame({ children, sidebar, hasToc, head }: Readonly<LayoutProps>)
               position="sticky"
               top={0}
               height="100dvh"
-              style={{ alignSelf: 'flex-start' }}
             >
-              <View
-                height="100%"
-                overflowY="auto"
-                bg="secondary"
-                px={2}
-                py={3}
-                style={{ borderRadius: PANEL_RADIUS }}
-              >
+              <SidebarPanel height="100%" overflowY="auto" bg="secondary" px={2} py={3}>
                 {sidebar}
-              </View>
-            </View>
+              </SidebarPanel>
+            </SidebarColumn>
           )}
           {/* The footer is under the content, not under the sidebar. */}
           <Flex flexDirection="column" flex="1 1 auto" minWidth={0}>
-            <Flex
+            <Main
               as="main"
               flexDirection="column"
               flex="1 1 auto"
               minWidth={0}
               px={4}
               py={5}
-              // What the head needs to know to line its tabs up with the content: the room beside it.
-              style={{ '--toc-room': hasToc ? TOC_ROOM : '0px' } as CSSProperties}
+              hasToc={hasToc}
             >
               {/* The head spans the room the sidebar leaves; the content reads in a column no wider than the grid. */}
               {head}
@@ -104,9 +114,9 @@ function LayoutFrame({ children, sidebar, hasToc, head }: Readonly<LayoutProps>)
                 maxWidth={hasToc ? `calc(${CONTENT_MAX_WIDTH} + ${TOC_ROOM})` : CONTENT_MAX_WIDTH}
                 mx="auto"
               >
-                <View minWidth={0} maxWidth={CONTENT_MAX_WIDTH} style={{ flex: '1 1 0' }}>
+                <ContentColumn minWidth={0} maxWidth={CONTENT_MAX_WIDTH}>
                   {children}
-                </View>
+                </ContentColumn>
                 {hasToc && (
                   <View
                     as="aside"
@@ -127,7 +137,7 @@ function LayoutFrame({ children, sidebar, hasToc, head }: Readonly<LayoutProps>)
                   </View>
                 )}
               </Flex>
-            </Flex>
+            </Main>
             <Footer />
           </Flex>
         </Flex>

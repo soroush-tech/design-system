@@ -9,10 +9,13 @@
 // - alpha / rc: each package becomes `<target>-<channel>.N`, N one above the highest already on
 //   npm for that target and channel (0 when there is none). A target that is already released
 //   fails the run, or is dropped with --skip-released (the `all` dispatch).
+// - The packages of the root package.json's `lockstep` list publish together: a run holding some
+//   of them but not all fails (cd-packages.yml names the whole set for any one of them).
 // - A workspace dependency outside the run is pointed at its newest `<target>-<channel>.N` on npm,
 //   so `workspace:^` publishes a range that resolves; with none there, the run stops: publish the
 //   dependency first. A dependency whose target is already released keeps it.
 import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { lockstepRunProblem } from '../packages/contract/src/lockstep.ts'
 
 const CHANNELS = ['alpha', 'rc', 'stable']
 const REGISTRY = 'https://registry.npmjs.org'
@@ -92,6 +95,12 @@ if (channel !== 'stable') {
   }
   run = unreleased
 }
+
+const lockstepProblem = lockstepRunProblem(
+  run.map(({ pkg }) => pkg.name),
+  JSON.parse(readFileSync('package.json', 'utf8')).lockstep
+)
+if (lockstepProblem) fail(lockstepProblem)
 
 // Dependencies first, so a dependent never points at a version not yet on npm.
 const ordered = []

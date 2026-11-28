@@ -6,7 +6,7 @@ import { PageContext } from 'src/common/PageContext'
 import { ThemeModeProvider } from 'src/theme/ThemeModeProvider'
 import { Layout } from './Layout'
 
-const renderLayout = (sidebar?: React.ReactNode, urlPathname = '/design-system/', hasToc = false) =>
+const renderLayout = (sidebar?: React.ReactNode, urlPathname = '/react/', hasToc = false) =>
   render(
     <ThemeModeProvider>
       <PageContext.Provider value={{ urlPathname } as VikePageContext}>
@@ -20,7 +20,7 @@ const renderLayout = (sidebar?: React.ReactNode, urlPathname = '/design-system/'
 describe('Layout', () => {
   it('renders the navbar, the content, and the footer', () => {
     renderLayout()
-    expect(screen.getByRole('link', { name: 'SOROUSH.DESIGN' })).toHaveAttribute('href', '/')
+    expect(screen.getByRole('link', { name: 'Gild UI' })).toHaveAttribute('href', '/')
     expect(screen.getByTestId('content')).toHaveTextContent('page content')
     expect(screen.getByRole('contentinfo')).toHaveTextContent('SOROUSH.TECH')
   })
@@ -55,7 +55,7 @@ describe('Layout', () => {
     const { unmount } = renderLayout()
     expect(screen.queryByLabelText('Contents')).toBeNull()
     unmount()
-    renderLayout(undefined, '/design-system/', true)
+    renderLayout(undefined, '/react/', true)
     expect(screen.getByLabelText('Contents').tagName).toBe('ASIDE')
   })
 
@@ -67,7 +67,7 @@ describe('Layout', () => {
   it('puts a head above the content, outside its column, so it can be wider', () => {
     render(
       <ThemeModeProvider>
-        <PageContext.Provider value={{ urlPathname: '/design-system/' } as VikePageContext}>
+        <PageContext.Provider value={{ urlPathname: '/react/' } as VikePageContext}>
           <Layout head={<header data-testid="head">the head</header>}>
             <div data-testid="content">page content</div>
           </Layout>
@@ -86,7 +86,7 @@ describe('Layout', () => {
   it('puts the contents beside the column, and leaves their room to the head', () => {
     const { container } = render(
       <ThemeModeProvider>
-        <PageContext.Provider value={{ urlPathname: '/design-system/' } as VikePageContext}>
+        <PageContext.Provider value={{ urlPathname: '/react/' } as VikePageContext}>
           <Layout hasToc>
             <div data-testid="content">page content</div>
           </Layout>
@@ -109,7 +109,7 @@ describe('Layout', () => {
     const rail = screen.getByRole('navigation', { name: 'Primary', hidden: true })
     expect(within(rail).getByRole('link', { name: 'Components', hidden: true })).toHaveAttribute(
       'href',
-      '/design-system/components/'
+      '/react/components/'
     )
   })
 

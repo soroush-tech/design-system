@@ -1,6 +1,6 @@
 import type { PageContext } from 'vike/types'
 
-export const SITE_NAME = 'SOROUSH.DESIGN'
+export const SITE_NAME = 'Gild UI'
 
 /** Resolves a config value that may be a string or a `(pageContext) => string` function. */
 const resolve = (value: unknown, pageContext: PageContext): string | undefined => {
@@ -15,7 +15,7 @@ export const pageTitle = (pageContext: PageContext): string | undefined =>
 export const pageDescription = (pageContext: PageContext): string | undefined =>
   resolve(pageContext.config?.description, pageContext)
 
-/** Formatted document `<title>`: "<page title> · SOROUSH.DESIGN", or the site name alone. */
+/** Formatted document `<title>`: "<page title> · Gild UI", or the site name alone. */
 export const documentTitle = (pageContext: PageContext): string => {
   const title = pageTitle(pageContext)
   return title ? `${title} · ${SITE_NAME}` : SITE_NAME

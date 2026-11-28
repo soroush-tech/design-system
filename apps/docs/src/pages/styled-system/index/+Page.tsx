@@ -1,16 +1,26 @@
-import readme from 'packages/styled-system/README.md?raw'
-import { Typography } from '@soroush.tech/design-system/Typography'
+import { Typography } from '@gild-ui/react/Typography'
 import { DocsNav } from 'src/common/DocsNav/DocsNav'
 import { Layout } from 'src/common/Layout'
 import { Readme } from 'src/common/Readme/Readme'
 
+const SOURCE = `The style-prop engine under Gild UI: responsive props, theme scales and
+variants for any component of yours. It lives in its own repository, with its own docs and releases.
+
+\`\`\`sh
+npm i @soroush.tech/styled-system
+\`\`\`
+
+- [Source on GitHub](https://github.com/soroush-tech/styled-system)
+- [Documentation](https://github.com/soroush-tech/styled-system/tree/main/docs)
+`
+
 export default function Page() {
   return (
-    <Layout sidebar={<DocsNav />} hasToc>
+    <Layout sidebar={<DocsNav />}>
       <Typography variant="h1" gutterBottom>
         Styled System
       </Typography>
-      <Readme source={readme} stripChrome />
+      <Readme source={SOURCE} />
     </Layout>
   )
 }

@@ -1,0 +1,38 @@
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import { MenuItem } from '../../MenuItem'
+import { MenuList } from '../MenuList'
+import { Paper } from '../../Paper'
+import { StyleSheet } from '../../style/styled'
+import { exampleArgs } from '../../utils/test/renderExample'
+import { menuDividerCatalog } from '@gild-ui/core/catalog/entries'
+import { MenuDivider } from './MenuDivider'
+
+const sheet = StyleSheet.create({ paper: { width: 220 } })
+
+const meta: Meta<typeof MenuDivider> = {
+  title: 'Theme/Menu/MenuDivider',
+  component: MenuDivider,
+  tags: ['autodocs'],
+  args: exampleArgs(menuDividerCatalog.example),
+  parameters: {
+    layout: 'padded',
+    controls: { include: [] },
+  },
+  decorators: [
+    (Story) => (
+      <Paper elevation={8} p={0} borderRadius="sm" style={sheet.paper}>
+        <MenuList aria-label="Edit">
+          <MenuItem>Cut</MenuItem>
+          <MenuItem>Copy</MenuItem>
+          <Story />
+          <MenuItem>Select all</MenuItem>
+        </MenuList>
+      </Paper>
+    ),
+  ],
+}
+
+export default meta
+type Story = StoryObj<typeof MenuDivider>
+
+export const Default: Story = {}

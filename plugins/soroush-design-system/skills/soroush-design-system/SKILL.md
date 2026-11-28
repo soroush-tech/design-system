@@ -1,13 +1,13 @@
 ---
 name: soroush-design-system
-description: Build UI with @soroush.tech/design-system - the token-driven Emotion component library documented at docs.soroush.tech. Load when starting or styling a React/Next.js app that should match that house style, when wiring ThemeProvider or the brand light+dark themes, when adding pages, cards, tables, forms, nav chrome, or status chips, or when reviewing UI code for token compliance (no raw hex, no ad-hoc spacing).
+description: Build UI with @gild-ui/react - the token-driven React component library documented at gild-ui.soroush.design. Load when starting or styling a React/Next.js app that should match that house style, when wiring ThemeProvider or the brand light+dark themes, when adding pages, cards, tables, forms, nav chrome, or status chips, or when reviewing UI code for token compliance (no raw hex, no ad-hoc spacing).
 ---
 
-# @soroush.tech design system
+# Gild UI
 
 A house style, not just a package. Two layers:
 
-1. **`@soroush.tech/design-system`** (npm, MIT) - Emotion + `@soroush.tech/styled-system`
+1. **`@gild-ui/react`** (npm, MIT) - UmberStyle + `@soroush.tech/styled-system`
    primitives and components. Ships a _dark, unbranded_ `baseTheme` with raw hex.
 2. **The brand layer** - a `theme.ts` in each app that builds `light` and `dark` via
    `createTheme(baseTheme, ...)` from the shared color ramps, plus a small local
@@ -30,17 +30,18 @@ If the `soroush` MCP server is connected (its tools are listed as `list_componen
 If it is not connected, read the `references/` files next to this skill - they hold the
 same content - and tell the user the server can be added to any MCP client at
 `https://mcp.soroush.design/mcp`. Every component's full API is also on the docs site,
-`https://docs.soroush.tech`.
+`https://gild-ui.soroush.design`.
 
 ## Setting up a new app
 
-1. `pnpm add @soroush.tech/design-system @emotion/cache` (React 19 peer).
+1. `pnpm add @gild-ui/react @gild-ui/core` (React 19.2 or later).
 2. Copy `references/theme.ts` verbatim into the app (`app/theme.ts` or `src/theme.ts`).
    The color ramps are the brand - change palette _assignments_ per app if you must,
    never the ramp hex values.
-3. Wire the provider. Next.js App Router needs an Emotion SSR registry - copy
-   `references/providers.tsx` verbatim; without it server-rendered markup arrives
-   unstyled and flashes.
+3. Wire the provider. In a Next.js App Router app the root layout is a server component
+   that renders `ThemeProvider`; copy `references/providers.tsx` verbatim (it registers the
+   theme for the browser's bundle) and follow `references/setup.md`. No style registry is
+   needed.
 4. Default to `light`. Both themes exist so `colorScheme`-aware components work, but
    the shipped default is light unless the app says otherwise.
 5. Copy the layout kit you need from `references/layout-kit.md`.
@@ -72,13 +73,13 @@ const Root = styled('span', { shouldForwardProp: (prop) => prop !== 'tone' })<{
 }>(({ theme, tone }) => ({ color: theme.palette[tone].main }))
 ```
 
-**Subpath imports.** `import { Button } from '@soroush.tech/design-system/Button'` -
+**Subpath imports.** `import { Button } from '@gild-ui/react/Button'` -
 one component per import, for tree-shaking. Only `styled`, the shared types, and
 `PaletteColor` come from the package root. `createTheme`/`baseTheme`/`ThemeProvider`
 from `/theme`, `alpha`/`generateBoxShadow` from `/utils`, `CacheProvider`/`Global`
 from `/engine`.
 
-**`"use client"` on anything themed.** Emotion's theme context is client-side. Every
+**`"use client"` on anything themed.** The theme context is client-side. Every
 file that calls `styled()` or reads `useTheme()` needs the directive.
 
 **Breakpoints come from the theme.** They are window classes, each a range from its
@@ -105,7 +106,7 @@ built from `Pressable`, `Flex`, and tokens.
   `SectionLabel`, `Pill`, `StatusBadge`, `StatStrip`, `TabNav`, `SettingCard`,
   `SearchInput`, `Main`, `TopBar`, `ProjectRail`.
 - `references/theme.ts` - the brand theme, copy verbatim.
-- `references/providers.tsx` - Next.js App Router provider + Emotion SSR registry.
+- `references/providers.tsx` - Next.js App Router client provider (registers the theme).
 - `references/setup.md` - new-app checklist.
 
 ## Review checklist
@@ -115,7 +116,7 @@ When reviewing UI code in an app that uses this system:
 - [ ] Raw hex / `rgb()` / named colors outside `theme.ts`
 - [ ] Hardcoded font stacks instead of `theme.fonts.*`
 - [ ] Numeric font weights instead of `theme.fontWeights.*`
-- [ ] Barrel import `from '@soroush.tech/design-system'` for a component
+- [ ] Barrel import `from '@gild-ui/react'` for a component
 - [ ] Missing `"use client"` on a file that calls `styled()`
 - [ ] Custom styling prop without `shouldForwardProp`
 - [ ] `style={{}}` where a styled component or styled-system prop belongs

@@ -1,6 +1,6 @@
 # My App
 
-An [Astro](https://astro.build) app on the [@soroush.tech design system](https://docs.soroush.tech):
+An [Astro](https://astro.build) app on [Gild UI](https://gild-ui.soroush.design):
 every page is HTML from the build, with its styles, and no JavaScript in the browser: its
 React parts render at build time only.
 
@@ -17,4 +17,4 @@ React parts render at build time only.
   runs `src/components/Home.test.tsx`, which checks the title.
 
 Fonts: the theme names Space Grotesk and JetBrains Mono, and does not load them. See
-https://docs.soroush.tech/design-system/getting-started/installation/#fonts
+https://gild-ui.soroush.design/react/installation/#fonts

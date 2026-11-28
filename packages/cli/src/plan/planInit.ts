@@ -1,8 +1,9 @@
+import { APP_PACKAGE, CORE_PACKAGE } from '../designSystemPackage'
 import { posix } from 'node:path'
 import {
   createProvidersSource,
   createThemesSource,
-  MARKER,
+  isSetUpByInit,
   type Scheme,
 } from '../templates/templates'
 import { readExtensionStyle, toImportSpecifier, type ExtensionStyle } from './importPath'
@@ -43,27 +44,35 @@ export interface InitFacts {
   /** A Parcel app that does not read package exports yet. */
   needsParcelPackageExports: boolean
   packageManager: PackageManager
-  /** The version of the design system the app gets. */
+  /** The version of Gild UI the app gets. */
   version: string
   scheme: Scheme
   /** A file's content, by its path from the app's root, or `undefined` when there is none. */
   readFile: (path: string) => string | undefined
 }
 
-const SETUP_DOCS = 'https://docs.soroush.tech/design-system/getting-started/installation/'
+const SETUP_DOCS = 'https://gild-ui.soroush.design/react/installation/'
 
-/** The command that adds the design system with the app's own package manager, running no scripts. */
+/** The command that adds Gild UI with the app's own package manager, running no scripts. */
 export function createInstallCommand(
   { name, isYarnBerry }: PackageManager,
   version: string
 ): InstallCommand {
   const range = version.includes('-') ? version : `^${version}`
-  const spec = `@soroush.tech/design-system@${range}`
+  const specs = [`${APP_PACKAGE}@${range}`, `${CORE_PACKAGE}@${range}`]
   if (name === 'yarn' && isYarnBerry) {
-    return { command: 'yarn', args: ['add', spec], env: { YARN_ENABLE_SCRIPTS: 'false' } }
+    return { command: 'yarn', args: ['add', ...specs], env: { YARN_ENABLE_SCRIPTS: 'false' } }
   }
   const verb = name === 'npm' ? 'install' : 'add'
-  return { command: name, args: [verb, spec, '--ignore-scripts'], env: {} }
+  return { command: name, args: [verb, ...specs, '--ignore-scripts'], env: {} }
+}
+
+/** The command that installs what package.json lists, with the app's package manager, running no scripts. */
+export function createInstallAllCommand({ name, isYarnBerry }: PackageManager): InstallCommand {
+  if (name === 'yarn' && isYarnBerry) {
+    return { command: 'yarn', args: ['install'], env: { YARN_ENABLE_SCRIPTS: 'false' } }
+  }
+  return { command: name, args: ['install', '--ignore-scripts'], env: {} }
 }
 
 function describeRootProblem(facts: InitFacts): string {
@@ -92,7 +101,7 @@ export function planInit(facts: InitFacts): Plan {
   }
   if (facts.needsParcelPackageExports) {
     plan.manual.push(
-      'Parcel finds @soroush.tech/design-system/theme and the other subpaths only once it reads package exports. Add to package.json: "@parcel/resolver-default": { "packageExports": true }'
+      `Parcel finds ${CORE_PACKAGE}/theme and the subpaths of ${APP_PACKAGE} only once it reads package exports. Add to package.json: "@parcel/resolver-default": { "packageExports": true }`
     )
   }
   if (!facts.hasDesignSystem)
@@ -110,7 +119,7 @@ interface ThemePaths {
 function getOwnership(facts: InitFacts, path: string): 'missing' | 'ours' | 'theirs' {
   const content = facts.readFile(path)
   if (content === undefined) return 'missing'
-  return content.startsWith(MARKER) ? 'ours' : 'theirs'
+  return isSetUpByInit(content) ? 'ours' : 'theirs'
 }
 
 /**

@@ -78,7 +78,7 @@ first line) with the closing keyword and the task number:
 Example:
 
 ```text
-feat(schema): extract contact validation into shared @soroush.tech/schema - close #155
+feat(schema): extract contact validation into shared @gild-ui/schema - close #155
 ```
 
 - One task → one commit. Commit tasks separately, in dependency order.

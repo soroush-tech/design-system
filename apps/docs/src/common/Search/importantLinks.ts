@@ -3,11 +3,11 @@ import { searchEntriesFor, type SearchEntry, type SectionNav } from 'src/common/
 // The pages a reader most often wants first, by section - the ones the search offers before a
 // word is typed. Each is named by its label, as the sidebar lists it.
 const IMPORTANT: Record<SectionNav['pkg'], string[]> = {
-  'design-system': [
+  react: [
     'Installation',
     'Usage',
     'All components',
-    'Theming',
+    'Theme',
     'How to customize',
     'Button',
     'TextInput',
@@ -19,14 +19,7 @@ const IMPORTANT: Record<SectionNav['pkg'], string[]> = {
   mcp: ['Overview', 'Releases'],
   'ui-spec': ['Overview', 'Releases'],
   cli: ['Overview', 'Releases'],
-  'styled-system': [
-    'Overview',
-    'Getting started',
-    'How it works',
-    'Responsive styles',
-    'Theming',
-    'API',
-  ],
+  'styled-system': ['Overview'],
 }
 
 /** The most important pages of a section, in the order its readers want them. */

@@ -3,12 +3,12 @@ import { act, fireEvent, render, screen } from '@testing-library/react'
 import { renderToString } from 'react-dom/server'
 import type { ReactNode } from 'react'
 import type { PageContext as VikePageContext } from 'vike/types'
-import { ThemeProvider } from '@soroush.tech/design-system/theme'
+import { ThemeProvider } from '@gild-ui/react'
 import { PageContext } from 'src/common/PageContext'
 import { dark } from 'src/theme/themes'
 import { OnThisPage } from './OnThisPage'
 
-const renderToc = (content: ReactNode, urlPathname = '/design-system/components/button/') =>
+const renderToc = (content: ReactNode, urlPathname = '/react/Button/') =>
   render(
     <ThemeProvider theme={dark}>
       <PageContext.Provider value={{ urlPathname } as VikePageContext}>
@@ -70,9 +70,7 @@ describe('OnThisPage', () => {
     expect(screen.queryByRole('navigation', { name: 'On this page' })).not.toBeInTheDocument()
     rerender(
       <ThemeProvider theme={dark}>
-        <PageContext.Provider
-          value={{ urlPathname: '/design-system/components/button/' } as VikePageContext}
-        >
+        <PageContext.Provider value={{ urlPathname: '/react/Button/' } as VikePageContext}>
           <main>
             <h2 id="a">A</h2>
             <h2 id="b">B</h2>

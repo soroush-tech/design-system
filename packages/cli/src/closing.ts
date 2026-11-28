@@ -1,5 +1,5 @@
 // The lines both commands end on: where the fonts come from, and what a coding agent can add.
-export const SETUP_DOCS = 'https://docs.soroush.tech/design-system/getting-started/installation/'
+export const SETUP_DOCS = 'https://gild-ui.soroush.design/react/installation/'
 
 export const FONTS_STEP = `  - Fonts: the theme names Space Grotesk and JetBrains Mono, and does not load them. To add them,
     see ${SETUP_DOCS}#fonts`

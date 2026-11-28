@@ -8,10 +8,6 @@ vi.mock('src/common/Routes', () => ({
 vi.mock('src/common/Providers', () => ({
   Providers: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }))
-vi.mock('@soroush.tech/design-system/engine', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('@soroush.tech/design-system/engine')>()),
-  styleCache: { key: 'soroush', inserted: {}, registered: {}, sheet: { tags: [] } },
-}))
 
 import { Bootstrap } from './Bootstrap'
 import { Routes } from 'src/common/Routes'

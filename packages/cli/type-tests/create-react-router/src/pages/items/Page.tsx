@@ -1,5 +1,5 @@
-import { Flex } from '@soroush.tech/design-system/Flex'
-import { Typography } from '@soroush.tech/design-system/Typography'
+import { Flex } from '@gild-ui/react/Flex'
+import { Typography } from '@gild-ui/react/Typography'
 import { useLoaderData } from 'react-router'
 import { RouterLink } from '../../components/RouterLink'
 import type { loader } from './loader'

@@ -1,11 +1,15 @@
 import { useEffect, useState } from 'react'
-import { Button } from '@soroush.tech/design-system/Button'
-import { Menu } from '@soroush.tech/design-system/Menu'
-import { MenuItem } from '@soroush.tech/design-system/MenuItem'
+import { styled } from '@gild-ui/react'
+import { Button } from '@gild-ui/react/Button'
+import { Menu } from '@gild-ui/react/Menu'
+import { MenuItem } from '@gild-ui/react/MenuItem'
+import { sections } from '@gild-ui/docs-content'
 import type { DocsSection } from 'src/common/nav'
 import { PACKAGE_VERSIONS } from 'src/common/packageVersions'
 import { newestVersion } from './utils/newestVersion'
 import { currentVersion } from './utils/versionFromPath'
+
+const TriggerButton = styled(Button)({ textTransform: 'none' })
 
 /** The manifest the deploy pipeline writes at the domain root. */
 export interface VersionsManifest {
@@ -43,6 +47,12 @@ const useVersions = (pkg: DocsSection): string[] => {
   return versions
 }
 
+const versionRow = (version: string, current: string) => (
+  <MenuItem key={version} value={version} role="menuitemradio" selected={current === version}>
+    v{version}
+  </MenuItem>
+)
+
 /**
  * The version of the docs, and a menu to change it: the live docs (`latest`) or any released
  * snapshot. A snapshot is a separate build, so choosing one loads it.
@@ -50,35 +60,27 @@ const useVersions = (pkg: DocsSection): string[] => {
 export function VersionMenu({ pkg, pathname }: Readonly<VersionMenuProps>) {
   const versions = useVersions(pkg)
   const current = currentVersion(pathname, pkg, import.meta.env.BASE_URL)
-  // The live build is the newest version. A snapshot is older than the latest, so it names the
-  // newest the manifest knows - and just "Latest" before there is one.
+  // "Latest" is the live version: the live build names its own, a snapshot the newest the
+  // manifest lists - and just "Latest" before there is one.
   const live = current === 'latest' ? PACKAGE_VERSIONS[pkg] : newestVersion(versions)
   const shown = current === 'latest' ? PACKAGE_VERSIONS[pkg] : current
   return (
     <Menu
       aria-label="Documentation version"
       onSelect={(value) => {
-        window.location.assign(value === 'latest' ? `/${pkg}/` : `/${pkg}/${value}/`)
+        const route = `/${sections[pkg].route}/`
+        window.location.assign(value === 'latest' ? route : `${route}${value}/`)
       }}
       trigger={
-        <Button
-          variant="outlined"
-          size="sm"
-          aria-label={`Documentation version, v${shown}`}
-          style={{ textTransform: 'none' }}
-        >
+        <TriggerButton variant="outlined" size="sm" aria-label={`Documentation version, v${shown}`}>
           v{shown}
-        </Button>
+        </TriggerButton>
       }
     >
       <MenuItem value="latest" role="menuitemradio" selected={current === 'latest'}>
         {live === undefined ? 'Latest' : `Latest (v${live})`}
       </MenuItem>
-      {versions.map((version) => (
-        <MenuItem key={version} value={version} role="menuitemradio" selected={current === version}>
-          v{version}
-        </MenuItem>
-      ))}
+      {versions.map((version) => versionRow(version, current))}
     </Menu>
   )
 }

@@ -12,7 +12,8 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@soroush.tech/design-system": "^2.3.0",
+    "@gild-ui/react": "^0.1.0",
+    "@gild-ui/core": "^0.1.0",
     "@astrojs/node": "^11.1.13",
     "@astrojs/react": "^7.1.9",
     "swr": "^2.5.1",

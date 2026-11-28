@@ -14,7 +14,7 @@ const FACTS: StarterFacts = {
   libraries: [],
   scheme: 'light',
   hasSampleData: true,
-  version: '2.3.0',
+  version: '0.1.0',
 }
 const FIXTURE = '../../../type-tests/create-react-router'
 
@@ -100,7 +100,8 @@ describe('the React Router starter', () => {
       test: 'vitest run',
     })
     expect(packageJson.dependencies).toEqual({
-      '@soroush.tech/design-system': '^2.3.0',
+      '@gild-ui/core': '^0.1.0',
+      '@gild-ui/react': '^0.1.0',
       react: devDependencies.react,
       'react-dom': devDependencies['react-dom'],
       'react-router': devDependencies['react-router'],

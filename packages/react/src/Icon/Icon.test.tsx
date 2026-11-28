@@ -1,0 +1,85 @@
+import { screen } from '@testing-library/react'
+import { describe, it, expect } from 'vitest'
+import { renderWithTheme } from '../utils/test/renderWithTheme'
+import { Icon } from './Icon'
+import { icons, type IconName } from './icons'
+import { toPx } from '../utils/test/toPx'
+import { describeRootSlot } from '../utils/test/describeRootSlot'
+
+describe('Icon', () => {
+  it('renders the named icon as an svg', () => {
+    const { container } = renderWithTheme(<Icon name="hub" />)
+    expect(container.querySelector('svg')).toBeInTheDocument()
+  })
+
+  it('is decorative (aria-hidden) by default', () => {
+    const { container } = renderWithTheme(<Icon name="hub" />)
+    expect(container.querySelector('svg')).toHaveAttribute('aria-hidden', 'true')
+  })
+
+  it('defaults size to 1.5rem on both axes', () => {
+    const { container } = renderWithTheme(<Icon name="hub" />)
+    expect(container.querySelector('svg')).toHaveStyle({
+      width: toPx('1.5rem'),
+      height: toPx('1.5rem'),
+    })
+  })
+
+  it('applies a custom size to width and height', () => {
+    const { container } = renderWithTheme(<Icon name="hub" size="2rem" />)
+    expect(container.querySelector('svg')).toHaveStyle({
+      width: toPx('2rem'),
+      height: toPx('2rem'),
+    })
+  })
+
+  it('reads a size named for one of the theme icon sizes as that size', () => {
+    const { container } = renderWithTheme(
+      <>
+        <Icon name="hub" size="sm" />
+        <Icon name="hub" size="md" />
+        <Icon name="hub" size={20} />
+      </>
+    )
+    const [sm, md, number] = container.querySelectorAll('svg')
+    expect(sm).toHaveStyle({ width: toPx('1rem'), height: toPx('1rem') })
+    expect(md).toHaveStyle({ width: toPx('1.25rem'), height: toPx('1.25rem') })
+    expect(number).toHaveStyle({ width: '20px', height: '20px' })
+  })
+
+  it('resolves fill from the color prop via currentColor', () => {
+    // color → CSS `color` (theme.text.secondary), and `fill: currentColor` follows it. jsdom
+    // keeps `currentcolor` as the computed fill, where a browser would resolve it.
+    const { container } = renderWithTheme(<Icon name="hub" color="secondary" />)
+    expect(container.querySelector('svg')).toHaveStyle({
+      fill: 'currentcolor',
+      color: 'rgb(156, 156, 156)',
+    })
+  })
+
+  it('forwards passthrough props to the svg element', () => {
+    const { container } = renderWithTheme(<Icon name="hub" data-testid="hub-icon" />)
+    expect(container.querySelector('[data-testid="hub-icon"]')).toBeInTheDocument()
+  })
+
+  it('preserves fill="none" on stroke-based icon paths (icons are generated without svgo)', () => {
+    // Icon's root CSS sets `fill: currentColor`, which paths inherit unless they
+    // carry their own fill attribute - stroke icons must keep `fill="none"` or
+    // they render as filled blobs. Guards the svgr --no-svgo generation contract.
+    const { container } = renderWithTheme(<Icon name="external_link" />)
+    expect(container.querySelector('path')).toHaveAttribute('fill', 'none')
+  })
+
+  it.each(Object.keys(icons) as IconName[])('renders the %s icon from the registry', (name) => {
+    const { container } = renderWithTheme(<Icon name={name} />)
+    const svg = container.querySelector('svg')
+    expect(svg).toBeInTheDocument()
+    expect(svg?.querySelector('path, circle, rect, line, polyline, polygon')).toBeInTheDocument()
+  })
+})
+
+describeRootSlot(
+  'Icon',
+  (props) => <Icon name="close" data-testid="root" {...props} />,
+  () => screen.getByTestId('root')
+)

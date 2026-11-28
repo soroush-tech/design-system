@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { View } from '@soroush.tech/design-system/View'
+import { View } from '@gild-ui/react/View'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Outlet } from 'react-router'
 import { useScheme } from '../state/scheme'

@@ -1,5 +1,5 @@
-import { styled } from '@soroush.tech/design-system'
-import { Typography, type TypographyProps } from '@soroush.tech/design-system/Typography'
+import { styled } from '@gild-ui/react'
+import { Typography, type TypographyProps } from '@gild-ui/react/Typography'
 
 export type ChipProps = TypographyProps
 

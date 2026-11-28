@@ -1,0 +1,137 @@
+'use client'
+
+import { useState, type ComponentType, type ImgHTMLAttributes, type CSSProperties } from 'react'
+import type {
+  LayoutProps,
+  SpaceProps,
+  BackgroundProps,
+  PositionProps,
+} from '@soroush.tech/styled-system'
+import { styled } from '../style/styled'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../style/overrides'
+import type { ImageSlot } from './Image.types'
+import { type Theme } from '../theme/themes'
+import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
+import { background, position, system, layout, space } from '@soroush.tech/styled-system'
+
+type Phase = 'initial' | 'without-srcset' | 'fallback' | 'failed'
+
+export interface ImageProps
+  extends
+    Omit<ImgHTMLAttributes<HTMLImageElement>, 'height' | 'width' | 'color' | 'style'>,
+    LayoutProps,
+    SpaceProps,
+    BackgroundProps,
+    PositionProps {
+  /** Fallback image URL tried when src (or srcSet) fails to load. */
+  fallback?: string
+  objectFit?: CSSProperties['objectFit']
+  objectPosition?: CSSProperties['objectPosition']
+  /** Corner radius - resolves against `theme.radii`. */
+  borderRadius?: keyof Theme['radii']
+  /** Called once when all image sources are exhausted. */
+  onError?: () => void
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<ImageSlot>
+}
+
+const baseShouldForwardProp = createShouldForwardProp([
+  ...props,
+  'fallback',
+  'objectFit',
+  'objectPosition',
+  'borderRadius',
+])
+
+// fetchPriority is a valid <img> attribute, but @styled-system/should-forward-prop pins an
+const shouldForwardProp = (prop: string) => prop === 'fetchPriority' || baseShouldForwardProp(prop)
+
+const objectSystem = system({
+  objectFit: { property: 'objectFit' },
+  objectPosition: { property: 'objectPosition' },
+  borderRadius: { property: 'borderRadius', scale: 'radii' },
+})
+
+const StyledImg = styled('img', {
+  name: 'Image',
+  label: 'image',
+  shouldForwardProp,
+  systemProps: [layout, space, background, position, objectSystem],
+})() as ComponentType<Omit<ImageProps, 'onError'> & { onError?: () => void }>
+
+export function Image({
+  src,
+  srcSet,
+  fallback,
+  alt,
+  onError,
+  style,
+  className,
+  slotProps,
+  ...rest
+}: Readonly<ImageProps>) {
+  const [prevSrc, setPrevSrc] = useState(src)
+  const [prevSrcSet, setPrevSrcSet] = useState(srcSet)
+  const [prevFallback, setPrevFallback] = useState(fallback)
+  const [phase, setPhase] = useState<Phase>('initial')
+
+  if (prevSrc !== src || prevSrcSet !== srcSet || prevFallback !== fallback) {
+    setPrevSrc(src)
+    setPrevSrcSet(srcSet)
+    setPrevFallback(fallback)
+    setPhase('initial')
+  }
+
+  const handleError = () => {
+    if (phase === 'initial') {
+      // srcset candidate failed
+      if (srcSet && src) {
+        setPhase('without-srcset')
+        return
+      }
+
+      if (fallback) {
+        setPhase('fallback')
+        return
+      }
+
+      setPhase('failed')
+      onError?.()
+      return
+    }
+
+    if (phase === 'without-srcset') {
+      // plain src failed
+      if (fallback) {
+        setPhase('fallback')
+        return
+      }
+
+      setPhase('failed')
+      onError?.()
+      return
+    }
+
+    if (phase === 'fallback') {
+      // fallback failed too
+      setPhase('failed')
+      onError?.()
+    }
+  }
+
+  const resolvedSrc = phase === 'fallback' || !src ? fallback : src
+  const resolvedSrcSet = phase === 'initial' ? srcSet : undefined
+
+  return (
+    <StyledImg
+      src={resolvedSrc}
+      srcSet={resolvedSrcSet}
+      alt={alt}
+      onError={handleError}
+      {...mergeOverrides(slotProps?.root, { style, className })}
+      {...rest}
+    />
+  )
+}

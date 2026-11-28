@@ -2,25 +2,25 @@
 import { mkdirSync, symlinkSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { createTestApp, createTestIo, VITE_ROOT } from '../testApp'
+import { createTestApp, VITE_ROOT } from '../testApp'
 import {
   detectPackageManager,
+  findInstalledVersion,
   findReactVersion,
   findRootFiles,
   findPackageFolder,
   findUnsupportedFramework,
   getDependency,
-  getGitState,
   isWorkspaceRoot,
+  listAppFiles,
   needsParcelPackageExports,
-  readDesignSystemPackage,
   readPackageJson,
   readText,
   satisfiesRange,
 } from './detect'
 
-// A file inside the design system's own folder in this workspace.
-const DESIGN_SYSTEM_FILE = join(process.cwd(), '../design-system/src/index.ts')
+// Gild UI's own folder in this workspace.
+const DESIGN_SYSTEM_FOLDER = join(process.cwd(), '../react')
 
 describe('readText and readPackageJson', () => {
   it('reads a file, and gives undefined when there is none', () => {
@@ -105,6 +105,17 @@ describe('findReactVersion', () => {
   })
 })
 
+describe('findInstalledVersion', () => {
+  it("reads a package's installed version, above the app too, and gives undefined when none", () => {
+    const root = createTestApp({
+      'node_modules/@test/a/package.json': JSON.stringify({ name: '@test/a', version: '1.4.0' }),
+    })
+    expect(findInstalledVersion(root, '@test/a')).toBe('1.4.0')
+    expect(findInstalledVersion(join(root, 'apps/web'), '@test/a')).toBe('1.4.0')
+    expect(findInstalledVersion(root, '@test/missing')).toBeUndefined()
+  })
+})
+
 describe('satisfiesRange', () => {
   const range = '^18.0.0 || ^19.0.0'
 
@@ -123,29 +134,10 @@ describe('satisfiesRange', () => {
     expect(satisfiesRange('18.3.0', '^18.2.5')).toBe(true)
   })
 
-  it("reads the design system's peer range, and throws on a shape it does not read", () => {
-    const { peerDependencies } = readDesignSystemPackage(DESIGN_SYSTEM_FILE)
-    expect(satisfiesRange('19.0.0', peerDependencies!.react)).toBe(true)
+  it("reads Gild UI's peer range, and throws on a shape it does not read", () => {
+    const { peerDependencies } = readPackageJson(DESIGN_SYSTEM_FOLDER)!
+    expect(satisfiesRange('19.2.8', peerDependencies!.react)).toBe(true)
     expect(() => satisfiesRange('19.0.0', '>=18')).toThrow('init cannot read the range >=18')
-  })
-})
-
-describe('getGitState', () => {
-  it('tells a clean tree, a dirty one, and a folder outside git apart', () => {
-    const answer = (status: number | null, stdout: string) =>
-      createTestIo('.', { run: () => ({ status, stdout }) }).io
-    expect(getGitState('.', answer(0, ''))).toBe('clean')
-    expect(getGitState('.', answer(0, ' M src/main.tsx\n'))).toBe('dirty')
-    expect(getGitState('.', answer(128, ''))).toBe('not-a-repository')
-    expect(getGitState('.', answer(null, ''))).toBe('not-a-repository')
-  })
-
-  it('asks git, in the app', () => {
-    const { io, commands } = createTestIo('.')
-    getGitState('/app', io)
-    expect(commands).toEqual([
-      { command: 'git', args: ['status', '--porcelain'], options: { cwd: '/app' } },
-    ])
   })
 })
 
@@ -187,15 +179,27 @@ describe('findRootFiles', () => {
   })
 })
 
-describe('readDesignSystemPackage', () => {
-  it("finds the design system's package.json above a file in it", () => {
-    expect(readDesignSystemPackage(DESIGN_SYSTEM_FILE).name).toBe('@soroush.tech/design-system')
+describe('listAppFiles', () => {
+  it('lists every file, sorted, and none in a hidden, output or dependency folder', () => {
+    const root = createTestApp({
+      'src/b.ts': '',
+      'src/a/c.json': '',
+      'readme.md': '',
+      'dist/x.js': '',
+      'node_modules/x/index.js': '',
+      '.cache/y.js': '',
+      '.env': '',
+      'a/b/c/d/e/f/deep.ts': '',
+    })
+    expect(listAppFiles(root)).toEqual(['package.json', 'readme.md', 'src/a/c.json', 'src/b.ts'])
   })
 
-  it('throws when there is none', () => {
-    expect(() => readDesignSystemPackage(join(createTestApp(), 'bin.mjs'))).toThrow(
-      'init cannot find the package.json of @soroush.tech/design-system'
-    )
+  it('does not follow a symbolic link', () => {
+    const root = createTestApp()
+    const elsewhere = createTestApp({ 'main.tsx': VITE_ROOT })
+    mkdirSync(join(root, 'src'))
+    symlinkSync(elsewhere, join(root, 'src/linked'), 'junction')
+    expect(listAppFiles(root)).toEqual(['package.json'])
   })
 })
 

@@ -1,23 +1,23 @@
 // Proves that an app `create` starts works, on this checkout's code rather than npm's:
 //
-// 1. builds and packs the design system and the workspace packages it depends on (the cli among
-//    them);
+// 1. builds and packs the React package an app imports from and the workspace packages it depends
+//    on, and builds the cli;
 // 2. runs the built cli's `create` in a temp folder, through its own `main`, with an Io whose
 //    install first points the new app at those tarballs;
 // 3. typechecks (TypeScript) and builds the app, checks that the build prerendered its pages,
-//    serves the build, and checks the HTML: the design system's styles and the starter's content
+//    serves the build, and checks the HTML: Gild UI's styles and the starter's content
 //    on `/` and `/about`, and the 404 page. With `--sample-data`, the list of sample items and the
 //    page of each, too. An SPA's HTML is the same shell on every path: its pages render in the
 //    browser.
 //
 //   node scripts/smoke-create.mjs [--lang ts|js] [--pm npm|pnpm] [--framework vike|astro|react-router]
 //     [--layout standalone|workspace] [--render isomorphic|spa|ssg] [--with <libraries>]
-//     [--sample-data]
+//     [--sample-data] [--keep]
 //
 // In a workspace, the app is apps/web, and its scripts run from the workspace's root.
 //
 // The temp folder is removed when every check passes, and kept, with its path printed, when one
-// fails.
+// fails, or with --keep.
 import { spawn, spawnSync } from 'node:child_process'
 import {
   existsSync,
@@ -34,7 +34,10 @@ import { dirname, join } from 'node:path'
 import { parseArgs } from 'node:util'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 
-const DESIGN_SYSTEM = '@soroush.tech/design-system'
+// The React package an app depends on and imports from, whose React range `create` reads, and the
+// command line that runs `create`: built, never packed, since an app does not install it.
+const APP_PACKAGE = '@gild-ui/react'
+const CLI_PACKAGE = '@soroush.design/cli'
 const APP = 'smokeApp'
 
 const repoRoot = join(dirname(fileURLToPath(import.meta.url)), '..')
@@ -47,6 +50,7 @@ const { values } = parseArgs({
     render: { type: 'string', default: 'isomorphic' },
     with: { type: 'string', default: '' },
     'sample-data': { type: 'boolean', default: false },
+    keep: { type: 'boolean', default: false },
   },
 })
 const { lang, pm, framework, layout, render, with: libraries } = values
@@ -72,9 +76,20 @@ const SERVER_ENTRY = isAstro ? 'dist/server/entry.mjs' : 'dist/server/index.mjs'
 // Where the build writes the pages and their files: Vike's client build, Astro's dist - its
 // client folder, for a server - or Vite's dist, for an SPA.
 const PAGES_DIR = (isAstro && !isServer) || isSpa ? 'dist' : 'dist/client'
-// The key of the Emotion cache that draws the styles: the design system's, which Vike's renderer
-// gives the page, or Emotion's own, which each Astro island makes as it renders.
-const STYLE_KEY = isAstro ? 'css' : 'soroush'
+// Gild UI's styles are drawn with the cache key `soroush` in every starter. Vike's
+// renderer writes them as `<style data-umber>` elements, one for the base styles and one for the
+// classes. An Astro island is rendered by React alone, which writes one
+// `<style data-precedence data-href>` element in front of it: its `data-href` lists the base styles
+// (the root theme and the global rules) and the classes.
+const STYLE_KEY = 'soroush'
+const BASE_STYLES = isAstro
+  ? new RegExp(`<style data-precedence="${STYLE_KEY}" data-href="[^"]*${STYLE_KEY}-global-`)
+  : new RegExp(`<style data-umber="${STYLE_KEY}-global `)
+const COMPONENT_STYLES = isAstro
+  ? new RegExp(
+      `<style data-precedence="${STYLE_KEY}" data-href="[^"]*${STYLE_KEY}-(?!root-|global-)[^" ]`
+    )
+  : new RegExp(`<style data-umber="${STYLE_KEY} [^"]`)
 
 /** Runs a command, showing its output, and throws when it fails. */
 function run(command, args, cwd) {
@@ -109,7 +124,7 @@ function readWorkspacePackages() {
   return packages
 }
 
-/** The design system and every workspace package it depends on, however deep. */
+/** The React package and every workspace package it depends on, however deep. */
 function collectShipped(packages) {
   const names = new Set()
   const visit = (name) => {
@@ -120,7 +135,7 @@ function collectShipped(packages) {
       if (range.startsWith('workspace:')) visit(dependency)
     }
   }
-  visit(DESIGN_SYSTEM)
+  visit(APP_PACKAGE)
   return [...names]
 }
 
@@ -140,14 +155,16 @@ const readJson = (path) => JSON.parse(readFileSync(path, 'utf8'))
 const writeJson = (path, value) => writeFileSync(path, `${JSON.stringify(value, null, 2)}\n`)
 
 /**
- * Points the new app at the tarballs: the design system as the app's dependency, and the packages
- * the design system depends on as overrides, in the root's package.json, where each package
+ * Points the new app at the tarballs: each package it lists as a dependency, and every package of
+ * the React package's tree as an override, in the root's package.json, where each package
  * manager reads them. `rootDir` is where the install runs; `appDir` is the app's own folder.
  */
 function useTarballs(rootDir, appDir, tarballs) {
   const toSpec = (name) => `file:${tarballs[name].replaceAll('\\', '/')}`
   const appManifest = readJson(join(appDir, 'package.json'))
-  appManifest.dependencies[DESIGN_SYSTEM] = toSpec(DESIGN_SYSTEM)
+  for (const name of Object.keys(appManifest.dependencies)) {
+    if (name in tarballs) appManifest.dependencies[name] = toSpec(name)
+  }
   writeJson(join(appDir, 'package.json'), appManifest)
   const rootManifest = readJson(join(rootDir, 'package.json'))
   const overrides = Object.fromEntries(Object.keys(tarballs).map((name) => [name, toSpec(name)]))
@@ -252,14 +269,8 @@ function checkHome(home) {
     check(/<script[^>]* type="module"/.test(home.html), '/ loads the script that renders it')
     return
   }
-  check(
-    home.html.includes(`<style data-emotion="${STYLE_KEY}-global`),
-    "/ carries the page's base styles"
-  )
-  check(
-    new RegExp(`<style data-emotion="${STYLE_KEY} [^"]`).test(home.html),
-    "/ carries its components' styles"
-  )
+  check(BASE_STYLES.test(home.html), "/ carries the page's base styles")
+  check(COMPONENT_STYLES.test(home.html), "/ carries its components' styles")
   check(home.html.includes(`>${APP}</h2>`), "/ has the starter's heading")
   const hasGreeting = /tanstack-query|swr|msw/.test(libraries)
   if (isAstro) {
@@ -348,13 +359,17 @@ let isPassed = false
 try {
   const packages = readWorkspacePackages()
   const shipped = collectShipped(packages)
-  run('pnpm', [...shipped.flatMap((name) => ['--filter', name]), 'build'], repoRoot)
+  run(
+    'pnpm',
+    [...[...shipped, CLI_PACKAGE].flatMap((name) => ['--filter', name]), 'build'],
+    repoRoot
+  )
   const packDir = join(workDir, 'packs')
   mkdirSync(packDir)
   const tarballs = pack(shipped, packages, packDir)
 
   const cli = await import(
-    pathToFileURL(join(packages.get('@soroush.design/cli').dir, 'dist/index.mjs')).href
+    pathToFileURL(join(packages.get(CLI_PACKAGE).dir, 'dist/index.mjs')).href
   )
   // create reads the package manager that ran it from here.
   process.env.npm_config_user_agent = `${pm}/10.0.0 node/${process.version}`
@@ -372,12 +387,12 @@ try {
       return nodeIo.run(command, args, options)
     },
   }
-  const { name, version, peerDependencies } = packages.get(DESIGN_SYSTEM).manifest
+  const { name, peerDependencies } = packages.get(APP_PACKAGE).manifest
   const argv = ['create', APP, '--yes', `--${lang}`, '--framework', framework, '--no-git']
   argv.push('--layout', layout, '--render', render, '--with', libraries)
   if (hasSampleData) argv.push('--sample-data')
   console.log(`\n$ create ${argv.slice(1).join(' ')}   (with ${pm})`)
-  const code = await cli.default(argv, io, { name, version, peerDependencies })
+  const code = await cli.default(argv, io, { name, peerDependencies })
   if (code !== 0) throw new Error(`create exited with ${code}`)
 
   const rootDir = join(workDir, APP)
@@ -424,7 +439,10 @@ try {
   await checkServedPages(appDir)
   isPassed = true
 } finally {
-  if (isPassed) {
+  if (isPassed && values.keep) {
+    console.log(`
+The app is kept in ${workDir}`)
+  } else if (isPassed) {
     try {
       rmSync(workDir, { recursive: true, force: true, maxRetries: 5, retryDelay: 500 })
     } catch {

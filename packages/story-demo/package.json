@@ -1,5 +1,5 @@
 {
-  "name": "@soroush.tech/story-demo",
+  "name": "@gild-ui/story-demo",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -15,7 +15,6 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@emotion/react": "^11.14.0",
     "@storybook/react-vite": "^10.6.7",
     "lz-string": "^1.5.0",
     "react-live": "^5.0.1",
@@ -23,16 +22,17 @@
     "sucrase": "^3.35.1"
   },
   "peerDependencies": {
-    "@soroush.tech/design-system": "workspace:^",
-    "@soroush.tech/hooks": "workspace:^",
-    "@soroush.tech/markdown": "workspace:^",
+    "@gild-ui/react": "workspace:^",
+    "@gild-ui/hooks": "workspace:^",
+    "@gild-ui/react-markdown": "workspace:^",
     "react": "^19.2.8"
   },
   "devDependencies": {
-    "@soroush.tech/design-system": "workspace:*",
+    "@gild-ui/core": "workspace:*",
+    "@gild-ui/react": "workspace:*",
+    "@gild-ui/hooks": "workspace:*",
+    "@gild-ui/react-markdown": "workspace:*",
     "@soroush.tech/eslint-config": "workspace:*",
-    "@soroush.tech/hooks": "workspace:*",
-    "@soroush.tech/markdown": "workspace:*",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.9",

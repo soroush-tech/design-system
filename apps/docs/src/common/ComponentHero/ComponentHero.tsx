@@ -1,15 +1,24 @@
 import { useEffect, useLayoutEffect, useRef, useState, type MouseEvent } from 'react'
-import { styled, createShouldForwardProp, get, type Theme } from '@soroush.tech/design-system'
-import { alpha } from '@soroush.tech/design-system/utils'
-import { Flex } from '@soroush.tech/design-system/Flex'
-import { Tab, Tabs } from '@soroush.tech/design-system/Tabs'
-import { Typography } from '@soroush.tech/design-system/Typography'
-import { View } from '@soroush.tech/design-system/View'
+import { alpha, styled } from '@gild-ui/react'
+import { createShouldForwardProp } from '@soroush.tech/styled-system/should-forward-prop'
+import { get } from '@soroush.tech/styled-system'
+import { type Theme } from '@gild-ui/core/theme'
+import { Flex } from '@gild-ui/react/Flex'
+import { Tab, Tabs } from '@gild-ui/react/Tabs'
+import { Typography } from '@gild-ui/react/Typography'
+import { View } from '@gild-ui/react/View'
 import { ComponentIllustration } from 'src/common/ComponentCard/ComponentIllustration'
 import { CONTENT_MAX_WIDTH, PANEL_RADIUS } from 'src/common/layoutSizes'
 import { RailGlyph } from 'src/common/NavRail/RailGlyph'
+import { ImportLines } from 'src/common/ImportLines/ImportLines'
 import { sourceUrlOf } from 'src/common/packages'
-import type { ComponentNavItem } from 'src/common/nav'
+import {
+  componentAccessibilityPath,
+  componentImportLine,
+  componentPagePath,
+  componentSpecsPath,
+  type ComponentNavItem,
+} from 'src/common/nav'
 import { sectionPath } from 'src/common/sectionPath'
 
 /** The pages of a component: what it is and does, its props, how it serves everyone. */
@@ -167,14 +176,14 @@ export function ComponentHero({
   }, [active])
 
   const tabs = [
-    { id: 'overview', label: 'Overview', path: `/components/${item.slug}/` },
-    { id: 'specs', label: 'Specs', path: `/api/${item.slug}/` },
+    { id: 'overview', label: 'Overview', path: componentPagePath(item) },
+    { id: 'specs', label: 'Specs', path: componentSpecsPath(item) },
     ...(hasAccessibility
       ? [
           {
             id: 'accessibility',
             label: 'Accessibility',
-            path: `/components/${item.slug}/accessibility/`,
+            path: componentAccessibilityPath(item),
           },
         ]
       : []),
@@ -204,6 +213,9 @@ export function ComponentHero({
             <ComponentIllustration name={item.name} />
           </Tile>
         </Hero>
+        <View mt={2}>
+          <ImportLines line={componentImportLine(item)} />
+        </View>
       </View>
       {active && (
         <TabBar
@@ -225,7 +237,7 @@ export function ComponentHero({
                 key={tab.id}
                 value={tab.id}
                 label={tab.label}
-                href={sectionPath('design-system', tab.path)}
+                href={sectionPath(item.pkg, tab.path)}
                 onClick={(event) => {
                   if (isPlainClick(event)) tabSwitch = isStuck ? 'stuck' : 'in-place'
                 }}

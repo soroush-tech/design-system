@@ -1,15 +1,15 @@
 import type { ReactNode } from 'react'
-import { AppBar } from '@soroush.tech/design-system/AppBar'
-import { Button } from '@soroush.tech/design-system/Button'
-import { DrawerToggle } from '@soroush.tech/design-system/Drawer'
-import { Flex } from '@soroush.tech/design-system/Flex'
-import { Icon } from '@soroush.tech/design-system/Icon'
-import { Link } from '@soroush.tech/design-system/Link'
-import { Typography } from '@soroush.tech/design-system/Typography'
-import { View } from '@soroush.tech/design-system/View'
-import { Chip } from '@soroush.tech/lab/Chip'
+import { AppBar } from '@gild-ui/react/AppBar'
+import { Button } from '@gild-ui/react/Button'
+import { DrawerToggle } from '@gild-ui/react/Drawer'
+import { Flex } from '@gild-ui/react/Flex'
+import { Icon } from '@gild-ui/react/Icon'
+import { Link } from '@gild-ui/react/Link'
+import { Typography } from '@gild-ui/react/Typography'
+import { View } from '@gild-ui/react/View'
+import { Chip } from '@gild-ui/lab/Chip'
 import { RailGlyph } from 'src/common/NavRail/RailGlyph'
-import designSystemPkg from 'packages/design-system/package.json'
+import { PACKAGE_VERSIONS } from 'src/common/packageVersions'
 import { useThemeMode } from 'src/theme/useThemeMode'
 
 export interface NavbarProps {
@@ -45,20 +45,20 @@ export function Navbar({ menuDrawer, onSearch, versionMenu }: Readonly<NavbarPro
               </DrawerToggle>
             </View>
           )}
-          <Link href="/" color="primary" style={{ textDecoration: 'none' }}>
+          <Link href="/" color="primary" underline="none">
             <Typography variant="h6" color="primary">
-              SOROUSH.DESIGN
+              Gild UI
             </Typography>
           </Link>
-          {versionMenu ?? <Chip>v{designSystemPkg.version}</Chip>}
+          {versionMenu ?? <Chip>v{PACKAGE_VERSIONS.react}</Chip>}
         </Flex>
         <Flex flexDirection="row" alignItems="center" gap={3}>
           <View display={{ xs: 'none', lg: 'inline-flex' }}>
             <Flex flexDirection="row" gap={3}>
-              <Link href="/design-system/" color="secondary">
-                Design System
+              <Link href="/react/" color="secondary">
+                Gild UI for React
               </Link>
-              <Link href="/markdown/" color="secondary">
+              <Link href="/react/markdown/" color="secondary">
                 Markdown
               </Link>
               <Link href="/styled-system/" color="secondary">

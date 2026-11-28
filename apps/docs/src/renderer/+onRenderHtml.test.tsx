@@ -1,11 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
-vi.mock('@emotion/server/create-instance', () => ({
-  default: vi.fn(() => ({
-    extractCriticalToChunks: vi.fn(() => ({ html: '<div />', styles: [] })),
-    constructStyleTagsFromChunks: vi.fn(() => '<style data-emotion="soroush"></style>'),
-  })),
+const styleServer = vi.hoisted(() => ({
+  extractCriticalToChunks: vi.fn(() => ({ html: '<div />', styles: [] })),
+  constructStyleTagsFromChunks: vi.fn(() => '<style data-umber="soroush"></style>'),
 }))
+vi.mock('@gild-ui/react/server', () => ({ styleServer }))
 vi.mock('react-dom/server', () => ({ renderToString: vi.fn(() => '<div id="app" />') }))
 vi.mock('vike/server', () => ({
   escapeInject: (_strings: TemplateStringsArray, ...values: unknown[]) => ({
@@ -14,19 +13,13 @@ vi.mock('vike/server', () => ({
   dangerouslySkipEscape: (s: string) => s,
 }))
 vi.mock('../common/Bootstrap', () => ({ Bootstrap: () => null }))
-vi.mock('@soroush.tech/design-system/engine', () => ({ styleCache: { key: 'soroush' } }))
 
 import { onRenderHtml } from './+onRenderHtml'
-import createEmotionServer from '@emotion/server/create-instance'
 import { renderToString } from 'react-dom/server'
 
 describe('+onRenderHtml', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    vi.mocked(createEmotionServer).mockReturnValue({
-      extractCriticalToChunks: vi.fn(() => ({ html: '<div />', styles: [] })),
-      constructStyleTagsFromChunks: vi.fn(() => '<style data-emotion="soroush"></style>'),
-    } as unknown as ReturnType<typeof createEmotionServer>)
   })
 
   it('calls renderToString with Bootstrap', async () => {
@@ -34,23 +27,14 @@ describe('+onRenderHtml', () => {
     expect(renderToString).toHaveBeenCalled()
   })
 
-  it('calls createEmotionServer with the style cache', async () => {
-    await onRenderHtml({} as never)
-    expect(createEmotionServer).toHaveBeenCalledWith({ key: 'soroush' })
-  })
-
   it('extracts critical chunks from the rendered HTML', async () => {
     await onRenderHtml({} as never)
-    expect(
-      vi.mocked(createEmotionServer).mock.results[0].value.extractCriticalToChunks
-    ).toHaveBeenCalledWith('<div id="app" />')
+    expect(styleServer.extractCriticalToChunks).toHaveBeenCalledWith('<div id="app" />')
   })
 
   it('constructs style tags from chunks', async () => {
     await onRenderHtml({} as never)
-    expect(
-      vi.mocked(createEmotionServer).mock.results[0].value.constructStyleTagsFromChunks
-    ).toHaveBeenCalled()
+    expect(styleServer.constructStyleTagsFromChunks).toHaveBeenCalled()
   })
 
   it('returns a defined result from escapeInject', async () => {
@@ -60,7 +44,7 @@ describe('+onRenderHtml', () => {
 
   it('injects the default site title when there is no page meta', async () => {
     const result = (await onRenderHtml({} as never)) as unknown as { __html: string }
-    expect(result.__html).toContain('<title data-mh>SOROUSH.DESIGN</title>')
+    expect(result.__html).toContain('<title data-mh>Gild UI</title>')
   })
 
   it('injects page SEO meta from pageContext config and url', async () => {
@@ -69,9 +53,9 @@ describe('+onRenderHtml', () => {
       urlPathname: '/about',
     }
     const result = (await onRenderHtml(pageContext as never)) as unknown as { __html: string }
-    expect(result.__html).toContain('<title data-mh>About · SOROUSH.DESIGN</title>')
+    expect(result.__html).toContain('<title data-mh>About · Gild UI</title>')
     expect(result.__html).toContain(
-      '<link rel="canonical" href="https://docs.soroush.tech/about/" data-mh />'
+      '<link rel="canonical" href="https://gild-ui.soroush.design/about/" data-mh />'
     )
   })
 })

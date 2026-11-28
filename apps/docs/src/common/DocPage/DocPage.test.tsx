@@ -4,10 +4,11 @@ import type { ReactNode } from 'react'
 import type { PageContext as VikePageContext } from 'vike/types'
 import { PageContext } from 'src/common/PageContext'
 import { ThemeModeProvider } from 'src/theme/ThemeModeProvider'
+import { hookImportLine } from 'src/common/nav'
 import { DocPage } from './DocPage'
 
 const renderDocPage = (props: Parameters<typeof DocPage>[0]) => {
-  const pageContext = { urlPathname: '/design-system/' } as VikePageContext
+  const pageContext = { urlPathname: '/react/' } as VikePageContext
   const wrapper = ({ children }: { children: ReactNode }) => (
     <ThemeModeProvider>
       <PageContext.Provider value={pageContext}>{children}</PageContext.Provider>
@@ -21,10 +22,15 @@ describe('DocPage', () => {
     renderDocPage({ source: '# Doc Title\n\nBody copy.' })
     // The sidebar renders in the aside and in the mobile drawer; both are hidden at jsdom's width.
     expect(
-      screen.getAllByRole('navigation', { name: 'Design system documentation', hidden: true })
+      screen.getAllByRole('navigation', { name: 'Gild UI documentation', hidden: true })
     ).toHaveLength(2)
     expect(screen.getByRole('heading', { name: 'Doc Title' })).toBeInTheDocument()
     expect(screen.getByText('Body copy.')).toBeInTheDocument()
+  })
+
+  it('shows the install and the import of its subject at the top, when it has them', () => {
+    renderDocPage({ source: 'Body.', importLine: hookImportLine('useDebounce') })
+    expect(screen.getByText((text) => text.includes('npm i @gild-ui/hooks'))).toBeInTheDocument()
   })
 
   it('renders its own title and strips the source chrome when title is given', () => {

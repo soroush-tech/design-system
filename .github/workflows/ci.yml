@@ -146,6 +146,20 @@ jobs:
       - name: Check release notes
         run: ${{ needs.prepare.outputs.runner }} run check:release-notes
 
+      # Fail the build if a breaking release of the Gild UI family has no migrate step to reach it
+      # (packages/cli/src/migrate/steps/gild-ui-<version>/, registered, with a fixture).
+      - name: Check migrations
+        run: ${{ needs.prepare.outputs.runner }} run check:migrations
+
+      # Fail the build if the lockstep packages (root package.json) differ in version, or one's
+      # range on a sibling does not cover it.
+      - name: Check lockstep
+        run: ${{ needs.prepare.outputs.runner }} run check:lockstep
+
+      # Fail the build if ThemeComponents no longer matches the component folders it is generated from.
+      - name: Check ThemeComponents
+        run: ${{ needs.prepare.outputs.runner }} run gen:theme-components --check
+
       # Fail the build if `npx skills add soroush-tech/design-system` would offer anything but the
       # public skill: every skill in .claude/skills marked internal, the plugin's skills/ only ours.
       - name: Check skills
@@ -253,7 +267,7 @@ jobs:
           name: ${{ matrix.flag }}
 
   # The React versions the published packages declare in `peerDependencies`: their unit tests
-  # on the lowest (18.0.0) and on 19.0.0, so a change that needs a newer React fails here and
+  # on the lowest (19.2.8) and on 19.3.1, so a change that needs a newer React fails here and
   # not in an app. The workspace installs with React pinned by a pnpm override, never committed.
   react-range:
     needs: [prepare, lint]
@@ -264,7 +278,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        react: ['18.0.0', '19.0.0']
+        react: ['19.2.8', '19.3.1']
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v7
@@ -288,17 +302,18 @@ jobs:
             echo "  react: $REACT"
             echo "  react-dom: $REACT"
           } >> pnpm-workspace.yaml
-          pnpm install --no-frozen-lockfile --ignore-scripts
-          node -e "const v=require('./packages/design-system/node_modules/react/package.json').version; if (v !== process.env.REACT) { console.error('react is ' + v); process.exit(1) }"
+          pnpm install --lockfile-only --ignore-scripts
+          pnpm install --frozen-lockfile --ignore-scripts
+          node -e "const v=require('./packages/react/node_modules/react/package.json').version; if (v !== process.env.REACT) { console.error('react is ' + v); process.exit(1) }"
 
       - name: Run Unit Tests
         run: |
-          pnpm --filter @soroush.tech/design-system exec vitest run --project=unit
-          pnpm --filter @soroush.tech/markdown test
+          pnpm --filter @gild-ui/react exec vitest run --project=unit
+          pnpm --filter @gild-ui/react-markdown test
 
-  # The apps `create` starts (packages/cli): the design system and the cli are packed from this
+  # The apps `create` starts (packages/cli): Gild UI and the cli are packed from this
   # checkout, an app is created on them, then typechecked, built and served, and its server HTML
-  # checked for the design system's styles. One row per language, each with another package
+  # checked for Gild UI's styles. One row per language, each with another package
   # manager.
   create-smoke:
     needs: [prepare, lint]
@@ -393,7 +408,7 @@ jobs:
 
       - name: Install Playwright browsers
         if: steps.playwright-cache.outputs.cache-hit != 'true'
-        run: pnpm --filter @soroush.tech/docs exec playwright install --with-deps chromium
+        run: pnpm --filter @soroush.design/docs exec playwright install --with-deps chromium
 
       # Same attempts as the packages matrix.
       - name: Install Playwright system deps
@@ -401,7 +416,7 @@ jobs:
         run: |
           echo 'DPkg::Lock::Timeout "120";' | sudo tee /etc/apt/apt.conf.d/90-lock-timeout > /dev/null
           for attempt in 1 2 3; do
-            timeout 180 pnpm --filter @soroush.tech/docs exec playwright install-deps chromium && exit 0
+            timeout 180 pnpm --filter @soroush.design/docs exec playwright install-deps chromium && exit 0
             echo "::warning::Playwright system deps, attempt $attempt of 3 failed"
             sudo pkill -x apt-get || true
             sudo dpkg --configure -a || true
@@ -416,13 +431,13 @@ jobs:
           key: ${{ runner.os }}-playwright-${{ needs.prepare.outputs.playwright_version }}
 
       - name: Run Tests with Coverage
-        run: ${{ needs.prepare.outputs.runner }} --filter @soroush.tech/docs test:coverage
+        run: ${{ needs.prepare.outputs.runner }} --filter @soroush.design/docs test:coverage
 
       - name: Build (prerender)
-        run: ${{ needs.prepare.outputs.runner }} --filter @soroush.tech/docs build
+        run: ${{ needs.prepare.outputs.runner }} --filter @soroush.design/docs build
 
       - name: Run E2E
-        run: ${{ needs.prepare.outputs.runner }} --filter @soroush.tech/docs test:e2e
+        run: ${{ needs.prepare.outputs.runner }} --filter @soroush.design/docs test:e2e
         env:
           CI: true
 
@@ -439,17 +454,18 @@ jobs:
           flags: docs
           name: docs
 
-  # Performance gate: styled-system's bench suite runs in the pinned Docker sandbox
-  # against the last npm release (via soroush-tech/bench-action); any case below the
-  # minimum speed ratio fails the job - and, via ci-ok, the PR.
-  bench:
+  # The Next.js App Router fixture (apps/next-fixture): a server component page renders the static
+  # components with the app's theme, and a Playwright run against its production build checks the
+  # computed styles with and without JavaScript, then the hydration and the interactive components.
+  # Its types are checked against the built declarations, as an app sees them.
+  next-fixture:
     needs: [prepare, lint]
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: write # bench-action posts/updates the results comment
-      id-token: write # OIDC token for the branded comment relay (api.bench.soroush.tech)
     timeout-minutes: 20
+    env:
+      PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/ms-playwright
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v7
@@ -463,40 +479,59 @@ jobs:
           manager: ${{ needs.prepare.outputs.manager }}
           command: ${{ needs.prepare.outputs.command }}
 
-      # The bench file imports this package's built dist so the comparison
-      # against the npm release's prebuilt dist is like-for-like.
-      - name: Build styled-system
-        run: ${{ needs.prepare.outputs.runner }} --filter @soroush.tech/styled-system build
-
-      # Mint a token from the org's GitHub App so the results comment is posted
-      # under the brand bot identity instead of github-actions[bot]. Skipped (and
-      # the gate falls back to GITHUB_TOKEN) when the app isn't configured.
-      - name: Mint bot token
-        id: bot-token
-        if: vars.BENCH_BOT_APP_ID != ''
-        uses: actions/create-github-app-token@v3
+      # Same pinned browser location and key as the docs job.
+      - name: Restore cache - Playwright binaries
+        uses: actions/cache/restore@v6
+        id: playwright-cache
         with:
-          app-id: ${{ vars.BENCH_BOT_APP_ID }}
-          private-key: ${{ secrets.BENCH_BOT_PRIVATE_KEY }}
-          # Scope the minted token to commenting only, instead of inheriting every
-          # permission the app installation has.
-          permission-pull-requests: write
+          path: ${{ github.workspace }}/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ needs.prepare.outputs.playwright_version }}
 
-      - name: Run benchmark gate
-        # Our own action, pinned like any other: `v1` is a tag, and a tag moves.
-        uses: soroush-tech/bench-action@b527ad437545189516e36ee3c29f6aeb09c3557e # v1.1.1
+      - name: Install Playwright browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: pnpm --filter @soroush.design/next-fixture exec playwright install --with-deps chromium
+
+      # Same attempts as the packages matrix.
+      - name: Install Playwright system deps
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: |
+          echo 'DPkg::Lock::Timeout "120";' | sudo tee /etc/apt/apt.conf.d/90-lock-timeout > /dev/null
+          for attempt in 1 2 3; do
+            timeout 180 pnpm --filter @soroush.design/next-fixture exec playwright install-deps chromium && exit 0
+            echo "::warning::Playwright system deps, attempt $attempt of 3 failed"
+            sudo pkill -x apt-get || true
+            sudo dpkg --configure -a || true
+          done
+          exit 1
+
+      - name: Save cache - Playwright binaries
+        if: always() && steps.playwright-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v6
         with:
-          bench-dir: packages/styled-system/bench
-          baseline-case: previous
-          min-ratio: '80'
-          github-token: ${{ steps.bot-token.outputs.token || secrets.GITHUB_TOKEN }}
+          path: ${{ github.workspace }}/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ needs.prepare.outputs.playwright_version }}
+
+      # The fixture runs the packages' source, and checks its types against their built declarations.
+      - name: Build the packages the fixture uses
+        run: >-
+          ${{ needs.prepare.outputs.runner }}
+          --filter @gild-ui/core --filter @gild-ui/hooks
+          --filter @gild-ui/react build
+
+      - name: Check types
+        run: ${{ needs.prepare.outputs.runner }} --filter @soroush.design/next-fixture test:types
+
+      - name: Run E2E
+        run: ${{ needs.prepare.outputs.runner }} --filter @soroush.design/next-fixture test:e2e
+        env:
+          CI: true
 
   # Single stable status check for branch protection: fails only if a required
   # job actually failed or was cancelled.
   ci-ok:
     name: ci-ok
     if: always()
-    needs: [prepare, lint, packages, docs, bench, react-range, create-smoke]
+    needs: [prepare, lint, packages, docs, next-fixture, react-range, create-smoke]
     runs-on: ubuntu-latest
     permissions: {}
     timeout-minutes: 5

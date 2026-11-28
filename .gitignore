@@ -39,8 +39,13 @@ packages/cli/templates/*/js/
 storybook-static
 test-results
 .vitest-attachments
+.vitest/
 __screenshots__/
 
 # Local artifacts
 *.tgz
 .playwright-mcp/
+
+# Next.js
+.next
+next-env.d.ts

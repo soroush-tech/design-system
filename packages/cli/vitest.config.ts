@@ -6,13 +6,14 @@ export default defineConfig({
     // The JavaScript templates are made from the TypeScript ones, not kept: made here first.
     globalSetup: ['./scripts/gen-templates.setup.mjs'],
     // type-tests/ holds the apps the commands write, and templates/ the files they are written
-    // from - with a test of the app's own, which that app runs, not this package.
-    exclude: [...configDefaults.exclude, 'type-tests/**', 'templates/**'],
+    // from - with a test of the app's own, which that app runs, not this package. A migration
+    // step's fixtures are apps of an earlier version, with tests of their own that do not run here.
+    exclude: [...configDefaults.exclude, 'type-tests/**', 'templates/**', 'src/**/fixtures/**'],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'lcov'],
       include: ['src/**/*.ts'],
-      exclude: ['src/**/*.test.ts'],
+      exclude: ['src/**/*.test.ts', 'src/**/fixtures/**'],
       thresholds: { 100: true },
     },
   },

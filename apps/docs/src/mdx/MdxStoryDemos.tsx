@@ -2,7 +2,7 @@ import { demosForComponent } from 'src/demos/registry'
 import { MdxStoryDemo } from './MdxStoryDemo'
 
 export interface MdxStoryDemosProps {
-  /** Component name as in the design system: `Button`. */
+  /** Component name as in Gild UI: `Button`. */
   of: string
 }
 

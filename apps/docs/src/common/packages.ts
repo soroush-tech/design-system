@@ -1,7 +1,4 @@
-import cliPkg from 'packages/cli/package.json'
-import mcpPkg from 'packages/mcp/package.json'
-import uiSpecPkg from 'packages/ui-spec/package.json'
-import type { ComponentNavItem } from '@soroush.tech/docs-content'
+import { sections, type ComponentNavItem } from '@gild-ui/docs-content'
 import type { DocsSection } from 'src/common/nav'
 import { PACKAGE_VERSIONS } from 'src/common/packageVersions'
 
@@ -9,8 +6,8 @@ import { PACKAGE_VERSIONS } from 'src/common/packageVersions'
 const GITHUB_TREE = 'https://github.com/soroush-tech/design-system/tree/main'
 
 export interface PackageInfo {
-  /** The folder under `packages/`, and the name after `@soroush.tech/`. */
-  id: string
+  /** The package's docs section: its URL segment. Its folder and npm name are looked up from it. */
+  id: DocsSection
   name: string
   description: string
   version: string
@@ -20,23 +17,23 @@ export interface PackageInfo {
   docs: DocsSection
 }
 
-// The MCP server and the command line are published under their own scope, `@soroush.design`.
-const DESIGN_SCOPED = new Set(['mcp', 'cli'])
-const npmOf = (id: string) =>
-  `https://www.npmjs.com/package/@soroush.${DESIGN_SCOPED.has(id) ? 'design' : 'tech'}/${id}`
-const githubOf = (id: string) => `${GITHUB_TREE}/packages/${id}`
+const npmOf = (id: DocsSection) => `https://www.npmjs.com/package/${sections[id].npm}`
+const githubOf = (id: DocsSection) => {
+  const { dir, repo } = sections[id]
+  return dir === null ? repo! : `${GITHUB_TREE}/packages/${dir}`
+}
 
 /** The packages the docs are about, the ones with a docs section first. */
 export const PACKAGES: PackageInfo[] = [
   {
-    id: 'design-system',
-    name: 'Design System',
+    id: 'react',
+    name: 'Gild UI for React',
     description:
       'The components: layout, inputs, feedback, navigation and overlays, with a theme to match your brand.',
-    version: PACKAGE_VERSIONS['design-system'],
-    npm: npmOf('design-system'),
-    github: githubOf('design-system'),
-    docs: 'design-system',
+    version: PACKAGE_VERSIONS.react,
+    npm: npmOf('react'),
+    github: githubOf('react'),
+    docs: 'react',
   },
   {
     id: 'markdown',
@@ -63,7 +60,7 @@ export const PACKAGES: PackageInfo[] = [
     name: 'MCP server',
     description:
       'Serves the component inventory, every README and the theme tokens to AI coding tools.',
-    version: mcpPkg.version,
+    version: PACKAGE_VERSIONS.mcp,
     npm: npmOf('mcp'),
     github: githubOf('mcp'),
     docs: 'mcp',
@@ -73,7 +70,7 @@ export const PACKAGES: PackageInfo[] = [
     name: 'UI spec',
     description:
       'The generative-UI spec: A2UI catalogs, a behavior schema for page data, and validators.',
-    version: uiSpecPkg.version,
+    version: PACKAGE_VERSIONS['ui-spec'],
     npm: npmOf('ui-spec'),
     github: githubOf('ui-spec'),
     docs: 'ui-spec',
@@ -82,8 +79,8 @@ export const PACKAGES: PackageInfo[] = [
     id: 'cli',
     name: 'Command line',
     description:
-      'Sets the design system up in an existing React app with one command, showing every change first.',
-    version: cliPkg.version,
+      'Sets Gild UI up in an existing React app with one command, showing every change first.',
+    version: PACKAGE_VERSIONS.cli,
     npm: npmOf('cli'),
     github: githubOf('cli'),
     docs: 'cli',
@@ -92,4 +89,4 @@ export const PACKAGES: PackageInfo[] = [
 
 /** A component's source folder on GitHub - the one its README is in. */
 export const sourceUrlOf = (item: ComponentNavItem): string =>
-  `${GITHUB_TREE}/packages/${item.pkg}/src/${item.readmePath.replace(/\/README\.md$/, '')}`
+  `${GITHUB_TREE}/packages/${sections[item.pkg].dir}/src/${item.readmePath.replace(/\/README\.md$/, '')}`

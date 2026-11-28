@@ -1,7 +1,7 @@
 // @if tanstack-query || (!zustand && !jotai && !redux-toolkit)
 import { useState } from 'react'
 // @endif
-import { View } from '@soroush.tech/design-system/View'
+import { View } from '@gild-ui/react/View'
 // @if tanstack-query
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 // @endif

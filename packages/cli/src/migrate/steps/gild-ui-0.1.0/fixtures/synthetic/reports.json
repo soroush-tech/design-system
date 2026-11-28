@@ -1,0 +1,397 @@
+[
+  {
+    "path": "src/augment.d.ts",
+    "line": 7,
+    "id": "EXP-004"
+  },
+  {
+    "path": "src/augment.d.ts",
+    "line": 10,
+    "id": "THM-005"
+  },
+  {
+    "path": "src/augment.d.ts",
+    "line": 13,
+    "id": "THM-005"
+  },
+  {
+    "path": "src/broken.ts",
+    "line": 1,
+    "id": "PARSE"
+  },
+  {
+    "path": "src/cache.tsx",
+    "line": 1,
+    "id": "DEP-009"
+  },
+  {
+    "path": "src/cache.tsx",
+    "line": 2,
+    "id": "IMP-EMOTION"
+  },
+  {
+    "path": "src/cache.tsx",
+    "line": 3,
+    "id": "STY-008"
+  },
+  {
+    "path": "src/cache.tsx",
+    "line": 5,
+    "id": "IMP-EMOTION"
+  },
+  {
+    "path": "src/cache.tsx",
+    "line": 9,
+    "id": "STY-009"
+  },
+  {
+    "path": "src/cache.tsx",
+    "line": 9,
+    "id": "STY-010"
+  },
+  {
+    "path": "src/cache.tsx",
+    "line": 10,
+    "id": "STY-009"
+  },
+  {
+    "path": "src/cache.tsx",
+    "line": 14,
+    "id": "STY-007"
+  },
+  {
+    "path": "src/cache.tsx",
+    "line": 14,
+    "id": "STY-011"
+  },
+  {
+    "path": "src/cache.tsx",
+    "line": 15,
+    "id": "STY-008"
+  },
+  {
+    "path": "src/imports.ts",
+    "line": 11,
+    "id": "EXP-001"
+  },
+  {
+    "path": "src/imports.ts",
+    "line": 12,
+    "id": "EXP-002"
+  },
+  {
+    "path": "src/imports.ts",
+    "line": 12,
+    "id": "EXP-003"
+  },
+  {
+    "path": "src/imports.ts",
+    "line": 17,
+    "id": "IMP-SPLIT"
+  },
+  {
+    "path": "src/imports.ts",
+    "line": 18,
+    "id": "IMP-UNKNOWN"
+  },
+  {
+    "path": "src/imports.ts",
+    "line": 19,
+    "id": "IMP-UNKNOWN"
+  },
+  {
+    "path": "src/imports.ts",
+    "line": 25,
+    "id": "IMP-SPLIT"
+  },
+  {
+    "path": "src/imports.ts",
+    "line": 28,
+    "id": "IMP-DYNAMIC"
+  },
+  {
+    "path": "src/imports.ts",
+    "line": 31,
+    "id": "IMP-SPLIT"
+  },
+  {
+    "path": "src/legacy.tsx",
+    "line": 7,
+    "id": "STY-003"
+  },
+  {
+    "path": "src/legacy.tsx",
+    "line": 10,
+    "id": "STY-003"
+  },
+  {
+    "path": "src/legacy.tsx",
+    "line": 11,
+    "id": "STY-002"
+  },
+  {
+    "path": "src/legacy.tsx",
+    "line": 14,
+    "id": "STY-002"
+  },
+  {
+    "path": "src/legacy.tsx",
+    "line": 16,
+    "id": "STY-005"
+  },
+  {
+    "path": "src/legacy.tsx",
+    "line": 19,
+    "id": "STY-001"
+  },
+  {
+    "path": "src/legacy.tsx",
+    "line": 20,
+    "id": "CMP-001"
+  },
+  {
+    "path": "src/legacy.tsx",
+    "line": 24,
+    "id": "OUT-004"
+  },
+  {
+    "path": "src/legacy.tsx",
+    "line": 25,
+    "id": "OUT-005"
+  },
+  {
+    "path": "src/legacy.tsx",
+    "line": 26,
+    "id": "CMP-005"
+  },
+  {
+    "path": "src/lift.tsx",
+    "line": 12,
+    "id": "USE-STYLE"
+  },
+  {
+    "path": "src/lift.tsx",
+    "line": 23,
+    "id": "STYLE-PROP"
+  },
+  {
+    "path": "src/lift.tsx",
+    "line": 24,
+    "id": "STYLE-PROP"
+  },
+  {
+    "path": "src/lift.tsx",
+    "line": 26,
+    "id": "STY-004"
+  },
+  {
+    "path": "src/lift.tsx",
+    "line": 27,
+    "id": "STY-004"
+  },
+  {
+    "path": "src/lift.tsx",
+    "line": 28,
+    "id": "STY-004"
+  },
+  {
+    "path": "src/lift.tsx",
+    "line": 29,
+    "id": "STY-004"
+  },
+  {
+    "path": "src/lift.tsx",
+    "line": 30,
+    "id": "STY-004"
+  },
+  {
+    "path": "src/lift.tsx",
+    "line": 31,
+    "id": "CMP-005"
+  },
+  {
+    "path": "src/lift.tsx",
+    "line": 38,
+    "id": "STY-004"
+  },
+  {
+    "path": "src/lift.tsx",
+    "line": 42,
+    "id": "STY-004"
+  },
+  {
+    "path": "src/lift.tsx",
+    "line": 46,
+    "id": "STY-004"
+  },
+  {
+    "path": "src/output.test.tsx",
+    "line": 5,
+    "id": "IMP-SPLIT"
+  },
+  {
+    "path": "src/output.test.tsx",
+    "line": 6,
+    "id": "IMP-SPLIT"
+  },
+  {
+    "path": "src/output.test.tsx",
+    "line": 10,
+    "id": "STY-011"
+  },
+  {
+    "path": "src/output.test.tsx",
+    "line": 11,
+    "id": "STY-011"
+  },
+  {
+    "path": "src/output.test.tsx",
+    "line": 12,
+    "id": "STY-011"
+  },
+  {
+    "path": "src/pragma.tsx",
+    "line": 1,
+    "id": "DEP-009"
+  },
+  {
+    "path": "src/pragma.tsx",
+    "line": 2,
+    "id": "STY-004"
+  },
+  {
+    "path": "src/semicolons.js",
+    "line": 9,
+    "id": "STY-003"
+  },
+  {
+    "path": "src/semicolons.js",
+    "line": 12,
+    "id": "STY-002"
+  },
+  {
+    "path": "src/theme.ts",
+    "line": 9,
+    "id": "THM-006"
+  },
+  {
+    "path": "src/themesApart.ts",
+    "line": 6,
+    "id": "THM-006"
+  },
+  {
+    "path": "src/themesApart.ts",
+    "line": 6,
+    "id": "THM-003"
+  },
+  {
+    "path": "src/themesApart.ts",
+    "line": 8,
+    "id": "THM-001"
+  },
+  {
+    "path": "src/themesApart.ts",
+    "line": 11,
+    "id": "THM-003"
+  },
+  {
+    "path": "src/themesApart.ts",
+    "line": 13,
+    "id": "THM-001"
+  },
+  {
+    "path": "src/themesApart.ts",
+    "line": 14,
+    "id": "CMP-003"
+  },
+  {
+    "path": "src/themesEarly.ts",
+    "line": 5,
+    "id": "THM-006"
+  },
+  {
+    "path": "src/themesEarly.ts",
+    "line": 5,
+    "id": "THM-001"
+  },
+  {
+    "path": "src/themesEarly.ts",
+    "line": 6,
+    "id": "THM-001"
+  },
+  {
+    "path": "src/themesMixed.ts",
+    "line": 4,
+    "id": "THM-006"
+  },
+  {
+    "path": "src/tokens.ts",
+    "line": 4,
+    "id": "STY-012"
+  },
+  {
+    "path": "src/tokens.ts",
+    "line": 5,
+    "id": "STY-012"
+  },
+  {
+    "path": "src/tokens.ts",
+    "line": 6,
+    "id": "STY-012"
+  },
+  {
+    "path": "src/tokens.ts",
+    "line": 7,
+    "id": "STY-012"
+  },
+  {
+    "path": "tsconfig.json",
+    "line": 4,
+    "id": "DEP-009"
+  },
+  {
+    "path": "vite.config.ts",
+    "line": 6,
+    "id": "DEP-009"
+  },
+  {
+    "path": "package.json",
+    "line": 6,
+    "id": "DEP-008"
+  },
+  {
+    "path": "package.json",
+    "line": 23,
+    "id": "DEP-006"
+  },
+  {
+    "path": "package.json",
+    "line": 27,
+    "id": "DEP-006"
+  },
+  {
+    "path": "package.json",
+    "line": 20,
+    "id": "DEP-006"
+  },
+  {
+    "path": "package.json",
+    "line": 12,
+    "id": "DEP-003"
+  },
+  {
+    "path": "package.json",
+    "line": 15,
+    "id": "THM-007"
+  },
+  {
+    "path": "package.json",
+    "line": 12,
+    "id": "CHECK"
+  },
+  {
+    "path": "package.json",
+    "line": 12,
+    "id": "CHECK"
+  }
+]

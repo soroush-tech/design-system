@@ -4,7 +4,7 @@
 //
 // A post-build script rather than a Vite plugin: vite.config.ts is executed by Node
 // with workspace dependencies left external, and this reads the registry out of
-// @soroush.tech/docs-content, whose exports are TypeScript source. Run under tsx.
+// @gild-ui/docs-content, whose exports are TypeScript source. Run under tsx.
 import { writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -12,22 +12,23 @@ import {
   absoluteReadmeLinks,
   allComponents,
   componentPagePath,
+  hookSection,
+  sitePath,
+  importPackageOf,
   importSubpathOf,
   markdownComponents,
   membersOf,
+  reactHooks,
   splitReadme,
   stripReadmeChrome,
-  styledSystemDocSlug,
-  styledSystemDocs,
-  styledSystemGuides,
   type ComponentNavItem,
-} from '@soroush.tech/docs-content'
-import { loadPackageFile, loadReadme } from '@soroush.tech/docs-content/node'
+} from '@gild-ui/docs-content'
+import { loadPackageFile, loadReadme, loadRepoFile } from '@gild-ui/docs-content/node'
 
-const SITE_URL = process.env.VITE_SITE_URL ?? 'https://docs.soroush.tech'
+const SITE_URL = process.env.VITE_SITE_URL ?? 'https://gild-ui.soroush.design'
 
 const componentUrl = (item: ComponentNavItem): string =>
-  `${SITE_URL}/${item.pkg}${componentPagePath(item)}`
+  `${SITE_URL}${sitePath(item.pkg, componentPagePath(item))}`
 
 // A family's members follow it, each linked to its API page.
 const designSystemComponents = allComponents.flatMap((item) => [item, ...membersOf(item)])
@@ -42,10 +43,19 @@ const firstLine = (markdown: string): string =>
 const link = (item: ComponentNavItem): string =>
   `- [${item.name}](${componentUrl(item)}): ${firstLine(splitReadme(absoluteReadmeLinks(loadReadme(item))).intro)}`
 
+const hooksReadme = (): string => loadRepoFile('packages/hooks/README.md')
+
+// A hook's page opens with a paragraph that says what it is, wrapped over several lines.
+const hookSummary = (hook: string): string =>
+  stripReadmeChrome(hookSection(hooksReadme(), hook)).split('\n\n')[0].replace(/\s+/g, ' ').trim()
+
+const hookLink = (hook: string): string =>
+  `- [${hook}](${SITE_URL}/react/hooks/${hook}/): ${hookSummary(hook)}`
+
 /** The spec-shaped index: what this is, then links out to everything. */
 export const renderIndex = (): string =>
   [
-    '# soroush design system',
+    '# Gild UI',
     '',
     '> A token-driven React component library built on a typed style-prop engine, with a',
     '> markdown companion library. Every component documents its props, token values, and',
@@ -56,14 +66,18 @@ export const renderIndex = (): string =>
     '',
     '## Getting started',
     '',
-    `- [Installation](${SITE_URL}/design-system/getting-started/installation/): install the packages and their peers.`,
-    `- [Usage](${SITE_URL}/design-system/getting-started/usage/): wrap the app in ThemeProvider and render a component.`,
-    `- [Theming](${SITE_URL}/design-system/customization/theming/): the Theme type and how createTheme composes one.`,
-    `- [Customization](${SITE_URL}/design-system/customization/how-to/): override styles through theme.components.`,
+    `- [Installation](${SITE_URL}/react/installation/): install the packages and their peers.`,
+    `- [Usage](${SITE_URL}/react/usage/): wrap the app in ThemeProvider and render a component.`,
+    `- [Theming](${SITE_URL}/react/theme/): the Theme type and how createTheme composes one.`,
+    `- [Customization](${SITE_URL}/react/customization/): override styles through theme.components.`,
     '',
     '## Components',
     '',
     ...designSystemComponents.map(link),
+    '',
+    '## Hooks',
+    '',
+    ...reactHooks.map(hookLink),
     '',
     '## Markdown components',
     '',
@@ -71,10 +85,10 @@ export const renderIndex = (): string =>
     '',
     '## styled-system',
     '',
-    ...[...styledSystemDocs, ...styledSystemGuides].map(
-      ({ label, file }) =>
-        `- [${label}](${SITE_URL}/styled-system/docs/${styledSystemDocSlug(file)}/)`
-    ),
+    'The style-prop package lives in its own repository.',
+    '',
+    `- [Overview](${SITE_URL}/styled-system/)`,
+    '- [Documentation](https://github.com/soroush-tech/styled-system/tree/main/docs)',
     '',
   ].join('\n')
 
@@ -92,7 +106,7 @@ export const renderFull = (): string =>
       return [
         `## ${item.name}`,
         '',
-        `Import: \`import { ${item.name} } from '@soroush.tech/${item.pkg}/${importSubpathOf(item)}'\``,
+        `Import: \`import { ${item.name} } from '${importPackageOf(item)}/${importSubpathOf(item)}'\``,
         '',
         stripReadmeChrome(intro),
         api,
@@ -102,13 +116,19 @@ export const renderFull = (): string =>
     }),
     '---',
     '',
+    '# Hooks',
+    '',
+    ...reactHooks.map((hook) => hookSection(hooksReadme(), hook)),
+    '',
+    '---',
+    '',
     '# Guides',
     '',
-    loadPackageFile('design-system', 'docs/theming.md'),
+    absoluteReadmeLinks(loadPackageFile('react', 'docs/theming.md')),
     '',
-    loadPackageFile('design-system', 'docs/customization.md'),
+    absoluteReadmeLinks(loadPackageFile('react', 'docs/customization.md')),
     '',
-    loadPackageFile('design-system', 'docs/consumer/setup.md'),
+    absoluteReadmeLinks(loadPackageFile('react', 'docs/consumer/setup.md')),
     '',
   ].join('\n')
 

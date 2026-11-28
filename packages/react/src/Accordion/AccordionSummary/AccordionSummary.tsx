@@ -1,0 +1,121 @@
+'use client'
+
+import type { ReactNode } from 'react'
+import { negate, styled } from '../../style/styled'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../../style/overrides'
+import type { AccordionSummarySlot } from './AccordionSummary.types'
+import { createShouldForwardProp } from '@soroush.tech/styled-system/should-forward-prop'
+import { get } from '@soroush.tech/styled-system'
+import { useDefaultProps } from '../../theme/hooks/useDefaultProps'
+import { Icon } from '../../Icon'
+import { getRegionId, getSummaryId, useAccordion } from '../AccordionContext'
+
+export type AccordionHeadingLevel = 1 | 2 | 3 | 4 | 5 | 6
+
+export interface AccordionSummaryProps {
+  /** What the header says. */
+  children?: ReactNode
+  /** The icon that turns as it opens. Default: the `expand_more` icon. */
+  expandIcon?: ReactNode
+  /** The level of the heading the button sits in. Default: `3`. */
+  headingLevel?: AccordionHeadingLevel
+  className?: string
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<AccordionSummarySlot>
+  'data-testid'?: string
+}
+
+const SummaryHeading = styled('div', {
+  name: 'AccordionSummary',
+  label: 'AccordionSummary',
+})({ margin: 0, font: 'inherit' })
+
+const SummaryButton = styled('button', {
+  name: 'AccordionSummary',
+  slot: 'button',
+  label: 'AccordionSummaryButton',
+  shouldForwardProp: createShouldForwardProp(['hasGutters']),
+})<{ hasGutters: boolean }>(({ theme, hasGutters }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  gap: theme.space[2],
+  width: '100%',
+  boxSizing: 'border-box',
+  padding: `${theme.space[2]} ${hasGutters ? theme.space[2] : '0'}`,
+  border: 0,
+  background: 'none',
+  color: 'inherit',
+  font: 'inherit',
+  textAlign: 'start',
+  cursor: 'pointer',
+  '&:disabled': { opacity: 0.5, cursor: 'not-allowed' },
+  '&:focus-visible': {
+    outline: `${theme.borderWidths.base} solid ${get(theme, 'palette.primary.main')}`,
+    outlineOffset: negate(theme.borderWidths.base),
+  },
+}))
+
+const SummaryContent = styled('span', {
+  name: 'AccordionSummary',
+  slot: 'content',
+  label: 'AccordionSummaryContent',
+})({ flex: 1, minWidth: 0 })
+
+const SummaryIcon = styled('span', {
+  name: 'AccordionSummary',
+  slot: 'icon',
+  label: 'AccordionSummaryIcon',
+  shouldForwardProp: createShouldForwardProp(['isExpanded']),
+})<{ isExpanded: boolean }>(({ theme, isExpanded }) => ({
+  display: 'inline-flex',
+  flexShrink: 0,
+  transition: `transform ${theme.transitions.duration.short}ms`,
+  transform: isExpanded ? 'rotate(180deg)' : 'none',
+  '@media (prefers-reduced-motion: reduce)': { transition: 'none' },
+}))
+
+/**
+ * @description The header of an `Accordion`: a button in a heading that opens and closes it, with
+ * `aria-expanded` and `aria-controls` for its region. Enter and Space press it, as they press any
+ * button; in an `AccordionGroup` the arrows, Home and End move between summaries.
+ */
+export function AccordionSummary({
+  children,
+  expandIcon,
+  headingLevel: headingLevelProp,
+  className,
+  style,
+  slotProps,
+  'data-testid': dataTestid,
+}: Readonly<AccordionSummaryProps>) {
+  const dp = useDefaultProps('AccordionSummary')
+  const headingLevel = headingLevelProp ?? dp.headingLevel ?? 3
+  const { baseId, isExpanded, disabled, hasGutters, toggle } = useAccordion('AccordionSummary')
+  return (
+    <SummaryHeading
+      as={`h${headingLevel}`}
+      {...mergeOverrides(slotProps?.root, { style, className })}
+      data-testid={dataTestid}
+    >
+      <SummaryButton
+        {...slotProps?.button}
+        type="button"
+        id={getSummaryId(baseId)}
+        aria-expanded={isExpanded}
+        aria-controls={getRegionId(baseId)}
+        disabled={disabled}
+        hasGutters={hasGutters}
+        data-accordion-summary=""
+        onClick={toggle}
+      >
+        <SummaryContent {...slotProps?.content}>{children}</SummaryContent>
+        <SummaryIcon {...slotProps?.icon} isExpanded={isExpanded} aria-hidden="true">
+          {expandIcon ?? <Icon name="expand_more" size="1em" color="inherit" />}
+        </SummaryIcon>
+      </SummaryButton>
+    </SummaryHeading>
+  )
+}

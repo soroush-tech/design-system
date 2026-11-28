@@ -1,17 +1,29 @@
-import { listStoryNames, type StoriesModule } from '@soroush.tech/story-demo'
-import designSystemPkg from 'packages/design-system/package.json'
+import { listStoryNames, type StoriesModule } from '@gild-ui/story-demo'
+import {
+  APP_PACKAGE,
+  APP_PACKAGE_VERSION,
+  CORE_PACKAGE,
+  CORE_PACKAGE_VERSION,
+} from 'src/common/packageVersions'
+import { requireMatches } from './requireMatches'
 
 // Every design-system stories module, resolved at build time - once as a namespace
 // (rendered via portable stories) and once as raw text (parsed into the shown code),
 // so the code shown is the code run.
-const modules = import.meta.glob('packages/design-system/src/**/*.stories.tsx', {
-  eager: true,
-}) as Record<string, StoriesModule>
-const sources = import.meta.glob('packages/design-system/src/**/*.stories.tsx', {
-  query: '?raw',
-  import: 'default',
-  eager: true,
-}) as Record<string, string>
+const modules = requireMatches(
+  'packages/react/src/**/*.stories.tsx',
+  import.meta.glob('packages/react/src/**/*.stories.tsx', {
+    eager: true,
+  }) as Record<string, StoriesModule>
+)
+const sources = requireMatches(
+  'packages/react/src/**/*.stories.tsx (?raw)',
+  import.meta.glob('packages/react/src/**/*.stories.tsx', {
+    query: '?raw',
+    import: 'default',
+    eager: true,
+  }) as Record<string, string>
+)
 
 export interface DemoEntry {
   /** Registry path: `<Component>/<StoryExport>`. */
@@ -65,8 +77,9 @@ export const demoByPath = new Map(
 
 /** Published versions for our own packages in sandbox exports; anything else rides at latest. */
 export const demoVersions: Record<string, string> = {
-  '@soroush.tech/design-system': `^${designSystemPkg.version}`,
+  [APP_PACKAGE]: `^${APP_PACKAGE_VERSION}`,
+  [CORE_PACKAGE]: `^${CORE_PACKAGE_VERSION}`,
 }
 
 /** The react / react-dom pin for sandbox exports. */
-export const demoReactVersion = designSystemPkg.peerDependencies.react
+export { COMPONENT_LIBRARY_REACT_RANGE as demoReactVersion } from 'src/common/packageVersions'

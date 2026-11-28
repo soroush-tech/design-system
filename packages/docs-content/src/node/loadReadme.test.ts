@@ -10,7 +10,12 @@ import {
 
 describe('packageDir', () => {
   it('points at the workspace package', () => {
-    expect(packageDir('design-system').replace(/\\/g, '/')).toMatch(/packages\/design-system$/)
+    expect(packageDir('react').replace(/\\/g, '/')).toMatch(/packages\/react$/)
+    expect(packageDir('cli').replace(/\\/g, '/')).toMatch(/packages\/cli$/)
+  })
+
+  it('fails for a package that lives in its own repository', () => {
+    expect(() => packageDir('styled-system')).toThrow('its own repository')
   })
 })
 
@@ -30,7 +35,7 @@ describe('loadReadme', () => {
 
 describe('loadPackageFile', () => {
   it('reads a file relative to the package directory', () => {
-    expect(loadPackageFile('styled-system', 'docs/api.md')).toBeTruthy()
+    expect(loadPackageFile('mcp', 'package.json')).toBeTruthy()
   })
 })
 
@@ -42,7 +47,7 @@ describe('loadRepoFile', () => {
 
 describe('listComponentReadmes', () => {
   it('finds both glob levels, sorted', () => {
-    const found = listComponentReadmes('design-system')
+    const found = listComponentReadmes('react')
     expect(found).toContain('Button/README.md')
     expect(found).toContain('Table/Table/README.md')
     expect([...found].sort()).toEqual(found)

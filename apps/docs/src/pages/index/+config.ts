@@ -5,7 +5,7 @@ import { docsSection } from '../../common/sectionRoute'
 export default {
   // Snapshot builds carry a single section - the landing page stays live-only.
   prerender: !docsSection(),
-  title: 'Design system documentation',
+  title: 'Gild UI documentation',
   description:
     'Documentation and live demos for the @soroush.tech packages: design-system, markdown, and styled-system.',
 } satisfies Config

@@ -1,28 +1,25 @@
 import {
+  allComponents,
   allDocComponents,
   componentCategories,
+  componentPagePath,
+  componentSpecsPath,
+  entryGuides,
   markdownComponents,
-  styledSystemDocSlug,
-  styledSystemDocs,
-  styledSystemGuides,
+  reactHooks,
+  sections,
   type ComponentNavItem,
-  type DocsPackage,
-} from '@soroush.tech/docs-content'
+  type DocsSection,
+} from '@gild-ui/docs-content'
 import { PACKAGES } from 'src/common/packages'
 import { sectionPath } from 'src/common/sectionPath'
 
-// The component taxonomy and the styled-system doc lists live in
-// @soroush.tech/docs-content, shared with the MCP server so both describe the same
+// The component taxonomy lives in
+// @gild-ui/docs-content, shared with the MCP server so both describe the same
 // library. Re-exported here because the app imports them through this module, and
 // guarded against the files on disk by that package's own tests. What stays below is
 // app-specific: turning the registry into the rail, the sidebar groups and the hrefs.
-export * from '@soroush.tech/docs-content'
-
-/**
- * A part of the site that documents a package. Every section is versioned: the live docs, and
- * a frozen snapshot per release.
- */
-export type DocsSection = DocsPackage | 'mcp' | 'ui-spec' | 'cli'
+export * from '@gild-ui/docs-content'
 
 export interface NavItem {
   label: string
@@ -67,7 +64,7 @@ export interface SectionNav {
 }
 
 const componentHref = (item: ComponentNavItem): string =>
-  sectionPath(item.pkg, `/components/${item.slug}/`)
+  sectionPath(item.pkg, componentPagePath(item))
 
 const HOME: RailItem = {
   id: 'home',
@@ -103,30 +100,24 @@ const PACKAGES_ITEM: RailItem = {
   ],
 }
 
-/** The design-system section's rail: what each part of the docs opens in the sidebar. */
-const designSystemRail: RailItem[] = [
+/** The React section's rail: what each part of the docs opens in the sidebar. */
+const reactRail: RailItem[] = [
   HOME,
   PACKAGES_ITEM,
   {
     id: 'get-started',
     label: 'Get started',
     icon: 'dots',
-    href: sectionPath('design-system', '/'),
-    matches: [
-      sectionPath('design-system', '/getting-started/'),
-      sectionPath('design-system', '/releases/'),
-    ],
+    href: sectionPath('react', '/'),
+    matches: [sectionPath('react', '/releases/')],
     groups: [
       {
         label: 'Get started',
         items: [
-          { label: 'Overview', href: sectionPath('design-system', '/') },
-          {
-            label: 'Installation',
-            href: sectionPath('design-system', '/getting-started/installation/'),
-          },
-          { label: 'Usage', href: sectionPath('design-system', '/getting-started/usage/') },
-          { label: 'Releases', href: sectionPath('design-system', '/releases/') },
+          { label: 'Overview', href: sectionPath('react', '/') },
+          { label: 'Installation', href: sectionPath('react', '/installation/') },
+          { label: 'Usage', href: sectionPath('react', '/usage/') },
+          { label: 'Releases', href: sectionPath('react', '/releases/') },
         ],
       },
     ],
@@ -135,13 +126,13 @@ const designSystemRail: RailItem[] = [
     id: 'components',
     label: 'Components',
     icon: 'add_circle',
-    href: sectionPath('design-system', '/components/'),
-    // A component's specs live under /api/ - they are still the component's.
-    matches: [sectionPath('design-system', '/components/'), sectionPath('design-system', '/api/')],
+    href: sectionPath('react', '/components/'),
+    // A component's specs, accessibility notes and members are under its own page - still its.
+    matches: allComponents.map((item) => sectionPath('react', componentPagePath(item))),
     groups: [
       {
         label: 'Components',
-        items: [{ label: 'All components', href: sectionPath('design-system', '/components/') }],
+        items: [{ label: 'All components', href: sectionPath('react', '/components/') }],
       },
       ...componentCategories.map((category) => ({
         label: category.label,
@@ -154,17 +145,51 @@ const designSystemRail: RailItem[] = [
     id: 'styles',
     label: 'Styles',
     icon: 'palette',
-    href: sectionPath('design-system', '/customization/theming/'),
-    matches: [sectionPath('design-system', '/customization/')],
+    href: sectionPath('react', '/theme/'),
+    matches: [],
     groups: [
       {
         label: 'Styles',
         items: [
-          { label: 'Theming', href: sectionPath('design-system', '/customization/theming/') },
-          {
-            label: 'How to customize',
-            href: sectionPath('design-system', '/customization/how-to/'),
-          },
+          { label: 'Theme', href: sectionPath('react', '/theme/') },
+          { label: 'How to customize', href: sectionPath('react', '/customization/') },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'entry-points',
+    label: 'Entry points',
+    icon: 'article',
+    href: sectionPath('react', '/style/'),
+    matches: [],
+    groups: [
+      {
+        label: 'Entry points',
+        items: Object.keys(entryGuides)
+          .filter((entry) => entry !== 'theme')
+          .map((entry) => ({
+            label: entry[0].toUpperCase() + entry.slice(1),
+            href: sectionPath('react', `/${entry}/`),
+          })),
+      },
+    ],
+  },
+  {
+    id: 'hooks',
+    label: 'Hooks',
+    icon: 'book',
+    href: sectionPath('react', '/hooks/'),
+    matches: [],
+    groups: [
+      {
+        label: 'Hooks',
+        items: [
+          { label: 'All hooks', href: sectionPath('react', '/hooks/') },
+          ...reactHooks.map((hook) => ({
+            label: hook,
+            href: sectionPath('react', `/hooks/${hook}/`),
+          })),
         ],
       },
     ],
@@ -196,7 +221,7 @@ const markdownRail: RailItem[] = [
     icon: 'add_circle',
     // There is no page of the list: the rail opens the first component, the sidebar lists the rest.
     href: componentHref(markdownComponents[0]),
-    matches: [sectionPath('markdown', '/components/')],
+    matches: [],
     groups: [
       {
         label: 'Components',
@@ -206,9 +231,7 @@ const markdownRail: RailItem[] = [
   },
 ]
 
-const styledSystemDocHref = (file: string): string =>
-  sectionPath('styled-system', `/docs/${styledSystemDocSlug(file)}/`)
-
+// The package lives in its own repository: one page here, and no releases of its own.
 const styledSystemRail: RailItem[] = [
   HOME,
   PACKAGES_ITEM,
@@ -221,42 +244,7 @@ const styledSystemRail: RailItem[] = [
     groups: [
       {
         label: 'Get started',
-        items: [
-          { label: 'Overview', href: sectionPath('styled-system', '/') },
-          { label: 'Releases', href: sectionPath('styled-system', '/releases/') },
-        ],
-      },
-    ],
-  },
-  {
-    id: 'docs',
-    label: 'Docs',
-    icon: 'article',
-    href: styledSystemDocHref(styledSystemDocs[0].file),
-    matches: [sectionPath('styled-system', '/docs/')],
-    groups: [
-      {
-        label: 'Docs',
-        items: styledSystemDocs.map(({ label, file }) => ({
-          label,
-          href: styledSystemDocHref(file),
-        })),
-      },
-    ],
-  },
-  {
-    id: 'guides',
-    label: 'Guides',
-    icon: 'book',
-    href: styledSystemDocHref(styledSystemGuides[0].file),
-    matches: [],
-    groups: [
-      {
-        label: 'Guides',
-        items: styledSystemGuides.map(({ label, file }) => ({
-          label,
-          href: styledSystemDocHref(file),
-        })),
+        items: [{ label: 'Overview', href: sectionPath('styled-system', '/') }],
       },
     ],
   },
@@ -286,7 +274,7 @@ const overviewRail = (pkg: 'mcp' | 'ui-spec' | 'cli'): RailItem[] => [
 
 const SECTIONS: SectionNav[] = (
   [
-    { pkg: 'design-system', label: 'Design system documentation', rail: designSystemRail },
+    { pkg: 'react', label: 'Gild UI documentation', rail: reactRail },
     { pkg: 'markdown', label: 'Markdown documentation', rail: markdownRail },
     { pkg: 'styled-system', label: 'Styled-system documentation', rail: styledSystemRail },
     { pkg: 'mcp', label: 'MCP server documentation', rail: overviewRail('mcp') },
@@ -298,18 +286,20 @@ const SECTIONS: SectionNav[] = (
   groups: section.rail.flatMap((item) => item.groups),
 }))
 
-/** The design-system section's sidebar groups, in reading order. */
-export const designSystemNav: NavGroup[] = SECTIONS[0].groups
+/** The React section's sidebar groups, in reading order. */
+export const reactNav: NavGroup[] = SECTIONS[0].groups
 
 /**
- * The section a pathname belongs to. Versioned snapshots serve a single section from
- * the domain root, so an unmatched path falls back to the build's own section (set at
- * build time via DOCS_SECTION) - and to design-system on the live site.
+ * The section a pathname belongs to: the one with the longest route that holds it, so a page of
+ * `/react/markdown/` is the markdown section's, not React's. Versioned snapshots serve a single
+ * section from the domain root, so an unmatched path falls back to the build's own section (set
+ * at build time via DOCS_SECTION) - and to React on the live site.
  */
 export const sectionFor = (pathname: string): SectionNav => {
-  const match = SECTIONS.find(
-    (section) => pathname === `/${section.pkg}` || pathname.startsWith(`/${section.pkg}/`)
-  )
+  const match = SECTIONS.filter(({ pkg }) => {
+    const route = `/${sections[pkg].route}`
+    return pathname === route || pathname.startsWith(`${route}/`)
+  }).sort((a, b) => sections[b.pkg].route.length - sections[a.pkg].route.length)[0]
   if (match) return match
   const buildSection = import.meta.env.PUBLIC_ENV__DOCS_SECTION
   return SECTIONS.find((section) => section.pkg === buildSection) ?? SECTIONS[0]
@@ -348,13 +338,13 @@ export const searchEntriesFor = (section: SectionNav): SearchEntry[] => {
   const listed = section.groups.flatMap((group) =>
     group.items.map((item) => ({ label: item.label, group: group.label, href: item.href }))
   )
-  if (section.pkg !== 'design-system') return listed
+  if (section.pkg !== 'react') return listed
   const specs = allDocComponents
-    .filter((item) => item.pkg === 'design-system')
+    .filter((item) => item.pkg === 'react')
     .map((item) => ({
       label: `${item.name} specs`,
       group: 'Specs',
-      href: sectionPath('design-system', `/api/${item.slug}/`),
+      href: sectionPath('react', componentSpecsPath(item)),
     }))
   return [...listed, ...specs]
 }

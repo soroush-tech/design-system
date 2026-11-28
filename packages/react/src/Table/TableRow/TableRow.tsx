@@ -1,0 +1,93 @@
+'use client'
+
+import { useContext, type ElementType, type HTMLAttributes } from 'react'
+import { TableContext } from '../TableContext'
+import type { SpaceProps, BorderProps } from '@soroush.tech/styled-system'
+import { styled } from '../../style/styled'
+import { mergeOverrides, type SlotProps, type StyleOverride } from '../../style/overrides'
+import type { TableRowSlot } from './TableRow.types'
+import { type Theme } from '../../theme/themes'
+import { type PaletteColor } from '@gild-ui/core/theme'
+import { createShouldForwardProp, props } from '@soroush.tech/styled-system/should-forward-prop'
+import { space, border, system } from '@soroush.tech/styled-system'
+import { themeDefault } from '@gild-ui/core/theme'
+
+/** Palette color driving the hover/selected shading - a `theme.palette` key. */
+export type TableRowColor = PaletteColor
+
+/** Valid values for the bg prop - derived from theme.background keys. */
+export type TableRowBackgroundToken = keyof Theme['background']
+
+/** Valid values for the borderColor prop - derived from theme.border keys. */
+export type TableRowBorderColorToken = keyof Theme['border']
+
+export interface TableRowProps
+  extends
+    Omit<HTMLAttributes<HTMLTableRowElement>, 'color' | 'style'>,
+    SpaceProps<Theme>,
+    Omit<BorderProps<Theme>, 'borderColor' | 'borderRadius'> {
+  /**
+   * Palette color for the hover/selected shading - maps to `theme.palette[color]`
+   * (hover → `.light`, selected → `.dark`, both with `contrastText`). Falls back
+   * to the enclosing `Table`'s `color`. Default: 'primary', overridable via `theme.defaults.color`.
+   */
+  color?: TableRowColor
+  /** Overrides the CSS of the root: an entry of `StyleSheet.create`, or a list of them. It wins over `slotProps.root.style`. */
+  style?: StyleOverride
+  /** Overrides for the slots a theme can style: `style`, `className`, `data-*` and `aria-*`. */
+  slotProps?: SlotProps<TableRowSlot>
+  as?: ElementType
+  /** Resolves against theme.background */
+  bg?: TableRowBackgroundToken
+  /** Resolves against theme.border - light · primary · dark */
+  borderColor?: TableRowBorderColorToken
+  /** Shades the row on hover with `theme.palette[color].light`. Default: `false`. */
+  isHoverable?: boolean
+  /** Fills the row with `theme.palette[color].dark` + contrast text. Default: `false`. */
+  isSelected?: boolean
+}
+
+const shouldForwardProp = createShouldForwardProp([...props, 'isHoverable', 'isSelected'])
+
+const colorSystem = system({
+  bg: { property: 'backgroundColor', scale: 'background' },
+  borderColor: { property: 'borderColor', scale: 'border' },
+})
+
+// Hover/selected fill the row from the palette (like Button): the light shade on
+// hover, the dark shade when selected, both paired with the palette's contrastText.
+const hoverStyle = ({ isHoverable, color, theme }: TableRowProps & { theme: Theme }) => {
+  const c = theme.palette[color ?? themeDefault(theme, 'color', 'primary')]
+  return isHoverable
+    ? {
+        '&:hover': {
+          backgroundColor: c.light,
+          color: c.contrastText,
+        },
+      }
+    : {}
+}
+
+const selectedStyle = ({ isSelected, color, theme }: TableRowProps & { theme: Theme }) => {
+  const c = theme.palette[color ?? themeDefault(theme, 'color', 'primary')]
+  return isSelected ? { backgroundColor: c.dark, color: c.contrastText } : {}
+}
+
+const TableRowBase = styled('tr', {
+  name: 'TableRow',
+  label: 'TableRow',
+  shouldForwardProp,
+  systemProps: [space, border, colorSystem],
+})<TableRowProps>(selectedStyle, hoverStyle)
+
+export function TableRow({ color, style, className, slotProps, ...rest }: Readonly<TableRowProps>) {
+  // Resolution: explicit prop → enclosing Table's broadcast → 'primary' (in the style fns).
+  const table = useContext(TableContext)
+  return (
+    <TableRowBase
+      color={color ?? table.color}
+      {...mergeOverrides(slotProps?.root, { style, className })}
+      {...rest}
+    />
+  )
+}

@@ -1,17 +1,12 @@
-import { View } from '@soroush.tech/design-system/View'
-import { Preview } from '@soroush.tech/markdown/Preview'
+import { View } from '@gild-ui/react/View'
+import { Preview } from '@gild-ui/react-markdown/Preview'
 import type { DocsSection } from 'src/common/nav'
 import { releaseNotesFor } from './utils/releaseNotesFor'
+import { titleByVersion } from './utils/titleByVersion'
 
 export interface ReleaseNotesProps {
   pkg: DocsSection
 }
-
-// A release's heading names the package and its version, as the file is the version's own:
-// `@soroush.tech/design-system@2.0.0` - under any scope. The page is the package's, so the
-// version alone is shown.
-const titleByVersion = (body: string): string =>
-  body.replace(/^## @[\w.-]+\/[\w-]+@(\S+)/, '## v$1')
 
 /** The package's version history, rendered from its in-repo release-notes files. */
 export function ReleaseNotes({ pkg }: Readonly<ReleaseNotesProps>) {

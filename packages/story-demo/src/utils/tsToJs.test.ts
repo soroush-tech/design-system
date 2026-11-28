@@ -4,7 +4,7 @@ import { tsToJs } from './tsToJs'
 describe('tsToJs', () => {
   it('strips type annotations and as-const while keeping JSX', () => {
     const code = [
-      "import { Flex } from '@soroush.tech/design-system/Flex'",
+      "import { Flex } from '@gild-ui/react/Flex'",
       '',
       'export default function Demo() {',
       '  return (',
@@ -44,7 +44,7 @@ describe('tsToJs', () => {
 
   it('keeps imports that only types used and collapses leftover blank lines', () => {
     const code = [
-      "import { css } from '@emotion/css'",
+      "import { css } from '@umber-style/css'",
       '',
       'type Props = { speed?: string }',
       '',
@@ -55,7 +55,7 @@ describe('tsToJs', () => {
       '',
     ].join('\n')
     const js = tsToJs(code)
-    expect(js).toContain("import { css } from '@emotion/css'")
+    expect(js).toContain("import { css } from '@umber-style/css'")
     expect(js).not.toContain('type Props')
     expect(js).not.toContain('\n\n\n')
     expect(js.endsWith('}\n')).toBe(true)

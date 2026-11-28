@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react'
-import { AppBar } from '@soroush.tech/design-system/AppBar'
-import { Flex } from '@soroush.tech/design-system/Flex'
-import { useTheme } from '@soroush.tech/design-system/theme'
-import { Typography } from '@soroush.tech/design-system/Typography'
-import { alpha } from '@soroush.tech/design-system/utils'
+import { AppBar } from '@gild-ui/react/AppBar'
+import { Flex } from '@gild-ui/react/Flex'
+import { useTheme } from '@gild-ui/react'
+import { Typography } from '@gild-ui/react/Typography'
+import { alpha } from '@gild-ui/core/utils'
 import { RouterLink } from './RouterLink'
 
 /**

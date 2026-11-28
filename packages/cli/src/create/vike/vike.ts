@@ -1,7 +1,8 @@
-// The Vike starter: a React app on the design system, rendered as the developer picks. Its files
+// The Vike starter: a React app on Gild UI, rendered as the developer picks. Its files
 // are the templates in templates/vike/ (see templates/templates.md); this module adds what is
 // computed: package.json, from the libraries picked, and the themes and Providers `init` writes
 // too. The Vike wiring here is the one `init` reuses for an existing Vike app (#80).
+import { APP_PACKAGE, CORE_PACKAGE } from '../../designSystemPackage'
 import { createProvidersSource, createThemesSource } from '../../templates/templates'
 import type { Starter, StarterFacts, StarterFile } from '../starters'
 import { createTemplateFiles } from '../template/starterFiles'
@@ -31,8 +32,9 @@ function createPackageJson({
       test: 'vitest run',
     },
     dependencies: {
-      '@soroush.tech/design-system': toRange(version),
-      ...pickVersions(['@emotion/server', ...libraryPackages, 'react', 'react-dom', 'vike']),
+      [APP_PACKAGE]: toRange(version),
+      [CORE_PACKAGE]: toRange(version),
+      ...pickVersions([...libraryPackages, 'react', 'react-dom', 'vike']),
     },
     devDependencies: pickVersions([
       '@vitejs/plugin-react',
@@ -53,7 +55,7 @@ function createFiles(facts: StarterFacts): StarterFile[] {
   const x = isTypeScript ? 'ts' : 'js'
   return [
     { path: 'package.json', content: createPackageJson(facts) },
-    { path: `src/theme/themes.${x}`, content: createThemesSource({ isTypeScript }) },
+    { path: `src/theme/themes.${x}`, content: createThemesSource({ isTypeScript, scheme }) },
     {
       path: `src/theme/Providers.${x}`,
       content: createProvidersSource({ isTypeScript, scheme, themesImport: './themes' }),
