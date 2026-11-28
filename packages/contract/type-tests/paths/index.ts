@@ -3,7 +3,6 @@ import {
   Global,
   LayoutProvider,
   StyleSheet,
-  StylesConsumer,
   ThemeProvider,
   css,
   keyframes,
@@ -76,7 +75,6 @@ import * as SkeletonEntry from '@gild-ui/react/Skeleton'
 import * as SlideEntry from '@gild-ui/react/Slide'
 import * as SnackbarEntry from '@gild-ui/react/Snackbar'
 import * as StyleSheetEntry from '@gild-ui/react/StyleSheet'
-import * as StylesConsumerEntry from '@gild-ui/react/StylesConsumer'
 import * as SwitchEntry from '@gild-ui/react/Switch'
 import * as TableEntry from '@gild-ui/react/Table'
 import * as TabsEntry from '@gild-ui/react/Tabs'
@@ -159,7 +157,6 @@ export const entries = [
   SlideEntry,
   SnackbarEntry,
   StyleSheetEntry,
-  StylesConsumerEntry,
   SwitchEntry,
   TableEntry,
   TabsEntry,
@@ -190,7 +187,6 @@ export const rootNames = [
   Global,
   LayoutProvider,
   StyleSheet,
-  StylesConsumer,
   ThemeProvider,
   css,
   keyframes,

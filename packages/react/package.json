@@ -112,8 +112,7 @@
     "./StyleSheet": "./src/entries/StyleSheet.ts",
     "./Global": "./src/entries/Global.ts",
     "./useStyle": "./src/entries/useStyle.ts",
-    "./withStyles": "./src/entries/withStyles.ts",
-    "./StylesConsumer": "./src/entries/StylesConsumer.ts"
+    "./withStyles": "./src/entries/withStyles.ts"
   },
   "types": "./src/index.ts",
   "publishConfig": {
@@ -928,16 +927,6 @@
         "require": {
           "types": "./dist/withStyles.d.cts",
           "default": "./dist/withStyles.cjs"
-        }
-      },
-      "./StylesConsumer": {
-        "import": {
-          "types": "./dist/StylesConsumer.d.mts",
-          "default": "./dist/StylesConsumer.mjs"
-        },
-        "require": {
-          "types": "./dist/StylesConsumer.d.cts",
-          "default": "./dist/StylesConsumer.cjs"
         }
       }
     },

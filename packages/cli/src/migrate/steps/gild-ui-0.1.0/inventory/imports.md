@@ -595,12 +595,13 @@ Target: `@gild-ui/react/testing`
 
 ## `@soroush.tech/design-system/style`
 
-Target: split - `@gild-ui/react` (5)
+Target: split - `@gild-ui/react` (4), `removed` (1)
 
-| Kind  | Status | New path         | Rule      | Names                                    |
-| ----- | ------ | ---------------- | --------- | ---------------------------------------- |
-| value | moved  | `@gild-ui/react` | IMP-STYLE | `useStyle` `withStyles` `StylesConsumer` |
-| type  | moved  | `@gild-ui/react` | IMP-STYLE | `StyleFactory` `StyleInput`              |
+| Kind  | Status  | New path         | Rule      | Names                                                                              |
+| ----- | ------- | ---------------- | --------- | ---------------------------------------------------------------------------------- |
+| value | moved   | `@gild-ui/react` | IMP-STYLE | `useStyle` `withStyles`                                                            |
+| value | removed | -                | EXP-005   | `StylesConsumer` - Not exported; use `useStyle` in a function component, or `withStyles` for a class. |
+| type  | moved   | `@gild-ui/react` | IMP-STYLE | `StyleFactory` `StyleInput`                                                        |
 
 ## `@soroush.tech/design-system/ToggleButton`
 

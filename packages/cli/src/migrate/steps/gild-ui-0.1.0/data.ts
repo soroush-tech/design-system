@@ -89,7 +89,6 @@ const REACT_ENTRY_OF_NAME: Record<string, string> = {
   withStyles: 'withStyles',
   StyleFactory: 'withStyles',
   StyleInput: 'withStyles',
-  StylesConsumer: 'StylesConsumer',
 }
 
 /** Where a name goes: the inventory's target, with the root of `@gild-ui/react` split by name. */

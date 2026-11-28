@@ -11,19 +11,19 @@ Input of the first `migrate` step (issue #171). Everything below was produced by
 | Area                 | mechanical | manual | of which report-only |
 | -------------------- | ---------: | -----: | -------------------: |
 | imports              |         19 |      2 |                    0 |
-| exports              |          0 |      4 |                    0 |
-| components           |          0 |      6 |                    1 |
+| exports              |          0 |      5 |                    0 |
+| components           |          0 |      7 |                    1 |
 | theme                |          2 |      9 |                    0 |
 | styling              |          1 |     10 |                    1 |
 | ssr                  |          0 |      4 |                    0 |
 | dependencies         |          5 |      4 |                    0 |
 | output               |          0 |      8 |                    8 |
-| **total (74 items)** |     **27** | **47** |               **10** |
+| **total (76 items)** |     **27** | **49** |               **10** |
 
 What the numbers say, in short:
 
-- **Components did not change their API.** 121 component functions compared (106 design-system + 15 markdown; the new side has 110 + 15, the 4 extra are new sub-components; every old component exists on the same subpath, except ThemeProvider, LayoutProvider and StylesConsumer, which moved with their entries). Own props: 0 removed, 0 renamed, 0 added, 0 changed value sets, 0 changed optionality (only the `as` prop of Flex, Grid, Quote, TableContainer and View is now declared by the engine instead of by the package: same accepted values). Defaults: the catalog of 93 components is identical option by option (values, defaults, scales, content, two-way, events, variants, examples), and the 401 comparable source files differ in 0 default values of any component. Only type _names_ moved (`keyof ButtonVariants` -> `ButtonVariant`, `keyof ThemePalette` -> `ThemeColor`, `keyof ThemeSizes` -> `ThemeSize`): same literal sets on the built-in theme.
-- **Imports are the bulk of the work, and almost all mechanical:** 79 old import paths, 837 (path, name) pairs: 470 kept at the same relative path under the new package name, 361 moved to another path, 0 renamed, 6 removed (all types).
+- **Components did not change their API.** 121 component functions compared (106 design-system + 15 markdown; the new side has 110 + 15, the 4 extra are new sub-components; every old component exists on the same subpath, except ThemeProvider and LayoutProvider, which moved with their entries, and StylesConsumer, which is removed (EXP-005)). Own props: 0 removed, 0 renamed, 0 added, 0 changed value sets, 0 changed optionality (only the `as` prop of Flex, Grid, Quote, TableContainer and View is now declared by the engine instead of by the package: same accepted values). Defaults: the catalog of 93 components is identical option by option (values, defaults, scales, content, two-way, events, variants, examples), and the 401 comparable source files differ in 0 default values of any component. Only type _names_ moved (`keyof ButtonVariants` -> `ButtonVariant`, `keyof ThemePalette` -> `ThemeColor`, `keyof ThemeSizes` -> `ThemeSize`): same literal sets on the built-in theme.
+- **Imports are the bulk of the work, and almost all mechanical:** 79 old import paths, 837 (path, name) pairs: 470 kept at the same relative path under the new package name, 360 moved to another path, 0 renamed, 6 removed (all types).
 - **The theme moved its component looks.** `createTheme` is tokens-only; `components` go to `defineThemes(themes, components)`, which is also what makes the typing of `color="brand"` / `variant="pill"` work through `Register`. `baseTheme` is value-identical (223 leaf keys, 0 diff).
 - **The styling engine change is where the manual work and the risk are:** SSR setup (registry / `@emotion/server` -> nothing / `@umber-style/server`), theme tokens becoming CSS variables (string math on tokens breaks), `css` and `keyframes` semantics, Emotion-specific selectors in tests, the `css` prop.
 - **React 19.2.8 is now the minimum** (peers were `^18 || ^19`).
@@ -46,7 +46,7 @@ Full per-name table: `imports.json` (every old path, every name, value/type, sta
 | @soroush.tech/markdown/MarkdownContext               | `@gild-ui/react-markdown` (root)                                                                                                                            | 2 (0 kept, 2 moved, 0 removed)     | 2 (0 kept, 2 moved, 0 removed)     | only reachable through the `./*` wildcard in 1.3.0 (IMP-MD-CONTEXT)             |
 | @soroush.tech/hooks/useCopyToClipboard               | `@gild-ui/hooks/useCopyToClipboard`                                                                                                                         | 2 (2 kept, 0 moved, 0 removed)     | 1 (1 kept, 0 moved, 0 removed)     | private package, never published (IMP-HOOKS)                                    |
 
-Removed names (the only 6 of 837): `ThemeCustomizationOptions`, `ComponentStyle`, `ComponentVariant`, `CardSlotIconProps`, `CardSlotTypographyProps`, `TabsVariants` (EXP-001..004). No name was **renamed**: a search for same-named or near-named replacements (checker over every new entry) found none; `TabsVariants` has a successor in concept only (`TabsVariant`, a union, no augmentation).
+Removed names (the only 7 of 837): `ThemeCustomizationOptions`, `ComponentStyle`, `ComponentVariant`, `CardSlotIconProps`, `CardSlotTypographyProps`, `TabsVariants`, `StylesConsumer` (EXP-001..005). No name was **renamed**: a search for same-named or near-named replacements (checker over every new entry) found none; `TabsVariants` has a successor in concept only (`TabsVariant`, a union, no augmentation).
 
 Added (new names with no old counterpart), by group - not a migration concern, listed so the diff is complete:
 
@@ -106,7 +106,7 @@ Added (new names with no old counterpart), by group - not a migration concern, l
 | `keyframes`                                | root, `@emotion/react`                                                                                                                                 | `@gild-ui/react` (and `/keyframes`); template or steps object                                                                                                        |
 | `Global`                                   | `/engine` (Emotion `Global`)                                                                                                                           | `@gild-ui/react` (and `/Global`); `globalStyles` stays in `/engine`                                                                                                  |
 | `useTheme`, `withTheme`, `ThemeProvider`   | `/theme`                                                                                                                                               | `@gild-ui/react` (and each name's own entry)                                                                                                                         |
-| `useStyle`, `withStyles`, `StylesConsumer` | `/style`                                                                                                                                               | `@gild-ui/react`; new `useStyleValue`, `alpha`, `negate`                                                                                                             |
+| `useStyle`, `withStyles` | `/style`                                                                                                                                               | `@gild-ui/react`; new `useStyleValue`, `alpha`, `negate`; `StylesConsumer` removed (EXP-005)                                                                                                            |
 | `shouldForwardProp`                        | `createShouldForwardProp`, `props` re-exported from the root                                                                                           | `@soroush.tech/styled-system/should-forward-prop` (import it there)                                                                                                  |
 | `css` prop                                 | not part of the API; works only if the app set Emotion's `jsxImportSource` (a Paper README example shows it)                                           | none (STY-004)                                                                                                                                                       |
 | cache                                      | `styleCache` (Emotion cache, key `soroush`) used only by SSR providers; `styled` used Emotion's default cache (class `css-<hash>`)                     | `styleCache` (UmberStyle cache, key `soroush`) is the one cache the engine writes to; classes `soroush-<hash>`                                                       |
@@ -207,8 +207,8 @@ Evidence is `file:line` at the tag (`2.2.0:`), at `HEAD:` or in a published tarb
 
 #### IMP-STYLE - mechanical
 
-- **From:** @soroush.tech/design-system/style: `useStyle`, `withStyles`, `StylesConsumer`, `StyleFactory`, `StyleInput`
-- **To:** @gild-ui/react (root; each also at /useStyle, /withStyles, /StylesConsumer)
+- **From:** @soroush.tech/design-system/style: `useStyle`, `withStyles`, `StyleFactory`, `StyleInput`
+- **To:** @gild-ui/react (root; each also at /useStyle, /withStyles)
 - **How:** Import rewrite. Same names and call forms; `StyleFactory.getStyles` now returns the engine's `WebStyleObject` (STY-013). `useStyleValue` and `LiveValue` are new.
 - **2.2.0 fixtures:** 0 occurrence(s) in 0 file(s)
 - **Evidence:** `npm @soroush.tech/design-system@2.2.0:package.json:654`, `HEAD:packages/react/src/entries/useStyle.ts:1`
@@ -335,6 +335,14 @@ Evidence is `file:line` at the tag (`2.2.0:`), at `HEAD:` or in a published tarb
 - **2.2.0 fixtures:** 0 occurrence(s) in 0 file(s)
 - **Evidence:** `2.2.0:packages/design-system/src/theme/themes.ts:660`, `HEAD:packages/react/src/Tabs/Tabs/Tabs.types.ts:16`, `HEAD:packages/core/src/theme/types.ts:412`
 
+#### EXP-005 - manual
+
+- **From:** `StylesConsumer` (component, /style)
+- **To:** removed
+- **How:** Report each import and each `<StylesConsumer>` with file:line. In a function component call `useStyle` with a sheet (`StyleSheet.create((theme) => ({ ... }))`) and pass its entries as `style`; for a class component wrap it with `withStyles` (`@gild-ui/react/withStyles`), which gives it a `styles` entry.
+- **2.2.0 fixtures:** 0 occurrence(s) in 0 file(s)
+- **Evidence:** `2.2.0:packages/design-system/src/style/StylesConsumer.tsx:1`
+
 ### components
 
 #### CMP-001 - manual
@@ -380,6 +388,14 @@ Evidence is `file:line` at the tag (`2.2.0:`), at `HEAD:` or in a published tarb
 - **To:** `[space, layout, typography, border, colorSystem, ...]`
 - **How:** Report-only: when two style props write the same CSS property on one element (e.g. `bg` and `background`, `color` and `typography`), the later group wins, and the groups swapped places. Not detectable in user code with certainty; listed so a visual check is done.
 - **Evidence:** `2.2.0:packages/design-system/src/View/View.tsx:84`, `HEAD:packages/react/src/View/View.tsx:83`
+
+#### CMP-007 - manual
+
+- **From:** `withStyles(style)(Component)`: the component gets `styles` as a `CSSObject`
+- **To:** same call forms (`{ getStyles(theme) }` or a style object); `styles` is now one entry of a style sheet, typed `StyleOverride`
+- **How:** The entry is opaque: pass it on as `style={styles}` to a Gild UI component. Reading inside it (`styles.color`, `{ ...styles }`) or handing it to anything but `style` no longer works: move that style into a `StyleSheet.create` entry. The step reports each `withStyles(...)(...)` call.
+- **2.2.0 fixtures:** 0 occurrence(s) in 0 file(s)
+- **Evidence:** `2.2.0:packages/design-system/src/style/hoc/withStyles.tsx:8`, `HEAD:packages/react/src/style/hoc/withStyles.tsx:10`
 
 ### theme
 
@@ -509,7 +525,7 @@ Evidence is `file:line` at the tag (`2.2.0:`), at `HEAD:` or in a published tarb
 
 #### STY-006 - mechanical
 
-- **From:** `useStyle`, `withStyles`, `StylesConsumer` and `Global` + `globalStyles`
+- **From:** `useStyle`, `withStyles` and `Global` + `globalStyles`
 - **To:** same API (`Global`'s `styles` is an object or `(theme) => object`; `<Global styles={globalStyles} />` unchanged); `Global` must be inside `ThemeProvider` as before
 - **How:** Only the import changes (IMP-STYLE, IMP-ENGINE-GLOBAL, IMP-ENGINE). Nothing else to edit.
 - **2.2.0 fixtures:** 2 occurrence(s) in 2 file(s) - docs-app 1, mcp + plugin 1; e.g. 2.2.0:apps/docs/src/theme/GlobalStyles.tsx:36, 2.2.0:plugins/soroush-design-system/skills/soroush-design-system/references/providers.tsx:52

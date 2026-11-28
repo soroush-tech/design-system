@@ -6,7 +6,6 @@
         "Global",
         "LayoutProvider",
         "StyleSheet",
-        "StylesConsumer",
         "ThemeProvider",
         "alpha",
         "css",
@@ -607,10 +606,6 @@
     },
     "./StyleSheet": {
       "values": ["StyleSheet"],
-      "types": []
-    },
-    "./StylesConsumer": {
-      "values": ["StylesConsumer"],
       "types": []
     },
     "./Switch": {

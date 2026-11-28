@@ -289,7 +289,6 @@ export const stylingEntries: Record<string, 'theme' | 'style'> = {
   Global: 'style',
   useStyle: 'style',
   withStyles: 'style',
-  StylesConsumer: 'style',
 }
 
 /**

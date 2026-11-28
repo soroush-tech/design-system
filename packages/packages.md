@@ -124,8 +124,8 @@ per area.
 
 `@gild-ui/react` holds the components and the styling system they are written in: root and
 one subpath each for `ThemeProvider`, `LayoutProvider`, `useTheme`, `useDefaultProps`,
-`useMediaQuery`, `withTheme`, `styled`, `css`, `keyframes`, `Global`, `useStyle`, `withStyles` and
-`StylesConsumer`; `/engine` for server-rendering setup; `/catalog` and `/testing`; and one subpath
+`useMediaQuery`, `withTheme`, `styled`, `css`, `keyframes`, `Global`, `useStyle` and
+`withStyles`; `/engine` for server-rendering setup; `/catalog` and `/testing`; and one subpath
 for every component. The public paths and the exact names of each are the contract in
 `packages/contract` (`exports/react.json`), checked by its tests.
 

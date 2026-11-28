@@ -45,7 +45,6 @@ describe('the root entry', () => {
         'Global',
         'LayoutProvider',
         'StyleSheet',
-        'StylesConsumer',
         'ThemeProvider',
         'alpha',
         'css',

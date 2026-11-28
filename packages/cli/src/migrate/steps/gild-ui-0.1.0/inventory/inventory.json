@@ -231,8 +231,8 @@
   {
     "id": "IMP-STYLE",
     "area": "imports",
-    "from": "@soroush.tech/design-system/style: `useStyle`, `withStyles`, `StylesConsumer`, `StyleFactory`, `StyleInput`",
-    "to": "@gild-ui/react (root; each also at /useStyle, /withStyles, /StylesConsumer)",
+    "from": "@soroush.tech/design-system/style: `useStyle`, `withStyles`, `StyleFactory`, `StyleInput`",
+    "to": "@gild-ui/react (root; each also at /useStyle, /withStyles)",
     "kind": "mechanical",
     "how": "Import rewrite. Same names and call forms; `StyleFactory.getStyles` now returns the engine's `WebStyleObject` (STY-013). `useStyleValue` and `LiveValue` are new.",
     "evidence": [
@@ -570,6 +570,23 @@
     }
   },
   {
+    "id": "EXP-005",
+    "area": "exports",
+    "from": "`StylesConsumer` (component, /style)",
+    "to": "removed",
+    "kind": "manual",
+    "how": "Report each import and each `<StylesConsumer>` with file:line. In a function component call `useStyle` with a sheet (`StyleSheet.create((theme) => ({ ... }))`) and pass its entries as `style`; for a class component wrap it with `withStyles` (`@gild-ui/react/withStyles`), which gives it a `styles` entry.",
+    "evidence": [
+      "2.2.0:packages/design-system/src/style/StylesConsumer.tsx:1"
+    ],
+    "fixtures": {
+      "total": 0,
+      "files": 0,
+      "byScope": {},
+      "samples": []
+    }
+  },
+  {
     "id": "CMP-001",
     "area": "components",
     "from": "withTheme(Component): `withTheme<P>(C: ComponentType<P & { theme: Theme }>)` returning a component that takes `P`",
@@ -657,6 +674,24 @@
     ],
     "reportOnly": true,
     "fixtures": null
+  },
+  {
+    "id": "CMP-007",
+    "area": "components",
+    "from": "`withStyles(style)(Component)`: the component gets `styles` as a `CSSObject`",
+    "to": "same call forms (`{ getStyles(theme) }` or a style object); `styles` is now one entry of a style sheet, typed `StyleOverride`",
+    "kind": "manual",
+    "how": "The entry is opaque: pass it on as `style={styles}` to a Gild UI component. Reading inside it (`styles.color`, `{ ...styles }`) or handing it to anything but `style` no longer works: move that style into a `StyleSheet.create` entry. The step reports each `withStyles(...)(...)` call.",
+    "evidence": [
+      "2.2.0:packages/design-system/src/style/hoc/withStyles.tsx:8",
+      "HEAD:packages/react/src/style/hoc/withStyles.tsx:10"
+    ],
+    "fixtures": {
+      "total": 0,
+      "files": 0,
+      "byScope": {},
+      "samples": []
+    }
   },
   {
     "id": "THM-001",
@@ -960,10 +995,10 @@
   {
     "id": "STY-006",
     "area": "styling",
-    "from": "`useStyle`, `withStyles`, `StylesConsumer` and `Global` + `globalStyles`",
+    "from": "`useStyle`, `withStyles` and `Global` + `globalStyles`",
     "to": "same API (`Global`'s `styles` is an object or `(theme) => object`; `<Global styles={globalStyles} />` unchanged); `Global` must be inside `ThemeProvider` as before",
     "kind": "mechanical",
-    "how": "Only the import changes (IMP-STYLE, IMP-ENGINE-GLOBAL, IMP-ENGINE). Nothing else to edit.",
+    "how": "Only the import changes (IMP-STYLE, IMP-ENGINE-GLOBAL, IMP-ENGINE), except what `withStyles` hands its component (CMP-007). Nothing else to edit.",
     "evidence": [
       "2.2.0:packages/design-system/src/theme/emotion.ts:20",
       "HEAD:packages/react/docs/engine.md:3"

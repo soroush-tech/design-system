@@ -584,6 +584,24 @@ describe('what is found in the text', () => {
     ])
   })
 
+  it('maps withStyles, and reports what changed for it and the removed StylesConsumer', () => {
+    const out = run({
+      'src/a.tsx': `import { withStyles, StylesConsumer } from '@soroush.tech/design-system/style'
+
+export const A = withStyles({ opacity: 1 })(Base)
+export const B = () => <StylesConsumer style={s}>{(x) => null}</StylesConsumer>
+`,
+    })
+    expect(out.reports.map(({ line, id }) => `${line}:${id}`)).toEqual([
+      '1:EXP-005',
+      '3:CMP-007',
+      '4:EXP-005',
+    ])
+    expect(JSON.stringify(out.changes)).toContain(
+      "import { withStyles } from '@gild-ui/react/withStyles'"
+    )
+  })
+
   it('reports tokens glued to text, and arithmetic on them', () => {
     const out = run({
       'src/a.ts':

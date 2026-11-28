@@ -115,14 +115,25 @@ const Tint = styled('div')(({ theme }) => ({
 
 `alpha()` is written as `color-mix()`.
 
-## Style factories
+## Class components
 
-`withStyles` and `StylesConsumer` (`@gild-ui/react/withStyles`, `/StylesConsumer`) resolve a factory, an object with a `getStyles(theme)` method, into a `CSSObject` for a class component or a place a hook cannot be called:
+`useStyle` and `useTheme` are hooks, so a class component cannot call them. `withStyles` and `withTheme` are their twins for a class (`@gild-ui/react/withStyles`, `/withTheme`). `withStyles(style)(Component)` gives the component one `styles` prop: an entry, to pass on as `style` to any component of the library. `style` is a `{ getStyles(theme) }` factory, which reads the theme of the nearest `ThemeProvider`, or a plain style object. The sheet is made once, when `withStyles` is called. `withTheme(Component)` gives the component the active theme as its `theme` prop.
 
 ```tsx
-import { StylesConsumer } from '@gild-ui/react'
+import { Component } from 'react'
+import { withStyles, type StyleOverride } from '@gild-ui/react'
+import type { Theme } from '@gild-ui/core/theme'
+import { Paper } from '@gild-ui/react/Paper'
 
 const card = { getStyles: (theme: Theme) => ({ padding: theme.space[2] }) }
 
-<StylesConsumer style={card}>{(styles) => ...}</StylesConsumer>
+class Panel extends Component<{ styles: StyleOverride }> {
+  render() {
+    return <Paper style={this.props.styles}>...</Paper>
+  }
+}
+
+export default withStyles<object>(card)(Panel)
 ```
+
+An entry is opaque, as `useStyle`'s: pass it on, do not read or spread it.

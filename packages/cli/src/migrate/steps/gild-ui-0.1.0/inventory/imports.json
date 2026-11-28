@@ -5739,9 +5739,10 @@
         {
           "name": "StylesConsumer",
           "kind": "value",
-          "status": "moved",
-          "to": "@gild-ui/react",
-          "rule": "IMP-STYLE"
+          "status": "removed",
+          "to": null,
+          "rule": "EXP-005",
+          "note": "Not exported; use `useStyle` in a function component, or `withStyles` for a class."
         },
         {
           "name": "StyleFactory",
@@ -7269,10 +7270,6 @@
       "values": ["withStyles"],
       "types": []
     },
-    "@gild-ui/react/StylesConsumer": {
-      "values": ["StylesConsumer"],
-      "types": []
-    },
     "@gild-ui/hooks": {
       "values": [
         "useControlled",
@@ -7526,7 +7523,6 @@
     "@gild-ui/react/Global",
     "@gild-ui/react/useStyle",
     "@gild-ui/react/withStyles",
-    "@gild-ui/react/StylesConsumer",
     "@gild-ui/hooks",
     "@gild-ui/hooks/useControlled",
     "@gild-ui/hooks/useDebounce",

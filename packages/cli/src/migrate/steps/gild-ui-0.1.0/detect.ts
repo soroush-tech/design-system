@@ -37,6 +37,7 @@ export function detectInSource(text: string, ast: File, imports: ImportEditor): 
   const css = local('css')
   const keyframes = local('keyframes')
   const withTheme = local('withTheme')
+  const withStyles = local('withStyles')
   const styled = local('styled')
 
   walk(ast.program, (node) => {
@@ -102,6 +103,7 @@ export function detectInSource(text: string, ast: File, imports: ImportEditor): 
     if (name === css) add(node, inventoryFinding('STY-002'))
     if (name === keyframes) add(node, inventoryFinding('STY-003'))
     if (name === withTheme) add(node, inventoryFinding('CMP-001'))
+    if (name === withStyles) add(node, inventoryFinding('CMP-007'))
     if (name === 'useServerInsertedHTML') add(node, inventoryFinding('STY-007'))
     if (name === 'createCache') readCreateCache(node)
     if (EXTRACTORS.has(name)) add(node, inventoryFinding('STY-008'))
@@ -156,6 +158,7 @@ export function detectInSource(text: string, ast: File, imports: ImportEditor): 
       if (tag?.imported === 'LayoutProvider' || tag?.imported === 'Portal') {
         add(node, inventoryFinding(tag.imported === 'Portal' ? 'OUT-005' : 'OUT-004'))
       }
+      if (node.name.name === 'StylesConsumer') add(node, inventoryFinding('EXP-005'))
     }
     for (const attribute of node.attributes) {
       if (attribute.type !== 'JSXAttribute' || attribute.name.name !== 'slotProps') continue

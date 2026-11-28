@@ -47,7 +47,7 @@ describe('the docs routes are the import paths', () => {
     expect(Object.keys(stylingEntries).sort()).toEqual(
       entries.filter((entry) => entry in stylingEntries).sort()
     )
-    expect(Object.keys(stylingEntries)).toHaveLength(14)
+    expect(Object.keys(stylingEntries)).toHaveLength(13)
   })
 
   it('has no capitalised page that is not an entry point or an export of one', () => {
