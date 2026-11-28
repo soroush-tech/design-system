@@ -32,7 +32,7 @@ Publish this package first: Gild UI's release names its exact version. CD orders
 - `src/main.ts` reads the command line, and holds the help: `USAGE` with no command, and `HELP`,
   each command's own, which `<command> --help` and a wrong option print. `src/init.ts` runs
   `init`, and `src/create/` runs `create`.
-- `src/detect/` reads the app: its package manager, React, its root, a workspace's apps, git.
+- `src/detect/` reads the app: its package manager, React, its root, a workspace's apps.
 - `src/plan/` works out every change from what `detect` read, writing nothing: the files, the
   root's edit, the install. It reads files only through `InitFacts.readFile`.
 - `src/apply/` writes the plan, taking every change back when a write fails.
@@ -56,7 +56,7 @@ sample data pages, and the React package's version, and returns each file by its
 3. It plans: the starter's files, and `<package manager> install` with no scripts. The package
    manager is the one that ran it, read from `npm_config_user_agent`; a new app has no lockfile.
 4. It shows the plan with `formatPlan`, and writes with `applyPlan` after a yes.
-5. It installs, then runs `git init` with no commit, unless the folder is in a repository.
+5. It installs. It runs no git: committing the new app is the person's.
 
 When a write or the install fails, it takes the app away: the folder it made, or what it wrote in
 the empty folder it was given. To add a starter, add it to `STARTERS`; the first one is the
@@ -172,7 +172,7 @@ zustand, React Hook Form), `-more` (SWR, Redux Toolkit, React Hook Form) and `-j
 
 `migrate` moves an app forward, from `@soroush.tech/design-system` 2.x or any released Gild UI
 version, to the latest version the command line carries (or `--to <version>`). It reuses init's
-safety rules and machinery: `io`, `prompt`, `isApproved`, `detectPackageManager`, `getGitState`,
+safety rules and machinery: `io`, `prompt`, `isApproved`, `detectPackageManager`,
 `applyPlans` (`applyPlan` for several plans, with one undo list) and the install command.
 
 1. **Detect** (`detectVersion.ts`): the package the app is on, of those the steps start from or
@@ -181,24 +181,73 @@ safety rules and machinery: `io`, `prompt`, `isApproved`, `detectPackageManager`
    means the app was moved and not installed yet, which keeps a second run a no-op).
 2. **Chain** (`chain.ts`): the steps ordered by `to.version`; from the app's package and version,
    the step whose `from` matches, then from where it ends, until the target. No step for the
-   version is a message: already there (exit 0), a version no step starts from, or a `--to` no
-   step ends at (exit 1).
+   version is a message: already there (status `nothing`), a version no step starts from, or a
+   `--to` no step ends at (status `refused`).
 3. **Plan** (`simulate.ts`): every step's `plan(app)` runs in memory on the app as the steps before
    it leave it, so step 2 reads step 1's edits; nothing is written between steps. After a step's
    own changes the runner moves the app to the step's `to`: its package takes `^to.version` in the
    section the former one was in, and the former one goes. The output (`formatMigration.ts`) is
    grouped by step: dependencies, creations and edits as diffs, and the report items to decide.
-4. **Apply** (`migrate.ts`): the same gates as `init` (a clean git tree, none on `--dry-run`; no
-   write without a yes, or `--yes`; no terminal and no `--yes` is a preview), then the steps'
-   plans in order with `applyPlans`, one install at the end, and the report items again as a
-   checklist.
+4. **Apply** (`migrate.ts`): no write without a yes, or `--yes`; no terminal and no `--yes` is a
+   preview; `--dry-run` writes nothing. Then the steps' plans in order with `applyPlans`, one
+   install at the end, and the report items again as a checklist. **It runs no git, and no
+   command but the install**: a studio runs the bin in a container with no git directory, and
+   commits the result itself. The detection reads `node_modules` from disk, and nothing fetches.
+
+**From a script (`--json`).** `runMigrate` builds one `MigrationReport` (`migrate.ts`) for every
+run, and `--json` prints it as the only thing on stdout (the text a person reads is dropped, the
+install's output is captured, and nothing is asked: without `--yes` it is a preview):
+
+```json
+{
+  "from": { "package": "@soroush.tech/design-system", "version": "2.9.0" },
+  "to": { "package": "@gild-ui/react", "version": "0.1.0" },
+  "status": "planned",
+  "steps": [
+    {
+      "id": "gild-ui-0.1.0",
+      "summary": "imports move to @gild-ui/*, ...",
+      "dependencies": [
+        { "name": "@gild-ui/react", "to": "^0.1.0", "action": "add" },
+        { "name": "@soroush.tech/design-system", "from": "^2.9.0", "action": "remove" }
+      ],
+      "files": [
+        { "path": "src/App.tsx", "action": "edit" },
+        { "path": "src/theme/sheet.ts", "action": "create" }
+      ],
+      "items": [
+        { "file": "src/App.tsx", "line": 12, "message": "[STY-007] ...", "code": "STY-007" }
+      ]
+    }
+  ],
+  "changedFiles": ["package.json", "src/App.tsx", "src/theme/sheet.ts"],
+  "installed": false,
+  "lockfileChanged": false
+}
+```
+
+`status` is `planned` (`--dry-run`, or no terminal and no `--yes`, or `--json` and no `--yes`),
+`nothing` (already on the target), `refused` (no `package.json`, no version found, no chain: the
+reason is `error.message`, `error.step` is the step's id when a step asked for what it may not and
+`null` otherwise; `from` and `to` are `null` when not known), `rolledBack` (a write failed and
+every change was taken back: `error.step` is the step whose write failed) or `applied`. An
+`applied` run with an `error` did not finish cleanly: the files are written, and either the
+install failed (`error.step` is `install`, `installed` is `false`) or a failed write could not
+be taken back in full. `lockfileChanged` compares the app folder's lockfile (pnpm, npm, yarn,
+bun) before and after the install by content. A dependency's `action` is `add`, `remove` or
+`change` (`from`, `to` are the ranges); `items[].code` is the `code` of the step's `report`
+change, an inventory id (`STY-007`) or the id of a check (`IMP-SPLIT`, `POST-TYPES`), stable per
+kind; `line` is 1-based. The exit code follows the report: `0` applied with nothing left for a
+person, `2` applied with items left, `3` nothing to migrate, `1` refused, rolled back, or applied
+with an `error`; `--dry-run` and previews exit `0` when a plan was printed and `3` when there is
+nothing to do. A wrong command line is `1`.
 
 A step is `src/migrate/steps/<id>/index.ts` exporting a `MigrationStep` (`step.ts`):
 `{ id, from: { package, range }, to: { package, version }, summary, plan(app) => Change[] }`.
 `range` is a version with `x` (`2.x`, `0.1.x`). `plan` only reads `app` (`packageJson`,
 `readFile`, `listFiles`) and answers with `Change`s: `create`, `edit` (the whole new text),
 `dependency` (`add`, `update`, `remove`; package.json is changed only this way) and `report` (a
-file and line that need a person). To add one: write the folder (with `fixtures/before` and
+file and line that need a person, with a `code`: the stable id of its kind, which `--json` prints). To add one: write the folder (with `fixtures/before` and
 `fixtures/after`), import it in `steps/index.ts`, and test it on the fixtures' app. The runner's
 own tests use two steps of a fake package, `src/migrate/testSteps.ts`, never in the registry.
 
@@ -216,7 +265,8 @@ targets it, so an app on any earlier version reaches the latest by running the s
 
 ## The rules each change keeps
 
-Each has a test: nothing is written before a yes; a clean git tree unless `--force` (`init`; `migrate` has no `--force`); a
+Each has a test: nothing is written before a yes; the command line runs no git (`--force` of
+`init` and `--no-git` of `create` are accepted and do nothing, for scripts of 0.2.0); a
 new or empty folder only, taken away on a failure (`create`); no file is overwritten; an edit is made only to the standard shape and read back; a failed write is undone;
 the install runs last, with the app's own package manager and no scripts; no network but the
 install; no path outside the app, and no symbolic link.

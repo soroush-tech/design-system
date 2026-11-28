@@ -14,7 +14,9 @@ import type {
 } from '@babel/types'
 import {
   augmentedModule,
-  inventoryMessage,
+  finding,
+  inventoryFinding,
+  type Finding,
   OLD_PACKAGES,
   resolveName,
   ruleOfPath,
@@ -23,9 +25,8 @@ import {
 import { lineAt, walk, type Edit } from './source'
 
 /** A place in a file that needs a person. */
-export interface FileReport {
+export interface FileReport extends Finding {
   line: number
-  message: string
 }
 
 /** A name an old import brought in, and where it comes from now. */
@@ -136,8 +137,8 @@ export class ImportEditor {
     this.readSites()
   }
 
-  private report(node: Node, message: string): void {
-    this.reports.push({ line: lineAt(this.text, node.start!), message })
+  private report(node: Node, found: Finding): void {
+    this.reports.push({ line: lineAt(this.text, node.start!), ...found })
   }
 
   private replaceLiteral(literal: StringLiteral, module: string): void {
@@ -159,7 +160,10 @@ export class ImportEditor {
     } else if (rule.kind === 'unknown') {
       this.report(
         source,
-        `[IMP-UNKNOWN] ${source.value} is not a path of the inventory: look for its name in Gild UI by hand (every component has its own entry, @gild-ui/react/<Component>).`
+        finding(
+          'IMP-UNKNOWN',
+          `${source.value} is not a path of the inventory: look for its name in Gild UI by hand (every component has its own entry, @gild-ui/react/<Component>).`
+        )
       )
     } else if (rule.kind === 'uniform') {
       this.replaceLiteral(source, rule.to)
@@ -197,7 +201,10 @@ export class ImportEditor {
     if (isWhole) {
       this.report(
         source,
-        `[IMP-SPLIT] ${source.value} is imported whole (a default, a namespace or export *), but its names now live in several modules (${targetsOfPath(source.value).join(', ')}): import each name from its module.`
+        finding(
+          'IMP-SPLIT',
+          `${source.value} is imported whole (a default, a namespace or export *), but its names now live in several modules (${targetsOfPath(source.value).join(', ')}): import each name from its module.`
+        )
       )
       return
     }
@@ -208,14 +215,17 @@ export class ImportEditor {
       if (result && 'removed' in result) {
         this.report(
           node,
-          inventoryMessage(result.removed, `${spec.imported} is not exported by Gild UI.`)
+          inventoryFinding(result.removed, `${spec.imported} is not exported by Gild UI.`)
         )
         return
       }
       if (!result) {
         this.report(
           node,
-          `[IMP-UNKNOWN] ${spec.imported} of ${source.value} is not a name of the inventory: look for it in Gild UI by hand.`
+          finding(
+            'IMP-UNKNOWN',
+            `${spec.imported} of ${source.value} is not a name of the inventory: look for it in Gild UI by hand.`
+          )
         )
       }
       const module = result?.to ?? source.value
@@ -285,7 +295,7 @@ export class ImportEditor {
     const [argument] = call.arguments
     if (!isLoad || !argument) return
     if (argument.type === 'StringLiteral') this.readSite(argument, false)
-    else if (this.startsWithOldPackage(argument)) this.report(call, inventoryMessage('IMP-DYNAMIC'))
+    else if (this.startsWithOldPackage(argument)) this.report(call, inventoryFinding('IMP-DYNAMIC'))
   }
 
   /** Whether a specifier built at run time starts with the text of an old package. */
@@ -307,7 +317,10 @@ export class ImportEditor {
     else {
       this.report(
         literal,
-        `[IMP-SPLIT] ${literal.value} is used here as a string (a dynamic import, a mock or a type), but its names now live in several modules (${targetsOfPath(literal.value).join(', ')}): move each by hand.`
+        finding(
+          'IMP-SPLIT',
+          `${literal.value} is used here as a string (a dynamic import, a mock or a type), but its names now live in several modules (${targetsOfPath(literal.value).join(', ')}): move each by hand.`
+        )
       )
     }
   }

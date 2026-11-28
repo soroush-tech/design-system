@@ -74,7 +74,9 @@ without a step.
    token math, output that differs - is a `report` with the file and line, never a guess.
 6. **Report ids and messages.** A message starts with `[ID]`, the inventory item, then the
    item's `how` text, so a message cannot drift from the inventory
-   (`fixtures.test.ts` checks it); a check with no item reports as `CHECK`. Say what changed,
+   (`fixtures.test.ts` checks it); a check with no item reports as `CHECK`. Every `report` change also carries a `code`, a
+   field and not parsed from the message: the item's id, or the check's (`IMP-SPLIT`), which
+   `migrate --json` prints. Say what changed,
    where, and what to do.
 7. **Idempotent.** The step's output, planned again, must be empty, and the runner moves the
    app's package to `to.version`, so a second `migrate` says it is already there.

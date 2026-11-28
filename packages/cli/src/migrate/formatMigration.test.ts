@@ -15,8 +15,10 @@ const plans = planChain(
 
 describe('formatReport', () => {
   it('puts the file and line first, and the file alone when there is no line', () => {
-    expect(formatReport({ path: 'src/a.ts', line: 3, message: 'm' })).toBe('src/a.ts:3 m')
-    expect(formatReport({ path: 'src/a.ts', message: 'm' })).toBe('src/a.ts m')
+    expect(formatReport({ path: 'src/a.ts', line: 3, code: 'C', message: 'm' })).toBe(
+      'src/a.ts:3 m'
+    )
+    expect(formatReport({ path: 'src/a.ts', code: 'C', message: 'm' })).toBe('src/a.ts m')
   })
 })
 

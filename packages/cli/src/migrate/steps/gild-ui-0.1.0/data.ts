@@ -38,6 +38,23 @@ export function inventoryMessage(id: string, detail?: string): string {
   return `[${id}] ${lead}${item.how}`
 }
 
+/** Something a person has to decide, with the stable code of its kind. */
+export interface Finding {
+  code: string
+  message: string
+}
+
+/** A finding of an inventory item: its code is the item's id. */
+export function inventoryFinding(id: string, detail?: string): Finding {
+  return { code: id, message: inventoryMessage(id, detail) }
+}
+
+/** A finding of a kind the inventory has no item for: `[CODE]` leads its message. */
+export const finding = (code: string, text: string): Finding => ({
+  code,
+  message: `[${code}] ${text}`,
+})
+
 /** The packages the step moves away from, and the ones they become. */
 export const OLD_PACKAGES = [
   '@soroush.tech/design-system',

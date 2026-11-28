@@ -11,7 +11,7 @@ import type {
   ObjectExpression,
   ObjectProperty,
 } from '@babel/types'
-import { CORE, inventoryMessage, REACT } from './data'
+import { CORE, inventoryFinding, REACT, type Finding } from './data'
 import type { FileReport, ImportEditor } from './imports'
 import type { Names } from './names'
 import { lineAt, nameOfKey, walk, type Edit } from './source'
@@ -44,8 +44,8 @@ export class ThemeMigrator {
     this.readAugmentations()
   }
 
-  private report(node: Node, message: string): void {
-    this.reports.push({ line: lineAt(this.text, node.start!), message })
+  private report(node: Node, found: Finding): void {
+    this.reports.push({ line: lineAt(this.text, node.start!), ...found })
   }
 
   private localOf(imported: string): string | undefined {
@@ -74,10 +74,10 @@ export class ThemeMigrator {
       calls.push({ call: node, object, components, ancestors })
     })
     if (calls.length === 0) return
-    this.report(calls[0].call, inventoryMessage('THM-006'))
+    this.report(calls[0].call, inventoryFinding('THM-006'))
     const moved = this.moveComponents(calls)
     for (const { object, components, ancestors } of calls) {
-      if (components && !moved) this.report(components, inventoryMessage('THM-001'))
+      if (components && !moved) this.report(components, inventoryFinding('THM-001'))
       const declarator = ancestors.at(-1)!
       if (
         !moved &&
@@ -85,7 +85,7 @@ export class ThemeMigrator {
         declarator.id.type === 'Identifier' &&
         declarator.id.typeAnnotation
       ) {
-        this.report(declarator, inventoryMessage('THM-003'))
+        this.report(declarator, inventoryFinding('THM-003'))
       }
       this.readElements(object)
     }
@@ -101,7 +101,7 @@ export class ThemeMigrator {
         node.key.name === 'element' &&
         node.value.type !== 'StringLiteral'
       ) {
-        this.report(node, inventoryMessage('CMP-003'))
+        this.report(node, inventoryFinding('CMP-003'))
       }
     })
   }
@@ -355,7 +355,7 @@ export class ThemeMigrator {
       walk(node, (inner) => {
         if (inner.type !== 'TSInterfaceDeclaration') return
         const { name } = inner.id
-        if (name === 'TabsVariants') this.report(inner, inventoryMessage('EXP-004'))
+        if (name === 'TabsVariants') this.report(inner, inventoryFinding('EXP-004'))
         const isComponentsOfTheme =
           name === 'Theme' &&
           inner.body.body.some(
@@ -365,7 +365,7 @@ export class ThemeMigrator {
               member.key.name === 'components'
           )
         if (isComponentsOfTheme || name === 'ThemeComponents')
-          this.report(inner, inventoryMessage('THM-005'))
+          this.report(inner, inventoryFinding('THM-005'))
       })
     })
   }

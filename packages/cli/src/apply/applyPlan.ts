@@ -10,11 +10,14 @@ import {
 /** A write failed. `isUndone` says whether every change made before it was taken back. */
 export class ApplyError extends Error {
   readonly isUndone: boolean
+  /** The place, among the plans, of the one whose write failed. */
+  readonly planIndex: number
 
-  constructor(message: string, isUndone: boolean) {
+  constructor(message: string, isUndone: boolean, planIndex = 0) {
     super(message)
     this.name = 'ApplyError'
     this.isUndone = isUndone
+    this.planIndex = planIndex
   }
 }
 
@@ -39,8 +42,12 @@ export function applyPlans(
   command = 'init'
 ): void {
   const undoSteps: (() => void)[] = []
+  let planIndex = 0
   try {
-    for (const plan of plans) writePlan(plan, root, fileSystem, undoSteps, command)
+    for (const plan of plans) {
+      writePlan(plan, root, fileSystem, undoSteps, command)
+      planIndex += 1
+    }
   } catch (error) {
     let isUndone = true
     for (const undo of undoSteps.reverse()) {
@@ -50,7 +57,7 @@ export function applyPlans(
         isUndone = false
       }
     }
-    throw new ApplyError((error as Error).message, isUndone)
+    throw new ApplyError((error as Error).message, isUndone, planIndex)
   }
 }
 

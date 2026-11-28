@@ -49,8 +49,6 @@ export interface CreateOptions {
   isConfirmed: boolean
   /** Prints the plan and exits. */
   isDryRun: boolean
-  /** Runs `git init` in the new folder, unless it is inside a repository already. */
-  isGit: boolean
 }
 
 export interface CreateDependencies {
@@ -119,12 +117,6 @@ function removeApp(target: string, wasMissing: boolean, fileSystem: FileSystem):
   } catch {
     return false
   }
-}
-
-/** Whether `folder` is inside a git work tree. */
-function isInsideRepository(folder: string, io: Io): boolean {
-  const { status, stdout } = io.run('git', ['rev-parse', '--is-inside-work-tree'], { cwd: folder })
-  return status === 0 && stdout.trim() === 'true'
 }
 
 const YES_OR_NO = [
@@ -344,11 +336,6 @@ function writeAndInstall(
   io.write(`\nInstalling with ${command}:\n`)
   if (io.run(command, args, { cwd: target, env, showOutput: true }).status !== 0) {
     return fail('the install failed')
-  }
-  if (options.isGit && !isInsideRepository(target, io)) {
-    if (io.run('git', ['init'], { cwd: target }).status !== 0) {
-      io.write('\ngit init failed, so the app has no repository. Run git init there yourself.\n')
-    }
   }
   io.write(formatClosing(name, plan, packageManager))
   return 0

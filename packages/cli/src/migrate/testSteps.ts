@@ -18,7 +18,7 @@ export const STEP_TWO: MigrationStep = {
       text.split('\n').forEach((line, index) => {
         if (line.includes('legacy(')) {
           const message = 'legacy() has no successor: decide'
-          changes.push({ kind: 'report', path, line: index + 1, message })
+          changes.push({ kind: 'report', path, line: index + 1, code: 'T-LEGACY', message })
         }
       })
     }
@@ -42,7 +42,7 @@ export const STEP_THREE: MigrationStep = {
       after: app.readFile('src/main.ts')!.replaceAll('newName', 'latestName'),
     },
     { kind: 'create', path: 'src/generated.ts', content: `// ${app.listFiles().length} files\n` },
-    { kind: 'report', path: 'src/main.ts', message: 'check the build' },
+    { kind: 'report', path: 'src/main.ts', code: 'T-BUILD', message: 'check the build' },
   ],
 }
 

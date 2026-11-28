@@ -11,7 +11,6 @@ import {
   findRootFiles,
   findUnsupportedFramework,
   getDependency,
-  getGitState,
   isWorkspaceRoot,
   needsParcelPackageExports,
   readPackageJson,
@@ -29,8 +28,6 @@ export interface InitOptions {
   isConfirmed: boolean
   /** Prints the plan and exits. */
   isDryRun: boolean
-  /** Runs outside git, or in a tree with uncommitted changes. */
-  isForced: boolean
   scheme: Scheme | undefined
 }
 
@@ -64,17 +61,6 @@ function findRefusal(
   }
   if (!satisfiesRange(reactVersion, reactRange)) {
     return `This app has React ${reactVersion}, and Gild UI needs React ${reactRange}. init changes nothing, and never upgrades React.`
-  }
-  return undefined
-}
-
-function findGitRefusal(root: string, io: Io): string | undefined {
-  const state = getGitState(root, io)
-  if (state === 'not-a-repository') {
-    return 'This folder is not in a git repository, so init could not show you its changes afterwards. Run git init and commit first, or run again with --force.'
-  }
-  if (state === 'dirty') {
-    return "This folder has uncommitted changes. Commit or stash them first, so init's changes stand on their own, or run again with --force."
   }
   return undefined
 }
@@ -181,7 +167,7 @@ function applyAndInstall(plan: Plan, root: string, io: Io, fileSystem: FileSyste
     const { message, isUndone } = error as ApplyError
     const outcome = isUndone
       ? 'Every change it made was taken back.'
-      : 'It could not take back every change: check git status.'
+      : 'It could not take back every change: check the files.'
     io.write(`init stopped: ${message}. ${outcome}\n`)
     return 1
   }
@@ -225,11 +211,6 @@ export async function runInit(
     return 1
   }
   const isPreviewOnly = options.isDryRun || (!io.isInteractive && !options.isConfirmed)
-  const gitRefusal = isPreviewOnly || options.isForced ? undefined : findGitRefusal(root, io)
-  if (gitRefusal) {
-    io.write(`${gitRefusal}\n`)
-    return 1
-  }
 
   const facts = collectFacts(app, options.scheme)
   const canAsk = !options.scheme && !isPreviewOnly && !options.isConfirmed

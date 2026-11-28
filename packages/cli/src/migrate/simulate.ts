@@ -8,9 +8,12 @@ import { toDeclaredRange } from './versions'
 
 /** A step asked for something it may not. */
 export class StepError extends Error {
+  readonly stepId: string
+
   constructor(step: MigrationStep, problem: string) {
     super(`The step ${step.id} ${problem}`)
     this.name = 'StepError'
+    this.stepId = step.id
   }
 }
 
@@ -28,6 +31,8 @@ export interface AppliedDependency {
 export interface Report {
   path: string
   line?: number
+  /** The stable code of its kind. */
+  code: string
   message: string
 }
 
@@ -205,7 +210,12 @@ export function planChain(
       if (change.kind === 'dependency') {
         dependencyChanges.push(change)
       } else if (change.kind === 'report') {
-        reports.push({ path: change.path, line: change.line, message: change.message })
+        reports.push({
+          path: change.path,
+          line: change.line,
+          code: change.code,
+          message: change.message,
+        })
       } else {
         applyFile(step, change, memory)
       }

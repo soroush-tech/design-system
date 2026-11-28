@@ -38,7 +38,7 @@ one app. It shows every change first, and writes nothing until you say yes.
 Options:
   -y, --yes               apply without asking
       --dry-run           show the changes and exit
-      --force             run outside git, or with uncommitted changes
+      --force             no effect: init checks no git now (kept for older scripts)
       --scheme <name>     the default color scheme: light (the default) or dark
   -h, --help              show this help
 
@@ -53,13 +53,19 @@ the migration steps from there to the target, and shows every change of every st
 dependencies, the file edits, and what only you can decide, with its file and line. It writes
 nothing until you say yes, then applies the steps in order and installs once.
 
-It runs only in a git repository with no uncommitted change. Run it again after: an app that is
-on the latest version has nothing to change.
+It runs no git: committing the result is yours. Run it again after: an app that is on the latest
+version has nothing to change.
+
+Exit codes: 0 applied, nothing left for you; 2 applied, items left for you; 3 nothing to
+migrate; 1 refused, or failed and was taken back (or a wrong command line). With --dry-run: 0
+when there is something to do, 3 when there is not.
 
 Options:
   -y, --yes               apply without asking
       --dry-run           show the changes and exit
       --to <version>      stop at this version instead of the latest
+      --json              print the run as one JSON object on stdout, and nothing else there;
+                          it never asks, so without --yes it is a preview
   -h, --help              show this help
 
 Example:
@@ -86,7 +92,7 @@ Options:
       --with <names>      the libraries to add, by comma: ${LIBRARY_NAMES.join(', ')}
       --scheme <name>     the default color scheme: light (the default) or dark
       --sample-data       add a list of sample items, and a page for each
-      --no-git            do not run git init
+      --no-git            no effect: create runs no git (kept for older scripts)
   -h, --help              show this help
 
 Examples:
@@ -106,6 +112,7 @@ const OPTIONS = {
   help: { type: 'boolean', short: 'h' },
   force: { type: 'boolean' },
   to: { type: 'string' },
+  json: { type: 'boolean' },
   framework: { type: 'string' },
   title: { type: 'string' },
   ts: { type: 'boolean' },
@@ -121,7 +128,7 @@ const OPTIONS = {
 /** The options only one command takes. */
 const OWN_OPTIONS: Record<string, readonly string[]> = {
   init: ['force'],
-  migrate: ['to'],
+  migrate: ['to', 'json'],
   create: [
     'framework',
     'title',
@@ -272,7 +279,6 @@ async function runCommandLine(
         hasSampleData: values['sample-data'],
         isConfirmed,
         isDryRun,
-        isGit: !values['no-git'],
       },
       io
     )
@@ -280,11 +286,7 @@ async function runCommandLine(
   if (command === 'migrate') {
     // Loaded only for migrate: its steps carry a source parser that init and create do not need.
     const { runMigrate } = await import('./migrate/migrate')
-    return runMigrate({ isConfirmed, isDryRun, to: values.to }, io)
+    return runMigrate({ isConfirmed, isDryRun, isJson: Boolean(values.json), to: values.to }, io)
   }
-  return runInit(
-    { isConfirmed, isDryRun, isForced: Boolean(values.force), scheme },
-    io,
-    designSystem
-  )
+  return runInit({ isConfirmed, isDryRun, scheme }, io, designSystem)
 }

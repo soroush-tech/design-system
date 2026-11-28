@@ -1,7 +1,6 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { dirname, join, posix } from 'node:path'
 import { compareText } from '../compareText'
-import type { Io } from '../io'
 import type { PackageManager, PackageManagerName } from '../plan/planInit'
 import { isRootSource } from '../plan/rootEdit'
 
@@ -104,15 +103,6 @@ export function satisfiesRange(version: string, range: string): boolean {
     const [low, lowMinor, lowPatch] = match.slice(1).map(Number)
     return major === low && (minor > lowMinor || (minor === lowMinor && patch >= lowPatch))
   })
-}
-
-export type GitState = 'clean' | 'dirty' | 'not-a-repository'
-
-/** Whether the app is in a git repository with no uncommitted change. */
-export function getGitState(root: string, io: Pick<Io, 'run'>): GitState {
-  const { status, stdout } = io.run('git', ['status', '--porcelain'], { cwd: root })
-  if (status !== 0) return 'not-a-repository'
-  return stdout.trim() === '' ? 'clean' : 'dirty'
 }
 
 const SKIPPED_FOLDERS = new Set(['node_modules', 'dist', 'build', 'out', 'coverage', 'public'])

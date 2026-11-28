@@ -15,18 +15,22 @@ import type {
   Node,
   ObjectExpression,
 } from '@babel/types'
-import { inventoryMessage, REACT } from './data'
+import { finding, inventoryMessage, REACT, type Finding } from './data'
 import type { FileReport, ImportEditor } from './imports'
 import { Names, readNames } from './names'
 import { lineAt, nameOfKey, walk, type Edit } from './source'
 
 type FunctionNode = ArrowFunctionExpression | FunctionDeclaration | FunctionExpression
 
-const STYLE_PROP_MESSAGE =
-  '[STYLE-PROP] `style` takes only entries of StyleSheet.create, never an object: move the static part into a sheet at module level (style={styles.name}); a style that reads the theme is a function sheet, StyleSheet.create((theme) => ({ ... })), resolved in the component with useStyle; a value that changes with props or state is a style prop of the component (width={...}) or a live value (useStyleValue). See the styling guide, docs/style.md of @gild-ui/react.'
+const STYLE_PROP_FINDING = finding(
+  'STYLE-PROP',
+  '`style` takes only entries of StyleSheet.create, never an object: move the static part into a sheet at module level (style={styles.name}); a style that reads the theme is a function sheet, StyleSheet.create((theme) => ({ ... })), resolved in the component with useStyle; a value that changes with props or state is a style prop of the component (width={...}) or a live value (useStyleValue). See the styling guide, docs/style.md of @gild-ui/react.'
+)
 
-const CSS_PROP_MESSAGE = (detail: string) =>
-  `${inventoryMessage('STY-004')} Here: ${detail}. Move it to a StyleSheet entry and pass it as style, as above.`
+const CSS_PROP_FINDING = (detail: string): Finding => ({
+  code: 'STY-004',
+  message: `${inventoryMessage('STY-004')} Here: ${detail}. Move it to a StyleSheet entry and pass it as style, as above.`,
+})
 
 const lowerFirst = (name: string) => name[0].toLowerCase() + name.slice(1)
 
@@ -117,8 +121,8 @@ export class StyleLifter {
     this.liftJsx()
   }
 
-  private report(node: Node, message: string): void {
-    this.reports.push({ line: lineAt(this.text, node.start!), message })
+  private report(node: Node, found: Finding): void {
+    this.reports.push({ line: lineAt(this.text, node.start!), ...found })
   }
 
   /** The tags of Gild UI components: imported from a component entry, or made with `styled`. */
@@ -165,7 +169,10 @@ export class StyleLifter {
       if (!factory) {
         this.report(
           node,
-          '[USE-STYLE] useStyle takes a sheet now, StyleSheet.create(...), and returns its entries: rewrite this call by hand (a factory object, { getStyles: (theme) => ({ ... }) }, becomes StyleSheet.create((theme) => ({ entry: { ... } })) and useStyle(sheet).entry).'
+          finding(
+            'USE-STYLE',
+            'useStyle takes a sheet now, StyleSheet.create(...), and returns its entries: rewrite this call by hand (a factory object, { getStyles: (theme) => ({ ... }) }, becomes StyleSheet.create((theme) => ({ entry: { ... } })) and useStyle(sheet).entry).'
+          )
         )
         return
       }
@@ -224,7 +231,7 @@ export class StyleLifter {
     const value =
       attribute.value?.type === 'JSXExpressionContainer' ? attribute.value.expression : undefined
     if (!isComponent) {
-      if (prop === 'css') this.report(attribute, CSS_PROP_MESSAGE(`<${tag || 'element'} css>`))
+      if (prop === 'css') this.report(attribute, CSS_PROP_FINDING(`<${tag || 'element'} css>`))
       return
     }
     if (value?.type === 'Identifier' && prop === 'css' && this.styleResults.has(value.name)) {
@@ -240,10 +247,10 @@ export class StyleLifter {
     } else if (prop === 'css') {
       this.report(
         attribute,
-        CSS_PROP_MESSAGE(`<${tag} css={...}> reads something other than a static object`)
+        CSS_PROP_FINDING(`<${tag} css={...}> reads something other than a static object`)
       )
     } else {
-      this.report(attribute, STYLE_PROP_MESSAGE)
+      this.report(attribute, STYLE_PROP_FINDING)
     }
   }
 
@@ -265,7 +272,7 @@ export class StyleLifter {
     if (!themed || hookAt === undefined) {
       this.report(
         site.attribute,
-        CSS_PROP_MESSAGE(
+        CSS_PROP_FINDING(
           `<${site.tag} css={...}> ${themed ? 'is not in a function component whose body has lines of its own to put a hook in' : 'reads more than its theme, or is not an arrow with one parameter and an object'}`
         )
       )

@@ -8,7 +8,9 @@ import type { FileReport } from './imports'
 import {
   CORE,
   HOOKS,
+  inventoryFinding,
   inventoryMessage,
+  type Finding,
   MARKDOWN,
   PREVIOUS_ENGINE,
   REACT,
@@ -125,6 +127,7 @@ function reportScripts(packageJson: Manifest, text: string): FileReport[] {
     .filter(([, command]) => /design-system\s+init/.test(command))
     .map(([name]) => ({
       line: lineOfKey(text, name),
+      code: 'DEP-008',
       message: `${inventoryMessage('DEP-008')} The script "${name}" runs "design-system init": run \`npx @soroush.design/cli init\` instead.`,
     }))
 }
@@ -132,8 +135,8 @@ function reportScripts(packageJson: Manifest, text: string): FileReport[] {
 /** The places that pin React, or its types, below the version Gild UI needs. */
 function reportReactPins(packageJson: Manifest, text: string): FileReport[] {
   const reports: FileReport[] = []
-  const add = (key: string, message: string) =>
-    reports.push({ line: lineOfKey(text, key), message })
+  const add = (key: string, found: Finding) =>
+    reports.push({ line: lineOfKey(text, key), ...found })
   for (const name of ['react', 'react-dom']) {
     const pins: [string, unknown][] = [
       ['peerDependencies', packageJson.peerDependencies?.[name]],
@@ -143,14 +146,17 @@ function reportReactPins(packageJson: Manifest, text: string): FileReport[] {
     ]
     for (const [where, range] of pins) {
       if (isLow(range, REACT_MINIMUM)) {
-        add(where, `${inventoryMessage('DEP-006')} ${where} pins ${name} at ${String(range)}.`)
+        add(where, {
+          code: 'DEP-006',
+          message: `${inventoryMessage('DEP-006')} ${where} pins ${name} at ${String(range)}.`,
+        })
       }
     }
   }
   for (const name of ['@types/react', '@types/react-dom']) {
     const range = packageJson.devDependencies?.[name] ?? packageJson.dependencies?.[name]
     if (isLow(range, '19.0.0'))
-      add(name, inventoryMessage('DEP-006', `${name} is at ${range}: use the types of React 19.`))
+      add(name, inventoryFinding('DEP-006', `${name} is at ${range}: use the types of React 19.`))
   }
   return reports
 }
@@ -158,14 +164,14 @@ function reportReactPins(packageJson: Manifest, text: string): FileReport[] {
 /** The old packages the app lists as peers, and Next.js. */
 function reportPeers(packageJson: Manifest, text: string): FileReport[] {
   const reports: FileReport[] = []
-  const add = (key: string, message: string) =>
-    reports.push({ line: lineOfKey(text, key), message })
+  const add = (key: string, found: Finding) =>
+    reports.push({ line: lineOfKey(text, key), ...found })
   for (const name of ['@soroush.tech/design-system', '@soroush.tech/markdown']) {
     if (packageJson.peerDependencies?.[name] !== undefined) {
       const target = name === '@soroush.tech/markdown' ? MARKDOWN : REACT
       add(
         name,
-        inventoryMessage(
+        inventoryFinding(
           'DEP-003',
           `${name} is a peer dependency of this package: change it to ${target} ${GILD_RANGE} by hand.`
         )
@@ -176,7 +182,7 @@ function reportPeers(packageJson: Manifest, text: string): FileReport[] {
     packageJson.dependencies?.next !== undefined ||
     packageJson.devDependencies?.next !== undefined
   ) {
-    add('next', inventoryMessage('THM-007'))
+    add('next', inventoryFinding('THM-007'))
   }
   return reports
 }
@@ -195,10 +201,12 @@ function reportAfterTheMove(text: string): FileReport[] {
   return [
     {
       line,
+      code: 'POST-OUTPUT',
       message: `Check the screens, and the tests that read the rendered page: ${['OUT-003', 'OUT-006', 'OUT-007', 'OUT-008', 'STY-015', 'CMP-006'].map((id) => inventoryMessage(id)).join(' ')}`,
     },
     {
       line,
+      code: 'POST-TYPES',
       message: `Run the type check: where it fails, these are the differences of type: ${['CMP-002', 'CMP-004', 'THM-008', 'THM-009', 'THM-010', 'STY-013'].map((id) => inventoryMessage(id)).join(' ')}`,
     },
   ]

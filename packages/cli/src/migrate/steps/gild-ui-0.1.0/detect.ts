@@ -1,7 +1,7 @@
 // What only a person can decide, found in the text of a source file: each place is reported with
 // its line and the inventory's words for it. Nothing here edits.
 import type { File, Node } from '@babel/types'
-import { inventoryMessage, PREVIOUS_ENGINE } from './data'
+import { inventoryFinding, PREVIOUS_ENGINE, type Finding } from './data'
 import type { FileReport, ImportEditor } from './imports'
 import { lineAt, walk } from './source'
 
@@ -30,8 +30,8 @@ function rootName(node: Node): string | undefined {
 
 export function detectInSource(text: string, ast: File, imports: ImportEditor): FileReport[] {
   const reports: FileReport[] = []
-  const add = (node: Node, message: string) =>
-    reports.push({ line: lineOfOffset(text, node), message })
+  const add = (node: Node, found: Finding) =>
+    reports.push({ line: lineOfOffset(text, node), ...found })
   const local = (imported: string) =>
     [...imports.locals].find(([, name]) => name.imported === imported)?.[0]
   const css = local('css')
@@ -56,9 +56,9 @@ export function detectInSource(text: string, ast: File, imports: ImportEditor): 
         break
       case 'TaggedTemplateExpression':
         if (node.tag.type === 'Identifier' && node.tag.name === css)
-          add(node, inventoryMessage('STY-002'))
+          add(node, inventoryFinding('STY-002'))
         if (node.tag.type === 'Identifier' && node.tag.name === keyframes)
-          add(node, inventoryMessage('STY-003'))
+          add(node, inventoryFinding('STY-003'))
         break
       case 'JSXOpeningElement':
         readElement(node)
@@ -71,7 +71,7 @@ export function detectInSource(text: string, ast: File, imports: ImportEditor): 
           ['*', '/', '+', '-'].includes(node.operator) &&
           [node.left, node.right].some(isThemeScale)
         ) {
-          add(node, inventoryMessage('STY-012'))
+          add(node, inventoryFinding('STY-012'))
         }
         break
       default:
@@ -99,12 +99,12 @@ export function detectInSource(text: string, ast: File, imports: ImportEditor): 
 
   /** A call of a name: `css(...)`, `withTheme(...)`, `createCache(...)`, `require('...')`. */
   function readNamedCall(node: Extract<Node, { type: 'CallExpression' }>, name: string): void {
-    if (name === css) add(node, inventoryMessage('STY-002'))
-    if (name === keyframes) add(node, inventoryMessage('STY-003'))
-    if (name === withTheme) add(node, inventoryMessage('CMP-001'))
-    if (name === 'useServerInsertedHTML') add(node, inventoryMessage('STY-007'))
+    if (name === css) add(node, inventoryFinding('STY-002'))
+    if (name === keyframes) add(node, inventoryFinding('STY-003'))
+    if (name === withTheme) add(node, inventoryFinding('CMP-001'))
+    if (name === 'useServerInsertedHTML') add(node, inventoryFinding('STY-007'))
     if (name === 'createCache') readCreateCache(node)
-    if (EXTRACTORS.has(name)) add(node, inventoryMessage('STY-008'))
+    if (EXTRACTORS.has(name)) add(node, inventoryFinding('STY-008'))
     if (name === 'require' && node.arguments[0]?.type === 'StringLiteral') {
       readPreviousEngineImport(node.arguments[0].value, node, [], add)
     }
@@ -112,8 +112,8 @@ export function detectInSource(text: string, ast: File, imports: ImportEditor): 
 
   /** A call of a member: `styled.div.withComponent(...)`, `cache.extractCritical(...)`. */
   function readMemberCall(node: Extract<Node, { type: 'CallExpression' }>, name: string): void {
-    if (name === 'withComponent') add(node, inventoryMessage('STY-001'))
-    if (EXTRACTORS.has(name)) add(node, inventoryMessage('STY-008'))
+    if (name === 'withComponent') add(node, inventoryFinding('STY-001'))
+    if (EXTRACTORS.has(name)) add(node, inventoryFinding('STY-008'))
   }
 
   /** `styled('div')<{ isOpen: boolean }>(...)` with props of its own and no `shouldForwardProp`. */
@@ -132,11 +132,11 @@ export function detectInSource(text: string, ast: File, imports: ImportEditor): 
           property.key.type === 'Identifier' &&
           property.key.name === 'shouldForwardProp'
       )
-    if (isDom && hasProps && !hasFilter) add(node, inventoryMessage('STY-005'))
+    if (isDom && hasProps && !hasFilter) add(node, inventoryFinding('STY-005'))
   }
 
   function readCreateCache(node: Extract<Node, { type: 'CallExpression' }>): void {
-    add(node, inventoryMessage('STY-009'))
+    add(node, inventoryFinding('STY-009'))
     const [options] = node.arguments
     if (options?.type !== 'ObjectExpression') return
     for (const property of options.properties) {
@@ -145,7 +145,7 @@ export function detectInSource(text: string, ast: File, imports: ImportEditor): 
         property.key.type === 'Identifier' &&
         property.key.name === 'nonce'
       ) {
-        add(property, inventoryMessage('STY-010'))
+        add(property, inventoryFinding('STY-010'))
       }
     }
   }
@@ -154,7 +154,7 @@ export function detectInSource(text: string, ast: File, imports: ImportEditor): 
     if (node.name.type === 'JSXIdentifier') {
       const tag = imports.locals.get(node.name.name)
       if (tag?.imported === 'LayoutProvider' || tag?.imported === 'Portal') {
-        add(node, inventoryMessage(tag.imported === 'Portal' ? 'OUT-005' : 'OUT-004'))
+        add(node, inventoryFinding(tag.imported === 'Portal' ? 'OUT-005' : 'OUT-004'))
       }
     }
     for (const attribute of node.attributes) {
@@ -177,7 +177,7 @@ export function detectInSource(text: string, ast: File, imports: ImportEditor): 
           property.key.type === 'Identifier' &&
           property.key.name === 'style'
       )
-      if (style) add(style, inventoryMessage('CMP-005'))
+      if (style) add(style, inventoryFinding('CMP-005'))
     }
   }
 
@@ -188,7 +188,7 @@ export function detectInSource(text: string, ast: File, imports: ImportEditor): 
       const before = node.quasis[index].value.raw
       const after = node.quasis[index + 1].value.raw
       if (before.endsWith('-') || /^(?:[0-9a-fA-F]{2}\b|px|rem|em|%)/.test(after))
-        add(node, inventoryMessage('STY-012'))
+        add(node, inventoryFinding('STY-012'))
     })
   }
 
@@ -212,11 +212,11 @@ function readPreviousEngineImport(
   specifier: string,
   node: Node,
   names: string[],
-  add: (node: Node, message: string) => void
+  add: (node: Node, found: Finding) => void
 ): void {
   if (!specifier.startsWith(PREVIOUS_ENGINE.scope)) return
   if (specifier.startsWith(PREVIOUS_ENGINE.server)) {
-    add(node, inventoryMessage('STY-008'))
+    add(node, inventoryFinding('STY-008'))
     return
   }
   const replacements = names.map(
@@ -225,7 +225,7 @@ function readPreviousEngineImport(
   )
   add(
     node,
-    inventoryMessage(
+    inventoryFinding(
       'IMP-EMOTION',
       replacements.length > 0 ? `Replacements: ${replacements.join('; ')}.` : undefined
     )
@@ -237,9 +237,9 @@ export function detectInText(text: string): FileReport[] {
   const reports: FileReport[] = []
   text.split('\n').forEach((line, index) => {
     if (PREVIOUS_ENGINE.output.test(line))
-      reports.push({ line: index + 1, message: inventoryMessage('STY-011') })
+      reports.push({ line: index + 1, ...inventoryFinding('STY-011') })
     if (PREVIOUS_ENGINE.settings.test(line)) {
-      reports.push({ line: index + 1, message: inventoryMessage('DEP-009') })
+      reports.push({ line: index + 1, ...inventoryFinding('DEP-009') })
     }
   })
   return reports

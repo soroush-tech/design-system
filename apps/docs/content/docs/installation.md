@@ -33,7 +33,7 @@ It shows every change before it makes one, and writes nothing until you say yes:
 - your root - what it renders is wrapped in `<Providers>`;
 - the install of `@gild-ui/react` and `@gild-ui/core`, with your own package manager.
 
-It runs in a git repository with no uncommitted change, never overwrites a file, and takes back
+It runs no git, never overwrites a file, and takes back
 every change if a write fails. Run in a workspace's root, it sets up the one app in it. Add
 `--dry-run` to see the changes and exit. In PowerShell, quote the package name, since `@` starts a
 splat there: `npx '@soroush.design/cli' init`.

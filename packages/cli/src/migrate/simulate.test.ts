@@ -30,7 +30,12 @@ describe('planChain', () => {
       "import { newName } from '@test/a'\nnewName()\nlegacy()\n"
     )
     expect(first.reports).toEqual([
-      { path: 'src/main.ts', line: 3, message: 'legacy() has no successor: decide' },
+      {
+        path: 'src/main.ts',
+        line: 3,
+        code: 'T-LEGACY',
+        message: 'legacy() has no successor: decide',
+      },
     ])
     expect(first.dependencies).toEqual([
       { action: 'add', name: '@test/helper', range: '^1.0.0', previous: undefined },
@@ -58,7 +63,9 @@ describe('planChain', () => {
     expect(second.plan.edits[1].before).toBe(first.plan.edits[1].after)
     // And its listing holds what step 1 left: package.json and src/main.ts, not yet generated.ts.
     expect(second.plan.creates).toEqual([{ path: 'src/generated.ts', content: '// 2 files\n' }])
-    expect(second.reports).toEqual([{ path: 'src/main.ts', message: 'check the build' }])
+    expect(second.reports).toEqual([
+      { path: 'src/main.ts', code: 'T-BUILD', message: 'check the build' },
+    ])
     expect(second.dependencies).toEqual([
       { action: 'update', name: '@test/a', range: '^3.0.0', previous: '^2.0.0' },
     ])
@@ -70,7 +77,7 @@ describe('planChain', () => {
       ...STEP_THREE,
       plan: (app) => [
         { kind: 'edit', path: 'src/new.ts', after: `${app.readFile('src/new.ts')}b` },
-        { kind: 'report', path: app.listFiles().at(-1)!, message: 'last file' },
+        { kind: 'report', path: app.listFiles().at(-1)!, code: 'T', message: 'last file' },
       ],
     }
     const [, second] = plan([create, edit])

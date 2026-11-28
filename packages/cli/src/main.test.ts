@@ -25,13 +25,13 @@ describe('main', () => {
     const { code, io } = await runMain('init', '-y', '--dry-run', '--force', '--scheme', 'dark')
     expect(code).toBe(0)
     expect(runInit).toHaveBeenLastCalledWith(
-      { isConfirmed: true, isDryRun: true, isForced: true, scheme: 'dark' },
+      { isConfirmed: true, isDryRun: true, scheme: 'dark' },
       io,
       DESIGN_SYSTEM
     )
     await runMain('init')
     expect(runInit).toHaveBeenLastCalledWith(
-      { isConfirmed: false, isDryRun: false, isForced: false, scheme: undefined },
+      { isConfirmed: false, isDryRun: false, scheme: undefined },
       expect.anything(),
       DESIGN_SYSTEM
     )
@@ -68,13 +68,12 @@ describe('main', () => {
         hasSampleData: true,
         isConfirmed: true,
         isDryRun: true,
-        isGit: false,
       },
       io
     )
     await runMain('create', '--ts')
     expect(runCreate).toHaveBeenLastCalledWith(
-      expect.objectContaining({ name: undefined, isTypeScript: true, isGit: true }),
+      expect.objectContaining({ name: undefined, isTypeScript: true }),
       expect.anything()
     )
     await runMain('create')
@@ -205,23 +204,24 @@ describe('main', () => {
   })
 
   it('runs migrate with its options, and describes it', async () => {
-    const { code, io } = await runMain('migrate', '-y', '--dry-run', '--to', '0.1.0')
+    const { code, io } = await runMain('migrate', '-y', '--dry-run', '--json', '--to', '0.1.0')
     expect(code).toBe(0)
     expect(runMigrate).toHaveBeenLastCalledWith(
-      { isConfirmed: true, isDryRun: true, to: '0.1.0' },
+      { isConfirmed: true, isDryRun: true, isJson: true, to: '0.1.0' },
       io
     )
     await runMain('migrate')
     expect(runMigrate).toHaveBeenLastCalledWith(
-      { isConfirmed: false, isDryRun: false, to: undefined },
+      { isConfirmed: false, isDryRun: false, isJson: false, to: undefined },
       expect.anything()
     )
     expect(await runMain('migrate', '-h')).toMatchObject({ code: 0, output: HELP.migrate })
     expect(USAGE).toContain('migrate ')
-    for (const option of ['--to <version>', '--dry-run', '--yes']) {
+    for (const option of ['--to <version>', '--dry-run', '--yes', '--json']) {
       expect(HELP.migrate).toContain(option)
     }
     expect(HELP.init).not.toContain('--to')
+    expect(HELP.init).not.toContain('--json')
   })
 
   it('refuses an option migrate does not take, and --to elsewhere', async () => {

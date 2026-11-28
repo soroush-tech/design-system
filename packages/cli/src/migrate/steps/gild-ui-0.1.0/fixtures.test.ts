@@ -105,7 +105,7 @@ describe.each(NAMES)('the step over the fixture %s', (name) => {
     const first = createTestIo(root)
     expect(
       await runMigrate({ isConfirmed: true, isDryRun: false, to: undefined }, first.io, [step])
-    ).toBe(0)
+    ).toBe(2)
     expect(readTree(root, '')).toMatchObject(
       Object.fromEntries(Object.entries(outcome.tree).filter(([path]) => path !== 'package.json'))
     )
@@ -114,7 +114,7 @@ describe.each(NAMES)('the step over the fixture %s', (name) => {
     const second = createTestIo(root)
     expect(
       await runMigrate({ isConfirmed: true, isDryRun: false, to: undefined }, second.io, [step])
-    ).toBe(0)
+    ).toBe(3)
     expect(second.getOutput()).toBe('Already on @gild-ui/react 0.1.0: migrate has nothing to do.\n')
     expect(second.commands).toEqual([])
     expect(readTree(root)).toEqual(written)

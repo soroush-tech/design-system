@@ -12,7 +12,7 @@ const DESIGN_SYSTEM = {
   peerDependencies: { react: '^18.0.0 || ^19.0.0' },
 }
 
-const YES: InitOptions = { isConfirmed: true, isDryRun: false, isForced: false, scheme: undefined }
+const YES: InitOptions = { isConfirmed: true, isDryRun: false, scheme: undefined }
 const ASK: InitOptions = { ...YES, isConfirmed: false }
 
 const createViteApp = (files: Record<string, string> = {}) =>
@@ -37,7 +37,6 @@ describe('runInit', () => {
     expect(read(root, 'src/theme/Providers.ts')).toContain("scheme = 'light',")
     expect(read(root, 'src/main.tsx')).toContain("import { Providers } from './theme/Providers.ts'")
     expect(commands.map(({ command, args, options }) => [command, args, options])).toEqual([
-      ['git', ['status', '--porcelain'], { cwd: root }],
       [
         'pnpm',
         [
@@ -78,7 +77,7 @@ describe('runInit', () => {
     const { io, commands, getOutput } = createTestIo(root)
     expect(await runInit(YES, io, DESIGN_SYSTEM)).toBe(0)
     expect(getOutput()).toBe('Gild UI is already set up here: init has nothing to change.\n')
-    expect(commands.map(({ command }) => command)).toEqual(['git'])
+    expect(commands.map(({ command }) => command)).toEqual([])
   })
 
   it('counts an app that has the component library alone as set up, and installs nothing', async () => {
@@ -89,7 +88,7 @@ describe('runInit', () => {
     const { io, commands, getOutput } = createTestIo(root)
     expect(await runInit(YES, io, DESIGN_SYSTEM)).toBe(0)
     expect(getOutput()).toBe('Gild UI is already set up here: init has nothing to change.\n')
-    expect(commands.map(({ command }) => command)).toEqual(['git'])
+    expect(commands.map(({ command }) => command)).toEqual([])
   })
 
   it('reports what it skipped even when there is nothing left to change', async () => {
@@ -105,7 +104,7 @@ describe('runInit', () => {
     expect(read(root, 'src/theme/themes.ts')).toBe('export default {}')
   })
 
-  it('previews only, with no terminal and no --yes, and does not ask git', async () => {
+  it('previews only, with no terminal and no --yes,', async () => {
     const root = createViteApp()
     const { io, commands, getOutput } = createTestIo(root)
     expect(await runInit(ASK, io, DESIGN_SYSTEM)).toBe(0)
@@ -117,7 +116,7 @@ describe('runInit', () => {
     expect(existsSync(join(root, 'src/theme'))).toBe(false)
   })
 
-  it('prints the plan and exits on --dry-run, even outside git', async () => {
+  it('prints the plan and exits on --dry-run', async () => {
     const root = createViteApp()
     const { io, commands, getOutput } = createTestIo(root, { isInteractive: true })
     expect(await runInit({ ...YES, isDryRun: true }, io, DESIGN_SYSTEM)).toBe(0)
@@ -141,7 +140,7 @@ describe('runInit', () => {
     const { io, commands, getOutput } = createTestIo(root, { isInteractive: true })
     expect(await runInit(ASK, io, DESIGN_SYSTEM)).toBe(0)
     expect(getOutput()).toContain('Nothing was changed.')
-    expect(commands.map(({ command }) => command)).toEqual(['git'])
+    expect(commands.map(({ command }) => command)).toEqual([])
     expect(read(root, 'src/main.tsx')).toBe(VITE_ROOT)
     expect(existsSync(join(root, 'src/theme'))).toBe(false)
   })
@@ -154,23 +153,13 @@ describe('runInit', () => {
     expect(read(root, 'src/theme/Providers.ts')).toContain("scheme = 'dark',")
   })
 
-  it('refuses a tree with uncommitted changes, or outside git, unless --force', async () => {
-    const dirty = createTestIo(createViteApp(), {
-      run: () => ({ status: 0, stdout: '?? notes.txt\n' }),
-    })
-    expect(await runInit(YES, dirty.io, DESIGN_SYSTEM)).toBe(1)
-    expect(dirty.getOutput()).toMatch(/^This folder has uncommitted changes\./)
-
-    const outside = createTestIo(createViteApp(), { run: () => ({ status: 128, stdout: '' }) })
-    expect(await runInit(YES, outside.io, DESIGN_SYSTEM)).toBe(1)
-    expect(outside.getOutput()).toMatch(/^This folder is not in a git repository/)
-    expect(existsSync(join(outside.io.cwd, 'src/theme'))).toBe(false)
-
-    const forced = createTestIo(createViteApp(), {
+  it('runs no git, whatever state the folder is in', async () => {
+    const { io, commands } = createTestIo(createViteApp(), {
       run: (command) => ({ status: command === 'git' ? 128 : 0, stdout: '' }),
     })
-    expect(await runInit({ ...YES, isForced: true }, forced.io, DESIGN_SYSTEM)).toBe(0)
-    expect(existsSync(join(forced.io.cwd, 'src/theme/themes.ts'))).toBe(true)
+    expect(await runInit(YES, io, DESIGN_SYSTEM)).toBe(0)
+    expect(existsSync(join(io.cwd, 'src/theme/themes.ts'))).toBe(true)
+    expect(commands.map(({ command }) => command)).not.toContain('git')
   })
 
   it('refuses a folder with no package.json, an app with no React, and a framework it does not set up yet', async () => {
@@ -228,7 +217,7 @@ describe('runInit', () => {
     expect(read(root, 'src/main.tsx')).toBe(VITE_ROOT)
     expect(existsSync(join(root, 'src/theme'))).toBe(false)
     // The install runs last, so it never ran.
-    expect(commands.map(({ command }) => command)).toEqual(['git'])
+    expect(commands.map(({ command }) => command)).toEqual([])
   })
 
   it('says so when it could not take a change back', async () => {
@@ -244,13 +233,13 @@ describe('runInit', () => {
     }
     const { io, getOutput } = createTestIo(root)
     expect(await runInit(YES, io, DESIGN_SYSTEM, fileSystem)).toBe(1)
-    expect(getOutput()).toContain('It could not take back every change: check git status.')
+    expect(getOutput()).toContain('It could not take back every change: check the files.')
   })
 
   it('keeps the files and prints the command when the install fails', async () => {
     const root = createViteApp()
     const { io, getOutput } = createTestIo(root, {
-      run: (command) => ({ status: command === 'git' ? 0 : 1, stdout: '' }),
+      run: () => ({ status: 1, stdout: '' }),
     })
     expect(await runInit(YES, io, DESIGN_SYSTEM)).toBe(1)
     expect(getOutput()).toContain(
@@ -274,7 +263,7 @@ describe('runInit', () => {
     )
     expect(getOutput()).toContain('init will set up @gild-ui/react in this app:')
     // Already a dependency: no install.
-    expect(commands.map(({ command }) => command)).toEqual(['git'])
+    expect(commands.map(({ command }) => command)).toEqual([])
   })
 
   it('writes JavaScript in an app with no root and no tsconfig.json', async () => {

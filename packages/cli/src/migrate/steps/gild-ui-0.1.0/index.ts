@@ -3,7 +3,7 @@
 // reads each file of the app once, makes the edits the inventory marks mechanical, and reports
 // the rest with its file and line.
 import type { Change, MigrationApp, MigrationStep } from '../../step'
-import { RELEVANT } from './data'
+import { finding, RELEVANT } from './data'
 import { planManifest, type AppFacts } from './dependencies'
 import { detectInSource, detectInText } from './detect'
 import { ImportEditor, type FileReport } from './imports'
@@ -25,8 +25,11 @@ interface FileResult {
 function planSource(path: string, text: string): FileResult {
   const ast = parseSource(path, text)
   if (!ast) {
-    const message = `[PARSE] ${path} could not be read as TypeScript or JavaScript, so nothing in it was moved: change its imports of the old packages by hand (the inventory in the migration guide lists every path), and its styles, as the other files'.`
-    return { after: text, reports: [{ line: 1, message }], modules: [] }
+    const { code, message } = finding(
+      'PARSE',
+      `${path} could not be read as TypeScript or JavaScript, so nothing in it was moved: change its imports of the old packages by hand (the inventory in the migration guide lists every path), and its styles, as the other files'.`
+    )
+    return { after: text, reports: [{ line: 1, code, message }], modules: [] }
   }
   const imports = new ImportEditor(text, ast)
   const names = new Names(ast)
@@ -62,7 +65,8 @@ function planFile(path: string, text: string, facts: AppFacts): Change[] {
   const changes: Change[] = []
   if (result.after !== text) changes.push({ kind: 'edit', path, after: result.after })
   const reports = [...result.reports].sort((a, b) => a.line - b.line)
-  for (const { line, message } of reports) changes.push({ kind: 'report', path, line, message })
+  for (const { line, code, message } of reports)
+    changes.push({ kind: 'report', path, line, code, message })
   return changes
 }
 
@@ -77,8 +81,8 @@ function plan(app: MigrationApp): Change[] {
   }
   const manifest = planManifest(app.packageJson, app.readFile('package.json')!, facts)
   changes.push(...manifest.changes)
-  for (const { line, message } of manifest.reports)
-    changes.push({ kind: 'report', path: 'package.json', line, message })
+  for (const { line, code, message } of manifest.reports)
+    changes.push({ kind: 'report', path: 'package.json', line, code, message })
   return changes
 }
 

@@ -2,7 +2,7 @@
 import { mkdirSync, symlinkSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { createTestApp, createTestIo, VITE_ROOT } from '../testApp'
+import { createTestApp, VITE_ROOT } from '../testApp'
 import {
   detectPackageManager,
   findInstalledVersion,
@@ -11,7 +11,6 @@ import {
   findPackageFolder,
   findUnsupportedFramework,
   getDependency,
-  getGitState,
   isWorkspaceRoot,
   listAppFiles,
   needsParcelPackageExports,
@@ -139,25 +138,6 @@ describe('satisfiesRange', () => {
     const { peerDependencies } = readPackageJson(DESIGN_SYSTEM_FOLDER)!
     expect(satisfiesRange('19.2.8', peerDependencies!.react)).toBe(true)
     expect(() => satisfiesRange('19.0.0', '>=18')).toThrow('init cannot read the range >=18')
-  })
-})
-
-describe('getGitState', () => {
-  it('tells a clean tree, a dirty one, and a folder outside git apart', () => {
-    const answer = (status: number | null, stdout: string) =>
-      createTestIo('.', { run: () => ({ status, stdout }) }).io
-    expect(getGitState('.', answer(0, ''))).toBe('clean')
-    expect(getGitState('.', answer(0, ' M src/main.tsx\n'))).toBe('dirty')
-    expect(getGitState('.', answer(128, ''))).toBe('not-a-repository')
-    expect(getGitState('.', answer(null, ''))).toBe('not-a-repository')
-  })
-
-  it('asks git, in the app', () => {
-    const { io, commands } = createTestIo('.')
-    getGitState('/app', io)
-    expect(commands).toEqual([
-      { command: 'git', args: ['status', '--porcelain'], options: { cwd: '/app' } },
-    ])
   })
 })
 

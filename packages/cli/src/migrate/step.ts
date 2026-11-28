@@ -13,7 +13,8 @@ export type DependencySection = 'dependencies' | 'devDependencies'
  * - `dependency`: `add` sets a range (in `section` when the app lacks the package, `dependencies`
  *   by default), `update` sets it only where the app has the package, and `remove` takes it out of
  *   both sections. package.json itself is changed only this way, never by an `edit`.
- * - `report`: something only a person can decide, with the file and line it is at.
+ * - `report`: something only a person can decide, with the file and line it is at, and the stable
+ *   `code` of its kind (an inventory id as STY-007, or IMP-SPLIT).
  */
 export type Change =
   | { kind: 'create'; path: string; content: string }
@@ -26,7 +27,7 @@ export type Change =
       section?: DependencySection
     }
   | { kind: 'dependency'; action: 'remove'; name: string }
-  | { kind: 'report'; path: string; line?: number; message: string }
+  | { kind: 'report'; path: string; line?: number; code: string; message: string }
 
 /** The app as a step sees it: the files as the steps before it left them. Read-only. */
 export interface MigrationApp {

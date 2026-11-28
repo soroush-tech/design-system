@@ -41,8 +41,8 @@ arrow keys:
 8. Whether to add the sample data pages.
 
 Then it shows every choice, one a line - the ones you picked and the defaults - then every file
-and the install, and writes nothing before a yes. It installs with no scripts, and runs `git init`
-with no commit, unless the folder is already in a repository. When a write or the install fails,
+and the install, and writes nothing before a yes. It installs with no scripts, and runs no git:
+committing the new app is yours. When a write or the install fails,
 it takes the new app away. Ctrl+C at a question stops it with nothing written.
 
 | Option               | What it does                                                      |
@@ -58,7 +58,7 @@ it takes the new app away. Ctrl+C at a question stops it with nothing written.
 | `--with <names>`     | The libraries, by comma: `--with tanstack-query,msw,zustand`      |
 | `--scheme <name>`    | The default color scheme: `light` or `dark`                       |
 | `--sample-data`      | Add the sample data pages                                         |
-| `--no-git`           | Do not run `git init`                                             |
+| `--no-git`           | No effect: `create` runs no git (kept for older scripts)          |
 | `-h`, `--help`       | Show the options of `create`                                      |
 
 ### Repository
@@ -220,13 +220,13 @@ npx @soroush.design/cli init
 It installs `@gild-ui/react`, the version the command line was released next to, and checks
 your React against its range.
 
-| Option            | What it does                                 |
-| ----------------- | -------------------------------------------- |
-| `-y`, `--yes`     | Apply without asking                         |
-| `--dry-run`       | Show the changes and exit                    |
-| `--force`         | Run outside git, or with uncommitted changes |
-| `--scheme <name>` | The default color scheme: `light` or `dark`  |
-| `-h`, `--help`    | Show the options of `init`                   |
+| Option            | What it does                                             |
+| ----------------- | -------------------------------------------------------- |
+| `-y`, `--yes`     | Apply without asking                                     |
+| `--dry-run`       | Show the changes and exit                                |
+| `--force`         | No effect: `init` checks no git (kept for older scripts) |
+| `--scheme <name>` | The default color scheme: `light` or `dark`              |
+| `-h`, `--help`    | Show the options of `init`                               |
 
 ### What `init` does
 
@@ -242,7 +242,7 @@ It is careful with your app:
 
 - It shows every change first - the files, each edit as a diff, the install - and writes nothing
   before a yes.
-- It runs only in a git repository with no uncommitted change, unless `--force`.
+- It runs no git: committing is yours.
 - It never overwrites a file, and edits the root only when it has the standard shape: one
   `createRoot(...).render(` or `ReactDOM.render(` call. Otherwise it prints the lines to add.
 - When a write fails, it takes back every change it made. The install runs last, with no scripts.
@@ -268,32 +268,86 @@ the latest version the command line knows. It reads the version the app is on - 
 the target. Each step starts from the exact state it expects, so an app several versions behind
 takes each step in turn.
 
-| Option           | What it does                               |
-| ---------------- | ------------------------------------------ |
-| `-y`, `--yes`    | Apply without asking                       |
-| `--dry-run`      | Show the changes and exit                  |
-| `--to <version>` | Stop at this version instead of the latest |
-| `-h`, `--help`   | Show the options of `migrate`              |
+| Option           | What it does                                              |
+| ---------------- | --------------------------------------------------------- |
+| `-y`, `--yes`    | Apply without asking                                      |
+| `--dry-run`      | Show the changes and exit                                 |
+| `--to <version>` | Stop at this version instead of the latest                |
+| `--json`         | Print the run as one JSON object (see the script section) |
+| `-h`, `--help`   | Show the options of `migrate`                             |
 
 It shows one plan, grouped by step: the dependencies it adds, removes and updates, each file edit
 as a diff, and what only you can decide, each with its file and line. Every step is planned on the
 app as the steps before it will leave it, and nothing is written until you say yes.
 
-- It runs only in a git repository with no uncommitted change, so its changes stand on their
-  own. `--dry-run` needs neither.
+- It runs no git, so it works in a folder with no repository, and committing its changes is
+  yours.
 - It applies the steps in order, each step's edits and then its dependencies, and takes back every
   change if a write fails. It installs once, at the end, with your package manager and no scripts.
 - It prints what is left to you again as a checklist, with the file and line of each item.
 - A second run finds the new version and changes nothing.
 - When no step starts from the version your app is on, it says so, and what to do.
 
+### Using `migrate` from a script
+
+`--json` prints one JSON object on stdout and nothing else there, for `--dry-run` (the plan) and
+for a run that applies. It never asks: without `--yes` it is a preview. The install's output is
+not shown.
+
+```json
+{
+  "from": { "package": "@soroush.tech/design-system", "version": "2.9.0" },
+  "to": { "package": "@gild-ui/react", "version": "0.1.0" },
+  "status": "planned",
+  "steps": [
+    {
+      "id": "gild-ui-0.1.0",
+      "summary": "imports move to @gild-ui/*, ...",
+      "dependencies": [
+        { "name": "@gild-ui/react", "to": "^0.1.0", "action": "add" },
+        { "name": "@soroush.tech/design-system", "from": "^2.9.0", "action": "remove" }
+      ],
+      "files": [
+        { "path": "src/App.tsx", "action": "edit" },
+        { "path": "src/theme/sheet.ts", "action": "create" }
+      ],
+      "items": [
+        { "file": "src/App.tsx", "line": 12, "message": "[STY-007] ...", "code": "STY-007" }
+      ]
+    }
+  ],
+  "changedFiles": ["package.json", "src/App.tsx", "src/theme/sheet.ts"],
+  "installed": false,
+  "lockfileChanged": false
+}
+```
+
+- `status` is `planned`, `nothing`, `refused`, `rolledBack` or `applied`. When it is `refused` or
+  `rolledBack`, or `applied` after a failed install, `error` says why: `error.message`, and
+  `error.step`, the id of the step (`install` for the install, `null` when no step is to blame).
+- `from` and `to` are the version the app was on and the one the steps end on; `null` when the
+  command could not tell.
+- Paths are from the app's folder, with `/`. `line` and `code` of an item are stable: the code is
+  an id of the migration guide (`STY-007`) or of a check (`IMP-SPLIT`).
+- `installed` is whether the install ran and succeeded; `lockfileChanged` whether the app's
+  lockfile differs after from before.
+
+| Exit code | When                                                                        |
+| --------- | --------------------------------------------------------------------------- |
+| `0`       | Applied, and nothing is left for a person; or, for a preview, a plan        |
+| `2`       | Applied, and items are left for a person                                    |
+| `3`       | Nothing to migrate: the app is on the target                                |
+| `1`       | Refused, failed and taken back, the install failed, or a wrong command line |
+
+The exit codes are the same without `--json`.
+
 ### From `@soroush.tech/design-system` 2.x to Gild UI 0.1.0
 
 The first step, `gild-ui-0.1.0`, moves an app from the design system 2.x, with its companion
 packages `@soroush.tech/markdown` and `@soroush.tech/hooks`, to `@gild-ui/react`, `@gild-ui/core`,
 `@gild-ui/hooks` and `@gild-ui/react-markdown` 0.1.0. The components keep every prop, value and
-default: the work is in the imports, the styling and the theme. Run it in a clean git tree, read
-the plan, and take what it leaves to you from the checklist at the end.
+default: the work is in the imports, the styling and the theme. Commit first, so its changes stand on
+their own, read the plan, and take what it leaves to you from the checklist at the end.
 
 **What the step edits**
 
